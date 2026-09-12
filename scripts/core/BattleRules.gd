@@ -1285,7 +1285,13 @@ static func normalize_battle_state(session: SessionStateStoreScript.SessionData)
 			if active_id == "" or _get_stack_by_id(session.battle, active_id).is_empty():
 				active_id = _advance_to_next_alive(session.battle, int(session.battle.get("turn_index", 0)))
 				session.battle["active_stack_id"] = active_id
-			_assign_default_target(session.battle)
+			var active := get_active_stack(session.battle)
+			# Normalization runs on every UI refresh. It must not replace a live
+			# player selection with the first preferred target after Next/Prev.
+			if String(active.get("side", "")) == "player" and _selected_target_can_remain_for_active_stack(session.battle, active, String(session.battle.get("selected_target_id", ""))):
+				_clear_stale_selected_target_closing(session.battle)
+			else:
+				_assign_default_target(session.battle)
 
 	return not session.battle.is_empty()
 
@@ -1419,7 +1425,7 @@ static func selected_target_continuity_context(battle: Dictionary) -> Dictionary
 		"target_line": "",
 	}
 	if bool(legality.get("attackable", false)) and action_label != "":
-		var ready_message := "Preserved setup target: board click will %s %s now." % [action_label, target_label]
+		var ready_message := "Preserved setup target: select to preview %s %s; confirm to commit." % [action_label, target_label]
 		context["emphasis"] = "attackable"
 		context["footer_label"] = "Setup: %s" % action_label
 		context["message"] = ready_message
@@ -1664,14 +1670,14 @@ static func board_click_attack_intent_for_target(battle: Dictionary, battle_id: 
 		intent["action"] = action_id
 		intent["label"] = action_label
 		intent["attackable"] = true
-		intent["message"] = "Board click will %s %s now." % [action_label, target_label]
+		intent["message"] = "Select to preview %s %s. Confirm order or activate the same target again to commit; Esc cancels." % [action_label, target_label]
 		if not approach.is_empty():
 			intent["message"] = "Move to %s and strike %s in one action." % [_hex_label(approach),target_label]
 		return intent
 
 	intent["blocked"] = true
 	if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
-		intent["message"] = "Board click blocked: %s cannot be attacked from this hex; click a highlighted enemy to attack, or move first." % target_label
+		intent["message"] = "Target blocked: %s cannot be attacked from this hex; select a highlighted enemy to preview, or move first." % target_label
 	else:
 		intent["message"] = "Board click blocked: %s cannot be attacked from this hex; move to a highlighted hex before attacking." % target_label
 	return intent
@@ -1807,7 +1813,7 @@ static func _movement_intent_message(
 				_stack_label(selected_target),
 			]
 		if legal_attack_count > 0:
-			return "Move hex click: Move %s to %s; highlighted enemies attack now, blocked targets need movement." % [
+			return "Select move hex: preview %s to %s, then confirm; blocked targets need movement." % [
 				active_label,
 				destination_phrase,
 			]
@@ -1880,6 +1886,15 @@ static func battle_hex_state_summary(battle: Dictionary) -> Dictionary:
 		"selected_target_closing_context": selected_closing_context,
 	}
 
+static func target_cycle_ids(battle: Dictionary) -> Array:
+	var enemies := _alive_stacks_for_side(battle, "enemy")
+	var legal_ids := _legal_attack_target_ids_for_active_stack(battle)
+	var ids := []
+	for enemy in enemies:
+		var id := String(enemy.get("battle_id", ""))
+		if legal_ids.is_empty() or id in legal_ids: ids.append(id)
+	return ids
+
 static func cycle_target(session: SessionStateStoreScript.SessionData, direction: int) -> void:
 	if session == null or session.battle.is_empty():
 		return
@@ -1887,31 +1902,28 @@ static func cycle_target(session: SessionStateStoreScript.SessionData, direction
 	if active_stack.is_empty() or String(active_stack.get("side", "")) != "player":
 		return
 
-	var enemies = _alive_stacks_for_side(session.battle, "enemy")
-	if enemies.is_empty():
+	var candidates := target_cycle_ids(session.battle)
+	if candidates.is_empty():
 		_set_selected_target(session.battle, "", true)
 		return
-
-	var candidates := []
-	var legal_target_ids := _legal_attack_target_ids_for_active_stack(session.battle)
-	if not legal_target_ids.is_empty():
-		for enemy in enemies:
-			if String(enemy.get("battle_id", "")) in legal_target_ids:
-				candidates.append(enemy)
-	else:
-		candidates = enemies
-	if candidates.is_empty():
-		candidates = enemies
 
 	var current_id = String(session.battle.get("selected_target_id", ""))
 	var step := -1 if direction < 0 else 1
 	var index := -1 if step > 0 else 0
 	for candidate_index in range(candidates.size()):
-		if String(candidates[candidate_index].get("battle_id", "")) == current_id:
+		if String(candidates[candidate_index]) == current_id:
 			index = candidate_index
 			break
 	index = posmod(index + step, candidates.size())
-	_set_selected_target(session.battle, String(candidates[index].get("battle_id", "")), true)
+	_set_selected_target(session.battle, String(candidates[index]), true)
+
+static func spell_target_ids(session: SessionStateStoreScript.SessionData, spell_id: String) -> Array:
+	var ids := []
+	if session == null or session.battle.is_empty(): return ids
+	for stack in session.battle.get("stacks", []):
+		var id := String(stack.get("battle_id", ""))
+		if id != "" and bool(spell_consequence_preview(session, spell_id, id).get("ok", false)): ids.append(id)
+	return ids
 
 static func describe_spellbook(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null:
@@ -2360,21 +2372,34 @@ static func advance_consequence_preview(battle: Dictionary) -> Dictionary:
 	return {"ok": true, "action": "move", "destination": destination,
 		"message": "Advance → %s\nMovement only — no attack. Enemy choices are not predicted." % _hex_label(destination)}
 
-static func spell_consequence_preview(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
+static func _player_spell_resolution(session: SessionStateStoreScript.SessionData, spell_id: String, target_id: String = "") -> Dictionary:
+	var battle := session.battle
+	var active := get_active_stack(battle)
+	var target := get_selected_target(battle) if target_id == "" else _get_stack_by_id(battle, target_id)
+	if target_id != "" and (target.is_empty() or _alive_count(target) <= 0):
+		return {"ok": false, "message": "That spell target is no longer alive."}
+	var resolution := SpellRulesScript.resolve_battle_spell(_player_commander_state(session), battle, active, target, spell_id)
+	# Explicit orders must never inherit the legacy support-spell fallback to the active stack.
+	if target_id != "" and bool(resolution.get("ok", false)) and String(resolution.get("target_battle_id", "")) != target_id:
+		return {"ok": false, "message": "That stack is not a valid target for this spell."}
+	return resolution
+
+static func spell_consequence_preview(session: SessionStateStoreScript.SessionData, spell_id: String, target_id: String = "") -> Dictionary:
 	if session == null or session.battle.is_empty(): return {"ok": false, "message": "No battle is active."}
 	var battle := session.battle
 	if _commander_spell_cast_this_round(battle, "player"): return {"ok": false, "message": "Commander already cast this round."}
 	var active := get_active_stack(battle)
-	var selected := get_selected_target(battle)
 	var hero := _player_commander_state(session)
-	var resolution := SpellRulesScript.resolve_battle_spell(hero, battle, active, selected, spell_id)
+	var resolution := _player_spell_resolution(session, spell_id, target_id)
 	if not bool(resolution.get("ok", false)): return resolution
 	var target := _get_stack_by_id(battle, String(resolution.get("target_battle_id", "")))
 	var damage := int(resolution.get("damage", 0))
 	var losses := _unit_loss_range(target, damage, damage)
 	var spell := ContentService.get_spell(spell_id)
 	var cost := SpellRulesScript.adjusted_spell_mana_cost(hero, spell)
-	var effect := String(resolution.get("message", ""))
+	# The legacy summary calls allied recipients the active stack; pass the
+	# resolved recipient so an explicitly selected ally keeps its own identity.
+	var effect := SpellRulesScript._battle_spell_effect_summary(hero, spell, battle, target, target)
 	if String(resolution.get("resolution_type", "")) == "damage":
 		effect = "%d damage; %d lost | No retaliation" % [damage, int(losses.min_units)]
 	return {"ok": true, "action": "cast_spell:" + spell_id, "target_id": String(target.get("battle_id", "")),
@@ -2584,7 +2609,7 @@ static func describe_action_surface(session: SessionStateStoreScript.SessionData
 	var closing_context := selected_target_closing_context(battle)
 	var board_click_line := String(click_intent.get("message", ""))
 	if board_click_line == "":
-		board_click_line = "Board click: highlighted enemy attacks now; outlined move hexes reposition."
+		board_click_line = "Board: select an enemy or move hex to preview; confirm to commit."
 	if not continuity_context.is_empty():
 		board_click_line = String(continuity_context.get("message", board_click_line))
 	elif not closing_context.is_empty():
@@ -2656,7 +2681,7 @@ static func target_handoff_cue_payload(session: SessionStateStoreScript.SessionD
 		elif not closing_context.is_empty():
 			board_line = String(closing_context.get("message", board_line))
 		if board_line == "":
-			board_line = "Board click: highlighted enemy attacks now; outlined move hexes reposition."
+			board_line = "Board: select an enemy or move hex to preview; confirm to commit."
 		move_line = String(movement_intent.get("message", ""))
 		var click_action := String(click_intent.get("action", ""))
 		var click_label := String(click_intent.get("label", "")).strip_edges()
@@ -3812,7 +3837,7 @@ static func _attack_unavailable_summary(attacker: Dictionary, target: Dictionary
 		return "%s is outside melee reach; Shoot is the legal order from this hex." % target_label
 	if bool(legality.get("blocked", false)):
 		if not _legal_attack_target_ids_for_active_stack(battle).is_empty():
-			return "%s is blocked for Strike from this hex; click a highlighted enemy to attack now, or click a move hex for later reach." % target_label
+			return "%s is blocked for Strike from this hex; select a highlighted enemy or move hex to preview, then confirm." % target_label
 		return "%s is blocked for Strike from this hex; click a move hex to approach attack range." % target_label
 	return "Close the distance or secure a target before striking."
 
@@ -5780,21 +5805,14 @@ static func latest_animation_event_presentation_payload(session: SessionStateSto
 		"turn_index": int(event.get("turn_index", 0)),
 	}
 
-static func cast_player_spell(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
+static func cast_player_spell(session: SessionStateStoreScript.SessionData, spell_id: String, target_id: String = "") -> Dictionary:
 	if session == null or session.battle.is_empty():
 		return {"ok": false, "message": "No battle is active.", "state": "invalid"}
 
 	var active_stack = get_active_stack(session.battle)
-	var target_stack = get_selected_target(session.battle)
 	if _commander_spell_cast_this_round(session.battle, "player"):
 		return {"ok": false, "message": "The commander has already cast a spell this round.", "state": "invalid"}
-	var resolution = SpellRulesScript.resolve_battle_spell(
-		_player_commander_state(session),
-		session.battle,
-		active_stack,
-		target_stack,
-		spell_id
-	)
+	var resolution := _player_spell_resolution(session, spell_id, target_id)
 	if not bool(resolution.get("ok", false)):
 		return {"ok": false, "message": String(resolution.get("message", "Spell casting failed.")), "state": "invalid"}
 	_clear_stack_animation_states(session.battle)
@@ -5910,7 +5928,7 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 			"action": "cast_spell",
 			"side": String(active_stack.get("side", "")),
 			"battle_id": String(active_stack.get("battle_id", "")),
-			"target_battle_id": String(resolution.get("target_battle_id", target_stack.get("battle_id", ""))),
+			"target_battle_id": String(resolution.get("target_battle_id", "")),
 		}
 	)
 	if not objective_messages.is_empty():
@@ -5955,7 +5973,7 @@ static func perform_presented_action(session: SessionStateStoreScript.SessionDat
 	elif action == "move":
 		result = move_active_stack_to_hex(session, int(destination.get("q", -1)), int(destination.get("r", -1)))
 	elif action.begins_with("cast_spell:"):
-		result = cast_player_spell(session, action.trim_prefix("cast_spell:"))
+		result = cast_player_spell(session, action.trim_prefix("cast_spell:"), String(destination.get("target_id", "")))
 	else:
 		result = perform_player_action(session, action)
 	return ActionPlayback.finish(original_battle, result)
@@ -8722,7 +8740,7 @@ static func _attach_post_move_target_context(result: Dictionary, battle: Diction
 	elif not selected_closing_context.is_empty():
 		result["post_move_target_guidance"] = String(selected_closing_context.get("message", selected_click_intent.get("message", "")))
 	elif bool(result.get("selected_target_actionable_after_move", false)):
-		result["post_move_target_guidance"] = "Target legality: board click will %s %s now." % [
+		result["post_move_target_guidance"] = "Target legality: select to preview %s %s; confirm to commit." % [
 			selected_action_label,
 			_stack_label(selected_target),
 		]

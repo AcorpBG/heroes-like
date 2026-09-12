@@ -184,6 +184,17 @@ var _field_objectives: Array = []
 var _stack_hit_shapes: Array = []
 var _hover_destination_cell := Vector2i(-1, -1)
 var _consequence_preview: Dictionary = {}
+var _staged_order_preview: Dictionary = {}
+var _spell_target_candidates: Array = []
+var _spell_target_previews: Dictionary = {}
+var _spell_target_mode := false
+
+func set_spell_target_candidates(ids: Array, previews: Dictionary = {}, targeting_active: bool = false) -> void:
+	_spell_target_candidates = ids.duplicate()
+	_spell_target_previews = previews.duplicate(true)
+	_spell_target_mode = targeting_active
+	_consequence_hover_key = ""
+	queue_redraw()
 var _consequence_hover_key := ""
 var _controller_cursor_cell := Vector2i(-1, -1)
 var _terrain_textures: Dictionary = {}
@@ -304,6 +315,7 @@ func _handle_controller_navigation_input(event: InputEvent) -> bool:
 		_move_controller_cursor(Vector2i.RIGHT, event is InputEventKey or event is InputEventJoypadButton)
 		return true
 	if event.is_action_pressed("ui_accept"):
+		if event is InputEventKey and event.echo: return true
 		return _dispatch_controller_cursor()
 	if event.is_action_pressed("ui_cancel"):
 		return handle_root_controller_navigation_cancel()
@@ -363,11 +375,17 @@ func _sync_controller_cursor_preview() -> void:
 	if has_focus(): _preview_position(_hex_center(_controller_cursor_cell, _current_hex_layout()))
 
 func set_consequence_preview(preview: Dictionary) -> void:
+	if not _staged_order_preview.is_empty(): preview = _staged_order_preview
 	_consequence_preview = preview.duplicate(true) if not _battle.has("playback_event") else {}
 	_consequence_hover_key = ""
 	queue_redraw()
 
+func set_staged_order_preview(preview: Dictionary) -> void:
+	_staged_order_preview = preview.duplicate(true)
+	set_consequence_preview(preview)
+
 func preview_attack(action: String, target_id: String) -> void:
+	if _spell_target_mode: return
 	if String(_active_stack.get("side", "")) != "player" or _battle.has("playback_event"):
 		set_consequence_preview({})
 		return
@@ -379,7 +397,11 @@ func _preview_position(position: Vector2) -> void:
 	if target_id == "": target_id = _stack_id_at_cell(cell)
 	var key := "%s:%s" % [target_id, str(cell)]
 	if key == _consequence_hover_key: return
-	if target_id != "":
+	if _spell_target_mode:
+		var spell_target := _stack_id_at_cell(cell)
+		if spell_target == "": spell_target = target_id
+		set_consequence_preview(_spell_target_previews.get(spell_target, {}))
+	elif target_id != "":
 		var intent := BattleRulesScript.board_click_attack_intent_for_target(_battle, target_id)
 		preview_attack(String(intent.get("action", "")), target_id)
 	elif _is_legal_destination_cell(cell):
@@ -693,6 +715,12 @@ func _bounded_battle_board_cursor_semantic_text(value: String, maximum_character
 func _dispatch_board_click_at_position(position: Vector2) -> Dictionary:
 	var target_cell := _hex_cell_at_position(position)
 	var battle_id := _stack_id_at_position(position)
+	if _spell_target_mode:
+		var spell_target := _stack_id_at_cell(target_cell)
+		if spell_target == "": spell_target = battle_id
+		if spell_target != "":
+			stack_focus_requested.emit(spell_target)
+			return {"accepted": true, "dispatch": "spell_target", "battle_id": spell_target}
 	if battle_id != "":
 		if _is_legal_destination_cell(target_cell):
 			hex_destination_requested.emit(target_cell.x, target_cell.y)
@@ -767,6 +795,10 @@ func _get_tooltip(at_position: Vector2) -> String:
 	var turn_strip_entry := _turn_strip_entry_at_position(at_position)
 	if not turn_strip_entry.is_empty():
 		return _turn_strip_entry_tooltip(turn_strip_entry, _turn_strip_entries(_current_field_rect()).size())
+	if _spell_target_mode:
+		var id := _stack_id_at_cell(_hex_cell_at_position(at_position))
+		if id == "": id = _stack_id_at_position(at_position)
+		return _stack_board_tooltip(id)
 	var destination_cell := _hex_cell_at_position(at_position)
 	var battle_id := _stack_id_at_position(at_position)
 	if battle_id != "":
@@ -826,7 +858,7 @@ func finish_action_playback(session) -> void:
 func _apply_battle_dictionary(battle: Dictionary) -> void:
 	set_meta("contextual_help_revision", int(get_meta("contextual_help_revision", 0)) + 1)
 	_cancel_battle_board_cursor_semantic()
-	_consequence_preview = {}
+	_consequence_preview = _staged_order_preview.duplicate(true)
 	_consequence_hover_key = ""
 	_battle = {}
 	_player_stacks = []
@@ -2020,6 +2052,12 @@ func _draw() -> void:
 	_draw_controller_cursor(hex_layout)
 	_draw_vfx_cues(hex_layout, stack_cells)
 	_draw_stack_tokens(hex_layout, stack_cells)
+	if not _battle.has("playback_event"):
+		for id in _spell_target_candidates:
+			if not stack_cells.has(id): continue
+			var selected := String(_staged_order_preview.get("target_id", "")) == String(id)
+			var center := _hex_center(stack_cells[id], hex_layout)
+			_draw_hex_outline(center, float(hex_layout.get("radius", 20.0)) * 0.96, ACTIVE_COLOR if selected else Color(0.42, 0.80, 1.0, 0.85), 4.0 if selected else 1.5)
 	if bool(_consequence_preview.get("ok", false)) and (bool(_consequence_preview.get("moved", false)) or String(_consequence_preview.get("action", "")) == "move") and not _battle.has("playback_event"):
 		var end: Dictionary = _consequence_preview.get("destination", {})
 		if not end.is_empty():
@@ -2620,6 +2658,7 @@ func _draw_field_objectives(hex_layout: Dictionary) -> void:
 		_draw_objective_marker(center, objective, color, float(hex_layout.get("radius", 1.0)))
 
 func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
+	if _spell_target_mode: return
 	if _active_stack.is_empty():
 		return
 	var active_id := String(_active_stack.get("battle_id", ""))
@@ -2802,6 +2841,7 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		var side := String(stack.get("side", ""))
 		var is_active := battle_id == String(_battle.get("active_stack_id", ""))
 		var is_target := battle_id == String(_battle.get("selected_target_id", ""))
+		if _spell_target_mode: is_target = battle_id == String(_staged_order_preview.get("target_id", ""))
 		var is_blocked_target := is_target and _selected_target_is_blocked()
 		var fill := _side_color(side)
 		if bool(stack.get("defending", false)):
@@ -5376,6 +5416,8 @@ func _hover_destination_preview() -> Dictionary:
 	return {}
 
 func _stack_board_tooltip(battle_id: String) -> String:
+	if _spell_target_mode:
+		return String(_spell_target_previews.get(battle_id, {}).get("message", "Not a legal target for this spell.")) + "\nSelect to preview; Confirm order casts. Esc cancels."
 	var stack := _stack_by_id(battle_id)
 	if stack.is_empty():
 		return tooltip_text

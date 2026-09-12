@@ -198,6 +198,10 @@ func _run() -> void:
 	var events_before := int(session.battle.get("recent_events", []).size())
 	await _press_joypad_button(JOY_BUTTON_A)
 	await _settle()
+	if int(session.battle.get("recent_events", []).size()) != events_before or shell.get("_pending_board_order").is_empty():
+		return _fail("First controller Board activation must stage movement without spending an action.")
+	await _press_joypad_button(JOY_BUTTON_A)
+	await _settle()
 	if UiAudio.validation_records() != blocked_ui_audio_records or PresentationAudio.validation_records() != blocked_presentation_audio_before:
 		return _fail("Successful controller Board movement emitted invalid audio or changed Battle presentation audio.")
 	var movement_result_message := String(shell.get("_last_message")).strip_edges()

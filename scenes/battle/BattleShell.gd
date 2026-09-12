@@ -101,6 +101,13 @@ const BATTLE_SPELL_VISIBLE_NAME_CHAR_LIMIT := 16
 
 var _session: SessionStateStore.SessionData
 var _last_message := ""
+var _pending_board_order: Dictionary = {}
+var _spell_targeting_id := ""
+var _spell_targeting_hash := 0
+var _board_cancel_release_pending := false
+var _pending_board_hash := 0
+var _confirm_order_button: Button
+var _cancel_order_button: Button
 var _last_return_to_menu_result: Dictionary = {}
 var _validation_return_to_menu_request_count := 0
 var _tactical_briefing_text := ""
@@ -172,6 +179,22 @@ var _last_refresh_intent_forecast: Dictionary = {}
 var _last_refresh_intent_forecast_battle_hash := 0
 
 func _ready() -> void:
+	_confirm_order_button = Button.new()
+	_confirm_order_button.name = "ConfirmOrderButton"
+	_confirm_order_button.text = "Confirm order"
+	_confirm_order_button.pressed.connect(_confirm_board_order)
+	_advance_button.get_parent().add_child(_confirm_order_button)
+	_cancel_order_button = Button.new()
+	_cancel_order_button.name = "CancelOrderButton"
+	_cancel_order_button.text = "Cancel"
+	_cancel_order_button.pressed.connect(_cancel_selected_order)
+	_advance_button.get_parent().add_child(_cancel_order_button)
+	_style_action_button(_confirm_order_button, true, 126.0)
+	_style_action_button(_cancel_order_button, true, 70.0)
+	_confirm_order_button.accessibility_description = "Commit the selected order if the battlefield is unchanged."
+	_cancel_order_button.tooltip_text = "Cancel the selected order without spending an action. Escape also cancels."
+	_confirm_order_button.hide()
+	_cancel_order_button.hide()
 	_banner_panel.set_meta("contextual_help_exclusion", true)
 	_message_log = BattleMessageLog.new()
 	_message_log.name = "BattleMessageLog"
@@ -437,22 +460,104 @@ func _tactical_briefing_is_shown() -> bool:
 	return state_value is Dictionary and bool(state_value.get("shown", false))
 
 func _on_prev_target_pressed() -> void:
-	if not _battle_resolution_checkpoint_pending.is_empty():
+	if _action_playback_in_progress or _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null or not _battle_resolution_checkpoint_pending.is_empty():
 		return
+	if _spell_targeting_id != "":
+		_cycle_spell_target(-1)
+		return
+	_cancel_board_order()
 	var started := ProfileLogScript.begin_usec()
 	BattleRules.cycle_target(_session, -1)
 	_refresh()
 	ProfileLogScript.emit_general("battle", "action", "cycle_target", ProfileLogScript.elapsed_ms(started), {}, _battle_profile_metadata(false).merged({"direction": -1}, true), _session)
 
 func _on_next_target_pressed() -> void:
-	if not _battle_resolution_checkpoint_pending.is_empty():
+	if _action_playback_in_progress or _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null or not _battle_resolution_checkpoint_pending.is_empty():
 		return
+	if _spell_targeting_id != "":
+		_cycle_spell_target(1)
+		return
+	_cancel_board_order()
 	var started := ProfileLogScript.begin_usec()
 	BattleRules.cycle_target(_session, 1)
 	_refresh()
 	ProfileLogScript.emit_general("battle", "action", "cycle_target", ProfileLogScript.elapsed_ms(started), {}, _battle_profile_metadata(false).merged({"direction": 1}, true), _session)
 
 func _on_board_stack_focus_requested(battle_id: String) -> Dictionary:
+	if _action_playback_in_progress: return _action_playback_block_result()
+	if _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null: return _return_board_cursor_action_result({"ok": false, "committed": false})
+	if _session == null or _session.battle.is_empty() or not _battle_resolution_checkpoint_pending.is_empty():
+		return _return_board_cursor_action_result({"ok": false, "committed": false})
+	if _spell_targeting_id != "":
+		if _spell_targeting_hash != hash(_session.battle):
+			_cancel_board_order()
+			return _return_board_cursor_action_result({"ok": false, "message": "The battlefield changed. Select the spell again."})
+		if _pending_board_order.get("kind", "") == "spell" and _pending_board_order.get("target_id", "") == battle_id:
+			return _confirm_board_order()
+		var spell_id := _spell_targeting_id
+		var spell_preview := BattleRules.spell_consequence_preview(_session, spell_id, battle_id)
+		_clear_staged_board_order()
+		return _stage_board_order({"kind": "spell", "target_id": battle_id, "action": "cast_spell:" + spell_id}, spell_preview)
+	if _pending_board_order.get("target_id", "") == battle_id and _pending_board_order.get("kind", "") == "attack" and _pending_board_hash == hash(_session.battle):
+		return _confirm_board_order()
+	_cancel_board_order()
+	var selection := BattleRules.select_target(_session, battle_id)
+	if not bool(selection.get("ok", false)): return _reject_board_stack_click(battle_id, String(selection.get("message", "Invalid target.")))
+	var intent := BattleRules.board_click_attack_intent_for_target(_session.battle, battle_id)
+	var action := String(intent.get("action", ""))
+	if action == "": return _reject_board_stack_click(battle_id, String(intent.get("message", "Target unavailable.")), "invalid", {"action": "blocked_target"})
+	var preview := BattleRules.attack_consequence_preview(_session.battle, action, battle_id)
+	return _stage_board_order({"kind": "attack", "target_id": battle_id, "action": action}, preview)
+
+func _stage_board_order(order: Dictionary, preview: Dictionary) -> Dictionary:
+	if not bool(preview.get("ok", false)):
+		_last_message = String(preview.get("message", "Unavailable order."))
+		_refresh()
+		return _return_board_cursor_action_result({"ok": false, "committed": false, "message": _last_message})
+	_last_message = "Selected — Confirm order or activate this target again. Esc cancels."
+	_refresh()
+	_pending_board_order = order.duplicate(true)
+	_pending_board_hash = hash(_session.battle)
+	_confirm_order_button.show()
+	_cancel_order_button.show()
+	_confirm_order_button.tooltip_text = String(preview.get("message", ""))
+	_battle_board_view.set_staged_order_preview(preview)
+	_refresh_spell_target_surface()
+	_configure_battle_keyboard_focus()
+	return _return_board_cursor_action_result({"ok": true, "committed": false, "state": "selected", "action": String(order.get("action", order.get("kind", ""))), "message": "Selected. Confirm order to commit, or cancel.", "order": order.duplicate(true)})
+
+func _cancel_board_order() -> void:
+	_spell_targeting_id = ""
+	if _battle_board_view != null: _battle_board_view.set_spell_target_candidates([])
+	_clear_staged_board_order()
+
+func _cancel_selected_order() -> void:
+	_cancel_board_order()
+	_last_message = "Order canceled. No action or mana spent."
+	_refresh()
+
+func _clear_staged_board_order() -> void:
+	_pending_board_order = {}
+	if _confirm_order_button != null: _confirm_order_button.hide()
+	if _cancel_order_button != null: _cancel_order_button.hide()
+	if _battle_board_view != null: _battle_board_view.set_staged_order_preview({})
+
+func _confirm_board_order() -> Dictionary:
+	if _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null: return {"ok": false, "committed": false}
+	if _pending_board_order.is_empty() or _action_playback_in_progress or not _battle_resolution_checkpoint_pending.is_empty():
+		return {"ok": false, "committed": false}
+	if _session == null or _pending_board_hash != hash(_session.battle):
+		_cancel_board_order()
+		_last_message = "The battlefield changed. Select the order again."
+		if _session != null: _refresh()
+		return _return_board_cursor_action_result({"ok": false, "committed": false, "message": _last_message})
+	var order := _pending_board_order.duplicate(true)
+	_cancel_board_order()
+	if order.kind == "move": return _commit_board_hex_destination_requested(int(order.q), int(order.r))
+	if order.kind == "spell": return _perform_action(String(order.action), {"target_id": String(order.target_id)})
+	return _commit_board_stack_focus_requested(String(order.target_id))
+
+func _commit_board_stack_focus_requested(battle_id: String) -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		return _return_board_cursor_action_result(_battle_resolution_checkpoint_block_result("board_target"))
@@ -610,6 +715,21 @@ func _reject_board_stack_click(
 
 func _on_board_hex_destination_requested(q: int, r: int) -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
+	if _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null: return {"ok": false, "committed": false}
+	if _spell_targeting_id != "":
+		_last_message = "Select a living spell target, or cancel the spell before moving."
+		_refresh()
+		return {"ok": false, "committed": false, "message": _last_message}
+	if _session == null or _session.battle.is_empty() or not _battle_resolution_checkpoint_pending.is_empty(): return {"ok": false, "committed": false}
+	if _pending_board_order.get("kind", "") == "move" and _pending_board_order.get("q", -1) == q and _pending_board_order.get("r", -1) == r and _pending_board_hash == hash(_session.battle):
+		return _confirm_board_order()
+	_cancel_board_order()
+	var intent := BattleRules.movement_intent_for_destination(_session.battle, q, r)
+	if not bool(intent.get("movable", false)): return _stage_board_order({}, intent)
+	return _stage_board_order({"kind": "move", "q": q, "r": r}, {"ok": bool(intent.get("movable", false)), "action": "move", "destination": {"q": q, "r": r}, "message": "Move → %s\nMovement only; no attack." % String(intent.get("destination_label", ""))})
+
+func _commit_board_hex_destination_requested(q: int, r: int) -> Dictionary:
+	if _action_playback_in_progress: return _action_playback_block_result()
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		return _return_board_cursor_action_result(_battle_resolution_checkpoint_block_result("board_move"))
 	var movement_intent := BattleRules.movement_intent_for_destination(_session.battle, q, r)
@@ -732,8 +852,18 @@ func _on_root_window_input(event: InputEvent) -> void:
 		or not (event is InputEventKey or event is InputEventJoypadButton)
 	):
 		return
+	if _board_cancel_release_pending and event.is_action_released("ui_cancel"):
+		_board_cancel_release_pending = false
+		get_tree().root.set_input_as_handled()
+		return
+	if (not _pending_board_order.is_empty() or _spell_targeting_id != "") and event.is_action_pressed("ui_cancel") and _active_exclusive_confirmation_dialog() == null:
+		_board_cancel_release_pending = true
+		_cancel_selected_order()
+		get_tree().root.set_input_as_handled()
+		return
 	if _battle_board_root_cancel_input_owned() and event.is_action_pressed("ui_cancel"):
 		if bool(_battle_board_view.call("handle_root_controller_navigation_cancel")):
+			_board_cancel_release_pending = true
 			get_tree().root.set_input_as_handled()
 		return
 	var dialog := _active_exclusive_confirmation_dialog()
@@ -1175,7 +1305,7 @@ func _restore_battle_presentation_speed_focus(button: Button) -> void:
 		button.call_deferred("grab_focus")
 
 func _preview_combat_action(action: String) -> void:
-	if _action_playback_in_progress or _session == null: return
+	if _action_playback_in_progress or _session == null or _spell_targeting_id != "": return
 	if action.begins_with("cast_spell:"):
 		_battle_board_view.set_consequence_preview(BattleRules.spell_consequence_preview(_session, action.trim_prefix("cast_spell:")))
 	elif action == "advance":
@@ -1184,38 +1314,51 @@ func _preview_combat_action(action: String) -> void:
 		_battle_board_view.preview_attack(action, String(_session.battle.get("selected_target_id", "")))
 
 func _on_spell_action_pressed(action_id: String) -> void:
-	if _action_playback_in_progress: return
+	if _action_playback_in_progress or _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null: return
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		_apply_battle_resolution_checkpoint_failure_surface()
 		return
 	if not action_id.begins_with("cast_spell:"):
 		return
-	var profile_started := ProfileLogScript.begin_usec()
-	var buckets := {}
-	var rules_started := ProfileLogScript.begin_usec()
-	var recap_context := BattleRules.post_action_recap_context(_session, action_id)
-	var result := BattleRules.perform_presented_action(_session, action_id)
-	buckets["rules_action"] = ProfileLogScript.elapsed_ms(rules_started)
-	_last_message = String(result.get("message", ""))
-	_record_action_recap(action_id, result, recap_context)
-	if bool(result.get("ok", false)):
-		_dismiss_tactical_briefing()
-	if _handle_battle_resolution(result):
-		ProfileLogScript.emit_general("battle", "action", "spell", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false).merged({
-			"action_id": action_id,
-			"result_ok": bool(result.get("ok", false)),
-			"routed": _last_battle_resolution_routed,
-		}, true), _session)
-		return
-	var refresh_started := ProfileLogScript.begin_usec()
+	_cancel_board_order()
+	_spell_targeting_id = action_id.trim_prefix("cast_spell:")
+	_spell_targeting_hash = hash(_session.battle)
+	_last_message = "Select a target for %s. Preview first; Confirm order casts. Esc cancels." % String(ContentService.get_spell(_spell_targeting_id).get("name", _spell_targeting_id))
 	_refresh()
-	call_deferred("_configure_battle_keyboard_focus", true)
-	buckets["refresh"] = ProfileLogScript.elapsed_ms(refresh_started)
-	ProfileLogScript.emit_general("battle", "action", "spell", ProfileLogScript.elapsed_ms(profile_started), buckets, _battle_profile_metadata(false).merged({
-		"action_id": action_id,
-		"result_ok": bool(result.get("ok", false)),
-		"routed": false,
-	}, true), _session)
+	_spell_targeting_hash = hash(_session.battle)
+	_cancel_order_button.show()
+
+func _cycle_spell_target(direction: int) -> void:
+	if _spell_targeting_hash != hash(_session.battle):
+		_cancel_board_order()
+		_refresh()
+		return
+	var ids := BattleRules.spell_target_ids(_session, _spell_targeting_id)
+	if ids.is_empty(): return
+	var index := ids.find(String(_pending_board_order.get("target_id", "")))
+	if index < 0: index = -1 if direction > 0 else 0
+	var id := String(ids[posmod(index + direction, ids.size())])
+	var spell_id := _spell_targeting_id
+	_clear_staged_board_order()
+	_stage_board_order({"kind": "spell", "target_id": id, "action": "cast_spell:" + spell_id}, BattleRules.spell_consequence_preview(_session, spell_id, id))
+	_refresh_spell_target_surface()
+
+func _refresh_spell_target_surface() -> void:
+	if _spell_targeting_id == "": return
+	var ids := BattleRules.spell_target_ids(_session, _spell_targeting_id)
+	var previews := {}
+	for id in ids: previews[id] = BattleRules.spell_consequence_preview(_session, _spell_targeting_id, String(id))
+	_battle_board_view.set_spell_target_candidates(ids, previews, true)
+	_cancel_order_button.show()
+	var index := ids.find(String(_pending_board_order.get("target_id", "")))
+	_prev_target_button.text = "Prev"
+	_next_target_button.text = "Target %d/%d" % [index + 1, ids.size()]
+	_prev_target_button.disabled = ids.is_empty()
+	_next_target_button.disabled = ids.is_empty()
+	for button in [_prev_target_button, _next_target_button]:
+		button.tooltip_text = "Cycle living legal spell targets; selection never casts. Confirm order to cast."
+	if ids.is_empty():
+		_last_message = "No legal living target for this spell. Cancel or select another spell."
 
 func _on_save_pressed(legacy_slot: bool = false) -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
@@ -1323,8 +1466,9 @@ func _on_active_play_setting_changed(setting_id: String) -> void:
 	_apply_responsive_layout()
 	_refresh()
 
-func _perform_action(action: String) -> Dictionary:
+func _perform_action(action: String, order_parameters: Dictionary = {}) -> Dictionary:
 	if _action_playback_in_progress: return _action_playback_block_result()
+	if _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null: return {"ok": false, "committed": false}
 	if not _battle_resolution_checkpoint_pending.is_empty():
 		return _battle_resolution_checkpoint_block_result(action)
 	_validation_perform_action_counts[action] = int(_validation_perform_action_counts.get(action, 0)) + 1
@@ -1332,7 +1476,8 @@ func _perform_action(action: String) -> Dictionary:
 	var buckets := {}
 	var rules_started := ProfileLogScript.begin_usec()
 	var recap_context := BattleRules.post_action_recap_context(_session, action)
-	var result := BattleRules.perform_presented_action(_session, action)
+	_cancel_board_order()
+	var result := BattleRules.perform_presented_action(_session, action, order_parameters)
 	buckets["rules_action"] = ProfileLogScript.elapsed_ms(rules_started)
 	_last_message = String(result.get("message", ""))
 	_record_action_recap(action, result, recap_context)
@@ -1633,6 +1778,10 @@ func _complete_battle_exit_animation_handoff(route_target: String) -> void:
 		_last_battle_resolution_routed = _route_checkpointed_battle_resolution()
 
 func _refresh() -> void:
+	if _spell_targeting_id != "" and (_session == null or _spell_targeting_hash != hash(_session.battle)):
+		_cancel_board_order()
+	if not _pending_board_order.is_empty() and (_session == null or _pending_board_hash != hash(_session.battle)):
+		_cancel_board_order()
 	if _action_playback_in_progress:
 		_disable_battle_exit_handoff_inputs()
 		return
@@ -1992,6 +2141,8 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 		_strike_button,
 		_shoot_button,
 		_defend_button,
+		_confirm_order_button,
+		_cancel_order_button,
 		_spell_actions,
 		_quick_resolve_button,
 		_retreat_button,
@@ -2060,10 +2211,15 @@ func _rebuild_spell_actions() -> void:
 	for action in actions:
 		if not (action is Dictionary):
 			continue
+		action = action.duplicate(true)
+		var legal_spell_targets := BattleRules.spell_target_ids(_session, String(action.get("id", "")).trim_prefix("cast_spell:"))
+		if not legal_spell_targets.is_empty() and bool(action.get("disabled", false)):
+			action["disabled"] = false
+			action["readiness"] = "Select a legal target"
 		var button := Button.new()
 		button.text = _battle_spell_action_button_text(action)
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = _battle_spell_action_tooltip(action)
+		button.tooltip_text = _battle_spell_action_tooltip(action) + "\nSelect spell, then a highlighted living target. Confirm order casts; Esc cancels."
 		_style_action_button(button, false, 132)
 		_apply_spell_action_icon(button, action)
 		button.set_meta("battle_action_id", String(action.get("id", "")))
@@ -2093,7 +2249,7 @@ func _refresh_action_buttons() -> void:
 	var enemy_lines = BattleRules.roster_lines(_session.battle, "enemy")
 	var surface := BattleRules.get_action_surface(_session)
 	var legal_target_ids := BattleRules.legal_attack_target_ids_for_active_stack(_session.battle)
-	var cycle_target_count := legal_target_ids.size() if not legal_target_ids.is_empty() else enemy_lines.size()
+	var cycle_target_count := BattleRules.target_cycle_ids(_session.battle).size()
 	var cycle_cue := _battle_target_cycle_cue_surface(player_turn, active_stack, target_stack, legal_target_ids, enemy_lines.size())
 
 	_prev_target_button.text = String(cycle_cue.get("prev_label", "Prev"))
@@ -2123,6 +2279,7 @@ func _refresh_action_buttons() -> void:
 	_strike_button.tooltip_text = "%s Target: %s." % [_strike_button.tooltip_text, target_name] if player_turn and not target_stack.is_empty() else _strike_button.tooltip_text
 	_shoot_button.tooltip_text = "%s Target: %s." % [_shoot_button.tooltip_text, target_name] if player_turn and not target_stack.is_empty() else _shoot_button.tooltip_text
 	_append_last_action_tooltips()
+	_refresh_spell_target_surface()
 
 func _refresh_speed_buttons() -> void:
 	var speed := BattleRules.battle_presentation_speed(_session)
@@ -2243,13 +2400,9 @@ func _battle_target_cycle_cue_surface(
 		target_ids = _living_enemy_target_ids()
 		scope = "enemy stacks"
 	var target_count := target_ids.size()
-	if target_count <= 0 and enemy_count > 0:
-		target_count = enemy_count
 	var selected_id := String(target_stack.get("battle_id", ""))
 	var target_index := target_ids.find(selected_id)
-	if target_index < 0 and target_count > 0:
-		target_index = 0
-	var position_text := "%d/%d" % [target_index + 1, target_count] if target_count > 0 else "0/0"
+	var position_text := "%d/%d" % [target_index + 1, target_count] if target_index >= 0 else "—/%d" % target_count
 	var focus := _battle_target_cycle_focus_label(target_stack)
 	var active_name := String(active_stack.get("name", "current stack")).strip_edges()
 	var state := "Ready"
@@ -3910,8 +4063,8 @@ func _apply_responsive_layout() -> void:
 	_system_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)
 	_system_body_label.visible = not compact_layout and not _system_body_label.text.strip_edges().is_empty()
 	_speed_bar.visible = not compact_layout
-	_prev_target_button.visible = not compact_layout
-	_next_target_button.visible = not compact_layout
+	_prev_target_button.visible = true
+	_next_target_button.visible = true
 	_battle_board_view.custom_minimum_size = Vector2(520.0, 240.0) if compact_layout else Vector2(620.0, 300.0)
 	_action_guide.visible = false
 	_action_panel.tooltip_text = _action_guide_source_text

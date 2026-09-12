@@ -134,7 +134,9 @@ func run() -> void:
 		get_tree().root.content_scale_size=requested
 		for i in range(4): await get_tree().process_frame
 		var clicked: Dictionary=shell._on_board_stack_focus_requested(String(rendered.battle.selected_target_id))
-		check(clicked.ok and shell._action_playback_in_progress,"live board click did not start queued playback")
+		check(clicked.ok and not shell._action_playback_in_progress,"first board selection spent an action")
+		clicked=shell._confirm_board_order()
+		check(clicked.ok and shell._action_playback_in_progress,"confirmed board order did not start queued playback")
 		var committed: Dictionary=rendered.to_dict().duplicate(true)
 		check(not shell._perform_action("defend").ok,"extra input accepted during playback")
 		check(rendered.to_dict()==committed,"locked input changed state")

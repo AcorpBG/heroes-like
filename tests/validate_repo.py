@@ -17052,8 +17052,8 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
             '_system_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)',
             "_system_body_label.visible = not compact_layout and not _system_body_label.text.strip_edges().is_empty()",
             "_speed_bar.visible = not compact_layout",
-            "_prev_target_button.visible = not compact_layout",
-            "_next_target_button.visible = not compact_layout",
+            "_prev_target_button.visible = true",
+            "_next_target_button.visible = true",
             "_battle_board_view.custom_minimum_size = Vector2(520.0, 240.0) if compact_layout else Vector2(620.0, 300.0)",
         ))
         ensure(all(index >= 0 for index in responsive_order) and list(responsive_order) == sorted(responsive_order), errors, "Battle responsive layout must reflow the existing footer, retain essential commands, compact only spacing/speed, and then preserve existing target/board contracts in order")
@@ -19117,9 +19117,11 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         root_bridge_order = (
             root_input_body.find("_forwarding_confirmation_root_physical_input"),
             root_input_body.find("not (event is InputEventKey or event is InputEventJoypadButton)"),
+            root_input_body.find('if (not _pending_board_order.is_empty() or _spell_targeting_id != "")'),
+            root_input_body.find('_cancel_selected_order()'),
             root_input_body.find('_battle_board_root_cancel_input_owned() and event.is_action_pressed("ui_cancel")'),
             root_input_body.find('bool(_battle_board_view.call("handle_root_controller_navigation_cancel"))'),
-            root_input_body.find("get_tree().root.set_input_as_handled()"),
+            root_input_body.find("get_tree().root.set_input_as_handled()", root_input_body.find('bool(_battle_board_view.call("handle_root_controller_navigation_cancel"))')),
             root_input_body.find("return", root_input_body.find('bool(_battle_board_view.call("handle_root_controller_navigation_cancel"))')),
             root_input_body.find("var dialog := _active_exclusive_confirmation_dialog()"),
         )
@@ -49223,7 +49225,7 @@ def validate_overworld_town_footprint_click_entry_routing(errors: list[str]) -> 
         "_set_selected_tile(route_tile)",
         '"open_town_from_footprint"',
         "_visit_selected_town()",
-        "if route_tile == _selected_tile:",
+        "if route_tile == _selected_tile and route_tile == _pointer_order_tile and _pointer_order_signature == _end_turn_session_state_signature():",
     ))
     ensure(all(index >= 0 for index in pointer_order) and list(pointer_order) == sorted(pointer_order), errors, "Town body clicks must open an owned Town before entry-route confirmation, while retaining exact entry selection")
 
