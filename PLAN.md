@@ -24,9 +24,9 @@ Rules:
 
 ### Top Priority: Small-map Playtest Gameplay Improvements
 
-Owner direction, 2026-09-12: the following five Phase 6 implementation slices take precedence over discretionary animation, art, content breadth and other polish. All are **pending**; this planning update implements no game behavior. This queue supersedes older "no next slice selected" / "await owner direction" statements below. Preserve completed slices and their bounded historical evidence.
+Owner direction, 2026-09-12: the following five Phase 6 implementation slices take precedence over discretionary animation, art, content breadth and other polish. Combat consequences is **completed** with source and both packaged-platform acceptance; the remaining four are **pending**. This queue supersedes older "no next slice selected" / "await owner direction" statements below. Preserve completed slices and their bounded historical evidence.
 
-Requirements and acceptance: `docs/small-map-playtest-gameplay-priorities.md`. Execute in the listed priority order; shared tooltip/input foundations may be implemented together where necessary, but each slice requires its own behavior acceptance. Combat consequences are the next selected slice. Do not tune balance from this single loss or change native generation rules.
+Requirements and acceptance: `docs/small-map-playtest-gameplay-priorities.md`. Execute in the listed priority order; shared tooltip/input foundations may be implemented together where necessary, but each slice requires its own behavior acceptance. Bounded contextual tooltips are next. Do not tune balance from this single loss or change native generation rules.
 
 | Order | Slice ID | Required outcome |
 | --- | --- | --- |

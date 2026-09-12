@@ -197,6 +197,12 @@ func _ready() -> void:
 	phase_started = ProfileLogScript.begin_usec()
 	if _battle_board_view.has_signal("stack_focus_requested"):
 		_battle_board_view.stack_focus_requested.connect(_on_board_stack_focus_requested)
+	for pair in [[_strike_button, "strike"], [_shoot_button, "shoot"], [_advance_button, "advance"]]:
+		var button: Button = pair[0]
+		button.mouse_entered.connect(_preview_combat_action.bind(String(pair[1])))
+		button.focus_entered.connect(_preview_combat_action.bind(String(pair[1])))
+		button.mouse_exited.connect(_battle_board_view.set_consequence_preview.bind({}))
+		button.focus_exited.connect(_battle_board_view.set_consequence_preview.bind({}))
 	if _battle_board_view.has_signal("hex_destination_requested"):
 		_battle_board_view.hex_destination_requested.connect(_on_board_hex_destination_requested)
 	if _battle_board_view.has_signal("controller_navigation_cancelled"):
@@ -1164,6 +1170,15 @@ func _restore_battle_presentation_speed_focus(button: Button) -> void:
 	if button != null and is_instance_valid(button) and button.is_visible_in_tree() and not button.disabled:
 		button.call_deferred("grab_focus")
 
+func _preview_combat_action(action: String) -> void:
+	if _action_playback_in_progress or _session == null: return
+	if action.begins_with("cast_spell:"):
+		_battle_board_view.set_consequence_preview(BattleRules.spell_consequence_preview(_session, action.trim_prefix("cast_spell:")))
+	elif action == "advance":
+		_battle_board_view.set_consequence_preview(BattleRules.advance_consequence_preview(_session.battle))
+	else:
+		_battle_board_view.preview_attack(action, String(_session.battle.get("selected_target_id", "")))
+
 func _on_spell_action_pressed(action_id: String) -> void:
 	if _action_playback_in_progress: return
 	if not _battle_resolution_checkpoint_pending.is_empty():
@@ -2049,6 +2064,10 @@ func _rebuild_spell_actions() -> void:
 		_apply_spell_action_icon(button, action)
 		button.set_meta("battle_action_id", String(action.get("id", "")))
 		button.pressed.connect(_on_spell_action_pressed.bind(String(action.get("id", ""))))
+		button.mouse_entered.connect(_preview_combat_action.bind(String(action.get("id", ""))))
+		button.focus_entered.connect(_preview_combat_action.bind(String(action.get("id", ""))))
+		button.mouse_exited.connect(_battle_board_view.set_consequence_preview.bind({}))
+		button.focus_exited.connect(_battle_board_view.set_consequence_preview.bind({}))
 		_spell_actions.add_child(button)
 
 func _apply_spell_action_icon(button: Button, action: Dictionary) -> void:
