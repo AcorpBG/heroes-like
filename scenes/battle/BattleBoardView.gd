@@ -183,6 +183,8 @@ var _target_stack: Dictionary = {}
 var _field_objectives: Array = []
 var _stack_hit_shapes: Array = []
 var _hover_destination_cell := Vector2i(-1, -1)
+var _consequence_preview: Dictionary = {}
+var _consequence_hover_key := ""
 var _controller_cursor_cell := Vector2i(-1, -1)
 var _terrain_textures: Dictionary = {}
 var _terrain_texture_missing: Dictionary = {}
@@ -236,6 +238,7 @@ func _ready() -> void:
 	tooltip_text = "Outlined hex click moves. Highlighted enemy click attacks; blocked enemies need movement."
 	focus_entered.connect(_on_controller_focus_entered)
 	focus_exited.connect(_on_controller_focus_exited)
+	mouse_exited.connect(func(): set_consequence_preview({}))
 	_configure_battle_board_cursor_semantic_timer()
 	_load_terrain_textures()
 	_load_battle_vfx_manifest()
@@ -268,6 +271,7 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseMotion:
 		var motion_event := event as InputEventMouseMotion
+		_preview_position(motion_event.position)
 		var hovered_cell := _hex_cell_at_position(motion_event.position)
 		if not _is_legal_destination_cell(hovered_cell):
 			hovered_cell = Vector2i(-1, -1)
@@ -322,6 +326,7 @@ func _on_controller_focus_entered() -> void:
 func _on_controller_focus_exited() -> void:
 	_cancel_battle_board_cursor_semantic(false)
 	_hover_destination_cell = Vector2i(-1, -1)
+	set_consequence_preview({})
 	queue_redraw()
 
 func _ensure_controller_cursor() -> void:
@@ -355,6 +360,33 @@ func _move_controller_cursor(delta: Vector2i, announce_semantic: bool = false) -
 
 func _sync_controller_cursor_preview() -> void:
 	_hover_destination_cell = _controller_cursor_cell if has_focus() and _is_legal_destination_cell(_controller_cursor_cell) else Vector2i(-1, -1)
+	if has_focus(): _preview_position(_hex_center(_controller_cursor_cell, _current_hex_layout()))
+
+func set_consequence_preview(preview: Dictionary) -> void:
+	_consequence_preview = preview.duplicate(true) if not _battle.has("playback_event") else {}
+	_consequence_hover_key = ""
+	queue_redraw()
+
+func preview_attack(action: String, target_id: String) -> void:
+	if String(_active_stack.get("side", "")) != "player" or _battle.has("playback_event"):
+		set_consequence_preview({})
+		return
+	set_consequence_preview(BattleRulesScript.attack_consequence_preview(_battle, action, target_id))
+
+func _preview_position(position: Vector2) -> void:
+	var target_id := _stack_id_at_position(position)
+	var cell := _hex_cell_at_position(position)
+	if target_id == "": target_id = _stack_id_at_cell(cell)
+	var key := "%s:%s" % [target_id, str(cell)]
+	if key == _consequence_hover_key: return
+	if target_id != "":
+		var intent := BattleRulesScript.board_click_attack_intent_for_target(_battle, target_id)
+		preview_attack(String(intent.get("action", "")), target_id)
+	elif _is_legal_destination_cell(cell):
+		set_consequence_preview({"ok": true, "action": "move", "destination": {"q": cell.x, "r": cell.y}, "message": "Move → %s\nMovement only — no attack. Enemy choices are not predicted." % BattleRulesScript._hex_label({"q": cell.x, "r": cell.y})})
+	else:
+		set_consequence_preview({})
+	_consequence_hover_key = key
 
 func _dispatch_controller_cursor() -> bool:
 	_ensure_controller_cursor()
@@ -786,6 +818,8 @@ func finish_action_playback(session) -> void:
 
 func _apply_battle_dictionary(battle: Dictionary) -> void:
 	_cancel_battle_board_cursor_semantic()
+	_consequence_preview = {}
+	_consequence_hover_key = ""
 	_battle = {}
 	_player_stacks = []
 	_enemy_stacks = []
@@ -814,6 +848,9 @@ func _apply_battle_dictionary(battle: Dictionary) -> void:
 	if has_focus():
 		_ensure_controller_cursor()
 		_sync_controller_cursor_preview()
+	elif not _target_stack.is_empty():
+		var intent := BattleRulesScript.board_click_attack_intent_for_target(_battle, String(_target_stack.get("battle_id", "")))
+		preview_attack(String(intent.get("action", "")), String(_target_stack.get("battle_id", "")))
 	queue_redraw()
 
 func validation_hex_layout_summary() -> Dictionary:
@@ -1975,6 +2012,12 @@ func _draw() -> void:
 	_draw_controller_cursor(hex_layout)
 	_draw_vfx_cues(hex_layout, stack_cells)
 	_draw_stack_tokens(hex_layout, stack_cells)
+	if bool(_consequence_preview.get("ok", false)) and (bool(_consequence_preview.get("moved", false)) or String(_consequence_preview.get("action", "")) == "move") and not _battle.has("playback_event"):
+		var end: Dictionary = _consequence_preview.get("destination", {})
+		if not end.is_empty():
+			var center := _hex_center(Vector2i(int(end.q), int(end.r)), hex_layout)
+			draw_arc(center, float(hex_layout.get("radius", 20.0)) * 0.88, 0.0, TAU, 32, ACTIVE_COLOR, 2.0, true)
+			_draw_text("END", center + Vector2(-12, 20), ACTIVE_COLOR, 11)
 	_draw_turn_strip(field_rect)
 	_draw_footer_line(field_rect)
 
@@ -4286,7 +4329,7 @@ func _turn_strip_rect(field_rect: Rect2) -> Rect2:
 
 func _turn_strip_entries(field_rect: Rect2) -> Array:
 	var entries: Array = []
-	var turn_order = _battle.get("turn_order", [])
+	var turn_order = BattleRulesScript.upcoming_actor_ids(_battle, 5)
 	if not (turn_order is Array):
 		return entries
 	var strip_rect := _turn_strip_rect(field_rect)
@@ -4390,6 +4433,17 @@ func _draw_footer_line(field_rect: Rect2) -> void:
 		while caption.length()>1 and font.get_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,-1,16).x>width-20.0:
 			caption=caption.left(caption.length()-2)+"…"
 		_draw_text(caption,box.position+Vector2(10,22),Color(1.0,0.92,0.72),16)
+		return
+	if not _consequence_preview.is_empty():
+		var box := Rect2(Vector2(field_rect.position.x + 10.0, field_rect.end.y - 55.0), Vector2(field_rect.size.x - 20.0, 49.0))
+		draw_rect(box, Color(0.025, 0.032, 0.038, 0.94), true)
+		var lines := String(_consequence_preview.get("message", "")).split("\n")
+		for index in range(mini(2, lines.size())):
+			var line := String(lines[index])
+			var font := get_theme_default_font()
+			while line.length() > 1 and font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x > box.size.x - 20.0:
+				line = line.left(line.length() - 2) + "…"
+			_draw_text(line, box.position + Vector2(10, 18 + 20 * index), ACTIVE_COLOR if index == 0 else TEXT_COLOR, 12)
 		return
 	var footer_width: float = minf(field_rect.size.x - 20.0, 520.0)
 	var footer_rect := Rect2(field_rect.position + Vector2(10.0, field_rect.end.y - 28.0), Vector2(footer_width, 22.0))

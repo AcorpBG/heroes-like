@@ -16,6 +16,11 @@ const ActionPlayback = preload("res://scripts/core/BattleActionPlayback.gd")
 const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
+# One immutable battle snapshot, bounded target/action entries. Never saved;
+# repeated hover and the legacy summaries share the same exact exchange.
+static var _consequence_cache_battle: Dictionary = {}
+static var _consequence_cache: Dictionary = {}
+
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
 const STATUS_ROOTED := "status_rooted"
@@ -2296,6 +2301,128 @@ static func describe_commander_summary(session: SessionStateStoreScript.SessionD
 		lines.insert(memory_index, "Memory: %s" % memory_summary)
 	return "\n".join(lines)
 
+## Known remaining actors only: never forecast an enemy's private decision or
+## claim next-round ordering before round effects have been applied.
+static func upcoming_actor_ids(battle: Dictionary, limit: int = 5) -> Array:
+	var result: Array = []
+	var order = battle.get("turn_order", [])
+	if not (order is Array) or limit <= 0: return result
+	var start := maxi(0, int(battle.get("turn_index", 0)))
+	var active_index: int = order.find(String(battle.get("active_stack_id", "")), start)
+	if active_index >= 0: start = active_index
+	for index in range(start, order.size()):
+		var stack := _get_stack_by_id(battle, String(order[index]))
+		if not stack.is_empty() and _alive_count(stack) > 0:
+			result.append(String(order[index]))
+			if result.size() >= limit: break
+	return result
+
+## Enumerate the authored primary damage rolls on isolated battle copies.
+## Retaliation is evaluated AFTER abilities, morale and surviving headcounts,
+## using the same modifier as resolution, without creating/advancing an RNG.
+static func attack_consequence_preview(battle: Dictionary, action: String, target_id: String) -> Dictionary:
+	if _consequence_cache_battle != battle:
+		_consequence_cache_battle = battle.duplicate(true)
+		_consequence_cache.clear()
+	var cache_key := action + ":" + target_id
+	if _consequence_cache.has(cache_key): return _consequence_cache[cache_key].duplicate(true)
+	var attacker := get_active_stack(battle)
+	var target := _get_stack_by_id(battle, target_id)
+	var rejected := {"ok": false, "action": action, "target_id": target_id, "message": "No legal attack on that target."}
+	if action not in ["strike", "shoot"] or attacker.is_empty() or target.is_empty(): return rejected
+	if _alive_count(target) <= 0 or String(attacker.get("side", "")) == String(target.get("side", "")): return rejected
+	var ranged := action == "shoot"
+	var approach := {} if ranged else melee_approach_destination(battle, attacker, target)
+	if ranged and not _can_make_ranged_attack(attacker, battle, target): return rejected
+	if not ranged and approach.is_empty() and not _can_make_melee_attack(attacker, battle, target): return rejected
+	var prepared := battle.duplicate(true)
+	prepared.erase(ActionPlayback.CAPTURE_KEY)
+	var actor_id := String(attacker.get("battle_id", ""))
+	if not approach.is_empty(): _apply_melee_approach(prepared, _get_stack_by_id(prepared, actor_id), approach)
+	var moved := _get_stack_by_id(prepared, actor_id)
+	var defender := _get_stack_by_id(prepared, target_id)
+	var distance := _attack_distance_for_action(moved, defender, prepared, ranged)
+	var outgoing := _damage_range_preview(moved, defender, prepared, ranged, false, distance)
+	var incoming := {"min_damage": 2147483647, "max_damage": 0, "min_units": 2147483647, "max_units": 0}
+	var any_retaliation := false
+	var every_retaliation := true
+	var min_roll := int(moved.get("min_damage", 1))
+	var max_roll := maxi(min_roll, int(moved.get("max_damage", 1)))
+	for roll in range(min_roll, max_roll + 1):
+		var trial := prepared.duplicate(true)
+		var a := _get_stack_by_id(trial, actor_id)
+		var d := _get_stack_by_id(trial, target_id)
+		var before := d.duplicate(true)
+		var damage := _damage_for_roll(a, d, trial, roll, ranged, false, distance)
+		_apply_damage_to_stack(trial, target_id, damage)
+		if ranged: _consume_shot(trial, actor_id)
+		_apply_attack_ability_effects(trial, a, d, ranged, distance, before)
+		_apply_damage_pressure(trial, a, before, d, ranged, "attack")
+		_apply_ranged_damage_return(trial, actor_id, before, ranged, "attack")
+		a = _get_stack_by_id(trial, actor_id)
+		d = _get_stack_by_id(trial, target_id)
+		var eligible := not ranged and _alive_count(d) > 0 and int(d.get("retaliations_left", 0)) > 0 and _can_make_retaliation(d, distance, trial)
+		any_retaliation = any_retaliation or eligible
+		every_retaliation = every_retaliation and eligible
+		var reflection := maxi(0, int(moved.get("total_health", 0)) - int(a.get("total_health", 0)))
+		var reply := _damage_range_preview(d, a, trial, false, true, distance) if eligible else {}
+		var low := reflection + int(reply.get("min_damage", 0))
+		var high := reflection + int(reply.get("max_damage", 0))
+		var losses := _unit_loss_range(moved, low, high)
+		incoming.min_damage = mini(incoming.min_damage, low)
+		incoming.max_damage = maxi(incoming.max_damage, high)
+		incoming.min_units = mini(incoming.min_units, losses.min_units)
+		incoming.max_units = maxi(incoming.max_units, losses.max_units)
+	var reply_label := "Damage return" if ranged else "Retaliation"
+	var reply_text := "%s: none" % reply_label
+	if int(incoming.max_damage) > 0:
+		reply_text = "%s%s: %s" % [reply_label, " if target survives" if any_retaliation and not every_retaliation else "", consequence_range_text(incoming)]
+	var final_hex := _stack_hex(moved).duplicate(true)
+	var preview := {"ok": true, "action": action, "actor_id": actor_id, "target_id": target_id,
+		"destination": final_hex, "moved": not approach.is_empty(), "damage": outgoing,
+		"incoming": incoming, "retaliation_possible": any_retaliation, "retaliation_certain": every_retaliation,
+		"message": "%s → %s | End %s\nHit: %s | %s" % [
+			"Move & strike" if not approach.is_empty() else action.capitalize(), _stack_label(target), _hex_label(final_hex),
+			consequence_range_text(outgoing), reply_text]}
+	if _consequence_cache.size() >= 32: _consequence_cache.clear()
+	_consequence_cache[cache_key] = preview.duplicate(true)
+	return preview
+
+static func consequence_range_text(value: Dictionary) -> String:
+	return "%d–%d damage; %d–%d lost" % [int(value.get("min_damage", 0)), int(value.get("max_damage", 0)), int(value.get("min_units", 0)), int(value.get("max_units", 0))]
+
+static func advance_consequence_preview(battle: Dictionary) -> Dictionary:
+	if not bool(action_availability(battle).get("advance", false)):
+		return {"ok": false, "message": "No advance is available."}
+	var copy := battle.duplicate(true)
+	copy.erase(ActionPlayback.CAPTURE_KEY)
+	var actor := get_active_stack(copy)
+	_apply_auto_advance_movement(copy, actor, int(copy.get("distance", 1)))
+	var destination := _stack_hex(actor).duplicate(true)
+	return {"ok": true, "action": "move", "destination": destination,
+		"message": "Advance → %s\nMovement only — no attack. Enemy choices are not predicted." % _hex_label(destination)}
+
+static func spell_consequence_preview(session: SessionStateStoreScript.SessionData, spell_id: String) -> Dictionary:
+	if session == null or session.battle.is_empty(): return {"ok": false, "message": "No battle is active."}
+	var battle := session.battle
+	if _commander_spell_cast_this_round(battle, "player"): return {"ok": false, "message": "Commander already cast this round."}
+	var active := get_active_stack(battle)
+	var selected := get_selected_target(battle)
+	var hero := _player_commander_state(session)
+	var resolution := SpellRulesScript.resolve_battle_spell(hero, battle, active, selected, spell_id)
+	if not bool(resolution.get("ok", false)): return resolution
+	var target := _get_stack_by_id(battle, String(resolution.get("target_battle_id", "")))
+	var damage := int(resolution.get("damage", 0))
+	var losses := _unit_loss_range(target, damage, damage)
+	var spell := ContentService.get_spell(spell_id)
+	var cost := SpellRulesScript.adjusted_spell_mana_cost(hero, spell)
+	var effect := String(resolution.get("message", ""))
+	if String(resolution.get("resolution_type", "")) == "damage":
+		effect = "%d damage; %d lost | No retaliation" % [damage, int(losses.min_units)]
+	return {"ok": true, "action": "cast_spell:" + spell_id, "target_id": String(target.get("battle_id", "")),
+		"destination": _stack_hex(active).duplicate(true), "mana_cost": cost, "damage": damage, "casualties": int(losses.min_units),
+		"message": "%s → %s | %d mana | End %s\n%s" % [String(spell.get("name", spell_id)), _stack_label(target), cost, _hex_label(_stack_hex(active)), effect]}
+
 static func describe_initiative_track(session: SessionStateStoreScript.SessionData) -> String:
 	if session == null or session.battle.is_empty():
 		return "Initiative track unavailable."
@@ -3655,6 +3782,9 @@ static func _enemy_action_preview_summary(battle: Dictionary, enemy_stack: Dicti
 static func _attack_action_summary(attacker: Dictionary, target: Dictionary, battle: Dictionary, is_ranged: bool) -> String:
 	if attacker.is_empty() or target.is_empty():
 		return "No clean target is lined up yet."
+	if String(attacker.get("battle_id", "")) == String(battle.get("active_stack_id", "")):
+		var exchange := attack_consequence_preview(battle, "shoot" if is_ranged else "strike", String(target.get("battle_id", "")))
+		if bool(exchange.get("ok", false)): return String(exchange.message).replace("\n", " | ")
 	if not is_ranged:
 		var approach := melee_approach_destination(battle, attacker, target)
 		if not approach.is_empty():
@@ -9032,10 +9162,12 @@ static func _calculate_damage(
 	is_retaliation: bool = false,
 	attack_distance: int = -1
 ) -> int:
-	var attacker_count = max(1, _alive_count(attacker))
 	var base_roll = rng.randi_range(int(attacker.get("min_damage", 1)), max(int(attacker.get("min_damage", 1)), int(attacker.get("max_damage", 1))))
 	_commit_damage_rng_roll(battle, rng)
-	var base_damage = attacker_count * base_roll
+	return _damage_for_roll(attacker, defender, battle, base_roll, is_ranged, is_retaliation, attack_distance)
+
+static func _damage_for_roll(attacker: Dictionary, defender: Dictionary, battle: Dictionary, base_roll: int, is_ranged: bool, is_retaliation: bool = false, attack_distance: int = -1) -> int:
+	var base_damage = maxi(1, _alive_count(attacker)) * base_roll
 	var modifier = _damage_modifier(attacker, defender, battle, is_ranged, is_retaliation, attack_distance)
 	return max(1, int(round(base_damage * modifier)))
 
