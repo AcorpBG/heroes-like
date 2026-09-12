@@ -1,0 +1,54 @@
+{
+  "audit_date": "2026-09-12T23:22:51+00:00",
+  "source_commit": "3d296d166e64f03fcf98f9b8d0a57c7e69ed6506",
+  "scope": "Inspection and production planning only; no audio generated, no listening approval, no runtime changes.",
+  "manifest_cue_entries": 141,
+  "unique_audio_files": 140,
+  "existing_audio_bytes": 10093588,
+  "existing_categories": {
+    "content/ui_sfx_manifest.json": 6,
+    "content/presentation_sfx_manifest.json": 27,
+    "content/battle_sfx_manifest.json": 22,
+    "content/ambient_sfx_manifest.json": 11,
+    "content/music_runtime_manifest.json": 75
+  },
+  "generation_briefs_by_priority": {
+    "P0": 90,
+    "P1": 125,
+    "P2": 83
+  },
+  "planned_files_by_priority": {
+    "P0": 140,
+    "P1": 430,
+    "P2": 188
+  },
+  "content_rows_by_domain": {
+    "units": 160,
+    "spells": 119,
+    "map_objects": 422,
+    "resource_sites": 377,
+    "buildings": 160,
+    "towns": 32,
+    "factions": 6,
+    "campaigns": 25,
+    "artifacts": 69,
+    "heroes": 66,
+    "resources": 9,
+    "biomes": 9,
+    "scenarios": 299
+  },
+  "content_coverage_rows": 1753,
+  "catalog_unresolved_unique_cues": [
+    "audio_placeholder_object_ambient_soft",
+    "audio_placeholder_spell_impact",
+    "audio_placeholder_spell_school",
+    "audio_placeholder_ui_invalid"
+  ],
+  "checks": {
+    "all_audio_decodes": true,
+    "all_audio_finite_non_silent": true,
+    "sample_rate_44100_stereo": true,
+    "all_coverage_targets_resolve": true
+  },
+  "generation_estimate_rule": "Planned files are edited deliverables; source generations/rejected takes and DAW stem work are not counted. P2 contains optional breadth."
+}

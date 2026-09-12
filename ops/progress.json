@@ -22270,6 +22270,44 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "planning-production-audio-generation-20260913",
+      "title": "Inventory current audio and prepare the complete production generation list",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "documentation_only",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/audio-generation-plan.md"
+      ],
+      "implementationTargets": [
+        "docs/audio-generation-plan.md",
+        "docs/audio-generation/"
+      ],
+      "createdAt": "2026-09-12T23:13:58+00:00",
+      "updatedAt": "2026-09-12T23:24:35+00:00",
+      "notes": "Documentation-only owner request complete: 141 cue entries / 140 decoded original files; 298 prioritized briefs and 1753 exact authored content-ID dispositions. P0 is 90 briefs / 140 replacement files; P1/P2 are proposed expansion and optional breadth. No game audio generated, integrated or listening-approved; ComfyUI remains stopped.",
+      "startedAt": "2026-09-12T23:22:51+00:00",
+      "completedAt": "2026-09-12T23:24:35+00:00",
+      "validationResults": {
+        "unique_audio_files_decoded": 140,
+        "cue_entries": 141,
+        "generation_briefs": 298,
+        "content_ids_covered": 1753,
+        "all_reference_targets_resolve": true,
+        "original_audio_hashes_preserved": true,
+        "unrelated_plan_and_progress_content_preserved": true
+      },
+      "latestEvidenceArtifacts": [
+        "docs/audio-generation-plan.md",
+        "docs/audio-generation/generation-checklist.md",
+        "docs/audio-generation/generation-queue.csv",
+        "docs/audio-generation/current-cue-inventory.csv",
+        "docs/audio-generation/content-coverage.csv",
+        "docs/audio-generation/catalog-routing-gaps.csv",
+        "docs/audio-generation/audit-summary.json"
+      ]
+    },
+    {
       "id": "ux-combat-consequence-preview-20260912",
       "title": "Combat Consequences Before Commitment",
       "phase": "phase-6-production-alpha-layer",

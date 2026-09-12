@@ -1,0 +1,6 @@
+event_id,cue_id,source,disposition
+overworld_object_idle,audio_placeholder_object_ambient_soft,content/animation_event_cues.json,No manifest/support in PresentationAudio; use planned local ambience only after routing; idle remains silent.
+overworld_object_ambient,audio_placeholder_object_ambient_soft,content/animation_event_cues.json,No manifest/support in PresentationAudio; use planned local ambience only after routing; idle remains silent.
+spell_cast_battle,audio_placeholder_spell_school,content/animation_event_cues.json,Catalog-only generic spell alias; battle uses cast and exact/shared effect cues. Reconcile alias; do not generate duplicate.
+spell_effect_damage,audio_placeholder_spell_impact,content/animation_event_cues.json,Catalog-only spell impact alias; battle uses hit/exact cues. Reconcile alias; do not generate duplicate.
+ui_invalid_action,audio_placeholder_ui_invalid,content/animation_event_cues.json,"Catalog alias differs from working UiAudio ui_invalid; reconcile alias, reuse ui_invalid asset."
