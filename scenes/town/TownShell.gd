@@ -1,5 +1,8 @@
 extends Control
 
+func _make_custom_tooltip(for_text: String) -> Object:
+	return get_node("/root/ContextualHelp").make_hover_card(self, for_text)
+
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
@@ -167,6 +170,7 @@ var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter
 static var _town_entity_cache_by_session: Dictionary = {}
 
 func _ready() -> void:
+	_banner_panel.set_meta("contextual_help_exclusion", true)
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
 	var phase_started := ProfileLogScript.begin_usec()
@@ -544,6 +548,7 @@ func _town_catalog_is_open() -> bool:
 	return _town_catalog_overlay != null and _town_catalog_overlay.visible
 
 func _open_town_catalog(mode: String) -> void:
+	get_node("/root/ContextualHelp").dismiss()
 	if mode not in ["build", "muster", "spells", "trade", "log", "building_info"] or _session == null:
 		return
 	if _town_action_input_blocker != null and _town_action_input_blocker.visible:

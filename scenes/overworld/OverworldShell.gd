@@ -1,5 +1,8 @@
 extends Control
 
+func _make_custom_tooltip(for_text: String) -> Object:
+	return get_node("/root/ContextualHelp").make_hover_card(self, for_text)
+
 const TurnPlayback = preload("res://scripts/core/OverworldTurnPlayback.gd")
 const TurnPresenter = preload("res://scenes/overworld/OverworldTurnPresenter.gd")
 var _turn_presenter: Control
@@ -351,6 +354,7 @@ var _save_written_cue_presenter: SystemSaveWrittenCuePresenter
 var _load_resumed_cue_presenter: SystemLoadResumedCuePresenter
 
 func _ready() -> void:
+	_top_strip_panel.set_meta("contextual_help_exclusion", true)
 	_resource_label.enable_inline_icons()
 	AppRouter.note_overworld_handoff_step("overworld_ready_enter")
 	_configure_controller_move_repeat_timer()
@@ -675,6 +679,7 @@ func _configure_gameplay_movement_input_ownership() -> void:
 		save_popup.about_to_popup.connect(_on_overworld_interaction_owner_opened)
 
 func _on_overworld_interaction_owner_opened() -> void:
+	get_node("/root/ContextualHelp").dismiss()
 	_clear_controller_move_state()
 	_deactivate_controller_route_cursor(false, false)
 

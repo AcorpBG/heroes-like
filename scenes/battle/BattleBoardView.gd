@@ -1,4 +1,4 @@
-extends Control
+extends "res://scripts/ui/BoundedTooltipControl.gd"
 
 signal stack_focus_requested(battle_id: String)
 signal hex_destination_requested(q: int, r: int)
@@ -788,6 +788,13 @@ func _get_tooltip(at_position: Vector2) -> String:
 			return message
 	return _fallback_board_tooltip()
 
+func contextual_inspection_text() -> String:
+	return _get_tooltip(_hex_center(_controller_cursor_cell, _current_hex_layout())) if has_focus() else get_tooltip(get_local_mouse_position())
+
+func contextual_help_exclusion_rects() -> Array:
+	var field := _current_field_rect()
+	return [_turn_strip_rect(field), Rect2(Vector2(field.position.x, field.end.y - 55), Vector2(field.size.x, 55))]
+
 func set_battle_state(session) -> void:
 	_session = session
 	var battle := {}
@@ -817,6 +824,7 @@ func finish_action_playback(session) -> void:
 	set_battle_state(session)
 
 func _apply_battle_dictionary(battle: Dictionary) -> void:
+	set_meta("contextual_help_revision", int(get_meta("contextual_help_revision", 0)) + 1)
 	_cancel_battle_board_cursor_semantic()
 	_consequence_preview = {}
 	_consequence_hover_key = ""

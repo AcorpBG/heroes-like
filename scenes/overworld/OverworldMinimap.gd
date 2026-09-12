@@ -1,5 +1,8 @@
 extends Control
 
+func _make_custom_tooltip(for_text: String) -> Object:
+	return get_node("/root/ContextualHelp").make_hover_card(self, for_text)
+
 signal recenter_requested(tile: Vector2i)
 
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")

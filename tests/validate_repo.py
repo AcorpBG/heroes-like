@@ -50604,7 +50604,7 @@ def validate_overworld_contained_hover_card(errors: list[str]) -> None:
         for forbidden in ("tooltip_text =", "split(", "replace(", "substr(", "_session", "session.", "_hover_tile", "Input.", "await ", "create_timer", "create_tween", "queue_redraw"):
             ensure(forbidden not in builder, errors, f"Hover-card construction must be presentation-only and retain full text: {forbidden}")
     if delegate:
-        ensure(delegate.strip() == 'func _make_custom_tooltip(for_text: String) -> Object:\n\treturn _build_hover_tooltip_card(for_text)', errors, "Map custom-tooltip ownership must be one exact builder delegate")
+        ensure(delegate.strip() == 'func _make_custom_tooltip(for_text: String) -> Object:\n\tif for_text.strip_edges() == "": return null\n\tvar card := _build_hover_tooltip_card(for_text)\n\treturn get_node("/root/ContextualHelp").adopt_hover_card(self, card, for_text)', errors, "Map tooltip must reject empty text and retain its bounded cartographic builder and shared lifecycle owner")
     if validation:
         for token in (
             'var profile := _hover_tooltip_visual_profile(for_text).duplicate(true)',
