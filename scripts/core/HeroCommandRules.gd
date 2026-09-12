@@ -449,6 +449,20 @@ static func town_defending_hero(session: SessionStateStoreScript.SessionData, to
 		if bool(hero.get("is_primary", false)): return hero
 	return candidates[0] if not candidates.is_empty() else {}
 
+static func town_recruitment_destination(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	# Remote management is not hero presence. Share the entrance/level and
+	# deterministic local-hero preference used by town defense.
+	var hero := town_defending_hero(session, town)
+	var holder_id := String(hero.get("id", HOLDER_GARRISON))
+	var label := _holder_label(session, town, holder_id)
+	var stacks := _holder_stacks(session, town, holder_id)
+	var occupied := 0
+	for stack in stacks:
+		if stack is Dictionary and int(stack.get("count", 0)) > 0:
+			occupied += 1
+	return {"holder_id": holder_id, "label": label, "stacks": stacks,
+		"summary": "Destination: %s | Arrives immediately here | %d/%d stacks." % [label, occupied, ARMY_SLOT_COUNT]}
+
 static func town_defense_force(session: SessionStateStoreScript.SessionData, town: Dictionary, preferred_hero_id: String = "") -> Dictionary:
 	# A town fields its garrison and ONE eligible visiting hero, not the remotely
 	# selected army or every reserve commander. Battle setup consumes these rows.

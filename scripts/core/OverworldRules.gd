@@ -1277,6 +1277,8 @@ static func _collect_resource_node_result(
 		return {"ok": false, "message": "This site has no authored payload."}
 	if NativeTransit.is_native(node):
 		return travel_native_passage(session, node, native_transit_cost)
+	if resource_site_is_recruit_source(site) and not hero_is_visiting_resource_site(session, node):
+		return {"ok": false, "message": "Your hero must visit this recruitment site to collect its troops."}
 	if (
 		String(site.get("batch003_role", "")) == "sign_waypoint"
 		or String(site.get("batch004_role", "")) == "route_waypoint"
@@ -2205,9 +2207,10 @@ static func recruit_in_active_town(session: SessionStateStoreScript.SessionData,
 		}
 
 	var recruit_cost := _multiply_cost(adjusted_unit_cost, recruit_count)
-	var army = session.overworld.get("army", {})
-	var admission := HeroCommandRulesScript.army_addition_plan(army.get("stacks", []), {unit_id: recruit_count})
+	var destination := HeroCommandRulesScript.town_recruitment_destination(session, town)
+	var admission := HeroCommandRulesScript.army_addition_plan(destination.get("stacks", []), {unit_id: recruit_count})
 	if not bool(admission.get("ok", false)):
+		admission["message"] = "%s: %s" % [destination.label, String(admission.get("message", "Formation full."))]
 		return admission
 	_spend_resources(session, recruit_cost)
 	recruits[unit_id] = available_count - recruit_count
@@ -2216,14 +2219,14 @@ static func recruit_in_active_town(session: SessionStateStoreScript.SessionData,
 	session.overworld["towns"] = towns
 
 	var stacks: Array = admission.get("stacks", [])
-	army["stacks"] = stacks
-	session.overworld["army"] = army
+	HeroCommandRulesScript._set_holder_stacks(session, town, String(destination.holder_id), stacks)
 	var field_total := _army_unit_count(stacks, unit_id)
 	var message_parts := ["Recruited %d %s." % [recruit_count, String(unit.get("name", unit_id))]]
 	var cost_summary := _describe_resource_delta(recruit_cost)
 	if cost_summary != "":
 		message_parts.append("Spent %s." % cost_summary)
-	message_parts.append("%d remain in town reserve; field army now has %d." % [
+	message_parts.append("Arrived immediately in %s; %d remain in town reserve; destination now has %d." % [
+		String(destination.label),
 		max(0, int(recruits.get(unit_id, 0))),
 		field_total,
 	])
@@ -6708,6 +6711,12 @@ static func _resource_site_weekly_recruits(site: Dictionary) -> Dictionary:
 		if roster_recruits is Dictionary:
 			return roster_recruits
 	return {}
+
+static func hero_is_visiting_resource_site(session: SessionStateStoreScript.SessionData, node: Dictionary) -> bool:
+	if session == null or not OverworldLevelRulesScript.on_level(node, hero_level(session)):
+		return false
+	var tile := hero_position(session)
+	return tile in _resource_node_world_interaction_tiles(_map_object_for_resource_node(node), node)
 
 static func resource_site_is_recruit_source(site: Dictionary) -> bool:
 	return (

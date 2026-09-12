@@ -571,7 +571,7 @@ func _open_town_catalog(mode: String) -> void:
 	elif mode == "muster":
 		var catalog := TownRules.get_muster_catalog(_session)
 		_town_catalog_title_label.text = "Muster Hall"
-		_town_catalog_subtitle_label.text = "%d roster units • tiers, reserves, weekly growth, costs, and dwelling locks" % catalog.size()
+		_town_catalog_subtitle_label.text = String(HeroCommandRules.town_recruitment_destination(_session, TownRules.get_active_town(_session)).summary)
 		_rebuild_recruit_actions(catalog)
 	elif mode == "spells":
 		var actions := TownRules.get_spell_learning_actions(_session)
@@ -1620,6 +1620,12 @@ func _refresh_cached_recruit_actions(actions: Variant, town: Dictionary, copy_mo
 		var available: int = max(0, int(action.get("available_count", 0)))
 		var direct_count: int = min(available, TownRules._max_affordable_count(_session, unit_cost))
 		var market_count: int = TownRules._max_market_affordable_count(_session, town, resources, unit_cost, available)
+		var destination := HeroCommandRules.town_recruitment_destination(_session, town)
+		var unit_id := String(action.get("id", "")).trim_prefix("recruit:")
+		var admission := HeroCommandRules.army_addition_plan(destination.get("stacks", []), {unit_id: 1})
+		if not bool(admission.get("ok", false)):
+			direct_count = 0
+			market_count = 0
 		var market_summary: String = ""
 		if market_count > direct_count:
 			market_summary = TownRules._market_coverage_line(OverworldRules.town_cost_readiness(
@@ -1636,6 +1642,8 @@ func _refresh_cached_recruit_actions(actions: Variant, town: Dictionary, copy_mo
 				unit_cost,
 				int(_session.day) if _session != null else -1
 			))
+		if not bool(admission.get("ok", false)):
+			shortfall_summary = "%s: %s" % [destination.label, String(admission.get("message", "Formation full."))]
 		action["direct_affordable_count"] = direct_count
 		action["market_affordable_count"] = market_count
 		action["market_coverable"] = market_count > direct_count
@@ -1649,6 +1657,9 @@ func _refresh_cached_recruit_actions(actions: Variant, town: Dictionary, copy_mo
 		var copy_model: Dictionary = models.get(String(action.get("id", "")), {}) if models.get(String(action.get("id", "")), {}) is Dictionary else {}
 		if not copy_model.is_empty():
 			var summary_lines := _duplicate_array(copy_model.get("static_summary_lines", []))
+			# Destination is live state, never a stale cached hero/garrison caption.
+			summary_lines = summary_lines.filter(func(line): return not String(line).begins_with("Destination:"))
+			summary_lines.push_front(String(destination.summary))
 			var impact_line := TownRules._recruit_choice_impact_line(
 				String(copy_model.get("unit_id", "")),
 				direct_count,
@@ -2447,6 +2458,8 @@ func _town_stage_town_payload(town: Dictionary) -> Dictionary:
 		"strategic_role": String(town.get("strategic_role", "")),
 		"x": int(town.get("x", 0)),
 		"y": int(town.get("y", 0)),
+		"level": int(town.get("level", 0)),
+		"visit_tile": preload("res://scripts/core/OverworldLevelRules.gd").town_entrance(town),
 		"built_buildings": _normalize_string_array(town.get("built_buildings", [])),
 		"garrison": _duplicate_action_array(town.get("garrison", [])),
 		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
@@ -2482,6 +2495,7 @@ func _town_stage_signature(stage_state: Dictionary) -> String:
 		String(town.get("placement_id", "")),
 		String(town.get("town_id", "")),
 		String(town.get("owner", "")),
+		_scalar_pairs_signature(town.get("visit_tile", {})),
 		_string_array_signature(town.get("built_buildings", [])),
 		_stack_collection_signature(town.get("garrison", [])),
 		_scalar_pairs_signature(town.get("available_recruits", {})),
@@ -2490,6 +2504,7 @@ func _town_stage_signature(stage_state: Dictionary) -> String:
 		_scalar_pairs_signature(occupation),
 		_scalar_pairs_signature(front),
 		str(_collection_size(stage_state.get("stationed", []))),
+		str(hash(stage_state.get("stationed", []))),
 		str(_collection_size(stage_state.get("build_actions", []))),
 		str(_collection_size(stage_state.get("recruit_actions", []))),
 		str(_collection_size(stage_state.get("response_actions", []))),
@@ -2516,6 +2531,7 @@ func _town_entity_cache_signature(town: Dictionary, minimal: bool) -> String:
 	parts.append("town:%s" % _signature_token(town.get("town_id", "")))
 	parts.append("owner:%s" % _signature_token(town.get("owner", "")))
 	parts.append("role:%s" % _signature_token(town.get("strategic_role", "")))
+	parts.append("entrance:%s" % _scalar_pairs_signature(preload("res://scripts/core/OverworldLevelRules.gd").town_entrance(town)))
 	parts.append("built:%s" % _string_array_signature(town.get("built_buildings", [])))
 	parts.append("recruits:%s" % _scalar_pairs_signature(town.get("available_recruits", {})))
 	parts.append("garrison:%s" % _stack_collection_signature(town.get("garrison", [])))
@@ -3893,6 +3909,8 @@ func _rebuild_market_actions(actions_override: Variant = null) -> void:
 		_market_actions.add_child(button)
 
 func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
+	if _town_catalog_mode == "muster":
+		_town_catalog_subtitle_label.text = String(HeroCommandRules.town_recruitment_destination(_session, TownRules.get_active_town(_session)).summary)
 	for child in _recruit_actions.get_children():
 		child.queue_free()
 
@@ -3942,6 +3960,13 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 		row_box.add_child(reserve_label)
 		var button := Button.new()
 		var ready_count := int(action.get("direct_affordable_count", 0))
+		var cost_label := Label.new()
+		cost_label.text = "Total: %s" % TownRules._describe_resources(TownRules._multiply_resource_cost(action.get("unit_cost", {}), ready_count)) if ready_count > 0 else "No purchase available"
+		cost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		cost_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		cost_label.tooltip_text = _catalog_muster_tooltip(action)
+		FrontierVisualKit.apply_label(cost_label, "muted", 11)
+		row_box.add_child(cost_label)
 		button.text = "Recruit %s x%d" % [String(action.get("tier_label", "Tier")), ready_count] if ready_count > 0 else String(action.get("catalog_status", "Unavailable"))
 		button.disabled = bool(action.get("disabled", false))
 		button.tooltip_text = _catalog_muster_tooltip(action)
@@ -3957,6 +3982,7 @@ func _catalog_muster_tooltip(action: Dictionary) -> String:
 	var unit_cost := TownRules._describe_resources(action.get("unit_cost", {}))
 	return _join_tooltip_sections([
 		"%s • %s • %s" % [String(action.get("tier_label", "Tier")), String(action.get("name", "Unit")), String(action.get("catalog_status", "Locked"))],
+		String(HeroCommandRules.town_recruitment_destination(_session, TownRules.get_active_town(_session)).summary),
 		"Role: %s | Cost each: %s" % [String(action.get("role", "unknown")).capitalize(), unit_cost],
 		"Reserve %d | Weekly growth +%d" % [int(action.get("available_count", 0)), int(action.get("weekly_growth", 0))],
 		String(action.get("catalog_status_detail", "")),
@@ -5671,8 +5697,10 @@ func _record_town_action_presentation(
 		presentation["response_label"] = String(action.get("label", placement_id))
 	elif lane == "recruit":
 		var unit_id := action_id.trim_prefix("recruit:")
-		var before_army: Dictionary = before.get("army_counts", {}) if before.get("army_counts", {}) is Dictionary else {}
-		var after_army: Dictionary = after.get("army_counts", {}) if after.get("army_counts", {}) is Dictionary else {}
+		if String(before.get("recruitment_holder_id", "")) != String(after.get("recruitment_holder_id", "")):
+			return
+		var before_army: Dictionary = before.get("recruitment_holder_counts", {}) if before.get("recruitment_holder_counts", {}) is Dictionary else {}
+		var after_army: Dictionary = after.get("recruitment_holder_counts", {}) if after.get("recruitment_holder_counts", {}) is Dictionary else {}
 		var recruited_count := int(after_army.get(unit_id, 0)) - int(before_army.get(unit_id, 0))
 		if unit_id == "" or unit_id == action_id or recruited_count <= 0:
 			return

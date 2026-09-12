@@ -667,8 +667,12 @@ static func town_action_consequence_signature(session: SessionStateStoreScript.S
 	var logistics: Dictionary = OverworldRulesScript.town_logistics_state(session, town)
 	var recovery: Dictionary = OverworldRulesScript.town_recovery_state(session, town)
 	var front: Dictionary = OverworldRulesScript.town_front_state(session, town)
+	var recipient: Dictionary = HeroCommandRulesScript.town_recruitment_destination(session, town)
 	return {
 		"town_name": _town_name(town),
+		"recruitment_holder_id": String(recipient.holder_id),
+		"recruitment_holder_label": String(recipient.label),
+		"recruitment_holder_counts": _army_unit_counts({"stacks": recipient.stacks}),
 		"resources": _duplicate_dictionary(session.overworld.get("resources", {})),
 		"built_buildings": _normalize_string_array(town.get("built_buildings", [])),
 		"available_recruits": _duplicate_dictionary(town.get("available_recruits", {})),
@@ -1054,7 +1058,8 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 		var unit_cost: Dictionary = OverworldRulesScript.town_recruit_cost(session, town, unit_id)
 		var direct_affordable_count: int = min(available, _max_affordable_count(session, unit_cost))
 		var market_affordable_count := _max_market_affordable_count(session, town, resources, unit_cost, available)
-		var admission: Dictionary = HeroCommandRulesScript.army_addition_plan(session.overworld.get("army", {}).get("stacks", []), {unit_id: 1})
+		var destination: Dictionary = HeroCommandRulesScript.town_recruitment_destination(session, town)
+		var admission: Dictionary = HeroCommandRulesScript.army_addition_plan(destination.get("stacks", []), {unit_id: 1})
 		var capacity_ok := bool(admission.get("ok", false))
 		if not capacity_ok:
 			direct_affordable_count = 0
@@ -1076,6 +1081,7 @@ static func get_recruit_actions(session: SessionStateStoreScript.SessionData) ->
 		if not capacity_ok:
 			shortfall_summary = String(admission.get("message", "Formation full."))
 		var summary_lines := [
+			String(destination.summary),
 			"%s %s x%d | %s | Weekly +%d | Cost %s" % [
 				tier_label,
 				String(unit.get("name", unit_id)),
@@ -2135,7 +2141,7 @@ static func _recruit_choice_impact_line(unit_id: String, ready_count: int, avail
 	if field_count <= 0:
 		return "Defense/frontier: reserves are waiting, but stores do not field this stack yet."
 	var strength: int = OverworldRulesScript.unit_stack_strength_value(unit_id, field_count)
-	return "Defense/frontier: fields strength +%d to the marching army; %d remain in town reserve." % [
+	return "Defense/frontier: adds strength +%d to the local recipient; %d remain in town reserve." % [
 		strength,
 		max(0, available_count - field_count),
 	]
@@ -2387,6 +2393,10 @@ static func _town_action_affected_line(
 	var army_delta := _signed_recruit_delta_summary(before.get("army_counts", {}), after.get("army_counts", {}), "Field")
 	if army_delta != "":
 		parts.append(army_delta)
+	if lane == "recruit" and before.get("recruitment_holder_id", "") == after.get("recruitment_holder_id", ""):
+		var destination_delta := _signed_recruit_delta_summary(before.get("recruitment_holder_counts", {}), after.get("recruitment_holder_counts", {}), String(after.get("recruitment_holder_label", "Local recipient")))
+		if destination_delta != "":
+			parts.append(destination_delta)
 	if parts.size() <= 1:
 		parts.append("Town queue and stores updated.")
 	return " | ".join(parts)

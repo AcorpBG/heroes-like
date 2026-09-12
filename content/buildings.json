@@ -646,9 +646,9 @@
     },
     {
       "id": "building_shard_yard",
-      "name": "Shard Yard",
+      "name": "Pavise Drill Yard",
       "category": "dwelling",
-      "description": "Mirror-glass drill yards that field the disciplined Shard Guard.",
+      "description": "Mirror-glass drill yards that field the braced Shard Pavise Guard, distinct from the linked-array Shard Wardens.",
       "cost": {
         "gold": 800,
         "ore": 1
@@ -685,7 +685,7 @@
       "id": "building_prism_range",
       "name": "Prism Range",
       "category": "dwelling",
-      "description": "Tiered firing galleries where Prism Adepts learn to bend glare into killing lanes.",
+      "description": "Tiered firing galleries where mobile Prism Harriers learn to disrupt enemy formations; the linked-array Prism Adepts train at the Prism Lens Gallery.",
       "cost": {
         "gold": 1250,
         "wood": 1,
@@ -724,7 +724,7 @@
       "id": "building_duel_circle",
       "name": "Duel Circle",
       "category": "dwelling",
-      "description": "Mirror-marked challenge courts where Duelists train to exploit broken timing and reflected lanes.",
+      "description": "Mirror-marked challenge courts for fast Mirror Skirmishers. The heavier tier-three Mirror Duelists train at the Duelist Mirror Forge.",
       "cost": {
         "gold": 1850,
         "wood": 1,
@@ -1280,7 +1280,7 @@
     },
     {
       "id": "building_sunvault_shard_yard",
-      "name": "Shard Yard",
+      "name": "Warden Array Yard",
       "category": "dwelling",
       "description": "Shard yards field shielded wardens for the first array line.",
       "cost": {
