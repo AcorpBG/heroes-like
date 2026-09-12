@@ -84,7 +84,8 @@ func scenery_controls(shell,out:String)->void:
 		check(texture!=null,"animation art failed to load: "+id)
 		if texture==null:continue
 		var profile:Dictionary=manifest.profiles[manifest.assets[id]]
-		check(profile.strength>0.0 and profile.strength<=.01,"excessive scenery displacement: "+id)
+		check(profile.strength>0.0 and profile.strength<=.04,"excessive scenery displacement: "+id)
+		if int(profile.mode)==1:check(profile.strength>=.02,"canopy motion imperceptible at map zoom: "+id)
 		var slot:=Vector2(index%4,index/4)*cell
 		var extent:float=minf(cell.x-25,cell.y-45)
 		var payload:Dictionary=view._object_painted_sprite_draw_payload(id,texture,slot+cell*.5,extent)
@@ -99,6 +100,12 @@ func scenery_controls(shell,out:String)->void:
 	painter.finish()
 	check(painter.entries.size()==ids.size(),"gallery omitted listed assets")
 	check(painter.batches.size()==ids.size(),"gallery duplicates sprites")
+	for entry in painter.entries:
+		var material:ShaderMaterial=entry.batch.material
+		var source:Vector4=material.get_shader_parameter("source_region")
+		var padding:Vector2=material.get_shader_parameter("padding_uv")
+		var required:float=float(entry.profile.strength)*maxf(entry.rect.size.x/source.z,entry.rect.size.y/source.w)
+		check(padding.x*entry.rect.size.x>=required+1.0 and padding.y*entry.rect.size.y>=required+1.0,"moving painting can clip its draw margin: "+entry.asset_id)
 	if DisplayServer.get_name()!="headless":
 		var images:Array[Image]=[]
 		for index in range(4):

@@ -16654,7 +16654,7 @@
   "currentSliceNotes": "Selected next: combat consequence previews. Pending implementation; requirements are in docs/small-map-playtest-gameplay-priorities.md.",
   "currentSliceStatus": "pending",
   "currentSliceTitle": "Combat Consequences Before Commitment",
-  "currentSliceUpdatedAt": "2026-09-12T18:01:11Z",
+  "currentSliceUpdatedAt": "2026-09-12T18:32:01Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22450,10 +22450,10 @@
       "nonGoals": [
         "No art regeneration, RMG, balance, save or unrelated UI changes"
       ],
-      "updatedAt": "2026-09-12T16:25:14Z",
+      "updatedAt": "2026-09-12T18:18:57Z",
       "startedAt": "2026-09-12T15:42:22Z",
-      "notes": "Fourteen original-raster scenery mappings implemented with anchored canopy sway and localized mill/kiln activity, preserving painter order and fog. Source 437, reduced 401, Linux Large 508 and Windows/Wine 385 checks pass; full repository, official exports/parity and prior-art byte preservation validated. Small/wide frames and normal-speed clips inspected. Cleaned 738454016 bytes; final evidence in docs/overworld-living-scenery.md.",
-      "completedAt": "2026-09-12T16:25:14Z"
+      "notes": "Owner visibility correction complete: roughly 4x canopy range, faster breeze, stronger working-site effects and displacement-sized margins. Source small 445/Large 516, Linux 445, Windows 407 and reduced-motion 423 pass. Official exports/parity pass; full repository scan found only stale reopen timestamp, corrected and tracker/scenery validators pass. Updated clips delivered to Discord; 171973814 bytes of rebuildable frames cleaned. Evidence: docs/overworld-living-scenery.md.",
+      "completedAt": "2026-09-12T18:18:57Z"
     },
     {
       "id": "animation-overworld-readability-20260912",
@@ -112449,7 +112449,7 @@
   ],
   "summary": "Five owner-approved Small-map gameplay improvements scheduled as top-priority pending Phase 6 slices. Combat previews selected next; no gameplay implementation or release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-12T18:01:11Z",
+  "updatedAt": "2026-09-12T18:32:01Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

@@ -42,7 +42,7 @@ Completion requires live behavior, focused regressions, inspected small/wide UI,
 
 id: `animation-overworld-living-scenery-20260912`
 
-Status: completed 2026-09-12, owner-directed Phase 6 child. Fourteen original-raster mappings add anchored canopy sway and localized mill/kiln activity through cached painter-order shader batches. Source 437, reduced-motion 401, Linux packaged Large 508 and Windows/Wine 385 checks pass; full repository validation, exports and package parity pass. Small/wide frames and clips inspected; Large viewport work stays bounded. Preserved art/audio bytes, fog, grounding, gameplay and saves; cleaned 738 MB of task intermediates. Requirements/evidence: `docs/overworld-living-scenery.md`. No art regeneration, RMG or unrelated UI changes; no release-readiness claim.
+Status: completed 2026-09-12, including owner-requested visibility correction. Fourteen original-raster mappings now use roughly four-times canopy range, faster breeze, stronger localized mill/kiln effects and displacement-sized margins. Source small/Large 445/516, Linux 445, Windows 407 and reduced-motion 423 checks pass; official exports/parity pass. Full repository scan reported only a stale reopen timestamp, corrected and tracker/scenery validators rechecked. Small/wide frames and updated clips inspected and delivered to Discord; 172 MB of new frame intermediates cleaned. Requirements/evidence: `docs/overworld-living-scenery.md`. Original art, grounding, fog, gameplay/saves and bounded cache work preserved; no RMG or unrelated UI changes or release-readiness claim.
 
 ### Overworld Animation Readability
 

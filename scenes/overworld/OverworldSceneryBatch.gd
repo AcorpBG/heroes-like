@@ -66,11 +66,13 @@ func paint(texture: Texture2D, rect: Rect2, tint: Color, profile: Dictionary, so
 	shader_material.set_shader_parameter("activity_region", Vector4(area[0], area[1], area[2], area[3]))
 	shader_material.set_shader_parameter("source_region", Vector4(source_region.position.x, source_region.position.y, source_region.size.x, source_region.size.y))
 	# Transparent margin lets canopy tips move without clipping the tight crop.
-	var padding := Vector2(2.0, 2.0) / rect.size
+	var displacement := float(profile.get("strength", 0.0)) * maxf(rect.size.x / source_region.size.x, rect.size.y / source_region.size.y)
+	var margin := ceilf(displacement) + 2.0
+	var padding := Vector2(margin, margin) / rect.size
 	shader_material.set_shader_parameter("padding_uv", padding)
 	shader_material.set_shader_parameter("phase", float(posmod(hash("%s:%d:%d:%d" % [asset_id, tile.x, tile.y, level]), 10007)) / 10007.0 * TAU)
 	batch.material = shader_material
-	batch.commands.append([&"draw_texture_rect", [texture, rect.grow(2.0), false, tint]])
+	batch.commands.append([&"draw_texture_rect", [texture, rect.grow(margin), false, tint]])
 	entries.append({"asset_id": asset_id, "tile": tile, "level": level, "rect": rect, "profile": profile, "batch": batch})
 	_current = null # Following fog, outlines and props stay ABOVE this sprite.
 
