@@ -10,6 +10,7 @@ const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacementRules.gd")
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 const Motion = preload("res://scenes/overworld/OverworldMotion.gd")
+const SceneryBatch = preload("res://scenes/overworld/OverworldSceneryBatch.gd")
 
 const OVERWORLD_ART_MANIFEST_PATH := "res://art/overworld/manifest.json"
 const OVERWORLD_VFX_MANIFEST_PATH := "res://content/overworld_vfx_manifest.json"
@@ -567,6 +568,8 @@ var _encounter_default_asset_id := ""
 var _session_static_layer: Control = null
 var _terrain_ambient_layer: Control = null
 var _state_layer: Control = null
+var _scenery_batches = SceneryBatch.new()
+var _scenery_manifest: Dictionary = {}
 var _dynamic_layer: Control = null
 var _frame_layer: Control = null
 var _draw_canvas_item: CanvasItem = null
@@ -807,11 +810,13 @@ func _ready() -> void:
 	_ensure_render_layers()
 	_load_terrain_grammar()
 	_load_overworld_art_manifest()
+	_scenery_manifest = JSON.parse_string(FileAccess.get_file_as_string("res://content/overworld_scenery_animation.json"))
 	_load_overworld_vfx_manifest()
 	_invalidate_frame_layer("ready")
 	set_process(false)
 
 func _on_settings_changed(_settings: Dictionary) -> void:
+	_scenery_batches.set_motion_enabled(_scenery_motion_enabled())
 	if not _overworld_terrain_ambient_should_animate():
 		_terrain_ambient_phase = TERRAIN_AMBIENT_STATIC_PHASE
 	_invalidate_terrain_ambient_layer("accessibility_settings_changed")
@@ -1604,10 +1609,32 @@ func _current_draw_canvas_item() -> CanvasItem:
 func _actor_color(color: Color) -> Color:
 	return Color(color.r, color.g, color.b, color.a * _turn_actor_alpha)
 
+func _record_scenery_command(method: StringName, arguments: Array) -> bool:
+	if _draw_canvas_item != _state_layer or not _scenery_batches.recording:
+		return false
+	_scenery_batches.record(method, arguments)
+	return true
+
+func _scenery_motion_enabled() -> bool:
+	return not SettingsService.reduced_motion_enabled() and not SettingsService.high_contrast_ui_enabled()
+
+func _draw_living_scenery(asset_id: String, texture: Texture2D, rect: Rect2, tint: Color, tile: Vector2i) -> void:
+	var profile_id := String(_scenery_manifest.get("assets", {}).get(asset_id, ""))
+	if _draw_canvas_item != _state_layer or not _scenery_batches.recording or profile_id.is_empty():
+		_canvas_draw_texture_rect(texture, rect, false, tint)
+		return
+	var profile: Dictionary = _scenery_manifest.get("profiles", {}).get(profile_id, {})
+	var region: Dictionary = _object_texture_visible_regions.get(asset_id, {})
+	_scenery_batches.paint(texture, rect, tint, profile, region.get("normalized_source_rect", Rect2(0, 0, 1, 1)), asset_id, tile, _level, _scenery_motion_enabled())
+
 func _canvas_draw_rect(rect: Rect2, color: Color, filled: bool = true, width: float = -1.0) -> void:
+	if _record_scenery_command(&"draw_rect", [rect, _actor_color(color), filled, width]):
+		return
 	_current_draw_canvas_item().draw_rect(rect, _actor_color(color), filled, width)
 
 func _canvas_draw_line(from: Vector2, to: Vector2, color: Color, width: float = -1.0, antialiased: bool = false) -> void:
+	if _record_scenery_command(&"draw_line", [from, to, _actor_color(color), width, antialiased]):
+		return
 	_current_draw_canvas_item().draw_line(from, to, _actor_color(color), width, antialiased)
 
 func _canvas_draw_circle(
@@ -1618,18 +1645,28 @@ func _canvas_draw_circle(
 	width: float = -1.0,
 	antialiased: bool = false
 ) -> void:
+	if _record_scenery_command(&"draw_circle", [position, radius, _actor_color(color), filled, width, antialiased]):
+		return
 	_current_draw_canvas_item().draw_circle(position, radius, _actor_color(color), filled, width, antialiased)
 
 func _canvas_draw_colored_polygon(points: PackedVector2Array, color: Color) -> void:
+	if _record_scenery_command(&"draw_colored_polygon", [points, _actor_color(color)]):
+		return
 	_current_draw_canvas_item().draw_colored_polygon(points, _actor_color(color))
 
 func _canvas_draw_polygon(points: PackedVector2Array, colors: PackedColorArray) -> void:
+	if _record_scenery_command(&"draw_polygon", [points, colors]):
+		return
 	_current_draw_canvas_item().draw_polygon(points, colors)
 
 func _canvas_draw_textured_polygon(points: PackedVector2Array, colors: PackedColorArray, uvs: PackedVector2Array, texture: Texture2D) -> void:
+	if _record_scenery_command(&"draw_polygon", [points, colors, uvs, texture]):
+		return
 	_current_draw_canvas_item().draw_polygon(points, colors, uvs, texture)
 
 func _canvas_draw_polyline(points: PackedVector2Array, color: Color, width: float = -1.0, antialiased: bool = false) -> void:
+	if _record_scenery_command(&"draw_polyline", [points, _actor_color(color), width, antialiased]):
+		return
 	_current_draw_canvas_item().draw_polyline(points, _actor_color(color), width, antialiased)
 
 func _canvas_draw_texture_rect(
@@ -1639,6 +1676,8 @@ func _canvas_draw_texture_rect(
 	modulate: Color = Color(1.0, 1.0, 1.0, 1.0),
 	transpose: bool = false
 ) -> void:
+	if _record_scenery_command(&"draw_texture_rect", [texture, rect, tile, _actor_color(modulate), transpose]):
+		return
 	_current_draw_canvas_item().draw_texture_rect(texture, rect, tile, _actor_color(modulate), transpose)
 
 func _canvas_draw_texture_rect_region(
@@ -1647,6 +1686,8 @@ func _canvas_draw_texture_rect_region(
 	source_rect: Rect2,
 	modulate: Color = Color(1.0, 1.0, 1.0, 1.0)
 ) -> void:
+	if _record_scenery_command(&"draw_texture_rect_region", [texture, rect, source_rect, _actor_color(modulate), false, true]):
+		return
 	_current_draw_canvas_item().draw_texture_rect_region(texture, rect, source_rect, _actor_color(modulate), false, true)
 
 func _canvas_draw_texture_rect_flipped(
@@ -1657,6 +1698,14 @@ func _canvas_draw_texture_rect_flipped(
 	modulate: Color = Color(1.0, 1.0, 1.0, 1.0),
 	transpose: bool = false
 ) -> void:
+	if _draw_canvas_item == _state_layer and _scenery_batches.recording:
+		if flip_x or flip_y:
+			_record_scenery_command(&"draw_set_transform", [rect.get_center(), 0.0, Vector2(-1.0 if flip_x else 1.0, -1.0 if flip_y else 1.0)])
+			_record_scenery_command(&"draw_texture_rect", [texture, Rect2(rect.size * -0.5, rect.size), false, modulate, transpose])
+			_record_scenery_command(&"draw_set_transform", [Vector2.ZERO, 0.0, Vector2.ONE])
+		else:
+			_record_scenery_command(&"draw_texture_rect", [texture, rect, false, modulate, transpose])
+		return
 	var canvas := _current_draw_canvas_item()
 	if not flip_x and not flip_y:
 		canvas.draw_texture_rect(texture, rect, false, modulate, transpose)
@@ -1972,7 +2021,9 @@ func _draw_terrain_ambient_layer() -> void:
 	_profile_add("terrain_ambient_draws", entries.size())
 
 func _draw_state_layer() -> void:
+	_scenery_batches.begin(_state_layer)
 	if _session == null:
+		_scenery_batches.finish()
 		return
 	var profile_start := _profile_begin("draw_state")
 	var tile_checks := 0
@@ -1995,6 +2046,7 @@ func _draw_state_layer() -> void:
 			_draw_tile_state_overlay(tile, rect)
 			_draw_town_footprint_underlay(tile, rect)
 			_draw_tile_state_icon(tile, rect)
+	_scenery_batches.finish()
 	_draw_canvas_item = previous_target
 	_profile_add("state_tile_checks", tile_checks)
 	_profile_add("hidden_tile_checks", hidden_checks)
@@ -4316,7 +4368,7 @@ func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, rem
 	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
 	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent)))
 	var base_modulate := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
-	_canvas_draw_texture_rect(draw_texture, sprite_rect, false, base_modulate)
+	_draw_living_scenery(asset_id, draw_texture, sprite_rect, base_modulate, tile)
 	return true
 
 func _draw_standalone_map_object_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
@@ -4380,7 +4432,7 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 			OBJECT_INTERACTIVE_SILHOUETTE_MEMORY if remembered else OBJECT_INTERACTIVE_SILHOUETTE_VISIBLE,
 			maxf(OBJECT_INTERACTIVE_SILHOUETTE_MIN_PX, sprite_extent * OBJECT_INTERACTIVE_SILHOUETTE_WIDTH_FACTOR)
 		)
-	_canvas_draw_texture_rect(draw_texture, sprite_rect, false, _mapped_object_sprite_modulate(profile, remembered))
+	_draw_living_scenery(asset_id, draw_texture, sprite_rect, _mapped_object_sprite_modulate(profile, remembered), tile)
 	return true
 
 func _mapped_object_uses_interactive_silhouette(profile: Dictionary) -> bool:

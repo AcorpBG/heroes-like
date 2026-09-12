@@ -22,6 +22,12 @@ Rules:
 
 ## Current Tactical State
 
+### Living Overworld Scenery
+
+id: `animation-overworld-living-scenery-20260912`
+
+Status: completed 2026-09-12, owner-directed Phase 6 child. Fourteen original-raster mappings add anchored canopy sway and localized mill/kiln activity through cached painter-order shader batches. Source 437, reduced-motion 401, Linux packaged Large 508 and Windows/Wine 385 checks pass; full repository validation, exports and package parity pass. Small/wide frames and clips inspected; Large viewport work stays bounded. Preserved art/audio bytes, fog, grounding, gameplay and saves; cleaned 738 MB of task intermediates. Requirements/evidence: `docs/overworld-living-scenery.md`. No art regeneration, RMG or unrelated UI changes; no release-readiness claim.
+
 ### Overworld Animation Readability
 
 id: `animation-overworld-readability-20260912`
