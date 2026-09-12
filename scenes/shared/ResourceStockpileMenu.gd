@@ -1,6 +1,9 @@
 class_name ResourceStockpileMenu
 extends MenuButton
 
+func _make_custom_tooltip(for_text: String) -> Object:
+	return get_node("/root/ContextualHelp").make_hover_card(self, for_text)
+
 const OverworldRules = preload("res://scripts/core/OverworldRules.gd")
 
 const SNAPSHOT_SCHEMA := "resource_stockpile_icon_menu_v1"

@@ -1,6 +1,9 @@
 class_name HeroPortraitView
 extends TextureRect
 
+func _make_custom_tooltip(for_text: String) -> Object:
+	return get_node("/root/ContextualHelp").make_hover_card(self, for_text)
+
 var _hero_id := ""
 var _portrait_path := ""
 

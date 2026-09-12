@@ -1832,7 +1832,9 @@ func _build_hover_tooltip_card(for_text: String) -> PanelContainer:
 	return card
 
 func _make_custom_tooltip(for_text: String) -> Object:
-	return _build_hover_tooltip_card(for_text)
+	if for_text.strip_edges() == "": return null
+	var card := _build_hover_tooltip_card(for_text)
+	return get_node("/root/ContextualHelp").adopt_hover_card(self, card, for_text)
 
 func _draw() -> void:
 	return

@@ -1,4 +1,7 @@
 extends Button
+
+func _make_custom_tooltip(for_text: String) -> Object:
+	return get_node("/root/ContextualHelp").make_hover_card(self, for_text)
 ## Pointer ownership follows painted pixels; keyboard focus retains the full bounds.
 
 var painted_mask: BitMap

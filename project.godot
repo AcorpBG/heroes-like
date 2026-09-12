@@ -35,6 +35,7 @@ MusicAudio="*res://scripts/autoload/MusicAudio.gd"
 AppRouter="*res://scripts/autoload/AppRouter.gd"
 LiveValidationHarness="*res://scripts/autoload/LiveValidationHarness.gd"
 UiAccessibility="*res://scripts/autoload/UiAccessibility.gd"
+ContextualHelp="*res://scripts/autoload/ContextualHelp.gd"
 
 [debug]
 file_logging/enable_file_logging=true

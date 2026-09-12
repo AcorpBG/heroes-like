@@ -1,5 +1,8 @@
 extends Control
 
+func _make_custom_tooltip(for_text: String) -> Object:
+	return get_node("/root/ContextualHelp").make_hover_card(self, for_text)
+
 const BattleMessageLog = preload("res://scenes/battle/BattleMessageLog.gd")
 var _message_log: PanelContainer
 
@@ -169,6 +172,7 @@ var _last_refresh_intent_forecast: Dictionary = {}
 var _last_refresh_intent_forecast_battle_hash := 0
 
 func _ready() -> void:
+	_banner_panel.set_meta("contextual_help_exclusion", true)
 	_message_log = BattleMessageLog.new()
 	_message_log.name = "BattleMessageLog"
 	var content := $ContentMargin/Content
@@ -3915,6 +3919,7 @@ func _apply_responsive_layout() -> void:
 func _on_tactical_details_pressed() -> void:
 	if _compact_layout_active:
 		return
+	get_node("/root/ContextualHelp").dismiss()
 	_tactical_details_expanded = not _tactical_details_expanded
 	_apply_responsive_layout()
 	_tactical_details_button.grab_focus()

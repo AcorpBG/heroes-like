@@ -99,6 +99,7 @@ Expected ownership boundaries:
 - Strategic AI and enemy turns: `EnemyTurnRules.gd`, `EnemyAdventureRules.gd`.
 - Difficulty: `DifficultyRules.gd`.
 - Save/load plumbing: `SessionStateStore.gd`, `SaveService.gd`.
+- Contextual UI help: `ContextualHelp.gd` owns viewport-local, non-interactive hover cards and explicit modal inspection; scene controls retain description generation. Hover and inspection never commit gameplay orders.
 
 If a slice changes ownership boundaries, update this document only when the decision is strategic and durable.
 
