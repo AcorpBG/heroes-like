@@ -375,9 +375,8 @@ static func describe_defense(session: SessionStateStoreScript.SessionData) -> St
 		return headline
 
 	var stationed: Array = HeroCommandRulesScript.stationed_heroes(session, town)
-	var active_hero_value: Variant = session.overworld.get("hero", {})
-	var active_hero: Dictionary = active_hero_value if active_hero_value is Dictionary else {}
-	var active_hero_id := String(session.overworld.get("active_hero_id", ""))
+	var active_hero: Dictionary = HeroCommandRulesScript.town_defending_hero(session, town)
+	var active_hero_id := String(active_hero.get("id", ""))
 	var reserve_lines := []
 	for hero in stationed:
 		if not (hero is Dictionary):
@@ -388,7 +387,8 @@ static func describe_defense(session: SessionStateStoreScript.SessionData) -> St
 
 	var lines := [
 		headline,
-		"- %s | %d companies | %d total troops" % [
+		HeroCommandRulesScript.describe_town_defense_force(session, town),
+		"- Garrison posture: %s | %d companies | %d garrison troops" % [
 			_defense_grade(town),
 			_garrison_company_count(town),
 			_garrison_headcount(town),
@@ -405,7 +405,7 @@ static func describe_defense(session: SessionStateStoreScript.SessionData) -> St
 	if bool(recovery.get("active", false)):
 		lines.append("- Recovery %s" % String(recovery.get("summary", "")))
 	if not active_hero.is_empty():
-		lines.append("- Active defender %s" % _hero_command_line(active_hero))
+		lines.append("- Defending commander %s" % _hero_command_line(active_hero))
 	if reserve_lines.is_empty():
 		lines.append("- No reserve commander is stationed. The town captain will lead if the field hero departs.")
 	else:

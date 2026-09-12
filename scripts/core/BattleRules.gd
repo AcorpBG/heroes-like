@@ -980,34 +980,15 @@ static func _player_setup_for_battle(
 		}
 
 	var town = _find_town_by_placement(session, String(battle_context.get("town_placement_id", ""))).get("town", {})
-	var defending_hero = _town_defending_hero(session, town, String(battle_context.get("defending_hero_id", "")))
+	var defense_force := HeroCommandRulesScript.town_defense_force(session, town, String(battle_context.get("defending_hero_id", "")))
+	var defending_hero: Dictionary = defense_force.hero
 	var commander_state = defending_hero if not defending_hero.is_empty() else _town_captain_state(town)
 	var commander_source = {
 		"type": "town_hero" if not defending_hero.is_empty() else "town_captain",
 		"hero_id": String(defending_hero.get("id", "")),
 		"town_placement_id": String(town.get("placement_id", "")),
 	}
-	var player_stacks = []
-	if not defending_hero.is_empty():
-		player_stacks.append_array(
-			_army_stack_descriptors(
-				defending_hero.get("army", {}),
-				{
-					"source_type": "hero_army",
-					"hero_id": String(defending_hero.get("id", "")),
-					"town_placement_id": String(town.get("placement_id", "")),
-				}
-			)
-		)
-	player_stacks.append_array(
-		_army_stack_descriptors(
-			{"stacks": town.get("garrison", [])},
-			{
-				"source_type": "town_garrison",
-				"town_placement_id": String(town.get("placement_id", "")),
-			}
-		)
-	)
+	var player_stacks: Array = defense_force.stacks
 	return {
 		"commander_state": commander_state,
 		"commander_source": commander_source,
@@ -1069,30 +1050,7 @@ static func _town_defending_hero(
 	town: Dictionary,
 	preferred_hero_id: String = ""
 ) -> Dictionary:
-	if session == null or town.is_empty():
-		return {}
-	var candidates = []
-	for hero_value in session.overworld.get("player_heroes", []):
-		if not (hero_value is Dictionary):
-			continue
-		if int(hero_value.get("position", {}).get("x", -1)) != int(town.get("x", -2)):
-			continue
-		if int(hero_value.get("position", {}).get("y", -1)) != int(town.get("y", -2)):
-			continue
-		candidates.append(hero_value)
-	if candidates.is_empty():
-		return {}
-	if preferred_hero_id != "":
-		for hero in candidates:
-			if String(hero.get("id", "")) == preferred_hero_id:
-				return hero
-	for hero in candidates:
-		if String(hero.get("id", "")) == String(session.overworld.get("active_hero_id", "")):
-			return hero
-	for hero in candidates:
-		if bool(hero.get("is_primary", false)):
-			return hero
-	return candidates[0]
+	return HeroCommandRulesScript.town_defending_hero(session, town, preferred_hero_id)
 
 static func _town_captain_state(town: Dictionary) -> Dictionary:
 	var name = "%s Watch Captain" % _town_name(town)

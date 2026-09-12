@@ -439,6 +439,67 @@ static func stationed_heroes(session: SessionStateStoreScript.SessionData, town:
 			stationed.append(hero)
 	return stationed
 
+static func town_defending_hero(session: SessionStateStoreScript.SessionData, town: Dictionary, preferred_hero_id: String = "") -> Dictionary:
+	var candidates := stationed_heroes(session, town)
+	for identity in [preferred_hero_id, String(session.overworld.get("active_hero_id", "")) if session != null else ""]:
+		if identity == "": continue
+		for hero in candidates:
+			if String(hero.get("id", "")) == identity: return hero
+	for hero in candidates:
+		if bool(hero.get("is_primary", false)): return hero
+	return candidates[0] if not candidates.is_empty() else {}
+
+static func town_defense_force(session: SessionStateStoreScript.SessionData, town: Dictionary, preferred_hero_id: String = "") -> Dictionary:
+	# A town fields its garrison and ONE eligible visiting hero, not the remotely
+	# selected army or every reserve commander. Battle setup consumes these rows.
+	var hero := town_defending_hero(session, town, preferred_hero_id)
+	var stacks := []
+	var garrison_troops := 0
+	var garrison_stacks := 0
+	var hero_troops := 0
+	var hero_stacks := 0
+	for source_type in ["hero_army", "town_garrison"]:
+		var rows: Array = hero.get("army", {}).get("stacks", []) if source_type == "hero_army" else town.get("garrison", [])
+		for row in rows:
+			if not row is Dictionary: continue
+			var count := maxi(0, int(row.get("count", 0)))
+			var unit_id := String(row.get("unit_id", ""))
+			if count == 0 or unit_id == "": continue
+			var source := {"source_type": source_type, "town_placement_id": String(town.get("placement_id", ""))}
+			if source_type == "hero_army": source["hero_id"] = String(hero.get("id", ""))
+			var descriptor := {"unit_id": unit_id, "count": count, "source": source}
+			var slot := int(row.get("slot_index", -1))
+			if slot >= 0 and slot < ARMY_SLOT_COUNT: descriptor["slot_index"] = slot
+			stacks.append(descriptor)
+			if source_type == "hero_army":
+				hero_troops += count
+				hero_stacks += 1
+			else:
+				garrison_troops += count
+				garrison_stacks += 1
+	return {"hero": hero, "stacks": stacks, "troops": garrison_troops + hero_troops,
+		"stack_count": stacks.size(), "garrison_troops": garrison_troops, "garrison_stacks": garrison_stacks,
+		"hero_troops": hero_troops, "hero_stacks": hero_stacks}
+
+static func describe_town_defense_force(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
+	var force := town_defense_force(session, town)
+	var hero: Dictionary = force.hero
+	return "Defenders: %d troops / %d stacks\nGarrison: %d troops / %d stacks%s\n%s" % [
+		force.troops, force.stack_count, force.garrison_troops, force.garrison_stacks,
+		" (empty)" if int(force.garrison_troops) == 0 else "",
+		"Visiting defender: %s — %d troops / %d stacks" % [String(hero.get("name", hero.get("id", "Hero"))), force.hero_troops, force.hero_stacks]
+		if not hero.is_empty() else "No visiting defender. Remote heroes do not defend this town."]
+
+static func empty_owned_towns(session: SessionStateStoreScript.SessionData) -> Array:
+	# Own troops are known without consulting hidden enemy positions/AI plans.
+	var result := []
+	if session == null: return result
+	for town in session.overworld.get("towns", []):
+		if town is Dictionary and String(town.get("owner", "")) == "player" and int(town_defense_force(session, town).troops) == 0:
+			result.append({"placement_id": String(town.get("placement_id", "")),
+				"name": String(ContentService.get_town(String(town.get("town_id", ""))).get("name", town.get("placement_id", "Town")))})
+	return result
+
 static func describe_tavern(session: SessionStateStoreScript.SessionData, town: Dictionary) -> String:
 	var hall_name := String(ContentService.get_building(HALL_BUILDING_ID).get("name", "Wayfarers Hall"))
 	var lines := [hall_name]

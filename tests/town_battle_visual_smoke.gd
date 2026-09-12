@@ -889,7 +889,7 @@ func _assert_town_capture_frontier_status_contract(live_board: Node, live_sessio
 			"%dd | Retake" % int(expected_combined_occupation.get("days_to_clear", 0)),
 			int(expected_combined_occupation.get("days_to_clear", 0)),
 			"faction_mireclaw"
-		) or int(combined.get("plaque_count", 0)) != 4 or not bool(combined.get("contained", false)):
+		) or int(combined.get("plaque_count", 0)) != 6 or not bool(combined.get("contained", false)):
 			push_error("Town smoke: combined captured-town plaque is not exact or contained at %s: %s." % [stage_size, combined])
 			fixture.queue_free()
 			return false
@@ -968,8 +968,8 @@ func _front_plaque_exact(
 ) -> bool:
 	var plaques: Array = summary.get("plaques", []) if summary.get("plaques", []) is Array else []
 	var plaque: Dictionary = summary.get("front_plaque", {}) if summary.get("front_plaque", {}) is Dictionary else {}
-	return plaques.size() == 4 \
-		and plaque == plaques[2] \
+	return plaques.size() == 6 \
+		and plaque == plaques[4] \
 		and String(plaque.get("kind", "")) == expected_kind \
 		and String(plaque.get("title", "")) == expected_title \
 		and String(plaque.get("value", "")) == expected_value \

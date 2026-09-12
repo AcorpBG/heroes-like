@@ -33562,9 +33562,14 @@ def validate_town_capture_frontier_first_view_status(errors: list[str]) -> None:
         plaque_body = plaque_match.group("body")
         plaque_tokens = (
             "var readiness := OverworldRulesScript.town_battle_readiness(_town, _session)",
+            "var force := HeroCommandRulesScript.town_defense_force(_session, _town)",
             "var spell_tier := TownRulesScript.current_spell_tier(_town)",
             "var pressure := OverworldRulesScript.town_pressure_output(_town, _session)",
-            '"title": "Guard"',
+            '"title": "Defending troops"',
+            '"value": "%d / %d stacks" % [force.troops, force.stack_count]',
+            '"title": "Garrison troops"',
+            '"title": "Readiness"',
+            '"value": "%d • not troops" % readiness',
             '"title": "Spell"',
             "_contextual_front_plaque(pressure)",
             '"title": "Routes"',
@@ -33573,7 +33578,7 @@ def validate_town_capture_frontier_first_view_status(errors: list[str]) -> None:
         ensure(
             min(plaque_positions) >= 0 and plaque_positions == sorted(plaque_positions),
             errors,
-            "Town status plaques must retain exact Guard/Spell/contextual-Front/Routes order from live rule state",
+            "Town status plaques must separate defending force, garrison and readiness before Spell/contextual-Front/Routes from live rule state",
         )
         ensure(plaque_body.count("_contextual_front_plaque(pressure)") == 1, errors, "Town status plaques must own exactly one contextual Front slot")
 
@@ -33618,7 +33623,7 @@ def validate_town_capture_frontier_first_view_status(errors: list[str]) -> None:
         for required_token in (
             "var plaques := _status_plaque_payloads()",
             "var rects := _status_plaque_rects(scene_rect, plaques.size())",
-            '"front_plaque": plaques[2].duplicate(true) if plaques.size() > 2 else {}',
+            '"front_plaque": _contextual_front_plaque(OverworldRulesScript.town_pressure_output(_town, _session))',
             '"occupation": _occupation.duplicate(true)',
             '"front": _front.duplicate(true)',
             '"contained": contained',

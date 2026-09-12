@@ -19,7 +19,7 @@
       "title": "Actual Town Garrisons and Exposed-town Warnings",
       "priority": "top",
       "priorityOrder": 3,
-      "status": "pending"
+      "status": "completed"
     },
     {
       "id": "ux-consistent-targeting-commit-20260912",
@@ -16647,14 +16647,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Combat consequence previews and bounded contextual tooltips are completed with source and both-platform acceptance. Tooltip source small/wide and Linux package pass 48 checks each; Windows passes 40 headless checks. Next: actual town garrisons and exposed-town warnings. Three later slices and the fresh Small match remain pending. No release-ready claim.",
+  "currentNotes": "Combat consequences, bounded tooltips and town defense clarity are completed with source and both-platform acceptance. Town defense source small/wide pass 66 each, Linux 70 and Windows Wine 69; native Small assault, existing end-turn/frontier, full repository and export/parity checks pass. Next: consistent targeting and commitment. Two slices and the fresh Small match remain pending; no release-ready claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-bounded-contextual-tooltips-20260912",
-  "currentSliceId": "ux-bounded-contextual-tooltips-20260912",
-  "currentSliceNotes": "Implemented bounded owned hover cards and explicit modal-aware inspection. Final source small/wide and Linux package pass 48 checks each; Windows package passes 40 headless checks. Official exports, 5609-member parity, 1397 combat integration checks and full repository validation pass. Screenshots inspected; 2820782844 bytes of superseded exports cleaned. Three later priorities and the fresh Small match remain pending.",
+  "currentSlice": "ux-accurate-town-garrison-20260912",
+  "currentSliceId": "ux-accurate-town-garrison-20260912",
+  "currentSliceNotes": "Shared entrance/level-aware defender force now feeds actual town battles and troop/garrison/readiness UI; empty towns use one actionable end-turn confirmation. Source small/wide 66 checks each, Linux release 70, Windows Wine release 69, native Small start/assault, existing end-turn and frontier contracts, full repository scan, official exports and 5609-member parity pass. Captures inspected; 3180471723 bytes recovered by bounded cleanup/compression. Two later priorities and fresh Small-match acceptance remain pending.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Bounded Contextual Tooltips",
-  "currentSliceUpdatedAt": "2026-09-12T20:01:33Z",
+  "currentSliceTitle": "Actual Town Garrisons and Exposed-town Warnings",
+  "currentSliceUpdatedAt": "2026-09-12T20:35:02Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22336,7 +22336,7 @@
       "title": "Actual Town Garrisons and Exposed-town Warnings",
       "phase": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
-      "status": "pending",
+      "status": "completed",
       "priority": "top",
       "priorityOrder": 3,
       "source": "PLAN.md",
@@ -22357,8 +22357,10 @@
         "No balance tuning from one loss, native RMG generation changes, or documentation-only completion"
       ],
       "createdAt": "2026-09-12T18:01:11Z",
-      "updatedAt": "2026-09-12T18:01:11Z",
-      "notes": "Planning recorded only. Runtime implementation and acceptance validation have not started."
+      "updatedAt": "2026-09-12T20:35:02Z",
+      "notes": "Shared entrance/level-aware defender force now feeds actual town battles and troop/garrison/readiness UI; empty towns use one actionable end-turn confirmation. Source small/wide 66 checks each, Linux release 70, Windows Wine release 69, native Small start/assault, existing end-turn and frontier contracts, full repository scan, official exports and 5609-member parity pass. Captures inspected; 3180471723 bytes recovered by bounded cleanup/compression. Two later priorities and fresh Small-match acceptance remain pending.",
+      "startedAt": "2026-09-12T20:04:30Z",
+      "completedAt": "2026-09-12T20:35:02Z"
     },
     {
       "id": "ux-consistent-targeting-commit-20260912",
@@ -112451,9 +112453,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Five owner-approved Small-map gameplay improvements remain the top-priority Phase 6 goal. Combat previews and bounded tooltips are implemented and validated; accurate town garrisons are next, with three slices and fresh Small-map acceptance remaining. No release-readiness claim.",
+  "summary": "Five owner-approved Small-map gameplay improvements remain the top-priority Phase 6 goal. Combat previews, bounded tooltips and town defense clarity are completed; consistent targeting/commit is next. Two slices and fresh Small-map acceptance remain pending. No release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-12T20:01:33Z",
+  "updatedAt": "2026-09-12T20:35:02Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
