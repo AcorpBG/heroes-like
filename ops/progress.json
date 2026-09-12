@@ -16611,14 +16611,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Living scenery completed: fourteen original-raster mappings, anchored tree motion and localized mill/kiln activity. Source 437, reduced 401, Linux Large 508, Windows/Wine 385 checks, full repository and official exports/parity pass. Original packaged art/audio bytes unchanged; 738454016 bytes of task intermediates cleaned. Evidence: docs/overworld-living-scenery.md. No next slice selected.",
+  "currentNotes": "Living scenery visibility correction completed: stronger canopy/site motion and adaptive margins. Source/package/accessibility, official exports/parity pass. Full repository scan found only stale reopen timestamp; corrected tracker/scenery validators pass. Updated clips delivered to Discord; 172 MB of rebuildable frame intermediates cleaned. See docs/overworld-living-scenery.md.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "animation-overworld-living-scenery-20260912",
   "currentSliceId": "animation-overworld-living-scenery-20260912",
-  "currentSliceNotes": "Fourteen original-raster scenery mappings implemented with anchored canopy sway and localized mill/kiln activity, preserving painter order and fog. Source 437, reduced 401, Linux Large 508 and Windows/Wine 385 checks pass; full repository, official exports/parity and prior-art byte preservation validated. Small/wide frames and normal-speed clips inspected. Cleaned 738454016 bytes; final evidence in docs/overworld-living-scenery.md.",
+  "currentSliceNotes": "Owner visibility correction complete: roughly 4x canopy range, faster breeze, stronger working-site effects and displacement-sized margins. Source small 445/Large 516, Linux 445, Windows 407 and reduced-motion 423 pass. Official exports/parity pass; full repository scan found only stale reopen timestamp, corrected and tracker/scenery validators pass. Updated clips delivered to Discord; 171973814 bytes of rebuildable frames cleaned. Evidence: docs/overworld-living-scenery.md.",
   "currentSliceStatus": "completed",
   "currentSliceTitle": "Living Overworld Scenery",
-  "currentSliceUpdatedAt": "2026-09-12T16:25:14Z",
+  "currentSliceUpdatedAt": "2026-09-12T18:18:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22230,7 +22230,7 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Living-scenery animation slice completed. Await the next owner-directed task; preserve original art, fog, gameplay/saves, native RMG, caches and unrelated artifacts. No whole-game animation or release-readiness claim.",
+  "nextActionGuardrailNote": "Living-scenery visibility correction complete. Await next owner task; preserve original art, grounding, fog, gameplay/saves, native RMG, caches and unrelated artifacts. No release-readiness claim.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
@@ -22269,10 +22269,10 @@
       "nonGoals": [
         "No art regeneration, RMG, balance, save or unrelated UI changes"
       ],
-      "updatedAt": "2026-09-12T16:25:14Z",
+      "updatedAt": "2026-09-12T18:18:57Z",
       "startedAt": "2026-09-12T15:42:22Z",
-      "notes": "Fourteen original-raster scenery mappings implemented with anchored canopy sway and localized mill/kiln activity, preserving painter order and fog. Source 437, reduced 401, Linux Large 508 and Windows/Wine 385 checks pass; full repository, official exports/parity and prior-art byte preservation validated. Small/wide frames and normal-speed clips inspected. Cleaned 738454016 bytes; final evidence in docs/overworld-living-scenery.md.",
-      "completedAt": "2026-09-12T16:25:14Z"
+      "notes": "Owner visibility correction complete: roughly 4x canopy range, faster breeze, stronger working-site effects and displacement-sized margins. Source small 445/Large 516, Linux 445, Windows 407 and reduced-motion 423 pass. Official exports/parity pass; full repository scan found only stale reopen timestamp, corrected and tracker/scenery validators pass. Updated clips delivered to Discord; 171973814 bytes of rebuildable frames cleaned. Evidence: docs/overworld-living-scenery.md.",
+      "completedAt": "2026-09-12T18:18:57Z"
     },
     {
       "id": "animation-overworld-readability-20260912",
@@ -112266,9 +112266,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Living overworld scenery completed: original canopy sway and localized mill/kiln activity with cached painter-order shader rendering. Source 437, reduced 401, Linux Large 508 and Windows/Wine 385 checks, full repository, official exports/parity and original-art byte preservation pass. Frames/clips inspected; 738 MB cleaned. No release-readiness claim.",
+  "summary": "Living overworld scenery visibility correction complete: stronger original-raster tree/site motion and adaptive margins. Source small/Large 445/516, Linux 445, Windows 407, reduced 423, official exports/parity pass. Full repository scan found only stale reopen timestamp, corrected with tracker/scenery revalidation. Clips delivered; 172 MB of new frame intermediates cleaned. No release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-12T16:25:14Z",
+  "updatedAt": "2026-09-12T18:18:57Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
