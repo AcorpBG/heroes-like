@@ -28,20 +28,20 @@ void fragment() {
 	if (motion_enabled) {
 		if (mode == 1 || mode == 2) {
 			float canopy = 1.0 - smoothstep(upper, anchor, original.y);
-			float breeze = sin(t * 0.85) * 0.72 + sin(t * 1.43 + original.y * 4.0) * 0.28;
-			uv.x -= strength * canopy * canopy * breeze / source_region.z;
+			float breeze = sin(t * 1.45) * 0.72 + sin(t * 2.31 + original.y * 4.0) * 0.28;
+			uv.x -= strength * canopy * breeze / source_region.z;
 		}
 		vec2 area_uv = (original - activity_region.xy) / activity_region.zw;
 		float area = step(0.0, area_uv.x) * step(0.0, area_uv.y) * step(area_uv.x, 1.0) * step(area_uv.y, 1.0);
 		if (mode == 2) {
 			// Only existing orange fire pixels respond; masonry stays rigid/dark.
 			float flame = smoothstep(0.10, 0.36, base.r - base.b) * smoothstep(0.08, 0.30, base.r - base.g);
-			brightness += area * flame * (0.18 * sin(t * 3.1) + 0.08 * sin(t * 7.3));
+			brightness += area * flame * (0.45 * sin(t * 3.1) + 0.20 * sin(t * 7.3));
 		} else if (mode == 3) {
 			// Flow stays inside painted blue mill water, never the wooden machine.
 			float water = smoothstep(0.08, 0.25, min(base.b, base.g) - base.r) * area;
-			uv.y += water * strength * sin(t * 2.2 - original.y * 50.0) / source_region.w;
-			brightness += water * 0.16 * sin(t * 2.2 - original.y * 50.0);
+			uv.y += water * strength * sin(t * 3.8 - original.y * 50.0) / source_region.w;
+			brightness += water * 0.38 * sin(t * 3.8 - original.y * 50.0);
 		}
 	}
 	vec4 pixel = texture(TEXTURE, texture_region.xy + clamp(uv, half_pixel, vec2(1.0) - half_pixel) * texture_region.zw);

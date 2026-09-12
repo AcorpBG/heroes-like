@@ -84756,8 +84756,10 @@ def validate_overworld_scenery_animation(errors: list[str]) -> None:
             errors.append(f"Unresolved living-scenery art/profile: {asset_id}/{profile_id}")
             continue
         profile = spec["profiles"][profile_id]
-        if not 0 < profile.get("strength", 0) <= 0.01 or profile.get("mode") not in (1, 2, 3):
+        if not 0 < profile.get("strength", 0) <= 0.04 or profile.get("mode") not in (1, 2, 3):
             errors.append(f"Invalid scenery motion profile: {profile_id}")
+        if profile.get("mode") == 1 and profile.get("strength", 0) < 0.02:
+            errors.append(f"Imperceptible normal-zoom canopy motion: {profile_id}")
         if not (ROOT / art[asset_id]["path"].removeprefix("res://")).is_file():
             errors.append(f"Missing original scenery raster: {asset_id}")
         if profile["mode"] in (1, 2) and not 0 <= profile.get("upper", -1) < profile.get("anchor", -1) < 0.8:
