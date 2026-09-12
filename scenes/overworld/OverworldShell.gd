@@ -129,6 +129,7 @@ const KEYBOARD_HERO_MOVE_DELTAS := {
 @onready var _spell_cast_input_blocker: Control = %SpellCastInputBlocker
 @onready var _artifact_acquired_input_blocker: Control = %ArtifactAcquiredInputBlocker
 @onready var _end_turn_confirmation_dialog: ConfirmationDialog = $EndTurnConfirmationDialog
+var _empty_town_inspect_button: Button
 @onready var _manual_save_overwrite_dialog = $ManualSaveOverwriteDialog
 @onready var _active_play_settings_dialog = %ActivePlaySettingsDialog
 
@@ -1209,6 +1210,9 @@ func _map_visible_bounds() -> Rect2i:
 
 func _configure_end_turn_confirmation() -> void:
 	_end_turn_confirmation_dialog.get_cancel_button().text = "Keep Waiting"
+	_empty_town_inspect_button = _end_turn_confirmation_dialog.add_button("Inspect empty town", false, "inspect_empty_town")
+	_empty_town_inspect_button.hide()
+	_end_turn_confirmation_dialog.custom_action.connect(_on_end_turn_custom_action)
 	var cancel_shortcut := Shortcut.new()
 	var cancel_action := InputEventAction.new()
 	cancel_action.action = "ui_cancel"
@@ -1290,6 +1294,7 @@ func _request_end_turn(show_dialog: bool = true) -> Dictionary:
 		_last_end_turn_confirmation_result = direct_result.duplicate(true)
 		return direct_result
 	_pending_end_turn_confirmation = {
+		"empty_towns": warning.get("empty_towns", []).duplicate(true),
 		"session_ref": _session,
 		"session_id": _session.session_id,
 		"day": _session.day,
@@ -1304,12 +1309,14 @@ func _request_end_turn(show_dialog: bool = true) -> Dictionary:
 	_end_turn_confirmation_dialog.dialog_text = String(copy.get("text", "End the current day?"))
 	_end_turn_confirmation_dialog.get_ok_button().text = "End Turn"
 	_end_turn_confirmation_dialog.get_cancel_button().text = "Keep Waiting"
+	_empty_town_inspect_button.visible = not warning.get("empty_towns", []).is_empty()
 	var dialog_label := _end_turn_confirmation_dialog.get_label()
 	dialog_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	dialog_label.custom_minimum_size = Vector2(680.0, 0.0)
 	if show_dialog:
 		_on_overworld_interaction_owner_opened()
 		_end_turn_confirmation_dialog.popup_centered(Vector2i(760, 300))
+		_compact_end_turn_confirmation.call_deferred()
 		_focus_end_turn_cancel_after_popup()
 	var request_result := validation_end_turn_confirmation_snapshot(warning)
 	request_result["ok"] = true
@@ -1317,6 +1324,13 @@ func _request_end_turn(show_dialog: bool = true) -> Dictionary:
 	request_result["committed"] = false
 	_last_end_turn_confirmation_result = request_result.duplicate(true)
 	return request_result
+
+func _compact_end_turn_confirmation() -> void:
+	# Autowrap minimum height is initially measured before the popup has width.
+	# Refit after that layout pass instead of retaining a tall mostly empty box.
+	if not _end_turn_confirmation_dialog.visible: return
+	_end_turn_confirmation_dialog.size = Vector2i(760, 300)
+	_end_turn_confirmation_dialog.position = (get_tree().root.size - _end_turn_confirmation_dialog.size) / 2
 
 func _current_end_turn_warning() -> Dictionary:
 	# Core forecast descriptions normalize their cached forecast state. Keep warning
@@ -1358,7 +1372,10 @@ func _current_end_turn_warning() -> Dictionary:
 			reasons.append("primary_order_available")
 	if risk_unconsumed:
 		reasons.append("command_risk_unconsumed")
+	var empty_towns := HeroCommandRules.empty_owned_towns(_session)
+	if not empty_towns.is_empty(): reasons.append("empty_town_defense")
 	var signature_payload := {
+		"empty_towns": empty_towns,
 		"button_text": String(surface.get("button_text", "")),
 		"confirmation": String(surface.get("confirmation", "")),
 		"movement_line": String(surface.get("movement_line", "")),
@@ -1369,6 +1386,7 @@ func _current_end_turn_warning() -> Dictionary:
 		"risk_unconsumed": risk_unconsumed,
 	}
 	var warning := {
+		"empty_towns": empty_towns,
 		"requires_confirmation": not reasons.is_empty(),
 		"reasons": reasons,
 		"signature": JSON.stringify(signature_payload),
@@ -1397,6 +1415,12 @@ func _end_turn_confirmation_copy(warning: Dictionary) -> Dictionary:
 		String(surface.get("confirmation", "")),
 		String(surface.get("spend_check", "")),
 	]
+	var empty_towns: Array = warning.get("empty_towns", [])
+	if not empty_towns.is_empty():
+		var names: Array[String] = []
+		for town in empty_towns.slice(0, 3): names.append(String(town.name))
+		var extra := " (+%d more)" % (empty_towns.size() - 3) if empty_towns.size() > 3 else ""
+		lines.push_front("No defending troops: %s%s. Readiness is not an army. Inspect a town to arrange a garrison or visiting defender, or End Turn to proceed. This is not a prediction of an attack." % [", ".join(names), extra])
 	if bool(warning.get("risk_unconsumed", false)):
 		var risk_data_value: Variant = risk_surface.get("forecast_data", {})
 		var risk_data: Dictionary = risk_data_value if risk_data_value is Dictionary else {}
@@ -1416,7 +1440,20 @@ func _end_turn_confirmation_copy(warning: Dictionary) -> Dictionary:
 func _on_end_turn_confirmation_canceled() -> void:
 	_cancel_end_turn_confirmation()
 
-func _cancel_end_turn_confirmation() -> Dictionary:
+func _on_end_turn_custom_action(action: StringName) -> void:
+	if action != "inspect_empty_town" or _pending_end_turn_confirmation.is_empty(): return
+	if not _stale_end_turn_request_fields(_pending_end_turn_confirmation).is_empty():
+		_cancel_end_turn_confirmation()
+		return
+	var empty_towns := HeroCommandRules.empty_owned_towns(_session)
+	_cancel_end_turn_confirmation(false)
+	if empty_towns.is_empty(): return
+	var placement_id := String(empty_towns[0].placement_id)
+	_on_town_roster_pressed(placement_id)
+	if String(_town_at(_selected_tile.x, _selected_tile.y).get("placement_id", "")) == placement_id:
+		_visit_selected_town()
+
+func _cancel_end_turn_confirmation(restore_focus: bool = true) -> Dictionary:
 	if _pending_end_turn_confirmation.is_empty():
 		return {
 			"ok": false,
@@ -1434,7 +1471,7 @@ func _cancel_end_turn_confirmation() -> Dictionary:
 		"committed": false,
 	}
 	_last_end_turn_confirmation_result = result.duplicate(true)
-	_end_turn_button.call_deferred("grab_focus")
+	if restore_focus: _end_turn_button.call_deferred("grab_focus")
 	return result
 
 func _on_end_turn_confirmation_confirmed() -> Dictionary:
@@ -4792,7 +4829,7 @@ func _rebuild_town_actions() -> void:
 		button.text = ""
 		button.toggle_mode = true
 		button.button_pressed = is_selected
-		button.tooltip_text = "%s at %d,%d. Click to select and center; double-click to open town." % [town_name, int(town.get("x", 0)), int(town.get("y", 0))]
+		button.tooltip_text = "%s\n%s\nAt %d,%d. Click to select and center; double-click to open town." % [town_name, HeroCommandRules.describe_town_defense_force(_session, town), int(entrance.x), int(entrance.y)]
 		button.accessibility_name = "%s town %s" % ["Selected" if is_selected else "Select", town_name]
 		button.accessibility_description = "Select this owned town and center its entry tile on the map. Double-click to open town, or use the Enter Town action after selecting."
 		button.focus_mode = Control.FOCUS_ALL
@@ -12973,6 +13010,7 @@ func _style_rail_action_button(button: Button, role: String = "secondary", heigh
 
 func _apply_visual_theme() -> void:
 	FrontierVisualKit.apply_confirmation_dialog(_end_turn_confirmation_dialog, "primary")
+	FrontierVisualKit.apply_button(_empty_town_inspect_button, "secondary", 180.0, 34.0, 14)
 	FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")
 	FrontierVisualKit.apply_panel(_shell_panel, "earth", 24)
 	FrontierVisualKit.apply_panel(_top_strip_panel, "banner", 20)

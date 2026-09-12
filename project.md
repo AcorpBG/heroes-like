@@ -91,7 +91,7 @@ Expected ownership boundaries:
 - Battle state, initiative, stack actions, spells/status, exits, and post-battle sync: `BattleRules.gd`.
 - Tactical enemy decisions: `BattleAiRules.gd`.
 - Town construction, recruitment, study, garrison, market, defense, and town summaries: `TownRules.gd`.
-- Heroes, command, roster, transfer, recruitment, progression, and carryover-safe hero state: `HeroCommandRules.gd`, `HeroProgressionRules.gd`.
+- Heroes, command, roster, transfer, town-defender eligibility/force assembly, recruitment, progression, and carryover-safe hero state: `HeroCommandRules.gd`, `HeroProgressionRules.gd`.
 - Artifacts: `ArtifactRules.gd`.
 - Spells: `SpellRules.gd`.
 - Objectives, scripts, outcome shaping: `ScenarioRules.gd`, `ScenarioScriptRules.gd`.
