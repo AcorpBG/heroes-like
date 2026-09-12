@@ -27411,7 +27411,7 @@ def validate_overworld_fog(errors: list[str]) -> None:
     for forbidden_token in ("_canvas_draw_circle", "tile.x", "tile.y", "for layer", "rect.grow(", "_terrain_at(", "_road_tile_payload(", "_draw_tile_icon(", "create_timer", "create_tween", "RandomNumberGenerator"):
         ensure(forbidden_token not in shroud_block, errors, f"Overworld fog shroud must not inspect hidden identity, animate, or use unstable randomness: {forbidden_token}")
     for required_token in (
-        "draw_texture_rect_region(texture, rect, source_rect, modulate, false, true)",
+        "draw_texture_rect_region(texture, rect, source_rect, _actor_color(modulate), false, true)",
         "var texture = _terrain_art_texture(UNEXPLORED_SHROUD_TEXTURE_PATH)",
         "Vector2i(texture.get_size()) == UNEXPLORED_SHROUD_TEXTURE_SIZE",
         "float(UNEXPLORED_SHROUD_TEXTURE_SIZE.x) / float(maxi(_map_size.x, 1))",
@@ -46452,7 +46452,7 @@ def validate_overworld_hero_route_locomotion(errors: list[str]) -> None:
         "func _draw_hero_movement_presentation",
         "func _hero_movement_draw_state",
         "from_rect.get_center().lerp(to_rect.get_center(), segment_progress)",
-        "_draw_hero_marker(draw_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))",
+        "_draw_hero_marker(draw_state.hero_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))",
         "not (_hero_movement_active and tile == _hero_tile)",
         "func validation_hero_movement_presentation",
         '"hero_movement_presentation": validation_hero_movement_presentation()',
@@ -49785,7 +49785,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     for forbidden in ("session.", "await ", "create_timer", "create_tween", "queue_redraw", ".erase("):
         ensure(forbidden not in layout_block, errors, f"Town-footprint hero validation layout must remain detached and read-only: {forbidden}")
     ensure("_reserve_hero_count(tile) if show_reserve_count else 0" in reserve_block, errors, "Faction hero adoption must preserve reserve-stack badge authority")
-    ensure("_draw_hero_marker(draw_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))" in movement_block, errors, "Hero movement interpolation must retain the authoritative active hero sprite across intermediate tiles")
+    ensure("_draw_hero_marker(draw_state.hero_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))" in movement_block, errors, "Hero movement interpolation must retain the authoritative active hero sprite across intermediate tiles")
     ensure('func validation_hero_draw_layout(tile: Vector2i, moving: bool = false) -> Dictionary:' in map_text and '_hero_draw_layout_payload(_tile_rect(_board_rect(), tile), tile, not moving)' in map_text, errors, "Focused validation must expose the exact static-versus-moving hero layout decision without mutating it")
     for token in (
         'const HERO_COMMAND_FOCUS_VISUAL_MODEL := "open_lateral_command_wings_and_ground_tick"',
@@ -56636,7 +56636,7 @@ def validate_overworld_object_resolution_vfx_assets(errors: list[str]) -> None:
         'if not bool(asset_state.get("uses_imported_asset", false)):',
         '_overworld_vfx_texture_for_path(String(asset_state.get("texture_path", "")))',
         "var motion_progress := progress if _object_resolution_allows_large_motion else 0.35",
-        "var alpha := clampf(1.0 - progress * 0.72, 0.24, 1.0)",
+        "var alpha := Motion.emphasis(progress)",
         '_canvas_draw_texture_rect(texture, draw_rect, false, Color(1.0, 1.0, 1.0, alpha))',
         '"mode": "imported_texture"',
         "return true",

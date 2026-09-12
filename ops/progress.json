@@ -16611,14 +16611,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Built-building silhouettes completed. All 173 layers/32 towns checked; source wide and Windows 5066 checks pass, Linux same checks accepted against exact bare-engine tooltip error baseline. Repository, exports/parity and small/wide visuals validated; 652 MB obsolete outputs cleaned. See docs/town-building-silhouette-outlines.md. No next slice selected.",
+  "currentNotes": "Overworld animation readability completed. Source small 345, Linux packaged Large 375, Windows 336 and reduced-motion 309 checks pass; final VFX, repository and official exports/parity validated. Before/after motion inspected; capped ambient work profiled on 108x108 Large. Cleaned 881390550 bytes of superseded outputs. Existing guarded-site assertion reproduces in old/new packages and is documented. See docs/overworld-animation-readability.md. No next slice selected.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ui-town-building-silhouette-outlines-20260911",
-  "currentSliceId": "ui-town-building-silhouette-outlines-20260911",
-  "currentSliceNotes": "Implemented cached alpha-mask built-building silhouettes. Source wide and Windows 5066 checks pass; Linux 5066 functional checks pass with exact bare-engine tooltip-error baseline acceptance, strict reports retained. Repository, official exports/parity and small/wide visual inspection complete. Cleaned 651767995 bytes of obsolete exports/PNGs; art, gameplay, saves and unrelated files preserved. Evidence: docs/town-building-silhouette-outlines.md.",
+  "currentSlice": "animation-overworld-readability-20260912",
+  "currentSliceId": "animation-overworld-readability-20260912",
+  "currentSliceNotes": "Implemented original-art travel/stride and smooth visitor-size transitions, AI boundary fades/action cues, interaction envelopes and water glints. Source 345, packaged Linux Large 375, Windows 336, reduced-motion 309 checks pass. Final VFX, repository and official exports/parity pass. Large timing and before/after frames inspected; 881390550 bytes cleaned. Legacy guarded-site assertion reproduces in old/new PCKs and is documented, not counted as a pass. Evidence: docs/overworld-animation-readability.md.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Built-building Silhouette Outlines",
-  "currentSliceUpdatedAt": "2026-09-11T17:46:00Z",
+  "currentSliceTitle": "Overworld Animation Readability",
+  "currentSliceUpdatedAt": "2026-09-12T15:30:27Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22230,9 +22230,51 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Built-building silhouette slice completed; native Linux tooltip errors remain documented against a bare-engine control. Await next owner-directed slice. Preserve original art, saves, caches and unrelated files; do not infer release readiness.",
+  "nextActionGuardrailNote": "Overworld animation slice completed; await the next owner-directed goal. Preserve rules, fog, saves, original art, caches and native RMG. Documented legacy guarded-site and Windows hardware limits are not release-readiness claims.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "animation-overworld-readability-20260912",
+      "title": "Overworld Animation Readability",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/overworld-animation-readability.md"
+      ],
+      "implementationTargets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "scenes/overworld/OverworldTurnPresenter.gd",
+        "scenes/overworld/OverworldMotion.gd",
+        "scripts/core/OverworldTurnPlayback.gd",
+        "tests/overworld_animation_readability_regression.py",
+        "tests/packaged_overworld_animation_readability_regression.py",
+        "tests/validate_repo.py"
+      ],
+      "validationCommands": [
+        "python3 -B tests/overworld_animation_readability_regression.py --label animation-check --render --resolution 1280x720",
+        "python3 -B tests/overworld_animation_readability_regression.py --label animation-reduced-check --render --reduced-motion --resolution 1280x720",
+        "python3 tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Smoother original-art travel, interactions and visible AI actions",
+        "Subtle bounded environmental motion respecting fog and accessibility",
+        "Before/after rendered evidence and Large-map profile",
+        "Linux/Windows gameplay, deterministic state, fog and save handoffs validated"
+      ],
+      "nonGoals": [
+        "No RMG, balance, gameplay/save-schema, unrelated UI or new art generation"
+      ],
+      "updatedAt": "2026-09-12T15:30:27Z",
+      "startedAt": "2026-09-12T14:48:02Z",
+      "notes": "Implemented original-art travel/stride and smooth visitor-size transitions, AI boundary fades/action cues, interaction envelopes and water glints. Source 345, packaged Linux Large 375, Windows 336, reduced-motion 309 checks pass. Final VFX, repository and official exports/parity pass. Large timing and before/after frames inspected; 881390550 bytes cleaned. Legacy guarded-site assertion reproduces in old/new PCKs and is documented, not counted as a pass. Evidence: docs/overworld-animation-readability.md.",
+      "completedAt": "2026-09-12T15:30:27Z"
+    },
     {
       "id": "ui-town-building-silhouette-outlines-20260911",
       "title": "Built-building Silhouette Outlines",
@@ -112180,9 +112222,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Built-building silhouette outlines completed: all 173 layer masks follow artwork for hover/pressed/focus. Source wide and Windows 5066 checks pass; Linux exact bare-engine tooltip error baseline acceptance, not error-free certification. Repository, exports/parity, small/wide visuals and scoped cleanup complete. See docs/town-building-silhouette-outlines.md. No release-readiness claim.",
+  "summary": "Overworld animation readability completed: smooth original-art travel/visitor transitions, revealed AI fades and action cues, interaction envelopes and bounded water glints. Source 345, Linux Large 375, Windows 336, reduced-motion 309; VFX, repository, exports/parity and visual/performance checks pass. Known legacy guarded-site assertion is documented; 881 MB obsolete outputs cleaned. No release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-11T17:46:15Z",
+  "updatedAt": "2026-09-12T15:30:27Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
