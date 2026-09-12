@@ -41,7 +41,7 @@ Do not load all of `ops/progress.json` by default. It is an operations tracker, 
 - Avoid direct cloning of copyrighted names, assets, maps, factions, unit art, music, or text.
 - Use original placeholder content where needed.
 - No temporary git worktrees. Work directly in this repo.
-- Local commits are fine when they are coherent. Push completed validated work to GitHub unless AcOrP explicitly says not to for that slice.
+- Local commits are fine when they are coherent. Always push completed validated work to GitHub and merge it into the default branch when there are no conflicts, unless AcOrP explicitly says otherwise for that slice. If working directly on the default branch, push it without creating an unnecessary merge. If conflicts occur, report them rather than forcing the merge or overwriting remote changes.
 
 ## Screen composition hard rules
 - Do not cover the dominant screen surface with large text panels, stacked report boxes, or generic geometry just to expose existing data.
