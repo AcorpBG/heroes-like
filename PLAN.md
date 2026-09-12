@@ -22,6 +22,12 @@ Rules:
 
 ## Current Tactical State
 
+### Production Audio Generation Inventory
+
+id: `planning-production-audio-generation-20260913`
+
+Status: completed 2026-09-13, documentation only. Inspected 141 cue entries / 140 original audio files and mapped all 1753 authored content IDs across the audited domains. `docs/audio-generation-plan.md` and `docs/audio-generation/` contain 298 prioritized generation briefs, exact current inventory, coverage and routing gaps. P0 replaces 140 nonfinal files; P1/P2 require additional runtime work or optional scope selection. Counts, references and original audio hashes verified. No generation, runtime audio change or listening approval; no generation slice started.
+
 ### Top Priority: Small-map Playtest Gameplay Improvements
 
 Owner direction, 2026-09-12: the following five Phase 6 implementation slices are **completed** with source and both packaged-platform acceptance. Recruitment follows the owner-approved local delivery contract. A fresh manual Small match reached a legitimate terminal defeat; the source-backed assessment records remaining OpenGL stability, prebattle threat-disclosure and existing town-development-test limitations. This completes this bounded queue, not release readiness. Preserve completed slices and their historical evidence; no discretionary follow-up is selected here.
