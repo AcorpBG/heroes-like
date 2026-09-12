@@ -22,6 +22,22 @@ Rules:
 
 ## Current Tactical State
 
+### Top Priority: Small-map Playtest Gameplay Improvements
+
+Owner direction, 2026-09-12: the following five Phase 6 implementation slices take precedence over discretionary animation, art, content breadth and other polish. All are **pending**; this planning update implements no game behavior. This queue supersedes older "no next slice selected" / "await owner direction" statements below. Preserve completed slices and their bounded historical evidence.
+
+Requirements and acceptance: `docs/small-map-playtest-gameplay-priorities.md`. Execute in the listed priority order; shared tooltip/input foundations may be implemented together where necessary, but each slice requires its own behavior acceptance. Combat consequences are the next selected slice. Do not tune balance from this single loss or change native generation rules.
+
+| Order | Slice ID | Required outcome |
+| --- | --- | --- |
+| 1 | `ux-combat-consequence-preview-20260912` | Preview damage/casualties, retaliation and final movement hex before commitment; clearly identify upcoming actors. |
+| 2 | `ux-bounded-contextual-tooltips-20260912` | Short, screen-bounded hover summaries; explicit detailed inspection; no stale tooltip across transitions. |
+| 3 | `ux-accurate-town-garrison-20260912` | Actual defending troop counts separate from readiness, plus an actionable exposed-empty-town end-turn warning. |
+| 4 | `ux-consistent-targeting-commit-20260912` | Consistent selection/commit behavior, reliable live-target cycling and explicit spell target selection. |
+| 5 | `gameplay-recruitment-logistics-clarity-20260912` | An explicit, enforced recruitment destination/arrival rule and unambiguous unit/building identities. |
+
+Completion requires live behavior, focused regressions, inspected small/wide UI, relevant Windows/Linux validation and a fresh Small-map playtest assessing clarity before balance. Reports, previews disconnected from authoritative rules, names alone or tracker edits do not complete these slices. The fifth slice must settle and record the logistics contract before implementing it, preserving remote town-management access and save/content identity compatibility.
+
 ### Living Overworld Scenery
 
 id: `animation-overworld-living-scenery-20260912`
