@@ -56,7 +56,11 @@ static func _visual_actor(actor: Dictionary, point: Dictionary) -> Dictionary:
 static func action(session, actor: Dictionary, verb: String) -> void:
 	if not session.overworld.has(KEY) or not visible(session,Levels.position(actor)): return
 	var point := Levels.position(actor)
-	session.overworld[KEY].append({"kind":"action","actor":_visual_actor(actor,point),"placement_id":String(actor.get("placement_id","")),"from":point,"to":point.duplicate(),"caption":_actor_name(actor)+" "+verb})
+	var cue := ""
+	match verb:
+		"claims a nearby site", "seizes a resource site": cue = "vfx_placeholder_capture_flag"
+		"engages a defending army": cue = "vfx_placeholder_guard_warning"
+	session.overworld[KEY].append({"kind":"action","actor":_visual_actor(actor,point),"placement_id":String(actor.get("placement_id","")),"from":point,"to":point.duplicate(),"caption":_actor_name(actor)+" "+verb,"vfx_cue_id":cue})
 
 static func _actor_name(actor: Dictionary) -> String:
 	var commander: Dictionary = actor.get("enemy_commander_state",{})

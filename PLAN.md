@@ -22,6 +22,12 @@ Rules:
 
 ## Current Tactical State
 
+### Overworld Animation Readability
+
+id: `animation-overworld-readability-20260912`
+
+Status: completed 2026-09-12, Phase 6. Added travel ramps/step motion, smooth town-visitor size transitions, revealed AI boundary fades and original-art action cues, smooth interaction envelopes and explored-water glints with capped ambient redraws. Source small 345, Linux packaged Large 375, Windows 336 and reduced-motion 309 checks pass; final VFX reports, repository validation and official exports/parity pass. Before/after frames inspected; Large profiling confirms bounded viewport work. Existing guarded-site legacy assertion fails on both old/new packages and is documented, not counted as a pass. Cleaned 881 MB of superseded outputs. Requirements/evidence: `docs/overworld-animation-readability.md`. Rules, fog, saves, native RMG and original art preserved; no release-readiness claim.
+
 ### Built-building Silhouette Outlines
 
 id: `ui-town-building-silhouette-outlines-20260911`

@@ -9,6 +9,7 @@ const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
 const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacementRules.gd")
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
+const Motion = preload("res://scenes/overworld/OverworldMotion.gd")
 
 const OVERWORLD_ART_MANIFEST_PATH := "res://art/overworld/manifest.json"
 const OVERWORLD_VFX_MANIFEST_PATH := "res://content/overworld_vfx_manifest.json"
@@ -419,6 +420,7 @@ const TERRAIN_AMBIENT_PHASE_SPEED := 0.38
 const TERRAIN_AMBIENT_STATIC_PHASE := 0.0
 const TERRAIN_AMBIENT_DENSITY_MODULUS := 4
 const TERRAIN_AMBIENT_PROFILES := {
+	"water": {"id": "water_glint", "kind": "water", "color": Color(0.72, 0.90, 0.96, 1.0), "alpha": 0.24, "radius_factor": 0.024, "drift": Vector2(0.045, 0.016)},
 	"grasslands": {"id": "meadow_pollen", "kind": "pollen", "color": Color(0.96, 0.86, 0.48, 1.0), "alpha": 0.20, "radius_factor": 0.020, "drift": Vector2(0.050, 0.065)},
 	"forest": {"id": "woodland_firefly", "kind": "firefly", "color": Color(0.91, 0.95, 0.48, 1.0), "alpha": 0.28, "radius_factor": 0.019, "drift": Vector2(0.042, 0.055)},
 	"mire": {"id": "fen_wisp", "kind": "wisp", "color": Color(0.48, 0.84, 0.76, 1.0), "alpha": 0.22, "radius_factor": 0.023, "drift": Vector2(0.052, 0.040)},
@@ -629,10 +631,27 @@ func _draw_turn_playback_actor(board_rect: Rect2) -> void:
 	if not OverworldRulesScript.is_tile_visible(_session,tile.x,tile.y,_level): return
 	var rect := _tile_rect(board_rect,tile)
 	var target_rect := _tile_rect(board_rect,Vector2i(int(to.x),int(to.y)))
-	var progress := 1.0 if SettingsService.reduced_motion_enabled() else _turn_playback_progress
+	var progress := 1.0 if SettingsService.reduced_motion_enabled() else Motion.travel(_turn_playback_progress)
+	var kind := String(_turn_playback_event.get("kind", ""))
+	if not SettingsService.reduced_motion_enabled():
+		if kind == "appear": _turn_actor_alpha = smoothstep(0.0, 0.7, _turn_playback_progress)
+		elif kind == "disappear": _turn_actor_alpha = 1.0 - smoothstep(0.25, 1.0, _turn_playback_progress)
+	if not SettingsService.reduced_motion_enabled() and String(_turn_playback_event.get("kind", "")) == "move":
+		_moving_sprite_offset = Motion.stride_offset(progress, minf(rect.size.x, rect.size.y))
 	_draw_canvas_item.draw_set_transform((target_rect.position-rect.position)*progress)
 	_draw_encounter_sprite(_turn_playback_event.actor,rect,false,tile)
 	_draw_canvas_item.draw_set_transform(Vector2.ZERO)
+	_moving_sprite_offset = Vector2.ZERO
+	_turn_actor_alpha = 1.0
+	if kind == "action":
+		var spec := _overworld_vfx_manifest_cue(String(_turn_playback_event.get("vfx_cue_id", "")))
+		if not spec.is_empty():
+			var texture: Texture2D = _overworld_vfx_texture_for_path(String(spec.get("texture_path", ""))) as Texture2D
+			if texture is Texture2D:
+				var emphasis := 1.0 if SettingsService.reduced_motion_enabled() else Motion.emphasis(_turn_playback_progress)
+				var extent := minf(rect.size.x, rect.size.y) * 0.7
+				var center := rect.get_center() + Vector2(0.0, -rect.size.y * 0.5)
+				_canvas_draw_texture_rect(texture, Rect2(center - Vector2.ONE * extent * 0.5, Vector2.ONE * extent), false, Color(1.0, 1.0, 1.0, emphasis))
 var _session_static_cache_signature := 0
 var _state_cache_signature := 0
 var _session_static_cache_generation := 0
@@ -654,6 +673,10 @@ var _validation_force_index_rebuild := false
 var _path_detail_profile_enabled := false
 var _validation_profile: Dictionary = {}
 var _terrain_ambient_phase := TERRAIN_AMBIENT_STATIC_PHASE
+var _terrain_ambient_elapsed := 0.0
+var _moving_sprite_offset := Vector2.ZERO
+var _moving_sprite_factor := -1.0
+var _turn_actor_alpha := 1.0
 var _towns_by_tile: Dictionary = {}
 var _town_footprints_by_tile: Dictionary = {}
 var _resources_by_tile: Dictionary = {}
@@ -904,7 +927,11 @@ func _process(delta: float) -> void:
 	var elapsed_delta := maxf(0.0, delta)
 	if _overworld_terrain_ambient_should_animate():
 		_terrain_ambient_phase = fmod(_terrain_ambient_phase + elapsed_delta * TERRAIN_AMBIENT_PHASE_SPEED, TAU)
-		_invalidate_terrain_ambient_layer("terrain_ambient_frame")
+		_terrain_ambient_elapsed += elapsed_delta
+		# Slow scenic motion does not need a terrain pass at display refresh rate.
+		if _terrain_ambient_elapsed >= 1.0 / 30.0:
+			_terrain_ambient_elapsed = fmod(_terrain_ambient_elapsed, 1.0 / 30.0)
+			_invalidate_terrain_ambient_layer("terrain_ambient_frame")
 	elif not is_zero_approx(_terrain_ambient_phase):
 		_terrain_ambient_phase = TERRAIN_AMBIENT_STATIC_PHASE
 		_invalidate_terrain_ambient_layer("terrain_ambient_static")
@@ -1574,11 +1601,14 @@ func _invalidate_frame_layer(reason: String) -> void:
 func _current_draw_canvas_item() -> CanvasItem:
 	return _draw_canvas_item if _draw_canvas_item != null else self
 
+func _actor_color(color: Color) -> Color:
+	return Color(color.r, color.g, color.b, color.a * _turn_actor_alpha)
+
 func _canvas_draw_rect(rect: Rect2, color: Color, filled: bool = true, width: float = -1.0) -> void:
-	_current_draw_canvas_item().draw_rect(rect, color, filled, width)
+	_current_draw_canvas_item().draw_rect(rect, _actor_color(color), filled, width)
 
 func _canvas_draw_line(from: Vector2, to: Vector2, color: Color, width: float = -1.0, antialiased: bool = false) -> void:
-	_current_draw_canvas_item().draw_line(from, to, color, width, antialiased)
+	_current_draw_canvas_item().draw_line(from, to, _actor_color(color), width, antialiased)
 
 func _canvas_draw_circle(
 	position: Vector2,
@@ -1588,10 +1618,10 @@ func _canvas_draw_circle(
 	width: float = -1.0,
 	antialiased: bool = false
 ) -> void:
-	_current_draw_canvas_item().draw_circle(position, radius, color, filled, width, antialiased)
+	_current_draw_canvas_item().draw_circle(position, radius, _actor_color(color), filled, width, antialiased)
 
 func _canvas_draw_colored_polygon(points: PackedVector2Array, color: Color) -> void:
-	_current_draw_canvas_item().draw_colored_polygon(points, color)
+	_current_draw_canvas_item().draw_colored_polygon(points, _actor_color(color))
 
 func _canvas_draw_polygon(points: PackedVector2Array, colors: PackedColorArray) -> void:
 	_current_draw_canvas_item().draw_polygon(points, colors)
@@ -1600,7 +1630,7 @@ func _canvas_draw_textured_polygon(points: PackedVector2Array, colors: PackedCol
 	_current_draw_canvas_item().draw_polygon(points, colors, uvs, texture)
 
 func _canvas_draw_polyline(points: PackedVector2Array, color: Color, width: float = -1.0, antialiased: bool = false) -> void:
-	_current_draw_canvas_item().draw_polyline(points, color, width, antialiased)
+	_current_draw_canvas_item().draw_polyline(points, _actor_color(color), width, antialiased)
 
 func _canvas_draw_texture_rect(
 	texture: Texture2D,
@@ -1609,7 +1639,7 @@ func _canvas_draw_texture_rect(
 	modulate: Color = Color(1.0, 1.0, 1.0, 1.0),
 	transpose: bool = false
 ) -> void:
-	_current_draw_canvas_item().draw_texture_rect(texture, rect, tile, modulate, transpose)
+	_current_draw_canvas_item().draw_texture_rect(texture, rect, tile, _actor_color(modulate), transpose)
 
 func _canvas_draw_texture_rect_region(
 	texture: Texture2D,
@@ -1617,7 +1647,7 @@ func _canvas_draw_texture_rect_region(
 	source_rect: Rect2,
 	modulate: Color = Color(1.0, 1.0, 1.0, 1.0)
 ) -> void:
-	_current_draw_canvas_item().draw_texture_rect_region(texture, rect, source_rect, modulate, false, true)
+	_current_draw_canvas_item().draw_texture_rect_region(texture, rect, source_rect, _actor_color(modulate), false, true)
 
 func _canvas_draw_texture_rect_flipped(
 	texture: Texture2D,
@@ -1872,6 +1902,10 @@ func _overworld_terrain_ambient_entries(board_rect: Rect2, visible_bounds: Rect2
 			)
 			var center := rect.position + (base_normalized + motion_normalized) * rect.size
 			var pulse := 0.76 + 0.24 * sin((local_phase * 1.17) + 0.6)
+			# Staggered glints quietly emerge and disappear; no full-map shader or
+			# texture scrolling, and every glint remains inside an explored tile.
+			if String(profile.get("kind", "")) == "water":
+				pulse = pow(maxf(0.0, sin(local_phase)), 2.0)
 			var bounds := Rect2(center - Vector2(outer_radius, outer_radius), Vector2(outer_radius * 2.0, outer_radius * 2.0))
 			entries.append({
 				"tile": tile,
@@ -1898,6 +1932,9 @@ func _draw_overworld_terrain_ambient_entry(entry: Dictionary) -> void:
 	var soft_color := Color(color.r, color.g, color.b, alpha * 0.42)
 	var core_color := Color(color.r, color.g, color.b, alpha)
 	match String(entry.get("kind", "")):
+		"water":
+			_canvas_draw_line(center - Vector2(radius * 2.1, 0.0), center + Vector2(radius * 2.1, 0.0), core_color, maxf(0.7, radius * 0.38), true)
+			_canvas_draw_line(center + Vector2(-radius, radius), center + Vector2(radius * 1.4, radius), soft_color, maxf(0.7, radius * 0.3), true)
 		"dust":
 			var tangent := Vector2(1.0, -0.22).normalized()
 			_canvas_draw_line(center - tangent * radius * 2.0, center + tangent * radius * 2.0, soft_color, maxf(0.7, radius * 0.62), true)
@@ -3615,7 +3652,11 @@ func _draw_hero_movement_presentation(board_rect: Rect2) -> void:
 	var grounding_tile: Vector2i = draw_state.get("grounding_tile", Vector2i(-1, -1))
 	if not _draw_hero_route_step_imported_vfx(draw_state):
 		_hero_movement_last_draw = {"mode": "existing_interpolated_hero_marker_only", "texture_path": ""}
-	_draw_hero_marker(draw_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))
+	_moving_sprite_offset = Motion.stride_offset(float(draw_state.segment_progress), minf(draw_rect.size.x, draw_rect.size.y))
+	_moving_sprite_factor = float(draw_state.sprite_factor)
+	_draw_hero_marker(draw_state.hero_rect, grounding_tile, false, _hero_presentation_entry(_hero_tile))
+	_moving_sprite_offset = Vector2.ZERO
+	_moving_sprite_factor = -1.0
 
 func _draw_hero_route_step_imported_vfx(draw_state: Dictionary) -> bool:
 	var asset_state := _hero_movement_vfx_asset_state()
@@ -3651,7 +3692,7 @@ func _hero_movement_draw_state(board_rect: Rect2) -> Dictionary:
 	if not _hero_movement_active or _hero_movement_path.size() <= 1 or _hero_movement_duration_sec <= 0.0:
 		return {}
 	var progress := clampf(_hero_movement_elapsed_sec / _hero_movement_duration_sec, 0.0, 1.0)
-	var scaled_progress := progress * float(_hero_movement_path.size() - 1)
+	var scaled_progress := Motion.travel(progress) * float(_hero_movement_path.size() - 1)
 	var segment_index := mini(int(floor(scaled_progress)), _hero_movement_path.size() - 2)
 	var segment_progress := clampf(scaled_progress - float(segment_index), 0.0, 1.0)
 	var from_tile: Vector2i = _hero_movement_path[segment_index]
@@ -3659,8 +3700,16 @@ func _hero_movement_draw_state(board_rect: Rect2) -> Dictionary:
 	var from_rect := _tile_rect(board_rect, from_tile)
 	var to_rect := _tile_rect(board_rect, to_tile)
 	var center := from_rect.get_center().lerp(to_rect.get_center(), segment_progress)
+	# Blend the *resting* visitor/field layouts, not just tile centers. Otherwise
+	# departure starts at field size and arrival suddenly shrinks into town.
+	var from_hero_rect := _hero_draw_rect(from_rect, from_tile, true)
+	var to_hero_rect := _hero_draw_rect(to_rect, to_tile, true)
+	var from_factor := HERO_FIELD_SPRITE_EXTENT_FACTOR if _town_presentation_at(from_tile).is_empty() else HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR
+	var to_factor := HERO_FIELD_SPRITE_EXTENT_FACTOR if _town_presentation_at(to_tile).is_empty() else HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR
 	return {
 		"rect": Rect2(center - from_rect.size * 0.5, from_rect.size),
+		"hero_rect": Rect2(from_hero_rect.position.lerp(to_hero_rect.position, segment_progress), from_hero_rect.size.lerp(to_hero_rect.size, segment_progress)),
+		"sprite_factor": lerpf(from_factor, to_factor, segment_progress),
 		"center": center,
 		"segment_index": segment_index,
 		"segment_progress": segment_progress,
@@ -3688,8 +3737,8 @@ func _draw_object_resolution_imported_vfx(rect: Rect2, progress: float) -> bool:
 	var center := rect.get_center()
 	var extent := minf(rect.size.x, rect.size.y)
 	var motion_progress := progress if _object_resolution_allows_large_motion else 0.35
-	var alpha := clampf(1.0 - progress * 0.72, 0.24, 1.0)
-	var draw_extent := extent * float(asset_state.get("scale", 1.0)) * lerpf(0.82, 1.0, motion_progress)
+	var alpha := Motion.emphasis(progress)
+	var draw_extent := extent * float(asset_state.get("scale", 1.0)) * lerpf(0.82, 1.06, Motion.travel(motion_progress))
 	var draw_rect := Rect2(center - Vector2(draw_extent, draw_extent) * 0.5, Vector2(draw_extent, draw_extent))
 	_canvas_draw_texture_rect(texture, draw_rect, false, Color(1.0, 1.0, 1.0, alpha))
 	_object_resolution_last_draw = {
@@ -4091,6 +4140,7 @@ func _draw_encounter_commander_sprite(encounter: Dictionary, rect: Rect2, rememb
 	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
 	var layout := _hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)
 	var icon_rect: Rect2 = layout.get("icon_rect", Rect2())
+	icon_rect.position += _moving_sprite_offset
 	_canvas_draw_texture_rect(texture, icon_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	_draw_hostile_actor_marker(layout.get("marker_profile", {}))
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)
@@ -4918,9 +4968,12 @@ func _draw_hero_sprite(hero: Dictionary, rect: Rect2, tile: Vector2i) -> bool:
 	var extent := minf(rect.size.x, rect.size.y)
 	var ground_center: Vector2 = anchor.get("center", rect.get_center())
 	var sprite_factor := HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR if not _town_presentation_at(tile).is_empty() else HERO_FIELD_SPRITE_EXTENT_FACTOR
+	if _moving_sprite_factor >= 0.0:
+		sprite_factor = _moving_sprite_factor
 	var sprite_extent := maxf(16.0, extent * sprite_factor)
 	var sprite_center := ground_center + Vector2(0.0, -extent * HERO_SPRITE_LIFT_FACTOR)
 	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
+	sprite_rect.position += _moving_sprite_offset
 	_draw_hero_command_pennant(_hero_command_pennant_profile(rect, bool(hero.get("is_active", false))))
 	_draw_sprite_silhouette_outline(
 		texture,
