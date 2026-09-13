@@ -15,6 +15,8 @@ const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalo
 const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
 const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")
 const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")
+const HeroSheetScript = preload("res://scenes/shared/HeroSheet.gd")
+var _hero_sheet: Control
 
 const UI_ART_OVERWORLD_RESOURCE_BAR := "res://art/ui/runtime/overworld/resource_bar.png"
 var _native_destination_dialog: ConfirmationDialog
@@ -536,6 +538,8 @@ func _responsive_available_size() -> Vector2:
 	return available_size
 
 func _input(event: InputEvent) -> void:
+	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
+		return
 	if is_instance_valid(_turn_presenter):
 		if event.is_action_pressed("ui_cancel") or event.is_action_pressed("ui_accept"): _turn_presenter.skip_playback()
 		if not (event is InputEventMouse): get_viewport().set_input_as_handled()
@@ -845,6 +849,8 @@ func _controller_route_direction_from_axis(axis: Vector2) -> Vector2i:
 	return Vector2i.DOWN if axis.y > 0.0 else Vector2i.UP
 
 func _overworld_gameplay_movement_blocked_reason() -> String:
+	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
+		return "hero_sheet_open"
 	if _session == null:
 		return "missing_session"
 	if _session.game_state != "overworld":
@@ -1104,6 +1110,9 @@ func _exit_tree() -> void:
 	_cancel_controller_route_semantic()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
+		get_viewport().set_input_as_handled()
+		return
 	if _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():
 		get_viewport().set_input_as_handled()
 		return
@@ -4782,6 +4791,7 @@ func _rebuild_hero_actions() -> void:
 		if button == null:
 			button = Button.new()
 			button.pressed.connect(_on_hero_roster_pressed.bind(hero_id))
+			button.gui_input.connect(_on_hero_roster_gui_input.bind(hero_id))
 			_hero_actions.add_child(button)
 		button.name = "HeroRoster_%s" % hero_id
 		button.text = ""
@@ -4789,7 +4799,7 @@ func _rebuild_hero_actions() -> void:
 		button.button_pressed = is_active
 		button.focus_mode = Control.FOCUS_ALL
 		button.accessibility_name = "%s hero %s" % ["Active" if is_active else "Select", hero_name]
-		button.accessibility_description = "Center this commander on the map." if is_active else "Make this commander active and center the map on them."
+		button.accessibility_description = "Click to select and center. Double-click, Enter or controller Confirm to inspect army, artifacts, stats and specializations."
 		button.tooltip_text = _hero_roster_tooltip(action)
 		_style_roster_icon_button(button, "primary" if is_active else "secondary")
 		var art := ContentService.get_hero_art(hero_id)
@@ -4822,6 +4832,7 @@ func _reconcile_roster_buttons(container: Container, retained: Array) -> void:
 
 func _hero_roster_tooltip(action: Dictionary) -> String:
 	return _join_tooltip_sections([
+		"Click to select; double-click or press Enter / controller Confirm to open hero sheet.",
 		String(action.get("summary", "")),
 		String(_hero_switch_check_surface(action).get("tooltip_text", "")),
 	])
@@ -4917,7 +4928,25 @@ func _load_roster_icon(path: String) -> Texture2D:
 		return null
 	return ResourceLoader.load(path, "Texture2D") as Texture2D
 
+func _on_hero_roster_gui_input(event: InputEvent, hero_id: String) -> void:
+	var double_click: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed and event.double_click
+	var confirm: bool = not (event is InputEventMouse) and event.is_action_pressed("ui_accept") and not event.is_echo()
+	if not double_click and not confirm: return
+	if _open_hero_sheet(hero_id): accept_event()
+
+func _open_hero_sheet(hero_id: String) -> bool:
+	if _overworld_gameplay_movement_blocked_reason() != "" or _overworld_order_input_blocked(): return false
+	var snapshot := HeroCommandRules.hero_inspection_snapshot(_session, hero_id)
+	if snapshot.is_empty(): return false
+	if not is_instance_valid(_hero_sheet):
+		_hero_sheet = HeroSheetScript.new()
+		_hero_sheet.name = "HeroSheet"
+		add_child(_hero_sheet)
+	_hero_sheet.open_hero(snapshot, _existing_roster_button(_hero_actions, "hero_id", hero_id))
+	return true
+
 func _on_hero_roster_pressed(hero_id: String) -> void:
+	if _overworld_gameplay_movement_blocked_reason() != "" or _overworld_order_input_blocked(): return
 	if hero_id == String(_session.overworld.get("active_hero_id", "")):
 		_focus_active_hero_from_roster()
 		return
