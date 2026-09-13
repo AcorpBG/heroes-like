@@ -1,0 +1,19 @@
+{
+  "status": "original_rgb_drafts_retained_after_approved_processing",
+  "reason": "These immutable RGB masters are provenance, never live textures. Their cleaned alpha/trimmed/runtime derivatives are registered in ../manifest.json and reproduced by ../offline_recipe.json.",
+  "workflow_approval": "Owner explicitly approved offline cutout/trim processing on 2026-09-13; no approval remains pending.",
+  "drafts": {
+    "riverwatch_land": {
+      "path": "res://art/overworld/source/generated/towns/biome_fit/pending/riverwatch_land_rgb_draft.png",
+      "input": "res://art/overworld/source/generated/towns/biome_fit/riverwatch_ash_cutout.png",
+      "prompt": "Use case: precise-object-edit. Edit Image 1, an already transparent original game sprite. Preserve its REAL TRANSPARENT ALPHA BACKGROUND and every stone building, roof, flame beacon, banner, crane, front gate and stair. Remove ONLY the surrounding dark volcanic terrain apron, loose basalt, lava cracks and ground outside the structural castle walls and foundations. Those removed areas must become alpha zero, like the existing transparent background. Keep internal structural paving and walls, but no surrounding ground island at all. This is a terrain-neutral architecture cutout of the identical Riverwatch castle for use on arbitrary painted map terrain. Do not redesign, add objects, paint a checkerboard, introduce any backdrop or change the image canvas. Preserve transparency; return an RGBA PNG.",
+      "rejected_extraction_prompt": "Remove the checkerboard background from this image. Return the castle as a transparent PNG cutout. Keep the castle exactly unchanged."
+    },
+    "embercourt_land": {
+      "path": "res://art/overworld/source/generated/towns/biome_fit/pending/embercourt_land_rgb_draft.png",
+      "input": "res://art/overworld/runtime/objects/towns/factions/embercourt.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the exact edit target, an original fantasy strategy game town. Make a TERRAIN-NEUTRAL LAND VERSION of this SAME settlement, not a redesign. Preserve the full arrangement, architecture, towers, roofs, faction banners, colored lights, front entrance, perspective and painted style. Remove ALL surrounding water, rivers, ponds, waterfalls, boats, floating lilies, reeds, grasses and loose surrounding dirt. Where water was INSIDE the settlement, use restrained worn structural stone paving or timber decking that belongs to the buildings; leave exterior gaps genuinely transparent. Retain the original walls, structural piers, stairs, footbridge entry and foundations, supported plausibly on land. No surrounding terrain island, no new platform or pedestal, no ground color field. The town must be able to stand on snow, basalt, sand or grass without bringing its own incompatible landscape. Keep all architecture and entrance position recognizable; no added buildings. Isolated sprite, whole silhouette visible with modest margins, real transparent RGBA background. No simulated transparency, no checkerboard, no colored or white rectangle, no text.",
+      "rejected_extraction_prompt": "Use case: background-extraction. Image 1 is the edit target. Deliver this exact original castle sprite as a genuinely transparent RGBA PNG with actual alpha=0 outside the sprite. Remove the entire gray-and-white checkerboard background: the checkerboard is an error, not artwork, and no checkerboard squares may remain. Preserve every castle, gate, banner, roof, lantern and stone or wooden foundation pixel and its irregular silhouette. Do not redraw, redesign, recolor, resize or add any object. NO visible background of any color. NO simulated transparency, no checkerboard, no white rectangle. The output must have an alpha channel with the surrounding area fully transparent; this is a clean game sprite cutout."
+    }
+  }
+}

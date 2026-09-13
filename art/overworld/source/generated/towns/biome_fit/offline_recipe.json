@@ -1,0 +1,158 @@
+{
+  "schema_id": "town_biome_offline_recipe_v1",
+  "owner_approval": "2026-09-13: you have the permission; offline removal of generated backgrounds, crop and runtime packing.",
+  "jobs": {
+    "riverwatch_land": {
+      "base_asset_id": "town_identity_riverwatch",
+      "input": "res://art/overworld/source/generated/towns/biome_fit/riverwatch_ash_cutout.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/pending/riverwatch_land_rgb_draft.png",
+      "draft_sha256": "09a714c1ef9c9e0226d056120f3de8977e62108ce6eec227aa0eabcdef904a8c",
+      "prompt": "Use case: precise-object-edit. Edit Image 1, an already transparent original game sprite. Preserve its REAL TRANSPARENT ALPHA BACKGROUND and every stone building, roof, flame beacon, banner, crane, front gate and stair. Remove ONLY the surrounding dark volcanic terrain apron, loose basalt, lava cracks and ground outside the structural castle walls and foundations. Those removed areas must become alpha zero, like the existing transparent background. Keep internal structural paving and walls, but no surrounding ground island at all. This is a terrain-neutral architecture cutout of the identical Riverwatch castle for use on arbitrary painted map terrain. Do not redesign, add objects, paint a checkerboard, introduce any backdrop or change the image canvas. Preserve transparency; return an RGBA PNG.",
+      "flat_white": false,
+      "seeds": [],
+      "description": "riverwatch land: same faction architecture on structural foundations without an incompatible exterior terrain island."
+    },
+    "embercourt_land": {
+      "base_asset_id": "town_faction_embercourt",
+      "input": "res://art/overworld/runtime/objects/towns/factions/embercourt.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/pending/embercourt_land_rgb_draft.png",
+      "draft_sha256": "db1941f11ef75a2a15ba100e1b77d41d5f4cc8de060acad3ae6cd67e1771f724",
+      "prompt": "Use case: precise-object-edit. Image 1 is the exact edit target, an original fantasy strategy game town. Make a TERRAIN-NEUTRAL LAND VERSION of this SAME settlement, not a redesign. Preserve the full arrangement, architecture, towers, roofs, faction banners, colored lights, front entrance, perspective and painted style. Remove ALL surrounding water, rivers, ponds, waterfalls, boats, floating lilies, reeds, grasses and loose surrounding dirt. Where water was INSIDE the settlement, use restrained worn structural stone paving or timber decking that belongs to the buildings; leave exterior gaps genuinely transparent. Retain the original walls, structural piers, stairs, footbridge entry and foundations, supported plausibly on land. No surrounding terrain island, no new platform or pedestal, no ground color field. The town must be able to stand on snow, basalt, sand or grass without bringing its own incompatible landscape. Keep all architecture and entrance position recognizable; no added buildings. Isolated sprite, whole silhouette visible with modest margins, real transparent RGBA background. No simulated transparency, no checkerboard, no colored or white rectangle, no text.",
+      "flat_white": false,
+      "seeds": [
+        [
+          770,
+          240
+        ]
+      ],
+      "description": "embercourt land: same faction architecture on structural foundations without an incompatible exterior terrain island."
+    },
+    "blackfen_gate_land": {
+      "base_asset_id": "town_identity_blackfen_gate",
+      "input": "res://art/overworld/runtime/objects/towns/identity/town_blackfen_gate.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/blackfen_gate_land_draft.png",
+      "draft_sha256": "25cc4dfa2236b9affe9c580aeedaced3ee5f5a2b3d2547277f9a61c1392dc411",
+      "flat_white": true,
+      "description": "blackfen gate land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island."
+    },
+    "murkward_ford_land": {
+      "base_asset_id": "town_identity_murkward_ford",
+      "input": "res://art/overworld/runtime/objects/towns/identity/town_murkward_ford.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/murkward_ford_land_draft.png",
+      "draft_sha256": "0f5d40902c60a321e3b7ee995210dcf57527350b55e462132190ea8af45bb7fa",
+      "flat_white": true,
+      "description": "murkward ford land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island."
+    },
+    "reedbarrow_ferry_land": {
+      "base_asset_id": "town_identity_reedbarrow_ferry",
+      "input": "res://art/overworld/runtime/objects/towns/identity/town_reedbarrow_ferry.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/reedbarrow_ferry_land_draft.png",
+      "draft_sha256": "1a89beb12ef5d9c95b6c00aa61385e1a75ea49c6762c5360f43d64dc5f59c24a",
+      "flat_white": true,
+      "description": "reedbarrow ferry land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island."
+    },
+    "bellwake_land": {
+      "base_asset_id": "town_identity_veilmourn_bellwake_harbor",
+      "input": "res://art/overworld/runtime/objects/towns/identity/town_veilmourn_bellwake_harbor.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/bellwake_land_draft.png",
+      "draft_sha256": "0a0a2817c2ce1d9ecb509a8dbc8d54196ccd3b694debc0afd69889b15059d5de",
+      "flat_white": true,
+      "description": "veilmourn bellwake harbor land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island."
+    },
+    "fogchart_land": {
+      "base_asset_id": "town_identity_veilmourn_fogchart_mooring",
+      "input": "res://art/overworld/runtime/objects/towns/identity/town_veilmourn_fogchart_mooring.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/fogchart_land_draft.png",
+      "draft_sha256": "fbd3c26cbbee06562523b969ef5e4e7c3b4ba7d6cf26208805dda12e5dd2b1ee",
+      "flat_white": true,
+      "description": "veilmourn fogchart mooring land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island."
+    },
+    "gloamwake_land": {
+      "base_asset_id": "town_identity_gloamwake_anchorage",
+      "input": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_gloamwake_anchorage.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/gloamwake_land_draft.png",
+      "draft_sha256": "08a31fe6457202204f37a71123991ac830837d73d317c5f8c39b6c35def1d0b1",
+      "flat_white": true,
+      "description": "gloamwake anchorage land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island."
+    },
+    "rainwrit_land": {
+      "base_asset_id": "town_identity_rainwrit_bastion",
+      "input": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_rainwrit_bastion.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/rainwrit_land_draft.png",
+      "draft_sha256": "1c656ddec11943d9c256d6fcd91bd9ac9caaa55837b4d914632e5de966a8637b",
+      "flat_white": true,
+      "description": "rainwrit bastion land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island."
+    },
+    "hollowreed_land": {
+      "base_asset_id": "town_identity_hollowreed_sanctuary",
+      "input": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_hollowreed_sanctuary.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/hollowreed_land_draft.png",
+      "draft_sha256": "26f820d7569a40520c994597b4e487ea961cdc33c8fef690e57ad6e2a5bdb95a",
+      "flat_white": true,
+      "description": "hollowreed sanctuary land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island."
+    },
+    "pale_sounding_land": {
+      "base_asset_id": "town_identity_pale_sounding_harbor",
+      "input": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_pale_sounding_harbor.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/pale_sounding_land_draft.png",
+      "draft_sha256": "cbc0d4509d1037d318a2111c46687b22a47a6f3c786094a3a5dd911d1572944c",
+      "flat_white": true,
+      "description": "pale sounding harbor land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island."
+    },
+    "cinderlock_land": {
+      "base_asset_id": "town_identity_cinderlock_bastion",
+      "input": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_cinderlock_bastion.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/cinderlock_land_draft.png",
+      "draft_sha256": "775b8bf2b28b78c5ca51b55ad8f3a87301a1dda49011833008eafdc432efa8f7",
+      "flat_white": true,
+      "description": "cinderlock bastion land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite. For this specific town also replace the OPEN molten lava canal with dark structural paving inside the walls and transparent exterior gaps; retain only the contained beacon/brazier flames. There must be no lava river on the surrounding ground."
+    },
+    "mireclaw_land": {
+      "base_asset_id": "town_faction_mireclaw",
+      "input": "res://art/overworld/runtime/objects/towns/factions/mireclaw.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/mireclaw_land_draft.png",
+      "draft_sha256": "99569c2097e7d7087b1f0290954d8509e8cc87d6feb82322993b356809ef38e0",
+      "flat_white": true,
+      "description": "mireclaw faction town on dry structural foundations: distinct architecture, colors, banners and entrance preserved; no exterior pond or water spill."
+    },
+    "sunvault_land": {
+      "base_asset_id": "town_faction_sunvault",
+      "input": "res://art/overworld/runtime/objects/towns/factions/sunvault.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/sunvault_land_draft.png",
+      "draft_sha256": "068ea5ee499b258c7e99c9b6407b7f4b3c3429e44c60fdc06946a221628e40ae",
+      "flat_white": true,
+      "description": "sunvault faction town on dry structural foundations: distinct architecture, colors, banners and entrance preserved; no exterior pond or water spill."
+    },
+    "thornwake_land": {
+      "base_asset_id": "town_faction_thornwake",
+      "input": "res://art/overworld/runtime/objects/towns/factions/thornwake.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/thornwake_land_draft.png",
+      "draft_sha256": "cc7740c0bd08cd201e19e79dd78e580a1673a035fde3d0af21503f6a7bed0765",
+      "flat_white": true,
+      "description": "thornwake faction town on dry structural foundations: distinct architecture, colors, banners and entrance preserved; no exterior pond or water spill."
+    },
+    "veilmourn_land": {
+      "base_asset_id": "town_faction_veilmourn",
+      "input": "res://art/overworld/runtime/objects/towns/factions/veilmourn.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/veilmourn_land_draft.png",
+      "draft_sha256": "c30cee7ad0713cbdc325188624d13583e9b32a1e23e8ae524b062a5afbaf65e6",
+      "flat_white": true,
+      "description": "veilmourn faction town on dry structural foundations: distinct architecture, colors, banners and entrance preserved; no exterior pond or water spill.",
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.\nSecond edit using veilmourn_land_initial_draft.png: Edit only the framing of this exact original castle artwork. Fit the WHOLE town into the image with a generous 8 percent pure white margin on EVERY side, including ABOVE the complete compass-star finial. Restore the tiny cropped upper tip of that compass star, otherwise preserve this exact architecture, palette, details, platforms, dry structural foundations and original isometric viewpoint. Nothing may touch the canvas edge. No new structures or water or landscape. Flat pure white background, no checkerboard, no external cast shadow. This will be extracted offline.",
+      "intermediate": {
+        "path": "res://art/overworld/source/generated/towns/biome_fit/veilmourn_land_initial_draft.png",
+        "sha256": "2cd96d51277047dd4770211cbff7b722f2b5c74353ab2daec0a6c64fbc10d78e"
+      }
+    },
+    "blackbell_land": {
+      "base_asset_id": "town_identity_blackbell_foundry",
+      "input": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_blackbell_foundry.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/blackbell_land_draft.png",
+      "draft_sha256": "7d1c8d3c56d93900ea1c157587c4266bd04b1c8b623e03282648b83f76bcc2bf",
+      "flat_white": true,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite. Specific Blackbell Foundry constraints: preserve the giant bronze hanging bell, black basalt cliff foundations, every pipe, chimney, furnace and contained molten pour. Keep the blue cooling troughs INSIDE the structure but close/contain their ends with existing-style dark stone retaining walls so absolutely NO blue waterfall or foam falls down the cliff or reaches the outside terrain. This is still the same industrial foundry, with contained circulation instead of streams spilling onto the landscape. Preserve smoke with clean edges suitable for extraction.",
+      "description": "Blackbell Foundry retains its bronze bell, furnaces, basalt foundations and contained cooling troughs; no water discharges beyond the structural base on dry terrain."
+    }
+  }
+}

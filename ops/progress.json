@@ -1,6 +1,12 @@
 {
   "actionableNextTasks": [
     {
+      "id": "art-overworld-town-biome-fit-20260913",
+      "title": "Biome-aware Overworld Town Artwork",
+      "status": "completed",
+      "priority": "top"
+    },
+    {
       "id": "ux-combat-consequence-preview-20260912",
       "title": "Combat Consequences Before Commitment",
       "priority": "top",
@@ -16647,14 +16653,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Completed 900 unique blocker PNGs, 100 per biome: nine new dead-tree originals plus 891 original-art clusters; 414 contain dead trees. All registered in live RMG palettes and wiki. Build uniqueness/counts, nine visual sheets, clean Godot import and asset inventory passed. No gameplay or broad suite run, per owner preference. Native semantics unchanged.",
+  "currentNotes": "Completed biome-aware Overworld town art: 19 original generated variants; 39 logical entries / 33 architectures / nine biomes / 22 aliases. 858 resolver cases, 17 pixel-reproducible cutouts, 19 clean-cache imports, visual review, full repository, official Linux/Windows exports and 1014-check native Medium-to-Town flows per platform pass. PCK 516821036 bytes / 8517 entries; only project.binary differs. Historical identity, native generation, placement, entrances, collision, fog, RNG and saves unchanged. Cleanup preserves source, evidence, packages, user data and caches; no release-ready claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "rmg-biome-blocker-library-20260913",
-  "currentSliceId": "rmg-biome-blocker-library-20260913",
-  "currentSliceNotes": "Completed 900 unique blocker PNGs, 100 per biome: nine new dead-tree originals plus 891 original-art clusters; 414 contain dead trees. All registered in live RMG palettes and wiki. Build uniqueness/counts, nine visual sheets, clean Godot import and asset inventory passed. No gameplay or broad suite run, per owner preference. Native semantics unchanged.",
+  "currentSlice": "art-overworld-town-biome-fit-20260913",
+  "currentSliceId": "art-overworld-town-biome-fit-20260913",
+  "currentSliceNotes": "Completed biome-aware Overworld town art: 19 original generated variants; 39 logical entries / 33 architectures / nine biomes / 22 aliases. 858 resolver cases, 17 pixel-reproducible cutouts, 19 clean-cache imports, visual review, full repository, official Linux/Windows exports and 1014-check native Medium-to-Town flows per platform pass. PCK 516821036 bytes / 8517 entries; only project.binary differs. Historical identity, native generation, placement, entrances, collision, fog, RNG and saves unchanged. Cleanup preserves source, evidence, packages, user data and caches; no release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Produce 100 new blockers per biome",
-  "currentSliceUpdatedAt": "2026-09-13T05:57:50.630237+00:00",
+  "currentSliceTitle": "Biome-aware Overworld Town Artwork",
+  "currentSliceUpdatedAt": "2026-09-13T18:48:55Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21959,24 +21965,26 @@
       }
     }
   },
-  "guardrailNote": "Town roster double-click shortcut only; preserve ownership, levels, movement, economy, saves and existing map input. No art or RMG changes.",
+  "guardrailNote": "Owner-approved original overworld town biome art and offline cutout/trim processing only. Preserve historical art, identities, native generation, placement, entrances, collision, fog, RNG and saves.",
   "lastValidation": {
-    "id": "bugfix-embercourt-town-building-overlaps-20260911",
-    "sliceId": "bugfix-embercourt-town-building-overlaps-20260911",
+    "id": "art-overworld-town-biome-fit-20260913",
+    "sliceId": "art-overworld-town-biome-fit-20260913",
     "status": "completed",
-    "sourceReport": "docs/embercourt-town-building-overlaps.md",
-    "sourceSmallChecks": 717,
-    "sourceWideChecks": 717,
-    "linuxPackagedChecks": 717,
-    "windowsPackagedChecks": 717,
-    "negativeControl": "Seven expected hall/river intersection failures with original view rectangles",
+    "validatedAt": "2026-09-13T18:48:55Z",
+    "sourceReport": "docs/overworld-town-biome-fit.md",
+    "sourceResolverCases": 858,
+    "originalVariants": 19,
+    "offlineProcessingJobs": 17,
+    "cleanCacheImports": 19,
+    "linuxPackagedChecks": 1014,
+    "windowsPackagedChecks": 1014,
     "repositoryValidation": "passed",
-    "officialExports": "Linux/Windows passed, including Windows generated-map/Town flow",
-    "packBytesPerPlatform": 313201864,
-    "packMemberCount": 5599,
-    "packParity": "Only platform-specific project.binary differs",
-    "cleanup": "Removed about 16 MB of obsolete captures and disposable Wine prefixes; final evidence, exports, user data, caches and unrelated files preserved",
-    "limits": "Render fixtures, not new paid-growth or disk-save playthrough. Windows headless Wine, not GPU certification. Five Embercourt placement records only."
+    "officialExports": "Linux/Windows passed, including startup and Windows generated-map/Town/build flow",
+    "packBytesPerPlatform": 516821036,
+    "packMemberCount": 8517,
+    "packParity": "Only platform-specific project.binary differs; current manifests, art and scripts match",
+    "cleanup": "1068756 bytes of obsolete extraction previews removed; disposable probes and Wine system prefixes removed, user data, final evidence, original art, exports and caches preserved",
+    "limits": "Overworld town presentation only; Windows headless Wine, not GPU certification. Town interiors, gameplay, native RMG and save schema unchanged. Not a release-ready claim."
   },
   "priorTownRosterDoubleClickValidation": {
     "id": "ui-town-roster-double-click-20260911",
@@ -22266,9 +22274,78 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Implement the five playtest slices in priorityOrder before discretionary work. Shared input/tooltip foundations may be combined, but each slice requires live behavior acceptance. Preserve native RMG source semantics; do not infer balance changes from this single loss or treat planning as implementation.",
+  "nextActionGuardrailNote": "Completed the owner-directed biome town art slice. Select the next owner-directed slice before further work; do not infer native RMG, Town-interior, gameplay or balance changes.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "art-overworld-town-biome-fit-20260913",
+      "title": "Biome-aware Overworld Town Artwork",
+      "phase": "phase-6-production-alpha-layer",
+      "parentId": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/overworld-town-biome-fit.md"
+      ],
+      "targets": [
+        ".gitignore",
+        "scenes/overworld/OverworldMapView.gd",
+        "scripts/core/TownBiomeArtRules.gd",
+        "art/overworld/manifest.json",
+        "art/overworld/town_biome_sprites.json",
+        "art/overworld/source/generated/towns/biome_fit",
+        "art/overworld/source/trimmed/towns/biome_fit",
+        "art/overworld/runtime/objects/towns/biome_fit",
+        "tools/prepare_town_biome_art.py",
+        "tools/package_town_biome_art.py",
+        "tests/town_biome_art_regression.py",
+        "tests/town_biome_release_regression.py",
+        "tests/town_biome_package_parity.py"
+      ],
+      "validation": [
+        "python3 -B tests/town_biome_art_regression.py",
+        "python3 -B tests/town_biome_art_regression.py --assets-only --reproduce-processing",
+        "python3 -B tests/town_biome_art_regression.py --assets-only --clean-import",
+        "python3 -B tests/town_biome_art_regression.py --proportion",
+        "python3 tests/validate_repo.py",
+        "tests/packaging_linux_export_smoke.py and tests/packaging_windows_export_smoke.py with task-owned evidence paths",
+        "tests/town_biome_release_regression.py on Linux/Windows packages",
+        "tests/town_biome_package_parity.py on final packages",
+        "visual inspection of seven art sheets and 1280x720/1920x1080 generated maps",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "All supported town/biome presentations resolve original manifest-backed artwork",
+        "Town identity, placement, entrance, collision, fog, RNG and saves unchanged",
+        "Inspected source/package evidence and relevant validation pass"
+      ],
+      "nonGoals": [
+        "Native RMG rules or placement changes",
+        "Town interior, balance, save schema or unrelated art changes"
+      ],
+      "createdAt": "2026-09-13T11:16:25Z",
+      "startedAt": "2026-09-13T11:16:25Z",
+      "updatedAt": "2026-09-13T18:48:55Z",
+      "notes": "Completed biome-aware Overworld town art: 19 original generated variants; 39 logical entries / 33 architectures / nine biomes / 22 aliases. 858 resolver cases, 17 pixel-reproducible cutouts, 19 clean-cache imports, visual review, full repository, official Linux/Windows exports and 1014-check native Medium-to-Town flows per platform pass. PCK 516821036 bytes / 8517 entries; only project.binary differs. Historical identity, native generation, placement, entrances, collision, fog, RNG and saves unchanged. Cleanup preserves source, evidence, packages, user data and caches; no release-ready claim.",
+      "evidencePaths": [
+        "docs/overworld-town-biome-fit.md",
+        "art/overworld/source/generated/towns/biome_fit/manifest.json",
+        ".artifacts/town-biome-fit-20260913/report.json",
+        ".artifacts/town-biome-fit-20260913/processing-reproduction.json",
+        ".artifacts/town-biome-fit-20260913/clean-import-report.json",
+        ".artifacts/town-biome-fit-20260913/proportion/report.json",
+        ".artifacts/town-biome-fit-20260913/repository-validation-final.log",
+        ".artifacts/town-biome-fit-20260913/linux/report.json",
+        ".artifacts/town-biome-fit-20260913/windows/report.json",
+        ".artifacts/town-biome-fit-20260913/release-entry/linux-reviewed/packaged-report.json",
+        ".artifacts/town-biome-fit-20260913/release-entry/windows-reviewed/packaged-report.json",
+        ".artifacts/town-biome-fit-20260913/package-parity.json"
+      ],
+      "blocker": "",
+      "completedAt": "2026-09-13T18:48:55Z"
+    },
     {
       "id": "production-content-validator-20260913",
       "title": "Reconcile production content validators",
@@ -112507,7 +112584,7 @@
     }
   ],
   "result": "small_map_gameplay_priorities_planned_only",
-  "status": "in_progress",
+  "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -112607,9 +112684,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "All five owner-priority slices implemented and validated. Local recruitment source compact/wide 175 each; final Linux 177 and Windows Wine 176. Full repository, official exports/startup and package parity pass. Fresh Small seed 10 manual match reached terminal defeat on Day 2. Existing Moonbite development test limitation reproduces identically in the prior release; unresolved manual OpenGL crash and headcount-only threat disclosure remain documented follow-ups. Cleanup removed 2010129404 bytes in superseded exports; final packages, evidence, saves and caches retained. No release-ready claim.",
+  "summary": "Completed biome-aware Overworld town art: 19 original generated variants; 39 logical entries / 33 architectures / nine biomes / 22 aliases. 858 resolver cases, 17 pixel-reproducible cutouts, 19 clean-cache imports, visual review, full repository, official Linux/Windows exports and 1014-check native Medium-to-Town flows per platform pass. PCK 516821036 bytes / 8517 entries; only project.binary differs. Historical identity, native generation, placement, entrances, collision, fog, RNG and saves unchanged. Cleanup preserves source, evidence, packages, user data and caches; no release-ready claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-13T00:06:21+00:00",
+  "updatedAt": "2026-09-13T18:48:55Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

@@ -26579,6 +26579,210 @@
       "source_model": "original_art_cluster_assembly",
       "source_manifest": "res://art/overworld/source/generated/terrain/biome_blocker_library_20260913/recipes.json",
       "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "town_biome_riverwatch_ash": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/riverwatch_ash.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/riverwatch_ash.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/riverwatch_ash_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "15343dafc1f5ab289a2d22f13074d7154b4ad0f45695d36865d06858658baf41",
+      "assigned_town_id": "town_riverwatch",
+      "base_asset_id": "town_identity_riverwatch",
+      "accessible_description": "Riverwatch fortress on dark basalt and ash, retaining its stone towers, red roofs, flame banners, beacon and front gate."
+    },
+    "town_biome_duskfen_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/duskfen_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/duskfen_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/duskfen_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "58019faf21b29ce0ee1f3cec5882ef194124aea7816bb9412b2a166d836b54d9",
+      "assigned_town_id": "town_duskfen",
+      "base_asset_id": "town_identity_duskfen",
+      "accessible_description": "Duskfen timber-and-bone fortress with a paved courtyard and land-supported foundations, preserving its green lanterns, towers and front bridge."
+    },
+    "town_biome_riverwatch_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/riverwatch_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/riverwatch_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/riverwatch_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "a285e24d4f8f41acee995c8bc6713381f7a6da15fd2e97e5b3db626a73175124",
+      "base_asset_id": "town_identity_riverwatch",
+      "accessible_description": "riverwatch land: same faction architecture on structural foundations without an incompatible exterior terrain island.",
+      "assigned_town_id": "town_riverwatch"
+    },
+    "town_biome_embercourt_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/embercourt_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/embercourt_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/embercourt_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "8136c8140fe160130b1736e73d2428892f545b2df0e75bafce04c2bdd245e6fe",
+      "base_asset_id": "town_faction_embercourt",
+      "accessible_description": "embercourt land: same faction architecture on structural foundations without an incompatible exterior terrain island."
+    },
+    "town_biome_blackfen_gate_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/blackfen_gate_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/blackfen_gate_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/blackfen_gate_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "254a51ba5ded1604ce8cd6451a3213c6fb32255dcdab22256fb67f509e38dc65",
+      "base_asset_id": "town_identity_blackfen_gate",
+      "accessible_description": "blackfen gate land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "assigned_town_id": "town_blackfen_gate"
+    },
+    "town_biome_murkward_ford_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/murkward_ford_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/murkward_ford_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/murkward_ford_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "6bb10d4b6cead58030d41e81847437e1949230dd6090fac9cb15bcbd66046ecc",
+      "base_asset_id": "town_identity_murkward_ford",
+      "accessible_description": "murkward ford land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "assigned_town_id": "town_murkward_ford"
+    },
+    "town_biome_reedbarrow_ferry_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/reedbarrow_ferry_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/reedbarrow_ferry_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/reedbarrow_ferry_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "f14074fcbf1fe188cda836e938afde645d061a82850374c5f1cce970ab32c1fd",
+      "base_asset_id": "town_identity_reedbarrow_ferry",
+      "accessible_description": "reedbarrow ferry land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "assigned_town_id": "town_reedbarrow_ferry"
+    },
+    "town_biome_bellwake_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/bellwake_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/bellwake_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/bellwake_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "036b49b6f31312299fdd5f8b3891494d5e369b5b3d0637d2daf8d380b4c98d39",
+      "base_asset_id": "town_identity_veilmourn_bellwake_harbor",
+      "accessible_description": "veilmourn bellwake harbor land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "assigned_town_id": "town_veilmourn_bellwake_harbor"
+    },
+    "town_biome_fogchart_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/fogchart_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/fogchart_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/fogchart_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "bfd677fbe6eb478d3b61bf0ca5fb000c786ec33bc88e3c1837414da093c0f675",
+      "base_asset_id": "town_identity_veilmourn_fogchart_mooring",
+      "accessible_description": "veilmourn fogchart mooring land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "assigned_town_id": "town_veilmourn_fogchart_mooring"
+    },
+    "town_biome_gloamwake_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/gloamwake_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/gloamwake_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/gloamwake_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "f95f5769621d7e3994a7d743c8f2d0da96d4902c56062c39cf52380486e85ce6",
+      "base_asset_id": "town_identity_gloamwake_anchorage",
+      "accessible_description": "gloamwake anchorage land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "assigned_town_id": "town_gloamwake_anchorage"
+    },
+    "town_biome_rainwrit_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/rainwrit_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/rainwrit_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/rainwrit_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "a25437b7490a5c9864d9d3da03cdb5f5e806fd26339edf5cd2a602a96028bd97",
+      "base_asset_id": "town_identity_rainwrit_bastion",
+      "accessible_description": "rainwrit bastion land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "assigned_town_id": "town_rainwrit_bastion"
+    },
+    "town_biome_hollowreed_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/hollowreed_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/hollowreed_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/hollowreed_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "c5e981c561e57bceaee01fac48adbc2b814f7ba4aba326b011121449f41164a6",
+      "base_asset_id": "town_identity_hollowreed_sanctuary",
+      "accessible_description": "hollowreed sanctuary land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "assigned_town_id": "town_hollowreed_sanctuary"
+    },
+    "town_biome_pale_sounding_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/pale_sounding_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/pale_sounding_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/pale_sounding_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "25274cf94702bca00a1b44659d01308cef8bc0e27806fdb2353c5daa73ab613d",
+      "base_asset_id": "town_identity_pale_sounding_harbor",
+      "accessible_description": "pale sounding harbor land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "assigned_town_id": "town_pale_sounding_harbor"
+    },
+    "town_biome_cinderlock_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/cinderlock_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/cinderlock_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/cinderlock_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "27e575a03b6414d94cc749166e4fc4560cc1bcd1c1134ec253048a8ace265425",
+      "base_asset_id": "town_identity_cinderlock_bastion",
+      "accessible_description": "cinderlock bastion land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "assigned_town_id": "town_cinderlock_bastion"
+    },
+    "town_biome_mireclaw_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/mireclaw_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/mireclaw_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/mireclaw_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "ade72afd2df62cbaac4ee3b18a338807af469d9cdd486585facf49871231077d",
+      "base_asset_id": "town_faction_mireclaw",
+      "accessible_description": "mireclaw faction town on dry structural foundations: distinct architecture, colors, banners and entrance preserved; no exterior pond or water spill."
+    },
+    "town_biome_sunvault_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/sunvault_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/sunvault_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/sunvault_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "0858dabf6fd52ad75608711d3c0f498218c972fde1ddbcb7f1bb856e46a5aa2f",
+      "base_asset_id": "town_faction_sunvault",
+      "accessible_description": "sunvault faction town on dry structural foundations: distinct architecture, colors, banners and entrance preserved; no exterior pond or water spill."
+    },
+    "town_biome_thornwake_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/thornwake_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/thornwake_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/thornwake_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "fe567213acaf995efcd6d5ec2c034e384668788034c87ac57917a41a7dba6146",
+      "base_asset_id": "town_faction_thornwake",
+      "accessible_description": "thornwake faction town on dry structural foundations: distinct architecture, colors, banners and entrance preserved; no exterior pond or water spill."
+    },
+    "town_biome_veilmourn_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/veilmourn_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/veilmourn_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/veilmourn_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "13026a145e55a6a87bb5a59a24df8702df9ee89ef0ca26cafe3b548d07f6b1e9",
+      "base_asset_id": "town_faction_veilmourn",
+      "accessible_description": "veilmourn faction town on dry structural foundations: distinct architecture, colors, banners and entrance preserved; no exterior pond or water spill."
+    },
+    "town_biome_blackbell_land": {
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/blackbell_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/blackbell_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/blackbell_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "29fb1d9a9613a1741d9697039ebca23fb232c395912fa2305064c014430f83cb",
+      "base_asset_id": "town_identity_blackbell_foundry",
+      "accessible_description": "Blackbell Foundry retains its bronze bell, furnaces, basalt foundations and contained cooling troughs; no water discharges beyond the structural base on dry terrain.",
+      "assigned_town_id": "town_blackbell_foundry"
     }
   },
   "resource_site_sprites": {
