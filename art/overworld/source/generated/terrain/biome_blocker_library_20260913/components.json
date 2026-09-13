@@ -1,0 +1,526 @@
+{
+  "generator": "OpenAI built-in image generation",
+  "assembly": "Owner-approved mix of separately generated dead-tree sprites and distinct original-art clusters",
+  "prompts": "res://art/overworld/source/generated/terrain/biome_blocker_library_20260913/prompts.json",
+  "components": {
+    "deadwood_hollow_dead_oak": {
+      "name": "Hollow Dead Oak",
+      "path": "res://art/overworld/source/generated/terrain/biome_blocker_library_20260913/hollow_dead_oak.png",
+      "generator": "OpenAI built-in image generation",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-ba091424-cbc5-4f18-86d9-b7225507b02e.png",
+      "sha256": "5a3106b9c83ef1a5ea7303fa7e1d04b3fa3a87eb138d5fdf5f092f68254c2796"
+    },
+    "cohesive_temperate_00": {
+      "name": "Temperate 00",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_temperate_01": {
+      "name": "Temperate 01",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
+      "atlas_region": [
+        128,
+        0,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_temperate_02": {
+      "name": "Temperate 02",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
+      "atlas_region": [
+        256,
+        0,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_temperate_03": {
+      "name": "Temperate 03",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_temperate_07": {
+      "name": "Temperate 07",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
+      "atlas_region": [
+        384,
+        128,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_temperate_12": {
+      "name": "Temperate 12",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/temperate_atlas.png",
+      "atlas_region": [
+        0,
+        384,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_variety_thornroot_thicket": {
+      "name": "Thornroot Thicket",
+      "path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/thornroot_thicket.png",
+      "atlas_region": null,
+      "source_manifest": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/manifest.json"
+    },
+    "cohesive_variety_wild_rose_barrier": {
+      "name": "Wild Rose Barrier",
+      "path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/wild_rose_barrier.png",
+      "atlas_region": null,
+      "source_manifest": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/manifest.json"
+    },
+    "cohesive_variety_ancient_oak_grove": {
+      "name": "Ancient Oak Grove",
+      "path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/ancient_oak_grove.png",
+      "atlas_region": null,
+      "source_manifest": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/manifest.json"
+    },
+    "deadwood_fallen_forest_giant": {
+      "name": "Fallen Forest Giant",
+      "path": "res://art/overworld/source/generated/terrain/biome_blocker_library_20260913/fallen_forest_giant.png",
+      "generator": "OpenAI built-in image generation",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-aa41ddf7-ad47-432a-a477-bea7e702087c.png",
+      "sha256": "935bbee5d7454289e4126d9d71fe357832880c00b6e47a9fb87afccb158345c5"
+    },
+    "deadwood_drowned_cypress_snags": {
+      "name": "Drowned Cypress Snags",
+      "path": "res://art/overworld/source/generated/terrain/biome_blocker_library_20260913/drowned_cypress_snags.png",
+      "generator": "OpenAI built-in image generation",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-bd1738c1-9fdb-45c5-b330-1889d143509e.png",
+      "sha256": "92009d328317d0aadfaf3e1a2c57f37f17feb52bab735f9ec42e0c51b461931f"
+    },
+    "cohesive_wet_cold_00": {
+      "name": "Wet Cold 00",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_wet_cold_01": {
+      "name": "Wet Cold 01",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [
+        128,
+        0,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_wet_cold_04": {
+      "name": "Wet Cold 04",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [
+        0,
+        128,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_wet_cold_10": {
+      "name": "Wet Cold 10",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [
+        256,
+        256,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_variety_tangled_marsh_roots": {
+      "name": "Tangled Marsh Roots",
+      "path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/tangled_marsh_roots.png",
+      "atlas_region": null,
+      "source_manifest": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/manifest.json"
+    },
+    "cohesive_variety_giant_shelf_fungi": {
+      "name": "Giant Shelf Fungi",
+      "path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/giant_shelf_fungi.png",
+      "atlas_region": null,
+      "source_manifest": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/manifest.json"
+    },
+    "deadwood_salt_killed_mangrove": {
+      "name": "Salt Killed Mangrove",
+      "path": "res://art/overworld/source/generated/terrain/biome_blocker_library_20260913/salt_killed_mangrove.png",
+      "generator": "OpenAI built-in image generation",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-7be01a3f-3483-45d8-b6cb-5a6902c60e73.png",
+      "sha256": "d827c53bd238363efdb68bcc78a1adc34946eba3252a3480c99f1019334fa862"
+    },
+    "cohesive_wet_cold_02": {
+      "name": "Wet Cold 02",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [
+        256,
+        0,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_wet_cold_06": {
+      "name": "Wet Cold 06",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [
+        256,
+        128,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_variety_saltworn_driftwood": {
+      "name": "Saltworn Driftwood",
+      "path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/saltworn_driftwood.png",
+      "atlas_region": null,
+      "source_manifest": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/manifest.json"
+    },
+    "deadwood_windblasted_dead_juniper": {
+      "name": "Windblasted Dead Juniper",
+      "path": "res://art/overworld/source/generated/terrain/biome_blocker_library_20260913/windblasted_dead_juniper.png",
+      "generator": "OpenAI built-in image generation",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-82017f1a-d748-45c0-87ea-837581c56a5d.png",
+      "sha256": "de19b5a513fe4734a09b6a59da93fbb130464b5be0641b9fa45947c7c6305d43"
+    },
+    "cohesive_harsh_00": {
+      "name": "Harsh 00",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_harsh_02": {
+      "name": "Harsh 02",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [
+        256,
+        0,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_variety_shattered_slate": {
+      "name": "Shattered Slate",
+      "path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/shattered_slate.png",
+      "atlas_region": null,
+      "source_manifest": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/manifest.json"
+    },
+    "deadwood_sun_bleached_dead_thorn": {
+      "name": "Sun Bleached Dead Thorn",
+      "path": "res://art/overworld/source/generated/terrain/biome_blocker_library_20260913/sun_bleached_dead_thorn.png",
+      "generator": "OpenAI built-in image generation",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-581c514d-f07c-4312-bada-44bf4d78a236.png",
+      "sha256": "292520e20be6ae272417b1e302d738eb0c3f7db826828255d0e95cd84fc989c5"
+    },
+    "cohesive_harsh_03": {
+      "name": "Harsh 03",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_harsh_07": {
+      "name": "Harsh 07",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [
+        384,
+        128,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_harsh_12": {
+      "name": "Harsh 12",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [
+        0,
+        384,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_variety_basalt_chimneys": {
+      "name": "Basalt Chimneys",
+      "path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/basalt_chimneys.png",
+      "atlas_region": null,
+      "source_manifest": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/manifest.json"
+    },
+    "cohesive_variety_redstone_hoodoos": {
+      "name": "Redstone Hoodoos",
+      "path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/redstone_hoodoos.png",
+      "atlas_region": null,
+      "source_manifest": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/manifest.json"
+    },
+    "deadwood_rimebound_dead_pine": {
+      "name": "Rimebound Dead Pine",
+      "path": "res://art/overworld/source/generated/terrain/biome_blocker_library_20260913/rimebound_dead_pine.png",
+      "generator": "OpenAI built-in image generation",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-4808c37f-872e-45ac-8337-dfee499d5e87.png",
+      "sha256": "323dee8f408aae6b8ef08f172fbcfca7ffe6c9fcfc03fe0046b7e7e402e3a85b"
+    },
+    "cohesive_wet_cold_03": {
+      "name": "Wet Cold 03",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_wet_cold_15": {
+      "name": "Wet Cold 15",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
+      "atlas_region": [
+        384,
+        384,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_variety_snowbound_deadfall": {
+      "name": "Snowbound Deadfall",
+      "path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/snowbound_deadfall.png",
+      "atlas_region": null,
+      "source_manifest": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/manifest.json"
+    },
+    "cohesive_variety_blue_ice_crag": {
+      "name": "Blue Ice Crag",
+      "path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/blue_ice_crag.png",
+      "atlas_region": null,
+      "source_manifest": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/manifest.json"
+    },
+    "deadwood_charred_blackwood_snags": {
+      "name": "Charred Blackwood Snags",
+      "path": "res://art/overworld/source/generated/terrain/biome_blocker_library_20260913/charred_blackwood_snags.png",
+      "generator": "OpenAI built-in image generation",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-d0fb8b91-c1a8-4eb1-afc2-44a73f21cec9.png",
+      "sha256": "a8791f8276b0aac7eb1edffaa6a9a9e6b110fa4a4e53adfd0d9836f15bdafe23"
+    },
+    "cohesive_harsh_01": {
+      "name": "Harsh 01",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [
+        128,
+        0,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_harsh_05": {
+      "name": "Harsh 05",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [
+        128,
+        128,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_harsh_09": {
+      "name": "Harsh 09",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [
+        128,
+        256,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_harsh_10": {
+      "name": "Harsh 10",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [
+        256,
+        256,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "cohesive_harsh_14": {
+      "name": "Harsh 14",
+      "path": "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
+      "atlas_region": [
+        256,
+        384,
+        128,
+        128
+      ],
+      "source_manifest": "res://art/overworld/source/generated/terrain/cohesive_blocker_mass_v3/manifest.json"
+    },
+    "deadwood_petrified_root_crown": {
+      "name": "Petrified Root Crown",
+      "path": "res://art/overworld/source/generated/terrain/biome_blocker_library_20260913/petrified_root_crown.png",
+      "generator": "OpenAI built-in image generation",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-3962bd49-adef-4eea-92f8-7016dc24d167.png",
+      "sha256": "8c1758a3c851b17abfb3d2b781ba234c5553ce3aec5ac1d3a82ca4e05250a17f"
+    },
+    "cohesive_variety_cavern_crystal_crag": {
+      "name": "Cavern Crystal Crag",
+      "path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/cavern_crystal_crag.png",
+      "atlas_region": null,
+      "source_manifest": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/manifest.json"
+    }
+  },
+  "biomes": {
+    "biome_grasslands": {
+      "new_dead_tree": "deadwood_hollow_dead_oak",
+      "existing_components": [
+        "cohesive_temperate_00",
+        "cohesive_temperate_01",
+        "cohesive_temperate_02",
+        "cohesive_temperate_03",
+        "cohesive_temperate_07",
+        "cohesive_temperate_12",
+        "cohesive_variety_thornroot_thicket",
+        "cohesive_variety_wild_rose_barrier",
+        "cohesive_variety_ancient_oak_grove"
+      ],
+      "target_new_blockers": 100
+    },
+    "biome_deep_forest": {
+      "new_dead_tree": "deadwood_fallen_forest_giant",
+      "existing_components": [
+        "cohesive_temperate_00",
+        "cohesive_temperate_01",
+        "cohesive_temperate_02",
+        "cohesive_temperate_07",
+        "cohesive_temperate_12",
+        "cohesive_variety_thornroot_thicket",
+        "cohesive_variety_wild_rose_barrier",
+        "cohesive_variety_ancient_oak_grove"
+      ],
+      "target_new_blockers": 100
+    },
+    "biome_mire_fen": {
+      "new_dead_tree": "deadwood_drowned_cypress_snags",
+      "existing_components": [
+        "cohesive_wet_cold_00",
+        "cohesive_wet_cold_01",
+        "cohesive_wet_cold_04",
+        "cohesive_wet_cold_10",
+        "cohesive_variety_tangled_marsh_roots",
+        "cohesive_variety_giant_shelf_fungi"
+      ],
+      "target_new_blockers": 100
+    },
+    "biome_coast_archipelago": {
+      "new_dead_tree": "deadwood_salt_killed_mangrove",
+      "existing_components": [
+        "cohesive_wet_cold_01",
+        "cohesive_wet_cold_02",
+        "cohesive_wet_cold_06",
+        "cohesive_wet_cold_10",
+        "cohesive_variety_tangled_marsh_roots",
+        "cohesive_variety_saltworn_driftwood"
+      ],
+      "target_new_blockers": 100
+    },
+    "biome_highland_ridge": {
+      "new_dead_tree": "deadwood_windblasted_dead_juniper",
+      "existing_components": [
+        "cohesive_wet_cold_02",
+        "cohesive_wet_cold_06",
+        "cohesive_harsh_00",
+        "cohesive_harsh_02",
+        "cohesive_variety_shattered_slate"
+      ],
+      "target_new_blockers": 100
+    },
+    "biome_rough_badlands": {
+      "new_dead_tree": "deadwood_sun_bleached_dead_thorn",
+      "existing_components": [
+        "cohesive_harsh_00",
+        "cohesive_harsh_03",
+        "cohesive_harsh_07",
+        "cohesive_harsh_12",
+        "cohesive_variety_shattered_slate",
+        "cohesive_variety_basalt_chimneys",
+        "cohesive_variety_redstone_hoodoos"
+      ],
+      "target_new_blockers": 100
+    },
+    "biome_snow_frost_marches": {
+      "new_dead_tree": "deadwood_rimebound_dead_pine",
+      "existing_components": [
+        "cohesive_wet_cold_03",
+        "cohesive_wet_cold_04",
+        "cohesive_wet_cold_15",
+        "cohesive_variety_snowbound_deadfall",
+        "cohesive_variety_blue_ice_crag"
+      ],
+      "target_new_blockers": 100
+    },
+    "biome_ash_lava_wastes": {
+      "new_dead_tree": "deadwood_charred_blackwood_snags",
+      "existing_components": [
+        "cohesive_harsh_00",
+        "cohesive_harsh_01",
+        "cohesive_harsh_02",
+        "cohesive_harsh_03",
+        "cohesive_harsh_05",
+        "cohesive_harsh_07",
+        "cohesive_harsh_09",
+        "cohesive_harsh_10",
+        "cohesive_harsh_12",
+        "cohesive_harsh_14",
+        "cohesive_variety_basalt_chimneys"
+      ],
+      "target_new_blockers": 100
+    },
+    "biome_subterranean_underways": {
+      "new_dead_tree": "deadwood_petrified_root_crown",
+      "existing_components": [
+        "cohesive_harsh_01",
+        "cohesive_harsh_02",
+        "cohesive_harsh_07",
+        "cohesive_harsh_09",
+        "cohesive_harsh_12",
+        "cohesive_variety_cavern_crystal_crag",
+        "cohesive_variety_giant_shelf_fungi"
+      ],
+      "target_new_blockers": 100
+    }
+  }
+}

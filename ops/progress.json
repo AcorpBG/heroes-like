@@ -16647,14 +16647,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Completed 12 original blocker appearances; 36 total live RMG palette assets across nine biomes. Source masters, runtime imports, biome wiring and explicit wiki entries delivered. Initial six passed focused generated-map coverage/authority checks; owner requested less testing and more assets, so final twelve received import and catalog rebuild only. No native topology changes.",
+  "currentNotes": "Completed 900 unique blocker PNGs, 100 per biome: nine new dead-tree originals plus 891 original-art clusters; 414 contain dead trees. All registered in live RMG palettes and wiki. Build uniqueness/counts, nine visual sheets, clean Godot import and asset inventory passed. No gameplay or broad suite run, per owner preference. Native semantics unchanged.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "rmg-blocker-variety-20260913",
-  "currentSliceId": "rmg-blocker-variety-20260913",
-  "currentSliceNotes": "Completed 12 original blocker appearances; 36 total live RMG palette assets across nine biomes. Source masters, runtime imports, biome wiring and explicit wiki entries delivered. Initial six passed focused generated-map coverage/authority checks; owner requested less testing and more assets, so final twelve received import and catalog rebuild only. No native topology changes.",
+  "currentSlice": "rmg-biome-blocker-library-20260913",
+  "currentSliceId": "rmg-biome-blocker-library-20260913",
+  "currentSliceNotes": "Completed 900 unique blocker PNGs, 100 per biome: nine new dead-tree originals plus 891 original-art clusters; 414 contain dead trees. All registered in live RMG palettes and wiki. Build uniqueness/counts, nine visual sheets, clean Godot import and asset inventory passed. No gameplay or broad suite run, per owner preference. Native semantics unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Expand live RMG biome blocker variety",
-  "currentSliceUpdatedAt": "2026-09-13T05:21:56.633430+00:00",
+  "currentSliceTitle": "Produce 100 new blockers per biome",
+  "currentSliceUpdatedAt": "2026-09-13T05:57:50.630237+00:00",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22269,6 +22269,21 @@
   "nextActionGuardrailNote": "Implement the five playtest slices in priorityOrder before discretionary work. Shared input/tooltip foundations may be combined, but each slice requires live behavior acceptance. Preserve native RMG source semantics; do not infer balance changes from this single loss or treat planning as implementation.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "rmg-biome-blocker-library-20260913",
+      "title": "Produce 100 new blockers per biome",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-biome-blocker-library.md"
+      ],
+      "createdAt": "2026-09-13T05:33:50.623354+00:00",
+      "startedAt": "2026-09-13T05:33:50.623354+00:00",
+      "notes": "Completed 900 unique blocker PNGs, 100 per biome: nine new dead-tree originals plus 891 original-art clusters; 414 contain dead trees. All registered in live RMG palettes and wiki. Build uniqueness/counts, nine visual sheets, clean Godot import and asset inventory passed. No gameplay or broad suite run, per owner preference. Native semantics unchanged.",
+      "completedAt": "2026-09-13T05:57:50.630237+00:00"
+    },
     {
       "id": "rmg-blocker-variety-20260913",
       "title": "Expand live RMG biome blocker variety",

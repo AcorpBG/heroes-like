@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Expanded Biome Blocker Library
+
+`rmg-biome-blocker-library-20260913` — completed. Added 900 distinct blocker PNGs (100 per biome): nine new dead-tree originals and 891 assembled clusters, including 414 dead-tree appearances. Live RMG palettes and wiki updated; native collision/placement authority unchanged. Asset build, visual review, import and catalog checks passed; no gameplay suite run. Details: `docs/rmg-biome-blocker-library.md`.
+
 ### RMG Blocker Variety
 
 Completed 2026-09-13: `rmg-blocker-variety-20260913`. Twelve original biome blocker sprites expand the live generated-body pool from 24 to 36. RMG palettes, portable imports and explicit wiki availability are wired. Native footprints/routes/saves are unchanged. Initial-batch focused generated-map check passed; owner redirected effort to more art, so the expanded batch received imports and catalog rebuild only. Evidence: `docs/rmg-blocker-variety.md`.

@@ -229,6 +229,10 @@ def main():
         e['description'] = description(e)
         e['faction'] = d.get('faction_id', d.get('player_faction_id', ''))
         e['tags'] = list(dict.fromkeys(str(v) for v in [d.get('role'), d.get('category'), d.get('family'), d.get('school_id'), d.get('rarity'), d.get('context'), d.get('strategic_role')] if v))
+        if d.get('contains_dead_tree'):
+            e['tags'].append('dead_tree')
+        if d.get('production_kind'):
+            e['tags'].append(d['production_kind'])
         e['media'] = list(entity_media[e['id']].values())
         special = d.get('scenic_backdrop_path') or d.get('emblem_path') or d.get('icon_path') or d.get('ui', {}).get('icon_path')
         e['portrait'] = primary.get(e['id']) or ({'path': special.removeprefix('res://')} if special else next((m for m in e['media'] if m['path'].endswith('.png') and not asset_by_path[m['path']]['archive']), None))
