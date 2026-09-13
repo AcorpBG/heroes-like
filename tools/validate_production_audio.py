@@ -24,7 +24,11 @@ def validate_manifest(path):
     manifest = read(path)
     assert manifest['legacy_regeneration_protected'] is True
     assert manifest['sample_rate_hz'] == 44100 and manifest['channel_count'] == 2
-    assert manifest['production_status'] == 'technical_checks_passed_listening_review_pending'
+    assert manifest['production_status'] in {'technical_checks_passed_listening_review_pending', 'accepted'}
+    if manifest['production_status'] == 'accepted':
+        approval = manifest['listening_acceptance']
+        assert approval['reviewer'] == 'owner' and approval['date']
+        assert approval['evidence'] == 'docs/audio-production-implementation.md'
     for cue in manifest['cues'].values():
         asset = ROOT / cue['path'].removeprefix('res://')
         assert asset.is_file(), asset

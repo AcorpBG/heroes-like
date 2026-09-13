@@ -589,10 +589,16 @@
     }
   },
   "production_source": "stable_audio_3_v1",
-  "production_status": "technical_checks_passed_listening_review_pending",
+  "production_status": "accepted",
   "generation_pipeline": "tools/generate_production_audio.py",
   "legacy_regeneration_protected": true,
   "generated_by": "tools/generate_production_audio.py",
   "duration_policy": "per_cue",
-  "master_sample_width_bits": 24
+  "master_sample_width_bits": 24,
+  "listening_acceptance": {
+    "reviewer": "owner",
+    "date": "2026-09-13",
+    "evidence": "docs/audio-production-implementation.md",
+    "scope": "Full manual playtest; production audio accepted."
+  }
 }
