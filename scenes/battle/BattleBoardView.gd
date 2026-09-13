@@ -168,6 +168,7 @@ const BATTLE_AUDIO_BUS := "Effects"
 const BATTLE_SFX_MANIFEST_PATH := "res://content/battle_sfx_manifest.json"
 const BATTLE_VFX_MANIFEST_PATH := "res://content/battle_vfx_manifest.json"
 const CombatVfxMotion = preload("res://scripts/ui/CombatVfxMotion.gd")
+const BattleUnitPose = preload("res://scripts/ui/BattleUnitPose.gd")
 const BATTLE_FIELD_OBJECTIVE_ART_MANIFEST_PATH := "res://content/battle_field_objective_art_manifest.json"
 const BATTLE_FIELD_OBJECTIVE_ART_PRESENTATION_MODEL := "type_distinct_imported_landmark_with_non_color_control_shape_and_legacy_geometry_fallback"
 const BATTLE_STATUS_EFFECT_ART_MANIFEST_PATH := "res://content/battle_status_effect_art_manifest.json"
@@ -2059,13 +2060,16 @@ func _draw() -> void:
 		for id in _spell_target_candidates:
 			if not stack_cells.has(id): continue
 			var selected := String(_staged_order_preview.get("target_id", "")) == String(id)
-			var center := _hex_center(stack_cells[id], hex_layout)
-			_draw_hex_outline(center, float(hex_layout.get("radius", 20.0)) * 0.96, ACTIVE_COLOR if selected else Color(0.42, 0.80, 1.0, 0.85), 4.0 if selected else 1.5)
+			for body_cell in BattleRulesScript.Footprint.cells(_stack_by_id(String(id))):
+				var center := _hex_center(Vector2i(int(body_cell.q), int(body_cell.r)), hex_layout)
+				_draw_hex_outline(center, float(hex_layout.get("radius", 20.0)) * 0.96, ACTIVE_COLOR if selected else Color(0.42, 0.80, 1.0, 0.85), 4.0 if selected else 1.5)
 	if bool(_consequence_preview.get("ok", false)) and (bool(_consequence_preview.get("moved", false)) or String(_consequence_preview.get("action", "")) == "move") and not _battle.has("playback_event"):
 		var end: Dictionary = _consequence_preview.get("destination", {})
 		if not end.is_empty():
 			var center := _hex_center(Vector2i(int(end.q), int(end.r)), hex_layout)
-			draw_arc(center, float(hex_layout.get("radius", 20.0)) * 0.88, 0.0, TAU, 32, ACTIVE_COLOR, 2.0, true)
+			for body_cell in BattleRulesScript.Footprint.cells(_active_stack, end):
+				var body_center := _hex_center(Vector2i(int(body_cell.q), int(body_cell.r)), hex_layout)
+				draw_arc(body_center, float(hex_layout.get("radius", 20.0)) * 0.88, 0.0, TAU, 32, ACTIVE_COLOR, 2.0, true)
 			_draw_text("END", center + Vector2(-12, 20), ACTIVE_COLOR, 11)
 	_draw_turn_strip(field_rect)
 	_draw_footer_line(field_rect)
@@ -2341,7 +2345,7 @@ func _unit_animation_sheet_for_stack(stack: Dictionary) -> Texture2D:
 	if unit_id == "":
 		return null
 	var animation := ContentService.get_unit_animation(unit_id)
-	var path := String(animation.get("sprite_sheet", ""))
+	var path := String(animation.get("pose_sheet", animation.get("sprite_sheet", "")))
 	if path == "":
 		return null
 	return _unit_animation_sheet_texture(path)
@@ -2368,6 +2372,10 @@ func _unit_animation_sheet_texture(path: String) -> Texture2D:
 
 func _animation_frame_region_for_stack(stack: Dictionary) -> Rect2:
 	var state_name := _animation_state_for_stack(stack)
+	var animation := ContentService.get_unit_animation(String(stack.get("unit_id", "")))
+	if BattleUnitPose.has_authored_poses(animation):
+		var reduced := bool(_animation_preferences().get("reduced_motion", false))
+		return BattleUnitPose.region(animation, state_name, _stack_presentation_progress(String(stack.get("battle_id", ""))), Time.get_ticks_msec(), reduced)
 	var row := _animation_state_row_for_unit(String(stack.get("unit_id", "")), state_name)
 	var frame := _animation_frame_index_for_stack(stack)
 	return Rect2(Vector2(64.0 * float(frame), 64.0 * float(row)), Vector2(64.0, 64.0))
@@ -2661,6 +2669,11 @@ func _draw_field_objectives(hex_layout: Dictionary) -> void:
 		var color := _controller_color(String(objective.get("control_side", "neutral")))
 		_draw_objective_marker(center, objective, color, float(hex_layout.get("radius", 1.0)))
 
+func _draw_body_outline(battle_id: String, hex_layout: Dictionary, radius: float, color: Color, width: float) -> void:
+	var stack := BattleRulesScript._get_stack_by_id(_battle, battle_id)
+	for cell in BattleRulesScript.Footprint.cells(stack):
+		_draw_hex_outline(_hex_center(Vector2i(cell.q, cell.r), hex_layout), radius, color, width)
+
 func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 	if _spell_target_mode: return
 	if _active_stack.is_empty():
@@ -2685,7 +2698,7 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 				continue
 			_draw_movement_destination_cue(cell, _hex_center(cell, hex_layout), radius, legal_cell_keys)
 
-	_draw_hex_outline(active_center, radius * 1.02, ACTIVE_COLOR, 3.4)
+	_draw_body_outline(active_id, hex_layout, radius * 1.02, ACTIVE_COLOR, 3.4)
 
 	if player_input_active:
 		var legal_melee_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, false)
@@ -2694,12 +2707,12 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 			var ranged_id := String(battle_id_value)
 			if not stack_cells.has(ranged_id):
 				continue
-			_draw_hex_outline(_hex_center(stack_cells.get(ranged_id), hex_layout), radius * 0.90, LEGAL_RANGED_COLOR, 2.0)
+			_draw_body_outline(ranged_id, hex_layout, radius * 0.90, LEGAL_RANGED_COLOR, 2.0)
 		for battle_id_value in legal_melee_targets:
 			var melee_id := String(battle_id_value)
 			if not stack_cells.has(melee_id):
 				continue
-			_draw_hex_outline(_hex_center(stack_cells.get(melee_id), hex_layout), radius * 0.96, LEGAL_MELEE_COLOR, 2.4)
+			_draw_body_outline(melee_id, hex_layout, radius * 0.96, LEGAL_MELEE_COLOR, 2.4)
 
 	if player_input_active and not _target_stack.is_empty():
 		var target_id := String(_target_stack.get("battle_id", ""))
@@ -2709,15 +2722,15 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 			var continuity_context := BattleRulesScript.selected_target_continuity_context(_battle)
 			var preserved_setup_target := not continuity_context.is_empty() and String(continuity_context.get("battle_id", "")) == target_id
 			if _selected_target_is_blocked():
-				_draw_hex_outline(target_center, radius * 1.02, BLOCKED_TARGET_COLOR, 3.2)
+				_draw_body_outline(target_id, hex_layout, radius * 1.02, BLOCKED_TARGET_COLOR, 3.2)
 				if preserved_setup_target:
-					_draw_hex_outline(target_center, radius * 1.11, BLOCKED_TARGET_COLOR.lightened(0.18), 2.0)
+					_draw_body_outline(target_id, hex_layout, radius * 1.11, BLOCKED_TARGET_COLOR.lightened(0.18), 2.0)
 				_draw_blocked_target_marker(target_center, radius)
 			else:
 				if preserved_setup_target:
 					var setup_color := LEGAL_RANGED_COLOR if String(continuity_context.get("board_click_action", "")) == "shoot" else LEGAL_MELEE_COLOR
-					_draw_hex_outline(target_center, radius * 1.12, setup_color, 2.4)
-				_draw_hex_outline(target_center, radius * 1.02, TARGET_COLOR, 3.2)
+					_draw_body_outline(target_id, hex_layout, radius * 1.12, setup_color, 2.4)
+				_draw_body_outline(target_id, hex_layout, radius * 1.02, TARGET_COLOR, 3.2)
 				_draw_focus_link(active_center, target_center, String(_active_stack.get("side", "")))
 
 func _draw_movement_destination_cue(cell: Vector2i, center: Vector2, radius: float, legal_cell_keys: Dictionary) -> void:
@@ -2819,6 +2832,7 @@ func _draw_controller_cursor(hex_layout: Dictionary) -> void:
 
 func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 	var radius := float(hex_layout.get("radius", 1.0))
+	_draw_battle_corpses(hex_layout)
 	var visual_rows: Array = []
 	for stack in _all_visible_stacks():
 		if not (stack is Dictionary):
@@ -2864,11 +2878,11 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		var battle_standee: Texture2D = _unit_battle_standee_for_stack(stack)
 		var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
 		if art_source == "event_animation_sheet":
-			var frame_size := _stack_standee_size(radius).y
+			var frame_size := _stack_standee_size(radius, stack).y
 			var frame_rect := Rect2(Vector2(center.x - frame_size * 0.5, ground_center.y - frame_size), Vector2(frame_size, frame_size))
 			_draw_stack_art_region(animation_sheet, frame_rect, _animation_frame_region_for_stack(stack), side == "enemy", Color(1.0, 1.0, 1.0, 0.96))
 		elif art_source == "resting_battle_standee":
-			_draw_stack_art(battle_standee, _stack_standee_rect(center, radius), side == "enemy", Color(1.0, 1.0, 1.0, 0.99))
+			_draw_stack_art(battle_standee, _stack_standee_rect(center, radius, stack), side == "enemy", Color(1.0, 1.0, 1.0, 0.99))
 		elif art_source == "resting_battle_icon":
 			var icon_size := token_radius * STACK_ICON_ART_EXTENT_FACTOR
 			var icon_rect := Rect2(center - Vector2(icon_size * 0.5, icon_size * 0.5), Vector2(icon_size, icon_size))
@@ -2901,6 +2915,35 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 				"radius": _stack_hit_shape_radius(radius),
 			}
 		)
+
+func _draw_battle_corpses(hex_layout: Dictionary) -> void:
+	for corpse in _battle_corpse_entries(hex_layout):
+		_draw_stack_art_region(corpse.texture, corpse.rect, corpse.region, corpse.flip, Color.WHITE)
+
+func _battle_corpse_entries(hex_layout: Dictionary) -> Array:
+	# Corpses derive from the saved dead stack, not an expiring visual event.
+	# They never enter living stack lists, hit shapes, readouts or occupancy.
+	var entries := []
+	var radius := float(hex_layout.get("radius", 1.0))
+	for stack in _battle.get("stacks", []):
+		if not stack is Dictionary or _stack_alive_count(stack) > 0: continue
+		if not _animation_playback_record_for_stack(String(stack.get("battle_id", ""))).is_empty(): continue
+		var cell := _stack_hex_cell(stack)
+		if not _cell_in_bounds(cell): continue
+		var animation := ContentService.get_unit_animation(String(stack.get("unit_id", "")))
+		# Rotated standing cutouts are not corpses. Content migration must supply
+		# an approved dedicated dead pose before enabling this presentation.
+		if not BattleUnitPose.has_authored_poses(animation): continue
+		var region := BattleUnitPose.region(animation, "death_rout_remove", 1.0, 0, false, true)
+		if not region.has_area(): continue
+		var texture := _unit_animation_sheet_for_stack(stack)
+		if texture == null: continue
+		var extent := _stack_standee_size(radius, stack).y
+		var center := _hex_center(cell, hex_layout) + _body_center_offset(stack, cell, hex_layout)
+		var ground_y := center.y + radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
+		var rect := Rect2(Vector2(center.x - extent * 0.5, ground_y - extent), Vector2(extent, extent))
+		entries.append({"battle_id":String(stack.get("battle_id", "")), "texture":texture, "rect":rect, "region":region, "flip":String(stack.get("side", "")) == "enemy"})
+	return entries
 
 func _active_mapped_status_effects(stack: Dictionary) -> Array:
 	_load_battle_status_effect_art_manifest()
@@ -3033,6 +3076,8 @@ func _draw_status_effect_polarity_foundation(center: Vector2, icon_size: float, 
 func _stack_token_art_source(stack: Dictionary) -> String:
 	var battle_id := String(stack.get("battle_id", ""))
 	var animation_sheet: Texture2D = _unit_animation_sheet_for_stack(stack)
+	if animation_sheet != null and BattleUnitPose.has_authored_poses(ContentService.get_unit_animation(String(stack.get("unit_id", "")))):
+		return "event_animation_sheet"
 	var battle_standee: Texture2D = _unit_battle_standee_for_stack(stack)
 	var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
 	return _stack_token_art_source_for_availability(
@@ -3053,12 +3098,13 @@ func _stack_token_art_source_for_availability(animation_available: bool, standee
 		return "animation_sheet_fallback"
 	return "procedural_glyph_fallback"
 
-func _stack_standee_size(hex_radius: float) -> Vector2:
+func _stack_standee_size(hex_radius: float, stack: Dictionary = {}) -> Vector2:
 	var height := clampf(hex_radius * STACK_STANDEE_ART_HEIGHT_FACTOR, STACK_STANDEE_ART_HEIGHT_MIN, STACK_STANDEE_ART_HEIGHT_MAX)
+	height *= clampf(float(stack.get("battle_visual_scale", 1.0)), 0.65, 1.6)
 	return Vector2(height * STACK_STANDEE_ASPECT, height)
 
-func _stack_standee_rect(center: Vector2, hex_radius: float) -> Rect2:
-	var size := _stack_standee_size(hex_radius)
+func _stack_standee_rect(center: Vector2, hex_radius: float, stack: Dictionary = {}) -> Rect2:
+	var size := _stack_standee_size(hex_radius, stack)
 	var ground_y := center.y + hex_radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
 	return Rect2(Vector2(center.x - size.x * 0.5, ground_y - size.y), size)
 
@@ -3080,9 +3126,15 @@ func _draw_stack_art_region(texture: Texture2D, rect: Rect2, region: Rect2, flip
 
 func _stack_presentation_center(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary, stack_cells: Dictionary) -> Vector2:
 	var motion := _stack_presentation_motion(stack, cell, hex_layout, stack_cells)
+	var offset := _body_center_offset(stack, cell, hex_layout)
 	if motion.is_empty():
-		return _hex_center(cell, hex_layout)
-	return Vector2(float(motion.get("center_x", 0.0)), float(motion.get("center_y", 0.0)))
+		return _hex_center(cell, hex_layout) + offset
+	return Vector2(float(motion.get("center_x", 0.0)), float(motion.get("center_y", 0.0))) + offset
+
+func _body_center_offset(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary) -> Vector2:
+	if BattleRulesScript.Footprint.width(stack) != 2: return Vector2.ZERO
+	var rear := cell + Vector2i(1 if String(stack.get("side", "")) == "enemy" else -1, 0)
+	return (_hex_center(rear, hex_layout) - _hex_center(cell, hex_layout)) * 0.5
 
 func _stack_presentation_summary(stack: Dictionary, cell: Vector2i, hex_layout: Dictionary, stack_cells: Dictionary) -> Dictionary:
 	var center := _hex_center(cell, hex_layout)
@@ -5523,6 +5575,9 @@ func _neighboring_stack_hit_shape_overlap_possible(hex_radius: float) -> bool:
 func _stack_id_at_cell(cell: Vector2i) -> String:
 	if not _cell_in_bounds(cell):
 		return ""
+	var occupied := BattleRulesScript.battle_occupancy_map(_battle)
+	var body_id := String(occupied.get("%d,%d" % [cell.x, cell.y], ""))
+	if body_id != "": return body_id
 	var stack_cells := _stack_cells()
 	for stack in _all_visible_stacks():
 		if not (stack is Dictionary):

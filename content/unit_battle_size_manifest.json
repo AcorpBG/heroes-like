@@ -1,0 +1,808 @@
+{
+  "schema_id": "unit_battle_size_manifest_v1",
+  "default_footprint": 1,
+  "default_visual_scale": 1,
+  "review_source": "All 160 shipped battle_standees visually inspected; source identities from unit_art_manifest.json. Scale and occupied length are independent.",
+  "units": {
+    "unit_river_guard": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_ember_archer": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_citadel_pikeward": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_blackbranch_cutthroat": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_mire_slinger": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_bog_brute": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_gorefen_ripper": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_shard_guard": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_prism_adept": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_mirror_duelist": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_aurora_ballista": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_embercourt_fordhook_cadets": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_embercourt_lantern_sappers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_embercourt_bargebow_crews": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_embercourt_ash_oath_bailiffs": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_embercourt_beacon_lectors": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_embercourt_sluicefire_lindworms": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_embercourt_charter_colossus": {
+      "footprint": 1,
+      "visual_scale": 1.4,
+      "reason": "Reviewed raster: tall upright body, one ground cell"
+    },
+    "unit_mireclaw_reedsnare_kin": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_mireclaw_mudglass_slingers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_mireclaw_bogplate_maulers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_mireclaw_ferrychain_lashers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_mireclaw_sporewake_chanters": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_mireclaw_gorefen_rippers": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_mireclaw_drowned_antler_sovereign": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_sunvault_shard_wardens": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_sunvault_prism_adepts": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_sunvault_mirror_duelists": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_sunvault_resonant_choristers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_sunvault_solar_array_striders": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_sunvault_aurora_ballistae": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_sunvault_daybreak_colossus": {
+      "footprint": 1,
+      "visual_scale": 1.4,
+      "reason": "Reviewed raster: tall upright body, one ground cell"
+    },
+    "unit_thornwake_seedcutters": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_thornwake_thornwhip_carriers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_thornwake_sporeglass_menders": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_thornwake_barkmantle_rams": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_thornwake_stagknot_runners": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_thornwake_graft_matriarchs": {
+      "footprint": 1,
+      "visual_scale": 1.2,
+      "reason": "Reviewed raster: tall upright body, one ground cell"
+    },
+    "unit_thornwake_worldroot_bastion": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_brasshollow_scrip_haulers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_brasshollow_rivet_hounds": {
+      "footprint": 2,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_brasshollow_furnace_pavis_teams": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_brasshollow_boiler_rivetcasters": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_brasshollow_debt_engine_exactors": {
+      "footprint": 1,
+      "visual_scale": 1.2,
+      "reason": "Reviewed raster: tall upright body, one ground cell"
+    },
+    "unit_brasshollow_crucible_crawlers": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_brasshollow_foundry_saint": {
+      "footprint": 1,
+      "visual_scale": 1.4,
+      "reason": "Reviewed raster: tall upright body, one ground cell"
+    },
+    "unit_veilmourn_bellwake_oars": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_veilmourn_mourning_lanterns": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_veilmourn_maskglass_corsairs": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_veilmourn_undertow_harpooners": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_veilmourn_obituary_scribes": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_veilmourn_mirrorkeel_reavers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_veilmourn_fogbound_leviathan": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_embercourt_cinderseal_bombardiers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_mireclaw_mireglass_reedcasters": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_sunvault_noonfacet_sentinels": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_thornwake_dawnseed_bolters": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_brasshollow_gaugeplate_bailiffs": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_veilmourn_tidehook_deckhands": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_roadwardens": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_hearthbow_carriers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_fenhound_runners": {
+      "footprint": 2,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_mossglass_sentinels": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_cliffhawk_wardens": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_windglass_slingers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_reedbarge_poles": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_lanternet_throwers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_glowcap_bulwarks": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_sporelamp_tossers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_dustjack_blades": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_scrapbow_teams": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_kilnward_mallets": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_cinderpot_hurlers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_frostbeacon_pikes": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_snowglass_markers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_orchard_halberds": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_millstone_slingers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_hedgehook_watch": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_thornbow_scouts": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_tidepool_cutters": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_reefbolt_crews": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_switchback_pikes": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_cairnshield_porters": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_saltpan_bucklers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_suncrack_throwers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_sumpstone_guards": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_echodart_casts": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_icehook_trappers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_whitepike_keepers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_scarshield_veterans": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_ashdart_stalkers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_greenbranch_cudgels": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_sapwhistle_callers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_harbor_polearms": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_flaremast_crews": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_kitehook_runners": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_ridgeflare_shots": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_tunnel_lanterns": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_glimmercap_needlers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_bogbell_mauls": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_peatflare_jarriers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_milestone_bucklers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_cartbow_tenders": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_frostwharf_cutters": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_lanternskate_throwers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_charcoal_mauls": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_emberpack_lobbers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_basalt_wardens": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_tunnelmark_bolters": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_thornwake_canopy_rammers": {
+      "footprint": 1,
+      "visual_scale": 1.2,
+      "reason": "Reviewed raster: tall upright body, one ground cell"
+    },
+    "unit_brasshollow_pressure_lancers": {
+      "footprint": 1,
+      "visual_scale": 1.2,
+      "reason": "Reviewed raster: tall upright body, one ground cell"
+    },
+    "unit_veilmourn_wakeglass_navigators": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_embercourt_beaconline_writguard": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_mireclaw_fenbell_chainstalkers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_sunvault_zenith_lensbearers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_cinderwake_aurochs": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_tideglass_skyrays": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_brambleback_knucklebears": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_mireglass_belltoads": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_galehorn_striders": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_sunscale_lanternmoths": {
+      "footprint": 1,
+      "visual_scale": 1.1,
+      "reason": "Reviewed raster: compact flying body; wings do not reserve a second ground cell"
+    },
+    "unit_neutral_rimebell_skyrakers": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_deepforge_vaultwyrms": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_thornwake_seedglass_cantors": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_brasshollow_quenchbell_mortars": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_veilmourn_saltwake_eulogists": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_thornwake_seedshield_wardens": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_brasshollow_gaugefire_arbalists": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_veilmourn_wakechain_boarders": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_thornwake_bramblekite_needlers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_brasshollow_quenchspool_slingers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_veilmourn_saltbell_casters": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_embercourt_lockglass_writcasters": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_thornwake_pollenhook_whistlers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_brasshollow_tallyspring_throwers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_veilmourn_gloamkeel_bulwarks": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_neutral_ashcrown_kilnelk": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_miremoon_crownmaws": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_noonshard_prism_kites": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_rootvault_barkhulks": {
+      "footprint": 1,
+      "visual_scale": 1.2,
+      "reason": "Reviewed raster: tall upright body, one ground cell"
+    },
+    "unit_neutral_quenchbell_ironbacks": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_saltwake_bellwhales": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_embercourt_amberweir_lockpike_wardens": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_mireclaw_moonbite_votive_drummers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_sunvault_splitprism_parallax_fencers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_thornwake_woundroot_hearthseed_slingers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_brasshollow_whitegauge_datum_lancers": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_veilmourn_dreamwake_tideglass_oracles": {
+      "footprint": 1,
+      "visual_scale": 1,
+      "reason": "Reviewed raster: compact infantry or crew body"
+    },
+    "unit_embercourt_amberweir_sluicebrand_mangonels": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_mireclaw_moonbite_mirehorn_breakers": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_sunvault_splitprism_heliograph_ballistae": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_thornwake_woundroot_rootmaul_behemoths": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_brasshollow_whitegauge_datum_breach_cannons": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_veilmourn_dreamwake_foganchor_colossi": {
+      "footprint": 1,
+      "visual_scale": 1.4,
+      "reason": "Reviewed raster: tall upright body, one ground cell"
+    },
+    "unit_neutral_cindervane_censerwings": {
+      "footprint": 1,
+      "visual_scale": 1.1,
+      "reason": "Reviewed raster: compact flying body; wings do not reserve a second ground cell"
+    },
+    "unit_neutral_fenmirror_gallowshells": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_prismwake_raylings": {
+      "footprint": 1,
+      "visual_scale": 1.1,
+      "reason": "Reviewed raster: compact flying body; wings do not reserve a second ground cell"
+    },
+    "unit_neutral_rootcrown_knotstags": {
+      "footprint": 2,
+      "visual_scale": 1.25,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_gaugecoil_orewyrms": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    },
+    "unit_neutral_gloambell_wake_mantas": {
+      "footprint": 2,
+      "visual_scale": 1.35,
+      "reason": "Reviewed raster: long beast or extended engine body"
+    }
+  }
+}

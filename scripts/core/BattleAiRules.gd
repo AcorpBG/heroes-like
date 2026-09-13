@@ -2,6 +2,7 @@ class_name BattleAiRules
 extends RefCounted
 
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const Footprint = preload("res://scripts/core/BattleFootprint.gd")
 
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
@@ -2341,7 +2342,7 @@ static func _hex_in_bounds(q: int, r: int) -> bool:
 	return q >= 0 and q < BATTLE_HEX_COLUMNS and r >= 0 and r < BATTLE_HEX_ROWS
 
 static func _stack_hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
-	return _hex_distance(_stack_hex(lhs), _stack_hex(rhs))
+	return Footprint.distance(lhs, rhs)
 
 static func _pressure_artillery_secondary_target(
 	battle: Dictionary,
@@ -3088,7 +3089,7 @@ static func _stack_is_hex_isolated(battle: Dictionary, stack: Dictionary) -> boo
 		if String(ally.get("battle_id", "")) == battle_id:
 			continue
 		var ally_hex := _stack_hex(ally)
-		if not ally_hex.is_empty() and _hex_distance(stack_hex, ally_hex) <= 1:
+		if not ally_hex.is_empty() and _stack_hex_distance(stack, ally) <= 1:
 			return false
 	return true
 
@@ -3112,7 +3113,7 @@ static func _harry_support_ready(
 		if String(ally.get("battle_id", "")) == attacker_id:
 			continue
 		var ally_hex := _stack_hex(ally)
-		if ally_hex.is_empty() or _hex_distance(target_hex, ally_hex) > 1:
+		if ally_hex.is_empty() or _stack_hex_distance(target, ally) > 1:
 			continue
 		supporting_allies += 1
 		if supporting_allies >= required_support:

@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Complete Battle Unit Animation and Size
+
+`combat-unit-animation-and-size-20260913` — blocked at original-art workflow approval, owner-directed Phase 6 goal. Runtime increment validated: all 160 size profiles are authored; 37 long bodies use shared two-hex placement, movement, targeting and AI. Clip/corpse runtime is implemented, but accepted new pose coverage remains 0/160. Next dependency: acceptable transparent original-art idle/move/attack/defend/death/dead poses, starting with the representative infantry/large-unit slice and then all roster batches. Two built-in drafts were rejected; CLI fallback/model/API usage needs owner approval. Legacy affine sheets do not count. Requirements and validation evidence: `docs/combat-unit-animation-and-size.md`.
+
 ### Layered Combat Visual Effects
 
 `vfx-combat-layered-feedback-20260913` — completed, owner-directed Phase 6 child. Original-raster projectile trails, melee sweeps, expanding hits and spell/status layers protect readouts, timing, rules and saves. Source/Linux 1,095 and Windows 1,081 checks pass; small/wide captures inspected. Repository, official exports and package parity pass; temporary intermediates cleaned. The legacy combined report's 11 unchanged audio-only assertion failures are documented, not claimed green. Requirements/evidence: `docs/combat-layered-vfx.md`. No next slice selected.
