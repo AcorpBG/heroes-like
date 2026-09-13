@@ -134,7 +134,7 @@
     artifact_sets: ['source_hint','piece_thresholds','runtime_policy'],
     resources: ['category','market_tier','stockpile','material_cue','legacy_aliases'],
     resource_sites: ['action_label','rewards','claim_rewards','control_income','control_income_cadence','claim_recruits','weekly_recruits','learn_spell_id','learn_spell_ids','service_summary','service_cost','service_effects','visit_cooldown_days','persistent_control','guarded','neutral_roster','town_support','transit_profile','shrine_effects','hero_command_bonus','vision_radius','sign_text','public_text','guarded_reward_contract','dwelling_contract','scouting_contract','route_lock_contract','runtime_boundary'],
-    map_objects: ['availability','placement_authority','biome_ids','family','footprint','passable','visitable','passability_class','interaction','approach','map_roles','runtime_boundary'],
+      map_objects: ['availability','placement_authority','production_kind','contains_dead_tree','biome_ids','family','footprint','passable','visitable','passability_class','interaction','approach','map_roles','runtime_boundary'],
     neutral_dwellings: ['summary','content_status'],
     army_groups: ['stacks'], encounters: ['terrain','max_rounds','battlefield_tags','enemy_commander','field_objectives','rewards'],
     biomes: ['movement_cost','sight_modifier','passable','battle_terrain','route_roles','allowed_site_families','decoration_palette','blocker_palette'],
