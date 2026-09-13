@@ -62,8 +62,14 @@ def main() -> int:
         "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/wet_cold_atlas.png",
         "res://art/overworld/runtime/objects/decorations/cohesive_blocker_mass_v3/harsh_atlas.png",
     }
-    if runtime_paths != expected_runtime_paths:
-        failures.append("palette is not restricted to the three cohesive runtime atlases")
+    # New standalone blockers retain the same dedicated palette boundary.
+    # Their source alpha/import/adoption checks live in rmg_blocker_variety.py.
+    variety_paths = {
+        str(row.get("runtime_path", ""))
+        for row in decorative.get("generated_body_appearances", {}).values()
+    }
+    if runtime_paths != expected_runtime_paths | variety_paths:
+        failures.append("palette contains unregistered cohesive runtime art")
 
     atlas_rows: list[dict[str, object]] = []
     for resource_path in sorted(expected_runtime_paths):

@@ -291,31 +291,86 @@
   },
   "generated_body_palette": {
     "biome_grasslands": [
-      "cohesive_temperate_00", "cohesive_temperate_01", "cohesive_temperate_02", "cohesive_temperate_03", "cohesive_temperate_07", "cohesive_temperate_12"
+      "cohesive_temperate_00",
+      "cohesive_temperate_01",
+      "cohesive_temperate_02",
+      "cohesive_temperate_03",
+      "cohesive_temperate_07",
+      "cohesive_temperate_12",
+      "cohesive_variety_thornroot_thicket",
+      "cohesive_variety_wild_rose_barrier",
+      "cohesive_variety_ancient_oak_grove"
     ],
     "biome_deep_forest": [
-      "cohesive_temperate_00", "cohesive_temperate_01", "cohesive_temperate_02", "cohesive_temperate_07", "cohesive_temperate_12"
+      "cohesive_temperate_00",
+      "cohesive_temperate_01",
+      "cohesive_temperate_02",
+      "cohesive_temperate_07",
+      "cohesive_temperate_12",
+      "cohesive_variety_thornroot_thicket",
+      "cohesive_variety_wild_rose_barrier",
+      "cohesive_variety_ancient_oak_grove"
     ],
     "biome_mire_fen": [
-      "cohesive_wet_cold_00", "cohesive_wet_cold_01", "cohesive_wet_cold_04", "cohesive_wet_cold_10"
+      "cohesive_wet_cold_00",
+      "cohesive_wet_cold_01",
+      "cohesive_wet_cold_04",
+      "cohesive_wet_cold_10",
+      "cohesive_variety_tangled_marsh_roots",
+      "cohesive_variety_giant_shelf_fungi"
     ],
     "biome_coast_archipelago": [
-      "cohesive_wet_cold_01", "cohesive_wet_cold_02", "cohesive_wet_cold_06", "cohesive_wet_cold_10"
+      "cohesive_wet_cold_01",
+      "cohesive_wet_cold_02",
+      "cohesive_wet_cold_06",
+      "cohesive_wet_cold_10",
+      "cohesive_variety_tangled_marsh_roots",
+      "cohesive_variety_saltworn_driftwood"
     ],
     "biome_highland_ridge": [
-      "cohesive_wet_cold_02", "cohesive_wet_cold_06", "cohesive_harsh_00", "cohesive_harsh_02"
+      "cohesive_wet_cold_02",
+      "cohesive_wet_cold_06",
+      "cohesive_harsh_00",
+      "cohesive_harsh_02",
+      "cohesive_variety_shattered_slate"
     ],
     "biome_rough_badlands": [
-      "cohesive_harsh_00", "cohesive_harsh_03", "cohesive_harsh_07", "cohesive_harsh_12"
+      "cohesive_harsh_00",
+      "cohesive_harsh_03",
+      "cohesive_harsh_07",
+      "cohesive_harsh_12",
+      "cohesive_variety_shattered_slate",
+      "cohesive_variety_basalt_chimneys",
+      "cohesive_variety_redstone_hoodoos"
     ],
     "biome_snow_frost_marches": [
-      "cohesive_wet_cold_03", "cohesive_wet_cold_04", "cohesive_wet_cold_15"
+      "cohesive_wet_cold_03",
+      "cohesive_wet_cold_04",
+      "cohesive_wet_cold_15",
+      "cohesive_variety_snowbound_deadfall",
+      "cohesive_variety_blue_ice_crag"
     ],
     "biome_ash_lava_wastes": [
-      "cohesive_harsh_00", "cohesive_harsh_01", "cohesive_harsh_02", "cohesive_harsh_03", "cohesive_harsh_05", "cohesive_harsh_07", "cohesive_harsh_09", "cohesive_harsh_10", "cohesive_harsh_12", "cohesive_harsh_14"
+      "cohesive_harsh_00",
+      "cohesive_harsh_01",
+      "cohesive_harsh_02",
+      "cohesive_harsh_03",
+      "cohesive_harsh_05",
+      "cohesive_harsh_07",
+      "cohesive_harsh_09",
+      "cohesive_harsh_10",
+      "cohesive_harsh_12",
+      "cohesive_harsh_14",
+      "cohesive_variety_basalt_chimneys"
     ],
     "biome_subterranean_underways": [
-      "cohesive_harsh_01", "cohesive_harsh_02", "cohesive_harsh_07", "cohesive_harsh_09", "cohesive_harsh_12"
+      "cohesive_harsh_01",
+      "cohesive_harsh_02",
+      "cohesive_harsh_07",
+      "cohesive_harsh_09",
+      "cohesive_harsh_12",
+      "cohesive_variety_cavern_crystal_crag",
+      "cohesive_variety_giant_shelf_fungi"
     ]
   },
   "legacy_archetype_asset_ids": [
@@ -2806,6 +2861,147 @@
         "biome_coast_archipelago"
       ],
       "assignment_source": "new_distinct_generated_sprite"
+    }
+  },
+  "generated_body_appearances": {
+    "cohesive_variety_thornroot_thicket": {
+      "name": "Thornroot Thicket",
+      "description": "Thornroot Thicket is impassable scenery used for the blocked body cells of generated RMG obstacles. It cannot be visited, collected or cleared and grants no resources. Its appearance is chosen deterministically in grasslands, deep forest. The native obstacle body mask determines exactly which tiles block movement.",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/thornroot_thicket.png",
+      "source_path": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/thornroot_thicket.png",
+      "availability": "Used by live RMG blocker-body presentation; presence depends on generated terrain and deterministic motif selection.",
+      "placement_authority": "Native generated obstacle body masks; appearance does not change the footprint."
+    },
+    "cohesive_variety_tangled_marsh_roots": {
+      "name": "Tangled Marsh Roots",
+      "description": "Tangled Marsh Roots is impassable scenery used for the blocked body cells of generated RMG obstacles. It cannot be visited, collected or cleared and grants no resources. Its appearance is chosen deterministically in mire fen, coast archipelago. The native obstacle body mask determines exactly which tiles block movement.",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/tangled_marsh_roots.png",
+      "source_path": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/tangled_marsh_roots.png",
+      "availability": "Used by live RMG blocker-body presentation; presence depends on generated terrain and deterministic motif selection.",
+      "placement_authority": "Native generated obstacle body masks; appearance does not change the footprint."
+    },
+    "cohesive_variety_shattered_slate": {
+      "name": "Shattered Slate",
+      "description": "Shattered Slate is impassable scenery used for the blocked body cells of generated RMG obstacles. It cannot be visited, collected or cleared and grants no resources. Its appearance is chosen deterministically in highland ridge, rough badlands. The native obstacle body mask determines exactly which tiles block movement.",
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_rough_badlands"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/shattered_slate.png",
+      "source_path": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/shattered_slate.png",
+      "availability": "Used by live RMG blocker-body presentation; presence depends on generated terrain and deterministic motif selection.",
+      "placement_authority": "Native generated obstacle body masks; appearance does not change the footprint."
+    },
+    "cohesive_variety_snowbound_deadfall": {
+      "name": "Snowbound Deadfall",
+      "description": "Snowbound Deadfall is impassable scenery used for the blocked body cells of generated RMG obstacles. It cannot be visited, collected or cleared and grants no resources. Its appearance is chosen deterministically in snow frost marches. The native obstacle body mask determines exactly which tiles block movement.",
+      "biome_ids": [
+        "biome_snow_frost_marches"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/snowbound_deadfall.png",
+      "source_path": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/snowbound_deadfall.png",
+      "availability": "Used by live RMG blocker-body presentation; presence depends on generated terrain and deterministic motif selection.",
+      "placement_authority": "Native generated obstacle body masks; appearance does not change the footprint."
+    },
+    "cohesive_variety_basalt_chimneys": {
+      "name": "Basalt Chimneys",
+      "description": "Basalt Chimneys is impassable scenery used for the blocked body cells of generated RMG obstacles. It cannot be visited, collected or cleared and grants no resources. Its appearance is chosen deterministically in ash lava wastes, rough badlands. The native obstacle body mask determines exactly which tiles block movement.",
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/basalt_chimneys.png",
+      "source_path": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/basalt_chimneys.png",
+      "availability": "Used by live RMG blocker-body presentation; presence depends on generated terrain and deterministic motif selection.",
+      "placement_authority": "Native generated obstacle body masks; appearance does not change the footprint."
+    },
+    "cohesive_variety_cavern_crystal_crag": {
+      "name": "Cavern Crystal Crag",
+      "description": "Cavern Crystal Crag is impassable scenery used for the blocked body cells of generated RMG obstacles. It cannot be visited, collected or cleared and grants no resources. Its appearance is chosen deterministically in subterranean underways. The native obstacle body mask determines exactly which tiles block movement.",
+      "biome_ids": [
+        "biome_subterranean_underways"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/cavern_crystal_crag.png",
+      "source_path": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/cavern_crystal_crag.png",
+      "availability": "Used by live RMG blocker-body presentation; presence depends on generated terrain and deterministic motif selection.",
+      "placement_authority": "Native generated obstacle body masks; appearance does not change the footprint."
+    },
+    "cohesive_variety_giant_shelf_fungi": {
+      "name": "Giant Shelf Fungi",
+      "description": "Giant Shelf Fungi is impassable scenery used for the blocked body cells of generated RMG obstacles. It cannot be visited, collected or cleared and grants no resources. Its appearance is chosen deterministically in mire fen, subterranean underways. The native obstacle body mask determines exactly which tiles block movement.",
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_subterranean_underways"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/giant_shelf_fungi.png",
+      "source_path": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/giant_shelf_fungi.png",
+      "availability": "Used by live RMG blocker-body presentation; presence depends on generated terrain and deterministic motif selection.",
+      "placement_authority": "Native generated obstacle body masks; appearance does not change the footprint."
+    },
+    "cohesive_variety_redstone_hoodoos": {
+      "name": "Redstone Hoodoos",
+      "description": "Redstone Hoodoos is impassable scenery used for the blocked body cells of generated RMG obstacles. It cannot be visited, collected or cleared and grants no resources. Its appearance is chosen deterministically in rough badlands. The native obstacle body mask determines exactly which tiles block movement.",
+      "biome_ids": [
+        "biome_rough_badlands"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/redstone_hoodoos.png",
+      "source_path": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/redstone_hoodoos.png",
+      "availability": "Used by live RMG blocker-body presentation; presence depends on generated terrain and deterministic motif selection.",
+      "placement_authority": "Native generated obstacle body masks; appearance does not change the footprint."
+    },
+    "cohesive_variety_blue_ice_crag": {
+      "name": "Blue Ice Crag",
+      "description": "Blue Ice Crag is impassable scenery used for the blocked body cells of generated RMG obstacles. It cannot be visited, collected or cleared and grants no resources. Its appearance is chosen deterministically in snow frost marches. The native obstacle body mask determines exactly which tiles block movement.",
+      "biome_ids": [
+        "biome_snow_frost_marches"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/blue_ice_crag.png",
+      "source_path": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/blue_ice_crag.png",
+      "availability": "Used by live RMG blocker-body presentation; presence depends on generated terrain and deterministic motif selection.",
+      "placement_authority": "Native generated obstacle body masks; appearance does not change the footprint."
+    },
+    "cohesive_variety_saltworn_driftwood": {
+      "name": "Saltworn Driftwood",
+      "description": "Saltworn Driftwood is impassable scenery used for the blocked body cells of generated RMG obstacles. It cannot be visited, collected or cleared and grants no resources. Its appearance is chosen deterministically in coast archipelago. The native obstacle body mask determines exactly which tiles block movement.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/saltworn_driftwood.png",
+      "source_path": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/saltworn_driftwood.png",
+      "availability": "Used by live RMG blocker-body presentation; presence depends on generated terrain and deterministic motif selection.",
+      "placement_authority": "Native generated obstacle body masks; appearance does not change the footprint."
+    },
+    "cohesive_variety_wild_rose_barrier": {
+      "name": "Wild Rose Barrier",
+      "description": "Wild Rose Barrier is impassable scenery used for the blocked body cells of generated RMG obstacles. It cannot be visited, collected or cleared and grants no resources. Its appearance is chosen deterministically in grasslands, deep forest. The native obstacle body mask determines exactly which tiles block movement.",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/wild_rose_barrier.png",
+      "source_path": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/wild_rose_barrier.png",
+      "availability": "Used by live RMG blocker-body presentation; presence depends on generated terrain and deterministic motif selection.",
+      "placement_authority": "Native generated obstacle body masks; appearance does not change the footprint."
+    },
+    "cohesive_variety_ancient_oak_grove": {
+      "name": "Ancient Oak Grove",
+      "description": "Ancient Oak Grove is impassable scenery used for the blocked body cells of generated RMG obstacles. It cannot be visited, collected or cleared and grants no resources. Its appearance is chosen deterministically in grasslands, deep forest. The native obstacle body mask determines exactly which tiles block movement.",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/ancient_oak_grove.png",
+      "source_path": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/ancient_oak_grove.png",
+      "availability": "Used by live RMG blocker-body presentation; presence depends on generated terrain and deterministic motif selection.",
+      "placement_authority": "Native generated obstacle body masks; appearance does not change the footprint."
     }
   }
 }
