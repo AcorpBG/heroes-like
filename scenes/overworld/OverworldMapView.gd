@@ -13,6 +13,8 @@ const Motion = preload("res://scenes/overworld/OverworldMotion.gd")
 const SceneryBatch = preload("res://scenes/overworld/OverworldSceneryBatch.gd")
 
 const OVERWORLD_ART_MANIFEST_PATH := "res://art/overworld/manifest.json"
+const TownBiomeArtRulesScript = preload("res://scripts/core/TownBiomeArtRules.gd")
+const TOWN_BIOME_ART_MANIFEST_PATH := "res://art/overworld/town_biome_sprites.json"
 const OVERWORLD_VFX_MANIFEST_PATH := "res://content/overworld_vfx_manifest.json"
 const TERRAIN_GRAMMAR_PATH := "res://content/terrain_grammar.json"
 const MAP_PADDING := 22.0
@@ -538,6 +540,7 @@ var _homm3_direct_bridge_pairs: Dictionary = {}
 var _homm3_routed_bridge_rules: Dictionary = {}
 var _homm3_road_overlays: Dictionary = {}
 var _overworld_art_manifest: Dictionary = {}
+var _town_biome_art_manifest: Dictionary = {}
 var _overworld_vfx_manifest: Dictionary = {}
 var _overworld_vfx_manifest_loaded := false
 var _overworld_vfx_textures: Dictionary = {}
@@ -4098,6 +4101,7 @@ func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile
 
 func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	var asset_id := _town_sprite_asset_id(_town_at(tile))
+	asset_id = String(_town_biome_appearance(_town_at(tile), asset_id).get("render_asset_id", ""))
 	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
 		return false
@@ -7932,6 +7936,7 @@ func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) 
 	var origin := _town_footprint_origin_for_entry(entry)
 	var faction_id := _town_template_faction_id(town)
 	var sprite_asset_id := _town_sprite_asset_id(town)
+	var biome_appearance := _town_biome_appearance(town, sprite_asset_id)
 	var cells := _town_footprint_cell_payloads(entry) if include_cells else []
 	var blocked_cells := []
 	var off_map_cells := 0
@@ -7977,6 +7982,8 @@ func _town_presentation_payload_for_town(town: Dictionary, include_cells: bool) 
 		"faction_id": faction_id,
 		"sprite_asset_id": sprite_asset_id,
 		"sprite_path": String(_object_asset_paths.get(sprite_asset_id, "")),
+		"biome_appearance": biome_appearance,
+		"render_sprite_path": String(_object_asset_paths.get(String(biome_appearance.get("render_asset_id", "")), "")),
 		"uses_identity_sprite": String(_town_identity_asset_ids.get(String(town.get("town_id", "")).strip_edges(), "")) == sprite_asset_id,
 		"uses_faction_sprite": faction_id != "" and String(_town_faction_asset_ids.get(faction_id, "")) == sprite_asset_id,
 		"uses_default_sprite": sprite_asset_id == _town_default_asset_id,
@@ -10927,6 +10934,7 @@ func _load_overworld_art_manifest() -> void:
 	_scenery_index_valid = false
 	_invalidate_state_cache("art_manifest_reloaded")
 	_overworld_art_manifest.clear()
+	_town_biome_art_manifest.clear()
 	_terrain_raster_base_v2_paths.clear()
 	_object_asset_paths.clear()
 	_object_asset_regions.clear()
@@ -10967,6 +10975,11 @@ func _load_overworld_art_manifest() -> void:
 		push_warning("Invalid overworld art manifest; procedural overworld markers remain active.")
 		return
 	_overworld_art_manifest = parser.data
+	var biome_payload = JSON.parse_string(FileAccess.get_file_as_string(TOWN_BIOME_ART_MANIFEST_PATH))
+	if biome_payload is Dictionary:
+		_town_biome_art_manifest = biome_payload
+	else:
+		push_error("Town biome art manifest is missing or invalid.")
 	var terrain_rendering = _overworld_art_manifest.get("terrain_rendering", {})
 	if terrain_rendering is Dictionary:
 		var raster_base = terrain_rendering.get("raster_base_v2", {})
@@ -11560,6 +11573,14 @@ func _town_sprite_asset_id(town: Dictionary) -> String:
 	if _town_default_asset_id != "" and _object_texture_for_asset(_town_default_asset_id) is Texture2D:
 		return _town_default_asset_id
 	return ""
+
+func _town_biome_appearance(town: Dictionary, base_asset_id: String = "") -> Dictionary:
+	# _map_data is the view's active level. Its indexed towns belong to that same
+	# level. The source-owned visit tile is the stable local terrain sample, even
+	# when a native image anchor is elsewhere or the footprint straddles biomes.
+	# Do not cache by town id: editor terrain changes must take effect immediately.
+	var base := base_asset_id if base_asset_id != "" else _town_sprite_asset_id(town)
+	return TownBiomeArtRulesScript.resolve(base, _terrain_at(_town_entry_tile(town)), _town_biome_art_manifest)
 
 func _hero_presentation_entry(tile: Vector2i) -> Dictionary:
 	var heroes: Array = _heroes_by_tile.get(_tile_key(tile), [])

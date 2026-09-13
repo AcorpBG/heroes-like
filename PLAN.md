@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Biome-aware Overworld Town Artwork
+
+`art-overworld-town-biome-fit-20260913` — completed, owner-directed Phase 6 slice. Terrain-aware rendering, 19 original generated variants and explicit coverage for 39 logical entries / 33 historical architectures / nine biomes are implemented. Visual review, 858 resolver cases, 17 reproducible cutouts, clean-cache import, full repository, both official exports and 1,014-check native Medium-to-Town flows on each platform pass. Identity, placement, entrances, collision, fog, RNG and saves are unchanged. Requirements/evidence: `docs/overworld-town-biome-fit.md`.
+
 ### Production content validator reconciliation
 
 `production-content-validator-20260913` — completed for the reported 931 failures. Production blocker/audio contracts and corruption controls pass; full local validation still reports 813 separate pre-existing art-proof/canvas and missing-prerequisite failures. No art/audio changed or checks exempted. Details: `docs/production-content-validation.md`.

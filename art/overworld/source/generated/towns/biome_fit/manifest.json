@@ -1,0 +1,943 @@
+{
+  "schema_id": "town_biome_art_provenance_v1",
+  "mode": "built_in_imagegen",
+  "asset_policy": "original_generated_raster_no_copyrighted_game_pixels",
+  "status": "19_original_variants_visually_reviewed",
+  "assets": {
+    "town_biome_riverwatch_ash": {
+      "base_asset_id": "town_identity_riverwatch",
+      "input": "res://art/overworld/runtime/objects/towns/identity/town_riverwatch.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/riverwatch_ash_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/riverwatch_ash_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/riverwatch_ash.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/riverwatch_ash.png",
+      "canvas": [
+        1254,
+        1254
+      ],
+      "import_size_limit": 512,
+      "processing": "Built-in generated alpha extraction; lossless copies into trimmed/runtime stages, no additional crop or invented pixels; Godot importer bounds texture to 512.",
+      "prompt": "Use case: precise-object-edit. Asset type: original strategy-game overworld town sprite, volcanic-biome variant. Image 1 is the exact edit target. Preserve this town's recognizable architecture, every tower arrangement, beacon flame, red roofs, heraldic red/gold banners, front gate, isometric camera angle and full unclipped silhouette. Change ONLY the settlement's ground contact and environmental dressing: replace all bright grass, green bushes, flowers and yellow dirt island with dark natural charcoal basalt, muted ash, black volcanic gravel and a subtly worn dark-stone approach to the same front gate. Keep the ground thin, irregular and softly broken into genuinely transparent edges; no square tile, raised platform, pedestal or surrounding scene. Very subdued warm reflected light low on the stonework, no lava pouring through the settlement and no added structures. Match the existing detailed hand-painted original game sprite style; avoid photographic or smooth plastic rendering. Genuine transparent RGBA background, no checkerboard painted into image, no shadow rectangle, no text, no border or watermark. Entire town centered with a small transparent margin. This is a terrain adaptation of the same town, not a new castle.",
+      "extraction_prompt": "Use case: background-extraction. Image 1 is the edit target. Deliver this exact original volcanic castle sprite as a genuinely transparent RGBA PNG with actual alpha=0 outside the sprite. Remove the entire gray-and-white checkerboard background: the checkerboard is an error, not artwork, and no checkerboard squares may remain. Preserve every castle, gate, banner, roof, beacon and dark basalt ground pixel and its irregular silhouette. Do not redraw, redesign, recolor, resize or add any object. NO visible background of any color. NO simulated transparency, no checkerboard, no white rectangle. The output must have an alpha channel with the surrounding area fully transparent; this is a clean game sprite cutout.",
+      "sha256": {
+        "input": "8b3d5d36082665384a3c42ba55297222f93f86b436e03a981270a557fb540aed",
+        "draft": "f2ee75045828fa0532b634f3113bd9830b81c35b029db62cd4a2f6d80040d2c4",
+        "source": "15343dafc1f5ab289a2d22f13074d7154b4ad0f45695d36865d06858658baf41",
+        "trimmed": "15343dafc1f5ab289a2d22f13074d7154b4ad0f45695d36865d06858658baf41",
+        "runtime": "15343dafc1f5ab289a2d22f13074d7154b4ad0f45695d36865d06858658baf41"
+      }
+    },
+    "town_biome_duskfen_land": {
+      "base_asset_id": "town_identity_duskfen",
+      "input": "res://art/overworld/runtime/objects/towns/identity/town_duskfen.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/duskfen_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/duskfen_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/duskfen_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/duskfen_land.png",
+      "canvas": [
+        1254,
+        1254
+      ],
+      "import_size_limit": 512,
+      "processing": "Built-in generated alpha extraction; lossless copies into trimmed/runtime stages, no additional crop or invented pixels; Godot importer bounds texture to 512.",
+      "prompt": "Use case: precise-object-edit. Image 1 is the exact edit target, an original fantasy strategy game town. Make a TERRAIN-NEUTRAL LAND VERSION of this SAME settlement, not a redesign. Preserve the full arrangement, architecture, towers, roofs, faction banners, colored lights, front entrance, perspective and painted style. Remove ALL surrounding water, rivers, ponds, waterfalls, boats, floating lilies, reeds, grasses and loose surrounding dirt. Where water was INSIDE the settlement, use restrained worn structural stone paving or timber decking that belongs to the buildings; leave exterior gaps genuinely transparent. Retain the original walls, structural piers, stairs, footbridge entry and foundations, supported plausibly on land. No surrounding terrain island, no new platform or pedestal, no ground color field. The town must be able to stand on snow, basalt, sand or grass without bringing its own incompatible landscape. Keep all architecture and entrance position recognizable; no added buildings. Isolated sprite, whole silhouette visible with modest margins, real transparent RGBA background. No simulated transparency, no checkerboard, no colored or white rectangle, no text.",
+      "extraction_prompt": "Use case: background-extraction. Image 1 is the edit target. Deliver this exact original castle sprite as a genuinely transparent RGBA PNG with actual alpha=0 outside the sprite. Remove the entire gray-and-white checkerboard background: the checkerboard is an error, not artwork, and no checkerboard squares may remain. Preserve every castle, gate, banner, roof, lantern and stone or wooden foundation pixel and its irregular silhouette. Do not redraw, redesign, recolor, resize or add any object. NO visible background of any color. NO simulated transparency, no checkerboard, no white rectangle. The output must have an alpha channel with the surrounding area fully transparent; this is a clean game sprite cutout.",
+      "sha256": {
+        "input": "de9e37b32f38e360d7c6691753b0f897549fa39d569db6bd887ee4503b535a37",
+        "draft": "627ffaf160b18ecd9d023e4edaae16f19714ca26248e0f36f3a4a01e0e35928c",
+        "source": "58019faf21b29ce0ee1f3cec5882ef194124aea7816bb9412b2a166d836b54d9",
+        "trimmed": "58019faf21b29ce0ee1f3cec5882ef194124aea7816bb9412b2a166d836b54d9",
+        "runtime": "58019faf21b29ce0ee1f3cec5882ef194124aea7816bb9412b2a166d836b54d9"
+      }
+    },
+    "town_biome_riverwatch_land": {
+      "base_asset_id": "town_identity_riverwatch",
+      "input": "res://art/overworld/source/generated/towns/biome_fit/riverwatch_ash_cutout.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/pending/riverwatch_land_rgb_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/riverwatch_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/riverwatch_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/riverwatch_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit Image 1, an already transparent original game sprite. Preserve its REAL TRANSPARENT ALPHA BACKGROUND and every stone building, roof, flame beacon, banner, crane, front gate and stair. Remove ONLY the surrounding dark volcanic terrain apron, loose basalt, lava cracks and ground outside the structural castle walls and foundations. Those removed areas must become alpha zero, like the existing transparent background. Keep internal structural paving and walls, but no surrounding ground island at all. This is a terrain-neutral architecture cutout of the identical Riverwatch castle for use on arbitrary painted map terrain. Do not redesign, add objects, paint a checkerboard, introduce any backdrop or change the image canvas. Preserve transparency; return an RGBA PNG.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "riverwatch_land",
+      "matte": {
+        "removed_pixels": 970883,
+        "minimum": 155,
+        "tolerance": 35,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 8,
+        "flat_white": false,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 601
+      },
+      "transform": {
+        "source_crop": [
+          98,
+          51,
+          1178,
+          1061
+        ],
+        "fit_size": [
+          480,
+          449
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "15343dafc1f5ab289a2d22f13074d7154b4ad0f45695d36865d06858658baf41",
+        "draft": "09a714c1ef9c9e0226d056120f3de8977e62108ce6eec227aa0eabcdef904a8c",
+        "source": "01285155a79acab2775ae3a6b7528e977062c3d1809b5974b0321f75bccaccde",
+        "trimmed": "a285e24d4f8f41acee995c8bc6713381f7a6da15fd2e97e5b3db626a73175124",
+        "runtime": "a285e24d4f8f41acee995c8bc6713381f7a6da15fd2e97e5b3db626a73175124"
+      }
+    },
+    "town_biome_embercourt_land": {
+      "base_asset_id": "town_faction_embercourt",
+      "input": "res://art/overworld/runtime/objects/towns/factions/embercourt.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/pending/embercourt_land_rgb_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/embercourt_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/embercourt_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/embercourt_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Image 1 is the exact edit target, an original fantasy strategy game town. Make a TERRAIN-NEUTRAL LAND VERSION of this SAME settlement, not a redesign. Preserve the full arrangement, architecture, towers, roofs, faction banners, colored lights, front entrance, perspective and painted style. Remove ALL surrounding water, rivers, ponds, waterfalls, boats, floating lilies, reeds, grasses and loose surrounding dirt. Where water was INSIDE the settlement, use restrained worn structural stone paving or timber decking that belongs to the buildings; leave exterior gaps genuinely transparent. Retain the original walls, structural piers, stairs, footbridge entry and foundations, supported plausibly on land. No surrounding terrain island, no new platform or pedestal, no ground color field. The town must be able to stand on snow, basalt, sand or grass without bringing its own incompatible landscape. Keep all architecture and entrance position recognizable; no added buildings. Isolated sprite, whole silhouette visible with modest margins, real transparent RGBA background. No simulated transparency, no checkerboard, no colored or white rectangle, no text.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "embercourt_land",
+      "matte": {
+        "removed_pixels": 764457,
+        "minimum": 155,
+        "tolerance": 35,
+        "background_seeds": [
+          [
+            770,
+            240
+          ]
+        ],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 7,
+        "flat_white": false,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 3018
+      },
+      "transform": {
+        "source_crop": [
+          44,
+          33,
+          1201,
+          1245
+        ],
+        "fit_size": [
+          458,
+          480
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "e9d8998b42f7f22f42bd1330550ee524f79bc81341998128795a0492eca77ee9",
+        "draft": "db1941f11ef75a2a15ba100e1b77d41d5f4cc8de060acad3ae6cd67e1771f724",
+        "source": "31df42fc576915c6ae31077b6b09c5a0f65243b7a817be7446acfd1da55b4574",
+        "trimmed": "8136c8140fe160130b1736e73d2428892f545b2df0e75bafce04c2bdd245e6fe",
+        "runtime": "8136c8140fe160130b1736e73d2428892f545b2df0e75bafce04c2bdd245e6fe"
+      }
+    },
+    "town_biome_blackfen_gate_land": {
+      "base_asset_id": "town_identity_blackfen_gate",
+      "input": "res://art/overworld/runtime/objects/towns/identity/town_blackfen_gate.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/blackfen_gate_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/blackfen_gate_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/blackfen_gate_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/blackfen_gate_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "blackfen_gate_land",
+      "matte": {
+        "removed_pixels": 977233,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 0,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 5661
+      },
+      "transform": {
+        "source_crop": [
+          62,
+          233,
+          1202,
+          986
+        ],
+        "fit_size": [
+          480,
+          317
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "6d7277695da28d6b7f337689707b8ed63d92cf993b10cd317e6a2d2a899417bb",
+        "draft": "25cc4dfa2236b9affe9c580aeedaced3ee5f5a2b3d2547277f9a61c1392dc411",
+        "source": "18c65c7affa739e54632084a9336fc6b7ce0f14a761f2bd4fb0dd3d4653b0687",
+        "trimmed": "254a51ba5ded1604ce8cd6451a3213c6fb32255dcdab22256fb67f509e38dc65",
+        "runtime": "254a51ba5ded1604ce8cd6451a3213c6fb32255dcdab22256fb67f509e38dc65"
+      }
+    },
+    "town_biome_murkward_ford_land": {
+      "base_asset_id": "town_identity_murkward_ford",
+      "input": "res://art/overworld/runtime/objects/towns/identity/town_murkward_ford.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/murkward_ford_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/murkward_ford_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/murkward_ford_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/murkward_ford_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "murkward_ford_land",
+      "matte": {
+        "removed_pixels": 1137832,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 0,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 6595
+      },
+      "transform": {
+        "source_crop": [
+          143,
+          218,
+          1165,
+          993
+        ],
+        "fit_size": [
+          480,
+          364
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "21364bab853ffef7df2cc5fc61b244ca6f2494abc6a37ebcc46e2579b2c24c8b",
+        "draft": "0f5d40902c60a321e3b7ee995210dcf57527350b55e462132190ea8af45bb7fa",
+        "source": "70ca1eae0d842348ca72cd45790d74c4ca6346b517cffdbbae23fb0793cb3155",
+        "trimmed": "6bb10d4b6cead58030d41e81847437e1949230dd6090fac9cb15bcbd66046ecc",
+        "runtime": "6bb10d4b6cead58030d41e81847437e1949230dd6090fac9cb15bcbd66046ecc"
+      }
+    },
+    "town_biome_reedbarrow_ferry_land": {
+      "base_asset_id": "town_identity_reedbarrow_ferry",
+      "input": "res://art/overworld/runtime/objects/towns/identity/town_reedbarrow_ferry.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/reedbarrow_ferry_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/reedbarrow_ferry_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/reedbarrow_ferry_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/reedbarrow_ferry_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "reedbarrow_ferry_land",
+      "matte": {
+        "removed_pixels": 1021515,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 0,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 9086
+      },
+      "transform": {
+        "source_crop": [
+          66,
+          149,
+          1203,
+          1119
+        ],
+        "fit_size": [
+          480,
+          409
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "20f2784d386f2a1151cce479fbb4bcb9ae938be8fa15b42d486091023c032394",
+        "draft": "1a89beb12ef5d9c95b6c00aa61385e1a75ea49c6762c5360f43d64dc5f59c24a",
+        "source": "f5109dd7bbe52516f94793614dd19973e1e59da52aed2d01b8a1dd283a85127e",
+        "trimmed": "f14074fcbf1fe188cda836e938afde645d061a82850374c5f1cce970ab32c1fd",
+        "runtime": "f14074fcbf1fe188cda836e938afde645d061a82850374c5f1cce970ab32c1fd"
+      }
+    },
+    "town_biome_bellwake_land": {
+      "base_asset_id": "town_identity_veilmourn_bellwake_harbor",
+      "input": "res://art/overworld/runtime/objects/towns/identity/town_veilmourn_bellwake_harbor.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/bellwake_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/bellwake_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/bellwake_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/bellwake_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "bellwake_land",
+      "matte": {
+        "removed_pixels": 945012,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 11,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 6920
+      },
+      "transform": {
+        "source_crop": [
+          54,
+          113,
+          1209,
+          1116
+        ],
+        "fit_size": [
+          480,
+          417
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "bcdaa2e369ec4b9879cf8e8eb622a00f34aeea0425c0670da8a20b8f4c947d52",
+        "draft": "0a0a2817c2ce1d9ecb509a8dbc8d54196ccd3b694debc0afd69889b15059d5de",
+        "source": "7adce133339344b166430ccbb9dedd3ae2de46769903bf6a1dd047f8038b5f20",
+        "trimmed": "036b49b6f31312299fdd5f8b3891494d5e369b5b3d0637d2daf8d380b4c98d39",
+        "runtime": "036b49b6f31312299fdd5f8b3891494d5e369b5b3d0637d2daf8d380b4c98d39"
+      }
+    },
+    "town_biome_fogchart_land": {
+      "base_asset_id": "town_identity_veilmourn_fogchart_mooring",
+      "input": "res://art/overworld/runtime/objects/towns/identity/town_veilmourn_fogchart_mooring.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/fogchart_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/fogchart_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/fogchart_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/fogchart_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "fogchart_land",
+      "matte": {
+        "removed_pixels": 1055401,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 0,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 5992
+      },
+      "transform": {
+        "source_crop": [
+          79,
+          129,
+          1135,
+          1021
+        ],
+        "fit_size": [
+          480,
+          405
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "952732d8202cc6f784e55148d2bc4491fd699f972361fd7622536591c703d408",
+        "draft": "fbd3c26cbbee06562523b969ef5e4e7c3b4ba7d6cf26208805dda12e5dd2b1ee",
+        "source": "122f340dda3a8e05bb23a08c3699547cc6d6789d38564b437e2d38afebf394bb",
+        "trimmed": "bfd677fbe6eb478d3b61bf0ca5fb000c786ec33bc88e3c1837414da093c0f675",
+        "runtime": "bfd677fbe6eb478d3b61bf0ca5fb000c786ec33bc88e3c1837414da093c0f675"
+      }
+    },
+    "town_biome_gloamwake_land": {
+      "base_asset_id": "town_identity_gloamwake_anchorage",
+      "input": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_gloamwake_anchorage.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/gloamwake_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/gloamwake_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/gloamwake_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/gloamwake_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "gloamwake_land",
+      "matte": {
+        "removed_pixels": 950866,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 10,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 9179
+      },
+      "transform": {
+        "source_crop": [
+          161,
+          39,
+          1142,
+          1206
+        ],
+        "fit_size": [
+          403,
+          480
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "2585b1d4947d1821c2aee0d18879d5dcf3d8d2bae5951eb817ab62992ec12f8f",
+        "draft": "08a31fe6457202204f37a71123991ac830837d73d317c5f8c39b6c35def1d0b1",
+        "source": "d017ab3ae8542740a4c57e9181bfff16476c43d11382786cc7852e0a3417931e",
+        "trimmed": "f95f5769621d7e3994a7d743c8f2d0da96d4902c56062c39cf52380486e85ce6",
+        "runtime": "f95f5769621d7e3994a7d743c8f2d0da96d4902c56062c39cf52380486e85ce6"
+      }
+    },
+    "town_biome_rainwrit_land": {
+      "base_asset_id": "town_identity_rainwrit_bastion",
+      "input": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_rainwrit_bastion.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/rainwrit_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/rainwrit_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/rainwrit_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/rainwrit_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "rainwrit_land",
+      "matte": {
+        "removed_pixels": 1037175,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 0,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 3968
+      },
+      "transform": {
+        "source_crop": [
+          140,
+          65,
+          1122,
+          1162
+        ],
+        "fit_size": [
+          430,
+          480
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "6aca6b9a64f9077fc665219c7c3f0131645ec7db2868cb120da6481095bae545",
+        "draft": "1c656ddec11943d9c256d6fcd91bd9ac9caaa55837b4d914632e5de966a8637b",
+        "source": "1615a2d18de6a10e8c2cceb42738f34b9cb27c9e4e19438e806d6b2d16547bef",
+        "trimmed": "a25437b7490a5c9864d9d3da03cdb5f5e806fd26339edf5cd2a602a96028bd97",
+        "runtime": "a25437b7490a5c9864d9d3da03cdb5f5e806fd26339edf5cd2a602a96028bd97"
+      }
+    },
+    "town_biome_hollowreed_land": {
+      "base_asset_id": "town_identity_hollowreed_sanctuary",
+      "input": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_hollowreed_sanctuary.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/hollowreed_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/hollowreed_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/hollowreed_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/hollowreed_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "hollowreed_land",
+      "matte": {
+        "removed_pixels": 952664,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 0,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 5234
+      },
+      "transform": {
+        "source_crop": [
+          156,
+          74,
+          1069,
+          1175
+        ],
+        "fit_size": [
+          398,
+          480
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "0619bdd1984ed7d271090fe74346a73f86b28e8d7a2d9c98f5a30a0bccef0135",
+        "draft": "26f820d7569a40520c994597b4e487ea961cdc33c8fef690e57ad6e2a5bdb95a",
+        "source": "d448ceb92ed507af3feb20e22bba764d49f0122d7f33bca4568db753caf156f9",
+        "trimmed": "c5e981c561e57bceaee01fac48adbc2b814f7ba4aba326b011121449f41164a6",
+        "runtime": "c5e981c561e57bceaee01fac48adbc2b814f7ba4aba326b011121449f41164a6"
+      }
+    },
+    "town_biome_pale_sounding_land": {
+      "base_asset_id": "town_identity_pale_sounding_harbor",
+      "input": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_pale_sounding_harbor.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/pale_sounding_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/pale_sounding_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/pale_sounding_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/pale_sounding_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "pale_sounding_land",
+      "matte": {
+        "removed_pixels": 974787,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 0,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 5381
+      },
+      "transform": {
+        "source_crop": [
+          148,
+          68,
+          1123,
+          1169
+        ],
+        "fit_size": [
+          425,
+          480
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "1230aa1ed742f0045934308ad172042f8897d5a21896014a980e881b1be9686c",
+        "draft": "cbc0d4509d1037d318a2111c46687b22a47a6f3c786094a3a5dd911d1572944c",
+        "source": "b63d21a02e85c003eedb6625bb83d296a61aca012f17a7442004fba3a4094a76",
+        "trimmed": "25274cf94702bca00a1b44659d01308cef8bc0e27806fdb2353c5daa73ab613d",
+        "runtime": "25274cf94702bca00a1b44659d01308cef8bc0e27806fdb2353c5daa73ab613d"
+      }
+    },
+    "town_biome_cinderlock_land": {
+      "base_asset_id": "town_identity_cinderlock_bastion",
+      "input": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_cinderlock_bastion.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/cinderlock_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/cinderlock_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/cinderlock_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/cinderlock_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite. For this specific town also replace the OPEN molten lava canal with dark structural paving inside the walls and transparent exterior gaps; retain only the contained beacon/brazier flames. There must be no lava river on the surrounding ground.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "cinderlock_land",
+      "matte": {
+        "removed_pixels": 1012410,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 0,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 3069
+      },
+      "transform": {
+        "source_crop": [
+          142,
+          34,
+          1085,
+          1185
+        ],
+        "fit_size": [
+          393,
+          480
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "ef7769688e2a5919dcc831f4c88c08f21ee56cfe74fbdc2d727dcf9714fe7b1a",
+        "draft": "775b8bf2b28b78c5ca51b55ad8f3a87301a1dda49011833008eafdc432efa8f7",
+        "source": "3c77b996dbc5dc12c3e2f12fa4795863f513d633990bcf7d8a2c3ef9366dab5b",
+        "trimmed": "27e575a03b6414d94cc749166e4fc4560cc1bcd1c1134ec253048a8ace265425",
+        "runtime": "27e575a03b6414d94cc749166e4fc4560cc1bcd1c1134ec253048a8ace265425"
+      }
+    },
+    "town_biome_mireclaw_land": {
+      "base_asset_id": "town_faction_mireclaw",
+      "input": "res://art/overworld/runtime/objects/towns/factions/mireclaw.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/mireclaw_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/mireclaw_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/mireclaw_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/mireclaw_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "mireclaw_land",
+      "matte": {
+        "removed_pixels": 987745,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 0,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 8170
+      },
+      "transform": {
+        "source_crop": [
+          117,
+          58,
+          1089,
+          1214
+        ],
+        "fit_size": [
+          404,
+          480
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "52c34e0fba7f6275627b30058e00cf486311d8042a6dcaee18903004d6ea5dde",
+        "draft": "99569c2097e7d7087b1f0290954d8509e8cc87d6feb82322993b356809ef38e0",
+        "source": "5ebc314a1c0d3893b5782b191df78173b4f4fff14832dce563a557690a8cf33d",
+        "trimmed": "ade72afd2df62cbaac4ee3b18a338807af469d9cdd486585facf49871231077d",
+        "runtime": "ade72afd2df62cbaac4ee3b18a338807af469d9cdd486585facf49871231077d"
+      }
+    },
+    "town_biome_sunvault_land": {
+      "base_asset_id": "town_faction_sunvault",
+      "input": "res://art/overworld/runtime/objects/towns/factions/sunvault.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/sunvault_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/sunvault_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/sunvault_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/sunvault_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "sunvault_land",
+      "matte": {
+        "removed_pixels": 845660,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 0,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 6135
+      },
+      "transform": {
+        "source_crop": [
+          116,
+          21,
+          1161,
+          1211
+        ],
+        "fit_size": [
+          422,
+          480
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "cf2bf29fedc3531144e3dee3a0ab561e363eb7af52139f15702a7a682b5f48dd",
+        "draft": "068ea5ee499b258c7e99c9b6407b7f4b3c3429e44c60fdc06946a221628e40ae",
+        "source": "a30ee42b7651c7e8f20d7fb61b307450851c5fa76aa1040159769ae545ab7f08",
+        "trimmed": "0858dabf6fd52ad75608711d3c0f498218c972fde1ddbcb7f1bb856e46a5aa2f",
+        "runtime": "0858dabf6fd52ad75608711d3c0f498218c972fde1ddbcb7f1bb856e46a5aa2f"
+      }
+    },
+    "town_biome_thornwake_land": {
+      "base_asset_id": "town_faction_thornwake",
+      "input": "res://art/overworld/runtime/objects/towns/factions/thornwake.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/thornwake_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/thornwake_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/thornwake_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/thornwake_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "thornwake_land",
+      "matte": {
+        "removed_pixels": 724889,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 0,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 7044
+      },
+      "transform": {
+        "source_crop": [
+          45,
+          8,
+          1167,
+          1176
+        ],
+        "fit_size": [
+          461,
+          480
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "875881aab052eb018f12c4af23e8bff80c08d4ff775d72ee33af178b315d4138",
+        "draft": "cc7740c0bd08cd201e19e79dd78e580a1673a035fde3d0af21503f6a7bed0765",
+        "source": "c9e6ade9679ce05a381f81a44ac07093c3db86a1a942082b0e2118007d31ecef",
+        "trimmed": "fe567213acaf995efcd6d5ec2c034e384668788034c87ac57917a41a7dba6146",
+        "runtime": "fe567213acaf995efcd6d5ec2c034e384668788034c87ac57917a41a7dba6146"
+      }
+    },
+    "town_biome_veilmourn_land": {
+      "base_asset_id": "town_faction_veilmourn",
+      "input": "res://art/overworld/runtime/objects/towns/factions/veilmourn.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/veilmourn_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/veilmourn_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/veilmourn_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/veilmourn_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite.\nSecond edit using veilmourn_land_initial_draft.png: Edit only the framing of this exact original castle artwork. Fit the WHOLE town into the image with a generous 8 percent pure white margin on EVERY side, including ABOVE the complete compass-star finial. Restore the tiny cropped upper tip of that compass star, otherwise preserve this exact architecture, palette, details, platforms, dry structural foundations and original isometric viewpoint. Nothing may touch the canvas edge. No new structures or water or landscape. Flat pure white background, no checkerboard, no external cast shadow. This will be extracted offline.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "veilmourn_land",
+      "matte": {
+        "removed_pixels": 991686,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 4,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 9988
+      },
+      "transform": {
+        "source_crop": [
+          167,
+          44,
+          1143,
+          1152
+        ],
+        "fit_size": [
+          423,
+          480
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "e89e68f9ab030b22a397caa0019439ff1dc623dae8254f4bcd249e105db8db44",
+        "draft": "c30cee7ad0713cbdc325188624d13583e9b32a1e23e8ae524b062a5afbaf65e6",
+        "source": "57e313c41b3e18e773ede90763352fb7013b245303375e1a44a5cd771c4d259d",
+        "trimmed": "13026a145e55a6a87bb5a59a24df8702df9ee89ef0ca26cafe3b548d07f6b1e9",
+        "runtime": "13026a145e55a6a87bb5a59a24df8702df9ee89ef0ca26cafe3b548d07f6b1e9"
+      }
+    },
+    "town_biome_blackbell_land": {
+      "base_asset_id": "town_identity_blackbell_foundry",
+      "input": "res://art/overworld/source/trimmed/cutout_recovery_20260909/towns/town_identity_blackbell_foundry.png",
+      "draft": "res://art/overworld/source/generated/towns/biome_fit/blackbell_land_draft.png",
+      "source": "res://art/overworld/source/generated/towns/biome_fit/blackbell_land_cutout.png",
+      "trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/blackbell_land.png",
+      "runtime": "res://art/overworld/runtime/objects/towns/biome_fit/blackbell_land.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "import_size_limit": 512,
+      "prompt": "Use case: precise-object-edit. Edit this exact original fantasy strategy-game town sprite into a terrain-neutral LAND version of the SAME town. Preserve its distinctive architecture, silhouette, tower layout, roofs, materials, faction symbols, lamps, isometric viewpoint, entrance position and detailed painted style. Remove exterior water, marsh, boats, reeds, surrounding grass and terrain islands. Preserve structures, stairs, bridges and pilings; support them plausibly with their existing stone or timber foundations. Replace water inside the walls only with modest structural stone paving or timber decking. Exterior gaps must be empty. No redesign or generic castle substitution, no added buildings, no new broad ground platform, no pedestal or surrounding landscape. Preserve living tree architecture where present. Deliver the whole uncropped town centered with generous margins on a completely flat pure white background, no checkerboard, no cast shadow outside the architecture, no gradients, no text. This flat background will be removed offline. Keep dark clean painted silhouette edges suitable for a small game sprite. Specific Blackbell Foundry constraints: preserve the giant bronze hanging bell, black basalt cliff foundations, every pipe, chimney, furnace and contained molten pour. Keep the blue cooling troughs INSIDE the structure but close/contain their ends with existing-style dark stone retaining walls so absolutely NO blue waterfall or foam falls down the cliff or reaches the outside terrain. This is still the same industrial foundry, with contained circulation instead of streams spilling onto the landscape. Preserve smoke with clean edges suitable for extraction.",
+      "processing": "Owner-approved offline background alpha extraction and aspect-preserving 512px packaging; source architecture is not repainted.",
+      "offline_recipe": "res://art/overworld/source/generated/towns/biome_fit/offline_recipe.json",
+      "recipe_job": "blackbell_land",
+      "matte": {
+        "removed_pixels": 796018,
+        "minimum": 230,
+        "tolerance": 20,
+        "background_seeds": [],
+        "neutral_speck_max_area": 48,
+        "removed_speck_pixels": 44,
+        "flat_white": true,
+        "neutral_fringe_radius": 2,
+        "removed_fringe_pixels": 4248
+      },
+      "transform": {
+        "source_crop": [
+          123,
+          49,
+          1139,
+          1176
+        ],
+        "fit_size": [
+          433,
+          480
+        ],
+        "canvas": [
+          512,
+          512
+        ],
+        "resampling": "LANCZOS"
+      },
+      "sha256": {
+        "input": "79ccf5ec84b737df14f5ef96d74642749262ed6608ddfe1aa13e015d89f9caf2",
+        "draft": "7d1c8d3c56d93900ea1c157587c4266bd04b1c8b623e03282648b83f76bcc2bf",
+        "source": "b0a174d6525172ab95950b4ae278e14f83c02d76bd24cde10dd837db65017f31",
+        "trimmed": "29fb1d9a9613a1741d9697039ebca23fb232c395912fa2305064c014430f83cb",
+        "runtime": "29fb1d9a9613a1741d9697039ebca23fb232c395912fa2305064c014430f83cb"
+      }
+    }
+  }
+}

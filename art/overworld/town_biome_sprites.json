@@ -1,0 +1,583 @@
+{
+  "schema_id": "town_biome_sprites_v1",
+  "terrain_sample": "source_owned_visit_tile_on_active_level",
+  "terrain_aliases": {
+    "plains": "biome_grasslands",
+    "hills": "biome_highland_ridge",
+    "ridge": "biome_highland_ridge",
+    "ice": "biome_snow_frost_marches",
+    "shore": "biome_coast_archipelago",
+    "subterranean": "biome_subterranean_underways",
+    "grass": "biome_grasslands",
+    "forest": "biome_deep_forest",
+    "mire": "biome_mire_fen",
+    "swamp": "biome_mire_fen",
+    "rough": "biome_highland_ridge",
+    "rock": "biome_highland_ridge",
+    "badlands": "biome_rough_badlands",
+    "sand": "biome_rough_badlands",
+    "dirt": "biome_rough_badlands",
+    "ash": "biome_ash_lava_wastes",
+    "lava": "biome_ash_lava_wastes",
+    "snow": "biome_snow_frost_marches",
+    "water": "biome_coast_archipelago",
+    "coast": "biome_coast_archipelago",
+    "cavern": "biome_subterranean_underways",
+    "underground": "biome_subterranean_underways"
+  },
+  "appearances": {
+    "town_identity_riverwatch": {
+      "environment_policy": "Original grassy apron on grass/forest; basalt on volcanic terrain; neutral structural foundations on all other biomes.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_riverwatch",
+        "biome_deep_forest": "town_identity_riverwatch",
+        "biome_mire_fen": "town_biome_riverwatch_land",
+        "biome_highland_ridge": "town_biome_riverwatch_land",
+        "biome_rough_badlands": "town_biome_riverwatch_land",
+        "biome_ash_lava_wastes": "town_biome_riverwatch_ash",
+        "biome_snow_frost_marches": "town_biome_riverwatch_land",
+        "biome_coast_archipelago": "town_biome_riverwatch_land",
+        "biome_subterranean_underways": "town_biome_riverwatch_land"
+      }
+    },
+    "town_identity_duskfen": {
+      "environment_policy": "Original marsh on mire/coast; dry timber and masonry on other terrain.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_duskfen_land",
+        "biome_deep_forest": "town_biome_duskfen_land",
+        "biome_mire_fen": "town_identity_duskfen",
+        "biome_highland_ridge": "town_biome_duskfen_land",
+        "biome_rough_badlands": "town_biome_duskfen_land",
+        "biome_ash_lava_wastes": "town_biome_duskfen_land",
+        "biome_snow_frost_marches": "town_biome_duskfen_land",
+        "biome_coast_archipelago": "town_identity_duskfen",
+        "biome_subterranean_underways": "town_biome_duskfen_land"
+      }
+    },
+    "town_identity_blackfen_gate": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_blackfen_gate_land",
+        "biome_deep_forest": "town_biome_blackfen_gate_land",
+        "biome_mire_fen": "town_identity_blackfen_gate",
+        "biome_highland_ridge": "town_biome_blackfen_gate_land",
+        "biome_rough_badlands": "town_biome_blackfen_gate_land",
+        "biome_ash_lava_wastes": "town_biome_blackfen_gate_land",
+        "biome_snow_frost_marches": "town_biome_blackfen_gate_land",
+        "biome_coast_archipelago": "town_identity_blackfen_gate",
+        "biome_subterranean_underways": "town_biome_blackfen_gate_land"
+      }
+    },
+    "town_identity_highwater_keep": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_highwater_keep",
+        "biome_deep_forest": "town_identity_highwater_keep",
+        "biome_mire_fen": "town_identity_highwater_keep",
+        "biome_highland_ridge": "town_identity_highwater_keep",
+        "biome_rough_badlands": "town_identity_highwater_keep",
+        "biome_ash_lava_wastes": "town_identity_highwater_keep",
+        "biome_snow_frost_marches": "town_identity_highwater_keep",
+        "biome_coast_archipelago": "town_identity_highwater_keep",
+        "biome_subterranean_underways": "town_identity_highwater_keep"
+      }
+    },
+    "town_identity_murkward_ford": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_murkward_ford_land",
+        "biome_deep_forest": "town_biome_murkward_ford_land",
+        "biome_mire_fen": "town_identity_murkward_ford",
+        "biome_highland_ridge": "town_biome_murkward_ford_land",
+        "biome_rough_badlands": "town_biome_murkward_ford_land",
+        "biome_ash_lava_wastes": "town_biome_murkward_ford_land",
+        "biome_snow_frost_marches": "town_biome_murkward_ford_land",
+        "biome_coast_archipelago": "town_identity_murkward_ford",
+        "biome_subterranean_underways": "town_biome_murkward_ford_land"
+      }
+    },
+    "town_identity_reedbarrow_ferry": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_reedbarrow_ferry_land",
+        "biome_deep_forest": "town_biome_reedbarrow_ferry_land",
+        "biome_mire_fen": "town_identity_reedbarrow_ferry",
+        "biome_highland_ridge": "town_biome_reedbarrow_ferry_land",
+        "biome_rough_badlands": "town_biome_reedbarrow_ferry_land",
+        "biome_ash_lava_wastes": "town_biome_reedbarrow_ferry_land",
+        "biome_snow_frost_marches": "town_biome_reedbarrow_ferry_land",
+        "biome_coast_archipelago": "town_identity_reedbarrow_ferry",
+        "biome_subterranean_underways": "town_biome_reedbarrow_ferry_land"
+      }
+    },
+    "town_identity_nightglass_redoubt": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_nightglass_redoubt",
+        "biome_deep_forest": "town_identity_nightglass_redoubt",
+        "biome_mire_fen": "town_identity_nightglass_redoubt",
+        "biome_highland_ridge": "town_identity_nightglass_redoubt",
+        "biome_rough_badlands": "town_identity_nightglass_redoubt",
+        "biome_ash_lava_wastes": "town_identity_nightglass_redoubt",
+        "biome_snow_frost_marches": "town_identity_nightglass_redoubt",
+        "biome_coast_archipelago": "town_identity_nightglass_redoubt",
+        "biome_subterranean_underways": "town_identity_nightglass_redoubt"
+      }
+    },
+    "town_identity_prismhearth": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_prismhearth",
+        "biome_deep_forest": "town_identity_prismhearth",
+        "biome_mire_fen": "town_identity_prismhearth",
+        "biome_highland_ridge": "town_identity_prismhearth",
+        "biome_rough_badlands": "town_identity_prismhearth",
+        "biome_ash_lava_wastes": "town_identity_prismhearth",
+        "biome_snow_frost_marches": "town_identity_prismhearth",
+        "biome_coast_archipelago": "town_identity_prismhearth",
+        "biome_subterranean_underways": "town_identity_prismhearth"
+      }
+    },
+    "town_identity_halo_spire": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_halo_spire",
+        "biome_deep_forest": "town_identity_halo_spire",
+        "biome_mire_fen": "town_identity_halo_spire",
+        "biome_highland_ridge": "town_identity_halo_spire",
+        "biome_rough_badlands": "town_identity_halo_spire",
+        "biome_ash_lava_wastes": "town_identity_halo_spire",
+        "biome_snow_frost_marches": "town_identity_halo_spire",
+        "biome_coast_archipelago": "town_identity_halo_spire",
+        "biome_subterranean_underways": "town_identity_halo_spire"
+      }
+    },
+    "town_identity_thornwake_graftroot_caravan": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_thornwake_graftroot_caravan",
+        "biome_deep_forest": "town_identity_thornwake_graftroot_caravan",
+        "biome_mire_fen": "town_identity_thornwake_graftroot_caravan",
+        "biome_highland_ridge": "town_identity_thornwake_graftroot_caravan",
+        "biome_rough_badlands": "town_identity_thornwake_graftroot_caravan",
+        "biome_ash_lava_wastes": "town_identity_thornwake_graftroot_caravan",
+        "biome_snow_frost_marches": "town_identity_thornwake_graftroot_caravan",
+        "biome_coast_archipelago": "town_identity_thornwake_graftroot_caravan",
+        "biome_subterranean_underways": "town_identity_thornwake_graftroot_caravan"
+      }
+    },
+    "town_identity_brasshollow_orevein_gantry": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_brasshollow_orevein_gantry",
+        "biome_deep_forest": "town_identity_brasshollow_orevein_gantry",
+        "biome_mire_fen": "town_identity_brasshollow_orevein_gantry",
+        "biome_highland_ridge": "town_identity_brasshollow_orevein_gantry",
+        "biome_rough_badlands": "town_identity_brasshollow_orevein_gantry",
+        "biome_ash_lava_wastes": "town_identity_brasshollow_orevein_gantry",
+        "biome_snow_frost_marches": "town_identity_brasshollow_orevein_gantry",
+        "biome_coast_archipelago": "town_identity_brasshollow_orevein_gantry",
+        "biome_subterranean_underways": "town_identity_brasshollow_orevein_gantry"
+      }
+    },
+    "town_identity_veilmourn_bellwake_harbor": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_bellwake_land",
+        "biome_deep_forest": "town_biome_bellwake_land",
+        "biome_mire_fen": "town_identity_veilmourn_bellwake_harbor",
+        "biome_highland_ridge": "town_biome_bellwake_land",
+        "biome_rough_badlands": "town_biome_bellwake_land",
+        "biome_ash_lava_wastes": "town_biome_bellwake_land",
+        "biome_snow_frost_marches": "town_biome_bellwake_land",
+        "biome_coast_archipelago": "town_identity_veilmourn_bellwake_harbor",
+        "biome_subterranean_underways": "town_biome_bellwake_land"
+      }
+    },
+    "town_identity_thornwake_rootgate_nursery": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_thornwake_rootgate_nursery",
+        "biome_deep_forest": "town_identity_thornwake_rootgate_nursery",
+        "biome_mire_fen": "town_identity_thornwake_rootgate_nursery",
+        "biome_highland_ridge": "town_identity_thornwake_rootgate_nursery",
+        "biome_rough_badlands": "town_identity_thornwake_rootgate_nursery",
+        "biome_ash_lava_wastes": "town_identity_thornwake_rootgate_nursery",
+        "biome_snow_frost_marches": "town_identity_thornwake_rootgate_nursery",
+        "biome_coast_archipelago": "town_identity_thornwake_rootgate_nursery",
+        "biome_subterranean_underways": "town_identity_thornwake_rootgate_nursery"
+      }
+    },
+    "town_identity_brasshollow_clauseworks_depot": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_brasshollow_clauseworks_depot",
+        "biome_deep_forest": "town_identity_brasshollow_clauseworks_depot",
+        "biome_mire_fen": "town_identity_brasshollow_clauseworks_depot",
+        "biome_highland_ridge": "town_identity_brasshollow_clauseworks_depot",
+        "biome_rough_badlands": "town_identity_brasshollow_clauseworks_depot",
+        "biome_ash_lava_wastes": "town_identity_brasshollow_clauseworks_depot",
+        "biome_snow_frost_marches": "town_identity_brasshollow_clauseworks_depot",
+        "biome_coast_archipelago": "town_identity_brasshollow_clauseworks_depot",
+        "biome_subterranean_underways": "town_identity_brasshollow_clauseworks_depot"
+      }
+    },
+    "town_identity_veilmourn_fogchart_mooring": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_fogchart_land",
+        "biome_deep_forest": "town_biome_fogchart_land",
+        "biome_mire_fen": "town_identity_veilmourn_fogchart_mooring",
+        "biome_highland_ridge": "town_biome_fogchart_land",
+        "biome_rough_badlands": "town_biome_fogchart_land",
+        "biome_ash_lava_wastes": "town_biome_fogchart_land",
+        "biome_snow_frost_marches": "town_biome_fogchart_land",
+        "biome_coast_archipelago": "town_identity_veilmourn_fogchart_mooring",
+        "biome_subterranean_underways": "town_biome_fogchart_land"
+      }
+    },
+    "town_identity_cinderlock_bastion": {
+      "environment_policy": "Original open molten canal only on volcanic terrain; structural paved gatehouse everywhere else.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_cinderlock_land",
+        "biome_deep_forest": "town_biome_cinderlock_land",
+        "biome_mire_fen": "town_biome_cinderlock_land",
+        "biome_highland_ridge": "town_biome_cinderlock_land",
+        "biome_rough_badlands": "town_biome_cinderlock_land",
+        "biome_ash_lava_wastes": "town_identity_cinderlock_bastion",
+        "biome_snow_frost_marches": "town_biome_cinderlock_land",
+        "biome_coast_archipelago": "town_biome_cinderlock_land",
+        "biome_subterranean_underways": "town_biome_cinderlock_land"
+      }
+    },
+    "town_identity_dawnmirror_observatory": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_dawnmirror_observatory",
+        "biome_deep_forest": "town_identity_dawnmirror_observatory",
+        "biome_mire_fen": "town_identity_dawnmirror_observatory",
+        "biome_highland_ridge": "town_identity_dawnmirror_observatory",
+        "biome_rough_badlands": "town_identity_dawnmirror_observatory",
+        "biome_ash_lava_wastes": "town_identity_dawnmirror_observatory",
+        "biome_snow_frost_marches": "town_identity_dawnmirror_observatory",
+        "biome_coast_archipelago": "town_identity_dawnmirror_observatory",
+        "biome_subterranean_underways": "town_identity_dawnmirror_observatory"
+      }
+    },
+    "town_identity_briarwheel_enclave": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_briarwheel_enclave",
+        "biome_deep_forest": "town_identity_briarwheel_enclave",
+        "biome_mire_fen": "town_identity_briarwheel_enclave",
+        "biome_highland_ridge": "town_identity_briarwheel_enclave",
+        "biome_rough_badlands": "town_identity_briarwheel_enclave",
+        "biome_ash_lava_wastes": "town_identity_briarwheel_enclave",
+        "biome_snow_frost_marches": "town_identity_briarwheel_enclave",
+        "biome_coast_archipelago": "town_identity_briarwheel_enclave",
+        "biome_subterranean_underways": "town_identity_briarwheel_enclave"
+      }
+    },
+    "town_identity_cindercoil_foundry": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_cindercoil_foundry",
+        "biome_deep_forest": "town_identity_cindercoil_foundry",
+        "biome_mire_fen": "town_identity_cindercoil_foundry",
+        "biome_highland_ridge": "town_identity_cindercoil_foundry",
+        "biome_rough_badlands": "town_identity_cindercoil_foundry",
+        "biome_ash_lava_wastes": "town_identity_cindercoil_foundry",
+        "biome_snow_frost_marches": "town_identity_cindercoil_foundry",
+        "biome_coast_archipelago": "town_identity_cindercoil_foundry",
+        "biome_subterranean_underways": "town_identity_cindercoil_foundry"
+      }
+    },
+    "town_identity_gloamwake_anchorage": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_gloamwake_land",
+        "biome_deep_forest": "town_biome_gloamwake_land",
+        "biome_mire_fen": "town_identity_gloamwake_anchorage",
+        "biome_highland_ridge": "town_biome_gloamwake_land",
+        "biome_rough_badlands": "town_biome_gloamwake_land",
+        "biome_ash_lava_wastes": "town_biome_gloamwake_land",
+        "biome_snow_frost_marches": "town_biome_gloamwake_land",
+        "biome_coast_archipelago": "town_identity_gloamwake_anchorage",
+        "biome_subterranean_underways": "town_biome_gloamwake_land"
+      }
+    },
+    "town_identity_rainwrit_bastion": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_rainwrit_land",
+        "biome_deep_forest": "town_biome_rainwrit_land",
+        "biome_mire_fen": "town_identity_rainwrit_bastion",
+        "biome_highland_ridge": "town_biome_rainwrit_land",
+        "biome_rough_badlands": "town_biome_rainwrit_land",
+        "biome_ash_lava_wastes": "town_biome_rainwrit_land",
+        "biome_snow_frost_marches": "town_biome_rainwrit_land",
+        "biome_coast_archipelago": "town_identity_rainwrit_bastion",
+        "biome_subterranean_underways": "town_biome_rainwrit_land"
+      }
+    },
+    "town_identity_hollowreed_sanctuary": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_hollowreed_land",
+        "biome_deep_forest": "town_biome_hollowreed_land",
+        "biome_mire_fen": "town_identity_hollowreed_sanctuary",
+        "biome_highland_ridge": "town_biome_hollowreed_land",
+        "biome_rough_badlands": "town_biome_hollowreed_land",
+        "biome_ash_lava_wastes": "town_biome_hollowreed_land",
+        "biome_snow_frost_marches": "town_biome_hollowreed_land",
+        "biome_coast_archipelago": "town_identity_hollowreed_sanctuary",
+        "biome_subterranean_underways": "town_biome_hollowreed_land"
+      }
+    },
+    "town_identity_meridian_choirhold": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_meridian_choirhold",
+        "biome_deep_forest": "town_identity_meridian_choirhold",
+        "biome_mire_fen": "town_identity_meridian_choirhold",
+        "biome_highland_ridge": "town_identity_meridian_choirhold",
+        "biome_rough_badlands": "town_identity_meridian_choirhold",
+        "biome_ash_lava_wastes": "town_identity_meridian_choirhold",
+        "biome_snow_frost_marches": "town_identity_meridian_choirhold",
+        "biome_coast_archipelago": "town_identity_meridian_choirhold",
+        "biome_subterranean_underways": "town_identity_meridian_choirhold"
+      }
+    },
+    "town_identity_crownroot_refuge": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_crownroot_refuge",
+        "biome_deep_forest": "town_identity_crownroot_refuge",
+        "biome_mire_fen": "town_identity_crownroot_refuge",
+        "biome_highland_ridge": "town_identity_crownroot_refuge",
+        "biome_rough_badlands": "town_identity_crownroot_refuge",
+        "biome_ash_lava_wastes": "town_identity_crownroot_refuge",
+        "biome_snow_frost_marches": "town_identity_crownroot_refuge",
+        "biome_coast_archipelago": "town_identity_crownroot_refuge",
+        "biome_subterranean_underways": "town_identity_crownroot_refuge"
+      }
+    },
+    "town_identity_blackbell_foundry": {
+      "environment_policy": "Original water discharge only on mire/coast; contained cooling troughs on dry, volcanic, frozen and subterranean terrain.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_blackbell_land",
+        "biome_deep_forest": "town_biome_blackbell_land",
+        "biome_mire_fen": "town_identity_blackbell_foundry",
+        "biome_highland_ridge": "town_biome_blackbell_land",
+        "biome_rough_badlands": "town_biome_blackbell_land",
+        "biome_ash_lava_wastes": "town_biome_blackbell_land",
+        "biome_snow_frost_marches": "town_biome_blackbell_land",
+        "biome_coast_archipelago": "town_identity_blackbell_foundry",
+        "biome_subterranean_underways": "town_biome_blackbell_land"
+      }
+    },
+    "town_identity_pale_sounding_harbor": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_pale_sounding_land",
+        "biome_deep_forest": "town_biome_pale_sounding_land",
+        "biome_mire_fen": "town_identity_pale_sounding_harbor",
+        "biome_highland_ridge": "town_biome_pale_sounding_land",
+        "biome_rough_badlands": "town_biome_pale_sounding_land",
+        "biome_ash_lava_wastes": "town_biome_pale_sounding_land",
+        "biome_snow_frost_marches": "town_biome_pale_sounding_land",
+        "biome_coast_archipelago": "town_identity_pale_sounding_harbor",
+        "biome_subterranean_underways": "town_biome_pale_sounding_land"
+      }
+    },
+    "town_identity_amberweir_granary": {
+      "environment_policy": "Shares the exact historical raster with town_faction_embercourt; uses that same architecture's biome variants without changing this named town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_embercourt_land",
+        "biome_deep_forest": "town_biome_embercourt_land",
+        "biome_mire_fen": "town_identity_amberweir_granary",
+        "biome_highland_ridge": "town_biome_embercourt_land",
+        "biome_rough_badlands": "town_biome_embercourt_land",
+        "biome_ash_lava_wastes": "town_biome_embercourt_land",
+        "biome_snow_frost_marches": "town_biome_embercourt_land",
+        "biome_coast_archipelago": "town_identity_amberweir_granary",
+        "biome_subterranean_underways": "town_biome_embercourt_land"
+      },
+      "shares_architecture_with": "town_faction_embercourt"
+    },
+    "town_identity_moonbite_reedshrine": {
+      "environment_policy": "Shares the exact historical raster with town_faction_mireclaw; uses that same architecture's biome variants without changing this named town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_mireclaw_land",
+        "biome_deep_forest": "town_biome_mireclaw_land",
+        "biome_mire_fen": "town_identity_moonbite_reedshrine",
+        "biome_highland_ridge": "town_biome_mireclaw_land",
+        "biome_rough_badlands": "town_biome_mireclaw_land",
+        "biome_ash_lava_wastes": "town_biome_mireclaw_land",
+        "biome_snow_frost_marches": "town_biome_mireclaw_land",
+        "biome_coast_archipelago": "town_identity_moonbite_reedshrine",
+        "biome_subterranean_underways": "town_biome_mireclaw_land"
+      },
+      "shares_architecture_with": "town_faction_mireclaw"
+    },
+    "town_identity_splitprism_duelcourt": {
+      "environment_policy": "Shares the exact historical raster with town_faction_sunvault; uses that same architecture's biome variants without changing this named town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_sunvault_land",
+        "biome_deep_forest": "town_biome_sunvault_land",
+        "biome_mire_fen": "town_identity_splitprism_duelcourt",
+        "biome_highland_ridge": "town_biome_sunvault_land",
+        "biome_rough_badlands": "town_biome_sunvault_land",
+        "biome_ash_lava_wastes": "town_biome_sunvault_land",
+        "biome_snow_frost_marches": "town_biome_sunvault_land",
+        "biome_coast_archipelago": "town_identity_splitprism_duelcourt",
+        "biome_subterranean_underways": "town_biome_sunvault_land"
+      },
+      "shares_architecture_with": "town_faction_sunvault"
+    },
+    "town_identity_woundroot_hearthgrove": {
+      "environment_policy": "Shares the exact historical raster with town_faction_thornwake; uses that same architecture's biome variants without changing this named town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_thornwake_land",
+        "biome_deep_forest": "town_biome_thornwake_land",
+        "biome_mire_fen": "town_identity_woundroot_hearthgrove",
+        "biome_highland_ridge": "town_biome_thornwake_land",
+        "biome_rough_badlands": "town_biome_thornwake_land",
+        "biome_ash_lava_wastes": "town_biome_thornwake_land",
+        "biome_snow_frost_marches": "town_biome_thornwake_land",
+        "biome_coast_archipelago": "town_identity_woundroot_hearthgrove",
+        "biome_subterranean_underways": "town_biome_thornwake_land"
+      },
+      "shares_architecture_with": "town_faction_thornwake"
+    },
+    "town_identity_whitegauge_calibration_yard": {
+      "environment_policy": "Shares the exact historical raster with town_faction_brasshollow; uses that same architecture's biome variants without changing this named town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_identity_whitegauge_calibration_yard",
+        "biome_deep_forest": "town_identity_whitegauge_calibration_yard",
+        "biome_mire_fen": "town_identity_whitegauge_calibration_yard",
+        "biome_highland_ridge": "town_identity_whitegauge_calibration_yard",
+        "biome_rough_badlands": "town_identity_whitegauge_calibration_yard",
+        "biome_ash_lava_wastes": "town_identity_whitegauge_calibration_yard",
+        "biome_snow_frost_marches": "town_identity_whitegauge_calibration_yard",
+        "biome_coast_archipelago": "town_identity_whitegauge_calibration_yard",
+        "biome_subterranean_underways": "town_identity_whitegauge_calibration_yard"
+      },
+      "shares_architecture_with": "town_faction_brasshollow"
+    },
+    "town_identity_dreamwake_oracle_harbor": {
+      "environment_policy": "Shares the exact historical raster with town_faction_veilmourn; uses that same architecture's biome variants without changing this named town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_veilmourn_land",
+        "biome_deep_forest": "town_biome_veilmourn_land",
+        "biome_mire_fen": "town_identity_dreamwake_oracle_harbor",
+        "biome_highland_ridge": "town_biome_veilmourn_land",
+        "biome_rough_badlands": "town_biome_veilmourn_land",
+        "biome_ash_lava_wastes": "town_biome_veilmourn_land",
+        "biome_snow_frost_marches": "town_biome_veilmourn_land",
+        "biome_coast_archipelago": "town_identity_dreamwake_oracle_harbor",
+        "biome_subterranean_underways": "town_biome_veilmourn_land"
+      },
+      "shares_architecture_with": "town_faction_veilmourn"
+    },
+    "town_faction_embercourt": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_embercourt_land",
+        "biome_deep_forest": "town_biome_embercourt_land",
+        "biome_mire_fen": "town_faction_embercourt",
+        "biome_highland_ridge": "town_biome_embercourt_land",
+        "biome_rough_badlands": "town_biome_embercourt_land",
+        "biome_ash_lava_wastes": "town_biome_embercourt_land",
+        "biome_snow_frost_marches": "town_biome_embercourt_land",
+        "biome_coast_archipelago": "town_faction_embercourt",
+        "biome_subterranean_underways": "town_biome_embercourt_land"
+      }
+    },
+    "town_faction_mireclaw": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_mireclaw_land",
+        "biome_deep_forest": "town_biome_mireclaw_land",
+        "biome_mire_fen": "town_faction_mireclaw",
+        "biome_highland_ridge": "town_biome_mireclaw_land",
+        "biome_rough_badlands": "town_biome_mireclaw_land",
+        "biome_ash_lava_wastes": "town_biome_mireclaw_land",
+        "biome_snow_frost_marches": "town_biome_mireclaw_land",
+        "biome_coast_archipelago": "town_faction_mireclaw",
+        "biome_subterranean_underways": "town_biome_mireclaw_land"
+      }
+    },
+    "town_faction_sunvault": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_sunvault_land",
+        "biome_deep_forest": "town_biome_sunvault_land",
+        "biome_mire_fen": "town_faction_sunvault",
+        "biome_highland_ridge": "town_biome_sunvault_land",
+        "biome_rough_badlands": "town_biome_sunvault_land",
+        "biome_ash_lava_wastes": "town_biome_sunvault_land",
+        "biome_snow_frost_marches": "town_biome_sunvault_land",
+        "biome_coast_archipelago": "town_faction_sunvault",
+        "biome_subterranean_underways": "town_biome_sunvault_land"
+      }
+    },
+    "town_faction_thornwake": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_thornwake_land",
+        "biome_deep_forest": "town_biome_thornwake_land",
+        "biome_mire_fen": "town_faction_thornwake",
+        "biome_highland_ridge": "town_biome_thornwake_land",
+        "biome_rough_badlands": "town_biome_thornwake_land",
+        "biome_ash_lava_wastes": "town_biome_thornwake_land",
+        "biome_snow_frost_marches": "town_biome_thornwake_land",
+        "biome_coast_archipelago": "town_faction_thornwake",
+        "biome_subterranean_underways": "town_biome_thornwake_land"
+      }
+    },
+    "town_faction_brasshollow": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_faction_brasshollow",
+        "biome_deep_forest": "town_faction_brasshollow",
+        "biome_mire_fen": "town_faction_brasshollow",
+        "biome_highland_ridge": "town_faction_brasshollow",
+        "biome_rough_badlands": "town_faction_brasshollow",
+        "biome_ash_lava_wastes": "town_faction_brasshollow",
+        "biome_snow_frost_marches": "town_faction_brasshollow",
+        "biome_coast_archipelago": "town_faction_brasshollow",
+        "biome_subterranean_underways": "town_faction_brasshollow"
+      }
+    },
+    "town_faction_veilmourn": {
+      "environment_policy": "Original wetland/coastal scenery only on mire or coast; dry structural variant on other biomes, preserving this exact town identity.",
+      "biome_asset_ids": {
+        "biome_grasslands": "town_biome_veilmourn_land",
+        "biome_deep_forest": "town_biome_veilmourn_land",
+        "biome_mire_fen": "town_faction_veilmourn",
+        "biome_highland_ridge": "town_biome_veilmourn_land",
+        "biome_rough_badlands": "town_biome_veilmourn_land",
+        "biome_ash_lava_wastes": "town_biome_veilmourn_land",
+        "biome_snow_frost_marches": "town_biome_veilmourn_land",
+        "biome_coast_archipelago": "town_faction_veilmourn",
+        "biome_subterranean_underways": "town_biome_veilmourn_land"
+      }
+    },
+    "frontier_town": {
+      "environment_policy": "Original structural foundations and contained architectural features retained; no exterior terrain island requiring replacement.",
+      "biome_asset_ids": {
+        "biome_grasslands": "frontier_town",
+        "biome_deep_forest": "frontier_town",
+        "biome_mire_fen": "frontier_town",
+        "biome_highland_ridge": "frontier_town",
+        "biome_rough_badlands": "frontier_town",
+        "biome_ash_lava_wastes": "frontier_town",
+        "biome_snow_frost_marches": "frontier_town",
+        "biome_coast_archipelago": "frontier_town",
+        "biome_subterranean_underways": "frontier_town"
+      }
+    }
+  },
+  "coverage_status": "explicit_39_logical_ids_33_architectures_9_biomes_visually_reviewed"
+}

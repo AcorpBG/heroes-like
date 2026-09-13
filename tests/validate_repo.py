@@ -44360,6 +44360,13 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Recruitment cutout recovery failed closed: {exc}")
     generated_blocker_sizes = validate_generated_blocker_contracts(object_assets, errors)
+    town_biome_spec = importlib.util.spec_from_file_location("town_biome_art_validation", ROOT / "tests" / "town_biome_art_regression.py")
+    town_biome_module = importlib.util.module_from_spec(town_biome_spec)
+    town_biome_spec.loader.exec_module(town_biome_module)
+    try:
+        errors.extend(town_biome_module.validate_assets(manifest))
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        errors.append(f"Town biome art validation failed closed: {exc}")
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -44388,6 +44395,12 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
             source_model = str(entry.get("source_model", ""))
             if asset_id in generated_blocker_sizes:
                 expected_canvas = generated_blocker_sizes[asset_id]
+            elif source_model == "built_in_image_gen_original_biome_town_variant":
+                # This family has preserved-alpha 1254px masters and approved
+                # offline-packed 512px cutouts. Its focused validator checks
+                # exact membership, hashes, canvas and processing provenance.
+                town_proof = load_json(ROOT / "art/overworld/source/generated/towns/biome_fit/manifest.json")
+                expected_canvas = tuple(town_proof.get("assets", {}).get(asset_id, {}).get("canvas", []))
             elif source_model == "built_in_image_gen_original_signature_encounter_landmark":
                 expected_canvas = (64, 64)
             elif source_model == "built_in_image_gen_original_recurring_encounter_landmark_atlas":
