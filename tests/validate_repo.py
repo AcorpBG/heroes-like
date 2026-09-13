@@ -31188,7 +31188,7 @@ def validate_town_route_response_dispatch_feedback(errors: list[str]) -> None:
     }], errors, "Town route-response animation event must remain a unique exact Town-owned nonblocking dispatch cue")
 
     audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
-    ensure(audio_cues.get("audio_placeholder_town_route_response") == {
+    validate_presentation_audio_mapping("audio_placeholder_town_route_response", {
         "path": "res://art/audio/runtime/presentation/town_route_response.wav",
         "duration_msec": 380,
         "volume_db": -13.0,
@@ -31359,7 +31359,7 @@ def validate_town_market_exchange_completion_feedback(errors: list[str]) -> None
     }], errors, "Town market-exchange animation event must remain a unique exact Town-owned nonblocking settlement cue")
 
     audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
-    ensure(audio_cues.get("audio_placeholder_town_market_exchange") == {
+    validate_presentation_audio_mapping("audio_placeholder_town_market_exchange", {
         "path": "res://art/audio/runtime/presentation/town_market_exchange.wav",
         "duration_msec": 360,
         "volume_db": -13.5,
@@ -31553,7 +31553,7 @@ def validate_town_spell_study_completion_feedback(errors: list[str]) -> None:
     }], errors, "Town spell-study animation event must remain a unique exact Town-owned nonblocking archive cue")
 
     audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
-    ensure(audio_cues.get("audio_placeholder_town_spell_study") == {
+    validate_presentation_audio_mapping("audio_placeholder_town_spell_study", {
         "path": "res://art/audio/runtime/presentation/town_spell_study.wav",
         "duration_msec": 400,
         "volume_db": -13.0,
@@ -31719,7 +31719,7 @@ def validate_town_hero_hire_completion_feedback(errors: list[str]) -> None:
         "producer_refs": ["TownShell._on_tavern_action_pressed", "TownRules.hire_hero_at_active_town"],
     }], errors, "Town hero-hire animation event must remain one exact nonblocking Town cue")
     audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
-    ensure(audio_cues.get("audio_placeholder_town_hero_hire") == {
+    validate_presentation_audio_mapping("audio_placeholder_town_hero_hire", {
         "path": "res://art/audio/runtime/presentation/town_hero_hire.wav", "duration_msec": 420,
         "volume_db": -12.5, "role": "town_hero_hired",
     }, errors, "Town hero-hire audio manifest entry drifted")
@@ -31754,8 +31754,10 @@ def validate_town_hero_hire_completion_feedback(errors: list[str]) -> None:
     ]
     ensure(all(index >= 0 for index in result_audio_order) and result_audio_order == sorted(result_audio_order), errors, "Town invalid audio must follow exact non-empty failed-rule classification and precede result-only profiling")
     ensure(result_recorder.count("UiAudio.play_invalid(") == 1, errors, "Town common action-result boundary must own exactly one invalid-audio call")
-    for forbidden in ("UiAudio.play_confirm", "UiAudio.play_cue", "PresentationAudio", "await ", "create_timer", "TownRules.get_", "result.erase(", "action.erase("):
+    for forbidden in ("UiAudio.play_confirm", "UiAudio.play_cue", "await ", "create_timer", "TownRules.get_", "result.erase(", "action.erase("):
         ensure(forbidden not in result_recorder, errors, f"Town failed-action audio must not change rule, presentation, timing, or payload ownership through {forbidden}")
+    ensure(result_recorder.count("PresentationAudio.") == 1, errors, "Town failed actions must have exactly one production shortfall audio owner")
+    ensure('if not result.is_empty() and not bool(result.get("ok", false)):\n\t\tif not bool(action.get("direct_affordable", true)):\n\t\t\tPresentationAudio.play_bank("notice_resource_shortfall", "town_action_failed", {"lane": lane, "action_id": action_id})\n\t\telse:\n\t\t\tUiAudio.play_invalid(' in result_recorder, errors, "Town shortfall audio must be failure-only and mutually exclusive with generic invalid audio")
     handler = re.search(r"func _on_tavern_action_pressed\(action_id: String\) -> void:\n(?P<body>.*?)(?=\nfunc )", shell_text, re.DOTALL)
     ensure(handler is not None, errors, "Town hero-hire presenter is missing the public tavern handler")
     if handler is not None:
@@ -31838,7 +31840,7 @@ def validate_town_specialty_selection_feedback(errors: list[str]) -> None:
         "producer_refs": ["TownShell._on_specialty_action_pressed", "TownRules.choose_specialty_at_active_town"],
     }], errors, "Town specialty selection must own one exact semantic nonblocking cue")
     audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
-    ensure(audio_cues.get("audio_placeholder_town_specialty_rank") == {
+    validate_presentation_audio_mapping("audio_placeholder_town_specialty_rank", {
         "path": "res://art/audio/runtime/presentation/town_specialty_rank.wav", "duration_msec": 400,
         "volume_db": -13.0, "role": "town_specialty_rank_gained",
     }, errors, "Town specialty selection must own its exact production completion audio")
@@ -31971,7 +31973,7 @@ def validate_town_army_transfer_completion_feedback(errors: list[str]) -> None:
         "producer_refs": ["TownShell._on_transfer_action_pressed", "TownRules.transfer_in_active_town"],
     }], errors, "Town army transfer must own one exact semantic nonblocking cue")
     audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
-    ensure(audio_cues.get("audio_placeholder_town_unit_transfer") == {
+    validate_presentation_audio_mapping("audio_placeholder_town_unit_transfer", {
         "path": "res://art/audio/runtime/presentation/town_unit_transfer.wav", "duration_msec": 380,
         "volume_db": -13.5, "role": "town_army_redeployed",
     }, errors, "Town army transfer must own its exact production completion audio")
@@ -43555,6 +43557,44 @@ def validate_overworld_object_content_batch_001(errors: list[str]) -> None:
                 ensure(required_text in doc_text, errors, f"Overworld object Batch 007 report doc is missing required boundary text: {required_text}")
 
 
+def validate_generated_blocker_contracts(object_assets: dict, errors: list[str]) -> dict:
+    """Validate standalone originals and baked clusters separately from old atlases."""
+    sizes = {}
+    base = ROOT / "art/overworld/source/generated/terrain"
+    palette = load_json(ROOT / "art/overworld/decorative_object_sprites.json")
+    try:
+        originals = load_json(base / "blocker_variety_20260913/manifest.json")["assets"]
+        library = load_json(base / "biome_blocker_library_20260913/recipes.json")
+        recipes = library["entries"]
+        assert len(originals) == 12 and len(recipes) == 900
+        assert library["canvas"] == [256, 256]
+        assert len({r["id"] for r in recipes}) == 900
+        assert Counter(r["biome"] for r in recipes) == Counter({b: 100 for b in palette["generated_body_palette"]})
+        assert sum(r["kind"] == "original_dead_tree" for r in recipes) == 9
+        assert sum(r["dead_tree"] for r in recipes) == 414
+        assert len({r["sha256"] for r in recipes}) == 900
+        rows = [(r["asset_id"], r["runtime"], r["source"], r["sha256"], (1254, 1254), r["biome_ids"]) for r in originals]
+        rows += [(r["id"], r["runtime_path"], None, r["sha256"], (256, 256), [r["biome"]]) for r in recipes]
+        for asset_id, path, source, digest, size, biomes in rows:
+            entry = object_assets.get(asset_id, {})
+            runtime = res_path_to_disk(path)
+            assert entry.get("path") == path, asset_id
+            assert entry.get("asset_policy") == "original_generated_no_copied_pixels", asset_id
+            assert runtime.is_file() and hashlib.sha256(runtime.read_bytes()).hexdigest() == digest, asset_id
+            assert png_size(runtime) == size and runtime.read_bytes()[25] == 6, asset_id
+            if source:
+                assert hashlib.sha256(res_path_to_disk(source).read_bytes()).hexdigest() == digest, asset_id
+            appearance = palette["generated_body_appearances"].get(asset_id, {})
+            assert appearance.get("runtime_path") == path and appearance.get("biome_ids") == biomes, asset_id
+            assert all(asset_id in palette["generated_body_palette"][biome] for biome in biomes), asset_id
+            settings = Path(str(runtime) + ".import").read_text(encoding="utf-8")
+            assert all(token in settings for token in ("process/size_limit=256", "mipmaps/generate=true", "process/fix_alpha_border=true")), asset_id
+            sizes[asset_id] = size
+    except (AssertionError, KeyError, ValueError, OSError) as exc:
+        errors.append(f"Generated blocker content/provenance contract failed: {exc}")
+    return sizes
+
+
 def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     required_paths = (
         OVERWORLD_ART_MANIFEST_PATH,
@@ -44319,6 +44359,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(len(recruitment_recoveries) == 36, errors, "All 36 recruitment paintings must reconstruct from registered source paint and six approved physical state edits")
     except (OSError, ValueError, KeyError, TypeError) as exc:
         errors.append(f"Recruitment cutout recovery failed closed: {exc}")
+    generated_blocker_sizes = validate_generated_blocker_contracts(object_assets, errors)
     for asset_id, entry in object_assets.items():
         ensure(isinstance(entry, dict), errors, f"Overworld object art asset {asset_id} must be a dictionary")
         if not isinstance(entry, dict):
@@ -44345,7 +44386,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         if runtime_path.exists():
             width, height = png_size(runtime_path)
             source_model = str(entry.get("source_model", ""))
-            if source_model == "built_in_image_gen_original_signature_encounter_landmark":
+            if asset_id in generated_blocker_sizes:
+                expected_canvas = generated_blocker_sizes[asset_id]
+            elif source_model == "built_in_image_gen_original_signature_encounter_landmark":
                 expected_canvas = (64, 64)
             elif source_model == "built_in_image_gen_original_recurring_encounter_landmark_atlas":
                 expected_canvas = (5952, 192) if asset_id in recurring_recoveries else (1488, 48)
@@ -57282,7 +57325,7 @@ def validate_overworld_object_blocked_feedback(errors: list[str]) -> None:
         "scale": 0.96,
     }, errors, "Overworld VFX manifest must map the exact object-blocked cue/event/texture")
     audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
-    ensure(audio_cues.get("audio_placeholder_blocked_object") == {
+    validate_presentation_audio_mapping("audio_placeholder_blocked_object", {
         "path": "res://art/audio/runtime/presentation/object_blocked.wav",
         "duration_msec": 340,
         "volume_db": -13.0,
@@ -57438,7 +57481,7 @@ def validate_overworld_route_open_feedback(errors: list[str]) -> None:
         "scale": 1.04,
     }, errors, "Overworld VFX manifest must map the exact route-open cue/event/texture")
     audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
-    ensure(audio_cues.get("audio_placeholder_route_open") == {
+    validate_presentation_audio_mapping("audio_placeholder_route_open", {
         "path": "res://art/audio/runtime/presentation/route_open.wav",
         "duration_msec": 420,
         "volume_db": -12.5,
@@ -57594,7 +57637,7 @@ def validate_overworld_route_closed_feedback(errors: list[str]) -> None:
         "scale": 1.04,
     }, errors, "Overworld VFX manifest must map the exact route-closed cue/event/texture")
     audio_cues = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
-    ensure(audio_cues.get("audio_placeholder_route_closed") == {
+    validate_presentation_audio_mapping("audio_placeholder_route_closed", {
         "path": "res://art/audio/runtime/presentation/route_closed.wav",
         "duration_msec": 440,
         "volume_db": -12.5,
@@ -57863,7 +57906,7 @@ def validate_overworld_object_focus_cue_playback(errors: list[str]) -> None:
     with wave.open(str(OVERWORLD_OBJECT_FOCUS_AUDIO_RUNTIME_PATH), "rb") as wav_file:
         ensure(wav_file.getnchannels() == 2 and wav_file.getsampwidth() == 2 and wav_file.getframerate() == 44100 and wav_file.getnframes() == 11466, errors, "Object-focus audio must remain 260ms stereo 16-bit PCM at 44.1kHz")
     audio_manifest = load_json(PRESENTATION_SFX_MANIFEST_PATH).get("cues", {})
-    ensure(audio_manifest.get("audio_placeholder_object_focus") == {
+    validate_presentation_audio_mapping("audio_placeholder_object_focus", {
         "path": "res://art/audio/runtime/presentation/object_focus.wav",
         "duration_msec": 260,
         "volume_db": -14.5,
@@ -64404,7 +64447,14 @@ def validate_unit_art_assets(errors: list[str]) -> None:
                 left_energy = sum(value * value for value in left_samples)
                 right_energy = sum(value * value for value in right_samples)
                 stereo_difference = sum((left - right) * (left - right) for left, right in zip(left_samples, right_samples))
-                ensure(0.25 <= peak <= 0.80, errors, f"battle SFX asset peak must stay in the bounded production range: {path_value}")
+                if battle_sfx_manifest.get("legacy_regeneration_protected"):
+                    # Generated recordings use RMS targeting with a capped gain,
+                    # not the legacy synthesizer's fixed minimum transient peak.
+                    provenance = load_json(res_path_to_disk(str(cue.get("provenance", ""))))
+                    recorded = provenance.get("edit", {}).get("runtime_statistics", {})
+                    validate_production_pcm_signal(samples, recorded, errors, path_value)
+                else:
+                    ensure(0.25 <= peak <= 0.80, errors, f"battle SFX asset peak must stay in the bounded production range: {path_value}")
                 ensure(left_energy > 0 and right_energy > 0, errors, f"battle SFX asset must contain non-silent left and right channels: {path_value}")
                 ensure(stereo_difference > 0, errors, f"battle SFX asset channels must not be byte-identical mono duplication: {path_value}")
                 if left_samples and right_samples:
@@ -73289,6 +73339,20 @@ def validate_runtime_audio_loader(errors: list[str]) -> None:
         ensure('path="res://tests/runtime_audio_cache_fallback_report.gd"' in report_scene_path.read_text(encoding="utf-8"), errors, "Runtime audio cache-fallback scene must load its focused report script")
 
 
+def validate_production_pcm_signal(samples, recorded: dict, errors: list[str], label: str) -> None:
+    peak = max((abs(value) for value in samples), default=0) / 32768.0
+    rms = (sum(value * value for value in samples) / max(len(samples), 1)) ** 0.5 / 32768.0
+    ensure(0 < peak < 0.98 and rms > 0.00001, errors, f"production battle SFX must be non-silent with headroom: {label}")
+    ensure(abs(peak - float(recorded.get("peak", -1))) <= 2 / 32768 and abs(rms - float(recorded.get("rms", -1))) <= 2 / 32768, errors, f"production battle SFX signal must match generation provenance: {label}")
+
+
+def validate_presentation_audio_mapping(cue_id: str, legacy: dict, errors: list[str], label: str) -> None:
+    manifest = load_json(PRESENTATION_SFX_MANIFEST_PATH)
+    expected = production_audio_expectation(manifest, cue_id, legacy, errors)
+    cue = manifest.get("cues", {}).get(cue_id, {})
+    ensure({key: cue.get(key) for key in expected} == expected, errors, label)
+
+
 def production_audio_expectation(manifest: dict, cue_id: str, legacy: dict, errors: list[str]) -> dict:
     """Use generation provenance as the asset authority after the full-mix migration.
 
@@ -79951,8 +80015,13 @@ def validate_six_unbound_wild_concords(errors: list[str]) -> None:
     for manifest_name, expected_count, expected_duration in (("music_runtime_manifest.json",75,8000),("ambient_sfx_manifest.json",11,12000)):
         manifest = load_json(CONTENT_DIR / manifest_name)
         cues = manifest.get("cues", {})
-        ensure(manifest.get("runtime_codec") == "vorbis" and manifest.get("runtime_container") == "ogg" and manifest.get("encoder_quality") == 4 and len(cues) == expected_count, errors, f"{manifest_name} Vorbis runtime contract changed")
-        ensure(all(str(cue.get("path", "")).endswith(".ogg") and int(cue.get("duration_msec", 0)) == expected_duration and res_path_to_disk(str(cue.get("path", ""))).is_file() for cue in cues.values() if isinstance(cue, dict)), errors, f"{manifest_name} has missing or non-OGG runtime cues")
+        production = manifest.get("legacy_regeneration_protected") is True
+        if production and manifest_name == "ambient_sfx_manifest.json":
+            expected_count += 6  # The six faction town loops join the eleven overworld loops.
+        ensure(manifest.get("runtime_codec") == "vorbis" and manifest.get("runtime_container") == "ogg" and manifest.get("encoder_quality") == (5 if production else 4) and len(cues) == expected_count, errors, f"{manifest_name} Vorbis runtime contract changed")
+        for cue_id, cue in cues.items():
+            expected = production_audio_expectation(manifest, cue_id, {"duration_msec": expected_duration}, errors) if production else {"duration_msec": expected_duration}
+            ensure(isinstance(cue, dict) and str(cue.get("path", "")).endswith(".ogg") and int(cue.get("duration_msec", 0)) == expected["duration_msec"] and res_path_to_disk(str(cue.get("path", ""))).is_file(), errors, f"{manifest_name} has a missing, non-OGG or incorrectly timed runtime cue: {cue_id}")
     for autoload_path in (ROOT / "scripts" / "autoload" / "MusicAudio.gd", ROOT / "scripts" / "autoload" / "AmbientAudio.gd"):
         text = autoload_path.read_text(encoding="utf-8")
         ensure("const SAMPLE_RATE := 44100" in text and "RuntimeAudioLoaderScript.load_stream(path)" in text and '"imported_ogg"' in text and '"vorbis"' in text, errors, f"{autoload_path.name} lost imported Vorbis playback")
