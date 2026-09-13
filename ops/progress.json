@@ -16651,7 +16651,7 @@
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "audio-production-library-20260913",
   "currentSliceId": "audio-production-library-20260913",
-  "currentSliceNotes": "Owner-approved local recruitment implemented: site visits required; town purchases enter eligible stationed hero or garrison, never distant active army. Destination/cost/capacity/cue and identity clarity validated. Source compact/wide 175 each, final Linux 177 and Windows Wine 176; full repository, official exports and package parity pass. Fresh native Small seed 10 manual match reached Day 2 terminal defeat. Existing Moonbite development limit reproduces identically in prior release; manual OpenGL crash remains unresolved, Vulkan match completed. See docs/small-map-playtest-gameplay-priorities.md. No release-ready claim.",
+  "currentSliceNotes": "All 520 required production audio files generated and integrated. Windows source and PCK pass 3167 runtime checks; six repository validators and all asset hashes/signals pass. Linux CI is running. Live Small map reached day two; further desktop interaction paused after owner Escape stop. Listening approval and remaining release review pending. See docs/audio-production-implementation.md.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Generate and integrate production SFX, ambience and full-mix music",
   "currentSliceUpdatedAt": "2026-09-13T00:06:21+00:00",
@@ -22282,7 +22282,7 @@
       ],
       "createdAt": "2026-09-13T00:02:46+00:00",
       "updatedAt": "2026-09-13T01:36:25.700431+00:00",
-      "notes": "520 required files generated; current source/master/runtime hash and signal checks pass. Orchestral revision retained. Artistic listening feedback remains pending; owner resumed testing.",
+      "notes": "520 required files generated; source/master/runtime hashes, signal and mono compatibility checks pass. Orchestral revision retained. Artistic listening feedback remains pending; desktop testing paused after owner Escape stop.",
       "startedAt": "2026-09-13T00:06:21+00:00"
     },
     {
@@ -22298,7 +22298,7 @@
       ],
       "createdAt": "2026-09-13T00:02:46+00:00",
       "updatedAt": "2026-09-13T01:36:25.700431+00:00",
-      "notes": "Data-driven banks, full-mix music, stingers, ambience and notifications implemented. Objective snapshots now use state and reset on save restore. Windows source and exported-PCK runtime checks pass; Linux execution and remaining release-build review pending."
+      "notes": "Data-driven banks, full-mix music, stingers, ambience and notifications implemented. Underground footsteps and catalog ownership corrected. Objective snapshots use state and reset on save restore. Windows source and PCK each pass 3167 runtime checks including actual save/resume routing; Linux execution and remaining release-build review pending."
     },
     {
       "id": "audio-production-acceptance-20260913",
@@ -22313,7 +22313,7 @@
       ],
       "createdAt": "2026-09-13T00:02:46+00:00",
       "updatedAt": "2026-09-13T01:36:25.700431+00:00",
-      "notes": "Owner resumed. Live Small map reached day two through town, battle victory, resource collection, AI turns and manual save without script errors. Five migrated repository audio validators and 3103 PCK runtime checks pass; release startup passes. Both exports built. Linux CI execution and live release save/resume/listening remain pending. Removed 40 task-generated translations, 250684 bytes.",
+      "notes": "Live Small map reached day two through town, battle victory, resource collection, AI turns and manual save without script errors. Desktop control subsequently stopped by owner Escape. Six repository audio validators and 3167 source/PCK runtime checks pass; release startup passes. Windows package refreshed after routing correction. Linux CI and live release save/resume/listening remain pending. Removed 40 task-generated translations, 250684 bytes.",
       "startedAt": "2026-09-13T01:05:51.421834+00:00"
     },
     {

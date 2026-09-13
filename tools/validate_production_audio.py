@@ -225,6 +225,26 @@ func run() -> void:
         check(town.layers.size() == 1 and town.layers[0].imported_asset_count == 1, "town ambience " + faction)
     ambient.stop_overworld_ambient("test_exit")
     check(ambient.validation_summary().active_player_count == 0, "ambient scene exit")
+    var saves = root.get_node("SaveService")
+    var router = root.get_node("AppRouter")
+    # Retain the old progress baseline to exercise the router's reset, while
+    # excluding notification records deliberately produced by earlier checks.
+    presentation._records.clear()
+    var save_name := "Audio validation " + str(Time.get_ticks_usec())
+    session.day = 8
+    session.overworld.hero.level = 4
+    var saved: Dictionary = saves.save_runtime_file_session(session, save_name)
+    check(bool(saved.get("ok", false)), "named save written in isolated profile")
+    if bool(saved.get("ok", false)):
+        var summary: Dictionary = saves.inspect_save_file(save_name)
+        check(router.resume_summary(summary), "saved session resumes through app router")
+        await create_timer(1.0).timeout
+        var restored = root.get_node("SessionState").active_session
+        check(restored.day == 8 and bool(restored.flags.get("mire_cleared", false)), "save preserves gameplay progress")
+        check(current_scene != null and current_scene.scene_file_path == "res://scenes/overworld/OverworldShell.tscn", "resume enters the actual overworld")
+        var notices: Array = presentation.validation_records().filter(func(row): return String(row.get("cue_id", "")).begins_with("production_notice_"))
+        check(notices.is_empty(), "resume does not replay day, level or objective notices")
+        check(music.validation_summary().current_player_count == 1, "resumed overworld plays one full mix")
     music.validation_reset()
     presentation.validation_reset()
     await process_frame
@@ -247,10 +267,11 @@ def validate_runtime(godot, pack=None):
     proc = subprocess.run(command, cwd=folder, env=env, capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=180)
     output = proc.stdout + proc.stderr
     (folder/'godot.log').write_text(output, encoding='utf-8')
-    assert proc.returncode == 0 and 'SCRIPT ERROR' not in output, output[-8000:]
-    line = next(line for line in proc.stdout.splitlines() if line.startswith('AUDIO_RUNTIME_RESULT='))
+    line = next((line for line in proc.stdout.splitlines() if line.startswith('AUDIO_RUNTIME_RESULT=')), '')
+    assert line, output[-8000:]
     report = json.loads(line.split('=',1)[1])
     assert not report['failures'], report
+    assert proc.returncode == 0 and 'SCRIPT ERROR' not in output, output[-8000:]
     return report
 
 
