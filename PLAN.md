@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Owned Hero Screen
+
+`ui-owned-hero-screen-20260913` — completed, owner-directed Phase 6 child. Portrait-led army/artifact/stat/specialization sheet opens by owned-roster double-click or keyboard/controller Confirm; inspection preserves gameplay/save authority and single-click selection. Source and both release platforms pass 528 checks each across 66 hero identities; small/wide and six-faction captures inspected. Town entry, full repository, official exports and package parity pass; task-owned obsolete captures cleaned. Requirements/evidence/limits: `docs/hero-screen.md`. No next slice selected.
+
 ### Biome-aware Overworld Town Artwork
 
 `art-overworld-town-biome-fit-20260913` — completed, owner-directed Phase 6 slice. Terrain-aware rendering, 19 original generated variants and explicit coverage for 39 logical entries / 33 historical architectures / nine biomes are implemented. Visual review, 858 resolver cases, 17 reproducible cutouts, clean-cache import, full repository, both official exports and 1,014-check native Medium-to-Town flows on each platform pass. Identity, placement, entrances, collision, fog, RNG and saves are unchanged. Requirements/evidence: `docs/overworld-town-biome-fit.md`.

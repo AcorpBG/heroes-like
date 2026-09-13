@@ -191,6 +191,23 @@ static func hero_by_id(session: SessionStateStoreScript.SessionData, hero_id: St
 			return hero
 	return {}
 
+static func hero_inspection_snapshot(session: SessionStateStoreScript.SessionData, hero_id: String) -> Dictionary:
+	# Inspection must not normalize/commit the live session. The active mirrors
+	# are authoritative until commit_active_hero synchronizes the roster.
+	var hero := hero_by_id(session, hero_id).duplicate(true)
+	if hero.is_empty():
+		return {}
+	if hero_id == String(session.overworld.get("active_hero_id", "")):
+		hero = session.overworld.get("hero", hero).duplicate(true)
+		for pair in [["army", "army"], ["movement", "movement"], ["position", "hero_position"]]:
+			hero[pair[0]] = session.overworld.get(pair[1], hero.get(pair[0], {})).duplicate(true)
+	hero = HeroProgressionRulesScript.ensure_hero_progression(hero)
+	hero = ArtifactRulesScript.ensure_hero_artifacts(hero)
+	hero["army"] = _normalize_army(hero.get("army", {}), hero_id)
+	hero["inspection_army_slots"] = _slotted_stacks(hero.army.get("stacks", []))
+	hero["inspection_overflow_stacks"] = hero.army.get("stacks", []).slice(ARMY_SLOT_COUNT)
+	return hero
+
 static func player_hero_count(session: SessionStateStoreScript.SessionData) -> int:
 	return hero_count_from_overworld(session.overworld if session != null else {})
 

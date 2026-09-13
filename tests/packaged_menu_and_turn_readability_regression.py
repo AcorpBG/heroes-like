@@ -17,10 +17,10 @@ def main():
     parser.add_argument('--label',required=True)
     args,_=parser.parse_known_args()
     payloads=members(args.pack)
-    paths=('scenes/menus/MainMenu.gdc','scenes/menus/MainMenuComposition.gdc',
+    paths=getattr(ui, 'COMPILED_OWNERS', ('scenes/menus/MainMenu.gdc','scenes/menus/MainMenuComposition.gdc',
            'scripts/core/OverworldTurnPlayback.gdc','scripts/core/EnemyAdventureRules.gdc',
            'scripts/core/EnemyTurnRules.gdc','scenes/overworld/OverworldTurnPresenter.gdc',
-           'scenes/overworld/OverworldShell.gdc','scenes/overworld/OverworldMapView.gdc')
+           'scenes/overworld/OverworldShell.gdc','scenes/overworld/OverworldMapView.gdc'))
     owners={path:hashlib.sha256(payloads[path]).hexdigest() for path in paths}
     del payloads
     def environment(env):

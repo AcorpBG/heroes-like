@@ -17172,12 +17172,23 @@ def validate_settings_and_onboarding(errors: list[str]) -> None:
             ensure(forbidden_token not in layout_roundtrip_body, errors, f"Battle compact/wide round trip must use public settings/window behavior and avoid {forbidden_token}")
 
     overworld_script_text = OVERWORLD_SCRIPT_PATH.read_text(encoding="utf-8")
-    ensure(
-        "func _unhandled_input(event: InputEvent) -> void:\n\tif _active_play_settings_dialog != null and _active_play_settings_dialog.is_open():\n\t\tget_viewport().set_input_as_handled()\n\t\treturn"
-        in overworld_script_text,
-        errors,
-        "OverworldShell.gd must consume unhandled commands while the active-play Settings modal owns input",
+    unhandled_match = re.search(
+        r"^func _unhandled_input\(event: InputEvent\) -> void:\n(?P<body>.*?)(?=^func |\Z)",
+        overworld_script_text, re.MULTILINE | re.DOTALL,
     )
+    unhandled_body = unhandled_match.group("body") if unhandled_match else ""
+    command_start = unhandled_body.find("\tif event is InputEventKey")
+    # Multiple exclusive modals may precede ordinary commands. Require each
+    # consume-and-return guard inside this handler, before command dispatch,
+    # rather than pinning Settings to the very first line of the function.
+    for label, condition in (
+        ("active-play Settings", "_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()"),
+        ("owned Hero sheet", "is_instance_valid(_hero_sheet) and _hero_sheet.visible"),
+    ):
+        guard = "\tif " + condition + ":\n\t\tget_viewport().set_input_as_handled()\n\t\treturn"
+        guard_start = unhandled_body.find(guard)
+        ensure(0 <= guard_start < command_start, errors,
+               f"OverworldShell.gd must consume unhandled commands while the {label} modal owns input")
 
     resolution_options = extract_settings_resolution_options(settings_text, errors)
     expected_resolutions = {"1280x720", "1600x900", "1920x1080", "2560x1440"}
