@@ -56,9 +56,19 @@ jobs:
           mkdir -p "$HOME/.local/share/godot/export_templates/4.6.2.stable"
           unzip -p /tmp/templates.tpz templates/linux_release.x86_64 > "$HOME/.local/share/godot/export_templates/4.6.2.stable/linux_release.x86_64"
           chmod +x "$HOME/.local/share/godot/export_templates/4.6.2.stable/linux_release.x86_64"
-      - name: Import and validate source audio
+      - name: Import runtime assets
         run: |
-          godot --headless --editor --path . --import
+          set -o pipefail
+          # These source directories are already excluded by both export presets.
+          # Keep them available to Python provenance checks without asking Godot
+          # to import thousands of unused source images in this disposable job.
+          for source in art/*/source; do
+            test ! -d "$source" || touch "$source/.gdignore"
+          done
+          mkdir -p .artifacts/audio-production
+          timeout 20m godot --headless --editor --path . --import 2>&1 | tee .artifacts/audio-production/linux-import.log
+      - name: Validate source audio
+        run: |
           python -B tools/validate_production_audio.py --godot /usr/local/bin/godot --repo-contracts
           cp .artifacts/audio-production/validation.json .artifacts/audio-production/linux-source-validation.json
       - name: Export and validate packaged Linux audio
@@ -74,6 +84,7 @@ jobs:
           name: linux-audio-validation
           path: |
             .artifacts/audio-production/*validation.json
+            .artifacts/audio-production/linux-import.log
             .artifacts/audio-production/runtime-test/godot.log
             .artifacts/audio-production/package-test/godot.log
             .artifacts/audio-production/release-startup/startup.log
