@@ -357,7 +357,8 @@
       "blocking_policy": "never_blocks_input",
       "skippable": true,
       "vfx_cue_ids": ["vfx_placeholder_object_idle"],
-      "audio_cue_ids": ["audio_placeholder_object_ambient_soft"],
+      "audio_cue_ids": [],
+      "audio_owner": "AmbientAudio",
       "fallbacks": {
         "reduced_motion_tag": "static_object_pose",
         "fast_mode_tag": "object_idle_snap"
@@ -528,7 +529,8 @@
       "blocking_policy": "never_blocks_input",
       "skippable": true,
       "vfx_cue_ids": ["vfx_placeholder_object_idle"],
-      "audio_cue_ids": ["audio_placeholder_object_ambient_soft"],
+      "audio_cue_ids": [],
+      "audio_owner": "AmbientAudio",
       "fallbacks": {
         "reduced_motion_tag": "static_object_pose",
         "fast_mode_tag": "static_object_pose"
@@ -718,7 +720,7 @@
       "blocking_policy": "input_blocking_timeout",
       "skippable": true,
       "vfx_cue_ids": ["vfx_placeholder_spell_anchor"],
-      "audio_cue_ids": ["audio_placeholder_spell_school"],
+      "audio_cue_ids": ["audio_placeholder_cast"],
       "fallbacks": {
         "reduced_motion_tag": "spell_school_icon_anchor",
         "fast_mode_tag": "spell_school_flash"
@@ -737,7 +739,7 @@
       "blocking_policy": "inherits_source",
       "skippable": true,
       "vfx_cue_ids": ["vfx_placeholder_spell_impact"],
-      "audio_cue_ids": ["audio_placeholder_spell_impact"],
+      "audio_cue_ids": ["audio_placeholder_hit"],
       "fallbacks": {
         "reduced_motion_tag": "impact_icon_damage",
         "fast_mode_tag": "impact_damage_snap"
@@ -851,7 +853,7 @@
       "blocking_policy": "never_blocks_input",
       "skippable": true,
       "vfx_cue_ids": ["vfx_placeholder_invalid_command"],
-      "audio_cue_ids": ["audio_placeholder_ui_invalid"],
+      "audio_cue_ids": ["ui_invalid"],
       "fallbacks": {
         "reduced_motion_tag": "invalid_icon_static",
         "fast_mode_tag": "invalid_icon_instant"

@@ -193,7 +193,8 @@ static func event_cue_catalog_report(catalog: Dictionary = {}) -> Dictionary:
 		var audio_ids := _string_array(entry.get("audio_cue_ids", []))
 		if vfx_ids.is_empty():
 			errors.append("%s must define at least one VFX cue id or placeholder." % event_id)
-		if audio_ids.is_empty():
+		var ambient_owned := event_id in ["overworld_object_idle", "overworld_object_ambient"] and String(entry.get("audio_owner", "")) == "AmbientAudio"
+		if audio_ids.is_empty() and not ambient_owned:
 			errors.append("%s must define at least one audio cue id or placeholder." % event_id)
 		for vfx_id in vfx_ids:
 			if String(vfx_id).begins_with("vfx_placeholder_"):
