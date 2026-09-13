@@ -16647,14 +16647,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Production audio goal completed following owner full-playtest and listening approval. P2 remains deferred.",
+  "currentNotes": "Completed standalone wiki: 3,139 authored entries and 8,852 media assets; search, filters, cross-links, responsive previews, bookmarks and unit comparison. Website-only review passed for navigation and interface behavior; native audio playback could not be confirmed because the in-app browser also crashed on isolated no-JavaScript audio. See docs/game-wiki.md. No repository validation, game tests or builds run.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "audio-production-library-20260913",
-  "currentSliceId": "audio-production-library-20260913",
-  "currentSliceNotes": "All 520 required audio files and routing are complete; Windows/Linux technical acceptance passed and owner approved audio after a full manual playtest on 2026-09-13. See docs/audio-production-implementation.md.",
+  "currentSlice": "game-wiki-20260913",
+  "currentSliceId": "game-wiki-20260913",
+  "currentSliceNotes": "Completed standalone wiki: 3,139 authored entries and 8,852 media assets; search, filters, cross-links, responsive previews, bookmarks and unit comparison. Website-only review passed for navigation and interface behavior; native audio playback could not be confirmed because the in-app browser also crashed on isolated no-JavaScript audio. See docs/game-wiki.md. No repository validation, game tests or builds run.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generate and integrate production SFX, ambience and full-mix music",
-  "currentSliceUpdatedAt": "2026-09-13T00:06:21+00:00",
+  "currentSliceTitle": "Build the game compendium and complete asset wiki",
+  "currentSliceUpdatedAt": "2026-09-13T03:30:04.334327+00:00",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22269,6 +22269,21 @@
   "nextActionGuardrailNote": "Implement the five playtest slices in priorityOrder before discretionary work. Shared input/tooltip foundations may be combined, but each slice requires live behavior acceptance. Preserve native RMG source semantics; do not infer balance changes from this single loss or treat planning as implementation.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "game-wiki-20260913",
+      "title": "Build the game compendium and complete asset wiki",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "documentation_tooling_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/game-wiki.md"
+      ],
+      "createdAt": "2026-09-13T03:00:12.096568+00:00",
+      "startedAt": "2026-09-13T03:00:12.096568+00:00",
+      "notes": "Completed standalone wiki: 3,139 authored entries and 8,852 media assets; search, filters, cross-links, responsive previews, bookmarks and unit comparison. Website-only review passed for navigation and interface behavior; native audio playback could not be confirmed because the in-app browser also crashed on isolated no-JavaScript audio. See docs/game-wiki.md. No repository validation, game tests or builds run.",
+      "completedAt": "2026-09-13T03:30:04.334327+00:00"
+    },
     {
       "id": "audio-production-library-20260913",
       "title": "Generate and integrate production SFX, ambience and full-mix music",

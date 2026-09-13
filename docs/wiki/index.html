@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#141c1b">
+  <meta name="description" content="The Aurelion Reach Codex: factions, heroes, units, magic, towns, adventure sites, artwork and sound.">
+  <title>The Aurelion Codex — Aurelion Reach Wiki</title>
+  <link rel="icon" href="../../icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="catalog.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="masthead">
+    <a class="brand" href="#/" aria-label="Aurelion Codex home">
+      <img src="../../art/factions/runtime/crests/embercourt.png" alt="" width="48" height="48">
+      <span>AURELION<span class="brand-sub">THE FIELD CODEX</span></span>
+    </a>
+    <nav class="top-nav" aria-label="Main navigation">
+      <a href="#/browse/units" data-nav="compendium">Compendium</a>
+      <a href="#/assets" data-nav="assets">Asset library</a>
+      <a href="#/guide" data-nav="guide">Field guide</a>
+    </nav>
+    <form id="global-search" class="global-search" role="search">
+      <label class="sr-only" for="global-query">Search the entire codex</label>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"></circle><path d="m15 15 6 6"></path></svg>
+      <input id="global-query" name="q" type="search" placeholder="Search the codex…" autocomplete="off">
+      <button type="submit" aria-label="Search">↵</button>
+    </form>
+    <a class="saved-link" href="#/saved" aria-label="Saved entries"><span aria-hidden="true">◇</span><span class="saved-label">Saved</span><span id="saved-count">0</span></a>
+  </header>
+  <main id="main" tabindex="-1"><div class="loading"><span class="eyebrow">Opening the archives</span><h1>The Aurelion Codex</h1><p>Loading the local content catalog…</p></div></main>
+  <noscript><p class="notice">This wiki uses JavaScript for search and navigation. Enable JavaScript and reopen this page.</p></noscript>
+  <footer class="site-footer"><a href="#/">AURELION REACH</a><span>An explorer’s reference to the Reach.</span><a href="#/guide">About this codex &amp; controls</a></footer>
+  <div id="compare-tray" class="compare-tray" hidden></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="image-dialog" aria-label="Artwork preview"><button class="dialog-close" aria-label="Close artwork preview">×</button><div id="image-dialog-content"></div></dialog>
+</body>
+</html>

@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Game Wiki
+
+Completed 2026-09-13: `game-wiki-20260913`. The standalone HTML/CSS/JavaScript codex at `docs/wiki/` covers 3,139 authored entries and 8,852 artwork/audio files with explanations, links, search/filtering, previews, bookmarks and unit comparison. Website-only review is recorded in `docs/game-wiki.md`, including the in-app browser native-audio playback limitation. No repository validation or game tests were run, per owner instruction.
+
 ### Production Audio Implementation
 
 Completed 2026-09-13: `audio-production-library-20260913`, `audio-production-routing-20260913`, and `audio-production-acceptance-20260913`. All 520 required P0/P1 files and their live routing are implemented. Windows and Linux source/package checks pass; the owner completed a full manual playtest, found the audio acceptable, and explicitly approved completion. The 25 music contexts use coherent full mixes with preserved legacy compatibility. Sources, masters, alternatives and provenance are retained. P2 optional breadth remains deferred. Requirements and acceptance evidence: `docs/audio-production-implementation.md`.
