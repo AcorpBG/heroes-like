@@ -24,7 +24,7 @@ Rules:
 
 ### Production Audio Implementation
 
-Owner-authorized goal, 2026-09-13. Selected slices: `audio-production-library-20260913`, `audio-production-routing-20260913`, `audio-production-acceptance-20260913` (in progress). All 520 required files are generated; library/routing remain in progress until acceptance. Windows and Linux technical acceptance pass. Desktop testing is paused after the owner stopped Computer Use; listening and remaining live review are pending. Generate and implement all P0 replacements and required P1 banks/events from the approved list; defer P2 optional breadth. Use one coherent full mix per existing music context, with an explicit manifest/runtime migration and preserved legacy fallback, rather than pretending independently generated tracks are synchronized stems. Requirements: `docs/audio-production-implementation.md`. Completion requires live event routing, curated source/provenance, focused regressions, Windows/Linux acceptance and a Small-match audio review; generation counts alone are not completion.
+Completed 2026-09-13: `audio-production-library-20260913`, `audio-production-routing-20260913`, and `audio-production-acceptance-20260913`. All 520 required P0/P1 files and their live routing are implemented. Windows and Linux source/package checks pass; the owner completed a full manual playtest, found the audio acceptable, and explicitly approved completion. The 25 music contexts use coherent full mixes with preserved legacy compatibility. Sources, masters, alternatives and provenance are retained. P2 optional breadth remains deferred. Requirements and acceptance evidence: `docs/audio-production-implementation.md`.
 
 ### Production Audio Generation Inventory
 

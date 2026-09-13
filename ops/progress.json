@@ -16647,12 +16647,12 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Owner authorized production audio goal; generation and runtime acceptance required.",
+  "currentNotes": "Production audio goal completed following owner full-playtest and listening approval. P2 remains deferred.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "audio-production-library-20260913",
   "currentSliceId": "audio-production-library-20260913",
-  "currentSliceNotes": "All 520 required production audio files generated and integrated. Windows and Linux source/PCK each pass 3167 runtime checks, six repository validators, asset hashes/signals and release startup. Live Small map reached day two; desktop control paused after owner Escape stop and test process cleaned up. Listening approval and remaining live release review pending. See docs/audio-production-implementation.md.",
-  "currentSliceStatus": "in_progress",
+  "currentSliceNotes": "All 520 required audio files and routing are complete; Windows/Linux technical acceptance passed and owner approved audio after a full manual playtest on 2026-09-13. See docs/audio-production-implementation.md.",
+  "currentSliceStatus": "completed",
   "currentSliceTitle": "Generate and integrate production SFX, ambience and full-mix music",
   "currentSliceUpdatedAt": "2026-09-13T00:06:21+00:00",
   "deferredRiskRegister": [
@@ -22273,7 +22273,7 @@
       "id": "audio-production-library-20260913",
       "title": "Generate and integrate production SFX, ambience and full-mix music",
       "phase": "phase-6-production-alpha-layer",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -22281,15 +22281,16 @@
         "docs/audio-generation-plan.md"
       ],
       "createdAt": "2026-09-13T00:02:46+00:00",
-      "updatedAt": "2026-09-13T01:36:25.700431+00:00",
-      "notes": "520 required files generated; source/master/runtime hashes, signal and mono compatibility checks pass. Orchestral revision retained. Artistic listening feedback remains pending; desktop testing paused after owner Escape stop.",
-      "startedAt": "2026-09-13T00:06:21+00:00"
+      "updatedAt": "2026-09-13T02:45:15.063098+00:00",
+      "notes": "Completed: all 520 required production audio files and routing are implemented. Windows/Linux source and PCK each pass 3167 runtime checks, six repository validators, asset checks and release startup. Owner completed a full manual playtest, accepted the audio and explicitly approved full completion on 2026-09-13. Sources and evidence preserved; 250684 bytes of disposable translations cleaned. P2 remains deferred. See docs/audio-production-implementation.md.",
+      "startedAt": "2026-09-13T00:06:21+00:00",
+      "completedAt": "2026-09-13T02:45:15.063098+00:00"
     },
     {
       "id": "audio-production-routing-20260913",
       "title": "Implement material, creature, school and contextual audio routing",
       "phase": "phase-6-production-alpha-layer",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -22297,14 +22298,15 @@
         "docs/audio-generation-plan.md"
       ],
       "createdAt": "2026-09-13T00:02:46+00:00",
-      "updatedAt": "2026-09-13T01:36:25.700431+00:00",
-      "notes": "Data-driven banks, full-mix music, stingers, ambience and notifications implemented. Underground footsteps and catalog ownership corrected. Objective snapshots use state and reset on save restore. Windows and Linux source/PCK each pass 3167 runtime checks including save/resume routing. Remaining live release-build review pending."
+      "updatedAt": "2026-09-13T02:45:15.063098+00:00",
+      "notes": "Completed: all 520 required production audio files and routing are implemented. Windows/Linux source and PCK each pass 3167 runtime checks, six repository validators, asset checks and release startup. Owner completed a full manual playtest, accepted the audio and explicitly approved full completion on 2026-09-13. Sources and evidence preserved; 250684 bytes of disposable translations cleaned. P2 remains deferred. See docs/audio-production-implementation.md.",
+      "completedAt": "2026-09-13T02:45:15.063098+00:00"
     },
     {
       "id": "audio-production-acceptance-20260913",
       "title": "Validate production audio and complete gameplay/platform acceptance",
       "phase": "phase-6-production-alpha-layer",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -22312,9 +22314,10 @@
         "docs/audio-generation-plan.md"
       ],
       "createdAt": "2026-09-13T00:02:46+00:00",
-      "updatedAt": "2026-09-13T01:36:25.700431+00:00",
-      "notes": "Live Small map reached day two through town, battle victory, resource collection, AI turns and manual save without script errors. Desktop control subsequently stopped by owner Escape; leftover test game terminated. All 520 assets, six repository validators, 3167 source/PCK runtime checks and release startup pass on Windows and Linux. Linux evidence: workflow 34732034272, commit c4efc9ab. Live release save/resume, repeated-loop listening and final Small-match review remain pending. Removed 40 task-generated translations, 250684 bytes.",
-      "startedAt": "2026-09-13T01:05:51.421834+00:00"
+      "updatedAt": "2026-09-13T02:45:15.063098+00:00",
+      "notes": "Completed: all 520 required production audio files and routing are implemented. Windows/Linux source and PCK each pass 3167 runtime checks, six repository validators, asset checks and release startup. Owner completed a full manual playtest, accepted the audio and explicitly approved full completion on 2026-09-13. Sources and evidence preserved; 250684 bytes of disposable translations cleaned. P2 remains deferred. See docs/audio-production-implementation.md.",
+      "startedAt": "2026-09-13T01:05:51.421834+00:00",
+      "completedAt": "2026-09-13T02:45:15.063098+00:00"
     },
     {
       "id": "planning-production-audio-generation-20260913",

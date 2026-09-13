@@ -75,6 +75,7 @@ def main():
     if not args.partial and len(records)!=len(jobs):
         raise RuntimeError(f'Only {len(records)}/{len(jobs)} audio jobs complete')
     manifests={name:load(ROOT/'content'/(name+'_manifest.json')) for name in ['ui_sfx','presentation_sfx','battle_sfx','ambient_sfx','music_runtime']}
+    previous_cues={name:json.dumps(manifest['cues'],sort_keys=True) for name,manifest in manifests.items()}
     banks=defaultdict(list);cues={}
     for r in records.values():
         entry={'path':r['runtime_path'],'duration_msec':round(r['edit']['runtime_statistics']['seconds']*1000),
@@ -107,7 +108,11 @@ def main():
         if name in ['music_runtime','ambient_sfx']:
             manifest.update(segment_duration_msec=0,duration_policy='per_cue',encoder_quality=5,
                 master_sample_width_bits=24,asset_tier='generated_full_mix_v1' if name=='music_runtime' else 'generated_ambient_loop_v1')
-        manifest.update(production_source='stable_audio_3_v1',production_status='generation_in_progress' if args.partial else 'technical_checks_passed_listening_review_pending',
+        accepted=(not args.partial and manifest.get('production_status')=='accepted'
+            and 'listening_acceptance' in manifest
+            and previous_cues[name]==json.dumps(manifest['cues'],sort_keys=True))
+        if not accepted:manifest.pop('listening_acceptance',None)
+        manifest.update(production_source='stable_audio_3_v1',production_status='generation_in_progress' if args.partial else ('accepted' if accepted else 'technical_checks_passed_listening_review_pending'),
             generation_pipeline='tools/generate_production_audio.py',legacy_regeneration_protected=True)
         save(ROOT/'content'/(name+'_manifest.json'),manifest)
     spell_banks={}
