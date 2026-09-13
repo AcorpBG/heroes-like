@@ -1,0 +1,164 @@
+{
+  "id": "ambient_lava_v01",
+  "brief_id": "ambient_lava",
+  "priority": "P0",
+  "category": "ambience",
+  "targets": [
+    "overworld_ambient_lava"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 64,
+  "prompt": "low hot-earth rumble, restrained lava bubbles and sparse ember crackle. Natural continuous bed, no music, no speech, no foreground event or dramatic swell.",
+  "seed": 78464772219809,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/ambient_lava_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/ambient_lava_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/ambient_lava_v01.ogg",
+  "source_sha256": "292241ae86d474e0d218feef73f469dfcb414cd896275f758f403869fd719b6b",
+  "master_sha256": "ac3ed3f49aa6deb7116c8af3b58ff1382fad7c6a71c92871cbfeb087812665d4",
+  "runtime_sha256": "da872bf38efaec1bfcf6b701c69fcab304c8b5c20ee607a31caec51668cc9196",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "low hot-earth rumble, restrained lava bubbles and sparse ember crackle. Natural continuous bed, no music, no speech, no foreground event or dramatic swell."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 64,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 78464772219809,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/ambient_lava_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "92ea230c-3998-4315-be54-6a373a5ca2a3",
+    "generation_seconds": 2.0
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 63.994195,
+      "frames": 2822144,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.073089599609375,
+      "rms": 0.01013101451098919,
+      "dc": 0.00030436081578955054,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 17.928121703864925,
+    "runtime_statistics": {
+      "seconds": 60.994195,
+      "frames": 2689844,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.5753473043441772,
+      "rms": 0.08002375811338425,
+      "dc": 2.8625954655581154e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

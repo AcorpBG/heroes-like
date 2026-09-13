@@ -1,0 +1,166 @@
+{
+  "id": "body_spectral_move_v03",
+  "brief_id": "body_spectral",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "spectral"
+  ],
+  "variant": 2,
+  "gesture": "move",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "subtle hollow breath, cloth and distant memory-bell texture without intelligible speech. One isolated single body footstep or body movement. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 79076924589068,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_spectral_move_v03.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_spectral_move_v03.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_spectral_move_v03.wav",
+  "source_sha256": "8f4c44ac4544ea3bcecd10bf92fc8bbe99e3bd4e22a36b4d54d1262c2d0acc3d",
+  "master_sha256": "60abefb92c0d801b11d366943515b109ef74bbc80b90a1c51cbfbdc1413228f7",
+  "runtime_sha256": "b83bb919e5e4824f769a5ed8960d3885dc11f4e65b99f07f36869441086a8c92",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "subtle hollow breath, cloth and distant memory-bell texture without intelligible speech. One isolated single body footstep or body movement. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 79076924589068,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_spectral_move_v03",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "9ab60054-eac3-4a8b-9000-37d4f8fe7f3d",
+    "generation_seconds": 1.0
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.007232666015625,
+      "rms": 0.0009111076942645013,
+      "dc": 2.8840645427408163e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 5292,
+    "trim_end_frame": 59094,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 18.06179973983887,
+    "runtime_statistics": {
+      "seconds": 1.22,
+      "frames": 53802,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.057861328125,
+      "rms": 0.011261717416346073,
+      "dc": 0.00019210555183235556,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

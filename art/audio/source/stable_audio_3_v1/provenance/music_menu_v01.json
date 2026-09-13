@@ -1,0 +1,167 @@
+{
+  "id": "music_menu_v01",
+  "brief_id": "music_menu",
+  "priority": "P0",
+  "category": "music",
+  "targets": [
+    "music_menu_theme",
+    "music_menu_theme_harmony",
+    "music_menu_theme_motion"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 124,
+  "prompt": "Instrumental, no vocals. broad inviting title theme with memorable original motif and a clear horizon. original acoustic fantasy ensemble: flute, lute, strings, horns and restrained hand percussion; exploration, wonder and consequence. One coherent complete stereo instrumental composition, spacious acoustic arrangement, steady tempo, no vocals, no speech, no sound effects.",
+  "seed": 183356741404546,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/music_menu_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/music_menu_v01.flac",
+  "runtime_path": "res://art/audio/source/stable_audio_3_v1/alternates/runtime/music_menu_v01.ogg",
+  "source_sha256": "93eb7cd6d65412710de1c3e4c684821023e4aa4e9ec5fe99f8bc75c09854b223",
+  "master_sha256": "09e69670b5030b31ea76e0a429409f54951a6cef7dde4dff17c967c2e6840fd8",
+  "runtime_sha256": "42a1ab952fea69c29ac94a0aaae6d183b5468985e90a988641ba3798b016852e",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "Instrumental, no vocals. broad inviting title theme with memorable original motif and a clear horizon. original acoustic fantasy ensemble: flute, lute, strings, horns and restrained hand percussion; exploration, wonder and consequence. One coherent complete stereo instrumental composition, spacious acoustic arrangement, steady tempo, no vocals, no speech, no sound effects."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 124,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 183356741404546,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/music_menu_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "d40ce1f7-afde-4568-bc56-50dda4b29fc8",
+    "generation_seconds": 6.031
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 123.994558,
+      "frames": 5468160,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.255126953125,
+      "rms": 0.03513716906309128,
+      "dc": 1.5817571693332866e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 8.76709370008653,
+    "runtime_statistics": {
+      "seconds": 120.994558,
+      "frames": 5335860,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.6905173063278198,
+      "rms": 0.09735362976789474,
+      "dc": 1.0723234481702093e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  },
+  "selection": "Superseded acoustic direction; preserved as an alternate following owner orchestral feedback."
+}

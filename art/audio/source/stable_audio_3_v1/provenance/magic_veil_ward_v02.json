@@ -1,0 +1,167 @@
+{
+  "id": "magic_veil_ward_v02",
+  "brief_id": "magic_veil_ward",
+  "priority": "P1",
+  "category": "magic",
+  "targets": [
+    "spell_veil_mist_shroud_10",
+    "spell_veil_salt_shroud_22"
+  ],
+  "variant": 1,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "fog breath, water, memory bells and dissolving spectral cloth. One short ward gestures with clear onset, no speech or music. Cast, impact and expiry must remain separate assets. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 17175007312685,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/magic_veil_ward_v02.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/magic_veil_ward_v02.flac",
+  "runtime_path": "res://art/audio/runtime/production/magic_veil_ward_v02.wav",
+  "source_sha256": "8cc242f28e7d48faa5e8e4a36174a9cc53a682658b63513b0594816801f619e8",
+  "master_sha256": "d0d1b5b5775c84c5c326fe582bf36bc519a0e7ba6e4610d161c49ae6a26b1f5b",
+  "runtime_sha256": "5631fffa640ab988e3eb4d9524e60476be339420784299237f8065781c59aa41",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "fog breath, water, memory bells and dissolving spectral cloth. One short ward gestures with clear onset, no speech or music. Cast, impact and expiry must remain separate assets. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 17175007312685,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/magic_veil_ward_v02",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "b6b4ce15-d789-422c-8349-d51bd73b7936",
+    "generation_seconds": 1.0
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.03558349609375,
+      "rms": 0.0012916902778670192,
+      "dc": 4.790033472090727e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 19845,
+    "trim_end_frame": 49833,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 18.06179973983887,
+    "runtime_statistics": {
+      "seconds": 0.68,
+      "frames": 29988,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.284637451171875,
+      "rms": 0.027764441445469856,
+      "dc": 8.812933083390817e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

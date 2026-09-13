@@ -1,0 +1,167 @@
+{
+  "id": "music_town_veilmourn_v01",
+  "brief_id": "music_town_veilmourn",
+  "priority": "P0",
+  "category": "music",
+  "targets": [
+    "music_town_veilmourn_theme",
+    "music_town_veilmourn_theme_harmony",
+    "music_town_veilmourn_theme_motion"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 124,
+  "prompt": "Instrumental, no vocals. warm settled place identity with small internal development and breathing room. distant funeral bells, breathy low winds, bowed strings and muted frame drums; fog, memory, tides and solemn resolve. One coherent complete stereo instrumental composition, spacious acoustic arrangement, steady tempo, no vocals, no speech, no sound effects.",
+  "seed": 173635222136529,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/music_town_veilmourn_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/music_town_veilmourn_v01.flac",
+  "runtime_path": "res://art/audio/source/stable_audio_3_v1/alternates/runtime/music_town_veilmourn_v01.ogg",
+  "source_sha256": "68eb4d18d5eb1b6999084443efc7c9848fdb809a54fef29aa40c2e86160d17e3",
+  "master_sha256": "8d38cd169ef01eb14c502e51fd9333c983556c657eea80dd2eb15eb7aec7354d",
+  "runtime_sha256": "53cbc4eaa3cf44639e9efa29b36e510bb4b093c604c95528b4dd7e12ee25780d",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "Instrumental, no vocals. warm settled place identity with small internal development and breathing room. distant funeral bells, breathy low winds, bowed strings and muted frame drums; fog, memory, tides and solemn resolve. One coherent complete stereo instrumental composition, spacious acoustic arrangement, steady tempo, no vocals, no speech, no sound effects."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 124,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 173635222136529,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/music_town_veilmourn_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "ea172b31-3f73-4a75-8c4f-e56af7fc4859",
+    "generation_seconds": 3.109
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 123.994558,
+      "frames": 5468160,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.2845458984375,
+      "rms": 0.03070899099111557,
+      "dc": 3.5606837627710775e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 7.820001396817591,
+    "runtime_statistics": {
+      "seconds": 120.994558,
+      "frames": 5335860,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.7082375288009644,
+      "rms": 0.07608180493116379,
+      "dc": 2.095374475175049e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  },
+  "selection": "Superseded acoustic direction; preserved as an alternate following owner orchestral feedback."
+}

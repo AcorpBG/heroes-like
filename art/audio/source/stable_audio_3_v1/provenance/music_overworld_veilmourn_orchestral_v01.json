@@ -1,0 +1,166 @@
+{
+  "id": "music_overworld_veilmourn_orchestral_v01",
+  "brief_id": "music_overworld_veilmourn",
+  "priority": "P0",
+  "category": "music",
+  "targets": [
+    "music_overworld_veilmourn_theme",
+    "music_overworld_veilmourn_theme_harmony",
+    "music_overworld_veilmourn_theme_motion"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 124,
+  "prompt": "Richly orchestrated original fantasy strategy soundtrack for full symphony orchestra. Expressive massed strings, lyrical woodwinds, warm French horns, carefully voiced brass, harp, timpani and restrained orchestral percussion. Instrumental, no vocals. patient exploration, spacious phrases, low fatigue over long turns. distant funeral bells, breathy low winds, bowed strings and muted frame drums; fog, memory, tides and solemn resolve. Broad melodic development and orchestral interplay. One coherent complete stereo instrumental composition, spacious concert-hall arrangement, steady tempo, no vocals, no speech, no sound effects, no drum kit, no electronic beat.",
+  "seed": 85621412063273,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/music_overworld_veilmourn_orchestral_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/music_overworld_veilmourn_orchestral_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/music_overworld_veilmourn_orchestral_v01.ogg",
+  "source_sha256": "8d3369ad4026908dbc02c609c60d54a7681658c6a451fb1ae5d0d1ecb69fc310",
+  "master_sha256": "173b614864ac089c53c14a0e121a1e1308ffb1fc07cb1f90b10f453434dffdbb",
+  "runtime_sha256": "4148ac8230ef80a856a80403be772fa769dc6d1c3a9d11328ae7ab090b57f64d",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "Richly orchestrated original fantasy strategy soundtrack for full symphony orchestra. Expressive massed strings, lyrical woodwinds, warm French horns, carefully voiced brass, harp, timpani and restrained orchestral percussion. Instrumental, no vocals. patient exploration, spacious phrases, low fatigue over long turns. distant funeral bells, breathy low winds, bowed strings and muted frame drums; fog, memory, tides and solemn resolve. Broad melodic development and orchestral interplay. One coherent complete stereo instrumental composition, spacious concert-hall arrangement, steady tempo, no vocals, no speech, no sound effects, no drum kit, no electronic beat."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 124,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 85621412063273,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/music_overworld_veilmourn_orchestral_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "ff2e869f-ee7a-43c5-9c73-42cc33821c5f",
+    "generation_seconds": 6.031
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 123.994558,
+      "frames": 5468160,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.24822998046875,
+      "rms": 0.024467896670103073,
+      "dc": 0.0001341090683126822,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 9.007827825824034,
+    "runtime_statistics": {
+      "seconds": 120.994558,
+      "frames": 5335860,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.6952479481697083,
+      "rms": 0.06966337561607361,
+      "dc": 4.343696855357848e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

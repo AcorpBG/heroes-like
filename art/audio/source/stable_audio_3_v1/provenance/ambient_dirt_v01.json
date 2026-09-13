@@ -1,0 +1,164 @@
+{
+  "id": "ambient_dirt_v01",
+  "brief_id": "ambient_dirt",
+  "priority": "P0",
+  "category": "ambience",
+  "targets": [
+    "overworld_ambient_dirt"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 64,
+  "prompt": "dry ground breeze, sparse scrub rustle and restrained outdoor texture. Natural continuous bed, no music, no speech, no foreground event or dramatic swell.",
+  "seed": 147487980325030,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/ambient_dirt_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/ambient_dirt_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/ambient_dirt_v01.ogg",
+  "source_sha256": "7d4a762b00b7f6cf29169ba6e9affac1edea041ca908d9ea6b75184a3d2629c2",
+  "master_sha256": "77c141a31e3fcb4ad151e8ba6e4c4e3ebd589c2b3e4270968b86f9d4a4c53756",
+  "runtime_sha256": "292d0a223d9d083ebc96b3f4045cc85f0de076dae17a5bd3a50d41e099ba3c98",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "dry ground breeze, sparse scrub rustle and restrained outdoor texture. Natural continuous bed, no music, no speech, no foreground event or dramatic swell."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 64,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 147487980325030,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/ambient_dirt_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "1f5714d7-6342-4875-8267-b670f04eeb27",
+    "generation_seconds": 2.015
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 63.994195,
+      "frames": 2822144,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.051513671875,
+      "rms": 0.0024208410177379847,
+      "dc": 3.6015392197441543e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 18.06179973983887,
+    "runtime_statistics": {
+      "seconds": 60.994195,
+      "frames": 2689844,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.41791194677352905,
+      "rms": 0.019510701298713684,
+      "dc": 3.966177700931439e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

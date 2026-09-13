@@ -1,0 +1,166 @@
+{
+  "id": "move_dirt_v01",
+  "brief_id": "move_dirt",
+  "priority": "P1",
+  "category": "movement",
+  "targets": [
+    "dirt"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "One separate dry dirt boot or equipment step variations. No baked rhythmic loop; no music or speech. Mounted gait requires confirmed hero art. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 115099791120710,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/move_dirt_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/move_dirt_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/move_dirt_v01.wav",
+  "source_sha256": "eb07435a9c57af3819d4ac2bde4da129c05b423b6b0797571d0ffd892f9ed98a",
+  "master_sha256": "6729071d824f5c9c3605eb7ba7363e4240f863c9ebad61bd2bcd2f5156dd95b8",
+  "runtime_sha256": "5cb982934e4e92b8889253bbc9edb263e37720616da7524788a43b862b040375",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "One separate dry dirt boot or equipment step variations. No baked rhythmic loop; no music or speech. Mounted gait requires confirmed hero art. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 115099791120710,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/move_dirt_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "c70899c2-7498-4ce5-8bd2-8915c43c2281",
+    "generation_seconds": 1.015
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.122650146484375,
+      "rms": 0.004134371876716614,
+      "dc": 6.95290918883984e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 0,
+    "trim_end_frame": 6174,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1543,
+    "gain_db": 15.198526250989898,
+    "runtime_statistics": {
+      "seconds": 0.14,
+      "frames": 6174,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.70001220703125,
+      "rms": 0.0854305699467659,
+      "dc": 0.000179734401172027,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

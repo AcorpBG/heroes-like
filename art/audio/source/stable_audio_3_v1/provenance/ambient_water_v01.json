@@ -1,0 +1,164 @@
+{
+  "id": "ambient_water_v01",
+  "brief_id": "ambient_water",
+  "priority": "P0",
+  "category": "ambience",
+  "targets": [
+    "overworld_ambient_water"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 64,
+  "prompt": "gentle shoreline wash with water lapping, sparse distant seabirds. Natural continuous bed, no music, no speech, no foreground event or dramatic swell.",
+  "seed": 185239666127824,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/ambient_water_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/ambient_water_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/ambient_water_v01.ogg",
+  "source_sha256": "618eafcd642298d803f41a3d61cb7cfefb9167b427b0490a800ea48c6e9ceacc",
+  "master_sha256": "eda45701378b071be60224115d02fbaa02272b814b3218db71336371c84517dd",
+  "runtime_sha256": "b415c6194ee80f5a1204e22ba5a7b79f038469fa8640ddf394e470b925502b30",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "gentle shoreline wash with water lapping, sparse distant seabirds. Natural continuous bed, no music, no speech, no foreground event or dramatic swell."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 64,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 185239666127824,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/ambient_water_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "82921976-610d-41ba-9871-7316f421868f",
+    "generation_seconds": 2.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 63.994195,
+      "frames": 2822144,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.086822509765625,
+      "rms": 0.005981932859867811,
+      "dc": 7.552411261713132e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 18.06179973983887,
+    "runtime_statistics": {
+      "seconds": 60.994195,
+      "frames": 2689844,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.7038280367851257,
+      "rms": 0.046867452561855316,
+      "dc": 3.3092908324761083e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

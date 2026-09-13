@@ -1,0 +1,167 @@
+{
+  "id": "music_outcome_defeat_v01",
+  "brief_id": "music_outcome_defeat",
+  "priority": "P0",
+  "category": "music",
+  "targets": [
+    "music_outcome_defeat_theme",
+    "music_outcome_defeat_theme_harmony",
+    "music_outcome_defeat_theme_motion"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 44,
+  "prompt": "Instrumental, no vocals. dignified loss, unresolved sadness and room to regroup. original acoustic fantasy ensemble: flute, lute, strings, horns and restrained hand percussion; exploration, wonder and consequence. One coherent complete stereo instrumental composition, spacious acoustic arrangement, steady tempo, no vocals, no speech, no sound effects.",
+  "seed": 39422340275842,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/music_outcome_defeat_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/music_outcome_defeat_v01.flac",
+  "runtime_path": "res://art/audio/source/stable_audio_3_v1/alternates/runtime/music_outcome_defeat_v01.ogg",
+  "source_sha256": "da573270c471842c151af81cbc13edf7b77e0276431e1c3755bd4a19548b0129",
+  "master_sha256": "6636c681f610b356b551859743e5048e27ed3d8fdd470f9dccd118ec551498a9",
+  "runtime_sha256": "45551ae05693f61f33bb462d96c899456cab3e7cfb14926ac53063dbf4964c11",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "Instrumental, no vocals. dignified loss, unresolved sadness and room to regroup. original acoustic fantasy ensemble: flute, lute, strings, horns and restrained hand percussion; exploration, wonder and consequence. One coherent complete stereo instrumental composition, spacious acoustic arrangement, steady tempo, no vocals, no speech, no sound effects."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 44,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 39422340275842,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/music_outcome_defeat_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "16cd502b-3d49-4812-aa2a-fb85ead709eb",
+    "generation_seconds": 2.0
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 44.025034,
+      "frames": 1941504,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.22174072265625,
+      "rms": 0.031633615493774414,
+      "dc": 7.165688293753192e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 9.987859091179788,
+    "runtime_statistics": {
+      "seconds": 41.025034,
+      "frames": 1809204,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.7177013754844666,
+      "rms": 0.1028071865439415,
+      "dc": 9.419499838259071e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  },
+  "selection": "Superseded acoustic direction; preserved as an alternate following owner orchestral feedback."
+}

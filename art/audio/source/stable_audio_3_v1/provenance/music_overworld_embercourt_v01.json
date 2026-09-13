@@ -1,0 +1,167 @@
+{
+  "id": "music_overworld_embercourt_v01",
+  "brief_id": "music_overworld_embercourt",
+  "priority": "P0",
+  "category": "music",
+  "targets": [
+    "music_overworld_embercourt_theme",
+    "music_overworld_embercourt_theme_harmony",
+    "music_overworld_embercourt_theme_motion"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 124,
+  "prompt": "Instrumental, no vocals. patient exploration, spacious phrases, low fatigue over long turns. warm horns, restrained field drums, plucked strings and small civic bells; river-charter confidence and humane resolve. One coherent complete stereo instrumental composition, spacious acoustic arrangement, steady tempo, no vocals, no speech, no sound effects.",
+  "seed": 236419056763614,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/music_overworld_embercourt_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/music_overworld_embercourt_v01.flac",
+  "runtime_path": "res://art/audio/source/stable_audio_3_v1/alternates/runtime/music_overworld_embercourt_v01.ogg",
+  "source_sha256": "88ad27f53da83bb72fe4382afb3babfb4a7a7100aed2ec2bcf668673ae5b718f",
+  "master_sha256": "741117f3bb4fde3a0a1d870ce46ba5b0ae378fc47c3a889f97ae7e6a211fa532",
+  "runtime_sha256": "7b6616f6b44eeb074d5bf0f8f396d9672d5827b1a19683a1b4976ae341e3ccda",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "Instrumental, no vocals. patient exploration, spacious phrases, low fatigue over long turns. warm horns, restrained field drums, plucked strings and small civic bells; river-charter confidence and humane resolve. One coherent complete stereo instrumental composition, spacious acoustic arrangement, steady tempo, no vocals, no speech, no sound effects."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 124,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 236419056763614,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/music_overworld_embercourt_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "ff4f61bb-4f5d-414b-90c1-0ef70551ad61",
+    "generation_seconds": 6.031
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 123.994558,
+      "frames": 5468160,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.2315673828125,
+      "rms": 0.018540572375059128,
+      "dc": 1.876258284028154e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 9.609116775894684,
+    "runtime_statistics": {
+      "seconds": 120.994558,
+      "frames": 5335860,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.7028557062149048,
+      "rms": 0.056694235652685165,
+      "dc": 8.77727143233642e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  },
+  "selection": "Superseded acoustic direction; preserved as an alternate following owner orchestral feedback."
+}

@@ -1,0 +1,166 @@
+{
+  "id": "replace_audio_placeholder_ranged_release_v01",
+  "brief_id": "replace_audio_placeholder_ranged_release",
+  "priority": "P0",
+  "category": "battle",
+  "targets": [
+    "audio_placeholder_ranged_release"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "bowstring snap with a short projectile air flick, no impact baked in. Isolated recording, no speech, no music, minimal room tail. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 43627541361663,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/replace_audio_placeholder_ranged_release_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/replace_audio_placeholder_ranged_release_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/replace_audio_placeholder_ranged_release_v01.wav",
+  "source_sha256": "ed770e2cd3c5a7eaf64b0ea001930e47f649dfb02bee3c18df9213d3cf2085ae",
+  "master_sha256": "0ccfa15fa482a727ae1ba152cf88a457391fb4e65ca7b765b44b1d8c9f88285e",
+  "runtime_sha256": "17a3e40e5d564de56291a590cbb905f5968eb7b9bdca2c89257d05e5505479ae",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "bowstring snap with a short projectile air flick, no impact baked in. Isolated recording, no speech, no music, minimal room tail. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 43627541361663,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/replace_audio_placeholder_ranged_release_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "d5a67862-b645-4189-be22-c3428910a526",
+    "generation_seconds": 1.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.156005859375,
+      "rms": 0.0016904029762372375,
+      "dc": 5.222994786890922e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 34839,
+    "trim_end_frame": 43659,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 13.038864669070245,
+    "runtime_statistics": {
+      "seconds": 0.2,
+      "frames": 8820,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.03793127089738846,
+      "dc": 0.0006898806313984096,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

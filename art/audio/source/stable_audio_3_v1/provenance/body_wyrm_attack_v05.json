@@ -1,0 +1,166 @@
+{
+  "id": "body_wyrm_attack_v05",
+  "brief_id": "body_wyrm",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "wyrm"
+  ],
+  "variant": 4,
+  "gesture": "attack",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "serpentine scaled creature, scrape, exhale and heavy coiling impact. One isolated brief attack exertion or physical attack gesture. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 211845337551742,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_wyrm_attack_v05.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_wyrm_attack_v05.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_wyrm_attack_v05.wav",
+  "source_sha256": "22d4afac4adabdb11e8a716989ec4bf27802cf70e4b6cc730a81a8b4925aa1ca",
+  "master_sha256": "25c3d7b9c07b12b9030a7650ceb46a746f5c92413efbc73c5f98b8255b2db6df",
+  "runtime_sha256": "4c7df9fcbfca6ce91e41031140f74bd20c0cdbd2b242b558ad961bf829a442cb",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "serpentine scaled creature, scrape, exhale and heavy coiling impact. One isolated brief attack exertion or physical attack gesture. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 211845337551742,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_wyrm_attack_v05",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "8db2816f-9997-4e59-ae06-7094ac657722",
+    "generation_seconds": 1.0
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.081451416015625,
+      "rms": 0.006957258563488722,
+      "dc": 4.6258584916358814e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 93051,
+    "trim_end_frame": 120393,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 18.06179973983887,
+    "runtime_statistics": {
+      "seconds": 0.62,
+      "frames": 27342,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.6519775390625,
+      "rms": 0.10516143590211868,
+      "dc": 9.930323358275928e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

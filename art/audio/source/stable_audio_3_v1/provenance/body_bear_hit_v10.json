@@ -1,0 +1,166 @@
+{
+  "id": "body_bear_hit_v10",
+  "brief_id": "body_bear",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "bear"
+  ],
+  "variant": 9,
+  "gesture": "hit",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "large furred beast, paws, low growl, restrained pain and fall. One isolated short hit reaction. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 280987922985234,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_bear_hit_v10.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_bear_hit_v10.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_bear_hit_v10.wav",
+  "source_sha256": "6043f9cef53a00ab0ec48862944babaddec00c0c2f62a00feec7355f9bba679f",
+  "master_sha256": "67f64633e8578cab31f00ca76af1d14c93a3e97f0018a3224cf0aae7411448b8",
+  "runtime_sha256": "de7c935a20f60981a933331ce5550af51a103c65dab6b929ac1ee309e71c6e0d",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "large furred beast, paws, low growl, restrained pain and fall. One isolated short hit reaction. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 280987922985234,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_bear_hit_v10",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "f7c1c0b1-e6f0-4d48-b323-b36bf6a1940a",
+    "generation_seconds": 1.0
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.042449951171875,
+      "rms": 0.0058336686342954636,
+      "dc": 3.045907760679256e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 22491,
+    "trim_end_frame": 59535,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 18.06179973983887,
+    "runtime_statistics": {
+      "seconds": 0.84,
+      "frames": 37044,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.339630126953125,
+      "rms": 0.09471136331558228,
+      "dc": 3.980696874350542e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

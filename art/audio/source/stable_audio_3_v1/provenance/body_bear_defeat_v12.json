@@ -1,0 +1,166 @@
+{
+  "id": "body_bear_defeat_v12",
+  "brief_id": "body_bear",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "bear"
+  ],
+  "variant": 11,
+  "gesture": "defeat",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "large furred beast, paws, low growl, restrained pain and fall. One isolated defeat and body collapse. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 15370877820643,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_bear_defeat_v12.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_bear_defeat_v12.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_bear_defeat_v12.wav",
+  "source_sha256": "50516c6454042b3446445294bd32d7bfd3ff17da7d822c6287b8ada1a0ea5395",
+  "master_sha256": "ca29810c29096bb860c1fbf273cb372e243dd16171900147a2c5a8cdac68c10e",
+  "runtime_sha256": "d7bf53a16e1a04c90d7c4f4f4e0f589b7d0b4272995821828bb8eb135f231e67",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "large furred beast, paws, low growl, restrained pain and fall. One isolated defeat and body collapse. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 15370877820643,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_bear_defeat_v12",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "1fa5190d-af24-4240-a44f-88b81ec6d7c6",
+    "generation_seconds": 1.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.095672607421875,
+      "rms": 0.007294963113963604,
+      "dc": 1.3214984392106999e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 9261,
+    "trim_end_frame": 15876,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1653,
+    "gain_db": 17.285008708913423,
+    "runtime_statistics": {
+      "seconds": 0.15,
+      "frames": 6615,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.70001220703125,
+      "rms": 0.07569779455661774,
+      "dc": 0.000446331687271595,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

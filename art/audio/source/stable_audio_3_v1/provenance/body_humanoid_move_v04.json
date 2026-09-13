@@ -1,0 +1,166 @@
+{
+  "id": "body_humanoid_move_v04",
+  "brief_id": "body_humanoid",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "humanoid"
+  ],
+  "variant": 3,
+  "gesture": "move",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "nonverbal exertion, clothing, armor and boots; varied adult performers, no intelligible words. One isolated single body footstep or body movement. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 110665775582126,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_humanoid_move_v04.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_humanoid_move_v04.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_humanoid_move_v04.wav",
+  "source_sha256": "98e32f86e84508725bb076b0b83515fa86830adbbe2257bb2d32df5f79907f7b",
+  "master_sha256": "caa3ddd10e10d7fa13c278b50cdcf05bc03bed7aaf5d060a5dff62dcac9ff6ae",
+  "runtime_sha256": "956ed93a40c3435404688be0f4ce4111c5e92c40fa8faf4a36f8681f51752ca4",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "nonverbal exertion, clothing, armor and boots; varied adult performers, no intelligible words. One isolated single body footstep or body movement. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 110665775582126,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_humanoid_move_v04",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "1d6d7f04-c23f-4c37-bd0e-e60cfcd65a28",
+    "generation_seconds": 1.032
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.11334228515625,
+      "rms": 0.004204848315566778,
+      "dc": 4.7376586735481396e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 10584,
+    "trim_end_frame": 17640,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 15.817753061756878,
+    "runtime_statistics": {
+      "seconds": 0.16,
+      "frames": 7056,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.10374944657087326,
+      "dc": 0.0037030891980975866,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

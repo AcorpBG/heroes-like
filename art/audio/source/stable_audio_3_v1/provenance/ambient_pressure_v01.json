@@ -1,0 +1,164 @@
+{
+  "id": "ambient_pressure_v01",
+  "brief_id": "ambient_pressure",
+  "priority": "P0",
+  "category": "ambience",
+  "targets": [
+    "overworld_ambient_pressure"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 64,
+  "prompt": "very quiet nonmelodic unease texture; no fake enemy footsteps or positional warning. Natural continuous bed, no music, no speech, no foreground event or dramatic swell.",
+  "seed": 139389290269371,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/ambient_pressure_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/ambient_pressure_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/ambient_pressure_v01.ogg",
+  "source_sha256": "c1701029295e8ddc26778902e91afd7cabd1182c8c06ffa8a89d25b18933d962",
+  "master_sha256": "d2f15621ffed14cb33e1ae4025815a30249612c278a87fae61923f8800b8b5b4",
+  "runtime_sha256": "5b12903a8f56abf9054288ee3f48d3335215ba95de3fb8cde52787d6e3518103",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "very quiet nonmelodic unease texture; no fake enemy footsteps or positional warning. Natural continuous bed, no music, no speech, no foreground event or dramatic swell."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 64,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 139389290269371,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/ambient_pressure_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "a3b0220b-705d-4133-8a87-8628331f37df",
+    "generation_seconds": 2.172
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 63.994195,
+      "frames": 2822144,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.19525146484375,
+      "rms": 0.01562831737101078,
+      "dc": 6.601938821404474e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 13.602043932418717,
+    "runtime_statistics": {
+      "seconds": 60.994195,
+      "frames": 2689844,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.7039540410041809,
+      "rms": 0.06435003131628036,
+      "dc": 5.2218074415577576e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

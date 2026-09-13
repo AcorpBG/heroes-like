@@ -1,0 +1,166 @@
+{
+  "id": "body_wyrm_move_v02",
+  "brief_id": "body_wyrm",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "wyrm"
+  ],
+  "variant": 1,
+  "gesture": "move",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "serpentine scaled creature, scrape, exhale and heavy coiling impact. One isolated single body footstep or body movement. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 198240691278521,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_wyrm_move_v02.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_wyrm_move_v02.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_wyrm_move_v02.wav",
+  "source_sha256": "491648f2a40db2c751028f4a6aadef5b50c28465bcccba2441e418dbb96e76dc",
+  "master_sha256": "5d36280570b57852e84c47acab6546c54bac156848145cf38b3999cfcb450fb7",
+  "runtime_sha256": "63ca1d5957d302bce0d46ffe8d5ab90d01dd7ae14300fe403c04c7a0f5fb0702",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "serpentine scaled creature, scrape, exhale and heavy coiling impact. One isolated single body footstep or body movement. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 198240691278521,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_wyrm_move_v02",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "f34b0770-b5fa-4558-8b03-3f63a6c4a36a",
+    "generation_seconds": 1.015
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.06182861328125,
+      "rms": 0.00255718850530684,
+      "dc": 1.4707584341522306e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 12789,
+    "trim_end_frame": 70560,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 18.06179973983887,
+    "runtime_statistics": {
+      "seconds": 1.31,
+      "frames": 57771,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.4945068359375,
+      "rms": 0.03055400401353836,
+      "dc": 7.367408397840336e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

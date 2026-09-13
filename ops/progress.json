@@ -16647,14 +16647,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "All five owner-priority slices implemented and validated. Local recruitment source compact/wide 175 each; final Linux 177 and Windows Wine 176. Full repository, official exports/startup and package parity pass. Fresh Small seed 10 manual match reached terminal defeat on Day 2. Existing Moonbite development test limitation reproduces identically in the prior release; unresolved manual OpenGL crash and headcount-only threat disclosure remain documented follow-ups. Cleanup removed 2010129404 bytes in superseded exports; final packages, evidence, saves and caches retained. No release-ready claim.",
+  "currentNotes": "Owner authorized production audio goal; generation and runtime acceptance required.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "gameplay-recruitment-logistics-clarity-20260912",
-  "currentSliceId": "gameplay-recruitment-logistics-clarity-20260912",
+  "currentSlice": "audio-production-library-20260913",
+  "currentSliceId": "audio-production-library-20260913",
   "currentSliceNotes": "Owner-approved local recruitment implemented: site visits required; town purchases enter eligible stationed hero or garrison, never distant active army. Destination/cost/capacity/cue and identity clarity validated. Source compact/wide 175 each, final Linux 177 and Windows Wine 176; full repository, official exports and package parity pass. Fresh native Small seed 10 manual match reached Day 2 terminal defeat. Existing Moonbite development limit reproduces identically in prior release; manual OpenGL crash remains unresolved, Vulkan match completed. See docs/small-map-playtest-gameplay-priorities.md. No release-ready claim.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Recruitment Logistics and Identity Clarity",
-  "currentSliceUpdatedAt": "2026-09-12T22:36:56Z",
+  "currentSliceStatus": "in_progress",
+  "currentSliceTitle": "Generate and integrate production SFX, ambience and full-mix music",
+  "currentSliceUpdatedAt": "2026-09-13T00:06:21+00:00",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22269,6 +22269,52 @@
   "nextActionGuardrailNote": "Implement the five playtest slices in priorityOrder before discretionary work. Shared input/tooltip foundations may be combined, but each slice requires live behavior acceptance. Preserve native RMG source semantics; do not infer balance changes from this single loss or treat planning as implementation.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "audio-production-library-20260913",
+      "title": "Generate and integrate production SFX, ambience and full-mix music",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "in_progress",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/audio-production-implementation.md",
+        "docs/audio-generation-plan.md"
+      ],
+      "createdAt": "2026-09-13T00:02:46+00:00",
+      "updatedAt": "2026-09-13T00:34:48.084796+00:00",
+      "notes": "All 520 required files generated with source/master/provenance and orchestral music revision. Artistic listening acceptance is pending; owner requested no further testing until they notify us.",
+      "startedAt": "2026-09-13T00:06:21+00:00"
+    },
+    {
+      "id": "audio-production-routing-20260913",
+      "title": "Implement material, creature, school and contextual audio routing",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "in_progress",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/audio-production-implementation.md",
+        "docs/audio-generation-plan.md"
+      ],
+      "createdAt": "2026-09-13T00:02:46+00:00",
+      "updatedAt": "2026-09-13T00:34:48.084796+00:00",
+      "notes": "Local routing implementation drafted; focused Godot harness passed 1934 checks. Full acceptance and obsolete-validator migration remain unfinished. Owner requested further testing deferred."
+    },
+    {
+      "id": "audio-production-acceptance-20260913",
+      "title": "Validate production audio and complete gameplay/platform acceptance",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "pending",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/audio-production-implementation.md",
+        "docs/audio-generation-plan.md"
+      ],
+      "createdAt": "2026-09-13T00:02:46+00:00",
+      "updatedAt": "2026-09-13T00:34:48.084796+00:00",
+      "notes": "Owner is using the computer and will notify when testing may resume. Do not launch game or resume tests until authorized. Local Linux WSL cannot start because virtualization is disabled; no system settings changed."
+    },
     {
       "id": "planning-production-audio-generation-20260913",
       "title": "Inventory current audio and prepare the complete production generation list",
@@ -112497,7 +112543,7 @@
   ],
   "summary": "All five owner-priority slices implemented and validated. Local recruitment source compact/wide 175 each; final Linux 177 and Windows Wine 176. Full repository, official exports/startup and package parity pass. Fresh Small seed 10 manual match reached terminal defeat on Day 2. Existing Moonbite development test limitation reproduces identically in the prior release; unresolved manual OpenGL crash and headcount-only threat disclosure remain documented follow-ups. Cleanup removed 2010129404 bytes in superseded exports; final packages, evidence, saves and caches retained. No release-ready claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-12T22:36:56Z",
+  "updatedAt": "2026-09-13T00:06:21+00:00",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

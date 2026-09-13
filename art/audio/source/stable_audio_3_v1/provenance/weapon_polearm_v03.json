@@ -1,0 +1,166 @@
+{
+  "id": "weapon_polearm_v03",
+  "brief_id": "weapon_polearm",
+  "priority": "P1",
+  "category": "weapons",
+  "targets": [
+    "polearm"
+  ],
+  "variant": 2,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "One wooden haft, hooked spear and polearm thrust takes, attack/release only; separate from impact. No speech, no music. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 127535345961358,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/weapon_polearm_v03.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/weapon_polearm_v03.flac",
+  "runtime_path": "res://art/audio/runtime/production/weapon_polearm_v03.wav",
+  "source_sha256": "94709d1574b932f0922100af62d11fb54aa553e6bafb576dde89a1f7c5268c1f",
+  "master_sha256": "694c23f5f92d8edc33b8c5a70664328abc9ac50f753a87ef1e8b1edc8f2acec9",
+  "runtime_sha256": "f91813c28edac6164ffe04a672a3fb2d4609d7394559db332ff6795169c8f0a2",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "One wooden haft, hooked spear and polearm thrust takes, attack/release only; separate from impact. No speech, no music. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 127535345961358,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/weapon_polearm_v03",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "2ceb18b9-4221-4c3b-aca6-a4da011b136b",
+    "generation_seconds": 1.015
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.17071533203125,
+      "rms": 0.0035303146578371525,
+      "dc": 1.1308325156278443e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 185661,
+    "trim_end_frame": 192276,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1653,
+    "gain_db": 12.306397760914356,
+    "runtime_statistics": {
+      "seconds": 0.15,
+      "frames": 6615,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.06247914955019951,
+      "dc": 0.00040455744601786137,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

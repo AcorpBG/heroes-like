@@ -1,0 +1,166 @@
+{
+  "id": "weapon_blunt_v02",
+  "brief_id": "weapon_blunt",
+  "priority": "P1",
+  "category": "weapons",
+  "targets": [
+    "blunt"
+  ],
+  "variant": 1,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "One heavy mallet or maul swing takes, attack/release only; separate from impact. No speech, no music. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 116224813827895,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/weapon_blunt_v02.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/weapon_blunt_v02.flac",
+  "runtime_path": "res://art/audio/runtime/production/weapon_blunt_v02.wav",
+  "source_sha256": "e82b6887474168425291fe689e3c3542b552efa7be1629655b22910b24a04db6",
+  "master_sha256": "426cc73e16193d4c52efe98db6442b322bc98898bdf84d7a23da4e516e55e027",
+  "runtime_sha256": "88adb37029b1a8ef385b8dae16f53b31336eb52a34c19bb9e79310ead305ee16",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "One heavy mallet or maul swing takes, attack/release only; separate from impact. No speech, no music. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 116224813827895,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/weapon_blunt_v02",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "4f5219a2-c59d-4461-9d45-664c307d1a64",
+    "generation_seconds": 1.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.1815185546875,
+      "rms": 0.00800318457186222,
+      "dc": 3.261698657297529e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 75852,
+    "trim_end_frame": 83349,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 11.910927368596667,
+    "runtime_statistics": {
+      "seconds": 0.17,
+      "frames": 7497,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.70001220703125,
+      "rms": 0.10711124539375305,
+      "dc": 0.0015909562353044748,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

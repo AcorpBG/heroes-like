@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Production Audio Implementation
+
+Owner-authorized goal, 2026-09-13. Selected slices: `audio-production-library-20260913`, `audio-production-routing-20260913`, `audio-production-acceptance-20260913` (pending). All 520 required files are generated; library/routing remain in progress until acceptance. Owner requested further tests paused and will notify when available. Generate and implement all P0 replacements and required P1 banks/events from the approved list; defer P2 optional breadth. Use one coherent full mix per existing music context, with an explicit manifest/runtime migration and preserved legacy fallback, rather than pretending independently generated tracks are synchronized stems. Requirements: `docs/audio-production-implementation.md`. Completion requires live event routing, curated source/provenance, focused regressions, Windows/Linux acceptance and a Small-match audio review; generation counts alone are not completion.
+
 ### Production Audio Generation Inventory
 
 id: `planning-production-audio-generation-20260913`

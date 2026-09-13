@@ -1,0 +1,164 @@
+{
+  "id": "ambient_mire_v01",
+  "brief_id": "ambient_mire",
+  "priority": "P0",
+  "category": "ambience",
+  "targets": [
+    "overworld_ambient_mire"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 64,
+  "prompt": "wet reed movement, insects, occasional distant frogs and low marsh air. Natural continuous bed, no music, no speech, no foreground event or dramatic swell.",
+  "seed": 172750543229683,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/ambient_mire_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/ambient_mire_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/ambient_mire_v01.ogg",
+  "source_sha256": "2b7433e1215ee1e280d480fe8dbbfa3bfb0aee02a36f747122e7d4e1eb353e78",
+  "master_sha256": "5a9c764ec49f3d9bc8580959bc868f96dce21b767072f432f6c64efbef1fdc16",
+  "runtime_sha256": "280b6dfeb908815f156c0aca68238d0e215c2453e137e163959dcdce4c1d4926",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "wet reed movement, insects, occasional distant frogs and low marsh air. Natural continuous bed, no music, no speech, no foreground event or dramatic swell."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 64,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 172750543229683,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/ambient_mire_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "35aead02-1d2d-477c-b2f2-0ccf60497683",
+    "generation_seconds": 2.078
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 63.994195,
+      "frames": 2822144,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.120208740234375,
+      "rms": 0.010314316488802433,
+      "dc": 0.00013507448602467775,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 15.313005200102374,
+    "runtime_statistics": {
+      "seconds": 60.994195,
+      "frames": 2689844,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.7120288014411926,
+      "rms": 0.06035500019788742,
+      "dc": 1.6615000276942737e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

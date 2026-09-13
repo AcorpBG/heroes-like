@@ -1,0 +1,167 @@
+{
+  "id": "magic_furnace_haste_v02",
+  "brief_id": "magic_furnace_haste",
+  "priority": "P1",
+  "category": "magic",
+  "targets": [
+    "spell_furnace_foundry_bellows_11",
+    "spell_furnace_brass_bellows_23"
+  ],
+  "variant": 1,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "ignition, dry embers, hot iron, pressure and quenched metal. One short haste gestures with clear onset, no speech or music. Cast, impact and expiry must remain separate assets. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 107561253663160,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/magic_furnace_haste_v02.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/magic_furnace_haste_v02.flac",
+  "runtime_path": "res://art/audio/runtime/production/magic_furnace_haste_v02.wav",
+  "source_sha256": "103919853f706647b8e1efee2bb01cccb846f607b3edef0ce796e15bf5961c3a",
+  "master_sha256": "fb675b9a9fd98120285e5b42ea4e385d5bd89d807f45461cf0d04510bc0d79d2",
+  "runtime_sha256": "e8a971a0b1f3e618d7c8218fbb6c69b9015ff2241f464ba7540892586c629698",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "ignition, dry embers, hot iron, pressure and quenched metal. One short haste gestures with clear onset, no speech or music. Cast, impact and expiry must remain separate assets. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 107561253663160,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/magic_furnace_haste_v02",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "65c77ee7-f9d3-4e7e-a64a-9900b3c04a26",
+    "generation_seconds": 1.015
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.148162841796875,
+      "rms": 0.004862995818257332,
+      "dc": 5.970398433419177e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 21168,
+    "trim_end_frame": 41454,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 13.48749891318219,
+    "runtime_statistics": {
+      "seconds": 0.46,
+      "frames": 20286,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.07188189774751663,
+      "dc": 0.000561470165848732,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

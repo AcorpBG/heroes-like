@@ -1,0 +1,166 @@
+{
+  "id": "notice_resource_shortfall_v01",
+  "brief_id": "notice_resource_shortfall",
+  "priority": "P1",
+  "category": "notifications",
+  "targets": [
+    "resource_shortfall"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "soft distinct deficit warning, may reuse UI invalid if redundant. No speech; keep subordinate to player actions. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 110902987034799,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/notice_resource_shortfall_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/notice_resource_shortfall_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/notice_resource_shortfall_v01.wav",
+  "source_sha256": "89c44b1e5e7fad2c267313d0d54705eee5e18e12f5dd67a382edfacebe37055e",
+  "master_sha256": "75c8e1ff4834772eeb3704b8cf17c1696885c14e6aa061770427003fba0d9326",
+  "runtime_sha256": "2806c72f71fdd12bc6401d0d5a5ec1056c1c18d795f07b6900df398b2999dce3",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "soft distinct deficit warning, may reuse UI invalid if redundant. No speech; keep subordinate to player actions. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 110902987034799,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/notice_resource_shortfall_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "3ccd16dd-31a8-4bd4-83ea-2673ca1e2158",
+    "generation_seconds": 1.015
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.069671630859375,
+      "rms": 0.012340911664068699,
+      "dc": 8.022620022529736e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 9702,
+    "trim_end_frame": 45423,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 15.848474665244819,
+    "runtime_statistics": {
+      "seconds": 0.81,
+      "frames": 35721,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.432037353515625,
+      "rms": 0.15999996662139893,
+      "dc": 2.7348862204235047e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

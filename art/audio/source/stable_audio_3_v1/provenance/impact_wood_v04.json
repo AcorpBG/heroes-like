@@ -1,0 +1,166 @@
+{
+  "id": "impact_wood_v04",
+  "brief_id": "impact_wood",
+  "priority": "P1",
+  "category": "impacts",
+  "targets": [
+    "wood"
+  ],
+  "variant": 3,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "One clearly different short weapon impacts on wooden shield or living bark. No weapon release, speech or music; compact and readable. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 251957407096321,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/impact_wood_v04.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/impact_wood_v04.flac",
+  "runtime_path": "res://art/audio/runtime/production/impact_wood_v04.wav",
+  "source_sha256": "a9137426ca926727532e17b086eab64538296050397c341a09dd06062be11a74",
+  "master_sha256": "1dd98a17148bdbe441343011bb95d6d589b58ad69138a34b5a605a68b07bccde",
+  "runtime_sha256": "082c7ddfb148a8e7ab9657ae80613091b5cef5d8bb4988f9d5f980d74edf0e33",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "One clearly different short weapon impacts on wooden shield or living bark. No weapon release, speech or music; compact and readable. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 251957407096321,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/impact_wood_v04",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "0222e679-151a-4204-9cd8-7a7e55344d8f",
+    "generation_seconds": 1.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.419952392578125,
+      "rms": 0.012707945890724659,
+      "dc": 4.7944486141204834e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 19845,
+    "trim_end_frame": 28665,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 4.436967867525436,
+    "runtime_statistics": {
+      "seconds": 0.2,
+      "frames": 8820,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.06849144399166107,
+      "dc": 0.000833624682854861,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

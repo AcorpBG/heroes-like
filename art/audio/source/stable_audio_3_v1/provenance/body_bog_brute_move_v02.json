@@ -1,0 +1,166 @@
+{
+  "id": "body_bog_brute_move_v02",
+  "brief_id": "body_bog_brute",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "bog_brute"
+  ],
+  "variant": 1,
+  "gesture": "move",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "heavy marsh brute, wet breathing, weighty feet and low animal exertion. One isolated single body footstep or body movement. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 43894644475750,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_bog_brute_move_v02.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_bog_brute_move_v02.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_bog_brute_move_v02.wav",
+  "source_sha256": "15138183af1b21862b0404e07b54c075dd0e95c3ff97c60a449191ef3bf10f0a",
+  "master_sha256": "698065b0ff4cd087c8130f7ec457638b1523c6dee2bb362077d656a71e1a4f33",
+  "runtime_sha256": "94c4291cba214c5fecc355a8ff43cfacf075e6341f692320986de9592470b0b8",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "heavy marsh brute, wet breathing, weighty feet and low animal exertion. One isolated single body footstep or body movement. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 43894644475750,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_bog_brute_move_v02",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "53f42a85-d56e-4a4e-9243-1aba65eb68a8",
+    "generation_seconds": 1.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.016693115234375,
+      "rms": 0.0025744298473000526,
+      "dc": 9.100608622247819e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 7938,
+    "trim_end_frame": 35280,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 18.06179973983887,
+    "runtime_statistics": {
+      "seconds": 0.62,
+      "frames": 27342,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.133636474609375,
+      "rms": 0.03739200904965401,
+      "dc": 0.0006079384475015104,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}
