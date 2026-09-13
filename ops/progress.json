@@ -1,6 +1,12 @@
 {
   "actionableNextTasks": [
     {
+      "id": "vfx-combat-layered-feedback-20260913",
+      "title": "Layered Combat Visual Effects",
+      "status": "completed",
+      "priority": "top"
+    },
+    {
       "id": "ui-owned-hero-screen-20260913",
       "title": "Owned Hero Screen",
       "status": "completed",
@@ -16659,14 +16665,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Completed owned-hero inspection sheet with roster double-click and keyboard/controller entry, current army/artifacts/stats/specializations, modal input/focus and read-only active/inactive hero authority. Source and Linux/Windows release probes pass 528 checks each across 66 identities; small/wide and six-faction captures inspected. Town entry 18 checks, repository validation, official exports and package parity pass. Removed 20892794 bytes of obsolete captures; caches, final evidence/packages and unrelated files preserved. No gameplay/save-schema changes or release-readiness claim.",
+  "currentNotes": "Implemented layered original-raster combat effects with protected readouts, bounded rendering and quiet accessibility fallbacks. Source/Linux release pass 1095 checks; Windows release passes 1081 plus equal nonvisual assertions. Normal/Fast/reduced/Instant readability, repository validation, official exports and package parity pass. Small/wide captures inspected. Legacy combined VFX/audio report retains the same 11 audio-only assertion failures as the pre-change Board, documented separately. Removed 10474554 bytes of obsolete intermediates; disposable Wine system prefixes cleaned with user data/caches/final evidence preserved. No gameplay, save, art or audio changes.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ui-owned-hero-screen-20260913",
-  "currentSliceId": "ui-owned-hero-screen-20260913",
-  "currentSliceNotes": "Completed owned-hero inspection sheet with roster double-click and keyboard/controller entry, current army/artifacts/stats/specializations, modal input/focus and read-only active/inactive hero authority. Source and Linux/Windows release probes pass 528 checks each across 66 identities; small/wide and six-faction captures inspected. Town entry 18 checks, repository validation, official exports and package parity pass. Removed 20892794 bytes of obsolete captures; caches, final evidence/packages and unrelated files preserved. No gameplay/save-schema changes or release-readiness claim.",
+  "currentSlice": "vfx-combat-layered-feedback-20260913",
+  "currentSliceId": "vfx-combat-layered-feedback-20260913",
+  "currentSliceNotes": "Implemented layered original-raster combat effects with protected readouts, bounded rendering and quiet accessibility fallbacks. Source/Linux release pass 1095 checks; Windows release passes 1081 plus equal nonvisual assertions. Normal/Fast/reduced/Instant readability, repository validation, official exports and package parity pass. Small/wide captures inspected. Legacy combined VFX/audio report retains the same 11 audio-only assertion failures as the pre-change Board, documented separately. Removed 10474554 bytes of obsolete intermediates; disposable Wine system prefixes cleaned with user data/caches/final evidence preserved. No gameplay, save, art or audio changes.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Owned Hero Screen",
-  "currentSliceUpdatedAt": "2026-09-13T20:14:20Z",
+  "currentSliceTitle": "Layered Combat Visual Effects",
+  "currentSliceUpdatedAt": "2026-09-13T20:56:45Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21971,8 +21977,26 @@
       }
     }
   },
-  "guardrailNote": "Owner-directed read-only hero sheet and roster entry only. Preserve gameplay, saves, original art, native RMG and Town behavior.",
+  "guardrailNote": "Combat presentation only; preserve original art identity, rules, RNG, saves, input/readout clarity and accessibility.",
   "lastValidation": {
+    "id": "vfx-combat-layered-feedback-20260913",
+    "sliceId": "vfx-combat-layered-feedback-20260913",
+    "status": "completed",
+    "validatedAt": "2026-09-13T20:56:45Z",
+    "sourceReport": "docs/combat-layered-vfx.md",
+    "sourceChecks": 1095,
+    "linuxPackagedChecks": 1095,
+    "windowsPackagedChecks": 1081,
+    "repositoryValidation": "passed; .artifacts/combat-vfx-20260913/repository-validation.log",
+    "officialExports": "Linux/Windows passed; Windows generated-map/Town/build flow and Wine cleanup passed",
+    "packBytesPerPlatform": 516838556,
+    "packMemberCount": 8521,
+    "packParity": "Only project.binary differs; same SHA-locked combat probe and compiled owners",
+    "legacyReport": "32 cases; identical 11 pre-existing audio assertion failures with old/new Board; no VFX failure assertions. Not claimed green.",
+    "cleanup": "10474554 apparent bytes of rebuildable intermediates removed; three Wine system prefixes cleaned, user data/caches/final packages/evidence and unrelated files retained",
+    "limits": "Combat presentation only. Windows headless Wine, not GPU certification; no gameplay/save/art/audio changes or release-ready claim."
+  },
+  "priorHeroSheetValidation": {
     "id": "ui-owned-hero-screen-20260913",
     "sliceId": "ui-owned-hero-screen-20260913",
     "status": "completed",
@@ -22299,9 +22323,28 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Hero sheet completed and validated. No next slice selected; await owner direction without inferring gameplay, native RMG or unrelated art changes.",
+  "nextActionGuardrailNote": "Combat VFX slice completed and validated. Await owner direction; legacy audio test reconciliation is documented, not silently folded into this presentation slice.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "vfx-combat-layered-feedback-20260913",
+      "title": "Layered Combat Visual Effects",
+      "phase": "phase-6-production-alpha-layer",
+      "parentId": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "docs/combat-layered-vfx.md", "docs/battle-readable-turns-and-melee-approach.md"],
+      "targets": ["scenes/battle/BattleBoardView.gd", "scripts/ui/CombatVfxMotion.gd", "tests/combat_vfx_regression.py", "tests/validate_repo.py"],
+      "validation": ["python3 -B tests/combat_vfx_regression.py --label source --render", "Existing battle readability and VFX reports", "python3 tests/validate_repo.py", "Linux/Windows official exports, same-probe packaged checks and package parity", "Inspect before/after and small/wide combat captures", "git diff --check"],
+      "completionCriteria": ["Noticeable event-aligned layered raster effects in normal combat", "Readouts, input, accessibility, timing, determinism and saves preserved", "Source and both packages validated with inspected visual evidence"],
+      "nonGoals": ["Balance, AI, gameplay RNG, saves, audio, new art generation, native RMG or unrelated UI"],
+      "createdAt": "2026-09-13T20:38:05Z",
+      "startedAt": "2026-09-13T20:38:05Z",
+      "updatedAt": "2026-09-13T20:56:45Z",
+      "completedAt": "2026-09-13T20:56:45Z",
+      "notes": "Implemented layered original-raster combat effects with protected readouts, bounded rendering and quiet accessibility fallbacks. Source/Linux release pass 1095 checks; Windows release passes 1081 plus equal nonvisual assertions. Normal/Fast/reduced/Instant readability, repository validation, official exports and package parity pass. Small/wide captures inspected. Legacy combined VFX/audio report retains the same 11 audio-only assertion failures as the pre-change Board, documented separately. Removed 10474554 bytes of obsolete intermediates; disposable Wine system prefixes cleaned with user data/caches/final evidence preserved. No gameplay, save, art or audio changes."
+    },
     {
       "id": "ui-owned-hero-screen-20260913",
       "title": "Owned Hero Screen",
@@ -112627,7 +112670,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "owned_hero_sheet_implemented_and_validated",
+  "result": "combat_layered_vfx_implemented_and_validated",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -112730,7 +112773,7 @@
   ],
   "summary": "Completed biome-aware Overworld town art: 19 original generated variants; 39 logical entries / 33 architectures / nine biomes / 22 aliases. 858 resolver cases, 17 pixel-reproducible cutouts, 19 clean-cache imports, visual review, full repository, official Linux/Windows exports and 1014-check native Medium-to-Town flows per platform pass. PCK 516821036 bytes / 8517 entries; only project.binary differs. Historical identity, native generation, placement, entrances, collision, fog, RNG and saves unchanged. Cleanup preserves source, evidence, packages, user data and caches; no release-ready claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-13T20:14:20Z",
+  "updatedAt": "2026-09-13T20:56:45Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",
