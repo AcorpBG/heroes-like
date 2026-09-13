@@ -1,0 +1,209 @@
+{
+  "generator": "OpenAI built-in image generation",
+  "created_at": "2026-09-13",
+  "use_case": "stylized-concept",
+  "asset_policy": "original_generated_no_copied_pixels",
+  "prompts": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/prompts.json",
+  "processing": "Original generated PNGs copied without pixel edits; runtime Godot import size_limit=256, alpha-border fix and mipmaps. Source masters retained.",
+  "assets": [
+    {
+      "asset_id": "cohesive_variety_thornroot_thicket",
+      "name": "Thornroot Thicket",
+      "source": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/thornroot_thicket.png",
+      "runtime": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/thornroot_thicket.png",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-9bd978d0-3304-496e-b00f-fa5f3cafa368.png",
+      "sha256": "273a71cc9540bccd0ed321444b5c0c3ea4ac07f2b5d1546d40aec79df0f28d8e",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "transparent_fraction": 0.3179,
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest"
+      ]
+    },
+    {
+      "asset_id": "cohesive_variety_tangled_marsh_roots",
+      "name": "Tangled Marsh Roots",
+      "source": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/tangled_marsh_roots.png",
+      "runtime": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/tangled_marsh_roots.png",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-11389024-732a-4691-ab66-35eb5a00a509.png",
+      "sha256": "17de01697a08fd82ec004696cab209680d8dbf1223b9598ec16f52e3b4948cb3",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "transparent_fraction": 0.4974,
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_coast_archipelago"
+      ]
+    },
+    {
+      "asset_id": "cohesive_variety_shattered_slate",
+      "name": "Shattered Slate",
+      "source": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/shattered_slate.png",
+      "runtime": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/shattered_slate.png",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-3027fefd-f44c-40ad-adae-0d42b6d9334f.png",
+      "sha256": "5e3916633e94f4d4129f9589d96d17385682b505d1d63c6a887b5ee919ea27a6",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "transparent_fraction": 0.3812,
+      "biome_ids": [
+        "biome_highland_ridge",
+        "biome_rough_badlands"
+      ]
+    },
+    {
+      "asset_id": "cohesive_variety_snowbound_deadfall",
+      "name": "Snowbound Deadfall",
+      "source": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/snowbound_deadfall.png",
+      "runtime": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/snowbound_deadfall.png",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-0063db0d-d41f-4379-8c41-2ec1a5763097.png",
+      "sha256": "29be6371b2cd4d240b0845ef53d29328cb93eaee84e7c29be30e4525f243ce1e",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "transparent_fraction": 0.4532,
+      "biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    {
+      "asset_id": "cohesive_variety_basalt_chimneys",
+      "name": "Basalt Chimneys",
+      "source": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/basalt_chimneys.png",
+      "runtime": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/basalt_chimneys.png",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-476be843-797f-4aaa-b5ee-42fb448e213e.png",
+      "sha256": "2a3ac0e3e777a09da464c347755b31f38345fd41bcf4625cd511c38468801998",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "transparent_fraction": 0.4473,
+      "biome_ids": [
+        "biome_ash_lava_wastes",
+        "biome_rough_badlands"
+      ]
+    },
+    {
+      "asset_id": "cohesive_variety_cavern_crystal_crag",
+      "name": "Cavern Crystal Crag",
+      "source": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/cavern_crystal_crag.png",
+      "runtime": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/cavern_crystal_crag.png",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-ea681ff0-8cf0-4595-be73-42febeb401c5.png",
+      "sha256": "604325b1f056a779afed711efc3a53d117d6d5ceedeebe07bab53ea68e48b9f3",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "transparent_fraction": 0.4468,
+      "biome_ids": [
+        "biome_subterranean_underways"
+      ]
+    },
+    {
+      "asset_id": "cohesive_variety_giant_shelf_fungi",
+      "name": "Giant Shelf Fungi",
+      "source": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/giant_shelf_fungi.png",
+      "runtime": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/giant_shelf_fungi.png",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-a04193b1-fcee-4c5a-b71f-ffbb4d65d2f9.png",
+      "sha256": "6b56fcdedf500eb4b44fa87bbb0548fda647abb15e73bf7d572bed327bad6f55",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "transparent_fraction": 0.3437,
+      "biome_ids": [
+        "biome_mire_fen",
+        "biome_subterranean_underways"
+      ]
+    },
+    {
+      "asset_id": "cohesive_variety_redstone_hoodoos",
+      "name": "Redstone Hoodoos",
+      "source": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/redstone_hoodoos.png",
+      "runtime": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/redstone_hoodoos.png",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-d202464b-aea3-4ddb-92a3-3f966f637afa.png",
+      "sha256": "086def6a0afe0aa2196335ae965bb94572e40f9e19f984ccb1717816c96df36a",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "transparent_fraction": 0.4407,
+      "biome_ids": [
+        "biome_rough_badlands"
+      ]
+    },
+    {
+      "asset_id": "cohesive_variety_blue_ice_crag",
+      "name": "Blue Ice Crag",
+      "source": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/blue_ice_crag.png",
+      "runtime": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/blue_ice_crag.png",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-2a9102ed-c646-4f9e-b9aa-13e1835b91c0.png",
+      "sha256": "375cb22f3daf62a52125a77b318e3cdd1bf38f98ec0266582e80b7745602871f",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "transparent_fraction": 0.3984,
+      "biome_ids": [
+        "biome_snow_frost_marches"
+      ]
+    },
+    {
+      "asset_id": "cohesive_variety_saltworn_driftwood",
+      "name": "Saltworn Driftwood",
+      "source": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/saltworn_driftwood.png",
+      "runtime": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/saltworn_driftwood.png",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-ca2ae124-8a54-46cd-9ccb-010b70b74a02.png",
+      "sha256": "2b62a20da4cb2db473dd753f4c37bcb1143a6c0f8edcd3d70de2a986b281c280",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "transparent_fraction": 0.4156,
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ]
+    },
+    {
+      "asset_id": "cohesive_variety_wild_rose_barrier",
+      "name": "Wild Rose Barrier",
+      "source": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/wild_rose_barrier.png",
+      "runtime": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/wild_rose_barrier.png",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-68c921a3-3519-4c45-b64e-28fbde84722f.png",
+      "sha256": "8415219d99edc95d7cbd8c5581c8dcb6322eb662153b3da8f8218a24bfef6bae",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "transparent_fraction": 0.3934,
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest"
+      ]
+    },
+    {
+      "asset_id": "cohesive_variety_ancient_oak_grove",
+      "name": "Ancient Oak Grove",
+      "source": "res://art/overworld/source/generated/terrain/blocker_variety_20260913/ancient_oak_grove.png",
+      "runtime": "res://art/overworld/runtime/objects/decorations/blocker_variety_20260913/ancient_oak_grove.png",
+      "generation_file": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-bc62abf1-df2b-49b5-91f4-2fde716279ad.png",
+      "sha256": "4ddb47927f5945f1ee785ecbcf045190f04fe543b09090f411acc488e85fd7ab",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "transparent_fraction": 0.3443,
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest"
+      ]
+    }
+  ]
+}

@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### RMG Blocker Variety
+
+Completed 2026-09-13: `rmg-blocker-variety-20260913`. Twelve original biome blocker sprites expand the live generated-body pool from 24 to 36. RMG palettes, portable imports and explicit wiki availability are wired. Native footprints/routes/saves are unchanged. Initial-batch focused generated-map check passed; owner redirected effort to more art, so the expanded batch received imports and catalog rebuild only. Evidence: `docs/rmg-blocker-variety.md`.
+
 ### Game Wiki
 
 Completed 2026-09-13: `game-wiki-20260913`. The standalone HTML/CSS/JavaScript codex at `docs/wiki/` covers 3,139 authored entries and 8,852 artwork/audio files with explanations, links, search/filtering, previews, bookmarks and unit comparison. Website-only review is recorded in `docs/game-wiki.md`, including the in-app browser native-audio playback limitation. No repository validation or game tests were run, per owner instruction.
