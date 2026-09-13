@@ -1,6 +1,17 @@
 name: Audio integration
 
 on:
+  push:
+    paths:
+      - 'art/audio/**'
+      - 'content/*manifest.json'
+      - 'content/audio_production_banks.json'
+      - 'scripts/audio/**'
+      - 'scripts/autoload/**'
+      - 'scenes/**'
+      - 'tools/*audio*.py'
+      - 'tests/validate_repo.py'
+      - '.github/workflows/audio-integration.yml'
   pull_request:
     paths:
       - 'art/audio/**'
