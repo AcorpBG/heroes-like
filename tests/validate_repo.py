@@ -10515,7 +10515,8 @@ def build_animation_event_cue_catalog_report() -> dict:
         audio_ids = string_list(entry.get("audio_cue_ids", []))
         if not vfx_ids:
             errors.append(f"{event_id} must define VFX ids or placeholders")
-        if not audio_ids:
+        ambient_owned = event_id in {"overworld_object_idle", "overworld_object_ambient"} and entry.get("audio_owner") == "AmbientAudio"
+        if not audio_ids and not ambient_owned:
             errors.append(f"{event_id} must define audio ids or placeholders")
         placeholder_counts["vfx"] += len([cue_id for cue_id in vfx_ids if cue_id.startswith("vfx_placeholder_")])
         placeholder_counts["audio"] += len([cue_id for cue_id in audio_ids if cue_id.startswith("audio_placeholder_")])

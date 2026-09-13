@@ -115,7 +115,7 @@ func play_cue(cue_id: String, source: String = "", metadata: Dictionary = {}) ->
 	if cue_id == "audio_placeholder_spell_school_soft" and String(metadata.get("spell_id", "")) != "":
 		bank = AudioPaletteScript.spell_bank(String(metadata["spell_id"]), "effect")
 	elif cue_id == "audio_placeholder_map_step" and String(metadata.get("terrain_id", "")) != "":
-		bank = AudioPaletteScript.ground_bank(String(metadata["terrain_id"]))
+		bank = AudioPaletteScript.ground_bank(String(metadata["terrain_id"]), int(metadata.get("level", 0)))
 	elif cue_id == "audio_placeholder_resource_tick" and String(metadata.get("resource_id", "")) != "":
 		bank = "resource_" + String(metadata["resource_id"]).trim_prefix("resource_")
 	if bank != "" and AudioPaletteScript.select(bank, 0) != "":

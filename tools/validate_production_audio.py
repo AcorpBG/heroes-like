@@ -140,6 +140,17 @@ func run() -> void:
         check(stream != null, "runtime resource loads " + id)
         if stream != null:
             check(abs(stream.get_length() * 1000 - float(all_cues[id].duration_msec)) < 3, "imported duration " + id)
+    var Catalog = load("res://scripts/core/AnimationCueCatalog.gd")
+    check(Catalog.event_cue_catalog_report().ok, "audio catalog ownership is valid")
+    for entry in content.load_json("res://content/animation_event_cues.json").entries:
+        for cue in entry.audio_cue_ids:
+            check(all_cues.has(cue), "catalog audio resolves " + cue)
+    for event_id in ["overworld_object_idle", "overworld_object_ambient"]:
+        check(Catalog.cue_playback_policy_for_event(event_id).selected_audio_cue_ids.is_empty(), "object idle leaves ambience to its owner")
+    for terrain in ["grass","dirt","stone","bridge","mire","sand","snow","water","underground"]:
+        check(Palette.select(Palette.ground_bank(terrain),0) != "", "ground bank exists " + terrain)
+    check(Palette.ground_bank("dirt",1) == "move_underground", "underground movement has its own bank")
+    check(Palette.ground_bank("water",1) == "move_shallow_water", "underground water retains wet footsteps")
     for id in palette.unit_profiles:
         for event_id in ["battle_unit_move","battle_unit_melee_attack","battle_unit_hit","battle_unit_death"]:
             var cues: Array = Palette.battle_cues({"event_id":event_id,"battle_id":"actor","serial":3},[{"battle_id":"actor","unit_id":id}],[])
@@ -291,7 +302,7 @@ def validate_repo_contracts():
     errors = []
     names = ['validate_runtime_audio_loader', 'validate_ui_audio_cue_runtime',
              'validate_presentation_audio_runtime', 'validate_overworld_ambient_audio_runtime',
-             'validate_music_audio_runtime']
+             'validate_music_audio_runtime', 'validate_animation_event_cue_catalog']
     for name in names:
         getattr(module, name)(errors)
     assert not errors, '\n'.join(errors)

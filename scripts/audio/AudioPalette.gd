@@ -26,11 +26,13 @@ static func spell_bank(spell_id: String, gesture: String) -> String:
 	var row: Dictionary = spells.get(spell_id, {})
 	return String(row.get(gesture, ""))
 
-static func ground_bank(terrain: String) -> String:
+static func ground_bank(terrain: String, level: int = 0) -> String:
+	if level > 0 and terrain not in ["water", "lava"]:
+		return "move_underground"
 	match terrain:
 		"water": return "move_shallow_water"
 		"mire", "swamp": return "move_mud"
-		"rough", "lava", "road_stone", "underground": return "move_stone"
+		"rough", "lava", "road_stone": return "move_stone"
 		"road", "road_dirt": return "move_dirt"
 		"bridge": return "move_wood"
 	return "move_" + terrain
