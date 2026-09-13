@@ -29,8 +29,14 @@ Owner calibration feedback: make the music more orchestral. The production music
 
 `audio-production-acceptance-20260913`: source and packaged behavior validation, listening review, cleanup and final handoff. These stages remain incomplete until their respective behavior and checks pass.
 
-## Generation checkpoint and owner hold
+## Current validation
 
-All 520 required P0/P1 files have been generated, including revised orchestral music and stingers. Per-file technical checks passed; sources, masters, prompts, seeds and hashes are preserved. The 31 earlier acoustic music/stinger variants remain in the excluded source area as alternatives. No generated source was deleted.
+All 520 required P0/P1 files exist, including revised orchestral music and stingers. Source/master/runtime hashes and signal checks pass. The 31 earlier acoustic variants remain in the excluded source area. The owner explicitly resumed testing on 2026-09-13.
 
-Before the owner hold, a focused Godot harness passed 1934 checks. This is not a live playthrough or artistic approval. The owner is using the computer and will notify when testing may resume. No further tests or game launches until that authorization. Full Small-match listening, packaged Windows/Linux acceptance and old fixed-duration validator migration remain unfinished. WSL startup additionally requires virtualization unavailable on this host. Local routing changes are a draft pending those checks.
+Windows source checks pass, including the five migrated repository audio validators. The exported Windows PCK passes 3103 runtime checks from a separate working directory: every manifest resource loads, durations match, full mixes play alone, legacy layering and missing-file fallback remain bounded, stingers duck/recover, bank cooldowns and mute/caps work, and objective observation preserves simulation/save state. The release executable also starts and exits successfully with a fresh profile. Godot's release template disables path overrides, so the PCK harness runs through the same-version editor binary; release startup is checked separately.
+
+A live Small 36x36 three-player map reached day two: town/garrison transfer, resource collection, ranged fire, offensive magic, movement/melee, retaliation, unit death, victory/result return, mine claim, AI turns and manual save completed without script errors. Roadward Lodge Watch ended in victory after two rounds, with 18 of 19 friendly troops surviving. This is a first gameplay-loop review, not a terminal full-match playthrough or artistic listening approval. The saved match remains in the isolated playtest profile for release-build resume checks.
+
+The review corrected objective audio to use structured objective state instead of the compact generated-map label, reset notification baselines after loading, preserve high priority for defeat sounds and avoid treating nonhuman defense values as metal armor. Generation CSVs are now excluded from Godot imports; 40 disposable generated translations (250684 bytes) were removed. Generated sources, masters, alternatives, caches, saves and validation logs remain intact.
+
+Both platform exports were built. The Windows pack contains all 520 required audio imports, matches the six published manifests, verifies all PCK payload digests, and excludes source assets. Pack size: 412162952 bytes. Linux execution is pending the audio integration workflow because local WSL fails with HCS_E_HYPERV_NOT_INSTALLED. Final listening feedback and remaining release-build review are pending; these slices remain in progress.

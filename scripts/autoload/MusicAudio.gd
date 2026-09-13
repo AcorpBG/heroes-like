@@ -2,6 +2,40 @@ class_name HeroesMusicAudio
 extends Node
 
 const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")
+const AudioPaletteScript = preload("res://scripts/audio/AudioPalette.gd")
+const SCORE_BUS := "MusicScore"
+var _stinger: AudioStreamPlayer = null
+var _stinger_keys: Array[String] = []
+var _duck_tween: Tween = null
+
+func play_stinger(bank: String, event_key: String) -> Dictionary:
+	if _is_muted() or _stinger_keys.has(event_key): return {"played": false}
+	var cue := AudioPaletteScript.cue(AudioPaletteScript.select(bank, 0))
+	var stream := RuntimeAudioLoaderScript.load_stream(String(cue.get("path", "")))
+	if stream == null: return {"played": false}
+	stop_stinger()
+	if _duck_tween != null and _duck_tween.is_valid(): _duck_tween.kill()
+	_stinger_keys.append(event_key)
+	if _stinger_keys.size() > 32: _stinger_keys.pop_front()
+	_music_bus()
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index(SCORE_BUS), -8.0)
+	_stinger = AudioStreamPlayer.new()
+	_stinger.stream = stream
+	_stinger.bus = SettingsService.music_audio_bus_name()
+	_stinger.volume_db = float(cue.get("volume_db", -15.0))
+	add_child(_stinger)
+	_stinger.finished.connect(stop_stinger)
+	_stinger.play()
+	return {"played": true, "bank": bank, "duration_sec": stream.get_length(), "audio_bus": _stinger.bus}
+
+func stop_stinger() -> void:
+	if is_instance_valid(_stinger): _stinger.queue_free()
+	_stinger = null
+	if _duck_tween != null and _duck_tween.is_valid(): _duck_tween.kill()
+	var index := AudioServer.get_bus_index(SCORE_BUS)
+	if index >= 0:
+		_duck_tween = create_tween()
+		_duck_tween.tween_method(func(value: float): AudioServer.set_bus_volume_db(index, value), AudioServer.get_bus_volume_db(index), 0.0, 0.4)
 
 const SAMPLE_RATE := 44100
 const MAX_ACTIVE_PLAYERS := 3
@@ -160,6 +194,7 @@ func sync_context(context_id: String, source: String = "runtime", metadata: Dict
 	})
 
 func stop_music(reason: String = "manual") -> void:
+	stop_stinger()
 	_transition_generation += 1
 	_kill_transition_tween()
 	for player in _active_players:
@@ -246,6 +281,11 @@ func _cue_id_for_context(context_id: String, metadata: Dictionary) -> String:
 
 func _layers_for_context(context_id: String, cue_id: String, metadata: Dictionary) -> Array[Dictionary]:
 	var spec: Dictionary = CONTEXT_SPECS[context_id]
+	var asset := _music_runtime_manifest_cue(cue_id)
+	if String(asset.get("playback_mode", "layered")) == "full_mix":
+		# A generated stereo composition is already arranged. Never add legacy
+		# synthesized harmony/motion over it, including when the asset is missing.
+		return [_layer_payload("full_mix", cue_id, float(spec.get("root", 174.0)), float(spec.get("gain", 0.024)), 0.0, float(spec.get("pulse", 0.4)), "complete composition")]
 	var root := float(spec.get("root", 174.0))
 	var gain := float(spec.get("gain", 0.024))
 	var mode := String(spec.get("mode", "major"))
@@ -397,6 +437,11 @@ func _fill_music_waveform(playback: AudioStreamGeneratorPlayback, layer: Diction
 		playback.push_frame(Vector2(sample, sample))
 
 func _signature_for_context(context_id: String, metadata: Dictionary) -> String:
+	var cue_id := _cue_id_for_context(context_id, metadata)
+	if String(_music_runtime_manifest_cue(cue_id).get("playback_mode", "layered")) == "full_mix":
+		# Advancing a day, moving a hero or refreshing a town must not keep
+		# restarting a two-minute composition at its introduction.
+		return "%s|%s|%s" % [context_id, cue_id, String(metadata.get("encounter_id", "")) if context_id == "battle" else ""]
 	var parts := [context_id]
 	for key in ["scenario_id", "day", "status", "encounter_id", "encounter_difficulty", "launch_mode", "threat_level", "player_faction_id", "town_placement_id", "town_id", "town_faction_id"]:
 		if metadata.has(key):
@@ -417,7 +462,13 @@ func _is_muted() -> bool:
 	return SettingsService.master_volume_percent() <= 0 or SettingsService.music_volume_percent() <= 0
 
 func _music_bus() -> String:
-	return SettingsService.music_audio_bus_name()
+	var parent := SettingsService.music_audio_bus_name()
+	if AudioServer.get_bus_index(SCORE_BUS) < 0:
+		AudioServer.add_bus()
+		var index := AudioServer.bus_count - 1
+		AudioServer.set_bus_name(index, SCORE_BUS)
+		AudioServer.set_bus_send(index, parent)
+	return SCORE_BUS
 
 func _append_record(record: Dictionary) -> Dictionary:
 	_records.append(record.duplicate(true))

@@ -231,6 +231,7 @@ func _ready() -> void:
 	buckets["configure_save_surface"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	MusicAudio.sync_context("town", "town_shell_ready", _town_music_metadata())
+	AmbientAudio.sync_town_context(String(_town_music_metadata().get("town_faction_id", "")), "town_shell_ready")
 	buckets["music_audio"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	_refresh(true)
@@ -5466,11 +5467,14 @@ func _record_town_action_result(
 	if bool(_last_action_recap.get("active", false)):
 		_session.flags["last_town_action_recap"] = _last_action_recap.duplicate(true)
 	if not result.is_empty() and not bool(result.get("ok", false)):
-		UiAudio.play_invalid("TownShell._record_town_action_result", {
-			"lane": lane,
-			"action_id": action_id,
-			"message": _last_message,
-		})
+		if not bool(action.get("direct_affordable", true)):
+			PresentationAudio.play_bank("notice_resource_shortfall", "town_action_failed", {"lane": lane, "action_id": action_id})
+		else:
+			UiAudio.play_invalid("TownShell._record_town_action_result", {
+				"lane": lane,
+				"action_id": action_id,
+				"message": _last_message,
+			})
 	ProfileLogScript.emit_general("town", "action", lane, ProfileLogScript.elapsed_ms(profile_started), {
 		"recap": ProfileLogScript.elapsed_ms(profile_started),
 	}, _town_profile_metadata(false).merged({

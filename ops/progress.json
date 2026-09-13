@@ -22281,8 +22281,8 @@
         "docs/audio-generation-plan.md"
       ],
       "createdAt": "2026-09-13T00:02:46+00:00",
-      "updatedAt": "2026-09-13T00:34:48.084796+00:00",
-      "notes": "All 520 required files generated with source/master/provenance and orchestral music revision. Artistic listening acceptance is pending; owner requested no further testing until they notify us.",
+      "updatedAt": "2026-09-13T01:36:25.700431+00:00",
+      "notes": "520 required files generated; current source/master/runtime hash and signal checks pass. Orchestral revision retained. Artistic listening feedback remains pending; owner resumed testing.",
       "startedAt": "2026-09-13T00:06:21+00:00"
     },
     {
@@ -22297,14 +22297,14 @@
         "docs/audio-generation-plan.md"
       ],
       "createdAt": "2026-09-13T00:02:46+00:00",
-      "updatedAt": "2026-09-13T00:34:48.084796+00:00",
-      "notes": "Local routing implementation drafted; focused Godot harness passed 1934 checks. Full acceptance and obsolete-validator migration remain unfinished. Owner requested further testing deferred."
+      "updatedAt": "2026-09-13T01:36:25.700431+00:00",
+      "notes": "Data-driven banks, full-mix music, stingers, ambience and notifications implemented. Objective snapshots now use state and reset on save restore. Windows source and exported-PCK runtime checks pass; Linux execution and remaining release-build review pending."
     },
     {
       "id": "audio-production-acceptance-20260913",
       "title": "Validate production audio and complete gameplay/platform acceptance",
       "phase": "phase-6-production-alpha-layer",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
@@ -22312,8 +22312,9 @@
         "docs/audio-generation-plan.md"
       ],
       "createdAt": "2026-09-13T00:02:46+00:00",
-      "updatedAt": "2026-09-13T00:34:48.084796+00:00",
-      "notes": "Owner is using the computer and will notify when testing may resume. Do not launch game or resume tests until authorized. Local Linux WSL cannot start because virtualization is disabled; no system settings changed."
+      "updatedAt": "2026-09-13T01:36:25.700431+00:00",
+      "notes": "Owner resumed. Live Small map reached day two through town, battle victory, resource collection, AI turns and manual save without script errors. Five migrated repository audio validators and 3103 PCK runtime checks pass; release startup passes. Both exports built. Linux CI execution and live release save/resume/listening remain pending. Removed 40 task-generated translations, 250684 bytes.",
+      "startedAt": "2026-09-13T01:05:51.421834+00:00"
     },
     {
       "id": "planning-production-audio-generation-20260913",

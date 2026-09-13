@@ -1726,6 +1726,8 @@ func _commit_end_turn() -> Dictionary:
 func _on_turn_playback_completed() -> void:
 	_turn_presenter = null
 	_end_turn_commit_in_progress = false
+	if _session.scenario_status == "in_progress" and _session.battle.is_empty():
+		PresentationAudio.play_bank("notice_player_turn", "turn_playback_completed", {"day": _session.day})
 	var resolution := _handle_session_resolution(true)
 	if not bool(resolution.get("handled",false)):
 		var serial_before := _object_resolution_presentation_serial
@@ -2625,6 +2627,12 @@ func _refresh_with_request(request: Dictionary) -> void:
 		AppRouter.note_overworld_handoff_step("overworld_refresh_text_surfaces_compact")
 	_sync_overworld_ambient_audio("refresh")
 	_sync_overworld_music_audio("refresh")
+	if _refresh_request_has_phase(request, REFRESH_PHASE_STATUS_SURFACES):
+		PresentationAudio.observe_session_progress(_session)
+		for town in _session.overworld.get("towns", []):
+			if town is Dictionary and String(town.get("owner", "")) == "player":
+				var threat := OverworldRules.town_public_threat_state(_session, town)
+				PresentationAudio.observe_town_threat(_session.session_id, String(town.get("placement_id", "")), int(threat.get("visible_marching", 0)) + int(threat.get("visible_pressuring", 0)))
 	AppRouter.note_overworld_handoff_step("overworld_refresh_done")
 	_complete_refresh_request(request)
 	_apply_responsive_layout()
@@ -3757,8 +3765,12 @@ func present_artifact_slot_presentation(presentation: Dictionary) -> Dictionary:
 
 func _play_overworld_presentation_audio(presentation: Dictionary, source: String) -> Array:
 	var records := []
+	var deltas: Array = presentation.get("deltas", [])
+	var resource_id := String(deltas[0].get("resource_id", "")) if not deltas.is_empty() else ""
 	for audio_cue_value in Array(presentation.get("selected_audio_cue_ids", [])):
 		records.append(PresentationAudio.play_cue(String(audio_cue_value), source, {
+			"resource_id": resource_id,
+			"spell_id": String(presentation.get("spell_id", "")),
 			"event_id": String(presentation.get("event_id", "")),
 			"presentation_serial": int(presentation.get("serial", 0)),
 			"action_id": String(presentation.get("action_id", "")),

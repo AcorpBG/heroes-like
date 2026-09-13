@@ -2,6 +2,7 @@ class_name HeroesPresentationAudio
 extends Node
 
 const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")
+const AudioPaletteScript = preload("res://scripts/audio/AudioPalette.gd")
 
 const SAMPLE_RATE := 22050
 const MAX_ACTIVE_PLAYERS := 6
@@ -43,9 +44,83 @@ var _records: Array[Dictionary] = []
 var _active_players: Array[AudioStreamPlayer] = []
 var _presentation_sfx_manifest: Dictionary = {}
 var _presentation_sfx_manifest_loaded := false
+var _bank_ordinals: Dictionary = {}
+var _bank_last_started: Dictionary = {}
+var _progress_session := ""
+var _progress_day := 0
+var _progress_levels: Dictionary = {}
+var _progress_objectives: Dictionary = {}
+var _town_threat_counts: Dictionary = {}
+
+func observe_town_threat(session_id: String, town_id: String, visible_count: int) -> void:
+	var key := session_id + ":" + town_id
+	if _town_threat_counts.has(key) and visible_count > int(_town_threat_counts[key]):
+		play_bank("notice_town_threat", "revealed_town_threat", {"town_id": town_id})
+	_town_threat_counts[key] = visible_count
+
+func reset_progress() -> void:
+	_progress_session = ""
+	_progress_day = 0
+	_progress_levels.clear()
+	_progress_objectives.clear()
+	_town_threat_counts.clear()
+
+func observe_session_progress(session) -> void:
+	var heroes: Array = Array(session.overworld.get("player_heroes", [])).duplicate()
+	heroes.append(session.overworld.get("hero", {}))
+	observe_progress(session.session_id, session.day, heroes, AudioPaletteScript.objective_snapshot(session))
+
+func observe_progress(session_id: String, day: int, heroes: Array, objectives: Dictionary) -> void:
+	if session_id != _progress_session:
+		reset_progress()
+		_progress_session = session_id
+	var notice := ""
+	if _progress_day > 0 and day > _progress_day:
+		notice = "notice_new_week" if int((day - 1) / 7.0) > int((_progress_day - 1) / 7.0) else "notice_new_day"
+	for hero in heroes:
+		if not hero is Dictionary: continue
+		var id := String(hero.get("id", hero.get("hero_id", "")))
+		var level := int(hero.get("level", 1))
+		if _progress_levels.has(id) and level > int(_progress_levels[id]): notice = "notice_hero_level_up"
+		_progress_levels[id] = level
+	if _progress_day > 0 and objectives != _progress_objectives:
+		notice = "notice_objective_update"
+		for id in objectives:
+			if bool(objectives[id].get("complete", false)) and not bool(_progress_objectives.get(id, {}).get("complete", false)):
+				notice = "notice_objective_complete"
+	_progress_day = day
+	_progress_objectives = objectives.duplicate(true)
+	if notice != "": play_bank(notice, "committed_progress", {"day": day, "session_id": session_id})
+
+func play_bank(bank: String, source: String = "", metadata: Dictionary = {}) -> Dictionary:
+	var ordinal := int(_bank_ordinals.get(bank, 0))
+	var cue_id := AudioPaletteScript.select(bank, ordinal)
+	if cue_id == "": return {}
+	var cue := AudioPaletteScript.cue(cue_id)
+	var cooldown := int(cue.get("repeat_cooldown_msec", 140))
+	if SettingsService.reduced_repetitive_sounds_enabled(): cooldown *= 2
+	var now := int(Time.get_ticks_msec())
+	if now - int(_bank_last_started.get(bank, -1000000000)) < cooldown:
+		return {"played": false, "suppressed_reason": "repeat_cooldown", "cue_id": cue_id}
+	var record := play_cue(cue_id, source, metadata)
+	if bool(record.get("played", false)):
+		_bank_ordinals[bank] = ordinal + 1
+		_bank_last_started[bank] = now
+	return record
 
 func play_cue(cue_id: String, source: String = "", metadata: Dictionary = {}) -> Dictionary:
-	var supported := CUE_SPECS.has(cue_id)
+	if cue_id == "audio_placeholder_artifact_claim":
+		MusicAudio.play_stinger("stinger_rare_discovery", source + ":" + str(metadata))
+	var bank := ""
+	if cue_id == "audio_placeholder_spell_school_soft" and String(metadata.get("spell_id", "")) != "":
+		bank = AudioPaletteScript.spell_bank(String(metadata["spell_id"]), "effect")
+	elif cue_id == "audio_placeholder_map_step" and String(metadata.get("terrain_id", "")) != "":
+		bank = AudioPaletteScript.ground_bank(String(metadata["terrain_id"]))
+	elif cue_id == "audio_placeholder_resource_tick" and String(metadata.get("resource_id", "")) != "":
+		bank = "resource_" + String(metadata["resource_id"]).trim_prefix("resource_")
+	if bank != "" and AudioPaletteScript.select(bank, 0) != "":
+		return play_bank(bank, source, metadata)
+	var supported := CUE_SPECS.has(cue_id) or not AudioPaletteScript.cue(cue_id).is_empty()
 	var muted := SettingsService.effects_audio_muted()
 	var reduced_repetition := SettingsService.reduced_repetitive_sounds_enabled()
 	var effective_voice_budget := REDUCED_REPETITION_MAX_ACTIVE_PLAYERS if reduced_repetition else MAX_ACTIVE_PLAYERS
@@ -68,7 +143,7 @@ func play_cue(cue_id: String, source: String = "", metadata: Dictionary = {}) ->
 	if supported and not muted:
 		_trim_players_to_budget(effective_voice_budget - 1)
 		playback = _play_imported_audio_cue(cue_id)
-		if playback.is_empty():
+		if playback.is_empty() and CUE_SPECS.has(cue_id):
 			playback = _play_generated_waveform(CUE_SPECS[cue_id])
 			if not playback.is_empty():
 				playback["source"] = "generated_waveform"
@@ -95,7 +170,10 @@ func play_cue(cue_id: String, source: String = "", metadata: Dictionary = {}) ->
 	return record
 
 func validation_reset() -> void:
+	reset_progress()
 	_records.clear()
+	_bank_ordinals.clear()
+	_bank_last_started.clear()
 	for player in _active_players:
 		if is_instance_valid(player):
 			player.queue_free()
@@ -232,6 +310,8 @@ func _prune_players() -> void:
 	_active_players = kept
 
 func _presentation_sfx_manifest_cue(cue_id: String) -> Dictionary:
+	if cue_id.begins_with("production_"):
+		return AudioPaletteScript.cue(cue_id)
 	_load_presentation_sfx_manifest()
 	var cues: Dictionary = _presentation_sfx_manifest.get("cues", {}) if _presentation_sfx_manifest.get("cues", {}) is Dictionary else {}
 	var cue: Dictionary = cues.get(cue_id, {}) if cues.get(cue_id, {}) is Dictionary else {}

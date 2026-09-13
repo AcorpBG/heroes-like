@@ -386,6 +386,8 @@ def write_wav(path: Path, cue_id: str, duration_msec: int) -> None:
 
 def main() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    if manifest.get("legacy_regeneration_protected"):
+        raise SystemExit("Production audio is protected. Use generate_production_audio.py and publish_production_audio.py.")
     cues = manifest.get("cues", {})
     generated_cues = {
         cue_id: cue

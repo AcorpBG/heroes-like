@@ -269,6 +269,9 @@ func _ready() -> void:
 	buckets["configure_save_surface"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	MusicAudio.sync_context("battle", "battle_shell_ready", _battle_music_metadata())
+	if int(_session.battle.get("round", 1)) <= 1:
+		var battle_audio_key := String(_session.battle.get("resolved_key", _session.battle.get("encounter_id", "")))
+		MusicAudio.play_stinger("stinger_battle_enter", "%s:%s:%d:enter" % [_session.session_id, battle_audio_key, _session.day])
 	buckets["music_audio"] = ProfileLogScript.elapsed_ms(phase_started)
 	phase_started = ProfileLogScript.begin_usec()
 	var initial_result := BattleRules.perform_presented_action(_session,"ready")

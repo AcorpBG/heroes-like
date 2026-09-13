@@ -42,6 +42,12 @@ func _ready() -> void:
 	if _report.is_empty():
 		_route_missing_report()
 		return
+	var won := String(_report.get("outcome", "")) in ["victory", "enemy_retreat", "enemy_surrender"]
+	MusicAudio.sync_context("outcome", "battle_report_ready", {
+		"scenario_id": _session.scenario_id,
+		"status": "victory" if won else "defeat",
+	})
+	MusicAudio.play_stinger("stinger_battle_win" if won else "stinger_battle_loss", "%s:report:%s" % [_session.session_id, String(_report.get("report_id", ""))])
 	_refresh()
 	_apply_responsive_layout()
 	call_deferred("_focus_continue")

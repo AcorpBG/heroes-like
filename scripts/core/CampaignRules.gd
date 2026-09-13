@@ -690,6 +690,7 @@ static func build_outcome_recap(profile: Dictionary, session: SessionStateStoreS
 		"campaign_id": campaign_id,
 		"campaign_name": String(campaign.get("name", campaign_id)),
 		"progression_summary": "\n".join(progression_lines),
+		"campaign_completed": _campaign_is_completed(normalized, campaign_id),
 		"campaign_arc_summary": "\n".join(_campaign_arc_outcome_lines(normalized, campaign_id, session)),
 		"carryover_summary": "\n".join(carryover_lines),
 		"aftermath_summary": "\n".join(aftermath_lines),

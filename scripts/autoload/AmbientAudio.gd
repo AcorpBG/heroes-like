@@ -2,6 +2,7 @@ class_name HeroesAmbientAudio
 extends Node
 
 const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")
+const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
 
 const SAMPLE_RATE := 44100
 const MAX_ACTIVE_PLAYERS := 4
@@ -128,6 +129,24 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 		"timestamp_msec": Time.get_ticks_msec(),
 	})
 
+func sync_town_context(faction_id: String, source: String = "town") -> Dictionary:
+	var cue_id := "town_amb_" + faction_id.trim_prefix("faction_")
+	var signature := "town:" + cue_id
+	_prune_players()
+	if signature == _current_signature and not _current_players.is_empty():
+		return {"changed": false, "signature": signature}
+	_cancel_transition_for_replacement()
+	var outgoing := _copy_player_group(_current_players)
+	_current_signature = signature
+	_current_layers = [_layer_payload("town", cue_id, {}, 0.0)]
+	var incoming: Array[AudioStreamPlayer] = []
+	if not SettingsService.effects_audio_muted():
+		incoming = _play_layers(_current_layers, not outgoing.is_empty())
+	_current_players = incoming
+	var context := {"terrain_id": "town", "faction_id": faction_id}
+	var transition := _begin_context_crossfade(outgoing, incoming, source, context)
+	return _append_record({"changed": true, "signature": signature, "layers": _current_layers.duplicate(true), "transition": transition})
+
 func stop_overworld_ambient(reason: String = "manual") -> void:
 	_transition_generation += 1
 	_kill_transition_tween()
@@ -196,8 +215,11 @@ func _overworld_context(session: Variant) -> Dictionary:
 	var hero_position: Dictionary = overworld.get("hero_position", {}) if overworld.get("hero_position", {}) is Dictionary else {}
 	var x := int(hero_position.get("x", 0))
 	var y := int(hero_position.get("y", 0))
-	var map_data: Array = overworld.get("map", []) if overworld.get("map", []) is Array else []
+	var level := OverworldLevelRulesScript.hero_level(session)
+	var map_data: Array = OverworldLevelRulesScript.terrain_rows(session, level)
 	var terrain_id := _terrain_at(map_data, x, y)
+	if level > 0 and terrain_id not in ["water", "lava"]:
+		terrain_id = "underground"
 	var dominant_terrain_id := _dominant_terrain(map_data)
 	var max_pressure := _max_enemy_pressure(overworld.get("enemy_states", []))
 	return {
@@ -205,6 +227,7 @@ func _overworld_context(session: Variant) -> Dictionary:
 		"day": int(session.day),
 		"x": x,
 		"y": y,
+		"level": level,
 		"terrain_id": terrain_id,
 		"dominant_terrain_id": dominant_terrain_id,
 		"max_enemy_pressure": max_pressure,
@@ -429,14 +452,12 @@ func _threat_level(pressure: int) -> String:
 	return "calm"
 
 func _signature_for_context(context: Dictionary) -> String:
-	return "%s:%d:%d:%d:%s:%s:%s" % [
+	return "%s:%d:%s:%s:%s" % [
 		String(context.get("scenario_id", "")),
-		int(context.get("day", 0)),
-		int(context.get("x", 0)),
-		int(context.get("y", 0)),
+		int(context.get("level", 0)),
 		String(context.get("terrain_id", "")),
-		String(context.get("dominant_terrain_id", "")),
 		String(context.get("threat_level", "")),
+		"later_days" if int(context.get("day", 1)) > 1 else "first_day",
 	]
 
 func _prune_players() -> void:
