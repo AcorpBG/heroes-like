@@ -35524,7 +35524,7 @@ def validate_battle_movement_range_perimeter_contour(errors: list[str]) -> None:
             "if not (destination is Dictionary):",
             "if not _cell_in_bounds(cell):",
             "_draw_movement_destination_cue(cell, _hex_center(cell, hex_layout), radius, legal_cell_keys)",
-            "_draw_hex_outline(active_center, radius * 1.02, ACTIVE_COLOR, 3.4)",
+            "_draw_body_outline(active_id, hex_layout, radius * 1.02, ACTIVE_COLOR, 3.4)",
             "var legal_melee_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, false)",
             "var legal_ranged_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, true)",
             "if player_input_active and not _target_stack.is_empty():",
@@ -59912,6 +59912,22 @@ def validate_hero_portrait_assets(errors: list[str]) -> None:
             ensure(f'"{hero_id}"' in packaging_text, errors, f"{packaging_path.name} is missing field-muster captain portrait {hero_id}")
 
 
+def validate_unit_battle_sizes(errors: list[str]) -> None:
+    manifest = load_json(CONTENT_DIR / "unit_battle_size_manifest.json")
+    units = {row["id"] for row in load_json(CONTENT_DIR / "units.json")["items"]}
+    profiles = manifest.get("units", {})
+    if set(profiles) != units:
+        errors.append("Battle size profiles must explicitly cover exactly the authored unit roster")
+    for identity, profile in profiles.items():
+        if profile.get("footprint") not in (1, 2):
+            errors.append(f"Invalid battle footprint: {identity}")
+        scale = profile.get("visual_scale")
+        if not isinstance(scale, (int, float)) or not 0.65 <= scale <= 1.6:
+            errors.append(f"Invalid battle visual scale: {identity}")
+        if not profile.get("reason"):
+            errors.append(f"Unreviewed battle body: {identity}")
+
+
 def validate_unit_art_assets(errors: list[str]) -> None:
     def gd_function_block(text: str, name: str) -> str:
         match = re.search(rf"func {re.escape(name)}\([^\n]*\)(?: -> [^:]+)?:\n(?P<body>.*?)(?=\nfunc |\Z)", text, re.S)
@@ -64638,9 +64654,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "var battle_standee: Texture2D = _unit_battle_standee_for_stack(stack)",
         "var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)",
         'if art_source == "event_animation_sheet":',
-        "var frame_size := _stack_standee_size(radius).y",
+        "var frame_size := _stack_standee_size(radius, stack).y",
         'elif art_source == "resting_battle_standee":',
-        "_draw_stack_art(battle_standee, _stack_standee_rect(center, radius), side == \"enemy\"",
+        "_draw_stack_art(battle_standee, _stack_standee_rect(center, radius, stack), side == \"enemy\"",
         'elif art_source == "resting_battle_icon":',
         "var icon_size := token_radius * STACK_ICON_ART_EXTENT_FACTOR",
         'elif art_source == "animation_sheet_fallback":',
@@ -85265,6 +85281,7 @@ def main() -> int:
     validate_overworld_object_resolution_cue_playback(errors)
     validate_neutral_dwelling_unit_slice(errors)
     validate_hero_portrait_assets(errors)
+    validate_unit_battle_sizes(errors)
     validate_unit_art_assets(errors)
     validate_six_faction_biome_scenario_breadth(errors)
     validate_town_frontline_reinforcement_delivery(errors)

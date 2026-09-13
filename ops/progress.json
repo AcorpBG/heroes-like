@@ -1,6 +1,12 @@
 {
   "actionableNextTasks": [
     {
+      "id": "combat-unit-animation-and-size-20260913",
+      "title": "Complete Battle Unit Animation and Size",
+      "status": "blocked",
+      "priority": "top"
+    },
+    {
       "id": "vfx-combat-layered-feedback-20260913",
       "title": "Layered Combat Visual Effects",
       "status": "completed",
@@ -16665,14 +16671,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Implemented layered original-raster combat effects with protected readouts, bounded rendering and quiet accessibility fallbacks. Source/Linux release pass 1095 checks; Windows release passes 1081 plus equal nonvisual assertions. Normal/Fast/reduced/Instant readability, repository validation, official exports and package parity pass. Small/wide captures inspected. Legacy combined VFX/audio report retains the same 11 audio-only assertion failures as the pre-change Board, documented separately. Removed 10474554 bytes of obsolete intermediates; disposable Wine system prefixes cleaned with user data/caches/final evidence preserved. No gameplay, save, art or audio changes.",
+  "currentNotes": "Runtime increment implemented: all 160 size profiles reviewed, 37 two-cell bodies, shared rules/AI/UI geometry and saved footprint compatibility. Clip/corpse ownership is tested, but accepted new animation art is 0/160. Two built-in drafts rejected; optional transparent CLI fallback awaits owner approval. Full goal is blocked at the art-workflow decision; runtime increment is validated, not full goal completion.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "vfx-combat-layered-feedback-20260913",
-  "currentSliceId": "vfx-combat-layered-feedback-20260913",
-  "currentSliceNotes": "Implemented layered original-raster combat effects with protected readouts, bounded rendering and quiet accessibility fallbacks. Source/Linux release pass 1095 checks; Windows release passes 1081 plus equal nonvisual assertions. Normal/Fast/reduced/Instant readability, repository validation, official exports and package parity pass. Small/wide captures inspected. Legacy combined VFX/audio report retains the same 11 audio-only assertion failures as the pre-change Board, documented separately. Removed 10474554 bytes of obsolete intermediates; disposable Wine system prefixes cleaned with user data/caches/final evidence preserved. No gameplay, save, art or audio changes.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Layered Combat Visual Effects",
-  "currentSliceUpdatedAt": "2026-09-13T20:56:45Z",
+  "currentSlice": "combat-unit-animation-and-size-20260913",
+  "currentSliceId": "combat-unit-animation-and-size-20260913",
+  "currentSliceNotes": "Runtime increment implemented: all 160 size profiles reviewed, 37 two-cell bodies, shared rules/AI/UI geometry and saved footprint compatibility. Clip/corpse ownership is tested, but accepted new animation art is 0/160. Two built-in drafts rejected; optional transparent CLI fallback awaits owner approval. Full goal is blocked at the art-workflow decision; runtime increment is validated, not full goal completion.",
+  "currentSliceStatus": "blocked",
+  "currentSliceTitle": "Complete Battle Unit Animation and Size",
+  "currentSliceUpdatedAt": "2026-09-13T21:04:18Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21977,7 +21983,7 @@
       }
     }
   },
-  "guardrailNote": "Combat presentation only; preserve original art identity, rules, RNG, saves, input/readout clarity and accessibility.",
+  "guardrailNote": "Implement selected unit animation/size goal only; preserve original identity, deterministic combat and save compatibility. No native RMG or unrelated UI work.",
   "lastValidation": {
     "id": "vfx-combat-layered-feedback-20260913",
     "sliceId": "vfx-combat-layered-feedback-20260913",
@@ -22323,9 +22329,40 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Combat VFX slice completed and validated. Await owner direction; legacy audio test reconciliation is documented, not silently folded into this presentation slice.",
+  "nextActionGuardrailNote": "Implement selected unit animation/size goal only; preserve original identity, deterministic combat and save compatibility. No native RMG or unrelated UI work.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "combat-unit-animation-and-size-20260913",
+      "title": "Complete Battle Unit Animation and Size",
+      "phase": "phase-6-production-alpha-layer",
+      "parentId": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "blocked",
+      "source": "PLAN.md",
+      "sourceDocs": ["project.md", "docs/combat-unit-animation-and-size.md"],
+      "targets": ["content/unit_animation_manifest.json", "scenes/battle/BattleBoardView.gd", "scripts/core/BattleRules.gd", "scripts/core/BattleAiRules.gd", "Original unit pose assets/provenance", "Python pose and footprint regressions"],
+      "validation": ["All-unit pose coverage and visually inspected playback", "Footprint deployment/movement/attack/AI/death/save tests", "python3 tests/validate_repo.py", "Linux/Windows exports and packaged combat probes", "git diff --check"],
+      "completionCriteria": ["All 160 units have accepted original articulated pose clips and persistent corpses", "Explicit large-unit scale and two-hex footprints work across battle rules, AI, UI and saves", "Visual, deterministic, accessibility and both-platform validation passes"],
+      "createdAt": "2026-09-13T21:04:18Z",
+      "startedAt": "2026-09-13T21:04:18Z",
+      "runtimeEvidence": {
+        "unitSizeProfiles": 160,
+        "twoCellUnits": 37,
+        "acceptedNewPoseUnits": 0,
+        "pendingNewPoseUnits": 160,
+        "sourceChecks": 951,
+        "linuxPackagedChecks": 951,
+        "windowsPackagedChecks": 950,
+        "officialExports": "Linux and Windows passed; Windows generated-map/Town/build and Wine cleanup passed",
+        "packParity": "8526 members, 516867256 bytes per platform; only project.binary differs",
+        "evidenceRoot": ".artifacts/battle-unit-animation-size-20260913",
+        "repositoryValidation": "Passed: accepted-repository-validation.log",
+        "remainingDependency": "Accepted original transparent articulated pose assets for all 160 units. Two built-in drafts rejected; CLI fallback/model choice awaits owner approval."
+      },
+      "blockedOn": "Original transparent articulated pose assets: 0/160 accepted. Built-in drafts failed review; owner decision needed before CLI fallback/model/API usage.",
+      "notes": "Runtime and all size profiles implemented and validated on both platforms; full goal blocked at original-art production, not completed by infrastructure. Owner approval or an accepted asset workflow is required to proceed."
+    },
     {
       "id": "vfx-combat-layered-feedback-20260913",
       "title": "Layered Combat Visual Effects",
@@ -112670,8 +112707,8 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "combat_layered_vfx_implemented_and_validated",
-  "status": "completed",
+  "result": "combat_unit_runtime_validated_art_workflow_approval_pending",
+  "status": "blocked",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -112773,7 +112810,7 @@
   ],
   "summary": "Completed biome-aware Overworld town art: 19 original generated variants; 39 logical entries / 33 architectures / nine biomes / 22 aliases. 858 resolver cases, 17 pixel-reproducible cutouts, 19 clean-cache imports, visual review, full repository, official Linux/Windows exports and 1014-check native Medium-to-Town flows per platform pass. PCK 516821036 bytes / 8517 entries; only project.binary differs. Historical identity, native generation, placement, entrances, collision, fog, RNG and saves unchanged. Cleanup preserves source, evidence, packages, user data and caches; no release-ready claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-13T20:56:45Z",
+  "updatedAt": "2026-09-13T22:40:57Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

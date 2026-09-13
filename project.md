@@ -90,6 +90,7 @@ Expected ownership boundaries:
 - Map/scenario persistence: current JSON content/save plumbing in `ContentService.gd`, `SaveService.gd`, and `SessionStateStore.gd`; future C++ GDExtension map package ownership once selected by a tactical slice.
 - Overworld state, movement, sites, economy ticks, fog, towns, and strategic summaries: `OverworldRules.gd`.
 - Battle state, initiative, stack actions, spells/status, exits, and post-battle sync: `BattleRules.gd`.
+- Battle body geometry is shared by rules, AI and presentation through `BattleFootprint.gd`. Explicit content profiles supply new stacks' one/two-cell footprints and visual scale; these fields persist in battle saves, while legacy battles without them retain one-cell occupancy. Raster pose clips and dead poses remain presentation metadata, not simulation state.
 - Tactical enemy decisions: `BattleAiRules.gd`.
 - Town construction, recruitment, study, garrison, market, defense, and town summaries: `TownRules.gd`.
 - Heroes, command, roster, transfer, town-defender eligibility/force assembly, recruitment, progression, and carryover-safe hero state: `HeroCommandRules.gd`, `HeroProgressionRules.gd`.

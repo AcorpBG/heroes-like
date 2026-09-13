@@ -13,6 +13,7 @@ const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const ActionPlayback = preload("res://scripts/core/BattleActionPlayback.gd")
+const Footprint = preload("res://scripts/core/BattleFootprint.gd")
 const ScenarioRulesScript = preload("res://scripts/core/ScenarioRules.gd")
 const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 
@@ -1368,7 +1369,7 @@ static func legal_attack_targets_for_active_stack(battle: Dictionary, ranged: bo
 			var reachable := _can_make_melee_attack(active_stack, battle, target)
 			if not reachable:
 				for cell in approach_cells:
-					if _hex_distance(cell,_stack_hex(target)) == 1:
+					if Footprint.distance(active_stack, target, cell) == 1:
 						reachable = true
 						break
 			if reachable: targets.append(String(target.get("battle_id", "")))
@@ -1831,7 +1832,7 @@ static func melee_approach_destination(battle: Dictionary, stack: Dictionary, ta
 		return {}
 	var best := {}
 	for cell in legal_destinations_for_stack(battle, String(stack.get("battle_id", ""))):
-		if _hex_distance(cell, _stack_hex(target)) != 1: continue
+		if Footprint.distance(stack, target, cell) != 1: continue
 		if best.is_empty() or int(cell.get("steps", 0)) < int(best.get("steps", 0)):
 			best = cell
 	return best.duplicate(true)
@@ -8175,6 +8176,7 @@ static func _build_battle_stack(
 	var unit_hp = max(1, int(unit.get("hp", 1)))
 	var cohesion_base = _cohesion_base_for_unit(unit)
 	var faction_id := String(unit.get("faction_id", ""))
+	var body: Dictionary = ContentService.load_json("res://content/unit_battle_size_manifest.json").get("units", {}).get(unit_id, {})
 	var affiliation := String(unit.get("affiliation", ""))
 	if affiliation == "":
 		affiliation = "faction" if faction_id != "" else "neutral"
@@ -8185,6 +8187,8 @@ static func _build_battle_stack(
 		"affiliation": affiliation,
 		"unit_id": unit_id,
 		"army_slot_index": army_slot_index if army_slot_index >= 0 and army_slot_index < 7 else index,
+		"battle_footprint": 2 if int(body.get("footprint", 1)) == 2 else 1,
+		"battle_visual_scale": clampf(float(body.get("visual_scale", 1.0)), 0.65, 1.6),
 		"name": String(unit.get("name", unit_id)),
 		"tier": clamp(int(unit.get("tier", 1)), 1, 7),
 		"unit_hp": unit_hp,
@@ -8237,6 +8241,8 @@ static func _normalize_stack(stack: Variant) -> Dictionary:
 	var normalized := {
 		"battle_id": String(stack.get("battle_id", "%s_%s" % [String(stack.get("side", "stack")), unit_id])),
 		"side": String(stack.get("side", "player")),
+		"battle_footprint": Footprint.width(stack),
+		"battle_visual_scale": clampf(float(stack.get("battle_visual_scale", 1.0)), 0.65, 1.6),
 		"faction_id": faction_id,
 		"affiliation": affiliation,
 		"unit_id": unit_id,
@@ -8339,11 +8345,12 @@ static func _ensure_battle_hex_state(battle: Dictionary) -> void:
 			stacks[index] = stack
 			continue
 		var cell := _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
-		if cell.is_empty() or used.has(_hex_key(cell)):
+		if cell.is_empty() or not Footprint.fits(stack, cell, used, BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS):
 			cell = _default_stack_hex(side, side_index, int(side_counts.get(side, 1)), stack, int(battle.get("distance", 1)))
-			cell = _first_open_hex_near(cell, used)
+			cell = _first_open_body_near(stack, cell, used)
 		stack[STACK_HEX_KEY] = cell
-		used[_hex_key(cell)] = String(stack.get("battle_id", ""))
+		for body_cell in Footprint.cells(stack):
+			used[_hex_key(body_cell)] = String(stack.get("battle_id", ""))
 		stacks[index] = stack
 	battle["stacks"] = stacks
 	_sync_occupied_hexes(battle)
@@ -8431,6 +8438,20 @@ static func _first_open_hex_near(preferred: Dictionary, used: Dictionary) -> Dic
 			frontier.append(neighbor)
 	return preferred
 
+static func _first_open_body_near(stack: Dictionary, preferred: Dictionary, used: Dictionary) -> Dictionary:
+	var frontier := [preferred]
+	var seen := {_hex_key(preferred):true}
+	while not frontier.is_empty():
+		var cell: Dictionary = frontier.pop_front()
+		if Footprint.fits(stack, cell, used, BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS): return cell
+		for neighbor in _hex_neighbors(cell):
+			var key := _hex_key(neighbor)
+			if seen.has(key): continue
+			seen[key] = true
+			frontier.append(neighbor)
+	push_error("No legal deployment space for battle stack %s" % String(stack.get("battle_id", "")))
+	return {}
+
 static func _stack_hex(stack: Dictionary) -> Dictionary:
 	return _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
 
@@ -8445,16 +8466,18 @@ static func _build_occupancy_map(battle: Dictionary) -> Dictionary:
 		var cell := _stack_hex(stack)
 		if cell.is_empty():
 			continue
-		occupied[_hex_key(cell)] = String(stack.get("battle_id", ""))
+		for body_cell in Footprint.cells(stack):
+			occupied[_hex_key(body_cell)] = String(stack.get("battle_id", ""))
 	return occupied
 
 static func _sync_occupied_hexes(battle: Dictionary) -> void:
 	battle[OCCUPIED_HEXES_KEY] = _build_occupancy_map(battle)
 
 static func _set_stack_hex(battle: Dictionary, battle_id: String, cell: Dictionary) -> void:
-	var from_hex := _stack_hex(_get_stack_by_id(battle, battle_id))
+	var moving := _get_stack_by_id(battle, battle_id)
+	var from_hex := _stack_hex(moving)
 	var normalized := _normalize_hex_cell(cell)
-	if normalized.is_empty():
+	if normalized.is_empty() or not Footprint.fits(moving, normalized, _build_occupancy_map(battle), BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS):
 		return
 	var playback_path := _presentation_walk_path(battle, from_hex, normalized) if battle.has(ActionPlayback.CAPTURE_KEY) else []
 	var stacks = battle.get("stacks", [])
@@ -8472,6 +8495,7 @@ static func _set_stack_hex(battle: Dictionary, battle_id: String, cell: Dictiona
 static func _presentation_walk_path(battle: Dictionary, start: Dictionary, destination: Dictionary) -> Array:
 	if start.is_empty() or destination.is_empty(): return []
 	var occupied := _build_occupancy_map(battle)
+	var moving := _get_stack_by_id(battle, String(occupied.get(_hex_key(start), "")))
 	occupied.erase(_hex_key(start))
 	var frontier := [[start]]
 	var seen := {_hex_key(start):true}
@@ -8481,7 +8505,7 @@ static func _presentation_walk_path(battle: Dictionary, start: Dictionary, desti
 		if _hex_key(cell) == _hex_key(destination): return path
 		for next in _hex_neighbors(cell):
 			var key := _hex_key(next)
-			if seen.has(key) or occupied.has(key): continue
+			if seen.has(key) or not Footprint.fits(moving, next, occupied, BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS): continue
 			seen[key]=true
 			var extended := path.duplicate()
 			extended.append(next)
@@ -8537,7 +8561,7 @@ static func _reachable_empty_hexes(battle: Dictionary, stack: Dictionary, max_st
 			continue
 		for neighbor in _hex_neighbors(current_cell):
 			var key := _hex_key(neighbor)
-			if seen.has(key) or occupied.has(key):
+			if seen.has(key) or not Footprint.fits(stack, neighbor, occupied, BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS):
 				continue
 			var next_steps := steps + 1
 			seen[key] = next_steps
@@ -8548,7 +8572,7 @@ static func _reachable_empty_hexes(battle: Dictionary, stack: Dictionary, max_st
 	return reachable
 
 static func _stack_hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
-	return _hex_distance(_stack_hex(lhs), _stack_hex(rhs))
+	return Footprint.distance(lhs, rhs)
 
 static func _hex_distance(lhs: Dictionary, rhs: Dictionary) -> int:
 	if lhs.is_empty() or rhs.is_empty():
@@ -8603,7 +8627,7 @@ static func _best_advance_destination(
 			continue
 		var score := 0
 		if not target.is_empty():
-			var projected_distance := _hex_distance(destination, _stack_hex(target))
+			var projected_distance := Footprint.distance(stack, target, destination)
 			if desired_distance_band >= 0:
 				var projected_band := _distance_band_from_hex_distance(_projected_min_opposing_hex_distance(battle, stack, destination))
 				if projected_band < desired_distance_band:
@@ -8946,7 +8970,7 @@ static func _nearest_opposing_stack(battle: Dictionary, stack: Dictionary) -> Di
 static func _projected_min_opposing_hex_distance(battle: Dictionary, stack: Dictionary, destination: Dictionary) -> int:
 	var best := 999
 	for target in _alive_stacks_for_side(battle, _opposing_side(String(stack.get("side", "")))):
-		best = min(best, _hex_distance(destination, _stack_hex(target)))
+		best = min(best, Footprint.distance(stack, target, destination))
 	return best
 
 static func _advance_lateral_penalty(stack: Dictionary, destination: Dictionary) -> int:
@@ -10215,13 +10239,15 @@ static func _status_effect_from_ability(ability: Dictionary, battle: Dictionary)
 static func _apply_hookline_pull(battle: Dictionary, attacker: Dictionary, defender: Dictionary) -> bool:
 	var attacker_cell := _stack_hex(attacker)
 	var defender_cell := _stack_hex(defender)
-	if attacker_cell.is_empty() or defender_cell.is_empty() or _hex_distance(attacker_cell, defender_cell) != 2:
+	if attacker_cell.is_empty() or defender_cell.is_empty() or _stack_hex_distance(attacker, defender) != 2:
 		return false
 	var occupied := _build_occupancy_map(battle)
 	var destination := {}
-	for candidate in _hex_neighbors(attacker_cell):
-		if occupied.has(_hex_key(candidate)) or _hex_distance(candidate, defender_cell) != 1:
+	var candidates := _hex_neighbors(attacker_cell) if Footprint.width(attacker) == 1 and Footprint.width(defender) == 1 else _hex_neighbors(defender_cell)
+	for candidate in candidates:
+		if not Footprint.fits(defender, candidate, occupied, BATTLE_HEX_COLUMNS, BATTLE_HEX_ROWS) or Footprint.distance(defender, attacker, candidate) != 1:
 			continue
+		if _hex_distance(candidate, defender_cell) != 1: continue
 		destination = candidate
 		break
 	if destination.is_empty():
@@ -12585,7 +12611,7 @@ static func _stack_is_hex_isolated(battle: Dictionary, stack: Dictionary) -> boo
 		if String(ally.get("battle_id", "")) == battle_id:
 			continue
 		var ally_hex := _stack_hex(ally)
-		if not ally_hex.is_empty() and _hex_distance(stack_hex, ally_hex) <= 1:
+		if not ally_hex.is_empty() and _stack_hex_distance(stack, ally) <= 1:
 			return false
 	return true
 
@@ -12609,7 +12635,7 @@ static func _harry_support_ready(
 		if String(ally.get("battle_id", "")) == attacker_id:
 			continue
 		var ally_hex := _stack_hex(ally)
-		if ally_hex.is_empty() or _hex_distance(target_hex, ally_hex) > 1:
+		if ally_hex.is_empty() or _stack_hex_distance(target, ally) > 1:
 			continue
 		supporting_allies += 1
 		if supporting_allies >= required_support:
