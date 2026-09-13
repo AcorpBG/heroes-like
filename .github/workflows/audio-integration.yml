@@ -1,0 +1,64 @@
+name: Audio integration
+
+on:
+  pull_request:
+    paths:
+      - 'art/audio/**'
+      - 'content/*audio*'
+      - 'content/*sfx*'
+      - 'content/music_runtime_manifest.json'
+      - 'scripts/audio/**'
+      - 'scripts/autoload/**'
+      - 'scenes/**'
+      - 'tools/*audio*.py'
+      - 'tests/validate_repo.py'
+      - '.github/workflows/audio-integration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  linux-audio:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install audio validation dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes ffmpeg libsndfile1
+          python -m pip install numpy soundfile
+      - name: Install pinned Godot and Linux export template
+        run: |
+          curl --fail --location --retry 3 -o /tmp/godot.zip https://github.com/godotengine/godot/releases/download/4.6.2-stable/Godot_v4.6.2-stable_linux.x86_64.zip
+          unzip -q /tmp/godot.zip -d /tmp/godot-audio
+          sudo install -m 0755 /tmp/godot-audio/Godot_v4.6.2-stable_linux.x86_64 /usr/local/bin/godot
+          curl --fail --location --retry 3 -o /tmp/templates.tpz https://github.com/godotengine/godot/releases/download/4.6.2-stable/Godot_v4.6.2-stable_export_templates.tpz
+          mkdir -p "$HOME/.local/share/godot/export_templates/4.6.2.stable"
+          unzip -p /tmp/templates.tpz templates/linux_release.x86_64 > "$HOME/.local/share/godot/export_templates/4.6.2.stable/linux_release.x86_64"
+          chmod +x "$HOME/.local/share/godot/export_templates/4.6.2.stable/linux_release.x86_64"
+      - name: Import and validate source audio
+        run: |
+          godot --headless --editor --path . --import
+          python -B tools/validate_production_audio.py --godot /usr/local/bin/godot --repo-contracts
+          cp .artifacts/audio-production/validation.json .artifacts/audio-production/linux-source-validation.json
+      - name: Export and validate packaged Linux audio
+        run: |
+          mkdir -p .artifacts/audio-production/packages/linux
+          godot --headless --path . --export-release 'Linux Release' .artifacts/audio-production/packages/linux/heroes-like.x86_64
+          chmod +x .artifacts/audio-production/packages/linux/heroes-like.x86_64
+          python -B tools/validate_production_audio.py --runtime-only --godot /usr/local/bin/godot --runtime-pack .artifacts/audio-production/packages/linux/heroes-like.pck --release-executable .artifacts/audio-production/packages/linux/heroes-like.x86_64
+      - name: Preserve audio validation results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: linux-audio-validation
+          path: |
+            .artifacts/audio-production/*validation.json
+            .artifacts/audio-production/runtime-test/godot.log
+            .artifacts/audio-production/package-test/godot.log
+            .artifacts/audio-production/release-startup/startup.log

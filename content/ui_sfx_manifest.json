@@ -1,6 +1,6 @@
 {
   "schema": "ui_runtime_sfx_manifest_v1",
-  "generated_by": "tools/generate_ui_sfx_assets.py",
+  "generated_by": "tools/generate_production_audio.py",
   "final_sound_design": false,
   "audio_bus": "Effects",
   "sample_rate_hz": 44100,
@@ -9,40 +9,68 @@
   "asset_tier": "production_layered_v1",
   "cues": {
     "ui_click": {
-      "path": "res://art/audio/runtime/ui/click.wav",
-      "duration_msec": 70,
+      "path": "res://art/audio/runtime/production/replace_ui_click_v01.wav",
+      "duration_msec": 280,
       "volume_db": -18.0,
-      "role": "button_click"
+      "role": "button_click",
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_ui_click_v01.json",
+      "sha256": "2183715010a2cd53c1c9a44ee4891b509baa2a00d327aaa9bf3aaf82d3763ae3",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140
     },
     "ui_select": {
-      "path": "res://art/audio/runtime/ui/select.wav",
-      "duration_msec": 80,
+      "path": "res://art/audio/runtime/production/replace_ui_select_v01.wav",
+      "duration_msec": 260,
       "volume_db": -18.0,
-      "role": "list_select"
+      "role": "list_select",
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_ui_select_v01.json",
+      "sha256": "78679a4c5590b4b0c1ecb7fc93799752c28e2c621db20e0d146ec4d65323add7",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140
     },
     "ui_adjust": {
-      "path": "res://art/audio/runtime/ui/adjust.wav",
-      "duration_msec": 60,
+      "path": "res://art/audio/runtime/production/replace_ui_adjust_v01.wav",
+      "duration_msec": 160,
       "volume_db": -20.0,
-      "role": "slider_adjust"
+      "role": "slider_adjust",
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_ui_adjust_v01.json",
+      "sha256": "fd2db58b581e756bc5948d878974e72655e9e270daa3496429d1077ee72c6f2b",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140
     },
     "ui_tab": {
-      "path": "res://art/audio/runtime/ui/tab.wav",
-      "duration_msec": 90,
+      "path": "res://art/audio/runtime/production/replace_ui_tab_v01.wav",
+      "duration_msec": 240,
       "volume_db": -18.5,
-      "role": "tab_change"
+      "role": "tab_change",
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_ui_tab_v01.json",
+      "sha256": "1460d4c10733cb1a4292601e1c0989f73aec441b30ad2a993831ea0c233ba3e6",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140
     },
     "ui_confirm": {
-      "path": "res://art/audio/runtime/ui/confirm.wav",
-      "duration_msec": 120,
+      "path": "res://art/audio/runtime/production/replace_ui_confirm_v01.wav",
+      "duration_msec": 190,
       "volume_db": -17.0,
-      "role": "confirm_action"
+      "role": "confirm_action",
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_ui_confirm_v01.json",
+      "sha256": "7ce37549a5efaf05572827134cbe59c930921e03563759ced44b9a1c7a46d334",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140
     },
     "ui_invalid": {
-      "path": "res://art/audio/runtime/ui/invalid.wav",
-      "duration_msec": 150,
+      "path": "res://art/audio/runtime/production/replace_ui_invalid_v01.wav",
+      "duration_msec": 280,
       "volume_db": -17.5,
-      "role": "invalid_action"
+      "role": "invalid_action",
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_ui_invalid_v01.json",
+      "sha256": "584146dfe1e9db8b1832192631eb3eed4f172b07ac0e100b2848422e73737ef9",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140
     }
-  }
+  },
+  "production_source": "stable_audio_3_v1",
+  "production_status": "technical_checks_passed_listening_review_pending",
+  "generation_pipeline": "tools/generate_production_audio.py",
+  "legacy_regeneration_protected": true
 }

@@ -39,6 +39,7 @@ func _ready() -> void:
 	call_deferred("_scan_tree")
 
 func play_cue(cue_id: String, source: String = "", metadata: Dictionary = {}) -> Dictionary:
+	if cue_id == "audio_placeholder_ui_invalid": cue_id = "ui_invalid"
 	var normalized := cue_id if CUE_SPECS.has(cue_id) else "ui_click"
 	var spec: Dictionary = CUE_SPECS[normalized]
 	var muted := SettingsService.effects_audio_muted()

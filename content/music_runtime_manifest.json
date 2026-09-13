@@ -5,87 +5,594 @@
   "sample_rate_hz": 44100,
   "channel_count": 2,
   "sample_width_bits": 16,
-  "segment_duration_msec": 8000,
+  "segment_duration_msec": 0,
   "loop_mode": "forward",
-  "asset_tier": "production_layered_loop_v1",
+  "asset_tier": "generated_full_mix_v1",
   "runtime_codec": "vorbis",
   "runtime_container": "ogg",
-  "encoder_quality": 4,
+  "encoder_quality": 5,
   "cues": {
-    "music_menu_theme": {"path": "res://art/audio/runtime/music/menu_root.ogg", "role": "menu root", "duration_msec": 8000, "volume_db": -23.0},
-    "music_menu_theme_harmony": {"path": "res://art/audio/runtime/music/menu_harmony.ogg", "role": "menu harmony", "duration_msec": 8000, "volume_db": -26.0},
-    "music_menu_theme_motion": {"path": "res://art/audio/runtime/music/menu_motion.ogg", "role": "menu motion", "duration_msec": 8000, "volume_db": -28.0},
-    "music_overworld_theme": {"path": "res://art/audio/runtime/music/overworld_root.ogg", "role": "overworld root", "duration_msec": 8000, "volume_db": -23.5},
-    "music_overworld_theme_harmony": {"path": "res://art/audio/runtime/music/overworld_harmony.ogg", "role": "overworld harmony", "duration_msec": 8000, "volume_db": -26.5},
-    "music_overworld_theme_motion": {"path": "res://art/audio/runtime/music/overworld_motion.ogg", "role": "overworld motion", "duration_msec": 8000, "volume_db": -28.5},
-    "music_overworld_embercourt_theme": {"path": "res://art/audio/runtime/music/overworld_embercourt_root.ogg", "role": "Embercourt overworld root", "duration_msec": 8000, "volume_db": -23.5},
-    "music_overworld_embercourt_theme_harmony": {"path": "res://art/audio/runtime/music/overworld_embercourt_harmony.ogg", "role": "Embercourt overworld harmony", "duration_msec": 8000, "volume_db": -26.5},
-    "music_overworld_embercourt_theme_motion": {"path": "res://art/audio/runtime/music/overworld_embercourt_motion.ogg", "role": "Embercourt overworld motion", "duration_msec": 8000, "volume_db": -28.5},
-    "music_overworld_mireclaw_theme": {"path": "res://art/audio/runtime/music/overworld_mireclaw_root.ogg", "role": "Mireclaw overworld root", "duration_msec": 8000, "volume_db": -23.5},
-    "music_overworld_mireclaw_theme_harmony": {"path": "res://art/audio/runtime/music/overworld_mireclaw_harmony.ogg", "role": "Mireclaw overworld harmony", "duration_msec": 8000, "volume_db": -26.5},
-    "music_overworld_mireclaw_theme_motion": {"path": "res://art/audio/runtime/music/overworld_mireclaw_motion.ogg", "role": "Mireclaw overworld motion", "duration_msec": 8000, "volume_db": -28.5},
-    "music_overworld_sunvault_theme": {"path": "res://art/audio/runtime/music/overworld_sunvault_root.ogg", "role": "Sunvault overworld root", "duration_msec": 8000, "volume_db": -23.5},
-    "music_overworld_sunvault_theme_harmony": {"path": "res://art/audio/runtime/music/overworld_sunvault_harmony.ogg", "role": "Sunvault overworld harmony", "duration_msec": 8000, "volume_db": -26.5},
-    "music_overworld_sunvault_theme_motion": {"path": "res://art/audio/runtime/music/overworld_sunvault_motion.ogg", "role": "Sunvault overworld motion", "duration_msec": 8000, "volume_db": -28.5},
-    "music_overworld_thornwake_theme": {"path": "res://art/audio/runtime/music/overworld_thornwake_root.ogg", "role": "Thornwake overworld root", "duration_msec": 8000, "volume_db": -23.5},
-    "music_overworld_thornwake_theme_harmony": {"path": "res://art/audio/runtime/music/overworld_thornwake_harmony.ogg", "role": "Thornwake overworld harmony", "duration_msec": 8000, "volume_db": -26.5},
-    "music_overworld_thornwake_theme_motion": {"path": "res://art/audio/runtime/music/overworld_thornwake_motion.ogg", "role": "Thornwake overworld motion", "duration_msec": 8000, "volume_db": -28.5},
-    "music_overworld_brasshollow_theme": {"path": "res://art/audio/runtime/music/overworld_brasshollow_root.ogg", "role": "Brasshollow overworld root", "duration_msec": 8000, "volume_db": -23.5},
-    "music_overworld_brasshollow_theme_harmony": {"path": "res://art/audio/runtime/music/overworld_brasshollow_harmony.ogg", "role": "Brasshollow overworld harmony", "duration_msec": 8000, "volume_db": -26.5},
-    "music_overworld_brasshollow_theme_motion": {"path": "res://art/audio/runtime/music/overworld_brasshollow_motion.ogg", "role": "Brasshollow overworld motion", "duration_msec": 8000, "volume_db": -28.5},
-    "music_overworld_veilmourn_theme": {"path": "res://art/audio/runtime/music/overworld_veilmourn_root.ogg", "role": "Veilmourn overworld root", "duration_msec": 8000, "volume_db": -23.5},
-    "music_overworld_veilmourn_theme_harmony": {"path": "res://art/audio/runtime/music/overworld_veilmourn_harmony.ogg", "role": "Veilmourn overworld harmony", "duration_msec": 8000, "volume_db": -26.5},
-    "music_overworld_veilmourn_theme_motion": {"path": "res://art/audio/runtime/music/overworld_veilmourn_motion.ogg", "role": "Veilmourn overworld motion", "duration_msec": 8000, "volume_db": -28.5},
-    "music_town_theme": {"path": "res://art/audio/runtime/music/town_root.ogg", "role": "town root", "duration_msec": 8000, "volume_db": -24.0},
-    "music_town_theme_harmony": {"path": "res://art/audio/runtime/music/town_harmony.ogg", "role": "town harmony", "duration_msec": 8000, "volume_db": -27.0},
-    "music_town_theme_motion": {"path": "res://art/audio/runtime/music/town_motion.ogg", "role": "town motion", "duration_msec": 8000, "volume_db": -29.0},
-    "music_town_embercourt_theme": {"path": "res://art/audio/runtime/music/town_embercourt_root.ogg", "role": "Embercourt town root", "duration_msec": 8000, "volume_db": -24.0},
-    "music_town_embercourt_theme_harmony": {"path": "res://art/audio/runtime/music/town_embercourt_harmony.ogg", "role": "Embercourt town harmony", "duration_msec": 8000, "volume_db": -27.0},
-    "music_town_embercourt_theme_motion": {"path": "res://art/audio/runtime/music/town_embercourt_motion.ogg", "role": "Embercourt town motion", "duration_msec": 8000, "volume_db": -29.0},
-    "music_town_mireclaw_theme": {"path": "res://art/audio/runtime/music/town_mireclaw_root.ogg", "role": "Mireclaw town root", "duration_msec": 8000, "volume_db": -24.0},
-    "music_town_mireclaw_theme_harmony": {"path": "res://art/audio/runtime/music/town_mireclaw_harmony.ogg", "role": "Mireclaw town harmony", "duration_msec": 8000, "volume_db": -27.0},
-    "music_town_mireclaw_theme_motion": {"path": "res://art/audio/runtime/music/town_mireclaw_motion.ogg", "role": "Mireclaw town motion", "duration_msec": 8000, "volume_db": -29.0},
-    "music_town_sunvault_theme": {"path": "res://art/audio/runtime/music/town_sunvault_root.ogg", "role": "Sunvault town root", "duration_msec": 8000, "volume_db": -24.0},
-    "music_town_sunvault_theme_harmony": {"path": "res://art/audio/runtime/music/town_sunvault_harmony.ogg", "role": "Sunvault town harmony", "duration_msec": 8000, "volume_db": -27.0},
-    "music_town_sunvault_theme_motion": {"path": "res://art/audio/runtime/music/town_sunvault_motion.ogg", "role": "Sunvault town motion", "duration_msec": 8000, "volume_db": -29.0},
-    "music_town_thornwake_theme": {"path": "res://art/audio/runtime/music/town_thornwake_root.ogg", "role": "Thornwake town root", "duration_msec": 8000, "volume_db": -24.0},
-    "music_town_thornwake_theme_harmony": {"path": "res://art/audio/runtime/music/town_thornwake_harmony.ogg", "role": "Thornwake town harmony", "duration_msec": 8000, "volume_db": -27.0},
-    "music_town_thornwake_theme_motion": {"path": "res://art/audio/runtime/music/town_thornwake_motion.ogg", "role": "Thornwake town motion", "duration_msec": 8000, "volume_db": -29.0},
-    "music_town_brasshollow_theme": {"path": "res://art/audio/runtime/music/town_brasshollow_root.ogg", "role": "Brasshollow town root", "duration_msec": 8000, "volume_db": -24.0},
-    "music_town_brasshollow_theme_harmony": {"path": "res://art/audio/runtime/music/town_brasshollow_harmony.ogg", "role": "Brasshollow town harmony", "duration_msec": 8000, "volume_db": -27.0},
-    "music_town_brasshollow_theme_motion": {"path": "res://art/audio/runtime/music/town_brasshollow_motion.ogg", "role": "Brasshollow town motion", "duration_msec": 8000, "volume_db": -29.0},
-    "music_town_veilmourn_theme": {"path": "res://art/audio/runtime/music/town_veilmourn_root.ogg", "role": "Veilmourn town root", "duration_msec": 8000, "volume_db": -24.0},
-    "music_town_veilmourn_theme_harmony": {"path": "res://art/audio/runtime/music/town_veilmourn_harmony.ogg", "role": "Veilmourn town harmony", "duration_msec": 8000, "volume_db": -27.0},
-    "music_town_veilmourn_theme_motion": {"path": "res://art/audio/runtime/music/town_veilmourn_motion.ogg", "role": "Veilmourn town motion", "duration_msec": 8000, "volume_db": -29.0},
-    "music_battle_theme": {"path": "res://art/audio/runtime/music/battle_root.ogg", "role": "battle root", "duration_msec": 8000, "volume_db": -22.5},
-    "music_battle_theme_harmony": {"path": "res://art/audio/runtime/music/battle_harmony.ogg", "role": "battle harmony", "duration_msec": 8000, "volume_db": -25.5},
-    "music_battle_theme_motion": {"path": "res://art/audio/runtime/music/battle_motion.ogg", "role": "battle motion", "duration_msec": 8000, "volume_db": -27.5},
-    "music_battle_embercourt_theme": {"path": "res://art/audio/runtime/music/battle_embercourt_root.ogg", "role": "Embercourt battle root", "duration_msec": 8000, "volume_db": -22.5},
-    "music_battle_embercourt_theme_harmony": {"path": "res://art/audio/runtime/music/battle_embercourt_harmony.ogg", "role": "Embercourt battle harmony", "duration_msec": 8000, "volume_db": -25.5},
-    "music_battle_embercourt_theme_motion": {"path": "res://art/audio/runtime/music/battle_embercourt_motion.ogg", "role": "Embercourt battle motion", "duration_msec": 8000, "volume_db": -27.5},
-    "music_battle_mireclaw_theme": {"path": "res://art/audio/runtime/music/battle_mireclaw_root.ogg", "role": "Mireclaw battle root", "duration_msec": 8000, "volume_db": -22.5},
-    "music_battle_mireclaw_theme_harmony": {"path": "res://art/audio/runtime/music/battle_mireclaw_harmony.ogg", "role": "Mireclaw battle harmony", "duration_msec": 8000, "volume_db": -25.5},
-    "music_battle_mireclaw_theme_motion": {"path": "res://art/audio/runtime/music/battle_mireclaw_motion.ogg", "role": "Mireclaw battle motion", "duration_msec": 8000, "volume_db": -27.5},
-    "music_battle_sunvault_theme": {"path": "res://art/audio/runtime/music/battle_sunvault_root.ogg", "role": "Sunvault battle root", "duration_msec": 8000, "volume_db": -22.5},
-    "music_battle_sunvault_theme_harmony": {"path": "res://art/audio/runtime/music/battle_sunvault_harmony.ogg", "role": "Sunvault battle harmony", "duration_msec": 8000, "volume_db": -25.5},
-    "music_battle_sunvault_theme_motion": {"path": "res://art/audio/runtime/music/battle_sunvault_motion.ogg", "role": "Sunvault battle motion", "duration_msec": 8000, "volume_db": -27.5},
-    "music_battle_thornwake_theme": {"path": "res://art/audio/runtime/music/battle_thornwake_root.ogg", "role": "Thornwake battle root", "duration_msec": 8000, "volume_db": -22.5},
-    "music_battle_thornwake_theme_harmony": {"path": "res://art/audio/runtime/music/battle_thornwake_harmony.ogg", "role": "Thornwake battle harmony", "duration_msec": 8000, "volume_db": -25.5},
-    "music_battle_thornwake_theme_motion": {"path": "res://art/audio/runtime/music/battle_thornwake_motion.ogg", "role": "Thornwake battle motion", "duration_msec": 8000, "volume_db": -27.5},
-    "music_battle_brasshollow_theme": {"path": "res://art/audio/runtime/music/battle_brasshollow_root.ogg", "role": "Brasshollow battle root", "duration_msec": 8000, "volume_db": -22.5},
-    "music_battle_brasshollow_theme_harmony": {"path": "res://art/audio/runtime/music/battle_brasshollow_harmony.ogg", "role": "Brasshollow battle harmony", "duration_msec": 8000, "volume_db": -25.5},
-    "music_battle_brasshollow_theme_motion": {"path": "res://art/audio/runtime/music/battle_brasshollow_motion.ogg", "role": "Brasshollow battle motion", "duration_msec": 8000, "volume_db": -27.5},
-    "music_battle_veilmourn_theme": {"path": "res://art/audio/runtime/music/battle_veilmourn_root.ogg", "role": "Veilmourn battle root", "duration_msec": 8000, "volume_db": -22.5},
-    "music_battle_veilmourn_theme_harmony": {"path": "res://art/audio/runtime/music/battle_veilmourn_harmony.ogg", "role": "Veilmourn battle harmony", "duration_msec": 8000, "volume_db": -25.5},
-    "music_battle_veilmourn_theme_motion": {"path": "res://art/audio/runtime/music/battle_veilmourn_motion.ogg", "role": "Veilmourn battle motion", "duration_msec": 8000, "volume_db": -27.5},
-    "music_outcome_theme": {"path": "res://art/audio/runtime/music/outcome_root.ogg", "role": "outcome root", "duration_msec": 8000, "volume_db": -24.0},
-    "music_outcome_theme_harmony": {"path": "res://art/audio/runtime/music/outcome_harmony.ogg", "role": "outcome harmony", "duration_msec": 8000, "volume_db": -27.0},
-    "music_outcome_theme_motion": {"path": "res://art/audio/runtime/music/outcome_motion.ogg", "role": "outcome motion", "duration_msec": 8000, "volume_db": -29.0},
-    "music_outcome_victory_theme": {"path": "res://art/audio/runtime/music/outcome_victory_root.ogg", "role": "victory outcome root", "duration_msec": 8000, "volume_db": -24.0},
-    "music_outcome_victory_theme_harmony": {"path": "res://art/audio/runtime/music/outcome_victory_harmony.ogg", "role": "victory outcome harmony", "duration_msec": 8000, "volume_db": -27.0},
-    "music_outcome_victory_theme_motion": {"path": "res://art/audio/runtime/music/outcome_victory_motion.ogg", "role": "victory outcome motion", "duration_msec": 8000, "volume_db": -29.0},
-    "music_outcome_defeat_theme": {"path": "res://art/audio/runtime/music/outcome_defeat_root.ogg", "role": "defeat outcome root", "duration_msec": 8000, "volume_db": -24.0},
-    "music_outcome_defeat_theme_harmony": {"path": "res://art/audio/runtime/music/outcome_defeat_harmony.ogg", "role": "defeat outcome harmony", "duration_msec": 8000, "volume_db": -27.0},
-    "music_outcome_defeat_theme_motion": {"path": "res://art/audio/runtime/music/outcome_defeat_motion.ogg", "role": "defeat outcome motion", "duration_msec": 8000, "volume_db": -29.0}
-  }
+    "music_menu_theme": {
+      "path": "res://art/audio/runtime/production/music_menu_orchestral_v01.ogg",
+      "role": "menu root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_menu_orchestral_v01.json",
+      "sha256": "df4b403cafdeb72fddb89e57263cffcd885d57262f035e0ef7b2a663a7e8810f",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_menu_theme_harmony": {
+      "path": "res://art/audio/runtime/music/menu_harmony.ogg",
+      "role": "menu harmony",
+      "duration_msec": 8000,
+      "volume_db": -26.0
+    },
+    "music_menu_theme_motion": {
+      "path": "res://art/audio/runtime/music/menu_motion.ogg",
+      "role": "menu motion",
+      "duration_msec": 8000,
+      "volume_db": -28.0
+    },
+    "music_overworld_theme": {
+      "path": "res://art/audio/runtime/production/music_overworld_orchestral_v01.ogg",
+      "role": "overworld root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_overworld_orchestral_v01.json",
+      "sha256": "c4baf03a4f582b3c33c341df924f882a801341a6b4cf56a9e720b126d01018ce",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_overworld_theme_harmony": {
+      "path": "res://art/audio/runtime/music/overworld_harmony.ogg",
+      "role": "overworld harmony",
+      "duration_msec": 8000,
+      "volume_db": -26.5
+    },
+    "music_overworld_theme_motion": {
+      "path": "res://art/audio/runtime/music/overworld_motion.ogg",
+      "role": "overworld motion",
+      "duration_msec": 8000,
+      "volume_db": -28.5
+    },
+    "music_overworld_embercourt_theme": {
+      "path": "res://art/audio/runtime/production/music_overworld_embercourt_orchestral_v01.ogg",
+      "role": "Embercourt overworld root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_overworld_embercourt_orchestral_v01.json",
+      "sha256": "e0221305680aa1b045200af51c4e6ee3b8915b64f218240d49d71e6c4a84c71f",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_overworld_embercourt_theme_harmony": {
+      "path": "res://art/audio/runtime/music/overworld_embercourt_harmony.ogg",
+      "role": "Embercourt overworld harmony",
+      "duration_msec": 8000,
+      "volume_db": -26.5
+    },
+    "music_overworld_embercourt_theme_motion": {
+      "path": "res://art/audio/runtime/music/overworld_embercourt_motion.ogg",
+      "role": "Embercourt overworld motion",
+      "duration_msec": 8000,
+      "volume_db": -28.5
+    },
+    "music_overworld_mireclaw_theme": {
+      "path": "res://art/audio/runtime/production/music_overworld_mireclaw_orchestral_v01.ogg",
+      "role": "Mireclaw overworld root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_overworld_mireclaw_orchestral_v01.json",
+      "sha256": "e65ca19f4f715338515f0ae726b158ee9746f4c4f487c57fdbc046f7a04d6799",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_overworld_mireclaw_theme_harmony": {
+      "path": "res://art/audio/runtime/music/overworld_mireclaw_harmony.ogg",
+      "role": "Mireclaw overworld harmony",
+      "duration_msec": 8000,
+      "volume_db": -26.5
+    },
+    "music_overworld_mireclaw_theme_motion": {
+      "path": "res://art/audio/runtime/music/overworld_mireclaw_motion.ogg",
+      "role": "Mireclaw overworld motion",
+      "duration_msec": 8000,
+      "volume_db": -28.5
+    },
+    "music_overworld_sunvault_theme": {
+      "path": "res://art/audio/runtime/production/music_overworld_sunvault_orchestral_v01.ogg",
+      "role": "Sunvault overworld root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_overworld_sunvault_orchestral_v01.json",
+      "sha256": "f3954765ed0c26c3ad007f19d1da69e7f27b6ed9a3411107d9ee84e52a9aaf4c",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_overworld_sunvault_theme_harmony": {
+      "path": "res://art/audio/runtime/music/overworld_sunvault_harmony.ogg",
+      "role": "Sunvault overworld harmony",
+      "duration_msec": 8000,
+      "volume_db": -26.5
+    },
+    "music_overworld_sunvault_theme_motion": {
+      "path": "res://art/audio/runtime/music/overworld_sunvault_motion.ogg",
+      "role": "Sunvault overworld motion",
+      "duration_msec": 8000,
+      "volume_db": -28.5
+    },
+    "music_overworld_thornwake_theme": {
+      "path": "res://art/audio/runtime/production/music_overworld_thornwake_orchestral_v01.ogg",
+      "role": "Thornwake overworld root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_overworld_thornwake_orchestral_v01.json",
+      "sha256": "c09a76268f18882fb7b96a3884c133bfd5f623d5cd54d1a4dbdb2dd8d6f5d298",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_overworld_thornwake_theme_harmony": {
+      "path": "res://art/audio/runtime/music/overworld_thornwake_harmony.ogg",
+      "role": "Thornwake overworld harmony",
+      "duration_msec": 8000,
+      "volume_db": -26.5
+    },
+    "music_overworld_thornwake_theme_motion": {
+      "path": "res://art/audio/runtime/music/overworld_thornwake_motion.ogg",
+      "role": "Thornwake overworld motion",
+      "duration_msec": 8000,
+      "volume_db": -28.5
+    },
+    "music_overworld_brasshollow_theme": {
+      "path": "res://art/audio/runtime/production/music_overworld_brasshollow_orchestral_v01.ogg",
+      "role": "Brasshollow overworld root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_overworld_brasshollow_orchestral_v01.json",
+      "sha256": "9091b614b40376e3b9438f1c8739065aab9bc576a50bc6c784b9d21be9f6fa21",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_overworld_brasshollow_theme_harmony": {
+      "path": "res://art/audio/runtime/music/overworld_brasshollow_harmony.ogg",
+      "role": "Brasshollow overworld harmony",
+      "duration_msec": 8000,
+      "volume_db": -26.5
+    },
+    "music_overworld_brasshollow_theme_motion": {
+      "path": "res://art/audio/runtime/music/overworld_brasshollow_motion.ogg",
+      "role": "Brasshollow overworld motion",
+      "duration_msec": 8000,
+      "volume_db": -28.5
+    },
+    "music_overworld_veilmourn_theme": {
+      "path": "res://art/audio/runtime/production/music_overworld_veilmourn_orchestral_v01.ogg",
+      "role": "Veilmourn overworld root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_overworld_veilmourn_orchestral_v01.json",
+      "sha256": "4148ac8230ef80a856a80403be772fa769dc6d1c3a9d11328ae7ab090b57f64d",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_overworld_veilmourn_theme_harmony": {
+      "path": "res://art/audio/runtime/music/overworld_veilmourn_harmony.ogg",
+      "role": "Veilmourn overworld harmony",
+      "duration_msec": 8000,
+      "volume_db": -26.5
+    },
+    "music_overworld_veilmourn_theme_motion": {
+      "path": "res://art/audio/runtime/music/overworld_veilmourn_motion.ogg",
+      "role": "Veilmourn overworld motion",
+      "duration_msec": 8000,
+      "volume_db": -28.5
+    },
+    "music_town_theme": {
+      "path": "res://art/audio/runtime/production/music_town_orchestral_v01.ogg",
+      "role": "town root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_town_orchestral_v01.json",
+      "sha256": "b21e13f9138f5b8ed6408e6df4a269dedb38de1f6140fca891b767f4fdab7ed8",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_town_theme_harmony": {
+      "path": "res://art/audio/runtime/music/town_harmony.ogg",
+      "role": "town harmony",
+      "duration_msec": 8000,
+      "volume_db": -27.0
+    },
+    "music_town_theme_motion": {
+      "path": "res://art/audio/runtime/music/town_motion.ogg",
+      "role": "town motion",
+      "duration_msec": 8000,
+      "volume_db": -29.0
+    },
+    "music_town_embercourt_theme": {
+      "path": "res://art/audio/runtime/production/music_town_embercourt_orchestral_v01.ogg",
+      "role": "Embercourt town root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_town_embercourt_orchestral_v01.json",
+      "sha256": "ca75f82d522d26a86f0144f4fda040882602f6d17bd5e3176d65fe9e617bf9cc",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_town_embercourt_theme_harmony": {
+      "path": "res://art/audio/runtime/music/town_embercourt_harmony.ogg",
+      "role": "Embercourt town harmony",
+      "duration_msec": 8000,
+      "volume_db": -27.0
+    },
+    "music_town_embercourt_theme_motion": {
+      "path": "res://art/audio/runtime/music/town_embercourt_motion.ogg",
+      "role": "Embercourt town motion",
+      "duration_msec": 8000,
+      "volume_db": -29.0
+    },
+    "music_town_mireclaw_theme": {
+      "path": "res://art/audio/runtime/production/music_town_mireclaw_orchestral_v01.ogg",
+      "role": "Mireclaw town root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_town_mireclaw_orchestral_v01.json",
+      "sha256": "a26073d7b046266f67ab1742195d6b9a5774b67c039134ee93f99cdea4c23df9",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_town_mireclaw_theme_harmony": {
+      "path": "res://art/audio/runtime/music/town_mireclaw_harmony.ogg",
+      "role": "Mireclaw town harmony",
+      "duration_msec": 8000,
+      "volume_db": -27.0
+    },
+    "music_town_mireclaw_theme_motion": {
+      "path": "res://art/audio/runtime/music/town_mireclaw_motion.ogg",
+      "role": "Mireclaw town motion",
+      "duration_msec": 8000,
+      "volume_db": -29.0
+    },
+    "music_town_sunvault_theme": {
+      "path": "res://art/audio/runtime/production/music_town_sunvault_orchestral_v01.ogg",
+      "role": "Sunvault town root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_town_sunvault_orchestral_v01.json",
+      "sha256": "d385e16fff974a747b030ff560b88a30a5becfbd5f6e9dddbbdc4125cc7b7072",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_town_sunvault_theme_harmony": {
+      "path": "res://art/audio/runtime/music/town_sunvault_harmony.ogg",
+      "role": "Sunvault town harmony",
+      "duration_msec": 8000,
+      "volume_db": -27.0
+    },
+    "music_town_sunvault_theme_motion": {
+      "path": "res://art/audio/runtime/music/town_sunvault_motion.ogg",
+      "role": "Sunvault town motion",
+      "duration_msec": 8000,
+      "volume_db": -29.0
+    },
+    "music_town_thornwake_theme": {
+      "path": "res://art/audio/runtime/production/music_town_thornwake_orchestral_v01.ogg",
+      "role": "Thornwake town root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_town_thornwake_orchestral_v01.json",
+      "sha256": "895152285107d53aa3f7cfb2f3aacac52f6e96af5e86aa41245266e40fe44e93",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_town_thornwake_theme_harmony": {
+      "path": "res://art/audio/runtime/music/town_thornwake_harmony.ogg",
+      "role": "Thornwake town harmony",
+      "duration_msec": 8000,
+      "volume_db": -27.0
+    },
+    "music_town_thornwake_theme_motion": {
+      "path": "res://art/audio/runtime/music/town_thornwake_motion.ogg",
+      "role": "Thornwake town motion",
+      "duration_msec": 8000,
+      "volume_db": -29.0
+    },
+    "music_town_brasshollow_theme": {
+      "path": "res://art/audio/runtime/production/music_town_brasshollow_orchestral_v01.ogg",
+      "role": "Brasshollow town root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_town_brasshollow_orchestral_v01.json",
+      "sha256": "cf9b375e7dca4296183bf562284f43dfe7fd7cbf6f980d4a1b5fe0dca49316e9",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_town_brasshollow_theme_harmony": {
+      "path": "res://art/audio/runtime/music/town_brasshollow_harmony.ogg",
+      "role": "Brasshollow town harmony",
+      "duration_msec": 8000,
+      "volume_db": -27.0
+    },
+    "music_town_brasshollow_theme_motion": {
+      "path": "res://art/audio/runtime/music/town_brasshollow_motion.ogg",
+      "role": "Brasshollow town motion",
+      "duration_msec": 8000,
+      "volume_db": -29.0
+    },
+    "music_town_veilmourn_theme": {
+      "path": "res://art/audio/runtime/production/music_town_veilmourn_orchestral_v01.ogg",
+      "role": "Veilmourn town root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_town_veilmourn_orchestral_v01.json",
+      "sha256": "c36b603d9fea5723c9dc97dbd869b6ff399a9ad69e8a871e98a6923cc57a4573",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_town_veilmourn_theme_harmony": {
+      "path": "res://art/audio/runtime/music/town_veilmourn_harmony.ogg",
+      "role": "Veilmourn town harmony",
+      "duration_msec": 8000,
+      "volume_db": -27.0
+    },
+    "music_town_veilmourn_theme_motion": {
+      "path": "res://art/audio/runtime/music/town_veilmourn_motion.ogg",
+      "role": "Veilmourn town motion",
+      "duration_msec": 8000,
+      "volume_db": -29.0
+    },
+    "music_battle_theme": {
+      "path": "res://art/audio/runtime/production/music_battle_orchestral_v01.ogg",
+      "role": "battle root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_battle_orchestral_v01.json",
+      "sha256": "e60f42874c1102456678b7dc0598652b4d362d9a8a5f874128ed55387cea401c",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_battle_theme_harmony": {
+      "path": "res://art/audio/runtime/music/battle_harmony.ogg",
+      "role": "battle harmony",
+      "duration_msec": 8000,
+      "volume_db": -25.5
+    },
+    "music_battle_theme_motion": {
+      "path": "res://art/audio/runtime/music/battle_motion.ogg",
+      "role": "battle motion",
+      "duration_msec": 8000,
+      "volume_db": -27.5
+    },
+    "music_battle_embercourt_theme": {
+      "path": "res://art/audio/runtime/production/music_battle_embercourt_orchestral_v01.ogg",
+      "role": "Embercourt battle root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_battle_embercourt_orchestral_v01.json",
+      "sha256": "2047d2440d0f988d674a64484e1a2d4ee7fd4a308d19864952441845c841007b",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_battle_embercourt_theme_harmony": {
+      "path": "res://art/audio/runtime/music/battle_embercourt_harmony.ogg",
+      "role": "Embercourt battle harmony",
+      "duration_msec": 8000,
+      "volume_db": -25.5
+    },
+    "music_battle_embercourt_theme_motion": {
+      "path": "res://art/audio/runtime/music/battle_embercourt_motion.ogg",
+      "role": "Embercourt battle motion",
+      "duration_msec": 8000,
+      "volume_db": -27.5
+    },
+    "music_battle_mireclaw_theme": {
+      "path": "res://art/audio/runtime/production/music_battle_mireclaw_orchestral_v01.ogg",
+      "role": "Mireclaw battle root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_battle_mireclaw_orchestral_v01.json",
+      "sha256": "846825d13d0d0ab979f0e8d2750c54342c59fc5f4a72a80ef5e2219b30a82d0a",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_battle_mireclaw_theme_harmony": {
+      "path": "res://art/audio/runtime/music/battle_mireclaw_harmony.ogg",
+      "role": "Mireclaw battle harmony",
+      "duration_msec": 8000,
+      "volume_db": -25.5
+    },
+    "music_battle_mireclaw_theme_motion": {
+      "path": "res://art/audio/runtime/music/battle_mireclaw_motion.ogg",
+      "role": "Mireclaw battle motion",
+      "duration_msec": 8000,
+      "volume_db": -27.5
+    },
+    "music_battle_sunvault_theme": {
+      "path": "res://art/audio/runtime/production/music_battle_sunvault_orchestral_v01.ogg",
+      "role": "Sunvault battle root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_battle_sunvault_orchestral_v01.json",
+      "sha256": "bd4fb63dcc681e2dbff36b9772ff270cef8e5d35669f53ee300bc76162cf4597",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_battle_sunvault_theme_harmony": {
+      "path": "res://art/audio/runtime/music/battle_sunvault_harmony.ogg",
+      "role": "Sunvault battle harmony",
+      "duration_msec": 8000,
+      "volume_db": -25.5
+    },
+    "music_battle_sunvault_theme_motion": {
+      "path": "res://art/audio/runtime/music/battle_sunvault_motion.ogg",
+      "role": "Sunvault battle motion",
+      "duration_msec": 8000,
+      "volume_db": -27.5
+    },
+    "music_battle_thornwake_theme": {
+      "path": "res://art/audio/runtime/production/music_battle_thornwake_orchestral_v01.ogg",
+      "role": "Thornwake battle root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_battle_thornwake_orchestral_v01.json",
+      "sha256": "bf9e79a94bffa896a87ae92f1c644a31bdde4ec4e263cea9900340f66542c613",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_battle_thornwake_theme_harmony": {
+      "path": "res://art/audio/runtime/music/battle_thornwake_harmony.ogg",
+      "role": "Thornwake battle harmony",
+      "duration_msec": 8000,
+      "volume_db": -25.5
+    },
+    "music_battle_thornwake_theme_motion": {
+      "path": "res://art/audio/runtime/music/battle_thornwake_motion.ogg",
+      "role": "Thornwake battle motion",
+      "duration_msec": 8000,
+      "volume_db": -27.5
+    },
+    "music_battle_brasshollow_theme": {
+      "path": "res://art/audio/runtime/production/music_battle_brasshollow_orchestral_v01.ogg",
+      "role": "Brasshollow battle root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_battle_brasshollow_orchestral_v01.json",
+      "sha256": "8a8048a01d8cab88eb7259fd03c7c2781d2e32a1dcd8eae664e0e2179d6e9648",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_battle_brasshollow_theme_harmony": {
+      "path": "res://art/audio/runtime/music/battle_brasshollow_harmony.ogg",
+      "role": "Brasshollow battle harmony",
+      "duration_msec": 8000,
+      "volume_db": -25.5
+    },
+    "music_battle_brasshollow_theme_motion": {
+      "path": "res://art/audio/runtime/music/battle_brasshollow_motion.ogg",
+      "role": "Brasshollow battle motion",
+      "duration_msec": 8000,
+      "volume_db": -27.5
+    },
+    "music_battle_veilmourn_theme": {
+      "path": "res://art/audio/runtime/production/music_battle_veilmourn_orchestral_v01.ogg",
+      "role": "Veilmourn battle root",
+      "duration_msec": 120995,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_battle_veilmourn_orchestral_v01.json",
+      "sha256": "11b0a82cd69dae38a3a998890ce903f96c0edb5411acfe4ee60698f259a9d46d",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_battle_veilmourn_theme_harmony": {
+      "path": "res://art/audio/runtime/music/battle_veilmourn_harmony.ogg",
+      "role": "Veilmourn battle harmony",
+      "duration_msec": 8000,
+      "volume_db": -25.5
+    },
+    "music_battle_veilmourn_theme_motion": {
+      "path": "res://art/audio/runtime/music/battle_veilmourn_motion.ogg",
+      "role": "Veilmourn battle motion",
+      "duration_msec": 8000,
+      "volume_db": -27.5
+    },
+    "music_outcome_theme": {
+      "path": "res://art/audio/runtime/production/music_outcome_orchestral_v01.ogg",
+      "role": "outcome root",
+      "duration_msec": 41025,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_outcome_orchestral_v01.json",
+      "sha256": "f80521c42770349016ff54d225f56427cb06e92b4cb00b4135498de8636a56c7",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_outcome_theme_harmony": {
+      "path": "res://art/audio/runtime/music/outcome_harmony.ogg",
+      "role": "outcome harmony",
+      "duration_msec": 8000,
+      "volume_db": -27.0
+    },
+    "music_outcome_theme_motion": {
+      "path": "res://art/audio/runtime/music/outcome_motion.ogg",
+      "role": "outcome motion",
+      "duration_msec": 8000,
+      "volume_db": -29.0
+    },
+    "music_outcome_victory_theme": {
+      "path": "res://art/audio/runtime/production/music_outcome_victory_orchestral_v01.ogg",
+      "role": "victory outcome root",
+      "duration_msec": 41025,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_outcome_victory_orchestral_v01.json",
+      "sha256": "d09c6c101a7dc499438785c7ba89de4d5e569b8601d1a6689b461cdad64618dc",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_outcome_victory_theme_harmony": {
+      "path": "res://art/audio/runtime/music/outcome_victory_harmony.ogg",
+      "role": "victory outcome harmony",
+      "duration_msec": 8000,
+      "volume_db": -27.0
+    },
+    "music_outcome_victory_theme_motion": {
+      "path": "res://art/audio/runtime/music/outcome_victory_motion.ogg",
+      "role": "victory outcome motion",
+      "duration_msec": 8000,
+      "volume_db": -29.0
+    },
+    "music_outcome_defeat_theme": {
+      "path": "res://art/audio/runtime/production/music_outcome_defeat_orchestral_v01.ogg",
+      "role": "defeat outcome root",
+      "duration_msec": 41025,
+      "volume_db": -15.0,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/music_outcome_defeat_orchestral_v01.json",
+      "sha256": "cfac04ad393be5244cdd8a523aae10ca6e8a81ac15f02d6c025136893e0af00f",
+      "priority_class": "normal",
+      "repeat_cooldown_msec": 140,
+      "playback_mode": "full_mix"
+    },
+    "music_outcome_defeat_theme_harmony": {
+      "path": "res://art/audio/runtime/music/outcome_defeat_harmony.ogg",
+      "role": "defeat outcome harmony",
+      "duration_msec": 8000,
+      "volume_db": -27.0
+    },
+    "music_outcome_defeat_theme_motion": {
+      "path": "res://art/audio/runtime/music/outcome_defeat_motion.ogg",
+      "role": "defeat outcome motion",
+      "duration_msec": 8000,
+      "volume_db": -29.0
+    }
+  },
+  "production_source": "stable_audio_3_v1",
+  "production_status": "technical_checks_passed_listening_review_pending",
+  "generation_pipeline": "tools/generate_production_audio.py",
+  "legacy_regeneration_protected": true,
+  "generated_by": "tools/generate_production_audio.py",
+  "duration_policy": "per_cue",
+  "master_sample_width_bits": 24
 }

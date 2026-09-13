@@ -64374,7 +64374,11 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             cue = battle_sfx_cues.get(audio_id, {}) if isinstance(battle_sfx_cues, dict) else {}
             ensure(isinstance(cue, dict), errors, f"battle_sfx_manifest.json is missing cue {audio_id}")
             path_value = str(cue.get("path", ""))
-            ensure(path_value.startswith("res://art/audio/runtime/battle/"), errors, f"battle SFX cue {audio_id} must use the runtime battle audio folder")
+            if battle_sfx_manifest.get("legacy_regeneration_protected"):
+                expected = production_audio_expectation(battle_sfx_manifest, audio_id, cue, errors)
+                ensure(path_value == expected["path"] and cue.get("duration_msec") == expected["duration_msec"], errors, f"battle SFX provenance drifted: {audio_id}")
+            else:
+                ensure(path_value.startswith("res://art/audio/runtime/battle/"), errors, f"battle SFX cue {audio_id} must use the runtime battle audio folder")
             wav_path = ROOT / path_value.removeprefix("res://")
             ensure(wav_path.exists(), errors, f"battle SFX asset is missing for {audio_id}: {path_value}")
             if wav_path.exists():
@@ -64391,7 +64395,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
                 ensure(sample_width == 2, errors, f"battle SFX asset must be 16-bit PCM: {path_value}")
                 ensure(sample_rate == 44100, errors, f"battle SFX asset must use 44.1 kHz: {path_value}")
                 expected_frames = int(44100 * int(cue.get("duration_msec", 0)) / 1000.0)
-                ensure(frame_count == expected_frames, errors, f"battle SFX asset duration must match manifest exactly: {path_value}")
+                ensure(abs(frame_count - expected_frames) <= (23 if battle_sfx_manifest.get("legacy_regeneration_protected") else 0), errors, f"battle SFX asset duration must match manifest: {path_value}")
                 samples = struct.unpack(f"<{len(raw_frames) // 2}h", raw_frames) if raw_frames else ()
                 left_samples = samples[0::2]
                 right_samples = samples[1::2]
@@ -73284,6 +73288,40 @@ def validate_runtime_audio_loader(errors: list[str]) -> None:
         ensure('path="res://tests/runtime_audio_cache_fallback_report.gd"' in report_scene_path.read_text(encoding="utf-8"), errors, "Runtime audio cache-fallback scene must load its focused report script")
 
 
+def production_audio_expectation(manifest: dict, cue_id: str, legacy: dict, errors: list[str]) -> dict:
+    """Use generation provenance as the asset authority after the full-mix migration.
+
+    Keep legacy role/mix checks, and verify new paths and durations against the
+    recorded generation output and its hash instead of the old synthesizer spec.
+    """
+    if not manifest.get("legacy_regeneration_protected") or cue_id.endswith(("_harmony", "_motion")):
+        return legacy
+    cue = manifest.get("cues", {}).get(cue_id, {})
+    try:
+        provenance_path = str(cue["provenance"])
+        assert provenance_path.startswith("res://art/audio/source/stable_audio_3_v1/provenance/")
+        provenance = json.loads((ROOT / provenance_path.removeprefix("res://")).read_text(encoding="utf-8"))
+        assert provenance["status"] == "technical_checks_passed"
+        assert cue_id in provenance["targets"] or cue_id == provenance["brief_id"]
+        path = provenance["runtime_path"]
+        assert path.startswith("res://art/audio/runtime/production/")
+        asset = (ROOT / path.removeprefix("res://")).resolve()
+        assert asset.is_relative_to((ROOT / "art/audio/runtime/production").resolve())
+        assert hashlib.sha256(asset.read_bytes()).hexdigest() == provenance["runtime_sha256"] == cue["sha256"]
+        duration = round(provenance["edit"]["runtime_statistics"]["seconds"] * 1000)
+        assert 60 <= duration <= 180000
+        expected = {**legacy, "path": path, "duration_msec": duration}
+        if path.endswith(".ogg"):
+            assert duration >= 40000
+            expected["volume_db"] = -15.0 if cue_id.startswith("music_") else (-29.0 if "pressure" in cue_id else (-22.0 if cue_id.startswith("town_amb_") else -20.0))
+        if cue_id.startswith("music_"):
+            assert cue.get("playback_mode") == "full_mix"
+        return expected
+    except (KeyError, ValueError, OSError, AssertionError) as exc:
+        errors.append(f"Production audio provenance mismatch for {cue_id}: {exc}")
+        return legacy
+
+
 def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
     project_path = ROOT / "project.godot"
     required_paths = (
@@ -73371,6 +73409,7 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
         ensure(set(ui_sfx_cues) == set(required_ui_cues), errors, "ui_sfx_manifest.json must contain exactly the six production UI cue ids")
         ui_asset_hashes: set[str] = set()
         for cue_id, expected_cue in required_ui_cues.items():
+            expected_cue = production_audio_expectation(ui_sfx_manifest, cue_id, expected_cue, errors)
             cue = ui_sfx_cues.get(cue_id, {}) if isinstance(ui_sfx_cues, dict) else {}
             ensure(isinstance(cue, dict), errors, f"ui_sfx_manifest.json is missing cue {cue_id}")
             path_value = str(cue.get("path", ""))
@@ -73394,7 +73433,7 @@ def validate_ui_audio_cue_runtime(errors: list[str]) -> None:
                 ensure(channel_count == 2, errors, f"production UI SFX asset must be stereo: {path_value}")
                 ensure(sample_width == 2, errors, f"production UI SFX asset must use 16-bit PCM: {path_value}")
                 ensure(sample_rate == 44100, errors, f"production UI SFX asset must use 44.1 kHz: {path_value}")
-                ensure(frame_count == expected_frame_count, errors, f"production UI SFX asset must preserve exact authored duration: {path_value}")
+                ensure(abs(frame_count - expected_frame_count) <= (23 if ui_sfx_manifest.get("legacy_regeneration_protected") else 0), errors, f"UI SFX frames must match the declared duration: {path_value}")
                 samples = struct.unpack(f"<{len(payload) // 2}h", payload) if payload else ()
                 left_samples = samples[0::2]
                 right_samples = samples[1::2]
@@ -73739,7 +73778,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     }
     manifest = json.loads(PRESENTATION_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
     ensure(manifest.get("schema") == "presentation_runtime_sfx_manifest_v1", errors, "presentation SFX manifest has the wrong schema")
-    ensure(manifest.get("generated_by") == "tools/generate_presentation_sfx_assets.py", errors, "presentation SFX manifest must name its deterministic generator")
+    ensure(manifest.get("generated_by") == ("tools/generate_production_audio.py" if manifest.get("legacy_regeneration_protected") else "tools/generate_presentation_sfx_assets.py"), errors, "presentation SFX manifest must name its generation pipeline")
     ensure(manifest.get("final_sound_design") is False, errors, "presentation SFX manifest must not claim final sound design")
     ensure(manifest.get("audio_bus") == "Effects", errors, "presentation SFX must route through Effects")
     ensure(int(manifest.get("sample_rate_hz", 0)) == 44100, errors, "production presentation SFX must use 44.1 kHz")
@@ -73750,7 +73789,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
     ensure(isinstance(cues, dict) and set(cues) == set(expected_cues), errors, "presentation SFX manifest must contain exactly the twenty-seven live Town, Overworld, navigation, blocking, route-open, route-closed, object-focus, object-resolution, guarded-context, and system action cues")
     asset_hashes: list[str] = []
     for cue_id in sorted(expected_cues):
-        expected = expected_cues[cue_id]
+        expected = production_audio_expectation(manifest, cue_id, expected_cues[cue_id], errors)
         cue = cues.get(cue_id, {}) if isinstance(cues, dict) else {}
         ensure(isinstance(cue, dict), errors, f"presentation SFX manifest is missing {cue_id}")
         ensure(str(cue.get("path", "")) == expected["path"], errors, f"presentation cue {cue_id} path drifted")
@@ -73772,7 +73811,7 @@ def validate_presentation_audio_runtime(errors: list[str]) -> None:
             ensure(channel_count == 2, errors, f"presentation SFX must be stereo: {expected['path']}")
             ensure(sample_width == 2, errors, f"presentation SFX must use 16-bit PCM: {expected['path']}")
             ensure(sample_rate == 44100, errors, f"presentation SFX must use 44.1 kHz: {expected['path']}")
-            ensure(frame_count == int(44100 * expected["duration_msec"] / 1000), errors, f"presentation SFX duration drifted: {expected['path']}")
+            ensure(abs(frame_count - int(44100 * expected["duration_msec"] / 1000)) <= (23 if manifest.get("legacy_regeneration_protected") else 0), errors, f"presentation SFX duration drifted: {expected['path']}")
             samples = struct.unpack(f"<{len(payload) // 2}h", payload) if payload else ()
             left_samples = samples[0::2]
             right_samples = samples[1::2]
@@ -74149,17 +74188,20 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
     )
     if AMBIENT_SFX_MANIFEST_PATH.exists():
         ambient_sfx_manifest = json.loads(AMBIENT_SFX_MANIFEST_PATH.read_text(encoding="utf-8"))
+        production = bool(ambient_sfx_manifest.get("legacy_regeneration_protected"))
         ensure(ambient_sfx_manifest.get("schema") == "overworld_ambient_runtime_sfx_manifest_v1", errors, "ambient_sfx_manifest.json has the wrong schema")
         ensure(ambient_sfx_manifest.get("final_sound_design") is False, errors, "ambient_sfx_manifest.json must not claim final sound design")
         ensure(ambient_sfx_manifest.get("audio_bus") == "Effects", errors, "ambient_sfx_manifest.json must route ambient SFX through Effects")
         ensure(int(ambient_sfx_manifest.get("sample_rate_hz", 0)) == 44100, errors, "production ambient assets must use 44.1 kHz")
         ensure(int(ambient_sfx_manifest.get("channel_count", 0)) == 2, errors, "production ambient assets must be stereo")
         ensure(int(ambient_sfx_manifest.get("sample_width_bits", 0)) == 16, errors, "production ambient source assets must use 16-bit PCM")
-        ensure(int(ambient_sfx_manifest.get("segment_duration_msec", 0)) == 12000, errors, "production ambient assets must use exact twelve-second segments")
+        ensure(int(ambient_sfx_manifest.get("segment_duration_msec", 0)) == (0 if production else 12000), errors, "production ambient assets must use exact twelve-second segments")
         ensure(ambient_sfx_manifest.get("loop_mode") == "forward", errors, "production ambient manifest must declare forward looping")
-        ensure(ambient_sfx_manifest.get("asset_tier") == "production_ambient_loop_v1", errors, "production ambient manifest must declare production_ambient_loop_v1")
-        ensure(ambient_sfx_manifest.get("runtime_codec") == "vorbis" and ambient_sfx_manifest.get("runtime_container") == "ogg" and int(ambient_sfx_manifest.get("encoder_quality", -1)) == 4, errors, "production ambient runtime must declare OGG Vorbis quality 4")
+        ensure(ambient_sfx_manifest.get("asset_tier") == ("generated_ambient_loop_v1" if production else "production_ambient_loop_v1"), errors, "production ambient manifest must declare production_ambient_loop_v1")
+        ensure(ambient_sfx_manifest.get("runtime_codec") == "vorbis" and ambient_sfx_manifest.get("runtime_container") == "ogg" and int(ambient_sfx_manifest.get("encoder_quality", -1)) == (5 if production else 4), errors, "production ambient runtime must declare OGG Vorbis quality 4")
         ambient_sfx_cues = ambient_sfx_manifest.get("cues", {})
+        if production:
+            required_ambient_cue_ids += tuple("town_amb_" + faction for faction in ("embercourt", "mireclaw", "sunvault", "thornwake", "brasshollow", "veilmourn"))
         ensure(isinstance(ambient_sfx_cues, dict), errors, "ambient_sfx_manifest.json cues must be an object")
         ensure(set(ambient_sfx_cues) == set(required_ambient_cue_ids), errors, "ambient_sfx_manifest.json must contain exactly the eleven live ambient cue ids")
         expected_ambient_cues = {
@@ -74175,12 +74217,17 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
             "overworld_ambient_pressure": ("res://art/audio/runtime/ambient/pressure.ogg", "enemy_pressure", -24.5),
             "overworld_ambient_day_pulse": ("res://art/audio/runtime/ambient/day_pulse.ogg", "day_pulse", -30.0),
         }
+        if production:
+            for faction in ("embercourt", "mireclaw", "sunvault", "thornwake", "brasshollow", "veilmourn"):
+                expected_ambient_cues["town_amb_" + faction] = ("", "town_amb_" + faction, -22.0)
         ambient_asset_hashes = set()
         for cue_id in required_ambient_cue_ids:
             cue = ambient_sfx_cues.get(cue_id, {}) if isinstance(ambient_sfx_cues, dict) else {}
             ensure(isinstance(cue, dict), errors, f"ambient_sfx_manifest.json is missing cue {cue_id}")
             path_value = str(cue.get("path", ""))
             expected_path, expected_role, expected_volume = expected_ambient_cues[cue_id]
+            expected = production_audio_expectation(ambient_sfx_manifest, cue_id, {"path": expected_path, "role": expected_role, "volume_db": expected_volume, "duration_msec": 12000}, errors)
+            expected_path, expected_volume = expected["path"], expected["volume_db"]
             ensure(path_value == expected_path, errors, f"ambient cue {cue_id} must preserve its exact live asset path")
             ensure(str(cue.get("role", "")) == expected_role, errors, f"ambient cue {cue_id} must preserve its exact role")
             ensure(float(cue.get("volume_db", 0.0)) == expected_volume, errors, f"ambient cue {cue_id} must preserve its exact volume")
@@ -74192,8 +74239,8 @@ def validate_overworld_ambient_audio_runtime(errors: list[str]) -> None:
                 probe = probe_audio(asset_path)
                 ensure(probe["codec_name"] == "vorbis", errors, f"production ambient asset must use Vorbis: {path_value}")
                 ensure(probe["channels"] == 2 and probe["sample_rate"] == 44100, errors, f"production ambient asset must remain 44.1 kHz stereo: {path_value}")
-                ensure(abs(float(probe["duration"]) - 12.0) < 0.01, errors, f"production ambient asset must contain exactly twelve seconds: {path_value}")
-            ensure(int(cue.get("duration_msec", 0)) == 12000, errors, f"ambient cue {cue_id} must use exact twelve-second duration")
+                ensure(abs(float(probe["duration"]) - expected["duration_msec"] / 1000) < 0.01, errors, f"production ambient asset must match its provenance duration: {path_value}")
+            ensure(int(cue.get("duration_msec", 0)) == expected["duration_msec"], errors, f"ambient cue {cue_id} must match its declared duration")
             ensure("volume_db" in cue, errors, f"ambient SFX cue {cue_id} needs volume_db")
         ensure(len(ambient_asset_hashes) == len(required_ambient_cue_ids), errors, "all eleven production ambient OGG payloads must be byte-distinct")
 
@@ -74587,16 +74634,17 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
     )
     if MUSIC_RUNTIME_MANIFEST_PATH.exists():
         music_manifest = json.loads(MUSIC_RUNTIME_MANIFEST_PATH.read_text(encoding="utf-8"))
+        production = bool(music_manifest.get("legacy_regeneration_protected"))
         ensure(music_manifest.get("schema") == "music_runtime_asset_manifest_v1", errors, "music_runtime_manifest.json has the wrong schema")
         ensure(music_manifest.get("final_composition") is False, errors, "music_runtime_manifest.json must not claim final composition")
         ensure(music_manifest.get("audio_bus") == "Music", errors, "music_runtime_manifest.json must target the Music bus")
         ensure(int(music_manifest.get("sample_rate_hz", 0)) == 44100, errors, "production music assets must use 44.1 kHz")
         ensure(int(music_manifest.get("channel_count", 0)) == 2, errors, "production music assets must be stereo")
         ensure(int(music_manifest.get("sample_width_bits", 0)) == 16, errors, "production music source assets must use 16-bit PCM")
-        ensure(int(music_manifest.get("segment_duration_msec", 0)) == 8000, errors, "production music assets must use exact eight-second segments")
+        ensure(int(music_manifest.get("segment_duration_msec", 0)) == (0 if production else 8000), errors, "production music assets must use exact eight-second segments")
         ensure(music_manifest.get("loop_mode") == "forward", errors, "production music manifest must declare forward looping")
-        ensure(music_manifest.get("asset_tier") == "production_layered_loop_v1", errors, "production music manifest must declare production_layered_loop_v1")
-        ensure(music_manifest.get("runtime_codec") == "vorbis" and music_manifest.get("runtime_container") == "ogg" and int(music_manifest.get("encoder_quality", -1)) == 4, errors, "production music runtime must declare OGG Vorbis quality 4")
+        ensure(music_manifest.get("asset_tier") == ("generated_full_mix_v1" if production else "production_layered_loop_v1"), errors, "production music manifest must declare production_layered_loop_v1")
+        ensure(music_manifest.get("runtime_codec") == "vorbis" and music_manifest.get("runtime_container") == "ogg" and int(music_manifest.get("encoder_quality", -1)) == (5 if production else 4), errors, "production music runtime must declare OGG Vorbis quality 4")
         music_cues = music_manifest.get("cues", {})
         ensure(isinstance(music_cues, dict), errors, "music_runtime_manifest.json cues must be an object")
         ensure(set(music_cues) == set(required_music_cue_ids), errors, "music_runtime_manifest.json must contain exactly the seventy-five live music layer ids")
@@ -74655,6 +74703,8 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
             ensure(isinstance(cue, dict), errors, f"music_runtime_manifest.json is missing cue {cue_id}")
             path_value = str(cue.get("path", ""))
             expected_path, expected_role, expected_volume = expected_music_cues[cue_id]
+            expected = production_audio_expectation(music_manifest, cue_id, {"path": expected_path, "role": expected_role, "volume_db": expected_volume, "duration_msec": 8000}, errors)
+            expected_path, expected_volume = expected["path"], expected["volume_db"]
             ensure(path_value == expected_path, errors, f"music cue {cue_id} must preserve its exact live asset path")
             ensure(str(cue.get("role", "")) == expected_role, errors, f"music cue {cue_id} must preserve its exact role")
             ensure(float(cue.get("volume_db", 0.0)) == expected_volume, errors, f"music cue {cue_id} must preserve its exact volume")
@@ -74666,8 +74716,8 @@ def validate_music_audio_runtime(errors: list[str]) -> None:
                 probe = probe_audio(asset_path)
                 ensure(probe["codec_name"] == "vorbis", errors, f"production music asset must use Vorbis: {path_value}")
                 ensure(probe["channels"] == 2 and probe["sample_rate"] == 44100, errors, f"production music asset must remain 44.1 kHz stereo: {path_value}")
-                ensure(abs(float(probe["duration"]) - 8.0) < 0.01, errors, f"production music asset must contain exactly eight seconds: {path_value}")
-            ensure(int(cue.get("duration_msec", 0)) == 8000, errors, f"music cue {cue_id} must use exact eight-second duration")
+                ensure(abs(float(probe["duration"]) - expected["duration_msec"] / 1000) < 0.01, errors, f"production music asset must match its provenance duration: {path_value}")
+            ensure(int(cue.get("duration_msec", 0)) == expected["duration_msec"], errors, f"music cue {cue_id} must match its declared duration")
             ensure("volume_db" in cue, errors, f"music cue {cue_id} needs volume_db")
         ensure(len(music_asset_hashes) == len(required_music_cue_ids), errors, "all seventy-five production music OGG payloads must be byte-distinct")
 

@@ -181,6 +181,9 @@ func _ready() -> void:
 	_configure_save_slot_picker()
 	_sync_outcome_recovery_state(true)
 	MusicAudio.sync_context("outcome", "outcome_shell_ready", _outcome_music_metadata())
+	if _session.launch_mode == "campaign" and _session.scenario_status == "victory":
+		var audio_recap := CampaignProgression.outcome_recap(_session)
+		MusicAudio.play_stinger("stinger_campaign_complete" if bool(audio_recap.get("campaign_completed", false)) else "stinger_campaign_chapter", _session.session_id + ":campaign_outcome")
 	_refresh()
 	_present_load_resumed_cue()
 	call_deferred("_configure_outcome_keyboard_focus", true)

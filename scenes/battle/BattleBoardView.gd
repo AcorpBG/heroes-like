@@ -6,6 +6,8 @@ signal controller_navigation_cancelled
 
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const AnimationCueCatalogScript = preload("res://scripts/core/AnimationCueCatalog.gd")
+const AudioPaletteScript = preload("res://scripts/audio/AudioPalette.gd")
+const RuntimeAudioLoaderScript = preload("res://scripts/audio/RuntimeAudioLoader.gd")
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 const HEX_COLUMNS := 11
@@ -2504,6 +2506,7 @@ func _animation_cue_playback_record_for_event(event: Dictionary) -> Dictionary:
 	if allows_strong_flash:
 		selected_vfx_cue_ids = _spell_specific_vfx_cue_ids_for_event(event, selected_vfx_cue_ids)
 	selected_audio_cue_ids = _spell_specific_audio_cue_ids_for_event(event, selected_audio_cue_ids)
+	selected_audio_cue_ids = AudioPaletteScript.battle_cues(event, _battle.get("stacks", []), selected_audio_cue_ids)
 	return {
 		"battle_id": battle_id,
 		"event_id": event_id,
@@ -3819,15 +3822,7 @@ func _play_imported_audio_cue(audio_id: String, battle_id: String, serial: int, 
 	var path := String(cue.get("path", "")).strip_edges()
 	if path == "":
 		return {}
-	var stream: AudioStream = null
-	if ResourceLoader.exists(path):
-		var resource = load(path)
-		if resource is AudioStream:
-			stream = resource
-	if stream == null and FileAccess.file_exists(path):
-		var wav_stream := AudioStreamWAV.load_from_file(path)
-		if wav_stream is AudioStream:
-			stream = wav_stream
+	var stream := RuntimeAudioLoaderScript.load_stream(path)
 	if stream == null:
 		return {}
 	var duration_msec := int(cue.get("duration_msec", 120))
@@ -3918,7 +3913,8 @@ func _audio_mix_admission(audio_id: String) -> Dictionary:
 	while _active_audio_players.size() > voice_budget:
 		_evict_audio_voice(_audio_eviction_candidate_index())
 	var now := int(Time.get_ticks_msec())
-	var last_started := int(_audio_last_started_msec_by_cue.get(audio_id, -1000000000))
+	var cooldown_key := String(_battle_sfx_manifest_cue(audio_id).get("cooldown_key", audio_id))
+	var last_started := int(_audio_last_started_msec_by_cue.get(cooldown_key, -1000000000))
 	if cooldown_msec > 0 and now - last_started < cooldown_msec:
 		_record_audio_cue_suppressed("repeat_cooldown")
 		return {"allowed": false, "reason": "repeat_cooldown", "priority": priority, "priority_class": priority_class, "repeat_cooldown_msec": cooldown_msec, "effective_voice_budget": voice_budget, "reduced_repetitive_sounds": reduced_repetition}
@@ -3987,7 +3983,8 @@ func _evict_audio_voice(index: int) -> Dictionary:
 	return {}
 
 func _record_audio_cue_started(audio_id: String, playback: Dictionary, admission: Dictionary) -> void:
-	_audio_last_started_msec_by_cue[audio_id] = int(Time.get_ticks_msec())
+	var cooldown_key := String(_battle_sfx_manifest_cue(audio_id).get("cooldown_key", audio_id))
+	_audio_last_started_msec_by_cue[cooldown_key] = int(Time.get_ticks_msec())
 	_audio_mix_counters["played"] = int(_audio_mix_counters.get("played", 0)) + 1
 	playback["priority_class"] = String(admission.get("priority_class", BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS))
 	playback["priority"] = int(admission.get("priority", BATTLE_AUDIO_PRIORITY_VALUES[BATTLE_AUDIO_DEFAULT_PRIORITY_CLASS]))
@@ -4018,6 +4015,8 @@ func _active_audio_voice_mix() -> Array:
 	return result
 
 func _battle_sfx_manifest_cue(audio_id: String) -> Dictionary:
+	if audio_id.begins_with("production_"):
+		return AudioPaletteScript.cue(audio_id)
 	_load_battle_sfx_manifest()
 	var cues: Dictionary = _battle_sfx_manifest.get("cues", {}) if _battle_sfx_manifest.get("cues", {}) is Dictionary else {}
 	var cue: Dictionary = cues.get(audio_id, {}) if cues.get(audio_id, {}) is Dictionary else {}

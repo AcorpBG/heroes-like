@@ -1,6 +1,6 @@
 {
   "schema": "battle_runtime_sfx_manifest_v1",
-  "generated_by": "tools/generate_battle_sfx_assets.py",
+  "generated_by": "tools/generate_production_audio.py",
   "final_sound_design": false,
   "audio_bus": "Effects",
   "sample_rate_hz": 44100,
@@ -19,180 +19,228 @@
   },
   "cues": {
     "audio_placeholder_ranged_release": {
-      "path": "res://art/audio/runtime/battle/ranged_release.wav",
-      "duration_msec": 150,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_ranged_release_v01.wav",
+      "duration_msec": 200,
       "volume_db": -12.0,
       "role": "ranged_release",
       "priority_class": "high",
-      "repeat_cooldown_msec": 90
+      "repeat_cooldown_msec": 90,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_ranged_release_v01.json",
+      "sha256": "17a3e40e5d564de56291a590cbb905f5968eb7b9bdca2c89257d05e5505479ae"
     },
     "audio_placeholder_status_apply": {
-      "path": "res://art/audio/runtime/battle/status_apply.wav",
-      "duration_msec": 190,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_status_apply_v01.wav",
+      "duration_msec": 1500,
       "volume_db": -13.5,
       "role": "status_apply",
       "priority_class": "normal",
-      "repeat_cooldown_msec": 140
+      "repeat_cooldown_msec": 140,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_status_apply_v01.json",
+      "sha256": "feb5cd7396cb104c442cd172761d66e342aa2a3ad0f759c5a91196a9c865fae5"
     },
     "audio_placeholder_melee_release": {
-      "path": "res://art/audio/runtime/battle/melee_release.wav",
-      "duration_msec": 120,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_melee_release_v01.wav",
+      "duration_msec": 560,
       "volume_db": -11.5,
       "role": "melee_release",
       "priority_class": "high",
-      "repeat_cooldown_msec": 90
+      "repeat_cooldown_msec": 90,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_melee_release_v01.json",
+      "sha256": "facc0502e838ca108616b0e770addd499e672cdde30429700b676af9ef2c45d5"
     },
     "audio_placeholder_hit": {
-      "path": "res://art/audio/runtime/battle/hit.wav",
-      "duration_msec": 100,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_hit_v01.wav",
+      "duration_msec": 170,
       "volume_db": -12.5,
       "role": "hit",
       "priority_class": "normal",
-      "repeat_cooldown_msec": 85
+      "repeat_cooldown_msec": 85,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_hit_v01.json",
+      "sha256": "08e39107d3f37653145639166d3813029d4140f091ac2bcd9bc75fc68871c0bb"
     },
     "audio_placeholder_unit_rout": {
-      "path": "res://art/audio/runtime/battle/unit_rout.wav",
-      "duration_msec": 260,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_unit_rout_v01.wav",
+      "duration_msec": 1500,
       "volume_db": -13.5,
       "role": "unit_rout",
       "priority_class": "critical",
-      "repeat_cooldown_msec": 250
+      "repeat_cooldown_msec": 250,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_unit_rout_v01.json",
+      "sha256": "29104b9c8cba03d7e89dfa8d6a30f067b02b4d509314c58b52a558ca26b92d6e"
     },
     "audio_placeholder_cast": {
-      "path": "res://art/audio/runtime/battle/cast.wav",
-      "duration_msec": 220,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_cast_v01.wav",
+      "duration_msec": 1360,
       "volume_db": -13.0,
       "role": "cast",
       "priority_class": "high",
-      "repeat_cooldown_msec": 150
+      "repeat_cooldown_msec": 150,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_cast_v01.json",
+      "sha256": "7741b863d016bc88e65a8352989c4cbb4883667d49decfccfea8ef8079452ab6"
     },
     "audio_placeholder_unit_step": {
-      "path": "res://art/audio/runtime/battle/unit_step.wav",
-      "duration_msec": 80,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_unit_step_v01.wav",
+      "duration_msec": 150,
       "volume_db": -16.0,
       "role": "unit_step",
       "priority_class": "low",
-      "repeat_cooldown_msec": 120
+      "repeat_cooldown_msec": 120,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_unit_step_v01.json",
+      "sha256": "2d96a0e2b00582214a5ec01c80511732418baf90b9489f5b5be02bee905c941e"
     },
     "audio_placeholder_defend": {
-      "path": "res://art/audio/runtime/battle/defend.wav",
-      "duration_msec": 100,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_defend_v01.wav",
+      "duration_msec": 180,
       "volume_db": -15.0,
       "role": "defend",
       "priority_class": "normal",
-      "repeat_cooldown_msec": 180
+      "repeat_cooldown_msec": 180,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_defend_v01.json",
+      "sha256": "90d79e53055d2ca178b1e3831fb66890861884bc9180d636b880e15071a20773"
     },
     "audio_placeholder_retaliation": {
-      "path": "res://art/audio/runtime/battle/retaliation.wav",
-      "duration_msec": 130,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_retaliation_v01.wav",
+      "duration_msec": 510,
       "volume_db": -12.5,
       "role": "retaliation",
       "priority_class": "high",
-      "repeat_cooldown_msec": 120
+      "repeat_cooldown_msec": 120,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_retaliation_v01.json",
+      "sha256": "fd53f8b71e27690cca2f71f21c8b92a1658d596c0654e854dc0012cb919c0616"
     },
     "audio_placeholder_retreat_order": {
-      "path": "res://art/audio/runtime/battle/retreat_order.wav",
-      "duration_msec": 210,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_retreat_order_v01.wav",
+      "duration_msec": 690,
       "volume_db": -14.0,
       "role": "retreat_order",
       "priority_class": "critical",
-      "repeat_cooldown_msec": 350
+      "repeat_cooldown_msec": 350,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_retreat_order_v01.json",
+      "sha256": "0603706f65d06633179d528782ad98c668d1cb36fd76123408b6026a8c6afd47"
     },
     "audio_placeholder_surrender_order": {
-      "path": "res://art/audio/runtime/battle/surrender_order.wav",
-      "duration_msec": 210,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_surrender_order_v01.wav",
+      "duration_msec": 580,
       "volume_db": -14.0,
       "role": "surrender_order",
       "priority_class": "critical",
-      "repeat_cooldown_msec": 350
+      "repeat_cooldown_msec": 350,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_surrender_order_v01.json",
+      "sha256": "647eec55aa20b390b5e7e29ab31ba1837eaf35d0e023ddbbfd991fef6982ab0f"
     },
     "audio_placeholder_turn_ready": {
-      "path": "res://art/audio/runtime/battle/turn_ready.wav",
-      "duration_msec": 110,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_turn_ready_v01.wav",
+      "duration_msec": 800,
       "volume_db": -17.0,
       "role": "turn_ready",
       "priority_class": "normal",
-      "repeat_cooldown_msec": 220
+      "repeat_cooldown_msec": 220,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_turn_ready_v01.json",
+      "sha256": "7c572fecc83f8746c9d34d7dcbf36f7dcc4f4c58f946acae133fa142e910e849"
     },
     "audio_placeholder_status_clear": {
-      "path": "res://art/audio/runtime/battle/status_clear.wav",
-      "duration_msec": 150,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_status_clear_v01.wav",
+      "duration_msec": 400,
       "volume_db": -16.0,
       "role": "status_clear",
       "priority_class": "normal",
-      "repeat_cooldown_msec": 140
+      "repeat_cooldown_msec": 140,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_status_clear_v01.json",
+      "sha256": "e32da50f43001c1a176c1b768ed1ebbfff949eb3a9d6444732a07cf2be0e2de3"
     },
     "audio_placeholder_idle_soft": {
-      "path": "res://art/audio/runtime/battle/idle_soft.wav",
-      "duration_msec": 70,
+      "path": "res://art/audio/runtime/production/replace_audio_placeholder_idle_soft_v01.wav",
+      "duration_msec": 1500,
       "volume_db": -23.0,
       "role": "idle_soft",
       "priority_class": "low",
-      "repeat_cooldown_msec": 500
+      "repeat_cooldown_msec": 500,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_placeholder_idle_soft_v01.json",
+      "sha256": "bd79a70a29ccbf38f0de66529b3ac9aeeea53a78c2a45b8eb1ecf1061854d239"
     },
     "audio_spell_cinder_burst": {
-      "path": "res://art/audio/runtime/battle/spell_cinder_burst.wav",
-      "duration_msec": 260,
+      "path": "res://art/audio/runtime/production/replace_audio_spell_cinder_burst_v01.wav",
+      "duration_msec": 1500,
       "volume_db": -12.0,
       "role": "spell_damage_fire",
       "priority_class": "critical",
-      "repeat_cooldown_msec": 220
+      "repeat_cooldown_msec": 220,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_spell_cinder_burst_v01.json",
+      "sha256": "c879cae32dc5562f6defd1d8a2ea0f31fe235317e2388a7df46b7a85b6560991"
     },
     "audio_spell_coal_rain": {
-      "path": "res://art/audio/runtime/battle/spell_coal_rain.wav",
-      "duration_msec": 300,
+      "path": "res://art/audio/runtime/production/replace_audio_spell_coal_rain_v01.wav",
+      "duration_msec": 320,
       "volume_db": -12.5,
       "role": "spell_damage_rain",
       "priority_class": "critical",
-      "repeat_cooldown_msec": 220
+      "repeat_cooldown_msec": 220,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_spell_coal_rain_v01.json",
+      "sha256": "af084aa76f82611e185f88e285a196aaa1afe5754145dae7d384bf9ef45d7105"
     },
     "audio_spell_sunlance_arc": {
-      "path": "res://art/audio/runtime/battle/spell_sunlance_arc.wav",
-      "duration_msec": 240,
+      "path": "res://art/audio/runtime/production/replace_audio_spell_sunlance_arc_v01.wav",
+      "duration_msec": 1080,
       "volume_db": -12.0,
       "role": "spell_damage_lance",
       "priority_class": "critical",
-      "repeat_cooldown_msec": 220
+      "repeat_cooldown_msec": 220,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_spell_sunlance_arc_v01.json",
+      "sha256": "6854a3241d7c7ba627a5158b0f662c465874e507649721ba78a077259065f6c2"
     },
     "audio_spell_briar_bind": {
-      "path": "res://art/audio/runtime/battle/spell_briar_bind.wav",
-      "duration_msec": 270,
+      "path": "res://art/audio/runtime/production/replace_audio_spell_briar_bind_v01.wav",
+      "duration_msec": 360,
       "volume_db": -13.0,
       "role": "spell_control_bind",
       "priority_class": "critical",
-      "repeat_cooldown_msec": 220
+      "repeat_cooldown_msec": 220,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_spell_briar_bind_v01.json",
+      "sha256": "efde24d42b8e7614d5cb3a0142799726057c8e14c87e1dc41889687e1ea8a398"
     },
     "audio_spell_graft_mend": {
-      "path": "res://art/audio/runtime/battle/spell_graft_mend.wav",
-      "duration_msec": 280,
+      "path": "res://art/audio/runtime/production/replace_audio_spell_graft_mend_v01.wav",
+      "duration_msec": 170,
       "volume_db": -13.5,
       "role": "spell_recovery",
       "priority_class": "critical",
-      "repeat_cooldown_msec": 220
+      "repeat_cooldown_msec": 220,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_spell_graft_mend_v01.json",
+      "sha256": "5fc92947fc21447ebc4b713e91f75cd555f8e23b126e6594ebb9f22e7f711096"
     },
     "audio_spell_prism_bastion": {
-      "path": "res://art/audio/runtime/battle/spell_prism_bastion.wav",
-      "duration_msec": 270,
+      "path": "res://art/audio/runtime/production/replace_audio_spell_prism_bastion_v01.wav",
+      "duration_msec": 380,
       "volume_db": -13.5,
       "role": "spell_cleanse",
       "priority_class": "critical",
-      "repeat_cooldown_msec": 220
+      "repeat_cooldown_msec": 220,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_spell_prism_bastion_v01.json",
+      "sha256": "0fec5dc4e5e4e8e65a2dfb6a1394b39352d2fffe489a7d088f7c847b5488c221"
     },
     "audio_spell_resonant_chorus": {
-      "path": "res://art/audio/runtime/battle/spell_resonant_chorus.wav",
-      "duration_msec": 290,
+      "path": "res://art/audio/runtime/production/replace_audio_spell_resonant_chorus_v01.wav",
+      "duration_msec": 1500,
       "volume_db": -13.0,
       "role": "spell_tempo_chorus",
       "priority_class": "critical",
-      "repeat_cooldown_msec": 220
+      "repeat_cooldown_msec": 220,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_spell_resonant_chorus_v01.json",
+      "sha256": "5e8d43c0097e9380d68b0fa88a568b2a52f29fa5e75694ecc27454a0a8c32fbf"
     },
     "audio_spell_command_ward": {
-      "path": "res://art/audio/runtime/battle/spell_command_ward.wav",
-      "duration_msec": 240,
+      "path": "res://art/audio/runtime/production/replace_audio_spell_command_ward_v01.wav",
+      "duration_msec": 1500,
       "volume_db": -14.0,
       "role": "spell_buff",
       "priority_class": "critical",
-      "repeat_cooldown_msec": 220
+      "repeat_cooldown_msec": 220,
+      "provenance": "res://art/audio/source/stable_audio_3_v1/provenance/replace_audio_spell_command_ward_v01.json",
+      "sha256": "6905cc4cb9bf599766f5058327bf5b14e8efebd48b2bc1934786de79a16cceb0"
     }
-  }
+  },
+  "production_source": "stable_audio_3_v1",
+  "production_status": "technical_checks_passed_listening_review_pending",
+  "generation_pipeline": "tools/generate_production_audio.py",
+  "legacy_regeneration_protected": true
 }

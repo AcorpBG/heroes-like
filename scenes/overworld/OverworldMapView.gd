@@ -1082,6 +1082,7 @@ func _sync_hero_movement_presentation(presentation: Dictionary) -> void:
 	_hero_movement_path = path
 	for audio_cue_value in _hero_movement_audio_cue_ids:
 		_hero_movement_audio_playback_records.append(PresentationAudio.play_cue(String(audio_cue_value), "OverworldMapView.hero_movement", {
+			"terrain_id": _terrain_at(_hero_tile),
 			"event_id": _hero_movement_event_id,
 			"presentation_serial": serial,
 			"route_step_count": path.size() - 1,

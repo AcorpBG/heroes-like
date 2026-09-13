@@ -1888,6 +1888,7 @@ func resume_summary(summary: Dictionary) -> bool:
 		push_warning("The selected save could not be restored.")
 		return false
 	var live_summary: Dictionary = SaveService.refresh_summary(summary)
+	PresentationAudio.reset_progress()
 	_pending_load_resumed_presentation = _build_load_resumed_presentation(live_summary, session)
 	SessionState.active_session = session
 	resume_active_session()
@@ -2134,6 +2135,9 @@ func validation_prepare_town_handoff_without_scene_change() -> Dictionary:
 	}
 
 func _change_scene(scene_path: String) -> void:
+	MusicAudio.stop_stinger()
+	if scene_path not in [OVERWORLD_SCENE, TOWN_SCENE]:
+		AmbientAudio.stop_overworld_ambient("scene_change")
 	_reconcile_pending_load_resumed_scene(scene_path)
 	_reconcile_pending_battle_resolution_overworld_scene(scene_path)
 	var packed_scene := _packed_scene_for_route(scene_path)
