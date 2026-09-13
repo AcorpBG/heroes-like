@@ -22270,6 +22270,23 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "production-content-validator-20260913",
+      "title": "Reconcile production content validators",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "tooling_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/rmg-biome-blocker-library.md",
+        "docs/audio-production-implementation.md",
+        "docs/production-content-validation.md"
+      ],
+      "createdAt": "2026-09-13T06:39:36.298944+00:00",
+      "startedAt": "2026-09-13T06:39:36.298944+00:00",
+      "notes": "Resolved exactly 931 reported assertions with provenance-backed checks; four focused positive/corruption tests pass. Full local validation: 1744 before, 813 after, no new failures. Remaining older art proofs/canvas expectations and missing prototype frames/smoke reports remain visible and block full-repository acceptance. Art/audio unchanged.",
+      "completedAt": "2026-09-13T06:47:02.881317+00:00"
+    },
+    {
       "id": "rmg-biome-blocker-library-20260913",
       "title": "Produce 100 new blockers per biome",
       "phase": "phase-6-production-alpha-layer",

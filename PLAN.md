@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Production content validator reconciliation
+
+`production-content-validator-20260913` — completed for the reported 931 failures. Production blocker/audio contracts and corruption controls pass; full local validation still reports 813 separate pre-existing art-proof/canvas and missing-prerequisite failures. No art/audio changed or checks exempted. Details: `docs/production-content-validation.md`.
+
 ### Expanded Biome Blocker Library
 
 `rmg-biome-blocker-library-20260913` — completed. Added 900 distinct blocker PNGs (100 per biome): nine new dead-tree originals and 891 assembled clusters, including 414 dead-tree appearances. Live RMG palettes and wiki updated; native collision/placement authority unchanged. Asset build, visual review, import and catalog checks passed; no gameplay suite run. Details: `docs/rmg-biome-blocker-library.md`.
