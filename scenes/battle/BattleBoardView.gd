@@ -167,6 +167,7 @@ const BATTLE_AUDIO_REDUCED_REPETITION_COOLDOWN_MULTIPLIER := 2
 const BATTLE_AUDIO_BUS := "Effects"
 const BATTLE_SFX_MANIFEST_PATH := "res://content/battle_sfx_manifest.json"
 const BATTLE_VFX_MANIFEST_PATH := "res://content/battle_vfx_manifest.json"
+const CombatVfxMotion = preload("res://scripts/ui/CombatVfxMotion.gd")
 const BATTLE_FIELD_OBJECTIVE_ART_MANIFEST_PATH := "res://content/battle_field_objective_art_manifest.json"
 const BATTLE_FIELD_OBJECTIVE_ART_PRESENTATION_MODEL := "type_distinct_imported_landmark_with_non_color_control_shape_and_legacy_geometry_fallback"
 const BATTLE_STATUS_EFFECT_ART_MANIFEST_PATH := "res://content/battle_status_effect_art_manifest.json"
@@ -2878,6 +2879,15 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 			draw_texture_rect_region(animation_sheet, fallback_frame_rect, _animation_frame_region_for_stack(stack), Color(1.0, 1.0, 1.0, 0.96))
 		else:
 			_draw_unit_glyph(center, token_radius, stack)
+	# Foreground combat art belongs above the bodies but below every readout.
+	_draw_combat_vfx_foreground(hex_layout, stack_cells)
+	for row_value in visual_rows:
+		var row: Dictionary = row_value
+		var stack: Dictionary = row.stack
+		var battle_id := String(row.battle_id)
+		var center: Vector2 = row.center
+		var token_radius: float = _stack_token_radius(radius)
+		var side := String(stack.get("side", ""))
 		_draw_stack_side_cue(center, token_radius, side)
 		_draw_stack_status_effect_badges(center, radius, token_radius, stack)
 		_draw_stack_health_bar(center, radius, stack)
@@ -3359,6 +3369,8 @@ func _draw_imported_vfx_asset(entry: Dictionary, start: Vector2, end: Vector2, c
 	var texture: Texture2D = _battle_vfx_texture_for_path(texture_path) as Texture2D
 	if texture == null:
 		return false
+	if CombatVfxMotion.owns(spec, entry):
+		return true # Composited after unit bodies, before health/count captions.
 	var render_mode := String(spec.get("render_mode", ""))
 	var draw_center := center
 	var rotation := deg_to_rad(float(spec.get("base_rotation_degrees", 0.0)))
@@ -3402,6 +3414,29 @@ func _draw_imported_vfx_asset(entry: Dictionary, start: Vector2, end: Vector2, c
 	draw_texture_rect(texture, Rect2(Vector2(-draw_size, -draw_size) * 0.5, Vector2(draw_size, draw_size)), false, Color(1.0, 1.0, 1.0, alpha))
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	return true
+
+func _combat_vfx_layers(hex_layout: Dictionary, stack_cells: Dictionary) -> Array:
+	var result := []
+	var preferences := AnimationCueCatalogScript.normalize_animation_preferences(_animation_preferences())
+	for entry in _vfx_draw_entries(hex_layout, stack_cells):
+		if not bool(entry.get("asset_loaded", false)): continue
+		var spec := _battle_vfx_manifest_cue(String(entry.get("cue_id", "")))
+		for layer in CombatVfxMotion.layers(spec, entry, preferences):
+			if result.size() >= CombatVfxMotion.MAX_LAYERS_PER_FRAME: return result
+			layer["asset_path"] = String(entry.get("asset_path", ""))
+			layer["cue_id"] = String(entry.get("cue_id", ""))
+			layer["event_id"] = String(entry.get("event_id", ""))
+			result.append(layer)
+	return result
+
+func _draw_combat_vfx_foreground(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
+	for layer in _combat_vfx_layers(hex_layout, stack_cells):
+		var texture: Texture2D = _battle_vfx_texture_for_path(String(layer.asset_path))
+		if texture == null: continue
+		var extent := float(layer.extent)
+		draw_set_transform(layer.center, float(layer.rotation), Vector2.ONE)
+		draw_texture_rect(texture, Rect2(Vector2.ONE * -extent * 0.5, Vector2.ONE * extent), false, Color(1, 1, 1, float(layer.alpha)))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array:
 	var entries: Array = []

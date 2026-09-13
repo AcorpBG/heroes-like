@@ -64863,7 +64863,10 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ensure('\t\t"effect":\n\t\t\treturn "vfx_spell_command_ward"' in spell_specific_vfx_block, errors, "BattleBoardView.gd must retain the shared Command Ward effect VFX cue")
     ensure('\t\t"effect":\n\t\t\treturn "audio_spell_command_ward"' in spell_specific_audio_block, errors, "BattleBoardView.gd must retain the shared Command Ward effect audio cue")
     draw_block = battle_board_text[battle_board_text.find("func _draw() -> void:"):battle_board_text.find("func _draw_terrain", battle_board_text.find("func _draw() -> void:"))]
-    ensure(draw_block.find("_draw_vfx_cues(hex_layout, stack_cells)") < draw_block.find("_draw_stack_tokens(hex_layout, stack_cells)"), errors, "Battle VFX assets must draw below stack tokens and count labels")
+    ensure(draw_block.find("_draw_vfx_cues(hex_layout, stack_cells)") < draw_block.find("_draw_stack_tokens(hex_layout, stack_cells)"), errors, "Ground VFX must precede the unit/effects/readout composite")
+    token_block = battle_board_text[battle_board_text.find("func _draw_stack_tokens"):battle_board_text.find("func _active_mapped_status_effects")]
+    effect_order = [token_block.find(token) for token in ("_draw_stack_art(", "_draw_combat_vfx_foreground(", "_draw_stack_health_bar(", "_draw_count_badge(", "_draw_stack_caption(")]
+    ensure(all(index >= 0 for index in effect_order) and effect_order == sorted(effect_order), errors, "Layered combat effects must sit above unit art and below health/count/caption readouts")
     imported_draw_block = battle_board_text[battle_board_text.find("func _draw_imported_vfx_asset"):battle_board_text.find("func _vfx_draw_entries", battle_board_text.find("func _draw_imported_vfx_asset"))]
     for required_token in (
         "if spec.is_empty():\n\t\treturn false",

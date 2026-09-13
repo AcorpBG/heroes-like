@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Layered Combat Visual Effects
+
+`vfx-combat-layered-feedback-20260913` — completed, owner-directed Phase 6 child. Original-raster projectile trails, melee sweeps, expanding hits and spell/status layers protect readouts, timing, rules and saves. Source/Linux 1,095 and Windows 1,081 checks pass; small/wide captures inspected. Repository, official exports and package parity pass; temporary intermediates cleaned. The legacy combined report's 11 unchanged audio-only assertion failures are documented, not claimed green. Requirements/evidence: `docs/combat-layered-vfx.md`. No next slice selected.
+
 ### Owned Hero Screen
 
 `ui-owned-hero-screen-20260913` — completed, owner-directed Phase 6 child. Portrait-led army/artifact/stat/specialization sheet opens by owned-roster double-click or keyboard/controller Confirm; inspection preserves gameplay/save authority and single-click selection. Source and both release platforms pass 528 checks each across 66 hero identities; small/wide and six-faction captures inspected. Town entry, full repository, official exports and package parity pass; task-owned obsolete captures cleaned. Requirements/evidence/limits: `docs/hero-screen.md`. No next slice selected.
