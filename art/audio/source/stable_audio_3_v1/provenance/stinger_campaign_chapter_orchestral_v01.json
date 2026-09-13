@@ -1,0 +1,166 @@
+{
+  "id": "stinger_campaign_chapter_orchestral_v01",
+  "brief_id": "stinger_campaign_chapter",
+  "priority": "P1",
+  "category": "stingers",
+  "targets": [
+    "campaign_chapter"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 8,
+  "prompt": "Original full-orchestra fantasy stinger: strings, woodwinds, French horns, timpani and orchestral percussion. Original instrumental fantasy quiet chapter transition. Clean full ending, no vocals; compatible with generic palette. No vocals, no electronic instruments. One complete short phrase with a clear natural ending.",
+  "seed": 101018780270887,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/stinger_campaign_chapter_orchestral_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/stinger_campaign_chapter_orchestral_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/stinger_campaign_chapter_orchestral_v01.wav",
+  "source_sha256": "e5dafc852b69f4b641caa4b8a7eb2f03b34f1f25c195b7c604d88ec022e26d42",
+  "master_sha256": "6bf836279fecced8c9e138799c4f1d610076df05a02d3a822212c1a9265445a5",
+  "runtime_sha256": "9147b56794165376e66bc1fdca0f8a03f83c4686999303b7476fc028e49d8806",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "Original full-orchestra fantasy stinger: strings, woodwinds, French horns, timpani and orchestral percussion. Original instrumental fantasy quiet chapter transition. Clean full ending, no vocals; compatible with generic palette. No vocals, no electronic instruments. One complete short phrase with a clear natural ending."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 8,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 101018780270887,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/stinger_campaign_chapter_orchestral_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "85734ad9-5534-4905-b0d3-72ddc4151617",
+    "generation_seconds": 2.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 7.987664,
+      "frames": 352256,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.2845458984375,
+      "rms": 0.04533864185214043,
+      "dc": 2.4987948563648388e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 0,
+    "trim_end_frame": 352256,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 7.819676588949419,
+    "runtime_statistics": {
+      "seconds": 7.987664,
+      "frames": 352256,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.70001220703125,
+      "rms": 0.11154553294181824,
+      "dc": 1.5660687495255843e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "id": "music_town_embercourt_v01",
+  "brief_id": "music_town_embercourt",
+  "priority": "P0",
+  "category": "music",
+  "targets": [
+    "music_town_embercourt_theme",
+    "music_town_embercourt_theme_harmony",
+    "music_town_embercourt_theme_motion"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 124,
+  "prompt": "Instrumental, no vocals. warm settled place identity with small internal development and breathing room. warm horns, restrained field drums, plucked strings and small civic bells; river-charter confidence and humane resolve. One coherent complete stereo instrumental composition, spacious acoustic arrangement, steady tempo, no vocals, no speech, no sound effects.",
+  "seed": 278317756929899,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/music_town_embercourt_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/music_town_embercourt_v01.flac",
+  "runtime_path": "res://art/audio/source/stable_audio_3_v1/alternates/runtime/music_town_embercourt_v01.ogg",
+  "source_sha256": "dafdf0341d94a82f524d12a6feb227d3ee4074234c68c756723a5d80f61269f3",
+  "master_sha256": "720bf064601e9fe50a8831dc6b3f500b829bbf49b6d9a021269389029579ba9a",
+  "runtime_sha256": "2ad07ec53ae1ed1299bcbeae4915877c26e889a81a16100b6fe7130556b712bc",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "Instrumental, no vocals. warm settled place identity with small internal development and breathing room. warm horns, restrained field drums, plucked strings and small civic bells; river-charter confidence and humane resolve. One coherent complete stereo instrumental composition, spacious acoustic arrangement, steady tempo, no vocals, no speech, no sound effects."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 124,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 278317756929899,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/music_town_embercourt_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "29cc1a57-364f-4adb-94f3-9d10078d683b",
+    "generation_seconds": 3.11
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 123.994558,
+      "frames": 5468160,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.209991455078125,
+      "rms": 0.018984714522957802,
+      "dc": 1.5970166714396328e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 10.45802572760766,
+    "runtime_statistics": {
+      "seconds": 120.994558,
+      "frames": 5335860,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.6809114217758179,
+      "rms": 0.06410682946443558,
+      "dc": 8.218762559408788e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  },
+  "selection": "Superseded acoustic direction; preserved as an alternate following owner orchestral feedback."
+}

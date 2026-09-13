@@ -1,0 +1,169 @@
+{
+  "id": "magic_old_measure_ward_v01",
+  "brief_id": "magic_old_measure_ward",
+  "priority": "P1",
+  "category": "magic",
+  "targets": [
+    "spell_old_measure_tally_axiom_04",
+    "spell_old_measure_measure_axiom_16",
+    "spell_old_measure_proof_axiom_28",
+    "spell_old_measure_unbroken_meridian"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "precise clicks, restrained low resonances and ordered geometric pulses. One short ward gestures with clear onset, no speech or music. Cast, impact and expiry must remain separate assets. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 128176022795479,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/magic_old_measure_ward_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/magic_old_measure_ward_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/magic_old_measure_ward_v01.wav",
+  "source_sha256": "443f43a502d4db073a4bd71949dfc7c0ac467f8ec43f48b3a2254fa6dae33351",
+  "master_sha256": "a12fe0464e9d394bafb2b07896c60fb0405dde86aaa860929091dd915261faa4",
+  "runtime_sha256": "8092edf9d087f44100a404b3229a22382a77a13bcbaee0c9b232385d18d5bd7c",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "precise clicks, restrained low resonances and ordered geometric pulses. One short ward gestures with clear onset, no speech or music. Cast, impact and expiry must remain separate assets. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 128176022795479,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/magic_old_measure_ward_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "8d3ac972-5010-4f66-bb77-892189150c5c",
+    "generation_seconds": 1.0
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.173675537109375,
+      "rms": 0.0019492243882268667,
+      "dc": 5.528054771275492e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 10143,
+    "trim_end_frame": 16317,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1543,
+    "gain_db": 12.106970180153338,
+    "runtime_statistics": {
+      "seconds": 0.14,
+      "frames": 6174,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.03820069134235382,
+      "dc": 0.00035698252031579614,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

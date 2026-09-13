@@ -1,0 +1,166 @@
+{
+  "id": "body_leviathan_hit_v09",
+  "brief_id": "body_leviathan",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "leviathan"
+  ],
+  "variant": 8,
+  "gesture": "hit",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "enormous marine creature, deep original breath, fin movement and heavy body fall. One isolated short hit reaction. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 249491282702188,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_leviathan_hit_v09.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_leviathan_hit_v09.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_leviathan_hit_v09.wav",
+  "source_sha256": "d15d2d300d1893cdb40ab329b40421f758d5ec3f3c83b0b15fabd5710c618169",
+  "master_sha256": "7a400b72045bd169b20fcb1d860121588486e0ca93371bae5348f98625348d56",
+  "runtime_sha256": "997c292f3a33ae4846bdef9be024a1d5d36427332fc4930ced2c47a1edd28018",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "enormous marine creature, deep original breath, fin movement and heavy body fall. One isolated short hit reaction. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 249491282702188,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_leviathan_hit_v09",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "c9782ea1-321d-4db7-b5ee-b22b31524cf8",
+    "generation_seconds": 1.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.155029296875,
+      "rms": 0.014960386790335178,
+      "dc": 3.6339515645522624e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 13671,
+    "trim_end_frame": 76734,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 13.095702542258481,
+    "runtime_statistics": {
+      "seconds": 1.43,
+      "frames": 63063,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.70001220703125,
+      "rms": 0.1223217248916626,
+      "dc": 0.0005412789178080857,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

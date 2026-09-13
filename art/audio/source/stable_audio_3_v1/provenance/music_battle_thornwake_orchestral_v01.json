@@ -1,0 +1,166 @@
+{
+  "id": "music_battle_thornwake_orchestral_v01",
+  "brief_id": "music_battle_thornwake",
+  "priority": "P0",
+  "category": "music",
+  "targets": [
+    "music_battle_thornwake_theme",
+    "music_battle_thornwake_theme_harmony",
+    "music_battle_thornwake_theme_motion"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 124,
+  "prompt": "Richly orchestrated original fantasy strategy soundtrack for full symphony orchestra. Expressive massed strings, lyrical woodwinds, warm French horns, carefully voiced brass, harp, timpani and restrained orchestral percussion. Instrumental, no vocals. clear restrained urgency, rhythmic purpose and space for attack/impact sounds. wooden flute, plucked wood, soft bowed strings and seed-rattle percussion; living orchards, recovery and encroaching roots. Broad melodic development and orchestral interplay. One coherent complete stereo instrumental composition, spacious concert-hall arrangement, steady tempo, no vocals, no speech, no sound effects, no drum kit, no electronic beat.",
+  "seed": 177782464495920,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/music_battle_thornwake_orchestral_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/music_battle_thornwake_orchestral_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/music_battle_thornwake_orchestral_v01.ogg",
+  "source_sha256": "993e007ce72ef7200d3c95ccb346307e3ec02e5333674db54f5413ea42d34830",
+  "master_sha256": "0220e3d02c3e21787de8664d21e61b63661b8e60a444e906f19e719372335989",
+  "runtime_sha256": "bf9e79a94bffa896a87ae92f1c644a31bdde4ec4e263cea9900340f66542c613",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "Richly orchestrated original fantasy strategy soundtrack for full symphony orchestra. Expressive massed strings, lyrical woodwinds, warm French horns, carefully voiced brass, harp, timpani and restrained orchestral percussion. Instrumental, no vocals. clear restrained urgency, rhythmic purpose and space for attack/impact sounds. wooden flute, plucked wood, soft bowed strings and seed-rattle percussion; living orchards, recovery and encroaching roots. Broad melodic development and orchestral interplay. One coherent complete stereo instrumental composition, spacious concert-hall arrangement, steady tempo, no vocals, no speech, no sound effects, no drum kit, no electronic beat."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 124,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 177782464495920,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/music_battle_thornwake_orchestral_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "3b5996e7-da1d-4f9f-a7c0-8414d1bc179d",
+    "generation_seconds": 6.047
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 123.994558,
+      "frames": 5468160,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.34735107421875,
+      "rms": 0.04412339627742767,
+      "dc": 7.799469312885776e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 6.088538384358156,
+    "runtime_statistics": {
+      "seconds": 120.994558,
+      "frames": 5335860,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.7022778987884521,
+      "rms": 0.08992067724466324,
+      "dc": 1.2687148227996659e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

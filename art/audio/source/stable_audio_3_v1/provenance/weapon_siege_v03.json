@@ -1,0 +1,166 @@
+{
+  "id": "weapon_siege_v03",
+  "brief_id": "weapon_siege",
+  "priority": "P1",
+  "category": "weapons",
+  "targets": [
+    "siege"
+  ],
+  "variant": 2,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "One large torsion engine or fantasy pressure cannon release; inspect specific unit before choosing takes, attack/release only; separate from impact. No speech, no music. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 128852477030188,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/weapon_siege_v03.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/weapon_siege_v03.flac",
+  "runtime_path": "res://art/audio/runtime/production/weapon_siege_v03.wav",
+  "source_sha256": "10bd50b2dfdbf7b629a56055687267571ac43b42255b8165bac212c8304ca5eb",
+  "master_sha256": "496333b990e01e401e26b61d7dde61ac21905c8ff177367c9cd002348ef73fd6",
+  "runtime_sha256": "d1924254b017402726661ee6c9aacd686bd6c598cd43a949ed2c22c3d15c1724",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "One large torsion engine or fantasy pressure cannon release; inspect specific unit before choosing takes, attack/release only; separate from impact. No speech, no music. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 128852477030188,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/weapon_siege_v03",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "12ba59b0-db56-436f-8ab4-62a257cef2c4",
+    "generation_seconds": 1.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.2344970703125,
+      "rms": 0.02046373300254345,
+      "dc": 0.0001251605135621503,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 0,
+    "trim_end_frame": 66150,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 9.503584892502516,
+    "runtime_statistics": {
+      "seconds": 1.5,
+      "frames": 66150,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.11087056994438171,
+      "dc": 0.0007920785574242473,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

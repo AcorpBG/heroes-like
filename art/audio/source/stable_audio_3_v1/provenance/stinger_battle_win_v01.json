@@ -1,0 +1,167 @@
+{
+  "id": "stinger_battle_win_v01",
+  "brief_id": "stinger_battle_win",
+  "priority": "P1",
+  "category": "stingers",
+  "targets": [
+    "battle_win"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 8,
+  "prompt": "Original instrumental fantasy earned short victory resolution. Clean full ending, no vocals; compatible with generic palette. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 73152552563006,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/stinger_battle_win_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/stinger_battle_win_v01.flac",
+  "runtime_path": "res://art/audio/source/stable_audio_3_v1/alternates/runtime/stinger_battle_win_v01.wav",
+  "source_sha256": "33ca3ce08389852ffcbb18fadca502e87dfbcfe831a656c405c7f31f64694876",
+  "master_sha256": "7ea85b0cdd078f4c17a22d7c039b2f89129a2c3fac5131103735334bdceb3c77",
+  "runtime_sha256": "ac50e181145036fd0cc91b888d96b4a699693831e0d9bb3faeab533eb724faa9",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "Original instrumental fantasy earned short victory resolution. Clean full ending, no vocals; compatible with generic palette. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 8,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 73152552563006,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/stinger_battle_win_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "c3700b7f-1554-410a-a88d-46d5bf56a350",
+    "generation_seconds": 2.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 7.987664,
+      "frames": 352256,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.10205078125,
+      "rms": 0.016479171812534332,
+      "dc": 0.0028371759690344334,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 0,
+    "trim_end_frame": 352256,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 16.970535965199936,
+    "runtime_statistics": {
+      "seconds": 7.987664,
+      "frames": 352256,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.11456070840358734,
+      "dc": 4.466779137146659e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  },
+  "selection": "Superseded acoustic direction; preserved as an alternate following owner orchestral feedback."
+}

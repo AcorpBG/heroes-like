@@ -1,0 +1,166 @@
+{
+  "id": "replace_audio_spell_command_ward_v01",
+  "brief_id": "replace_audio_spell_command_ward",
+  "priority": "P0",
+  "category": "battle",
+  "targets": [
+    "audio_spell_command_ward"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "neutral protective field settling with a warm low pulse; shared effect fallback. Isolated recording, no speech, no music, minimal room tail. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 171715860138300,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/replace_audio_spell_command_ward_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/replace_audio_spell_command_ward_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/replace_audio_spell_command_ward_v01.wav",
+  "source_sha256": "f7a6b42bb23c642bbfe76cd3e91ef9bc2a9718b4ea2d2b3a21cbff7c1a73862a",
+  "master_sha256": "82f98ae60a27dc7a82afe10a388171e771f023c93872a7eb88222b2d5a7b0476",
+  "runtime_sha256": "6905cc4cb9bf599766f5058327bf5b14e8efebd48b2bc1934786de79a16cceb0",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "neutral protective field settling with a warm low pulse; shared effect fallback. Isolated recording, no speech, no music, minimal room tail. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 171715860138300,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/replace_audio_spell_command_ward_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "ed07e706-efe8-461b-b841-9176cf70615d",
+    "generation_seconds": 1.0
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.056427001953125,
+      "rms": 0.013426866382360458,
+      "dc": 0.0003039402363356203,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 26019,
+    "trim_end_frame": 92169,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 16.811509134998822,
+    "runtime_statistics": {
+      "seconds": 1.5,
+      "frames": 66150,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.392974853515625,
+      "rms": 0.16000036895275116,
+      "dc": 0.0038762837648391724,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

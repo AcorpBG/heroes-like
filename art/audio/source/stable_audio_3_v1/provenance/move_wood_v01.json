@@ -1,0 +1,166 @@
+{
+  "id": "move_wood_v01",
+  "brief_id": "move_wood",
+  "priority": "P1",
+  "category": "movement",
+  "targets": [
+    "wood"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "One separate dry wood boot or equipment step variations. No baked rhythmic loop; no music or speech. Mounted gait requires confirmed hero art. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 12181318155407,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/move_wood_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/move_wood_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/move_wood_v01.wav",
+  "source_sha256": "3d75c3460a4453239f2be04355fddbd230101dd2fad548ea0a21f0e250559bb8",
+  "master_sha256": "e15e06b7a618ce7183198ae1fba5a976e422b0f9bad53694391de7bd4efbdb08",
+  "runtime_sha256": "32f08c8b9f40f9a5922ccd626f0f25d6e9cd53e55cc28d2d45cd5c2d50f5f038",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "One separate dry wood boot or equipment step variations. No baked rhythmic loop; no music or speech. Mounted gait requires confirmed hero art. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 12181318155407,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/move_wood_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "7705f2f8-ee9a-4ce6-aa50-a6d1103d0fc2",
+    "generation_seconds": 1.015
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.22174072265625,
+      "rms": 0.006992368493229151,
+      "dc": 1.377722765028011e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 0,
+    "trim_end_frame": 8820,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 9.984513475124487,
+    "runtime_statistics": {
+      "seconds": 0.2,
+      "frames": 8820,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.061683539301157,
+      "dc": 0.0005288018146529794,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

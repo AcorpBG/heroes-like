@@ -1,0 +1,166 @@
+{
+  "id": "stinger_battle_loss_orchestral_v01",
+  "brief_id": "stinger_battle_loss",
+  "priority": "P1",
+  "category": "stingers",
+  "targets": [
+    "battle_loss"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 8,
+  "prompt": "Original full-orchestra fantasy stinger: strings, woodwinds, French horns, timpani and orchestral percussion. Original instrumental fantasy restrained defeat cadence. Clean full ending, no vocals; compatible with generic palette. No vocals, no electronic instruments. One complete short phrase with a clear natural ending.",
+  "seed": 209485244761470,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/stinger_battle_loss_orchestral_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/stinger_battle_loss_orchestral_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/stinger_battle_loss_orchestral_v01.wav",
+  "source_sha256": "c987412328e29f4aff0f725b0a2f0e3d43602ac719d15e01c5e756d5a47338b6",
+  "master_sha256": "f1e1a8cbd93693670a6b1abcf7b0227981c2e247365f4481c8729be72717b5cf",
+  "runtime_sha256": "148aa3387355d81ebeca193a3cc659c138a62e910515d4fed37066e6113a616f",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "Original full-orchestra fantasy stinger: strings, woodwinds, French horns, timpani and orchestral percussion. Original instrumental fantasy restrained defeat cadence. Clean full ending, no vocals; compatible with generic palette. No vocals, no electronic instruments. One complete short phrase with a clear natural ending."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 8,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 209485244761470,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/stinger_battle_loss_orchestral_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "ba40a508-e13b-44fc-b167-5760db2b4a3d",
+    "generation_seconds": 2.032
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 7.987664,
+      "frames": 352256,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.32379150390625,
+      "rms": 0.04447949677705765,
+      "dc": 0.00016845035133883357,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 0,
+    "trim_end_frame": 352256,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 6.699579952487281,
+    "runtime_statistics": {
+      "seconds": 7.987664,
+      "frames": 352256,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.70001220703125,
+      "rms": 0.09619138389825821,
+      "dc": 1.7734548237058334e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

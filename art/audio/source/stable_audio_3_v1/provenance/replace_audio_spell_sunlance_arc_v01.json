@@ -1,0 +1,166 @@
+{
+  "id": "replace_audio_spell_sunlance_arc_v01",
+  "brief_id": "replace_audio_spell_sunlance_arc",
+  "priority": "P0",
+  "category": "battle",
+  "targets": [
+    "audio_spell_sunlance_arc"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "sharp glass-light charge and focused radiant lance sweep. Isolated recording, no speech, no music, minimal room tail. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 220457229075787,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/replace_audio_spell_sunlance_arc_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/replace_audio_spell_sunlance_arc_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/replace_audio_spell_sunlance_arc_v01.wav",
+  "source_sha256": "49f857188abf6abce61be6db13a43ed1b9fe061bc83cfa243ed88875d4c42bcd",
+  "master_sha256": "4c7585014ac4a74fb9ea0d6185906cc5c035b3d4dd034f8eb3670372fc0b7037",
+  "runtime_sha256": "6854a3241d7c7ba627a5158b0f662c465874e507649721ba78a077259065f6c2",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "sharp glass-light charge and focused radiant lance sweep. Isolated recording, no speech, no music, minimal room tail. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 220457229075787,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/replace_audio_spell_sunlance_arc_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "38dba8d4-bc32-4c60-8738-546b565ebebe",
+    "generation_seconds": 1.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.200164794921875,
+      "rms": 0.007435638457536697,
+      "dc": 3.618912614911096e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 17199,
+    "trim_end_frame": 64827,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 10.874241152176268,
+    "runtime_statistics": {
+      "seconds": 1.08,
+      "frames": 47628,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.05525407940149307,
+      "dc": 0.0001272879308089614,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

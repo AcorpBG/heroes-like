@@ -1,0 +1,169 @@
+{
+  "id": "magic_mire_impact_v01",
+  "brief_id": "magic_mire_impact",
+  "priority": "P1",
+  "category": "magic",
+  "targets": [
+    "spell_coal_rain",
+    "spell_mire_silt_rot_04",
+    "spell_mire_lowtide_rot_16",
+    "spell_mire_flood_rot_28"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "reeds, wet pressure, bubbles, breathy low tones and creeping marsh tension. One short impact gestures with clear onset, no speech or music. Cast, impact and expiry must remain separate assets. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 129851475264971,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/magic_mire_impact_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/magic_mire_impact_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/magic_mire_impact_v01.wav",
+  "source_sha256": "d9587599b6ae367d7572619b55121694f54d7deb87b8126751cd005a8807c0d6",
+  "master_sha256": "aeb5b5f60e01be128f4611deb1e7bbdd86cfa4b318d882b2043e1173cca2c8c4",
+  "runtime_sha256": "352df9541ac3703baef1028fb6a90ea587c8d59a4ebb14b64c8feeb076626320",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "reeds, wet pressure, bubbles, breathy low tones and creeping marsh tension. One short impact gestures with clear onset, no speech or music. Cast, impact and expiry must remain separate assets. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 129851475264971,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/magic_mire_impact_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "1b6bfe1f-7059-4849-baa6-d6c8c9f02060",
+    "generation_seconds": 1.0
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.152099609375,
+      "rms": 0.014181606471538544,
+      "dc": 5.904792124056257e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 3528,
+    "trim_end_frame": 69678,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 13.262771813829586,
+    "runtime_statistics": {
+      "seconds": 1.5,
+      "frames": 66150,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.11449869722127914,
+      "dc": 0.0005358697380870581,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "id": "body_spectral_attack_v07",
+  "brief_id": "body_spectral",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "spectral"
+  ],
+  "variant": 6,
+  "gesture": "attack",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "subtle hollow breath, cloth and distant memory-bell texture without intelligible speech. One isolated brief attack exertion or physical attack gesture. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 236666780354299,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_spectral_attack_v07.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_spectral_attack_v07.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_spectral_attack_v07.wav",
+  "source_sha256": "44d245b449bc104b0732f12472ae5d27df37297b54728fb3a6a47f83073818a8",
+  "master_sha256": "d9ffe79c16af30b10c0f2af677c10dc296e28a7926ba17e6e0374c259adf8bab",
+  "runtime_sha256": "7762e0ec812f858238f1d1f87842e1a12a332d7d89969da5bded90debbcb8ef2",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "subtle hollow breath, cloth and distant memory-bell texture without intelligible speech. One isolated brief attack exertion or physical attack gesture. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 236666780354299,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_spectral_attack_v07",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "93069606-7915-4a93-80ae-a3d4919dd076",
+    "generation_seconds": 1.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.034820556640625,
+      "rms": 0.0013942611403763294,
+      "dc": 5.669974780175835e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 174636,
+    "trim_end_frame": 183456,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 18.06179973983887,
+    "runtime_statistics": {
+      "seconds": 0.2,
+      "frames": 8820,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.27813720703125,
+      "rms": 0.03149436041712761,
+      "dc": 0.0018641672795638442,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

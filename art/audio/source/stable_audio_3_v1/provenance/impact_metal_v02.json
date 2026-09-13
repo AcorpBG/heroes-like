@@ -1,0 +1,166 @@
+{
+  "id": "impact_metal_v02",
+  "brief_id": "impact_metal",
+  "priority": "P1",
+  "category": "impacts",
+  "targets": [
+    "metal"
+  ],
+  "variant": 1,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "One clearly different short weapon impacts on metal armor or shield. No weapon release, speech or music; compact and readable. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 36457414213416,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/impact_metal_v02.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/impact_metal_v02.flac",
+  "runtime_path": "res://art/audio/runtime/production/impact_metal_v02.wav",
+  "source_sha256": "9bdd087a133e921831d3c335642453474ace807fb99863c6551893c4f3da1ee0",
+  "master_sha256": "eede456b379861e3a0106f239dae062e44cba85094cc18462712f459ea15597d",
+  "runtime_sha256": "cd126602b1542979f45124f5775af09b4fcbef194f816a0244001736a3d90dca",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "One clearly different short weapon impacts on metal armor or shield. No weapon release, speech or music; compact and readable. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 36457414213416,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/impact_metal_v02",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "191d1881-e47e-45dc-8374-9ea9f3fb33db",
+    "generation_seconds": 1.015
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.162872314453125,
+      "rms": 0.0029647971969097853,
+      "dc": 5.3612448027706705e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 19404,
+    "trim_end_frame": 29106,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 12.665301529538976,
+    "runtime_statistics": {
+      "seconds": 0.22,
+      "frames": 9702,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.70001220703125,
+      "rms": 0.040484312921762466,
+      "dc": 0.0002618654689285904,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

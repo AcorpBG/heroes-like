@@ -1,0 +1,166 @@
+{
+  "id": "body_living_wood_move_v02",
+  "brief_id": "body_living_wood",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "living_wood"
+  ],
+  "variant": 1,
+  "gesture": "move",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "bark creaks, roots stepping, branch swing and woody break/fall. One isolated single body footstep or body movement. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 88008813481517,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_living_wood_move_v02.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_living_wood_move_v02.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_living_wood_move_v02.wav",
+  "source_sha256": "f383197fb107db0abd2a0f6587417b5bc76a188a323d13a77b4475eb4d6e97af",
+  "master_sha256": "15f41e397d01b2f1082aa9cf905da0bbcc47f464fb5105a7c2c362250461424d",
+  "runtime_sha256": "49e7271b9cfe891383b46ba0390364fff863c032dd3da6878f6f2ad36cb19efe",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "bark creaks, roots stepping, branch swing and woody break/fall. One isolated single body footstep or body movement. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 88008813481517,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_living_wood_move_v02",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "4f59d389-c255-4943-81d4-4cdabc333352",
+    "generation_seconds": 1.0
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.122650146484375,
+      "rms": 0.0035208158660680056,
+      "dc": 1.47653954627458e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 146412,
+    "trim_end_frame": 155232,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 15.129639413088718,
+    "runtime_statistics": {
+      "seconds": 0.2,
+      "frames": 8820,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.05495312437415123,
+      "dc": 0.0003500421589706093,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

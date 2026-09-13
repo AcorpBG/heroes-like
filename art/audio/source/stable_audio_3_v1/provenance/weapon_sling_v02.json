@@ -1,0 +1,166 @@
+{
+  "id": "weapon_sling_v02",
+  "brief_id": "weapon_sling",
+  "priority": "P1",
+  "category": "weapons",
+  "targets": [
+    "sling"
+  ],
+  "variant": 1,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "One sling spin and stone release takes, attack/release only; separate from impact. No speech, no music. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 237659845677955,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/weapon_sling_v02.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/weapon_sling_v02.flac",
+  "runtime_path": "res://art/audio/runtime/production/weapon_sling_v02.wav",
+  "source_sha256": "e71fccba0e20196533a5ae3cc7576913dd11121bce8ef548531635165a3515e0",
+  "master_sha256": "41107efdf0643d05714f4e34be606280b84b76d11e3adeb9a2e81d756b9af596",
+  "runtime_sha256": "ed3943245f10fe6fde28d98e68f4affc806eec588f1c4e30b9e5cf0fbd7edc43",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "One sling spin and stone release takes, attack/release only; separate from impact. No speech, no music. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 237659845677955,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/weapon_sling_v02",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "5b092fa7-6eab-4de1-a53e-f7ac78aea5e4",
+    "generation_seconds": 1.015
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.162872314453125,
+      "rms": 0.0031156358309090137,
+      "dc": 2.4747103452682495e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 21609,
+    "trim_end_frame": 29106,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 12.666331517639087,
+    "runtime_statistics": {
+      "seconds": 0.17,
+      "frames": 7497,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.70001220703125,
+      "rms": 0.05036972090601921,
+      "dc": 0.0019955369643867016,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

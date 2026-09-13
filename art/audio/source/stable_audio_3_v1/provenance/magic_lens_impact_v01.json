@@ -1,0 +1,168 @@
+{
+  "id": "magic_lens_impact_v01",
+  "brief_id": "magic_lens_impact",
+  "priority": "P1",
+  "category": "magic",
+  "targets": [
+    "spell_sunlance_arc",
+    "spell_lens_array_ray_06",
+    "spell_lens_halo_ray_18"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "glass facets, clean harmonics, light sweeps and focused crystalline pulses. One short impact gestures with clear onset, no speech or music. Cast, impact and expiry must remain separate assets. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 143546953927405,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/magic_lens_impact_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/magic_lens_impact_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/magic_lens_impact_v01.wav",
+  "source_sha256": "0ceb9e32dbf0178d64bbea76b66613ef7c9c5ebf0af101c66122c03602f6376a",
+  "master_sha256": "4cecc41589a7ffa9d220ef8f41a40d2a68dd6d719c930f3ff391de4c4d0f40cc",
+  "runtime_sha256": "000b4cccbf85a4a93a48a108fd583322ea869a68d42459599cde88d40bddf9b9",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "glass facets, clean harmonics, light sweeps and focused crystalline pulses. One short impact gestures with clear onset, no speech or music. Cast, impact and expiry must remain separate assets. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 143546953927405,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/magic_lens_impact_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "1e35e145-00c6-4e2d-a205-1998387134bc",
+    "generation_seconds": 1.015
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.0770263671875,
+      "rms": 0.003591714659705758,
+      "dc": 2.7584257622947916e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 10143,
+    "trim_end_frame": 56889,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 18.06179973983887,
+    "runtime_statistics": {
+      "seconds": 1.06,
+      "frames": 46746,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.616241455078125,
+      "rms": 0.059829749166965485,
+      "dc": 0.00024486592155881226,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

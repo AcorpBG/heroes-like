@@ -1,0 +1,166 @@
+{
+  "id": "music_menu_orchestral_v01",
+  "brief_id": "music_menu",
+  "priority": "P0",
+  "category": "music",
+  "targets": [
+    "music_menu_theme",
+    "music_menu_theme_harmony",
+    "music_menu_theme_motion"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": true,
+  "source_seconds": 124,
+  "prompt": "Richly orchestrated original fantasy strategy soundtrack for full symphony orchestra. Expressive massed strings, lyrical woodwinds, warm French horns, carefully voiced brass, harp, timpani and restrained orchestral percussion. Instrumental, no vocals. broad inviting title theme with memorable original motif and a clear horizon. original acoustic fantasy ensemble: flute, lute, strings, horns and restrained hand percussion; exploration, wonder and consequence. Broad melodic development and orchestral interplay. One coherent complete stereo instrumental composition, spacious concert-hall arrangement, steady tempo, no vocals, no speech, no sound effects, no drum kit, no electronic beat.",
+  "seed": 189232242540752,
+  "model": "stable_audio_3_medium.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "48d9c65e290e7bcd5194e0633bfc2424a59ee9683f5c2d58762d997b7d8ce0b5",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/music_menu_orchestral_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/music_menu_orchestral_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/music_menu_orchestral_v01.ogg",
+  "source_sha256": "a949697d8a4f5fef9c2ed22cbb80e39c45f8af4279d3e207f6f248552e7215f0",
+  "master_sha256": "65fd0b8a42aa6ded54aab1f14a87e392ef96a8a2d19b858901f2307916592db6",
+  "runtime_sha256": "df4b403cafdeb72fddb89e57263cffcd885d57262f035e0ef7b2a663a7e8810f",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_medium.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "Richly orchestrated original fantasy strategy soundtrack for full symphony orchestra. Expressive massed strings, lyrical woodwinds, warm French horns, carefully voiced brass, harp, timpani and restrained orchestral percussion. Instrumental, no vocals. broad inviting title theme with memorable original motif and a clear horizon. original acoustic fantasy ensemble: flute, lute, strings, horns and restrained hand percussion; exploration, wonder and consequence. Broad melodic development and orchestral interplay. One coherent complete stereo instrumental composition, spacious concert-hall arrangement, steady tempo, no vocals, no speech, no sound effects, no drum kit, no electronic beat."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 124,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 189232242540752,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/music_menu_orchestral_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "2c136aa1-14cb-4045-b16e-414f077cc617",
+    "generation_seconds": 6.031
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 123.994558,
+      "frames": 5468160,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.32379150390625,
+      "rms": 0.044140588492155075,
+      "dc": 2.4526390916435048e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "loop_crossfade_seconds": 2.0,
+    "leading_trim_seconds": 1.0,
+    "gain_db": 6.696511916361948,
+    "runtime_statistics": {
+      "seconds": 120.994558,
+      "frames": 5335860,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.7129350900650024,
+      "rms": 0.09657508879899979,
+      "dc": 2.0722614863188937e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "id": "impact_machine_v04",
+  "brief_id": "impact_machine",
+  "priority": "P1",
+  "category": "impacts",
+  "targets": [
+    "machine"
+  ],
+  "variant": 3,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "One clearly different short weapon impacts on mechanical shell and loose rivets. No weapon release, speech or music; compact and readable. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 265631302475230,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/impact_machine_v04.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/impact_machine_v04.flac",
+  "runtime_path": "res://art/audio/runtime/production/impact_machine_v04.wav",
+  "source_sha256": "a06be820a020c2dc953be4bdb80321ad1c9a0002f1a0ca2d938c28ae0751a978",
+  "master_sha256": "85fdcc9d17ca76178248524813d566f7de6c642f9d61a6216c70f9f0dd427f37",
+  "runtime_sha256": "43e55a016313304106a6f537e3289d1e074c2af79f9001af7faf5ff6ef3b3efc",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "One clearly different short weapon impacts on mechanical shell and loose rivets. No weapon release, speech or music; compact and readable. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 265631302475230,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/impact_machine_v04",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "b6d8c8ea-a4ff-4073-a613-f2e6664b8b62",
+    "generation_seconds": 1.0
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.134429931640625,
+      "rms": 0.0030689991544932127,
+      "dc": 2.613360038594692e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 91728,
+    "trim_end_frame": 98343,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1653,
+    "gain_db": 15.412143553635316,
+    "runtime_statistics": {
+      "seconds": 0.15,
+      "frames": 6615,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.044749509543180466,
+      "dc": 0.00023913971381261945,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "id": "magic_furnace_expire_v01",
+  "brief_id": "magic_furnace_expire",
+  "priority": "P1",
+  "category": "magic",
+  "targets": [
+    "spell_cinder_burst",
+    "spell_stone_veil",
+    "spell_heat_rite",
+    "spell_pressure_clause",
+    "spell_furnace_rivet_clause_05",
+    "spell_furnace_brass_rite_07",
+    "spell_furnace_ash_mantle_09",
+    "spell_furnace_foundry_bellows_11",
+    "spell_furnace_hammer_rail_13",
+    "spell_furnace_slag_clamp_15",
+    "spell_furnace_coal_clause_17",
+    "spell_furnace_kiln_rite_19",
+    "spell_furnace_rivet_mantle_21",
+    "spell_furnace_brass_bellows_23",
+    "spell_furnace_ash_rail_25",
+    "spell_furnace_foundry_clamp_27",
+    "spell_furnace_redline_overdrive"
+  ],
+  "variant": 0,
+  "gesture": "",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "ignition, dry embers, hot iron, pressure and quenched metal. One short expire gestures with clear onset, no speech or music. Cast, impact and expiry must remain separate assets. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience.",
+  "seed": 190101612028892,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/magic_furnace_expire_v01.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/magic_furnace_expire_v01.flac",
+  "runtime_path": "res://art/audio/runtime/production/magic_furnace_expire_v01.wav",
+  "source_sha256": "eb323bf6ed6d18a8eb59eba16da72d2afd7424e491ea4243b71c59111f94a213",
+  "master_sha256": "410cc9a284b4a7de3cfef4e5450e4b2876dbb1d26591f0d151d7120fff3b7f0a",
+  "runtime_sha256": "024194ad56edd1da81402ff917c865e11732fa872e0b57b421e1d860f1a20387",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "ignition, dry embers, hot iron, pressure and quenched metal. One short expire gestures with clear onset, no speech or music. Cast, impact and expiry must remain separate assets. A single isolated event, not a repeating sequence. Quiet space before and after. No background ambience."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 190101612028892,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/magic_furnace_expire_v01",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "dd976bbc-5f5d-4438-b5ee-24775b36c24d",
+    "generation_seconds": 1.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.152099609375,
+      "rms": 0.005811034236103296,
+      "dc": 4.402465492603369e-06,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 6615,
+    "trim_end_frame": 18081,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 13.259649861651797,
+    "runtime_statistics": {
+      "seconds": 0.26,
+      "frames": 11466,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.70001220703125,
+      "rms": 0.07464203238487244,
+      "dc": 0.00023374187003355473,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

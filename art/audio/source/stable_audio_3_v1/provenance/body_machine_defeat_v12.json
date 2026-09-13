@@ -1,0 +1,166 @@
+{
+  "id": "body_machine_defeat_v12",
+  "brief_id": "body_machine",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "machine"
+  ],
+  "variant": 11,
+  "gesture": "defeat",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "metal joints, pressure hiss, mechanism strain and shutdown/collapse. One isolated defeat and body collapse. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 56224980355077,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_machine_defeat_v12.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_machine_defeat_v12.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_machine_defeat_v12.wav",
+  "source_sha256": "3edf49a4cc488ecc59d53f59bc2588c708128d7d462ffd9efc4493223cabaa92",
+  "master_sha256": "c26c54923291ee8b907da09bdbd9ccfe1ed9bebd0e97a076f105d76bc3bb70ce",
+  "runtime_sha256": "624c94ed8b193b48ae32d4e4914edbd855c16cfeffac4523cb7dd599fa282bfe",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "metal joints, pressure hiss, mechanism strain and shutdown/collapse. One isolated defeat and body collapse. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 56224980355077,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_machine_defeat_v12",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "a425ed66-4346-4de1-8a6f-2a0db2b378d6",
+    "generation_seconds": 1.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.14422607421875,
+      "rms": 0.007073522545397282,
+      "dc": 2.6573461582302116e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 30429,
+    "trim_end_frame": 48069,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 13.722676406252903,
+    "runtime_statistics": {
+      "seconds": 0.4,
+      "frames": 17640,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.11420943588018417,
+      "dc": 0.0009874114766716957,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

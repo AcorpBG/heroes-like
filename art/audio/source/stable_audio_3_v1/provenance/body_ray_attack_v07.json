@@ -1,0 +1,166 @@
+{
+  "id": "body_ray_attack_v07",
+  "brief_id": "body_ray",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "ray"
+  ],
+  "variant": 6,
+  "gesture": "attack",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "floating marine creature, soft membrane movement, airy calls and wet impacts. One isolated brief attack exertion or physical attack gesture. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 195339854588572,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_ray_attack_v07.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_ray_attack_v07.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_ray_attack_v07.wav",
+  "source_sha256": "994b07a81a92f5e152d88bf776fe57b4d7d02c15f5ba1392204537cf3d0da9fa",
+  "master_sha256": "91d2e5e517aaed5c41517294ebe1278a2fcda145be214c810085e0bd4a6b86f7",
+  "runtime_sha256": "216c6ece073a568c513936d8c6dc44537df421ebf539c7c48173a2395262e8da",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "floating marine creature, soft membrane movement, airy calls and wet impacts. One isolated brief attack exertion or physical attack gesture. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 195339854588572,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_ray_attack_v07",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "9a765c49-1d52-4171-8c57-0df06e8bb52a",
+    "generation_seconds": 1.0
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.21978759765625,
+      "rms": 0.008667287416756153,
+      "dc": 5.273714123177342e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 146412,
+    "trim_end_frame": 156555,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 10.063969695890211,
+    "runtime_statistics": {
+      "seconds": 0.23,
+      "frames": 10143,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.09982205182313919,
+      "dc": 0.004338427446782589,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}

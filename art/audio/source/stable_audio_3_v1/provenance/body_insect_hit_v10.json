@@ -1,0 +1,166 @@
+{
+  "id": "body_insect_hit_v10",
+  "brief_id": "body_insect",
+  "priority": "P1",
+  "category": "unit_body",
+  "targets": [
+    "insect"
+  ],
+  "variant": 9,
+  "gesture": "hit",
+  "loop": false,
+  "source_seconds": 5,
+  "prompt": "moth-like wing flutter, chitin rustle and small dry body impacts. One isolated short hit reaction. No other action, no speech, no music. Close isolated recording with quiet space before and after.",
+  "seed": 225505008055122,
+  "model": "stable_audio_3_small_sfx.safetensors",
+  "status": "technical_checks_passed",
+  "listening_review": "pending",
+  "model_repository": "Comfy-Org/stable-audio-3",
+  "model_revision": "96fc663283cde94cb631bc84f6c9ece7bbe2bf25",
+  "model_sha256": "ed9cf1b6172f1a8c2921a9560c21109ff3239524563ced9dce6dcdef41e2f515",
+  "text_encoder_sha256": "1e1eba25be8872edb0d3c6335c6658fd6388e7b14b60da6e454e404cfcd8150e",
+  "source_path": "art/audio/source/stable_audio_3_v1/raw/body_insect_hit_v10.flac",
+  "master_path": "art/audio/source/stable_audio_3_v1/masters/body_insect_hit_v10.flac",
+  "runtime_path": "res://art/audio/runtime/production/body_insect_hit_v10.wav",
+  "source_sha256": "b2a3d1c1ef4a92d14446dce8ee27d4678e2fa717501ca5ebee34a57c7ec81485",
+  "master_sha256": "9abc3184625ac582ac7b4e53048161add3afca57f9f6ea716043c17a3fde4660",
+  "runtime_sha256": "9dac4e8573df491a5b4827c2b407a09b134ab4020ad42b5d6e74fbb03642a9bc",
+  "generation": {
+    "workflow": {
+      "25": {
+        "class_type": "CheckpointLoaderSimple",
+        "inputs": {
+          "ckpt_name": "stable_audio_3_small_sfx.safetensors"
+        }
+      },
+      "26": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "t5gemma_b_b_ul2.safetensors",
+          "type": "stable_audio",
+          "device": "default"
+        }
+      },
+      "6": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": "moth-like wing flutter, chitin rustle and small dry body impacts. One isolated short hit reaction. No other action, no speech, no music. Close isolated recording with quiet space before and after."
+        }
+      },
+      "7": {
+        "class_type": "CLIPTextEncode",
+        "inputs": {
+          "clip": [
+            "26",
+            0
+          ],
+          "text": ""
+        }
+      },
+      "11": {
+        "class_type": "EmptyLatentAudio",
+        "inputs": {
+          "seconds": 5,
+          "batch_size": 1
+        }
+      },
+      "3": {
+        "class_type": "KSampler",
+        "inputs": {
+          "model": [
+            "25",
+            0
+          ],
+          "positive": [
+            "6",
+            0
+          ],
+          "negative": [
+            "7",
+            0
+          ],
+          "latent_image": [
+            "11",
+            0
+          ],
+          "seed": 225505008055122,
+          "steps": 8,
+          "cfg": 1.0,
+          "sampler_name": "lcm",
+          "scheduler": "simple",
+          "denoise": 1.0
+        }
+      },
+      "12": {
+        "class_type": "VAEDecodeAudio",
+        "inputs": {
+          "samples": [
+            "3",
+            0
+          ],
+          "vae": [
+            "25",
+            2
+          ]
+        }
+      },
+      "59": {
+        "class_type": "AudioAdjustVolume",
+        "inputs": {
+          "audio": [
+            "12",
+            0
+          ],
+          "volume": -12
+        }
+      },
+      "58": {
+        "class_type": "SaveAudioAdvanced",
+        "inputs": {
+          "audio": [
+            "59",
+            0
+          ],
+          "filename_prefix": "production-v1/body_insect_hit_v10",
+          "format": "flac"
+        }
+      }
+    },
+    "prompt_id": "9b13d620-401b-4b52-9b2d-1690623c8876",
+    "generation_seconds": 1.016
+  },
+  "edit": {
+    "recipe": "aurelion_audio_edit_v1",
+    "source_statistics": {
+      "seconds": 5.01551,
+      "frames": 221184,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.148162841796875,
+      "rms": 0.006950049661099911,
+      "dc": 4.011848068330437e-05,
+      "finite": true,
+      "clipping_fraction": 0.0
+    },
+    "trim_start_frame": 57771,
+    "trim_end_frame": 68355,
+    "attack_fade_frames": 132,
+    "release_fade_frames": 1764,
+    "gain_db": 14.392759506844916,
+    "runtime_statistics": {
+      "seconds": 0.24,
+      "frames": 10584,
+      "sample_rate_hz": 44100,
+      "channels": 2,
+      "peak": 0.699981689453125,
+      "rms": 0.08078279346227646,
+      "dc": 0.0061671859584748745,
+      "finite": true,
+      "clipping_fraction": 0.0
+    }
+  }
+}
