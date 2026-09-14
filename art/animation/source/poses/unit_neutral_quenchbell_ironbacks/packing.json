@@ -1,0 +1,222 @@
+{
+  "unit_id": "unit_neutral_quenchbell_ironbacks",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          385,
+          340
+        ]
+      ],
+      "anchor": [
+        235,
+        340
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "idle_breath",
+      "source": "poses.png",
+      "rects": [
+        [
+          385,
+          0,
+          770,
+          340
+        ]
+      ],
+      "anchor": [
+        619,
+        340
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "poses.png",
+      "rects": [
+        [
+          770,
+          0,
+          1155,
+          340
+        ]
+      ],
+      "anchor": [
+        1003,
+        340
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "poses.png",
+      "rects": [
+        [
+          1155,
+          0,
+          1536,
+          340
+        ]
+      ],
+      "anchor": [
+        1387,
+        340
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "walk_pass",
+      "source": "poses.png",
+      "rects": [
+        [
+          0,
+          350,
+          380,
+          648
+        ]
+      ],
+      "anchor": [
+        235,
+        680
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "attack_windup",
+      "source": "poses.png",
+      "rects": [
+        [
+          380,
+          340,
+          738,
+          675
+        ]
+      ],
+      "anchor": [
+        619,
+        680
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "attack_ram",
+      "source": "poses.png",
+      "rects": [
+        [
+          738,
+          380,
+          1157,
+          675
+        ]
+      ],
+      "anchor": [
+        1003,
+        680
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "guard",
+      "source": "poses.png",
+      "rects": [
+        [
+          1157,
+          375,
+          1536,
+          680
+        ]
+      ],
+      "anchor": [
+        1387,
+        680
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "recoil",
+      "source": "poses.png",
+      "rects": [
+        [
+          0,
+          680,
+          370,
+          980
+        ],
+        [
+          260,
+          648,
+          345,
+          680
+        ]
+      ],
+      "anchor": [
+        235,
+        985
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "death_kneel",
+      "source": "poses.png",
+      "rects": [
+        [
+          370,
+          695,
+          740,
+          980
+        ]
+      ],
+      "anchor": [
+        619,
+        985
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "death_fall",
+      "source": "poses.png",
+      "rects": [
+        [
+          740,
+          730,
+          1110,
+          980
+        ]
+      ],
+      "anchor": [
+        1003,
+        985
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "dead",
+      "source": "poses.png",
+      "rects": [
+        [
+          1110,
+          790,
+          1536,
+          980
+        ]
+      ],
+      "anchor": [
+        1387,
+        985
+      ],
+      "scale": 0.72
+    }
+  ]
+}

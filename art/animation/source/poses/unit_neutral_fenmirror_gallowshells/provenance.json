@@ -1,0 +1,62 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_fenmirror_gallowshells",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_only_pending_packing_and_playback",
+  "reference": "art/units/source/curated/unit_neutral_fenmirror_gallowshells.png",
+  "reference_sha256": "634ad7a6b9f09011a932b14dd8e558b7a738371c04a066e98c6fc785f55388ed",
+  "outputs": [
+    {
+      "source": "poses-anatomy-v3.png",
+      "source_sha256": "9d7238c7b0ee82bdb371d4cdd143f8d2f80ac1a358ed732a24c8be1f38b6e95a",
+      "source_output": "exec-1d7383a1-41cb-4789-95ba-331c15f22f92.png",
+      "prompt": "Edit ONLY bottom-left creature (row3 column1) in this 4x3 sheet. It mistakenly has THREE pincers: two raised overhead and one low near the center-bottom pointing right. REMOVE ENTIRE low third pincer and its arm at approximately x180..290,y860..955, replacing that extra arm with the same flat gray background where outside the torso; reconstruct only exposed small torso surface if needed. Retain the TWO overhead pincers. Do not remove or change the six narrow pointed walking legs. All other eleven creatures, shell arches, placement, size, colors and gray background remain unchanged. No new limbs, no text.",
+      "alpha_source": "alpha/poses-anatomy-v3.png",
+      "alpha_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
+      "alpha_output": "exec-d3b41bd3-875a-4dcb-a3f7-010e4030b284.png",
+      "alpha_prompt": "Remove ONLY the pale gray background from this corrected twelve-pose crab sheet. Output genuine transparent RGBA, preserving exact creature pixels, poses, layout, size, two pincers per body, six legs, shell arches and hanging ornaments. Transparent gaps between legs and under arches. No matte, checkerboard, shadows, floor, glow, haze, text or new anatomy."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "poses.png",
+      "sha256": "dcec838994afa00e2c5f3bad74b8f25c1fff988bd49c00756550e645da5dc81a",
+      "source_output": "exec-5618a639-52af-43b0-9f2b-befe8678c1e3.png",
+      "prompt": "Use case: stylized-concept. Original fantasy tactical battle sprite sheet, twelve fully articulated poses of Fenmirror Gallowshell based on this identity reference: low dark armored crab with SIX jointed walking legs and TWO massive serrated pincer arms, amber lantern eyes, moss-covered blue-gray peatglass carapace rising into a large curved arch over its back, bronze shell ribs and small hanging bronze rings/knotted moss cords under arch. Same creature and body size, facing RIGHT, elevated three-quarter side tactical camera. EXACT FOUR columns by THREE rows, generous empty gutters, every arch/leg/pincer inside its own cell, no overlapping poses. Row1: relaxed planted stance claws low; breathing/alert claws slightly lifted; walking alternating tripod contact A near front leg forward and middle back, opposite legs reversed; opposite tripod contact B. Row2: passing step feet lifted under body; attack anticipation near huge pincer open and drawn back; attack strong forward snapping pincer with arm fully extended and weight shifted; defense both pincers crossed before face six feet planted low under arch. Row3: hit recoil shell tilting backward and pincers thrown apart; dying legs folding beneath body amber eyes dimming; falling onto SIDE shell arch tilted legs slack; fully DEAD body on side with curled legs, limp pincers, dark eyes and arch resting sideways, no floating. No blood or loose debris. Redraw genuine joint articulation and weight shift, not rotated/resized duplicate standing cutouts. Detailed original painterly raster matching reference. True transparent RGBA background, no checkerboard, floor, shadows, scenery, particles, haze, text, labels or panel borders. Preserve original legal identity, no copyrighted character art.",
+      "status": "Rejected anatomy: missing walking pincers and extra recoil pincer."
+    },
+    {
+      "source": "poses-gray.png",
+      "sha256": "78baebc28939f6e682cc4a6d3fe39b8ddedd3afc43131dac4b06a02a1f819b6a",
+      "source_output": "exec-63fe31b3-e68d-4f6f-b8f7-3b7c91239bcd.png",
+      "prompt": "Change ONLY the checkerboard behind these twelve original armored crab poses to flat pale gray RGB(210,210,210). Preserve exact poses, size, placement, shell arches, hanging ornaments, limbs and pincers. No gradients, shadows, text, particles or extra elements.",
+      "status": "Gray intermediate retains original anatomy faults."
+    },
+    {
+      "source": "alpha/poses.png",
+      "sha256": "cc252f764997f27d2c547e013abeb5b5f22a0dbe2fd325f7b3cd2a9e8d781344",
+      "source_output": "exec-714498b2-9260-4261-8120-d41dbb0cbaf1.png",
+      "prompt": "Remove the pale gray background completely. Genuine transparent RGBA. Preserve all twelve original crab poses, blue-gray curved shells, bronze edges, hanging ornaments, amber eyes, jointed legs and pincers unchanged at current size and positions. Clean transparent gaps, no checkerboard, gray matte, shadows, speckles, haze, text or new elements.",
+      "status": "Unselected original anatomy extraction."
+    },
+    {
+      "source": "poses-anatomy-v2.png",
+      "sha256": "ea0fd80b502076ebcbb98bd2a40affd06bd09e6adbcf1356087ac4d19663a1c6",
+      "source_output": "exec-735ed47c-7400-444a-a23f-8fbb34236ca1.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the twelve-pose sheet to correct; image 2 is the original crab identity reference. Correct ONLY limb anatomy in sheet row1 column3, row1 column4, row2 column1 and row3 column1. Every creature must retain exactly TWO large serrated PINCER ARMS distinct from SIX pointed walking legs (three each side; far legs may be occluded). In row1 column3 restore both pincers held ahead of face while retaining the alternating walking legs. In row1 column4 restore the missing near pincer held ahead while preserving the other pincer and opposite walking step. In row2 column1 restore both pincers ahead of face while preserving the passing walking step. In row3 column1 REMOVE the EXTRA third pincer low in front; keep exactly the two raised recoil pincers attached to their original shoulders, and six legs. Keep ALL OTHER POSES and the shell arches, bronze trim, moss ornaments, amber eyes, body size, exact 4x3 layout, original camera and pale gray background unchanged. Do not add new poses, change framing, rotate whole sprites, add extra claws, text, shadows or scenery. Original raster art.",
+      "status": "Walking pincers restored; extra recoil pincer remains."
+    },
+    {
+      "source": "poses-anatomy-v3.png",
+      "sha256": "9d7238c7b0ee82bdb371d4cdd143f8d2f80ac1a358ed732a24c8be1f38b6e95a",
+      "source_output": "exec-1d7383a1-41cb-4789-95ba-331c15f22f92.png",
+      "prompt": "Edit ONLY bottom-left creature (row3 column1) in this 4x3 sheet. It mistakenly has THREE pincers: two raised overhead and one low near the center-bottom pointing right. REMOVE ENTIRE low third pincer and its arm at approximately x180..290,y860..955, replacing that extra arm with the same flat gray background where outside the torso; reconstruct only exposed small torso surface if needed. Retain the TWO overhead pincers. Do not remove or change the six narrow pointed walking legs. All other eleven creatures, shell arches, placement, size, colors and gray background remain unchanged. No new limbs, no text.",
+      "status": "Extra recoil pincer removed. Source only, motion review pending."
+    }
+  ],
+  "review_notes": [
+    "Visual source inspection confirms restored walking pincers and removal of extra recoil pincer. Corrected alpha is RGBA 0..254; gallow-fixed-source-alpha-20260914 passes seven checks and its 1280x720 light/dark Godot capture was inspected cleanly. Not enabled; gait contacts, full action/death motion and packing remain outstanding."
+  ]
+}

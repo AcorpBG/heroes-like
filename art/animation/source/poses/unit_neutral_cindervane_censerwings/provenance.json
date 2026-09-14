@@ -1,0 +1,40 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_cindervane_censerwings",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_cindervane_censerwings.png",
+  "reference_sha256": "c729b4b977beaf19d411c9789e3ff73f192a63c3dac73238dc1cfd9c1cf25619",
+  "outputs": [
+    {
+      "source": "poses-gray.png",
+      "source_sha256": "e74f7f2106e9f970a6c343b7a47cfb2a9001ab099a2952e686d3c8a73c9c1d4d",
+      "source_output": "exec-0d6efbf1-f0ec-4f7e-b086-8356547e2571.png",
+      "prompt": "Replace ONLY the checkerboard background behind these sixteen original ember-feathered bird poses with uniform pale neutral gray RGB(210,210,210). Keep exact positions, sizes, wing feather tips, curved beaks, crest, bronze censer collars, talons and tails. No new shadows, gradients, smoke, particles, text or elements.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "ca02b1b0d48923a48a22436a5b56a3521a9be6cceb283e2ea479efee4b06851b",
+      "alpha_output": "exec-fc0ff80e-bea2-45ef-9446-461a67d089d0.png",
+      "alpha_prompt": "Remove the pale gray background entirely. Genuine transparent RGBA output. Preserve all sixteen original bird poses, fine feather tips, curved beaks, talons, crest, bronze censer collars and tails unchanged at current size and position. Clean transparent silhouette gaps, no gray matte, checkerboard, exterior glow, speckles, shadows, floor, text or new elements."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "poses.png",
+      "sha256": "851fc88001abb10ac853b6b06a381bfa3538eafb545c7f39db71a2d672ec8fb5",
+      "source_output": "exec-bea8c101-8865-4de0-9ddf-cd6c55c9b7e3.png",
+      "prompt": "Use case: stylized-concept. Original fantasy strategy battle sprite atlas using reference Cindervane Censerwing identity: slender long-necked dark charcoal and rust-red bird with ivory throat/chest feathers, long curved red beak, ember-tipped swept crest, TWO large feathered wings with bright orange teardrop ember eyespots and white bands, bronze glowing slotted censer collar around chest, two long thin black talon legs, long dark red feather tail with a compact attached smoky curl. Create SIXTEEN complete articulated poses of the SAME creature facing RIGHT (opposite reference), same body size and elevated three-quarter side camera. Exact FOUR columns by FOUR rows, generous empty gutters, every wing/tail/claw inside its cell, no pose overlap. Row1: relaxed wings half open feet lightly down; breathing/alert head raised wings relaxed differently; flying strong wings upstroke legs tucked; flying downstroke wings below body legs trailing. Row2: flight passing wings horizontal; melee anticipation neck pulled back talons cocked; forward hooked beak jab talons reaching; defense wings folded protecting bronze chest censer. Row3: ranged charge chest censer bright head raised wings drawn inward; ranged release chest forward beak open wings fanned out, no detached projectile; ranged recoil neck pulled back censer dimming wings back; ranged recovery settles with wings half open. Row4: hit recoil head averted wings uneven; dying wings buckling body falling feet slack; falling onto SIDE with folded wings and limp neck; final DEAD bird resting on side, neck and beak flat, collapsed wings, limp talons/tail, censer and ember markings unlit, no smoke. No blood. Every pose genuinely redrawn with visible joint articulation, not rotated/resized copies. Detailed painterly original raster matching reference. True transparent RGBA background, no checkerboard, shadows, floor, scenery, text, labels, grid, panel lines, detached smoke clouds, haze, loose sparks or exterior glow. Original art only.",
+      "status": "RGB checkerboard original, not runtime alpha"
+    }
+  ],
+  "review_notes": [
+    "Sixteen original articulated poses packed and enabled as a candidate. Source battle/packed-alpha checks pass 169/7; actual 1280x720 firing and light/dark captures inspected. Continuous wingbeat/action/guard/death acceptance remains outstanding."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_cindervane_censerwings.png",
+    "runtime_sha256": "1d12722a5df5f849ee02ed9ebb1f6eeecb2436c5b0fcd71ad8e1c4469c6a4b28",
+    "method": "Uniform 0.70 downsampling and segmented original-raster wing/beak/tail rectangles; no painting or warping."
+  }
+}
