@@ -133,6 +133,15 @@ func run()->void:
 		animation.pose_clips[Pose.REQUIRED_CLIPS[i]]={"row":i,"frames":4,"loop":i==0 or i==1,"frame_msec":150,"static_frame":0}
 	check(Pose.region(animation,"idle_hold",1.0,0,false)!=Pose.region(animation,"idle_hold",1.0,160,false),"idle does not cycle")
 	check(Pose.region(animation,"move_path_step",0.2,0,true)==Pose.region(animation,"move_path_step",0.8,600,true),"reduced motion cycles")
+	var normal_clock:Dictionary={"started_at_msec":1000,"max_duration_ms":700,"base_duration_ms":700}
+	var fast_clock:Dictionary={"started_at_msec":1000,"max_duration_ms":294,"base_duration_ms":700}
+	check(Pose.elapsed_msec({},1234)==1234,"idle wall clock lost")
+	check(Pose.elapsed_msec(normal_clock,800)==0,"queued event animated before start")
+	check(Pose.elapsed_msec(normal_clock,1000)==0,"event starts midway through global cycle")
+	check(Pose.elapsed_msec(normal_clock,1350)==350,"normal event clock drift")
+	check(Pose.elapsed_msec(fast_clock,1147)==350,"fast movement legs do not follow travel speed")
+	check(Pose.elapsed_msec({"started_at_msec":1000,"max_duration_ms":700},1350)==350,"legacy presentation record clock incompatible")
+	check(Pose.region(animation,"move_path_step",0.5,Pose.elapsed_msec(normal_clock,1350),false)==Pose.region(animation,"move_path_step",0.5,Pose.elapsed_msec(fast_clock,1147),false),"speed changes stride phase at equal action progress")
 	check(Pose.region(animation,"death_rout_remove",1.0,0,false,true)==Rect2(0,1280,256,256),"corpse not dedicated final row")
 	var packed:Dictionary={"pose_frame_size":{"width":512,"height":256},"pose_columns":4,"pose_clips":{"attack":{"frames":3,"indices":[6,7,8]}}}
 	check(Pose.region(packed,"melee_windup_release",1.0,0,false)==Rect2(0,512,512,256),"packed attack fails to cross atlas row")
@@ -189,6 +198,22 @@ func run()->void:
 	board.finish_action_playback(river)
 	var river_animation:=ContentService.get_unit_animation("unit_river_guard")
 	check(board._stack_token_art_source(river_stack)=="event_animation_sheet","original idle pose not used in normal battle")
+	# Two same-unit presentation actors must not share the application's loop
+	# phase. Compare away from frame boundaries so real render ticks are safe.
+	var prior_reduced_motion:=SettingsService.reduced_motion_enabled()
+	SettingsService.set_reduced_motion_enabled(false)
+	var phase_actor:Dictionary=river_stack.duplicate(true)
+	phase_actor.battle_id="independent_pose_clock"
+	var clock_now:=Time.get_ticks_msec()
+	for item in [[river_stack.battle_id,40],[phase_actor.battle_id,210]]:
+		board._stack_animation_playback_records[item[0]]={"state":"move_path_step","started_at_msec":clock_now-int(item[1]),"max_duration_ms":700,"base_duration_ms":700}
+		board._stack_animation_playback_until_msec[item[0]]=clock_now+2000
+	check(board._animation_frame_region_for_stack(river_stack)!=board._animation_frame_region_for_stack(phase_actor),"live event loops still share global application phase")
+	SettingsService.set_reduced_motion_enabled(true)
+	check(board._animation_frame_region_for_stack(river_stack)==board._animation_frame_region_for_stack(phase_actor),"event clock animates reduced-motion poses")
+	SettingsService.set_reduced_motion_enabled(prior_reduced_motion)
+	board._stack_animation_playback_records.clear()
+	board._stack_animation_playback_until_msec.clear()
 	for state in ["idle_hold","move_path_step","melee_windup_release","defend_brace","death_rout_remove"]:
 		check(Pose.region(river_animation,state,0.5,180,false).has_area(),"missing candidate state: "+state)
 	await capture("river-guard-idle",requested)

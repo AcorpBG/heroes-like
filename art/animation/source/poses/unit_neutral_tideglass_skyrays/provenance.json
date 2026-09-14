@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_tideglass_skyrays",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_prepared_not_runtime_registered",
+  "reference": "art/units/source/curated/unit_neutral_tideglass_skyrays.png",
+  "reference_sha256": "22a21c70b22ea35331c7b46e75bf4efbd2ceb996999780b21e6846906a2be9cb",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "70d982fa9afa90ff9ff0afef5d1756e7ffa43ef350c9e10d9a30b6e372433c20",
+      "source_output": "exec-4952141d-87a2-418f-ada5-05a83f9e11ba.png",
+      "prompt": "Use case: stylized-concept. Original Tideglass Skyray battle sprite animation sheet based on supplied original flying creature. Preserve its deep teal manta-ray body, broad translucent pale aqua glass-veined pectoral fins, three ivory dorsal fins, flowing white/aqua ribbon tendrils, long narrow tail, luminous pale eyes and small antique brass hanging lantern ornaments under the body. Exactly twelve whole-creature poses in strict FOUR columns by THREE rows. Every pose faces RIGHT in same slightly elevated three-quarter tactical camera, same body scale. Generous empty gutters and all long fins/tendrils/tail fully contained in each cell. Row1: relaxed hovering fins slightly lifted; gentle breathing hover fins flattening; flight stroke with both broad fins raised high and tendrils trailing; flight downstroke with fins curved down and tendrils lifting behind. Row2: level gliding fins extended; attack windup front body lifted fins curled back; diving ram attack snout extended forward RIGHT with fins swept back; defensive fins curled around flanks and body drawn inward. Row3: impact recoil body bent and fin tips recoiling; dying losing lift, body lowered with fins drooping and tendrils slack; landing collapsed on ground with one fin partly folded; final motionless DEAD manta lying flat on ground, fins slack and spread, head resting, tail and ribbons settled beside it, lanterns unlit. No blood. Death must show anatomical collapse, not a rotated flying cutout. Fins genuinely articulate and change curve across frames, not whole-image transforms. Match original detailed painterly raster with translucent glass membranes. Solid flat pure green RGB(0,255,0) backdrop in all gaps, no terrain, cast shadows, checkerboard, labels, grid, detached effects or particles.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "8fa6a6e9f67a400f9c5f024ebb4b3b321d206ae27a27300aa5f2c333c9d1c9a1",
+      "alpha_output": "exec-6c60f748-57f1-4b2d-8a7c-cb6bbe358c46.png",
+      "alpha_prompt": "Remove the green background. Preserve the twelve flying creature sprites unchanged, including translucent fins and pale ribbon tendrils. Transparent background."
+    }
+  ],
+  "review_notes": [
+    "Twelve original source poses inspected. Raised/downstroke fins, level glide, ram, inward defensive curl and flattened dead body are distinct. Original glass-veined fins, pale tendrils and brass lanterns retained.",
+    "Source-only; translucent fin/ribbon compositing, packing and live motion acceptance required before registration. No enabled or accepted count assigned."
+  ]
+}

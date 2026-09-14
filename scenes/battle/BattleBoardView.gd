@@ -2376,7 +2376,9 @@ func _animation_frame_region_for_stack(stack: Dictionary) -> Rect2:
 	if BattleUnitPose.has_authored_poses(animation):
 		var preferences := AnimationCueCatalogScript.normalize_animation_preferences(_animation_preferences())
 		var reduced := bool(preferences.get("reduced_motion", false))
-		return BattleUnitPose.region(animation, state_name, _stack_presentation_progress(String(stack.get("battle_id", ""))), Time.get_ticks_msec(), reduced)
+		var battle_id := String(stack.get("battle_id", ""))
+		var elapsed := BattleUnitPose.elapsed_msec(_animation_playback_record_for_stack(battle_id), Time.get_ticks_msec())
+		return BattleUnitPose.region(animation, state_name, _stack_presentation_progress(battle_id), elapsed, reduced)
 	var row := _animation_state_row_for_unit(String(stack.get("unit_id", "")), state_name)
 	var frame := _animation_frame_index_for_stack(stack)
 	return Rect2(Vector2(64.0 * float(frame), 64.0 * float(row)), Vector2(64.0, 64.0))
@@ -2452,6 +2454,7 @@ func _sync_animation_playback_records() -> void:
 		playback_record["expires_at_msec"] = expires_at_msec
 		playback_record["sequence_delay_msec"] = sequence_delay_msec
 		playback_record["max_duration_ms"] = duration_msec
+		playback_record["base_duration_ms"] = base_duration_msec
 		_stack_animation_playback_records[battle_id] = playback_record
 		if not cue_record.is_empty():
 			cue_record["observed_at_msec"] = now

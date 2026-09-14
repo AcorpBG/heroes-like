@@ -38,6 +38,7 @@ func pose_fixture(unit_id:String,lethal:bool=false,ranged:bool=false):
 		session.battle.stacks[index]=stack
 	BattleRules._sync_occupied_hexes(session.battle)
 	BattleRules._sync_distance_from_hexes(session.battle)
+	BattleRules.set_battle_presentation_speed(session,"fast" if OS.get_environment("BATTLE_POSE_SPEED")=="fast" else "normal")
 	return session
 func capture(name:String)->void:
 	if DisplayServer.get_name()=="headless":return
@@ -51,7 +52,7 @@ func run()->void:
 	var dims:=OS.get_environment("TOWN_OVERLAY_RESOLUTION").split("x")
 	requested=Vector2i(int(dims[0]),int(dims[1]))
 	SettingsService.set_reduced_motion_enabled(OS.get_environment("BATTLE_READABILITY_REDUCED")=="1")
-	SettingsService.set_battle_playback_speed_id("normal")
+	SettingsService.set_battle_playback_speed_id("fast" if OS.get_environment("BATTLE_POSE_SPEED")=="fast" else "normal")
 	var live=SessionState.set_active_session(pose_fixture("unit_river_guard"))
 	var shell=load("res://scenes/battle/BattleShell.tscn").instantiate()
 	add_child(shell)
@@ -101,6 +102,8 @@ func run()->void:
 				if not seen.has(identity):
 					seen[identity]=true
 					var record:Dictionary=board._animation_playback_record_for_stack(actor_id)
+					if OS.get_environment("BATTLE_POSE_SPEED")=="fast" and not record.is_empty():
+						check(int(record.get("max_duration_ms",0))==maxi(1,int(round(float(record.get("base_duration_ms",0))*0.42))),"live Fast action did not retain original/scaled pose clock: "+identity)
 					var sample_at:=int(record.get("started_at_msec",Time.get_ticks_msec()))+int(record.get("max_duration_ms",1))*0.5
 					var delay:=maxf(0.001,(sample_at-Time.get_ticks_msec())/1000.0)
 					await get_tree().create_timer(delay).timeout
@@ -111,7 +114,8 @@ func run()->void:
 					await capture(unit_id+"_"+action+"_"+identity)
 					var regions:=[]
 					for progress in [0.0,0.5,1.0]:
-						regions.append(str(Pose.region(animation,state,progress,300,false)))
+						var tick:=int(record.get("started_at_msec",0))+int(progress*int(record.get("max_duration_ms",1)))
+						regions.append(str(Pose.region(animation,state,progress,Pose.elapsed_msec(record,tick),false)))
 					evidence.append({"fixture":unit_id,"action":action,"actor":actor.unit_id,"side":actor.side,"state":state,"regions":regions,"sampled_region":sampled_region,"duration_ms":record.get("max_duration_ms",0)})
 			if action=="ranged":
 				check(seen.has(unit_id+"_ranged_aim_release"),unit_id+" never used dedicated ranged pose")
@@ -149,6 +153,12 @@ func run()->void:
 
 
 def main():
+    if '--pose-speed' in sys.argv:
+        index = sys.argv.index('--pose-speed')
+        if index + 1 >= len(sys.argv) or sys.argv[index + 1] not in ('normal', 'fast'):
+            raise SystemExit('--pose-speed requires normal or fast')
+        os.environ['BATTLE_POSE_SPEED'] = sys.argv[index + 1]
+        del sys.argv[index:index + 2]
     if '--unit' in sys.argv:
         index = sys.argv.index('--unit')
         if index + 1 >= len(sys.argv):

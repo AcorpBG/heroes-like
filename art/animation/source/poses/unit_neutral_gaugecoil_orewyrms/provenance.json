@@ -1,0 +1,31 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_gaugecoil_orewyrms",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_gaugecoil_orewyrms.png",
+  "reference_sha256": "80896b86d6f369940c0a1f17280bd79c6e1d51bfe5053636021c4f3189083907",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "37f0695c7acae92be9d4ba8ad859e64248f8e3872d4db0569df2c81455d80722",
+      "source_output": "exec-392ea5b0-6506-437d-ab00-15c79f35aa96.png",
+      "prompt": "Use case: stylized-concept. Original Gaugecoil Orewyrm battle animation sprite sheet using supplied original creature as identity reference. Preserve heavy segmented charcoal rock and weathered brass cylindrical body, circular drill-flower mouth with overlapping metal tooth petals, four short jointed rock fore/hind legs, three amber glass pressure bulbs and round dial gauges on back, raised tapered tail with red valve wheel. Twelve complete distinct articulated poses, strict FOUR columns by THREE rows. Every sprite faces RIGHT in a consistent slightly elevated three-quarter tactical camera; mouth on RIGHT, tail on LEFT. Same body scale, large clear gutters, all legs gauges mouth petals and tail inside each cell. Row1: idle settled legs and closed drill mouth; breathing pressure bulbs glowing subtly and body segments expanded; walking near front leg reaches forward and near hind leg pushes back; opposite walking contact near front leg pushes back and near hind leg reaches forward. Row2: low passing walking step with legs flexed beneath body; bite/drill windup front segments drawn back and mouth petals spreading; attack thrust head extended and tooth petals wide open toward RIGHT; braced defense crouch legs spread and armored back lowered. Row3: recoil front body bent away with gauges tilted; dying front legs buckle and front pressure bulb goes dark; collapse onto side with slack legs and resting tail; final motionless dead body lying on its side, dim intact amber bulbs, limp legs and drill mouth resting on ground. No blood or detached fragments. Genuine segment, leg and jaw articulation, not rotation/scaling of one standing image. Original detailed painterly raster matching reference. Solid flat green RGB(0,255,0) background including all gaps; no shadows, checkerboard, grid, labels, terrain or particle effects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "a952211bf65c8695c4e42d50ad8f7596387349bcf4956391833a4f2ad9f497a1",
+      "alpha_output": "exec-10f00f20-3f96-4a26-a3ef-c10d8fe3f81f.png",
+      "alpha_prompt": "Remove the green background. Preserve the twelve creature sprites unchanged. Transparent background."
+    }
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_gaugecoil_orewyrms.png",
+    "runtime_sha256": "abb71f83d336b6e6d6e553049b07320fe2d9df47787ac290c87d56e570ee51ab",
+    "method": "Uniform 0.62 downsampling and anatomical ground anchors. Source regions preserve extended mouth petals and tail valve while excluding neighboring sprites; no alpha repaint or standing-cutout transforms."
+  },
+  "review_notes": [
+    "Twelve source poses visually inspected: original segmented body, gauges, tail valve and drill mouth retained. Separate mouth windup/thrust, braced defense and grounded dead body. Real RGBA alpha 0..255. Final motion review pending."
+  ]
+}

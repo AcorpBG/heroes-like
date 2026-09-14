@@ -4,7 +4,7 @@
   "date": "2026-09-14",
   "tool_mode": "built_in_image_gen",
   "model": "not_exposed_by_tool",
-  "review_status": "source_prepared_not_runtime_registered",
+  "review_status": "candidate_pending_playback_acceptance",
   "reference": "art/units/source/curated/unit_neutral_deepforge_vaultwyrms.png",
   "reference_sha256": "c68fd1d8dc8b2786db643264ec8183d4de912f7d32b95a822241c7517eaafbbc",
   "outputs": [
@@ -30,7 +30,14 @@
       "alpha_prompt": "Remove the green background. Preserve the twelve creature sprites unchanged. Transparent background."
     }
   ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_deepforge_vaultwyrms.png",
+    "runtime_sha256": "6ba29009c9b5a3bb372c8880ebaf376b162db30847d07adf5007e1b3486adfff",
+    "method": "Semantic column order restored from generated right-facing sheet, uniform 0.65 downsampling and independent anatomical ground anchors. Segmented source regions separate adjacent tails/claws without repainting."
+  },
   "review_notes": [
+    "Right-facing original poses packed and candidate registered. Neighboring tail fragments excluded; low corpse anchored separately. Final continuous-motion acceptance pending.",
     "Twelve original poses inspected. Heavy basalt/brass quadruped retains original identity, distinct jaw attack, planted defense and collapsed body.",
     "Source is LEFT-facing despite right-facing request. Packing/runtime orientation must be resolved before registration. Actual alpha ranges 0..254; colored preview background is not proof of opaque pixels. No enabled or accepted count assigned.",
     "Built-in whole-sheet horizontal reflection produced a right-facing version with columns reversed in each row. Original left source retained; use poses-right and restore semantic frame order during later packing. Source-only, not yet runtime registered.",
