@@ -24,7 +24,7 @@ Rules:
 
 ### Complete Battle Unit Animation and Size
 
-`combat-unit-animation-and-size-20260913` — blocked at original-art workflow approval, owner-directed Phase 6 goal. Runtime increment validated: all 160 size profiles are authored; 37 long bodies use shared two-hex placement, movement, targeting and AI. Clip/corpse runtime is implemented, but accepted new pose coverage remains 0/160. Next dependency: acceptable transparent original-art idle/move/attack/defend/death/dead poses, starting with the representative infantry/large-unit slice and then all roster batches. Two built-in drafts were rejected; CLI fallback/model/API usage needs owner approval. Legacy affine sheets do not count. Requirements and validation evidence: `docs/combat-unit-animation-and-size.md`.
+`combat-unit-animation-and-size-20260913` — in_progress, owner-directed Phase 6 goal. All 160 size profiles are authored; 37 long bodies use shared two-hex rules/AI/UI geometry. Eight original-art candidates are enabled, including Gorefen Ripper. Eight-candidate repository, Linux/Windows exports, packaged action/accessibility probes (1190/1182 checks) and parity pass. Final accepted coverage remains 0/160 pending refinement and full motion review. Aurora Ballista source poses are prepared but unregistered; River Guard opposite-stride refinement remains unresolved. Continue across all 160 identities; legacy affine sheets do not count. Requirements/evidence: `docs/combat-unit-animation-and-size.md`.
 
 ### Layered Combat Visual Effects
 

@@ -4,6 +4,8 @@ extends RefCounted
 
 const MAX_LAYERS_PER_CUE := 6
 const MAX_LAYERS_PER_FRAME := 64
+const MAX_SLASH_EXTENT_RADIUS := 1.15
+const SLASH_CONTACT_FRACTION := 0.86
 const MODES := ["projectile", "spell_projectile", "slash", "impact", "ward", "spell_target"]
 
 static func owns(spec: Dictionary, entry: Dictionary) -> bool:
@@ -26,6 +28,12 @@ static func layers(spec: Dictionary, entry: Dictionary, preferences: Dictionary)
 	var quiet := reduced or bool(preferences.get("reduced_flashes", false))
 	var opacity := (0.48 if quiet else 0.88) * pow(fade, 0.7)
 	var result := []
+	if mode == "slash":
+		# Keep the painted contact cue near the defender, not across the
+		# attacker's articulated body. Manifest scale must not bury the pose.
+		center = start.lerp(end, SLASH_CONTACT_FRACTION)
+		base_size = minf(base_size, radius * MAX_SLASH_EXTENT_RADIUS)
+		opacity *= 0.62
 	if reduced:
 		# One stationary, gently fading symbol; no sweep, travel, growth or debris.
 		_stamp(result, end if mode in ["projectile", "spell_projectile", "spell_target"] else center, base_size, angle, opacity, "reduced_static")
@@ -42,11 +50,10 @@ static func layers(spec: Dictionary, entry: Dictionary, preferences: Dictionary)
 			_stamp(result, start.lerp(end, p), base_size * 1.15, angle, opacity, "projectile_head")
 		"slash":
 			angle += (end - start).angle()
-			center = start.lerp(end, 0.68)
 			for index in range(2, 0, -1):
 				var prior := maxf(0.0, p - index * 0.09)
-				_stamp(result, center, base_size * 1.10, angle + lerpf(-0.80, 0.65, prior), opacity * (0.25 - index * 0.065), "slash_afterimage")
-			_stamp(result, center, base_size * (0.85 + 0.40 * fade), angle + lerpf(-0.80, 0.65, p), opacity, "slash_sweep")
+				_stamp(result, center, base_size * 0.90, angle + lerpf(-0.80, 0.65, prior), opacity * (0.25 - index * 0.065), "slash_afterimage")
+			_stamp(result, center, base_size * (0.80 + 0.20 * fade), angle + lerpf(-0.80, 0.65, p), opacity, "slash_sweep")
 		"impact":
 			_stamp(result, center, base_size * (0.55 + eased * 1.05), angle + p * 0.35, opacity, "impact_bloom")
 			# Deterministic, localized painted debris; no particle system or RNG.

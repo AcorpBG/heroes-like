@@ -3,7 +3,7 @@
     {
       "id": "combat-unit-animation-and-size-20260913",
       "title": "Complete Battle Unit Animation and Size",
-      "status": "blocked",
+      "status": "in_progress",
       "priority": "top"
     },
     {
@@ -16671,14 +16671,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Runtime increment implemented: all 160 size profiles reviewed, 37 two-cell bodies, shared rules/AI/UI geometry and saved footprint compatibility. Clip/corpse ownership is tested, but accepted new animation art is 0/160. Two built-in drafts rejected; optional transparent CLI fallback awaits owner approval. Full goal is blocked at the art-workflow decision; runtime increment is validated, not full goal completion.",
+  "currentNotes": "Eight original-art candidates enabled. Eight-candidate repository/official exports pass; Linux 1190 and Windows 1182 packaged battle checks pass; parity 8542 members, 521815888 bytes each. Eight packing tests and 959 body checks pass. Final accepted roster remains 0/160. Aurora Ballista source prepared but unregistered; River Guard walk refinement unresolved. Full goal active, built-in imagegen only.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "combat-unit-animation-and-size-20260913",
   "currentSliceId": "combat-unit-animation-and-size-20260913",
-  "currentSliceNotes": "Runtime increment implemented: all 160 size profiles reviewed, 37 two-cell bodies, shared rules/AI/UI geometry and saved footprint compatibility. Clip/corpse ownership is tested, but accepted new animation art is 0/160. Two built-in drafts rejected; optional transparent CLI fallback awaits owner approval. Full goal is blocked at the art-workflow decision; runtime increment is validated, not full goal completion.",
-  "currentSliceStatus": "blocked",
+  "currentSliceNotes": "Eight original-art candidates enabled. Eight-candidate repository/official exports pass; Linux 1190 and Windows 1182 packaged battle checks pass; parity 8542 members, 521815888 bytes each. Eight packing tests and 959 body checks pass. Final accepted roster remains 0/160. Aurora Ballista source prepared but unregistered; River Guard walk refinement unresolved. Full goal active, built-in imagegen only.",
+  "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Complete Battle Unit Animation and Size",
-  "currentSliceUpdatedAt": "2026-09-13T21:04:18Z",
+  "currentSliceUpdatedAt": "2026-09-14T09:09:33Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22338,7 +22338,7 @@
       "phase": "phase-6-production-alpha-layer",
       "parentId": "phase-6-production-alpha-layer",
       "classification": "implementation_slice",
-      "status": "blocked",
+      "status": "in_progress",
       "source": "PLAN.md",
       "sourceDocs": ["project.md", "docs/combat-unit-animation-and-size.md"],
       "targets": ["content/unit_animation_manifest.json", "scenes/battle/BattleBoardView.gd", "scripts/core/BattleRules.gd", "scripts/core/BattleAiRules.gd", "Original unit pose assets/provenance", "Python pose and footprint regressions"],
@@ -22358,10 +22358,13 @@
         "packParity": "8526 members, 516867256 bytes per platform; only project.binary differs",
         "evidenceRoot": ".artifacts/battle-unit-animation-size-20260913",
         "repositoryValidation": "Passed: accepted-repository-validation.log",
-        "remainingDependency": "Accepted original transparent articulated pose assets for all 160 units. Two built-in drafts rejected; CLI fallback/model choice awaits owner approval."
+        "enabledCandidatePoseUnits": 8,
+        "candidateSourceChecks": 962,
+        "candidatePackingTests": 8,
+        "candidateEvidence": "Eight-candidate repository and official exports pass. Linux packaged 1190 normal-motion and Windows packaged 1182 reduced-motion assertions pass with matching compiled owners. Parity 8542 members / 521815888 bytes each. Eight packing tests, source Gorefen 124 and body 959 checks pass. Evidence labels eight-pose-*-20260914. Aurora Ballista sources unregistered; final 160-unit animation acceptance unfinished.",
+        "remainingDependency": "Final original-art acceptance for all 160 units; River Guard candidate needs walk refinement and full action review, followed by roster rollout and refreshed repository/Linux/Windows validation. Built-in RGBA production works; no paid CLI/API dependency."
       },
-      "blockedOn": "Original transparent articulated pose assets: 0/160 accepted. Built-in drafts failed review; owner decision needed before CLI fallback/model/API usage.",
-      "notes": "Runtime and all size profiles implemented and validated on both platforms; full goal blocked at original-art production, not completed by infrastructure. Owner approval or an accepted asset workflow is required to proceed."
+      "notes": "Original-art production resumed with built-in image generation, smaller pose batches and visual iteration. Prior CLI-approval blocker was premature; no paid API fallback is needed or authorized. Full roster remains the goal."
     },
     {
       "id": "vfx-combat-layered-feedback-20260913",
@@ -112707,8 +112710,8 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "combat_unit_runtime_validated_art_workflow_approval_pending",
-  "status": "blocked",
+  "result": "combat_unit_builtin_pose_production_in_progress",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -112810,7 +112813,7 @@
   ],
   "summary": "Completed biome-aware Overworld town art: 19 original generated variants; 39 logical entries / 33 architectures / nine biomes / 22 aliases. 858 resolver cases, 17 pixel-reproducible cutouts, 19 clean-cache imports, visual review, full repository, official Linux/Windows exports and 1014-check native Medium-to-Town flows per platform pass. PCK 516821036 bytes / 8517 entries; only project.binary differs. Historical identity, native generation, placement, entrances, collision, fog, RNG and saves unchanged. Cleanup preserves source, evidence, packages, user data and caches; no release-ready claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-13T22:40:57Z",
+  "updatedAt": "2026-09-14T07:22:29Z",
   "validation": {
     "id": "towns_20260910_accepted",
     "sliceId": "art-overworld-cutout-runtime-pool-20260909",

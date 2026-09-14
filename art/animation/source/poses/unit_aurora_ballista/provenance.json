@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_aurora_ballista",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_prepared_not_runtime_registered",
+  "reference": "art/units/source/curated/unit_aurora_ballista.png",
+  "reference_sha256": "f41f6b46ab457267a870128b0bf2d5c4a15f1803e055625fe8db9cd7a85e7625",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "50322a8a485b3262a3f1c74ab3512063a4333c45efc59bc51a5e38f9d043b7b4",
+      "source_output": "exec-843ec714-9edb-4d57-91a2-4b692112e9fc.png",
+      "prompt": "Use case: stylized-concept. Create an original tactical-game animation sheet for the supplied Aurora Ballista. Preserve its distinctive ivory-and-gold wheeled carriage, blue enamel, prismatic translucent crossbow limbs, central crystal-bolt rail, tall rear lens crystal and four articulated stabilizer legs. No crew. Turn the machine to face RIGHT in consistent three-quarter tactical view. SIXTEEN complete poses in a strict 4 columns by 4 rows grid, same machine scale, generous clear gutters, no contact between cells. Row1: idle resting charged lens; idle gently brighter lens with bow flex; rolling motion with stabilizers lifted and first wheel-spoke phase; rolling next wheel phase with chassis lightly compressed. Row2: third rolling phase with stabilizers swinging; fourth rolling phase settling; ranged aiming with bowstring visibly drawn back and crystal bolt loaded; ranged release with bow limbs sprung forward and empty rail. Row3: close-range chassis/foreleg bash windup; forward ram with stabilizer extended; defensive brace with all stabilizer feet spread and carriage lowered; impact recoil tilted chassis and flexed bow. Row4: ranged recovery cooling lens and mechanism returning; destruction beginning, cracked bow and buckled wheel; collapsing carriage with broken crystal and folded mast; final inert wreck with mast fallen, dim broken lens, wheels detached beside low chassis, fragments contained within cell. Articulate actual mechanisms in each pose, do not merely rotate or resize the same cutout. No traveling projectiles, no explosions, no ground or shadow. Every full bowtip and stabilizer must stay inside its own cell. Original detailed painterly raster art. Plain uniform bright green background RGB(0,255,0), including between wheels and mechanisms. No checkerboard, text, grid lines, logos, or borrowed game pixels.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "5f07be007bf5f95f9b344696434cb87fcf82f7aac14a918287434f303b48c73e",
+      "alpha_output": "exec-a46ea63c-24f9-4cf1-ae22-315074682a0d.png",
+      "alpha_prompt": "Remove the green background from this sprite sheet, including the gaps between wheels, crossbow strings and supports. Preserve all sixteen machines unchanged. Return the unchanged sprites isolated on a genuinely transparent RGBA background. No checkerboard, replacement color, ground or shadows."
+    }
+  ],
+  "review_notes": [
+    "Original sixteen-pose sheet visually inspected: wheel/stabilizer motion, loaded/released rail, defensive brace and inert wreck. No runtime registration yet.",
+    "Generated edit is RGBA with alpha 0..255. Preview shows colored edge pixels; actual renderer contrast verification and crop review are required before use. No local chroma-key or painted alpha substitution."
+  ]
+}

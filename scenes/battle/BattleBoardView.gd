@@ -2374,7 +2374,8 @@ func _animation_frame_region_for_stack(stack: Dictionary) -> Rect2:
 	var state_name := _animation_state_for_stack(stack)
 	var animation := ContentService.get_unit_animation(String(stack.get("unit_id", "")))
 	if BattleUnitPose.has_authored_poses(animation):
-		var reduced := bool(_animation_preferences().get("reduced_motion", false))
+		var preferences := AnimationCueCatalogScript.normalize_animation_preferences(_animation_preferences())
+		var reduced := bool(preferences.get("reduced_motion", false))
 		return BattleUnitPose.region(animation, state_name, _stack_presentation_progress(String(stack.get("battle_id", ""))), Time.get_ticks_msec(), reduced)
 	var row := _animation_state_row_for_unit(String(stack.get("unit_id", "")), state_name)
 	var frame := _animation_frame_index_for_stack(stack)
@@ -2879,8 +2880,9 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		var battle_icon: Texture2D = _unit_battle_icon_for_stack(stack)
 		if art_source == "event_animation_sheet":
 			var frame_size := _stack_standee_size(radius, stack).y
-			var frame_rect := Rect2(Vector2(center.x - frame_size * 0.5, ground_center.y - frame_size), Vector2(frame_size, frame_size))
-			_draw_stack_art_region(animation_sheet, frame_rect, _animation_frame_region_for_stack(stack), side == "enemy", Color(1.0, 1.0, 1.0, 0.96))
+			var frame_region := _animation_frame_region_for_stack(stack)
+			var frame_rect := BattleUnitPose.grounded_rect(ground_center, frame_size, frame_region)
+			_draw_stack_art_region(animation_sheet, frame_rect, frame_region, side == "enemy", Color(1.0, 1.0, 1.0, 0.96))
 		elif art_source == "resting_battle_standee":
 			_draw_stack_art(battle_standee, _stack_standee_rect(center, radius, stack), side == "enemy", Color(1.0, 1.0, 1.0, 0.99))
 		elif art_source == "resting_battle_icon":
@@ -2941,7 +2943,7 @@ func _battle_corpse_entries(hex_layout: Dictionary) -> Array:
 		var extent := _stack_standee_size(radius, stack).y
 		var center := _hex_center(cell, hex_layout) + _body_center_offset(stack, cell, hex_layout)
 		var ground_y := center.y + radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
-		var rect := Rect2(Vector2(center.x - extent * 0.5, ground_y - extent), Vector2(extent, extent))
+		var rect := BattleUnitPose.grounded_rect(Vector2(center.x, ground_y), extent, region)
 		entries.append({"battle_id":String(stack.get("battle_id", "")), "texture":texture, "rect":rect, "region":region, "flip":String(stack.get("side", "")) == "enemy"})
 	return entries
 

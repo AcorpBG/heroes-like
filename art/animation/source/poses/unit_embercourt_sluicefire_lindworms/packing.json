@@ -1,0 +1,199 @@
+{
+  "unit_id": "unit_embercourt_sluicefire_lindworms",
+  "status": "candidate_requires_playback_review",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "alpha/idle_move.png",
+      "rects": [
+        [
+          15,
+          115,
+          600,
+          580
+        ]
+      ],
+      "anchor": [
+        345,
+        575
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "idle_1",
+      "source": "alpha/idle_move.png",
+      "rects": [
+        [
+          649,
+          78,
+          1223,
+          580
+        ]
+      ],
+      "anchor": [
+        975,
+        575
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "move_0",
+      "source": "alpha/idle_move.png",
+      "rects": [
+        [
+          3,
+          756,
+          668,
+          1149
+        ]
+      ],
+      "anchor": [
+        345,
+        1155
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "move_1",
+      "source": "alpha/idle_move.png",
+      "rects": [
+        [
+          682,
+          719,
+          1241,
+          1157
+        ]
+      ],
+      "anchor": [
+        975,
+        1155
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "attack_0",
+      "source": "alpha/attack.png",
+      "rects": [
+        [
+          17,
+          158,
+          701,
+          704
+        ]
+      ],
+      "anchor": [
+        380,
+        710
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "attack_1",
+      "source": "alpha/attack.png",
+      "rects": [
+        [
+          743,
+          283,
+          1750,
+          693
+        ]
+      ],
+      "anchor": [
+        1120,
+        710
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "defend_0",
+      "source": "alpha/defend.png",
+      "rects": [
+        [
+          22,
+          163,
+          865,
+          766
+        ]
+      ],
+      "anchor": [
+        460,
+        770
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "defend_1",
+      "source": "alpha/defend.png",
+      "rects": [
+        [
+          879,
+          168,
+          1758,
+          765
+        ]
+      ],
+      "anchor": [
+        1340,
+        770
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "death_0",
+      "source": "alpha/death_dead.png",
+      "rects": [
+        [
+          2,
+          166,
+          605,
+          556
+        ]
+      ],
+      "anchor": [
+        350,
+        565
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "death_1",
+      "source": "alpha/death_dead.png",
+      "rects": [
+        [
+          607,
+          305,
+          1365,
+          566
+        ]
+      ],
+      "anchor": [
+        990,
+        565
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "dead",
+      "source": "alpha/death_dead.png",
+      "rects": [
+        [
+          1366,
+          373,
+          2171,
+          567
+        ]
+      ],
+      "anchor": [
+        1730,
+        565
+      ],
+      "scale": 0.44
+    }
+  ]
+}

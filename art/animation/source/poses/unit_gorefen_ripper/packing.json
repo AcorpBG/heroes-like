@@ -1,0 +1,19 @@
+{
+  "unit_id": "unit_gorefen_ripper",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [512, 256], "columns": 4, "ground_margin": 8,
+  "frames": [
+    {"name":"idle_low","source":"alpha/poses.png","rects":[[0,20,495,260]],"anchor":[255,247],"scale":0.72},
+    {"name":"idle_high","source":"alpha/poses.png","rects":[[505,0,1015,275]],"anchor":[770,267],"scale":0.72},
+    {"name":"stride_a","source":"alpha/poses.png","rects":[[1020,15,1536,275]],"anchor":[1280,265],"scale":0.72},
+    {"name":"passing_a","source":"alpha/poses.png","rects":[[0,265,495,496]],"anchor":[255,487],"scale":0.72},
+    {"name":"stride_b","source":"alpha/poses.png","rects":[[500,275,1028,490],[850,490,1060,515],[1028,435,1060,490]],"anchor":[770,506],"scale":0.72},
+    {"name":"passing_b","source":"alpha/poses.png","rects":[[1030,280,1536,435],[1060,435,1536,495],[1200,495,1536,505]],"anchor":[1280,501],"scale":0.72},
+    {"name":"attack_windup","source":"alpha/poses.png","rects":[[0,487,400,746],[0,746,210,766],[400,520,495,746]],"anchor":[255,763],"scale":0.72},
+    {"name":"attack_lunge","source":"alpha/poses.png","rects":[[495,500,940,665],[940,535,1080,665],[495,665,1090,764]],"anchor":[770,763],"scale":0.72},
+    {"name":"guard","source":"alpha/poses.png","rects":[[1082,507,1350,535],[1082,535,1536,665],[1092,665,1536,765]],"anchor":[1280,765],"scale":0.72},
+    {"name":"death_recoil","source":"alpha/poses.png","rects":[[0,766,495,1024],[250,754,495,766]],"anchor":[255,1012],"scale":0.72},
+    {"name":"collapse","source":"alpha/poses.png","rects":[[500,790,998,1024]],"anchor":[770,1003],"scale":0.72},
+    {"name":"dead","source":"alpha/poses.png","rects":[[1000,790,1536,1024]],"anchor":[1280,986],"scale":0.72}
+  ]
+}

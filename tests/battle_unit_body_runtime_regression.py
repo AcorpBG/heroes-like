@@ -134,6 +134,9 @@ func run()->void:
 	check(Pose.region(animation,"idle_hold",1.0,0,false)!=Pose.region(animation,"idle_hold",1.0,160,false),"idle does not cycle")
 	check(Pose.region(animation,"move_path_step",0.2,0,true)==Pose.region(animation,"move_path_step",0.8,600,true),"reduced motion cycles")
 	check(Pose.region(animation,"death_rout_remove",1.0,0,false,true)==Rect2(0,1280,256,256),"corpse not dedicated final row")
+	var packed:Dictionary={"pose_frame_size":{"width":512,"height":256},"pose_columns":4,"pose_clips":{"attack":{"frames":3,"indices":[6,7,8]}}}
+	check(Pose.region(packed,"melee_windup_release",1.0,0,false)==Rect2(0,512,512,256),"packed attack fails to cross atlas row")
+	check(Pose.grounded_rect(Vector2(300,400),100,Rect2(0,0,512,256))==Rect2(200,300,200,100),"rectangular pose distorts or loses ground anchor")
 	var live=SessionState.set_active_session(wide_fixture())
 	var shell=load("res://scenes/battle/BattleShell.tscn").instantiate()
 	add_child(shell)
@@ -177,13 +180,36 @@ func run()->void:
 	check(board._battle_corpse_entries(board._current_hex_layout()).is_empty(),"revived stack also draws a corpse")
 	ContentService.clear_cache()
 	ContentService._cache[ContentService.UNIT_ANIMATION_PATH]=original_manifest
+	var river=fixture()
+	var river_stack:=BattleRules._build_battle_stack("unit_river_guard",10,"player",0)
+	river_stack.battle_id=river.battle.stacks[0].battle_id
+	river_stack.hex={"q":4,"r":3}
+	river.battle.stacks[0]=river_stack
+	BattleRules._sync_occupied_hexes(river.battle)
+	board.finish_action_playback(river)
+	var river_animation:=ContentService.get_unit_animation("unit_river_guard")
+	check(board._stack_token_art_source(river_stack)=="event_animation_sheet","original idle pose not used in normal battle")
+	for state in ["idle_hold","move_path_step","melee_windup_release","defend_brace","death_rout_remove"]:
+		check(Pose.region(river_animation,state,0.5,180,false).has_area(),"missing candidate state: "+state)
+	await capture("river-guard-idle",requested)
+	river_stack.total_health=0
+	BattleRules._sync_occupied_hexes(river.battle)
+	board.finish_action_playback(river)
+	check(board._battle_corpse_entries(board._current_hex_layout()).size()==1,"generated River Guard corpse missing")
+	await capture("river-guard-dead",requested)
 	var unit_count:=0
+	var enabled_pose_count:=0
 	for unit in ContentService.load_json("res://content/units.json").items:
 		var stack:=BattleRules._build_battle_stack(unit.id,0,"player",0)
 		stack.hex={"q":4,"r":3}
 		board.set_battle_presentation_snapshot({"stacks":[stack]})
-		check(board._battle_corpse_entries(board._current_hex_layout()).is_empty(),"unapproved legacy affine corpse exposed: "+unit.id)
-		unit_count+=1
+		var mapped:=ContentService.get_unit_animation(unit.id)
+		if Pose.has_authored_poses(mapped):
+			check(board._battle_corpse_entries(board._current_hex_layout()).size()==1,"authored corpse missing: "+unit.id)
+			enabled_pose_count+=1
+		else:
+			check(board._battle_corpse_entries(board._current_hex_layout()).is_empty(),"unapproved legacy affine corpse exposed: "+unit.id)
+			unit_count+=1
 	shell.queue_free()
 	for i in range(3): await get_tree().process_frame
 	# The fast probe exits during the entry stinger. Stop audio explicitly and
@@ -191,7 +217,7 @@ func run()->void:
 	MusicAudio.stop_stinger()
 	MusicAudio.stop_music("unit_body_probe_teardown")
 	await get_tree().create_timer(0.15).timeout
-	print("BATTLE_READABILITY_REPORT "+JSON.stringify({"ok":failures.is_empty(),"checks":checks,"failures":failures,"legacy_corpse_units_rejected":unit_count,"new_pose_roster_accepted":0,"scope":"runtime only; corpse ownership uses an isolated clip fixture, full art/size roster remains in progress"}))
+	print("BATTLE_READABILITY_REPORT "+JSON.stringify({"ok":failures.is_empty(),"checks":checks,"failures":failures,"legacy_corpse_units_rejected":unit_count,"new_pose_roster_enabled":enabled_pose_count,"new_pose_roster_accepted":0,"scope":"runtime and candidate pose routing; full roster art acceptance remains in progress"}))
 	get_tree().quit(0 if failures.is_empty() else 1)
 '''
 

@@ -1,0 +1,75 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_embercourt_sluicefire_lindworms",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_full_playback_acceptance",
+  "reference": "art/units/source/curated/unit_embercourt_sluicefire_lindworms.png",
+  "reference_sha256": "1130c1b2ca3cf24264cfe21d54409401c365d18e71403180bc9f052134cd1f29",
+  "outputs": [
+    {
+      "source": "idle_move.png",
+      "source_sha256": "a0a28affffb1346320dc1f7dab43619faf8423fafda68bfc2c0d13a7f16d0a65",
+      "source_output": "exec-88a2e146-4626-41eb-a265-52f8cc38671a.png",
+      "prompt": "Use case: identity-preserve. Original Sluicefire Lindworm game animation poses, four separate full creatures in a 2x2 layout. Preserve this original long LEGLESS serpent's charcoal scales, bone-white dorsal plates, black iron braces, glowing orange furnace vents and angular dragon head. Same painterly style, no new limbs or wings. All heads face RIGHT (player-side battle convention), all creatures same size, entire long tail and coils visible. TOP LEFT idle: relaxed S-coil, head raised calmly, jaw shut, low orange glow. TOP RIGHT idle inhale: neck expands slightly, head lifts a little, coils shift and vents brighten. BOTTOM LEFT slither: body lengthens, head reaches forward right low, first coil contracts and tail curves left. BOTTOM RIGHT slither alternate: neck arches forward and the contraction travels to rear coil, tail tip swings the other way. Clearly redraw the changing curves and segmented plate positions rather than rotate/scale the whole creature. Keep 70px empty gutters between creatures, all parts inside their quadrant, common floor baseline per row and stable head/body scale. Perfectly uniform vivid chroma green RGB(0,255,0) backdrop including internal coil gaps, no ground, no shadows, no glow bleeding into backdrop, no lettering or cell lines.",
+      "alpha_source": "alpha/idle_move.png",
+      "alpha_sha256": "a802de7665f90712bceadc7cabef5e0af3506dfd2c6df0ed5582d6533b698476",
+      "alpha_output": "exec-5da7ae3a-08a7-4fe4-bf65-810667279565.png",
+      "alpha_prompt": "Remove the green background from this sprite sheet. Preserve the four creatures unchanged. Return them isolated on a transparent background."
+    },
+    {
+      "source": "attack.png",
+      "source_sha256": "638a951825810cb9b863d42db8c0e6578c5fc77bbd53f7534c6b23c9847eb401",
+      "source_output": "exec-30c7f5a7-824d-45f0-ac35-94b9916b3a34.png",
+      "reference": "art/units/source/curated/unit_embercourt_sluicefire_lindworms.png",
+      "prompt": "Use case: identity-preserve. Original Sluicefire Lindworm ATTACK animation, two clearly separated full-body raster poses side by side on a wide canvas. Same long legless black-scaled serpent, bone-white dorsal plates, dark iron bands and orange furnace vents as the reference; no legs, wings, extra heads or new ornaments. Both face RIGHT, same painted tactical-game camera and same head/body dimensions. LEFT windup: compress into tight coil, neck pulled back and raised, jaws opening in preparation to strike. RIGHT strike: powerful forward neck lunge to RIGHT, wide open jaws with teeth exposed and orange glow only inside throat, front body uncoils horizontally while tail anchors behind. Redraw curved segmented anatomy, not a rotated standing cutout. Entire tail, head, jaws and plates visible, no overlapping characters, wide gaps and generous outer margins. Perfectly flat chroma green RGB(0,255,0) backdrop including coil gaps. No flame projectile, no glow haze, no smoke, no ground, no shadows, no text, no panels.",
+      "alpha_source": "alpha/attack.png",
+      "alpha_sha256": "4d0c361c13166393fc22205373bd23e9f00231b6fa9e1f73f214fcaf5899be4a",
+      "alpha_output": "exec-74efc5ac-4680-4a38-802c-18e92ffc1dda.png",
+      "alpha_prompt": "Remove the green background from this sprite strip. Preserve the two creatures unchanged. Return them isolated on a transparent background."
+    },
+    {
+      "source": "defend.png",
+      "source_sha256": "4c552a45055156c2d222110d76c84795abf5fc04916daba18860f73ef7fe88f4",
+      "source_output": "exec-ebccd109-c8f2-461a-bfea-cc906e7ba8ed.png",
+      "reference": "defend-left-input.png",
+      "prompt": "Edit target: this two-pose Lindworm defense strip. Mirror each creature horizontally inside its own half so BOTH noses point to the RIGHT edge of the image and BOTH tails sit to the LEFT of their bodies. Keep the two different defending poses, exact painted anatomy, armor, colors, dimensions and flat green backdrop unchanged. Only correct their facing direction.",
+      "alpha_source": "alpha/defend.png",
+      "alpha_sha256": "49e50e582622a96e359551be8055094f64acdd1c88ed1c3402dd6bea0fc8f1a3",
+      "alpha_output": "exec-ae76e66d-69fa-4614-aa9c-8e91a4a5b725.png",
+      "alpha_prompt": "Remove the green background from this sprite strip. Preserve the two creatures unchanged. Return them isolated on a transparent background."
+    },
+    {
+      "source": "death_dead.png",
+      "source_sha256": "078c0f8f0f0dcd3a26e83e36a52498dae119357d7a1d923fc8738de7f902371a",
+      "source_output": "exec-29debd58-f0e5-4305-81ce-56462645f516.png",
+      "reference": "idle_move.png",
+      "prompt": "Use case: identity-preserve. Use the supplied original right-facing armored Lindworm as character reference. Generate THREE DYING/DEAD poses in a wide horizontal strip, fully separated with broad empty gaps, same head and body scale. Same legless charcoal serpent, bone-white dorsal plates, black iron bands, angular head and orange vents. LEFT collapse onset: raised neck droops, jaw slack, muscular coil loosens, orange vents dim. CENTER falling: head and neck sink toward the ground at RIGHT, front coil rolls onto its side, tail uncurls, almost no orange glow. RIGHT final dead pose: whole creature limp and flattened on its side on the ground, neck/head rest fully at the RIGHT, tail stretches loosely LEFT, eyes dark and vents extinguished, rigid white armor follows the collapsed body; convincing drawn corpse anatomy rather than a rotated living sprite. No extra limbs, no bones, blood, smoke or magic. All three bodies and tails wholly inside canvas, same painterly game style, common ground baseline. Perfectly uniform vivid chroma green RGB(0,255,0) backdrop with no floor, shadows, labels, borders or texture.",
+      "alpha_source": "alpha/death_dead.png",
+      "alpha_sha256": "321f19948cde8bcc638052bf7203057dd4451d08097afa47435e2ed44424c7e9",
+      "alpha_output": "exec-5729989e-9805-49d0-aa35-2e2798ae82bd.png",
+      "alpha_prompt": "Remove the green background from this sprite strip. Preserve the three creatures unchanged. Return them isolated on a transparent background."
+    }
+  ],
+  "intermediate_sources": [
+    {
+      "source": "defend-left-input.png",
+      "source_sha256": "ffb4a9c02a87252bbe01e549415cb5a12761d823a52978d447ca6a39ec9be502",
+      "source_output": "exec-560c6564-aac0-4629-b88d-9a92fbbb8264.png",
+      "reference": "art/units/source/curated/unit_embercourt_sluicefire_lindworms.png",
+      "prompt": "Use case: identity-preserve. Original Sluicefire Lindworm DEFEND animation, two separate full-body painted poses side by side. Preserve exact reference legless serpent identity: charcoal scales, bone-white armored dorsal plates, black metal braces and orange furnace vents, angular skull. Both face RIGHT and use the same head/body scale. LEFT brace: pull the head low behind a high protective front coil, white plates facing outward, tail wraps nearer the body, jaw shut. RIGHT recoil: coil compresses further, head tucks slightly back and down, tail tip shifts outward, orange vents dim slightly, segmented spine flexes. Real changing serpent anatomy, no whole-body rotations. Entire serpent and tail visible in each half, no contact between characters and wide empty gutters. Uniform pure chroma green RGB(0,255,0) background including internal coil gaps. No legs, no wings, no enemies, no sparks, no smoke, no floor, no shadow, no text or border."
+    }
+  ],
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_embercourt_sluicefire_lindworms.png",
+    "runtime_sha256": "7255bd942347348191528a30ae5cac2c128d68568d4e89307dc94b0cbb2e5d79"
+  },
+  "review_notes": [
+    "All source and alpha poses inspected; original articulated coils and distinct prone corpse.",
+    "Explicit rectangular trimming excludes low-alpha extraction noise outside the drawn silhouettes; no chroma-key or local painting.",
+    "Runtime cadence, grounded scale and both-side facing still require battle playback review."
+  ]
+}
