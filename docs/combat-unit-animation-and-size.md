@@ -2,7 +2,35 @@
 
 Owner goal, Phase 6: `combat-unit-animation-and-size-20260913`.
 
-Current state: sixteen original-art candidates enabled, zero of 160 final animation acceptances. The sixteen-unit batch passes consolidated repository/platform validation below. The size/footprint implementation remains validated. Built-in generation only; the earlier paid-CLI approval blocker was premature and is withdrawn. Earlier increment sections are historical, not current coverage claims.
+Current state: twenty original-art candidates enabled, zero of 160 final animation acceptances. Four-unit batch repository/platform/battle validation passes, including separate ranged/melee clips and inspected small/wide captures. Size/footprint implementation remains validated. Built-in generation only; the earlier paid-CLI approval blocker was premature and is withdrawn. Earlier increment sections are historical, not current coverage claims.
+
+## Twenty-unit batch validation
+
+`twenty-pose-repository-20260914.log` reports VALIDATION PASSED. Both official `twenty-pose-linux-20260914` and `twenty-pose-windows-20260914` exports pass, including Windows generated-map/Town entry and managed Wine cleanup. `twenty-pose-linux-actions-20260914` passes 3,003 rendered battle checks at 1920x1080; `twenty-pose-windows-actions-20260914` passes 2,983 headless reduced-motion checks. Both final packaged driver reports pass and their processes are terminal. The five compiled combat owner hashes match exactly. Wide Knucklebear swipe and Lanternmoth firing captures were inspected alongside all four units' 1280x720 source/alpha captures; event stills do not establish continuous-motion acceptance.
+
+`twenty-pose-parity-20260914.json` passes at 531,879,844 bytes / 8,566 members per platform, with only `project.binary` different. Eight packing/provenance tests cover twenty recipes. This batch changes only four identities' pose metadata and original raster assets, not combat stats, rules, footprint profiles or saves. Final animation acceptance remains 0/160. Windows headless Wine evidence is not Windows GPU certification.
+
+## Sunscale Lanternmoth and twenty-unit batch
+
+Sixteen original Sunscale Lanternmoth poses now supply wing upstroke/downstroke/passing, distinct leg-rake melee versus four-stage abdomen/fan firing, folded-wing guard, recoil and a collapsed unlit corpse. Built-in generation, green-background edit and true RGBA extraction are preserved with exact prompts/hashes under `art/animation/source/poses/unit_neutral_sunscale_lanternmoths/`. Uniform 0.69 packing uses segmented rectangles to retain wing tips without adjacent pose fragments. No procedural or affine substitute poses were authored.
+
+`moth-actions-20260914` passes 175 actual battle checks, including separate ranged/melee and own-corpse/save routing. `moth-packed-alpha-20260914` passes seven compositing checks; actual 1280x720 firing and light/dark captures were inspected. Eight packing/provenance tests cover twenty reproducible recipes. Repository, official exports and packaged battle validation pass as recorded below. Continuous flight/action acceptance remains outstanding, and the full goal stays active.
+
+Rimebell Skyraker original/RGBA sources are prepared, not registered. The seven-check `rime-source-alpha-20260914` report passes and its actual Godot light/dark capture was inspected. Twelve poses retain the feather fins, blue keel and rake talons; full packing/motion review remains pending. Exact built-in prompts/hashes remain under its source directory, excluded from enabled counts.
+
+Cleanup verified all six sixteen-unit export/action/driver reports pass and no file references before deleting exactly six obsolete fourteen-unit executable/PCK/native-library payloads (1,238,476,680 rebuildable bytes). Fourteen-unit reports/screenshots remain, as do sixteen-unit rollback and twenty-unit current payloads, all original art/provenance, caches, user data and unrelated retention files.
+
+## Galehorn Strider candidate
+
+Sixteen original built-in generated poses are registered for idle, four movement phases, horn anticipation/thrust/recovery, brace/impact, recoil and four collapse/dead states. The first RGB checkerboard output is retained as a rejected runtime source; a built-in green-background edit and alpha extraction produced real RGBA 0..254. Individual crop boundaries exclude neighboring tails/hooves; uniform 0.78 downsampling preserves original anatomy without painting or affine replacement poses. Exact prompts, hashes and reproducible packing are under `art/animation/source/poses/unit_neutral_galehorn_striders/`.
+
+`galehorn-actions-20260914` passes 124 battle checks and `galehorn-packed-alpha-20260914` passes seven compositing checks. Their actual 1280x720 horn-attack and light/dark captures were inspected. Godot import is clean; eight packing/provenance tests pass across nineteen recipes, and `git diff --check` plus tracker sync dry-run pass. Walking contacts and continuous-motion acceptance remain outstanding. This three-unit increment remains uncommitted for the next consolidated repository/Linux/Windows batch; sixteen-unit packages are the validated platform baseline. No simulation, footprint, save or balance change. Cleanup review retains required originals, provenance and small focused evidence; no newly obsolete export payload exists. Caches and unrelated retention files remain untouched.
+
+## Knucklebear and Belltoad candidates
+
+Brambleback Knucklebear now has twelve packed poses for idle, knuckle steps, raised-arm swipe, forearm guard, recoil, collapse and its own prone corpse. Mireglass Belltoad has sixteen including compressed/airborne/landing hop phases and distinct melee bite versus inflated/contracted-throat ranged croak. Uniform scales are 0.60 and 0.70 respectively. Segmented crops preserve long claws and airborne webbed feet while separating neighboring poses. Original raster sources, exact built-in prompts/hashes and reproducible recipes remain in their source directories; no procedural or affine replacement poses were authored.
+
+Import and eight packing/provenance tests across eighteen recipes pass; `knucklebear-actions-20260914` and `belltoad-actions-20260914` pass 136 and 183 checks; packed-alpha reports pass seven each. Actual 1280x720 swipe/croak and light/dark captures were inspected without visible matte or neighboring fragments. No gameplay, save schema, footprint or balance changes. This content increment remains uncommitted; consolidate next full exports across a larger art batch. Full walking/hopping/attack/death motion acceptance remains outstanding. Cleanup review retains needed new source/runtime atlases and evidence; no newly obsolete export files are deleted, and temporary probes use lifecycle-owned folders. Unrelated retention files and caches remain untouched.
 
 ## Sixteen-unit batch validation
 

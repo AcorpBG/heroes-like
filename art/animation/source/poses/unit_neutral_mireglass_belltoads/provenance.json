@@ -4,7 +4,7 @@
   "date": "2026-09-14",
   "tool_mode": "built_in_image_gen",
   "model": "not_exposed_by_tool",
-  "review_status": "source_prepared_not_runtime_registered",
+  "review_status": "candidate_pending_playback_acceptance",
   "reference": "art/units/source/curated/unit_neutral_mireglass_belltoads.png",
   "reference_sha256": "dcac2aea21aa7d0508ec54611356b62576ba6132430a6b3cb0202c832736339e",
   "outputs": [
@@ -20,7 +20,14 @@
     }
   ],
   "review_notes": [
+    "Packed and registered as original-pose candidate. Earlier source-only notes are historical; full motion acceptance remains pending.",
     "Sixteen original poses inspected: compressed/airborne/landing hop, separate melee bite and inflated/contracted ranged croak, guard and collapsed deflated dead body preserve original amphibian/reed/fungus identity.",
     "Actual RGBA 0..255, source-only. Packing, throat/limb alignment and full motion review pending; no runtime registration or accepted count."
-  ]
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_mireglass_belltoads.png",
+    "runtime_sha256": "9a2dc1d386b928a026a0d3842f779e40e7203c1bf1a11fdadeb93e9817f4f0bc",
+    "method": "Uniform 0.70 source downsampling with independent ground anchors and segmented airborne-foot crops. Separate anatomical hop, bite, croak and collapsed dead poses."
+  }
 }

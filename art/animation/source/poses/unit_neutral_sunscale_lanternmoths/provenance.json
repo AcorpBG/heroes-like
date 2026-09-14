@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_sunscale_lanternmoths",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_sunscale_lanternmoths.png",
+  "reference_sha256": "617a1e3c2b1552d6d61fd543f6a2fa45393ab392418037ca72e4bcadb3e1949f",
+  "outputs": [
+    {
+      "source": "poses-green.png",
+      "source_sha256": "4a9f28385ff11f1e0ad229f8890ba6e96e13a5e8039086b816f8ff0144b9877c",
+      "source_output": "exec-abbe0583-c716-4273-aa36-363df442d4a8.png",
+      "prompt": "Change ONLY the checkerboard background behind these sixteen moth sprites to completely flat solid pure green RGB(0,255,0). Preserve every original moth pose, four wings, antennae, six legs, lantern abdomen, size and spacing, including fallen bodies. No gradients, shadows, text or extra elements.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "668d7f9b2919c12d5e42079ac7a5c6278385149538e0828b51ed9040be252361",
+      "alpha_output": "exec-a7be0f31-f5c9-4ef8-a763-39bf51da5f8c.png",
+      "alpha_prompt": "Remove the green background. Keep all sixteen original moth poses unchanged, preserving four wings, antennae, fine legs, lantern abdomen, sizes, positions and collapsed bodies. Transparent background."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "poses.png",
+      "sha256": "843a7a1aab9023cb8268c380c2f67f271fada0206fd8ab8277cc13e35e2edf59",
+      "source_output": "exec-fd52d02c-13af-4c21-adeb-75331d73d8b1.png",
+      "prompt": "Use case: stylized-concept. Original Sunscale Lanternmoth tactical battle sprite animation sheet, referencing the supplied original creature. Preserve FOUR gold-edged cobalt-blue mineral-pattern wings, furry blue/gold thorax, six fine brown legs, two feather antennae, amber eyes and faceted glowing golden lantern abdomen. Exactly SIXTEEN complete poses arranged FOUR columns by FOUR rows, broad transparent gutters. All face RIGHT in the same elevated three-quarter battle camera, body same size; keep wings, legs and antennae fully inside each cell. Row 1: idle hover wings halfway raised; breathing hover abdomen gently inflated wings relaxed; flying strong upstroke all four wings raised high; flying downstroke wings low and spread. Row 2: flying passing stroke wings extended horizontally; melee anticipation legs drawing back; melee forward leg rake and head lunge, abdomen behind; defensive wings folded forward around thorax like shields. Row 3: ranged aim abdomen tilting forward under thorax; ranged charge wings lifted to expose bright faceted abdomen; ranged RELEASE four wings fan outward with abdomen contracted and aimed right; ranged recovery wings halfway folded abdomen relaxed. No detached projectiles or particles: only creature articulation. Row 4: recoil curled legs body pulled back; dying losing lift wings drooping and legs curled; landing on side wings crumpled on ground; final DEAD moth flat on side with collapsed unlit amber abdomen, limp legs/antennae and folded fallen wings. No blood. Actual redrawn articulated anatomy, not rotated or scaled standing cutouts. Detailed painterly original raster art consistent with reference. GENUINE transparent alpha background; no checkerboard, matte, scenery, ground, cast shadows, smoke, text, labels, grids or panel borders.",
+      "status": "RGB checkerboard source, not runtime transparent art"
+    }
+  ],
+  "review_notes": [
+    "Sixteen original wing, leg-rake, separate abdomen/fan firing, guard, recoil and collapsed dead poses. Continuous flight and action acceptance pending.",
+    "Real RGBA 0..254. Segmented wing-tip crops exclude adjacent art without painting, warping or synthesizing poses."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_sunscale_lanternmoths.png",
+    "runtime_sha256": "f4fd63f7ef7c78a20f30d86c1635364c3d6e423b201dee6fa945ff18f90e894b",
+    "method": "Uniform 0.69 downsampling and independent flying/ground anchors; segmented rectangles preserve original wing tips and legs."
+  }
+}
