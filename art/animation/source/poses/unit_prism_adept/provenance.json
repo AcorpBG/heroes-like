@@ -1,0 +1,34 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_prism_adept",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_prepared_not_runtime_registered",
+  "reference": "art/units/source/curated/unit_prism_adept.png",
+  "reference_sha256": "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "aaf7160465926e3311eb1a291b832d7d1542ad8b2dc1d45b85ac26e66a23089c",
+      "source_output": "exec-a4ba686b-18fb-4ed5-a733-1d91862bdc38.png",
+      "prompt": "Use case: stylized-concept. Original Prism Harrier tactical sprite sheet from supplied character reference. Preserve adult woman's face, white hood lined deep blue with gold trim, crystal shoulder armor, layered ivory/blue/gold robe panels, armored boots, hip crystal-bolt case and ornate horizontal prismatic crossbow. Sixteen complete poses in strict 4 columns x 4 rows grid. All face RIGHT in the same three-quarter tactical camera, identical anatomical scale and weapon proportions. Row1: relaxed ready crossbow held at waist; breathing ready pose with small shoulder change; walking left-foot contact with right foot back; low passing step right foot crossing past planted left ankle. Row2: walking right-foot contact with left foot back; low passing step left foot crossing past planted right ankle; aiming crossbow forward at shoulder level; trigger release with arms absorbing small recoil and empty crossbow rail. Row3: close-range crossbow-stock bash windup; stock bash extended toward RIGHT with torso twisting; defensive crouch weapon across chest; impact recoil ducking head behind forearm. Row4: reloading crystal bolt onto rail with one hand; death knees buckling and weapon slipping; collapsing onto side with loose robe panels; final fully horizontal motionless dead body lying on side, head resting, eyes closed and crossbow on ground beside relaxed hands. Walking should clearly alternate foot contacts and remain low, no high-knee march. Arm/leg articulation, cloth and crossbow mechanism genuinely redraw each pose; do not rotate or scale one standing cutout. Whole weapon, cloak and boots inside each cell with generous gutters. No blood, traveling projectiles, effects or cast shadows. Detailed original painterly raster art matching reference. Uniform flat green RGB(0,255,0) background throughout all gaps, no checkerboard, text, grid or terrain.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "8beb178da4206710e8daf027a61cef0fcfaf94d934e2c6a75b5d43f85792d045",
+      "alpha_output": "exec-8fd99244-7d96-469c-ae07-d4008d4099fa.png",
+      "alpha_prompt": "Remove the green background. Preserve the sixteen character sprites unchanged. Transparent background."
+    }
+  ],
+  "rejected_attempts": [
+    {
+      "source": "attempts/alpha-checkerboard.png",
+      "sha256": "b8d4046957002fb09d957c7eb20dbe8c766eab90651328a72141d8601d9170f3",
+      "prompt": "Remove the green background from this sixteen-pose sheet. Keep every woman, crossbow, crystal and cloth panel unchanged. Return the same sprites on a genuine transparent RGBA background, including the gaps within silhouettes. No checkerboard, painted replacement background, ground or shadows.",
+      "reason": "RGB image with baked checkerboard, not real transparency."
+    }
+  ],
+  "review_notes": [
+    "Sixteen original poses visually inspected, including distinct crossbow aim/release, reload, defensive crouch and prone body. Walking alternation remains a final-review concern.",
+    "Retry produced actual RGBA alpha 0..255. prism-source-alpha-20260914 passes seven checks and its light/dark Godot rendering was visually inspected with clean transparency. Source preparation only; crop and motion review required before registration."
+  ]
+}

@@ -4,7 +4,7 @@
   "date": "2026-09-14",
   "tool_mode": "built_in_image_gen",
   "model": "not_exposed_by_tool",
-  "review_status": "source_prepared_not_runtime_registered",
+  "review_status": "candidate_pending_playback_acceptance",
   "reference": "art/units/source/curated/unit_aurora_ballista.png",
   "reference_sha256": "f41f6b46ab457267a870128b0bf2d5c4a15f1803e055625fe8db9cd7a85e7625",
   "outputs": [
@@ -21,6 +21,13 @@
   ],
   "review_notes": [
     "Original sixteen-pose sheet visually inspected: wheel/stabilizer motion, loaded/released rail, defensive brace and inert wreck. No runtime registration yet.",
-    "Generated edit is RGBA with alpha 0..255. Preview shows colored edge pixels; actual renderer contrast verification and crop review are required before use. No local chroma-key or painted alpha substitution."
-  ]
+    "Generated edit is RGBA with alpha 0..255. Preview shows colored edge pixels; actual renderer contrast verification and crop review are required before use. No local chroma-key or painted alpha substitution.",
+    "Godot contrasting-background render inspected: genuine alpha, no visible replacement backdrop. Packed sixteen-pose atlas inspected; isolated neighbor fragments excluded through source crop boundaries. Full motion acceptance pending."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_aurora_ballista.png",
+    "runtime_sha256": "e9727eb58ef21d2dc23fe95d7b17a50d5e29e7e2fc4ff2bf5fff2de86e72dadf",
+    "method": "Uniform 0.72 downsampling, ground anchors and segmented crops preserving stabilizers while excluding neighboring parts."
+  }
 }
