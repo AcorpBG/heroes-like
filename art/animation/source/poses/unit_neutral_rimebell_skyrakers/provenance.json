@@ -4,7 +4,7 @@
   "date": "2026-09-14",
   "tool_mode": "built_in_image_gen",
   "model": "not_exposed_by_tool",
-  "review_status": "source_only_pending_packing",
+  "review_status": "candidate_pending_playback_acceptance",
   "reference": "art/units/source/curated/unit_neutral_rimebell_skyrakers.png",
   "reference_sha256": "2ded46c9e9d6c4baf39c74a7811a26cb1c4096e61ec679923dcc60077a84844a",
   "outputs": [
@@ -29,7 +29,14 @@
     }
   ],
   "review_notes": [
+    "Packed and enabled as candidate. Earlier source-only note is historical; continuous flight/rake/death acceptance remains pending.",
     "Twelve original flight, talon rake, folded guard, recoil and fallen poses prepared. Real RGBA 0..254. Not packed or registered; excluded from enabled coverage.",
     "Original wing/keel/talon identity retained; full motion acceptance pending."
-  ]
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_rimebell_skyrakers.png",
+    "runtime_sha256": "d69db630b66e82c7e6838d7d1885ed63953aa034e8c4aee78c295b5a71f73abc",
+    "method": "Uniform 0.57 downsampling with anatomical flying/ground anchors and segmented wing/tail crops preserving original raster poses."
+  }
 }

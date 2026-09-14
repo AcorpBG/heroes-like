@@ -1,0 +1,302 @@
+{
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          360,
+          310
+        ]
+      ],
+      "anchor": [
+        250,
+        315
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "idle_alert",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          360,
+          0,
+          710,
+          305
+        ]
+      ],
+      "anchor": [
+        600,
+        315
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "flight_up",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          710,
+          0,
+          1045,
+          315
+        ]
+      ],
+      "anchor": [
+        950,
+        315
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "flight_down",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1045,
+          0,
+          1402,
+          310
+        ]
+      ],
+      "anchor": [
+        1300,
+        315
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "flight_pass",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          310,
+          360,
+          550
+        ],
+        [
+          0,
+          550,
+          190,
+          570
+        ]
+      ],
+      "anchor": [
+        250,
+        585
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "melee_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          360,
+          305,
+          715,
+          580
+        ]
+      ],
+      "anchor": [
+        600,
+        585
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "melee_jab",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          715,
+          315,
+          1100,
+          585
+        ]
+      ],
+      "anchor": [
+        950,
+        585
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "guard",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1100,
+          310,
+          1402,
+          585
+        ]
+      ],
+      "anchor": [
+        1300,
+        585
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_charge",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          835,
+          360,
+          1122
+        ],
+        [
+          0,
+          825,
+          190,
+          835
+        ]
+      ],
+      "anchor": [
+        250,
+        1122
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_fire",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          360,
+          825,
+          725,
+          1122
+        ]
+      ],
+      "anchor": [
+        600,
+        1122
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          725,
+          835,
+          1045,
+          1122
+        ]
+      ],
+      "anchor": [
+        950,
+        1122
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_recover",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1045,
+          835,
+          1402,
+          1122
+        ]
+      ],
+      "anchor": [
+        1300,
+        1122
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          570,
+          360,
+          830
+        ],
+        [
+          190,
+          550,
+          300,
+          570
+        ]
+      ],
+      "anchor": [
+        250,
+        835
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_drop",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          360,
+          585,
+          710,
+          825
+        ]
+      ],
+      "anchor": [
+        600,
+        835
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_land",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          710,
+          590,
+          1025,
+          825
+        ]
+      ],
+      "anchor": [
+        950,
+        835
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "dead",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1025,
+          650,
+          1402,
+          835
+        ]
+      ],
+      "anchor": [
+        1300,
+        835
+      ],
+      "scale": 0.7
+    }
+  ]
+}

@@ -1,0 +1,264 @@
+{
+  "unit_id": "unit_neutral_ashcrown_kilnelk",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "alternatives/gray-alpha-attempt.png",
+      "rects": [
+        [
+          0,
+          0,
+          360,
+          395
+        ]
+      ],
+      "anchor": [
+        200,
+        400
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "idle_breath",
+      "source": "alternatives/gray-alpha-attempt.png",
+      "rects": [
+        [
+          360,
+          0,
+          735,
+          400
+        ]
+      ],
+      "anchor": [
+        562,
+        400
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "alternatives/gray-alpha-attempt.png",
+      "rects": [
+        [
+          735,
+          0,
+          1090,
+          400
+        ]
+      ],
+      "anchor": [
+        924,
+        400
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "alternatives/gray-alpha-attempt.png",
+      "rects": [
+        [
+          1090,
+          0,
+          1448,
+          400
+        ]
+      ],
+      "anchor": [
+        1286,
+        400
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "walk_pass",
+      "source": "alternatives/gray-alpha-attempt.png",
+      "rects": [
+        [
+          0,
+          395,
+          350,
+          590
+        ],
+        [
+          0,
+          590,
+          330,
+          715
+        ]
+      ],
+      "anchor": [
+        200,
+        735
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "attack_windup",
+      "source": "alternatives/gray-alpha-attempt.png",
+      "rects": [
+        [
+          350,
+          430,
+          715,
+          730
+        ],
+        [
+          715,
+          530,
+          755,
+          665
+        ]
+      ],
+      "anchor": [
+        562,
+        735
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "attack_sweep",
+      "source": "alternatives/gray-alpha-attempt.png",
+      "rects": [
+        [
+          755,
+          400,
+          1160,
+          582
+        ],
+        [
+          755,
+          582,
+          1135,
+          605
+        ],
+        [
+          755,
+          605,
+          1090,
+          665
+        ],
+        [
+          715,
+          665,
+          1090,
+          735
+        ]
+      ],
+      "anchor": [
+        924,
+        735
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "guard",
+      "source": "alternatives/gray-alpha-attempt.png",
+      "rects": [
+        [
+          1160,
+          490,
+          1448,
+          582
+        ],
+        [
+          1135,
+          582,
+          1448,
+          605
+        ],
+        [
+          1090,
+          605,
+          1448,
+          740
+        ]
+      ],
+      "anchor": [
+        1286,
+        735
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "recoil",
+      "source": "alternatives/gray-alpha-attempt.png",
+      "rects": [
+        [
+          0,
+          730,
+          330,
+          1060
+        ],
+        [
+          110,
+          710,
+          270,
+          730
+        ]
+      ],
+      "anchor": [
+        200,
+        1060
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "death_kneel",
+      "source": "alternatives/gray-alpha-attempt.png",
+      "rects": [
+        [
+          330,
+          790,
+          680,
+          1060
+        ]
+      ],
+      "anchor": [
+        562,
+        1060
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "death_fall",
+      "source": "alternatives/gray-alpha-attempt.png",
+      "rects": [
+        [
+          680,
+          800,
+          1065,
+          1060
+        ]
+      ],
+      "anchor": [
+        924,
+        1060
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "dead",
+      "source": "alternatives/gray-alpha-attempt.png",
+      "rects": [
+        [
+          1065,
+          800,
+          1448,
+          1060
+        ]
+      ],
+      "anchor": [
+        1286,
+        1060
+      ],
+      "scale": 0.59
+    }
+  ]
+}

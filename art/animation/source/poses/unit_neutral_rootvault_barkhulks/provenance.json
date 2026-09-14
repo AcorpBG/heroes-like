@@ -1,0 +1,34 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_rootvault_barkhulks",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_pending_packing_and_playback_review",
+  "reference": "art/units/source/curated/unit_neutral_rootvault_barkhulks.png",
+  "reference_sha256": "be80278f987ac873272bced9de40cec12423516c63b7c5eb4e125593740b7167",
+  "outputs": [
+    {
+      "source": "poses-gray.png",
+      "source_sha256": "f056dc81a3d902d923d964e7811c87fac260134667b4bd8486625262e15d24fa",
+      "source_output": "exec-cf0d5973-8b04-4f31-a84a-074e6d634308.png",
+      "prompt": "Change ONLY the checkerboard behind these twelve original wooden creatures into uniform pale neutral gray RGB(210,210,210). Keep exact poses, anatomy, size, positions, ringed heartwood belly, amber knots, branches, leaves, moss, mushrooms, roots and collapsed bodies. No floor, shadows, gradient, added particles or text. Preserve all creature details and generous gutters.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "c5ee32b1313a1b8566894a11cac778d36464a8bcd6e76074d6d462078a0eff59",
+      "alpha_output": "exec-ac911e83-0cbb-4e01-9a55-c4599d0aede5.png",
+      "alpha_prompt": "Remove the gray background from this twelve-pose wooden creature sheet. Genuine transparent RGBA, clean silhouette edges. Preserve all twelve original articulated poses, fine branches/leaves/moss, root fingers, heartwood ring chest, amber knots and fallen bodies exactly at current size and position. No gray matte or checkerboard, no new shadows, haze, particles, halo or text."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "poses.png",
+      "sha256": "9570046e214cc2696b3eb0968325af2fdcda89915ff5ef3f069a88354939c193",
+      "source_output": "exec-d194f29c-9410-40c2-a643-7899dcd35411.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle animation sprite atlas, twelve fully articulated poses in exactly FOUR columns by THREE rows. Reference image is identity authority for Rootvault Barkhulk: massive low-slung wooden gorilla-like guardian, two huge twisted root arms and two root legs, round concentric heartwood trunk belly, hunched head in upper right, amber knot eyes and amber knots at shoulders/wrists, moss beard, green leaves, broken branched crown and small shelf mushrooms. Preserve all these traits, same creature size and elevated three-quarter side camera, facing RIGHT. Row1: relaxed standing knuckle support; subtle breathing shoulders lifted and head alert; walking left contact with near root hand forward and opposite rear foot forward; opposite contact near arm back and near rear foot forward. Row2: heavy passing step raised near root fist under chest; attack anticipation one massive fist raised high with shoulder and trunk twist; attack downward-forward fist slam with bent knees and weight over extended hand; defense hunkered round heartwood torso protected by both root forearms planted forward. Row3: hit recoil trunk tilted back head averted; dying knees and supporting elbow buckling; collapse rolling onto side with arms slack; fully DEAD motionless side-lying hollow trunk, limp root limbs and fallen head, amber light extinguished. No blood or scattered debris. Every pose is distinctly redrawn articulation, not a rotated or resized duplicate. Consistent detailed painterly raster matching reference. Full creature including crown/fingers/feet inside each cell, generous transparent gutters, NO pose overlap. True transparent RGBA background, no checkerboard, floor, scenery, shadows, text, borders, particles or exterior haze. Original art, no copied copyrighted characters.",
+      "status": "Original articulated source with RGB checkerboard, not runtime alpha"
+    }
+  ],
+  "review_notes": [
+    "Twelve source poses prepared only; no runtime registration or accepted coverage. Seven source-alpha checks pass and actual 1280x720 light/dark capture inspected clean. Packing and continuous gait/slam/brace/death review remain pending."
+  ]
+}

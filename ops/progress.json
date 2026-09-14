@@ -16671,14 +16671,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Twenty candidates validated. Repository, official Linux/Windows exports and packaged actions 3003/2983 pass with matching five compiled combat owners. Parity 8566 entries / 531879844 bytes. Eight packing tests cover twenty recipes, including distinct ranged/melee clips. Small/wide and alpha captures inspected. Skyraker sources prepared only. Cleanup recovered 1238476680 rebuildable bytes. Final accepted roster 0/160; full goal active.",
+  "currentNotes": "Twenty-four original pose candidates enabled. Repository, both official exports and parity pass (534777376 bytes, 8574 members each). Linux rendered battle checks 3544 and Windows reduced-motion checks 3520 pass; final driver reports and compiled owner parity pass, wide captures inspected. Eight packing tests pass. Barkhulk/Ironback original sources prepared only, seven alpha checks each with inspected captures. Cleaned 1241318192 rebuildable bytes of obsolete sixteen-unit exports; retained evidence/caches/art. No gameplay/save/footprint changes. Final accepted roster 0/160; full goal active.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "combat-unit-animation-and-size-20260913",
   "currentSliceId": "combat-unit-animation-and-size-20260913",
-  "currentSliceNotes": "Twenty candidates validated. Repository, official Linux/Windows exports and packaged actions 3003/2983 pass with matching five compiled combat owners. Parity 8566 entries / 531879844 bytes. Eight packing tests cover twenty recipes, including distinct ranged/melee clips. Small/wide and alpha captures inspected. Skyraker sources prepared only. Cleanup recovered 1238476680 rebuildable bytes. Final accepted roster 0/160; full goal active.",
+  "currentSliceNotes": "Twenty-four original pose candidates enabled. Repository, both official exports and parity pass (534777376 bytes, 8574 members each). Linux rendered battle checks 3544 and Windows reduced-motion checks 3520 pass; final driver reports and compiled owner parity pass, wide captures inspected. Eight packing tests pass. Barkhulk/Ironback original sources prepared only, seven alpha checks each with inspected captures. Cleaned 1241318192 rebuildable bytes of obsolete sixteen-unit exports; retained evidence/caches/art. No gameplay/save/footprint changes. Final accepted roster 0/160; full goal active.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Complete Battle Unit Animation and Size",
-  "currentSliceUpdatedAt": "2026-09-14T11:47:33Z",
+  "currentSliceUpdatedAt": "2026-09-14T12:52:30Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22358,10 +22358,10 @@
         "packParity": "8526 members, 516867256 bytes per platform; only project.binary differs",
         "evidenceRoot": ".artifacts/battle-unit-animation-size-20260913",
         "repositoryValidation": "Passed: accepted-repository-validation.log",
-        "enabledCandidatePoseUnits": 20,
+        "enabledCandidatePoseUnits": 24,
         "candidateSourceChecks": 962,
         "candidatePackingTests": 8,
-        "candidateEvidence": "Twenty candidates validated. Repository, official Linux/Windows exports and packaged actions 3003/2983 pass with matching five compiled combat owners. Parity 8566 entries / 531879844 bytes. Eight packing tests cover twenty recipes, including distinct ranged/melee clips. Small/wide and alpha captures inspected. Skyraker sources prepared only. Cleanup recovered 1238476680 rebuildable bytes. Final accepted roster 0/160; full goal active.",
+        "candidateEvidence": "Twenty-four original pose candidates enabled. Repository, both official exports and parity pass (534777376 bytes, 8574 members each). Linux rendered battle checks 3544 and Windows reduced-motion checks 3520 pass; final driver reports and compiled owner parity pass, wide captures inspected. Eight packing tests pass. Barkhulk/Ironback original sources prepared only, seven alpha checks each with inspected captures. Cleaned 1241318192 rebuildable bytes of obsolete sixteen-unit exports; retained evidence/caches/art. No gameplay/save/footprint changes. Final accepted roster 0/160; full goal active.",
         "remainingDependency": "Final original-art acceptance for all 160 units; River Guard candidate needs walk refinement and full action review, followed by roster rollout and refreshed repository/Linux/Windows validation. Built-in RGBA production works; no paid CLI/API dependency."
       },
       "notes": "Original-art production resumed with built-in image generation, smaller pose batches and visual iteration. Prior CLI-approval blocker was premature; no paid API fallback is needed or authorized. Full roster remains the goal."

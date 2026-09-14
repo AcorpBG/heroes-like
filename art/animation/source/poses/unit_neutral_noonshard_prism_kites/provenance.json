@@ -1,0 +1,40 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_noonshard_prism_kites",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_noonshard_prism_kites.png",
+  "reference_sha256": "d81eef59889e0b304c0413e15a2bb678ac50fd922c6c0529d1cb6c20d6feec39",
+  "outputs": [
+    {
+      "source": "poses-gray.png",
+      "source_sha256": "62fe7d38edac131cdd1ce26b207c6fc1e4983cacc4be0c3bd3ceae702dae161d",
+      "source_output": "exec-2ab99877-f2e6-415d-86ed-2306d911f968.png",
+      "prompt": "Replace ONLY the checkerboard background behind these sixteen original glass-winged creatures with uniform neutral gray RGB(190,190,190). Preserve the exact sixteen poses, positions, size, full wing outlines, gold ribs, ivory bodies, feet and tail tips, including the prone dead body. No checkerboard, floor, cast shadows, text, extra objects or exterior glow. Do not alter the creature art.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "9b76d117366be0f53573908ee53a6ec7183789e8c3e78f15a94d0b5f01d14264",
+      "alpha_output": "exec-8ebc5f21-cfd3-47c5-9c68-f6ce2b79a5f9.png",
+      "alpha_prompt": "Remove the gray background entirely, genuine transparent RGBA output. Keep all sixteen glass-winged creature poses, gold edges, pale rainbow wing membranes, ivory bodies, fine tail ribbons, feet and fallen body intact at their current positions and size. Clean transparent gaps around every silhouette. No gray matte, checkerboard, halo, speckles, scenery or shadows. Preserve painted wing interiors rather than treating the pale glass as background."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "poses.png",
+      "sha256": "4a28d9121e00a7161e515a42307b2eccee17d8c3ffbe4bead9e855ee7ccd5d03",
+      "source_output": "exec-3b4bd643-c5b8-42a8-b4de-0e7707c744c0.png",
+      "prompt": "Use case: stylized-concept. Asset type: original fantasy strategy battle sprite pose atlas. Reference image defines Noonshard Prism Kite identity: slender ivory pearlescent avian dragon, four translucent faceted glass wings with elegant gold ribs, sharp swept gold crest, beaked head, two small hooked feet, long ribbonlike forked tail with prism tips. Create sixteen genuinely articulated full-body poses of this SAME creature, facing right, consistent scale and three-quarter side camera, painterly high quality readable silhouette. Layout EXACT 4 columns by 4 rows, equal cells, generous empty gutters, every wing and tail completely inside its own cell, no overlap. Row1: relaxed hovering wings spread; alert hovering wings slightly lowered; flight powerful wings upstroke; flight deep downstroke. Row2: flight recovery with wings halfway; melee neck pulled back talons cocked; melee forward beak jab talons reaching; defense glass wings folded protectively ahead of torso. Row3: recoil head back wings splayed; death losing lift wings buckling; death collapsed body landing sideways; fully dead motionless side-lying body with folded broken-angle wings and limp tail, no floating. Row4: ranged charging front wing facets aligned and throat luminous; ranged firing pose neck and forewings extended aiming right with small white-gold light at beak, no long projectile; ranged recoil neck retracted wings flared; ranged recovery settling wings. All sixteen distinct poses, anatomy visibly changes not rotated copies. Actual transparent RGBA background, no checkerboard, no floor, no shadow discs, no labels, no text, no grid lines, no environment. Keep white pearl and pale rainbow glass with gold outlines legible, no stray colored pixels or exterior haze. Original art only, no copyrighted character.",
+      "status": "Original sixteen poses, RGB checkerboard not runtime alpha"
+    }
+  ],
+  "review_notes": [
+    "Sixteen original articulated poses with distinct ranged and melee clips. Actual Godot final packed light/dark and ranged action captures inspected clean. Final battle/alpha checks pass 169/7; frame order groups firing before recoil/death with corpse last. Continuous flight and action acceptance remains outstanding."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_noonshard_prism_kites.png",
+    "runtime_sha256": "26caf395d48e9042e76382b6b68f05408b01817581145820f923a54a4707f4f2",
+    "method": "Uniform 0.70 downsampling and segmented pose rectangles preserving original raster wings and tails; no painted or warped replacement poses."
+  }
+}
