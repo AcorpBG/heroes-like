@@ -1,0 +1,314 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          315,
+          315
+        ]
+      ],
+      "anchor": [
+        158,
+        311
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "idle_lens",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          315,
+          0,
+          629,
+          315
+        ]
+      ],
+      "anchor": [
+        472,
+        311
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "roll_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          629,
+          0,
+          950,
+          315
+        ]
+      ],
+      "anchor": [
+        790,
+        311
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "roll_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          950,
+          0,
+          1254,
+          315
+        ]
+      ],
+      "anchor": [
+        1102,
+        311
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "roll_c",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          315,
+          315,
+          619
+        ]
+      ],
+      "anchor": [
+        158,
+        615
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "roll_d",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          315,
+          315,
+          629,
+          619
+        ]
+      ],
+      "anchor": [
+        472,
+        615
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "ranged_draw",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          629,
+          315,
+          950,
+          619
+        ]
+      ],
+      "anchor": [
+        790,
+        615
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "ranged_release",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          950,
+          315,
+          1254,
+          619
+        ]
+      ],
+      "anchor": [
+        1102,
+        615
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "ram_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          619,
+          315,
+          933
+        ]
+      ],
+      "anchor": [
+        158,
+        929
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "ram_contact",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          315,
+          619,
+          629,
+          795
+        ],
+        [
+          315,
+          795,
+          604,
+          865
+        ],
+        [
+          315,
+          865,
+          629,
+          933
+        ]
+      ],
+      "anchor": [
+        472,
+        929
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "brace",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          629,
+          619,
+          950,
+          933
+        ],
+        [
+          604,
+          795,
+          629,
+          865
+        ]
+      ],
+      "anchor": [
+        790,
+        929
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          950,
+          619,
+          1254,
+          885
+        ],
+        [
+          968,
+          885,
+          1254,
+          933
+        ]
+      ],
+      "anchor": [
+        1102,
+        929
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "ranged_recovery",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          933,
+          315,
+          1240
+        ]
+      ],
+      "anchor": [
+        158,
+        1235
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "breaking",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          315,
+          933,
+          629,
+          1240
+        ]
+      ],
+      "anchor": [
+        472,
+        1235
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "collapse",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          629,
+          933,
+          950,
+          1100
+        ],
+        [
+          629,
+          1100,
+          941,
+          1240
+        ]
+      ],
+      "anchor": [
+        790,
+        1235
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "dead",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          950,
+          933,
+          1254,
+          1240
+        ]
+      ],
+      "anchor": [
+        1102,
+        1235
+      ],
+      "scale": 0.72
+    }
+  ]
+}

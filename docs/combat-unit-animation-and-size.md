@@ -2,7 +2,31 @@
 
 Owner goal, Phase 6: `combat-unit-animation-and-size-20260913`.
 
-Current state: eight original-art candidates enabled and platform-validated, zero of 160 final animation acceptances. The size/footprint implementation remains validated. Built-in generation only; the earlier paid-CLI approval blocker was premature and is withdrawn. Latest batch evidence is below; earlier increment sections are historical, not current coverage claims.
+Current state: ten original-art candidates enabled and consolidated platform validation passed, zero of 160 final animation acceptances. The size/footprint implementation remains validated. Built-in generation only; the earlier paid-CLI approval blocker was premature and is withdrawn. Earlier increment sections are historical, not current coverage claims.
+
+## Ten-unit batch validation
+
+`ten-pose-repository-20260914.log` reports VALIDATION PASSED. Both official `ten-pose-linux-20260914` and `ten-pose-windows-20260914` exports pass, including the Windows generated-map/Town flow and managed Wine cleanup. `ten-pose-linux-actions-20260914` passes 1,523 rendered assertions at 1920x1080; `ten-pose-windows-actions-20260914` passes 1,513 headless reduced-motion assertions and its driver exits zero after cleanup. Both probes retain all assertions and record matching hashes for the five compiled combat owners. Packaged Aurora firing and Shard persistent-corpse scenes were visually inspected alongside their source 1280x720 captures. Living units can overlap corpses, which correctly draw underneath and have no readouts of their own.
+
+`ten-pose-parity-20260914.json` passes: 523,890,800 bytes / 8,546 members each, with only `project.binary` different. Eight reproducible packing/provenance tests cover all ten recipes; `git diff --check` passes. This validates the candidate runtime/platform increment, not final continuous animation quality or complete roster coverage. Prism Harrier remains source-only and is excluded from enabled counts.
+
+## Tenth candidate: Shard Pavise Guard
+
+Cleanup removed the six superseded seven-unit export payload files (1,225,771,584 bytes) after verifying no active process referenced them and both eight-unit replacement probes passed. Only reproducible executables, PCKs and native libraries were removed. Seven-unit reports/captures, original art, caches, Wine user data and unrelated untracked retention files remain; the validated eight-unit and current ten-unit payloads remain available.
+
+`unit_shard_guard` now has sixteen original generated poses: idle, four movement phases, blade windup/thrust/recovery, shield brace/block, hit, kneel/fall/landing and a dedicated horizontal corpse. Its original faceted pavise, blade, closed visor and gold/ivory armor are retained. Built-in source/alpha prompts and hashes are saved with the reproducible 0.72-scale packing recipe; separate ground anchors align the low death poses. The packed atlas and actual Godot light/dark contrast rendering were inspected. The visible shield and prone-body poses are distinct; clearer alternating walk contacts and full continuous-motion acceptance remain open. No paid API or local painted approximation was used.
+
+`shard-actions-20260914` passes 154 actual battle assertions, including its own death/corpse and save identity. The 1280x720 attack scene was inspected. `shard-packed-alpha-20260914` passes seven compositing assertions; all eight packing/provenance tests pass across ten recipes. Import and `git diff --check` pass. Ten-unit Linux export passes at `ten-pose-linux-20260914`; repository validation, Windows export and packaged action checks are running. A wrapper exit 143 does not invalidate or restart the confirmed-live repository/Linux probe children; collect their final reports before claiming completion.
+
+Prism Harrier (`unit_prism_adept`) has a sixteen-pose source and real RGBA retry prepared, but no runtime registration. Its first alpha edit was RGB with baked checkerboard and is explicitly rejected. Source, attempts and exact prompts/hashes are retained under its source directory. `prism-source-alpha-20260914` passes seven compositing assertions and its clean light/dark rendering was inspected. Packing and motion review are next; no enabled/accepted count is assigned to this source-only work.
+
+The ten-unit repository log subsequently reported VALIDATION PASSED and `ten-pose-windows-20260914` official export completed with `ok: true`. `ten-pose-parity-20260914.json` passes at 523,890,800 bytes / 8,546 members per platform, with only `project.binary` differing. Packaged action-result collection remains in progress; no completed ten-unit batch claim yet.
+
+## Ninth candidate: Aurora Ballista
+
+`unit_aurora_ballista` now uses sixteen original generated poses for idle lens changes, movement, distinct firing/ram attacks, defensive brace/recoil, destruction and a persistent wreck. Existing two-hex footprint and 1.25 visual scale are unchanged. `packing.json` preserves generated alpha and uniform 0.72 source scale, with segmented crops retaining the extended stabilizer while excluding neighboring pose fragments. Provenance records the exact runtime hash and unchanged source lineage. The packed atlas and actual Godot light/dark contrast render were inspected; colored tool-preview edges do not appear as a replacement background in the rendered capture.
+
+`aurora-actions-20260914` passes 183 real-action assertions, including distinct Shoot/Strike clips, its own death/corpse identity, save/resume and unchanged simulation. Its 1280x720 firing capture was inspected. `aurora-alpha-20260914` and `aurora-packed-alpha-20260914` each pass seven compositing checks. The latter preserves atlas aspect ratio; the alpha driver now accepts an explicit source resource instead of requiring a separate hardcoded script for each unit. All eight packing/provenance tests pass across nine recipes; import and `git diff --check` pass. These are focused source results, not nine-unit Windows/Linux export acceptance. Wheel/stabilizer continuity and continuous-motion review remain open; final accepted count stays zero. Platform/repository reruns are grouped with the next content batch, not repeated after every individual asset.
 
 ## Latest validated batch, 2026-09-14
 

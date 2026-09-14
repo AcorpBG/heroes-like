@@ -24,7 +24,7 @@ Rules:
 
 ### Complete Battle Unit Animation and Size
 
-`combat-unit-animation-and-size-20260913` — in_progress, owner-directed Phase 6 goal. All 160 size profiles are authored; 37 long bodies use shared two-hex rules/AI/UI geometry. Eight original-art candidates are enabled, including Gorefen Ripper. Eight-candidate repository, Linux/Windows exports, packaged action/accessibility probes (1190/1182 checks) and parity pass. Final accepted coverage remains 0/160 pending refinement and full motion review. Aurora Ballista source poses are prepared but unregistered; River Guard opposite-stride refinement remains unresolved. Continue across all 160 identities; legacy affine sheets do not count. Requirements/evidence: `docs/combat-unit-animation-and-size.md`.
+`combat-unit-animation-and-size-20260913` — in_progress, owner-directed Phase 6 goal. All 160 size profiles are authored; 37 long bodies use shared two-hex rules/AI/UI geometry. Ten original-art candidates are enabled, including Aurora Ballista and Shard Pavise Guard. Ten-unit repository, Linux/Windows exports, package parity and battle probes (1523/1513 assertions) pass; eight packing tests cover ten recipes. Prism Harrier source art and verified RGBA cutout are prepared but unregistered. Final accepted coverage remains 0/160 pending refinement and full motion review. Continue across all 160 identities; legacy affine sheets do not count. Requirements/evidence: `docs/combat-unit-animation-and-size.md`.
 
 ### Layered Combat Visual Effects
 

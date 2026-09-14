@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """Render actual source RGBA over contrasting backgrounds; never alter source art."""
+import argparse
+import os
+import sys
 import battle_readability_regression as runner
 
 SCRIPT = r'''extends Node
@@ -22,11 +25,14 @@ func run()->void:
 		add_child(background)
 		var filename:="alpha/poses.png" if index==0 else "alternatives/alpha-attempt-2.png"
 		var path:="res://art/animation/source/poses/unit_gorefen_ripper/"+filename
+		if not OS.get_environment("BATTLE_ALPHA_SOURCE").is_empty():
+			path=OS.get_environment("BATTLE_ALPHA_SOURCE")
 		var source:=Image.load_from_file(path)
 		check(source!=null and not source.is_empty(),"source missing")
 		check(source.get_pixel(0,0).a==0.0,"source corner is not transparent")
 		var sprite:=TextureRect.new()
 		sprite.expand_mode=TextureRect.EXPAND_IGNORE_SIZE
+		sprite.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		sprite.texture=ImageTexture.create_from_image(source)
 		sprite.position=Vector2(index*640+20,160)
 		sprite.size=Vector2(600,400)
@@ -44,6 +50,12 @@ func run()->void:
 '''
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument('--alpha-source')
+    args, remaining = parser.parse_known_args()
+    sys.argv[1:] = remaining
+    if args.alpha_source:
+        os.environ['BATTLE_ALPHA_SOURCE'] = args.alpha_source
     runner.OUTPUT = runner.ROOT / '.artifacts/battle-unit-animation-size-20260913'
     runner.SCRIPT = SCRIPT
     raise SystemExit(runner.main())

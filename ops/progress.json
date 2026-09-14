@@ -16671,14 +16671,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Eight original-art candidates enabled. Eight-candidate repository/official exports pass; Linux 1190 and Windows 1182 packaged battle checks pass; parity 8542 members, 521815888 bytes each. Eight packing tests and 959 body checks pass. Final accepted roster remains 0/160. Aurora Ballista source prepared but unregistered; River Guard walk refinement unresolved. Full goal active, built-in imagegen only.",
+  "currentNotes": "Ten candidates enabled. Repository, both official exports, Linux 1523 and Windows 1513 packaged battle assertions and parity pass (8546 members, 523890800 bytes). Eight packing tests cover ten recipes. Prism Harrier source and verified RGBA cutout prepared but unregistered. Final accepted roster 0/160; full goal active.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "combat-unit-animation-and-size-20260913",
   "currentSliceId": "combat-unit-animation-and-size-20260913",
-  "currentSliceNotes": "Eight original-art candidates enabled. Eight-candidate repository/official exports pass; Linux 1190 and Windows 1182 packaged battle checks pass; parity 8542 members, 521815888 bytes each. Eight packing tests and 959 body checks pass. Final accepted roster remains 0/160. Aurora Ballista source prepared but unregistered; River Guard walk refinement unresolved. Full goal active, built-in imagegen only.",
+  "currentSliceNotes": "Ten candidates enabled. Repository, both official exports, Linux 1523 and Windows 1513 packaged battle assertions and parity pass (8546 members, 523890800 bytes). Eight packing tests cover ten recipes. Prism Harrier source and verified RGBA cutout prepared but unregistered. Final accepted roster 0/160; full goal active.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Complete Battle Unit Animation and Size",
-  "currentSliceUpdatedAt": "2026-09-14T09:09:33Z",
+  "currentSliceUpdatedAt": "2026-09-14T09:35:44Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22358,10 +22358,10 @@
         "packParity": "8526 members, 516867256 bytes per platform; only project.binary differs",
         "evidenceRoot": ".artifacts/battle-unit-animation-size-20260913",
         "repositoryValidation": "Passed: accepted-repository-validation.log",
-        "enabledCandidatePoseUnits": 8,
+        "enabledCandidatePoseUnits": 10,
         "candidateSourceChecks": 962,
         "candidatePackingTests": 8,
-        "candidateEvidence": "Eight-candidate repository and official exports pass. Linux packaged 1190 normal-motion and Windows packaged 1182 reduced-motion assertions pass with matching compiled owners. Parity 8542 members / 521815888 bytes each. Eight packing tests, source Gorefen 124 and body 959 checks pass. Evidence labels eight-pose-*-20260914. Aurora Ballista sources unregistered; final 160-unit animation acceptance unfinished.",
+        "candidateEvidence": "Ten-unit batch passes: repository log, both official exports, Linux 1523 / Windows 1513 packaged action assertions with matching compiled owners, parity 8546 members and 523890800 bytes. Eight packing tests cover ten recipes. Small/wide captures inspected. Prism Harrier source-only; full 160-unit final motion acceptance unfinished.",
         "remainingDependency": "Final original-art acceptance for all 160 units; River Guard candidate needs walk refinement and full action review, followed by roster rollout and refreshed repository/Linux/Windows validation. Built-in RGBA production works; no paid CLI/API dependency."
       },
       "notes": "Original-art production resumed with built-in image generation, smaller pose batches and visual iteration. Prior CLI-approval blocker was premature; no paid API fallback is needed or authorized. Full roster remains the goal."
