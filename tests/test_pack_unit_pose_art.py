@@ -38,6 +38,7 @@ class PosePackingTests(unittest.TestCase):
 
     def test_registered_clips_resolve_real_frames(self):
         manifest = json.loads((ROOT / "content/unit_animation_manifest.json").read_text())
+        units = {row["id"]: row for row in json.loads((ROOT / "content/units.json").read_text())["items"]}
         for unit in manifest["items"]:
             if not unit.get("pose_sheet"):
                 continue  # Pending migration, not falsely counted as accepted.
@@ -49,6 +50,11 @@ class PosePackingTests(unittest.TestCase):
                 count = (atlas.width // width) * (atlas.height // height)
                 for name in ("idle", "move", "attack", "defend", "death", "dead"):
                     self.assertIn(name, unit["pose_clips"])
+                if units[unit["unit_id"]].get("ranged", False):
+                    self.assertIn("ranged", unit["pose_clips"], "ranged unit has no original firing sequence")
+                    self.assertNotEqual(unit["pose_clips"]["ranged"]["indices"],
+                                        unit["pose_clips"]["attack"]["indices"],
+                                        "ranged attack silently reuses the melee poses")
                 for name, clip in unit["pose_clips"].items():
                     self.assertEqual(clip["frames"], len(clip["indices"]))
                     self.assertGreaterEqual(clip["frames"], 1 if name == "dead" else 2)

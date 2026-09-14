@@ -16671,14 +16671,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Fourteen candidates and event-relative pose timing validated. Repository, both official exports, Linux/Windows actions 2086/2072 and bodies 971/968 pass. Fast Orewyrm source/Linux/Windows checks 156/156/131 pass. Parity 8554 members / 527101992 bytes. Eight packing tests cover fourteen recipes. Skyray source prepared only. Final accepted roster 0/160; full goal active.",
+  "currentNotes": "Sixteen candidates validated. Repository, official Linux/Windows exports and packaged actions 2393/2377 pass with matching five compiled combat owners. Parity 8558 entries / 528522748 bytes. Eight packing tests cover sixteen recipes including distinct firing clips. Small/wide and alpha captures inspected. Knucklebear and Belltoad sources prepared only. Final accepted roster 0/160; full goal active.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "combat-unit-animation-and-size-20260913",
   "currentSliceId": "combat-unit-animation-and-size-20260913",
-  "currentSliceNotes": "Fourteen candidates and event-relative pose timing validated. Repository, both official exports, Linux/Windows actions 2086/2072 and bodies 971/968 pass. Fast Orewyrm source/Linux/Windows checks 156/156/131 pass. Parity 8554 members / 527101992 bytes. Eight packing tests cover fourteen recipes. Skyray source prepared only. Final accepted roster 0/160; full goal active.",
+  "currentSliceNotes": "Sixteen candidates validated. Repository, official Linux/Windows exports and packaged actions 2393/2377 pass with matching five compiled combat owners. Parity 8558 entries / 528522748 bytes. Eight packing tests cover sixteen recipes including distinct firing clips. Small/wide and alpha captures inspected. Knucklebear and Belltoad sources prepared only. Final accepted roster 0/160; full goal active.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Complete Battle Unit Animation and Size",
-  "currentSliceUpdatedAt": "2026-09-14T10:42:04Z",
+  "currentSliceUpdatedAt": "2026-09-14T11:13:29Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22358,10 +22358,10 @@
         "packParity": "8526 members, 516867256 bytes per platform; only project.binary differs",
         "evidenceRoot": ".artifacts/battle-unit-animation-size-20260913",
         "repositoryValidation": "Passed: accepted-repository-validation.log",
-        "enabledCandidatePoseUnits": 14,
+        "enabledCandidatePoseUnits": 16,
         "candidateSourceChecks": 962,
         "candidatePackingTests": 8,
-        "candidateEvidence": "Fourteen candidates and event-relative pose timing validated. Repository, both official exports, Linux/Windows actions 2086/2072 and bodies 971/968 pass. Fast Orewyrm source/Linux/Windows checks 156/156/131 pass. Parity 8554 members / 527101992 bytes. Eight packing tests cover fourteen recipes. Skyray source prepared only. Final accepted roster 0/160; full goal active.",
+        "candidateEvidence": "Sixteen candidates validated. Repository, official Linux/Windows exports and packaged actions 2393/2377 pass with matching five compiled combat owners. Parity 8558 entries / 528522748 bytes. Eight packing tests cover sixteen recipes including distinct firing clips. Small/wide and alpha captures inspected. Knucklebear and Belltoad sources prepared only. Final accepted roster 0/160; full goal active.",
         "remainingDependency": "Final original-art acceptance for all 160 units; River Guard candidate needs walk refinement and full action review, followed by roster rollout and refreshed repository/Linux/Windows validation. Built-in RGBA production works; no paid CLI/API dependency."
       },
       "notes": "Original-art production resumed with built-in image generation, smaller pose batches and visual iteration. Prior CLI-approval blocker was premature; no paid API fallback is needed or authorized. Full roster remains the goal."

@@ -1,0 +1,49 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_cinderwake_aurochs",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_cinderwake_aurochs.png",
+  "reference_sha256": "3b8525b7f40345295e4a74de88f8f46a51490adbeb70ab93fc66412d545aff0e",
+  "outputs": [
+    {
+      "source": "poses-green.png",
+      "source_sha256": "92332c6ad6fa2b7a1f9543d94688a7251dcc95a222af30bf0a06ecad4ba9749f",
+      "source_output": "exec-bedd7131-fd2e-4782-ace1-5c1e8a43e727.png",
+      "prompt": "Change ONLY the background behind these twelve bull creature sprites to completely flat solid pure green RGB(0,255,0). Remove every checkerboard square. Keep every original creature, pose, scale, spacing, horns, hooves and tails unchanged. No gradients or shadows.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "8f1c3b035e77cb69c5e03fe44c92125c967c941972aa3d7c74d7844f0546c39a",
+      "alpha_output": "exec-b51758fc-3323-411f-af2a-2795cc0b0496.png",
+      "alpha_prompt": "Remove the green background. Preserve all twelve creature sprites unchanged. Transparent background."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "poses.png",
+      "sha256": "b7a7d2c70741028e56c6c0b8dc487c83c78dfdcfb525b837cd9671b0f5fcfdcf",
+      "source_output": "exec-59bb7505-61c3-4b48-bc59-0905fab489ae.png",
+      "prompt": "Use case: stylized-concept. Original Cinderwake Aurochs tactical battle animation sprite sheet using the reference creature. Preserve bulky black basalt bull body, angular rock armor along spine, lava-orange cracks, short orange beard, broad bronze-edged curled horns, turquoise oxidized metal harness, four heavy cloven hooves and tufted long tail. Exactly TWELVE complete poses arranged FOUR columns by THREE rows. All face RIGHT at identical slightly elevated three-quarter tactical view, consistent body size, generous clear gutters. Row1: standing relaxed; breathing with lowered shoulders and tail shifted; walking contact with near foreleg FORWARD and near rear leg BACK; opposite walking contact with near foreleg BACK and near rear leg FORWARD. Row2: passing stride with lifted forehoof and opposite rearhoof; charge anticipation with horns lowered and hindlegs braced; forward horn thrust with neck extended, forelegs catching weight; defensive crouch planting all four hooves and horns shielding face. Row3: impact recoil shoulders back; death knees buckling; fall onto side legs folded; final DEAD bull resting heavily on side, all hooves slack, head and horns on ground, tail down and lava cracks dim. No blood. Draw actual anatomical changes and weight transfer, not rotations or translations of standing cutouts. Detailed painterly original raster style matching reference. Genuine transparent background. No terrain, cast shadows, colored matte, checkerboard, text, labels, grids, detached particles or smoke. Keep entire horns, hooves and tail in every cell.",
+      "status": "RGB checkerboard source, not runtime transparent art"
+    },
+    {
+      "source": "alternatives/checkerboard-alpha-attempt.png",
+      "sha256": "c3dc6ec5d28b2bb45bdb65af2ee9d1d1746f6491c53d38eb92e705734b46d378",
+      "source_output": "exec-bdf326cc-c08b-4cb7-9d40-f1ef5b256686.png",
+      "prompt": "Remove the checkerboard background. Keep all twelve bull creature poses unchanged, with fully preserved horns, tails, lava seams, hooves and collapsed bodies. Genuine transparent background.",
+      "status": "Rejected extraction: remains RGB checkerboard"
+    }
+  ],
+  "review_notes": [
+    "Twelve poses packed and enabled as candidate. Source-only notes below are historical; continuous walking/charge/death acceptance remains outstanding.",
+    "Twelve source poses preserve original basalt bull, horns, harness and lava seams; buckling knees, side collapse and prone corpse differ from standing poses. Generated walk contacts still require motion review.",
+    "Final cutout has real RGBA 0..255. Prepared source only; packing and runtime registration pending. No accepted or enabled identity count assigned."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_cinderwake_aurochs.png",
+    "runtime_sha256": "2d682419e72576b67f9888ca66ce5891901c703578ce40dec037a758c168fc05",
+    "method": "Uniform 0.66 downsampling with anatomical ground anchors; segmented crops preserve extended horns and raised tails while excluding adjacent pose fragments. Original pixels preserved without painted or affine replacement poses."
+  }
+}

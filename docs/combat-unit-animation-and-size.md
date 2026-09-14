@@ -2,7 +2,35 @@
 
 Owner goal, Phase 6: `combat-unit-animation-and-size-20260913`.
 
-Current state: fourteen original-art candidates enabled, zero of 160 final animation acceptances. The fourteen-unit content and event-clock increment passes consolidated repository/platform validation below. The size/footprint implementation remains validated. Built-in generation only; the earlier paid-CLI approval blocker was premature and is withdrawn. Earlier increment sections are historical, not current coverage claims.
+Current state: sixteen original-art candidates enabled, zero of 160 final animation acceptances. The sixteen-unit batch passes consolidated repository/platform validation below. The size/footprint implementation remains validated. Built-in generation only; the earlier paid-CLI approval blocker was premature and is withdrawn. Earlier increment sections are historical, not current coverage claims.
+
+## Sixteen-unit batch validation
+
+`sixteen-pose-repository-20260914.log` reports VALIDATION PASSED. Both official exports pass, including Windows generated-map/Town entry and managed Wine cleanup. `sixteen-pose-linux-actions-20260914` passes 2,393 rendered battle assertions at 1920x1080; `sixteen-pose-windows-actions-20260914` passes 2,377 headless reduced-motion assertions. Both final packaged driver reports pass and their processes are terminal. All five compiled combat owner hashes match across platforms. Wide Skyray firing and Aurochs death captures were inspected alongside their 1280x720 source captures; these remain event stills, not final continuous-motion acceptance.
+
+Package parity passes at 528,522,748 bytes / 8,558 entries each, only `project.binary` differs. Eight packing/provenance tests cover sixteen recipes and require distinct firing/melee frame lists for every enabled ranged unit. No gameplay, footprint, save schema or balance changes in this content batch. All 160 final motion acceptances remain outstanding.
+
+Brambleback Knucklebear and Mireglass Belltoad original/RGBA sources are prepared, not registered. Their seven-check source-alpha reports pass and actual light/dark Godot captures were inspected. Sources and exact built-in generation/extraction prompts are preserved under their `art/animation/source/poses/` directories. Belltoad includes sixteen source poses with separate hop, bite, throat-charge/croak and deflated dead body; Knucklebear includes twelve with raised-arm swipe, forearm guard and prone corpse. Packing and full motion review remain pending for both.
+
+## Cinderwake Aurochs candidate
+
+Both `sixteen-pose-linux-20260914` and `sixteen-pose-windows-20260914` official exports pass, including Windows generated-map/Town startup. `sixteen-pose-parity-20260914.json` passes at 528,522,748 bytes / 8,558 entries per platform, only `project.binary` differs. Packaged battle probes remain running; export success is not their completion. Brambleback Knucklebear source/RGBA is prepared but unregistered; its seven-check `knucklebear-source-alpha-20260914` contrast capture was inspected. Exact built-in prompts/hashes are retained under its source directory.
+
+Cleanup verified the fourteen-unit export/action reports and no active references before deleting exactly six twelve-unit executable/PCK/native-library files (1,235,706,072 rebuildable bytes). Twelve-unit reports/screenshots remain, as do fourteen-unit rollback and sixteen-unit current payloads, all original art/provenance, caches, user data and unrelated files.
+
+Twelve original poses are packed at uniform 0.66 scale: idle/breath, hoof contact/passing, lowered-horn anticipation and thrust, crouched guard, recoil, buckling knees, side fall and dedicated corpse. Segmented crops remove neighboring horn/tail fragments caught in the first atlas inspection while retaining the generated anatomy. Exact source/extraction prompts and hashes, rejected checkerboard attempts and reproducible packing are in `art/animation/source/poses/unit_neutral_cinderwake_aurochs/`.
+
+`aurochs-actions-20260914` passes 136 actual battle checks, including own death/corpse/save routing; its 1280x720 horn attack was inspected. `aurochs-packed-alpha-20260914` passes seven checks and its light/dark capture was inspected. Import and eight packing/provenance tests across sixteen recipes pass. Repository validation and Linux export are running; Windows/package checks remain pending. No new gameplay, footprint, save or balance changes. Clearer walking contacts and full continuous-motion review remain required; this is not final art acceptance.
+
+## Tideglass Skyray candidate
+
+Sixteen packed original poses now cover hover, raised/downstroke fins, glide, ram, defensive curl, recoil, collapse and a dedicated flat corpse. Content inspection found this is a ranged unit, so four additional original Glasswing Broadside poses were generated rather than aliasing Shoot to ram. Built-in generation/extraction prompts, exact hashes and the reproducible packing recipe are in `art/animation/source/poses/unit_neutral_tideglass_skyrays/`. The atlas uses 0.62 base-sheet and 0.36 higher-resolution ranged-sheet downsampling; segmented crops preserve extended fins without neighboring fragments.
+
+`skyray-actions-20260914` passes 175 actual battle assertions, including distinct ranged/melee routing and its own death/corpse/save identity. Its 1280x720 firing capture was visually inspected. Both `skyray-ranged-alpha-rendered-20260914` and `skyray-packed-alpha-20260914` pass seven compositing checks; light/dark Godot captures were inspected. The first source-alpha invocation omitted rendering and returned no report; it is not passing evidence. Import and eight packing/provenance tests across fifteen recipes pass. The packing suite now requires every enabled ranged unit to have a firing clip with indices distinct from melee. No simulation, footprint, save or balance change.
+
+This content increment remains uncommitted pending the next consolidated art/platform batch; prior fourteen-unit packages do not contain Skyray. Continuous motion acceptance remains outstanding. Cinderwake Aurochs original source and true RGBA retry are prepared but unregistered; rejected RGB checkerboard attempts and exact built-in provenance are retained. Cleanup review retains these needed sources and evidence; probe-owned temporary folders are lifecycle-cleaned, and no additional obsolete export payloads are removed. Caches and unrelated untracked retention files remain untouched.
+
+The next Aurochs source-alpha probe, `aurochs-source-alpha-20260914`, passes seven checks. Its actual Godot light/dark capture was visually inspected without checkerboard or green backdrop. This is source compositing evidence only; Aurochs is still not enabled.
 
 ## Fourteen-unit batch validation
 

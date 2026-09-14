@@ -1,0 +1,35 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_prepared_not_runtime_registered",
+  "reference": "art/units/source/curated/unit_neutral_brambleback_knucklebears.png",
+  "reference_sha256": "65e799e768c11ad91b12fa5a95d17d6a436f7c42d29b6a581bd7d16b5fc9cff4",
+  "outputs": [
+    {
+      "source": "poses-green.png",
+      "source_sha256": "e50f95b2bf6c6150cbf1e62541bb08f6dcf7c46e0765c5d80558b5426f677899",
+      "source_output": "exec-afc8def1-134c-48ac-af67-b1d474a223b5.png",
+      "prompt": "Change ONLY the checkerboard background to a completely flat solid pure green RGB(0,255,0) background, including every gap between claws, roots and limbs. Preserve all twelve bear creatures and their poses, detailed bark/moss/fur, size and positions unchanged. No shadows, gradients, text or grid.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "f2b9cffe19f0e384ca1e56f42ac052e056e58375a9174d41a998d77680d28d09",
+      "alpha_output": "exec-af22cc59-4393-406c-8f1c-d871f3fd1c1e.png",
+      "alpha_prompt": "Remove the green background. Preserve all twelve bear creature sprites unchanged, including moss, leaves, fine roots and claws. Transparent background."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "poses.png",
+      "sha256": "0b8e2fdcfb8c6455b8e00f75ceb9f4d157fb0bb0f4f87f51d3013dd3b996cb8e",
+      "source_output": "exec-fd86cd33-5f76-47c9-bc04-d214177c369f.png",
+      "prompt": "Use case: stylized-concept. Create original Brambleback Knucklebear battle animation sheet from supplied original reference. Keep massive brown bear body, extremely powerful long forearms and heavy clawed knuckles, bark armor plates and twisted roots around arms/back, small green moss/leaves, branching wooden crown/spines and amber sap fissures/eyes. Exactly TWELVE full-body poses, FOUR columns and THREE rows, consistent size and right-facing elevated three-quarter tactical view. Every body including claws and wooden crown contained in cell with generous empty gutters. Row1: idle four-limbed weight on knuckles; breathing shoulders lowered; walking near forearm forward and near hindleg back; opposite contact near forearm back and near hindleg forward. Row2: passing step with near knuckles raised; melee anticipation raising near arm back; forceful forward/down claw swipe aimed right with torso twist and weight on other forearm; defensive hunch with bark-plated forearms shielding head. Row3: recoiling from blow with head and shoulder backward; dying front knees/knuckles buckling; falling onto side with claws slack; final DEAD bear lying fully prone on side, head resting and forearms collapsed on ground, amber sap dim. No blood. Distinct articulated joints, weight and anatomy, not affine transforms of idle. Match rich painted fantasy raster reference, not cartoon or vector. Genuine transparent background; no checkerboard, colored matte, ground/shadow, labels, grids, detached leaves, smoke or particles.",
+      "status": "RGB checkerboard source, not transparent runtime art"
+    }
+  ],
+  "review_notes": [
+    "Original twelve-pose source inspected: raised arm/swipe, forearm guard, knees buckling, side fall and prone dead bear preserve bark/moss/amber identity. Walk contact alternation still requires motion review.",
+    "Final extraction has actual RGBA 0..255. Source only; packing and live motion validation pending. Not registered or counted as an enabled/accepted identity."
+  ]
+}

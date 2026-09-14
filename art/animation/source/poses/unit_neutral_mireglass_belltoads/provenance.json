@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_mireglass_belltoads",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_prepared_not_runtime_registered",
+  "reference": "art/units/source/curated/unit_neutral_mireglass_belltoads.png",
+  "reference_sha256": "dcac2aea21aa7d0508ec54611356b62576ba6132430a6b3cb0202c832736339e",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "a67b29c56cb09fd4e53c8a679a57e7c9bc7b6ffa2ed6027ddfc7485133b20766",
+      "source_output": "exec-8e59bdce-f16e-4b62-8b81-5e3b0ce6baf3.png",
+      "prompt": "Use case: stylized-concept. Original Mireglass Belltoad battle animation sprite sheet from reference. Preserve squat dark warty amphibian, four webbed feet, moss/reed fronds across shoulders, glowing aqua fungi on back, golden-green eyes and THREE adjacent translucent aqua bell-shaped throat sacs. Sixteen complete poses arranged exactly FOUR columns by FOUR rows, facing RIGHT at consistent elevated three-quarter tactical view, same anatomical scale. Generous empty gutters; each entire toad and every reed tip contained in its cell. Row1: idle low crouch throat sacs gently inflated; breathing sacs slightly smaller; hop anticipation with hindlegs compressed; airborne short hop with forefeet reaching forward and hindlegs extended back. Row2: landing forefeet contacting ground and hindlegs gathering; melee windup leaning back, throat sacs tucked in; short biting/head lunge toward RIGHT with mouth open and forefeet braced; defensive flattened crouch behind folded forelegs. Row3: ranged aim lifting chin and firmly planting forefeet; ranged charge all three glass throat sacs greatly inflated; resonant CROAK release mouth open wide, sacs sharply contracted, cheeks tense, no detached waves; ranged recovery closing mouth and sacs returning to idle. Row4: hit recoil head jerked back; dying legs buckling, throat sacs limp; side collapse with slack webbed feet; final DEAD toad resting flat on belly/side, head on ground, all sacs deflated and faint, feet slack, eyes closed. No blood. Actual limb and throat articulation, not whole-body rotation or scaling copies. Painterly original raster fantasy style matching reference. Flat solid pure green RGB(0,255,0) backdrop everywhere between sprites; no checkerboard, shadows, ground, detached effects, labels or grid.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "9b04802177d4acfb1fcea02fa287b410539a64601eaf767726187da0a3cc0d46",
+      "alpha_output": "exec-5cdae511-4e7a-4bb3-98b1-b7847ba439ae.png",
+      "alpha_prompt": "Remove the green background. Preserve all sixteen toad creature sprites unchanged, including translucent aqua throat sacs, moss, reeds, webbed feet and fungi. Transparent background."
+    }
+  ],
+  "review_notes": [
+    "Sixteen original poses inspected: compressed/airborne/landing hop, separate melee bite and inflated/contracted ranged croak, guard and collapsed deflated dead body preserve original amphibian/reed/fungus identity.",
+    "Actual RGBA 0..255, source-only. Packing, throat/limb alignment and full motion review pending; no runtime registration or accepted count."
+  ]
+}

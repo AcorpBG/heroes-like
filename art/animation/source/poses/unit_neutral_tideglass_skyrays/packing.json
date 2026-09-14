@@ -1,0 +1,302 @@
+{
+  "unit_id": "unit_neutral_tideglass_skyrays",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          370,
+          380
+        ]
+      ],
+      "anchor": [
+        195,
+        375
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "idle_breath",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          370,
+          0,
+          740,
+          380
+        ]
+      ],
+      "anchor": [
+        557,
+        375
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "flight_up",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          740,
+          0,
+          1090,
+          380
+        ]
+      ],
+      "anchor": [
+        919,
+        375
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "flight_down",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1090,
+          0,
+          1448,
+          380
+        ]
+      ],
+      "anchor": [
+        1281,
+        375
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "glide",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          395,
+          375,
+          705
+        ],
+        [
+          375,
+          440,
+          440,
+          525
+        ]
+      ],
+      "anchor": [
+        195,
+        705
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "ram_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          375,
+          380,
+          740,
+          440
+        ],
+        [
+          440,
+          440,
+          740,
+          525
+        ],
+        [
+          375,
+          525,
+          740,
+          710
+        ]
+      ],
+      "anchor": [
+        557,
+        705
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "ram",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          740,
+          380,
+          1160,
+          710
+        ]
+      ],
+      "anchor": [
+        919,
+        705
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "guard",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1160,
+          380,
+          1448,
+          710
+        ]
+      ],
+      "anchor": [
+        1281,
+        705
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          710,
+          370,
+          1086
+        ]
+      ],
+      "anchor": [
+        195,
+        1080
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "collapse",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          370,
+          745,
+          740,
+          1086
+        ]
+      ],
+      "anchor": [
+        557,
+        1080
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "landing",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          740,
+          780,
+          1086,
+          1040
+        ]
+      ],
+      "anchor": [
+        919,
+        1040
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "ranged_aim",
+      "source": "alpha/ranged.png",
+      "rects": [
+        [
+          0,
+          0,
+          760,
+          515
+        ]
+      ],
+      "anchor": [
+        360,
+        510
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "ranged_charge",
+      "source": "alpha/ranged.png",
+      "rects": [
+        [
+          760,
+          0,
+          1536,
+          515
+        ]
+      ],
+      "anchor": [
+        1150,
+        510
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "ranged_release",
+      "source": "alpha/ranged.png",
+      "rects": [
+        [
+          0,
+          515,
+          795,
+          1024
+        ]
+      ],
+      "anchor": [
+        430,
+        1015
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "ranged_recover",
+      "source": "alpha/ranged.png",
+      "rects": [
+        [
+          795,
+          515,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1150,
+        1015
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "dead",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1086,
+          800,
+          1448,
+          1020
+        ]
+      ],
+      "anchor": [
+        1281,
+        1040
+      ],
+      "scale": 0.62
+    }
+  ]
+}

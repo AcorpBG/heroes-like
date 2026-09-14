@@ -4,7 +4,7 @@
   "date": "2026-09-14",
   "tool_mode": "built_in_image_gen",
   "model": "not_exposed_by_tool",
-  "review_status": "source_prepared_not_runtime_registered",
+  "review_status": "candidate_pending_playback_acceptance",
   "reference": "art/units/source/curated/unit_neutral_tideglass_skyrays.png",
   "reference_sha256": "22a21c70b22ea35331c7b46e75bf4efbd2ceb996999780b21e6846906a2be9cb",
   "outputs": [
@@ -17,10 +17,27 @@
       "alpha_sha256": "8fa6a6e9f67a400f9c5f024ebb4b3b321d206ae27a27300aa5f2c333c9d1c9a1",
       "alpha_output": "exec-6c60f748-57f1-4b2d-8a7c-cb6bbe358c46.png",
       "alpha_prompt": "Remove the green background. Preserve the twelve flying creature sprites unchanged, including translucent fins and pale ribbon tendrils. Transparent background."
+    },
+    {
+      "source": "ranged.png",
+      "source_sha256": "f91a79a19ca96e8c833e205d21a8f5485a3b652d4c38527fae26bca18df9f6fc",
+      "source_output": "exec-2d1e2824-d06f-49f2-b725-203664516139.png",
+      "prompt": "Use case: stylized-concept. Create FOUR original animation poses of the SAME Tideglass Skyray from the reference, in a strict two-column two-row sheet. Preserve the deep teal manta body, translucent aqua glass-veined crescent fins, ivory dorsal fins, flowing white ribbon tendrils and antique brass resonator bells under the belly. Same right-facing elevated three-quarter tactical camera, painterly detail and consistent anatomical scale across all four poses. This is its Glasswing Broadside ranged attack, NOT a diving ram. Top left: hovering and aiming right, near crescent fin drawn back, bells drawn inward. Top right: charging broadside, both crescent membranes aligned toward right, body held level and bells extended. Bottom left: release, near fin sharply flexes outward toward right, far fin counters back, bells swung forward; small concentrated pale light within membranes only, no detached projectile or beam. Bottom right: recovery, fins relax back toward hovering stance, bells and ribbons swing backward. All four WHOLE creatures fully contained with generous transparent gutters around tail and fin tips. Genuine transparent background, no checkerboard, green matte, floor, text, labels or grid. Keep original creature identity and viewpoint; do not add weapons or humanoid anatomy.",
+      "alpha_source": "alpha/ranged.png",
+      "alpha_sha256": "0c2b046c62a3aedc0d326d1decc2553abcf1893eb8199d58e974f8aa608c14ce",
+      "alpha_output": "exec-c6bda693-3923-4dc2-9437-baee7038622f.png",
+      "alpha_prompt": "Remove the background completely. Preserve all four creature sprites unchanged, including white ribbons and glass fin membranes. Genuine transparent background."
     }
   ],
   "review_notes": [
+    "Candidate registered with separate ram and Glasswing Broadside clips. Full continuous-motion acceptance remains pending; earlier source-only notes are historical.",
     "Twelve original source poses inspected. Raised/downstroke fins, level glide, ram, inward defensive curl and flattened dead body are distinct. Original glass-veined fins, pale tendrils and brass lanterns retained.",
     "Source-only; translucent fin/ribbon compositing, packing and live motion acceptance required before registration. No enabled or accepted count assigned."
-  ]
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_tideglass_skyrays.png",
+    "runtime_sha256": "29ad66951967f497f227f566bd6667faf1daccb607969b22e782dcef259ad4c9",
+    "method": "Sixteen original poses; uniform 0.62 base-sheet and 0.36 higher-resolution ranged-sheet downsampling with anatomical ground anchors and segmented glide/ram crops. No painted, rotated or warped replacement poses."
+  }
 }
