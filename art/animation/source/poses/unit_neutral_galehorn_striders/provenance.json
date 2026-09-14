@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_galehorn_striders",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_galehorn_striders.png",
+  "reference_sha256": "4dce95d5932a559d80e1352ef005860ece228d7407f59657b39832035381c061",
+  "outputs": [
+    {
+      "source": "poses-green.png",
+      "source_sha256": "0cc32b378bc45056a3146d9e4c5cc3230b959e6269b40a42447602f27a9f9d97",
+      "source_output": "exec-73b026d2-807e-44be-8414-bcbfd1ceaa95.png",
+      "prompt": "Change ONLY the background behind these sixteen creature sprites to completely flat solid pure green RGB(0,255,0). Remove every checkerboard square. Preserve every original creature pixel, pose, six-legged anatomy, scale, spacing, complete horns, hooves, tail and collapsed bodies. No gradients, cast shadows or extra elements.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "7411ab5e1a3bd2c9cf701fcf305b1f7b1dd6937a622efdde9d6b9f930db23e56",
+      "alpha_output": "exec-9fe3c389-d518-41bc-9f79-a47303f9420a.png",
+      "alpha_prompt": "Remove the green background. Preserve all sixteen creature sprites unchanged, including all horns, fine mane, six hoofed legs, tails and fallen bodies. Transparent background."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "poses.png",
+      "sha256": "22c9ebfc561235dad8c7d22602590f74b13d1a6b64f6e5f2275cbc939b2ee1c2",
+      "source_output": "exec-3e9972a4-d30d-4376-9470-cac25c3944db.png",
+      "prompt": "Use case: stylized-concept. Generate an ORIGINAL Galehorn Strider battle animation sprite sheet from this creature reference, not copyrighted game art. Preserve six slender hoofed legs, silver-blue scaled hide, swept long twisted pale horns, golden eyes, long tufted tail and wispy mane. Exactly SIXTEEN complete poses in FOUR columns by FOUR rows with generous empty gutters; same body size and elevated three-quarter camera in every cell, facing RIGHT. Row 1: relaxed standing; chest inhale tail gently raised; walk contact A near front leg forward and near rear leg back; passing A near front leg lifted under chest. Row 2: walk contact B near front leg BACK and near rear leg FORWARD, clearly opposite of contact A; passing B opposite foreleg raised; horn attack anticipation neck lowered and rear legs braced; forward horn thrust neck extended and front legs spread catching weight. Row 3: attack recovery head lifting; defensive low brace horns protecting face; defensive impact head bowed and legs flexed; hit recoil chest back with forelegs off ground. Row 4: dying knees buckling; falling onto SIDE with six legs folding; body settling flat; fully DEAD resting on side, limp legs and head/horns down, eyes closed. No blood. Real anatomy articulation, not repeated standing cutouts, translations, rotations or scale effects. Keep full horns and tail within every cell; no creature touches a neighboring cell. Consistent detailed painted raster style and proportions from reference. Genuinely transparent alpha background, no checkerboard, ground, shadows, text, labels, grid, smoke, particles, outlines or colored matte.",
+      "status": "RGB checkerboard source, not runtime transparent art"
+    }
+  ],
+  "review_notes": [
+    "Sixteen articulated original poses with horn thrust, brace, recoil and four collapse/dead states. Walking leg contacts and continuous motion require refinement/review; no final acceptance claimed.",
+    "Real RGBA 0..254 output; uniform downsampling and per-pose crops separate adjacent tails/hooves without painted or warped replacements."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_galehorn_striders.png",
+    "runtime_sha256": "b60aa665873d485499b89d78af8088ef4d3f5f5b37ec800a6b8ec2fdc84f013d",
+    "method": "Uniform 0.78 downsampling, anatomical ground anchors and individual source rectangles preserving original generated poses."
+  }
+}

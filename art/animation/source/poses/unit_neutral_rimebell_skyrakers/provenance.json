@@ -1,0 +1,35 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_rimebell_skyrakers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_only_pending_packing",
+  "reference": "art/units/source/curated/unit_neutral_rimebell_skyrakers.png",
+  "reference_sha256": "2ded46c9e9d6c4baf39c74a7811a26cb1c4096e61ec679923dcc60077a84844a",
+  "outputs": [
+    {
+      "source": "poses-green.png",
+      "source_sha256": "35175df58f7428176d3cc2e6456a24001f2b247dee1b31e5778c0ad824d19191",
+      "source_output": "exec-40814531-0be2-4d0e-b62a-7ceb145f0f3e.png",
+      "prompt": "Change ONLY the checkerboard background behind these twelve ice creature sprites to completely flat pure green RGB(0,255,0). Preserve every original pose, white and blue feather fins, fine feather edges, crest, hooked talons, glowing keel, tail and fallen bodies, same positions and sizes. No gradients, shadows, text or extra elements.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "c6d813880bb58e7e8f6e8f8fc788bffef8e7e86da80fd4886036f4d17b547a0d",
+      "alpha_output": "exec-35a55f0f-1e39-4d71-b90f-4f21e2320207.png",
+      "alpha_prompt": "Remove the green background. Preserve all twelve original ice-creature sprites unchanged, including white feather edges, crest, fins, talons, glowing keel, tapering tails and fallen bodies. Transparent background."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "poses.png",
+      "sha256": "646571fb94f9a4f41b0b1ea3d439422fdea6fcbfba9653bf0dd3acd4ecb02548",
+      "source_output": "exec-40160abc-3f91-4c5a-bc23-945da94556b3.png",
+      "prompt": "Use case: stylized-concept. Original Rimebell Skyraker tactical battle sprite animation sheet based on the supplied original creature reference. Preserve FOUR white-and-ice-blue feather fins, swept crystalline head crest, beaked face, glowing blue bell-like chest keel, TWO enormous hooked ice talons on curled arms, and a tapering pale blue feathered tail. Exactly TWELVE complete poses in FOUR columns by THREE rows. All face RIGHT with the same elevated three-quarter tactical camera and body size, generous empty gutters. Row 1: idle hover fins half raised; relaxed hover slight chest breath fins lowered; flying strong upstroke four fins high, talons tucked; flying strong downstroke fins spread low, tail trailing. Row 2: flying passing phase fins horizontal; melee windup both talons curled back at chest; melee long forward talon RAKE with both arms extending right and fins braced behind; defensive four fins folded forward around blue keel and talons crossed. Row 3: hit recoil head pulled back talons spread; dying losing lift fins droop and blue keel darkens; fallen onto side with fins folded and talons slack; final DEAD body lying flat, dull unlit keel, beak/talons resting on ground and tail down. No blood. Real redrawn anatomy articulation, not standing cutouts rotated or scaled. Original detailed painterly raster matching reference. No detached frost particles or mist, keep tail a coherent feathered form. Full wings/crest/talons/tail visible inside each cell, no overlaps. Genuine transparent background, no checkerboard, matte, scenery, cast shadows, labels, text, grid or frame.",
+      "status": "RGB checkerboard source, not runtime transparent art"
+    }
+  ],
+  "review_notes": [
+    "Twelve original flight, talon rake, folded guard, recoil and fallen poses prepared. Real RGBA 0..254. Not packed or registered; excluded from enabled coverage.",
+    "Original wing/keel/talon identity retained; full motion acceptance pending."
+  ]
+}
