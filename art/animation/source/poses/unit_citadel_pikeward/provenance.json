@@ -1,0 +1,32 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_citadel_pikeward",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_citadel_pikeward.png",
+  "reference_sha256": "92c79e97dea6f8261272874990bdb6d12255a6201e4dd3b53fff100a51d81ca0",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "44ba237cfca4d318d2f7d4de36ca8500486ac2ea76523305de2579960e4843d0",
+      "source_output": "exec-0cf4e26d-9bea-47c6-8a4d-70eda28587ff.png",
+      "prompt": "Use case: stylized-concept. Original Citadel Pikeward tactical-game sprite poses, using the supplied original artwork as identity and painterly style reference: male soldier, steel helmet with red plume, segmented red and steel armor, cream scarf and cream-red skirt, teal cloth panel, tall red/cream shield with original riverwave brass sun decoration, long hooked steel polearm. Exactly twelve full-body separately articulated poses in a roomy 4-column by 3-row sheet. All face RIGHT in consistent three-quarter camera. Row 1: relaxed idle with polearm near vertical; breathing idle with free shoulder and head slightly shifting; walking contact one foot ahead shield carried; narrow passing step other boot beside supporting ankle. Row 2: pulling polearm back to wind up a thrust; thrusting polearm horizontally RIGHT with shield forward, rear heel raised; crouched planted shield guard; recoiling behind shield under impact. Row 3: sinking onto one knee with shield sagging; collapsing onto side with weapon slipping down; fully prone dead body with shield and polearm resting alongside; opposite walking contact with other leg ahead. Same body scale in every cell, including corpse. Generous empty gutters and margins; entire long polearm fits in its cell without overlapping neighboring artwork, keep head/body size consistent even when weapon extends. Real changes in joints, hands, limbs and equipment, not transformed copies. Flat uniform green RGB(0,255,0) background including gaps, no ground/shadow, text, frame lines, effects or blood. Original raster painting, no borrowed copyrighted artwork.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "16eedd517ad36a14c2d6d39562720f039ec989550bf99bb61b614a8dd99350d1",
+      "alpha_output": "exec-75a5ade6-ef33-4f05-b3be-7ec822f4f3f2.png",
+      "alpha_prompt": "Remove the green background from this sprite sheet. Preserve the twelve characters and their equipment unchanged. Return them isolated on a transparent background."
+    }
+  ],
+  "review_notes": [
+    "Original identity and articulated shield/thrust/collapse poses inspected. Real RGBA alpha verified.",
+    "Source candidate only: explicit long-weapon crops, scale alignment, walk refinement and playback review remain.",
+    "Segmented crops preserve thrust and upper polearm points while excluding neighboring boots. All poses use uniform 0.60 downsampling; final motion/scale review pending."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_citadel_pikeward.png",
+    "runtime_sha256": "32948b8d40c2922d436e1462acf876a47ceac95da0b5aa205393bdb8cd5aa2de"
+  }
+}

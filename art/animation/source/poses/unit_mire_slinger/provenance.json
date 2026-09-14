@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_mire_slinger",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_mire_slinger.png",
+  "reference_sha256": "21b98fd2f90d738b168ddb0b1b160dc6c8c731dd7a590d848255175589ac2c55",
+  "intermediates": [
+    {
+      "source": "draft.png",
+      "sha256": "7a3ac001e2f06a7781443633c03d370390c44243c964f8d57d751c40b6641dad",
+      "output": "exec-04966836-c834-41e3-842d-b30796b6afe9.png",
+      "prompt": "Use case: stylized-concept. Original Mire Slinger battle animation sheet. Supplied image is identity/style reference: lean human woman, dark braids, olive headband with reeds, layered dark-green sleeveless tunic and ragged skirt, yellow reed cords at waist and calves, wrapped leather boots/bracers, leather stone pouch on hip, simple leather cord sling. Preserve her face, proportions and equipment. Exactly SIXTEEN full-body separate newly articulated poses in strict 4 columns by 4 rows, equal anatomical scale, generous empty gutters. All face RIGHT in consistent three-quarter tactical camera. Row 1 left to right: relaxed idle with sling lowered; breathing idle with shoulders shifting; walking contact near leg forward far leg back; passing step weight on near leg, far boot passing beside ankle. Row 2: opposite walk contact far leg forward near leg back; opposite passing step weight on far leg; sling windup with right arm raised and loaded sling extended behind shoulder; sling release right arm snapping forward toward RIGHT, free hand balancing. Row 3: close-range fist winding back while sling hangs; close-range forward punch with planted front leg and twisted torso; low defensive crouch with forearms protecting upper body; impact recoil behind raised forearm. Row 4: collapsing onto one knee; falling onto side with sling slipping down; final fully prone dead body eyes closed, sling resting beside hand; sling recovery with right arm lowering and body returning upright. Each pose genuinely changes joints and clothing, never a rotated standing cutout. No extra weapons, no projectile outside cells. Entire body/boots/sling inside each cell, no crossing gutters. Flat uniform green RGB(0,255,0) background including gaps. No floor, cast shadow, blood, effects, labels or grid. Original detailed painterly raster art."
+    }
+  ],
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "8f984e5087ed7f7ec9928a13e0b3c80cb328a1b9207ca83af3047a698456c87c",
+      "source_output": "exec-657f760d-ba72-461f-baf8-f678b4763a04.png",
+      "input": "draft.png",
+      "prompt": "Edit only TWO poses in this exact 4-by-4 original sprite sheet. Keep the other fourteen poses, identity, canvas size, scale, positions, painted style and uniform green background unchanged. Row 2 column 4 (far right of second row): correct the SLING RELEASE. Her right arm is extended toward the right; one cord end remains held in her right hand while the other cord end has been released, so the empty sling pouch and two leather cords trail as a loose OPEN Y-shaped whip curving forward/right. Do NOT draw a closed loop in her fist. No stone/projectile or motion lines. Row 4 column 4 (bottom right): replace the crouch with an upright relaxed recovery stance, both boots planted, right arm lowering the now loose sling beside her hip, free hand near chest; same body/head scale as row1 idle. Full sling and limbs within the cell and generous green gutters. Change nothing else.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "a3689621f8eb1c079047618a70b7f36b64cd8aac4d69258ff31557ef29d3695a",
+      "alpha_output": "exec-8e561ff8-94b2-4de7-a1e5-2724656d1f7a.png",
+      "alpha_prompt": "Remove the green background from this sprite sheet. Preserve the sixteen characters and their equipment unchanged. Return them isolated on a transparent background."
+    }
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_mire_slinger.png",
+    "runtime_sha256": "94e64dabdfebfe766dd195da029f4901cec8ee9acbe4536b045cd5a8f31c8c91"
+  },
+  "review_notes": [
+    "Sixteen actual articulated original poses, separate sling windup/release/recovery and melee punches.",
+    "Draft release/recovery edited before alpha extraction. Sling mechanics and walking contacts still require final visual acceptance.",
+    "Uniform 0.70 scale, real alpha verified; packing never paints source pixels."
+  ]
+}

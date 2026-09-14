@@ -44,6 +44,20 @@ func pure_checks()->void:
 			entry.progress=phase
 			check(Motion.layers(spec,entry,{}).is_empty(),"expired cue still draws: "+cue)
 	entry.kind=""
+	# Adjacent-cell attacks and retaliations must leave the attacker's body
+	# readable, including reduced motion and oversized authored cue scales.
+	for direction in [Vector2.RIGHT,Vector2.LEFT,Vector2(0.5,0.866),Vector2(-0.5,-0.866)]:
+		for radius in [16.0,32.0,64.0]:
+			var origin:=Vector2(150,150)
+			var target:Vector2=origin+direction*radius*sqrt(3.0)
+			var contact:Dictionary={"progress":0.5,"hex_radius":radius,"start_x":origin.x,"start_y":origin.y,"end_x":target.x,"end_y":target.y,"center_x":origin.x,"center_y":origin.y}
+			for preferences in [{},{"reduced_motion":true},{"reduced_flashes":true}]:
+				var slashes:=Motion.layers({"render_mode":"slash","scale":3.5},contact,preferences)
+				for layer in slashes:
+					check(layer.extent<=radius*1.15+0.001,"slash still blankets a full unit body")
+					check(layer.alpha<=0.55,"slash overwhelms articulated pose")
+					var expected_center:=origin.lerp(target,0.86)+Vector2(0,-radius*0.62)
+					check(layer.center.distance_to(expected_center)<0.001,"slash detached from directional contact")
 	entry.progress=0.25
 	var projectile:Dictionary=manifest.cues.vfx_placeholder_projectile_path
 	var first:Array=Motion.layers(projectile,entry,{})

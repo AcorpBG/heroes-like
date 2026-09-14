@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_ember_archer",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "reference": "art/units/source/curated/unit_ember_archer.png",
+  "reference_sha256": "d019d88e87184ac8b68c852444d4be3b1a7fbd54282c13aa61f78170b885ce83",
+  "review_status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "9abb09f4b3e8854b4c660b299d63ccf6bf8b396e61032a9471af76db925f85a5",
+      "source_output": "exec-bafe4110-2804-4e55-aff0-831e1ff7c2af.png",
+      "prompt": "Original Ember Archer tactical battle animation sheet using the supplied original woman as identity and painted-style reference: brown tied-back hair, dark leather armor, orange split coat, tall boots, quiver and long bow. All poses face RIGHT in a consistent three-quarter camera. Make exactly 12 separate full-body poses in a strict 4-column by 3-row grid, each entirely inside its own roomy equal cell, with wide empty gutters. Row 1 left to right: relaxed idle exhale with bow lowered; idle inhale with head and shoulders slightly raised; walking stride with near leg forward and far leg back; opposite stride with near leg back and far leg forward. Row 2: drawing an arrow on the bow, string pulled to cheek, bow aimed right; arrow just released, bow arm extended right and string hand following through; crouching guard with bow held across chest; recoil behind raised forearm, knees compressed. Row 3: struck and sinking onto one knee; falling onto her side with bow slipping to ground; final dead body lying fully horizontal on her side, bow beside her, eyes closed; close-range bow-staff strike forward to right with bent front knee. Draw actual articulated changes to limbs, anatomy and equipment, never rotated copies of the standing reference. Keep the same anatomical body/head size even for the low prone corpse. Entire bow, boots, hands and quiver visible in every cell, no crossing gutters. Flat uniform vivid green RGB(0,255,0) background including gaps; no shadows, floor, grid lines, labels, effects, arrows flying outside cells or additional characters. Original painterly raster sprites, not cartoons or vector art.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "352be01a93b9d54d360d408d22b05c662db9666a0bf637c4f4ab69c4fa84ad5f",
+      "alpha_output": "exec-03f13e05-2f51-4e48-b3f9-41e10ec1e0a2.png",
+      "alpha_prompt": "Remove the green background from this sprite sheet. Preserve the twelve characters and their equipment unchanged. Return them isolated on a transparent background."
+    },
+    {
+      "source": "passing.png",
+      "source_sha256": "745efdbf6f35dcdeeb0cb56cc2759c55b793f2a00bf4878763862b0ba6fedbed",
+      "source_output": "exec-ce7c60dc-780b-4bf1-89b2-b7da04f86b5e.png",
+      "prompt": "Original Ember Archer WALK passing poses, two separate full-body drawings side by side. Preserve this original woman's painted appearance: tied-back brown hair, dark leather armor, orange split coat, quiver, long bow, tall boots. Face RIGHT in three-quarter tactical-game view. This is the middle of a normal walking step, NOT a wide stride or marching pose. LEFT figure: weight on a straight planted leg directly under the hip; the other knee bends only slightly with its boot passing very close beside the planted ankle, toe about 5 cm above ground. RIGHT figure: body moves onto the other planted leg, free foot bends back at ankle with toe just leaving the ground behind the supporting heel. Legs stay close together and near vertical; no foot reaches far forward, no raised knee to waist height. Bow hangs low in left hand, free arm swings naturally, loose orange cloth shifts. Same camera and anatomical scale in both, each full bow and boot inside its own half with generous margins. Flat uniform vivid green RGB(0,255,0), no floor, shadow, texture, lettering or grid. Real newly drawn articulated anatomy, not a transformed standing sprite.",
+      "alpha_source": "alpha/passing.png",
+      "alpha_sha256": "141aada7b7d8ad1e60b63b039774317604cb5a6cadae61b86e926c60c6e208eb",
+      "alpha_output": "exec-8f350a8d-42b9-4d3c-a8bd-268da179db66.png",
+      "alpha_prompt": "Remove the green background from this sprite strip. Preserve the two characters and their equipment unchanged. Return them isolated on a transparent background."
+    }
+  ],
+  "review_notes": [
+    "Twelve original articulated poses include bow draw/release, guard/recoil and prone dead body.",
+    "Two additional passing-step poses now supply a visually different leg/arm phase; need packing and playback review.",
+    "Pending trim, ground alignment, distinct melee/ranged routing and full playback review."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_ember_archer.png",
+    "runtime_sha256": "b17b0d46885819d7a92fe48d7ae6d139770f1675211399a2bc5fa69400dc327b"
+  }
+}

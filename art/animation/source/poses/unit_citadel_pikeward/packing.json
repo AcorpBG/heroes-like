@@ -1,0 +1,246 @@
+{
+  "unit_id": "unit_citadel_pikeward",
+  "status": "candidate_requires_playback_review",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          70,
+          0,
+          275,
+          386
+        ]
+      ],
+      "anchor": [
+        174,
+        383
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_1",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          435,
+          0,
+          640,
+          390
+        ]
+      ],
+      "anchor": [
+        538,
+        386
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "move_0",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          820,
+          0,
+          1030,
+          398
+        ]
+      ],
+      "anchor": [
+        926,
+        390
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "move_1",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1220,
+          0,
+          1385,
+          395
+        ]
+      ],
+      "anchor": [
+        1310,
+        390
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "move_2",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1225,
+          713,
+          1420,
+          1061
+        ],
+        [
+          1270,
+          697,
+          1290,
+          713
+        ]
+      ],
+      "anchor": [
+        1325,
+        1054
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "attack_0",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          382,
+          100,
+          407
+        ],
+        [
+          0,
+          407,
+          325,
+          714
+        ]
+      ],
+      "anchor": [
+        195,
+        710
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "attack_1",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          375,
+          410,
+          810,
+          716
+        ],
+        [
+          810,
+          470,
+          878,
+          537
+        ]
+      ],
+      "anchor": [
+        537,
+        710
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "guard",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          810,
+          540,
+          1161,
+          720
+        ],
+        [
+          883,
+          462,
+          1161,
+          540
+        ]
+      ],
+      "anchor": [
+        949,
+        710
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "hit",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1350,
+          385,
+          1420,
+          420
+        ],
+        [
+          1175,
+          420,
+          1420,
+          713
+        ]
+      ],
+      "anchor": [
+        1300,
+        710
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_0",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          22,
+          802,
+          347,
+          1065
+        ]
+      ],
+      "anchor": [
+        185,
+        1055
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_1",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          347,
+          850,
+          715,
+          1060
+        ]
+      ],
+      "anchor": [
+        516,
+        1049
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "dead",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          714,
+          909,
+          1223,
+          1060
+        ]
+      ],
+      "anchor": [
+        947,
+        1046
+      ],
+      "scale": 0.6
+    }
+  ]
+}

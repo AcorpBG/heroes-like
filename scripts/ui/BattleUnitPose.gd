@@ -17,6 +17,12 @@ static func clip_name(state: String) -> String:
 static func has_authored_poses(animation: Dictionary) -> bool:
 	return not String(animation.get("pose_sheet", "")).is_empty() and animation.get("pose_clips", {}) is Dictionary and not animation.get("pose_clips", {}).is_empty()
 
+static func grounded_rect(ground: Vector2, height: float, region: Rect2) -> Rect2:
+	# Preserve raster aspect for long weapons and prone bodies. Gameplay body
+	# cells are independent of this presentation-only transparent canvas.
+	var width := height * region.size.x / maxf(1.0, region.size.y)
+	return Rect2(Vector2(ground.x - width * 0.5, ground.y - height), Vector2(width, height))
+
 static func clip(animation: Dictionary, state: String, dead: bool = false) -> Dictionary:
 	var clips: Dictionary = animation.get("pose_clips", {})
 	var name := "dead" if dead else clip_name(state)
@@ -41,4 +47,9 @@ static func region(animation: Dictionary, state: String, progress: float, elapse
 			frame = clampi(int(progress * count), 0, count - 1)
 	elif reduced_motion:
 		frame = clampi(int(spec.get("static_frame", 0)), 0, count - 1)
+	var indices: Array = spec.get("indices", [])
+	if not indices.is_empty():
+		var columns := maxi(1, int(animation.get("pose_columns", 1)))
+		var index := int(indices[clampi(frame, 0, indices.size() - 1)])
+		return Rect2(Vector2((index % columns) * width, int(index / columns) * height), Vector2(width, height))
 	return Rect2(Vector2((int(spec.get("column", 0)) + frame) * width, int(spec.get("row", 0)) * height), Vector2(width, height))

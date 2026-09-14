@@ -1,0 +1,33 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_bog_brute",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_bog_brute.png",
+  "reference_sha256": "6e971e93ab527beff8702d16ffe4e69b4e40a8e4b63ff9fe1d3411f8d2daea85",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "2f38fc3474086335380d0e1d0a28b92e2934539a864e80774346f88393f78d70",
+      "source_output": "exec-c842315c-521e-45d6-b71e-98d2688bab4a.png",
+      "prompt": "Original Bog Brute battle animation sprite sheet. Preserve the supplied original HUMAN warrior: long dark hair and beard, rugged face, layered mossy green-brown scale armor, reed cords, leather boots, heavy iron-headed wooden mace. He is a human, not a monster. Painted three-quarter tactical camera, facing RIGHT. Exactly twelve separate full-body poses in four columns and three rows, same anatomical scale, large empty gutters, all mace and body parts inside their own cell. Row 1: relaxed idle, mace hanging; breathing idle, shoulders and free hand shift; walking stride with one leg reaching forward; walking passing step, planted leg vertical below hip and the other boot passing close to its ankle. Row 2: wind up mace above and behind shoulder with torso twisted; powerful downward-forward mace swing to RIGHT, bent front knee, fully visible mace; guarded crouch, mace across chest; impact recoil with free forearm protecting head. Row 3: collapse onto one knee; falling on his side and dropping mace; fully prone dead body on its side, eyes closed, mace lying alongside; next walking contact, pushing off rear toe and other foot contacting ahead. Genuine newly drawn joint and weapon changes, never rotations/scales of standing art. The corpse is lower but not anatomically larger than living frames. Entire backdrop flat vivid green RGB(0,255,0), including all gaps. No floor, cast shadows, effects, blood, text, grid borders or extra characters. Match the original detailed painterly raster style.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "30072c3a56b87cee61e0eed1659feb58d8f4fd34b6718eb436c6cebb87af68c4",
+      "alpha_output": "exec-240b1ab7-91e6-4757-ab16-ddc377d56d5a.png",
+      "alpha_prompt": "Remove the green background from this sprite sheet. Preserve the twelve characters and their equipment unchanged. Return them isolated on a transparent background."
+    }
+  ],
+  "review_notes": [
+    "Twelve original poses visually inspected, actual RGBA output verified.",
+    "Clear mace windup/swing, brace/recoil and two-stage collapse with prone corpse; walking includes stride and narrow passing pose.",
+    "Packing must account for the attack mace extending beyond its nominal grid cell; ground alignment and runtime playback still pending.",
+    "Reviewed segmented crops retain the long attack mace and exclude neighboring corpse pixels; final continuous playback acceptance remains pending."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_bog_brute.png",
+    "runtime_sha256": "e9fb4471662e66c45191f9331d4f1c5153fe9e634fc54f37bf77cb5119fe8fbe"
+  }
+}

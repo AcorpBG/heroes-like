@@ -1,0 +1,31 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_blackbranch_cutthroat",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_blackbranch_cutthroat.png",
+  "reference_sha256": "eb0af47ab0292c278335f76092420e9dba0073c84f3507f0b0d11b85b50fa143",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "713791e786b33fbab1fe6f070e5849c7b2191658c79b3a3d852dfc67feed1948",
+      "source_output": "exec-09c31c65-636d-48b0-a6a1-863a819bcd12.png",
+      "prompt": "Use case: stylized-concept. Original Blackbranch Cutthroat tactical battle animation poses. Supplied artwork is identity/style reference: lean human female ambusher, olive hood and tattered moss-green layered cloth, brown braided hair, leather bracers and boots, curved sickle dagger in right hand, small round wood-and-brass buckler in left. Exactly twelve separate full-body drawings, strict 4 columns by 3 rows with generous blank gutters and equal anatomical scale. Consistent three-quarter camera facing RIGHT. Row 1: cautious relaxed idle knees soft; breathing idle with shoulders/chest gently lifted; stalking stride one foot forward; narrow walking passing step free boot beside supporting ankle. Row 2: winding sickle arm back with torso twist; forward low slashing lunge with sickle extended RIGHT and buckler protecting chest; low defensive crouch behind buckler; recoil behind raised buckler and bent knees. Row 3: collapsing onto one knee with lowered blade; falling onto side with buckler slipping toward ground; fully prone dead body on side, eyes closed, sickle and buckler resting alongside; opposite stride other foot contacting forward. True newly articulated limbs, equipment and fabric, not transformed copies. Keep identity, no extra weapons. Entire body and weapons within each cell, no overlaps. Flat vivid green RGB(0,255,0) background including gaps; no ground, shadow, text, frame lines, effects or blood. Original detailed painterly raster game art.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "32ca6c043d6c4abc6cbac5ba1ce951660ca72ef4a14b579b59f52eade040977d",
+      "alpha_output": "exec-5007bd97-b64b-4264-9964-c274c4187d0e.png",
+      "alpha_prompt": "Remove the green background from this sprite sheet. Preserve the twelve characters and their equipment unchanged. Return them isolated on a transparent background."
+    }
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_blackbranch_cutthroat.png",
+    "runtime_sha256": "b2dd6952a393e87e75970d4ce56f76426b9aa43426c0219df29db79c96db9d62"
+  },
+  "review_notes": [
+    "Original hood/buckler/sickle identity retained, actual articulated windup/lunge/guard/collapse inspected.",
+    "Real RGBA alpha verified; uniform 0.60 packing scale. Final continuous playback and walk quality review pending."
+  ]
+}

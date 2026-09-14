@@ -1,0 +1,25 @@
+{
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "date": "2026-09-14",
+  "status": "rejected_not_runtime_registered",
+  "reference": "../alpha/move.png",
+  "review": "All three drafts visually inspected. Lower knees improved, but repeated leading-leg silhouette remains; sheet additionally bakes a checkerboard in RGB. Do not treat these as accepted walking frames.",
+  "outputs": [
+    {
+      "path": "low-walk-sheet.png",
+      "sha256": "522d992aa01ffdfc7d169c8e64f9d9c7e177e36a18e8d89e9d9530ea77659f89",
+      "prompt": "Edit this original River Guard sprite sheet into a correct FOUR-frame walking cycle in a 2 by 2 grid. Preserve exactly his painterly style, red quilted coat, brass helmet, bearded face, white sash, tall red river-wave shield and spear. All face RIGHT. Keep torso and equipment scale consistent. Change legs and small weight shift only. Reading order: 1 near leg forward heel touching ground, far leg back toe touching ground; 2 near leg planted vertically supporting body, far foot passing close to ankle with toe barely above ground; 3 far leg forward heel touching ground, near leg back toe touching ground; 4 far leg planted vertically supporting body, near foot passing close to ankle with toe barely above ground. Crucially frames 3 and 4 must reverse which anatomical leg is forward/supporting, not repeat frames 1 and 2. Natural restrained walking, no high-knee marching, no hopping, knees never raised to waist. Show full figure and spear in all cells with generous empty gutters. Transparent RGBA background, no shadow, no ground, no text. Do not mirror torso or swap weapon/shield hands."
+    },
+    {
+      "path": "near-forward.png",
+      "sha256": "a3d80ed8b2ec4a18d8b3623fe64903150d21d842bf0a03ea05b7d30b6d01da0a",
+      "prompt": "Using this original guard as reference, paint ONE full-body walking pose only. He faces RIGHT, same camera, red quilted armor, brass helmet, beard, cream sash, spear in the same hand and red wave-pattern shield in the same hand. CRITICAL LEG POSE: the leg nearest the viewer, on the spear-hand side, now strides FORWARD across the body toward the RIGHT, heel on the ground. The farther leg, on the shield side, extends BACK toward the LEFT, heel raised with only its toe touching ground. Near/front thigh must visibly overlap the far/back thigh at their crossing. This is the OPPOSITE footfall to the top-left reference. Neither knee is raised: natural low walking stride. Keep upper body upright and both knees below the coat hem. Full boots and entire spear visible with large margins. Preserve detailed painterly raster style. Plain uniform bright green backdrop RGB 0,255,0, no checkerboard, no text, no ground or shadow. Exactly one original character, not a sheet."
+    },
+    {
+      "path": "near-back.png",
+      "sha256": "ee118215ac58a181147af0afffd54b33c4097a72b6565c581100048c7a2c180f",
+      "prompt": "Paint this same original River Guard in ONE opposite walking stride. Keep all upper-body identity, face looking RIGHT, spear hand and shield hand unchanged. Change the leg silhouette fundamentally: the NEAR leg closest to the viewer extends diagonally DOWN-LEFT BEHIND him, and its boot points down on its toe with heel raised. The FAR leg, partly hidden by the near thigh, extends diagonally DOWN-RIGHT IN FRONT of him, straightened with its heel reaching the ground. The near/back thigh must overlap and partially obscure the far/forward thigh. His knees stay low, no raised-knee march. Keep entire spear and both boots in frame. Same painterly armor, red tunic, brass helmet, beard, cream sash and long red wave shield. Plain uniform green background RGB 0,255,0. Exactly one full-body character, no grid or text or shadow."
+    }
+  ]
+}

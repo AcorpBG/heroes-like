@@ -1,0 +1,73 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_river_guard",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_not_final_roster_acceptance",
+  "reference": "art/units/source/curated/unit_river_guard.png",
+  "reference_sha256": "95e7c9fc8dfddeebe0d5cd7439347dc1e6538b4d0e1f52584dac8cbaf76354eb",
+  "review_notes": [
+    "Real articulated attack, brace and prone body; no affine standing-cutout poses.",
+    "Walk requires playback review: alternating leg contacts are not sufficiently distinct yet.",
+    "Generated edges and death-sheet equipment boundaries need in-context review."
+  ],
+  "outputs": [
+    {
+      "source": "idle.png",
+      "source_sha256": "e792a3c852a5a9625ef2ea12a2dba30f780209a1623d2fb81b98dcedc83603cf",
+      "source_output": "exec-3475b38e-39dc-4d19-b5bd-728ea3c1acdb.png",
+      "prompt": "Use case: identity-preserve. Two original River Guard IDLE breathing poses side by side. Same original man, brass helmet, beard, red quilted coat, cream sash, boots, oval red-blue-cream shield and hooked spear; exact reference painterly character style. Facing right in three-quarter view, same camera, same anatomical size, feet aligned to a common bottom baseline, all spear and body pixels inside each half with generous margins. Left: relaxed exhale, shoulders lowered, hips resting over back leg, spear upright, shield held beside him. Right: inhale and weight shift, chest expanded, shoulders slightly raised, head turns a few degrees right, supporting elbow bent more and shield lifted a little, loose cloth changes naturally. Subtle but distinct articulated poses, not scaled or rotated copies. Flat uniform vivid chroma green RGB(0,255,0) backdrop and gaps. No floor, no shadow, no pattern, no text, no frame lines.",
+      "alpha_source": "alpha/idle.png",
+      "alpha_sha256": "ec957cf61ff039f2e4f3d0bb10f965ff48407c648d726893c374026f8b415beb",
+      "alpha_output": "exec-a2860bf3-2452-45f6-9345-a3206a1d3b51.png",
+      "alpha_prompt": "Remove the green background from this sprite strip. Preserve the two characters and their equipment unchanged. Return them isolated on a transparent background."
+    },
+    {
+      "source": "move.png",
+      "source_sha256": "7445e3a7ada64d1464eabe3c1ca926b8fd41609a3de61a86dc92105190d02667",
+      "source_output": "exec-721d698e-ef7c-4e75-890a-42125ca8e2c9.png",
+      "prompt": "Use case: identity-preserve. Asset: original River Guard WALK animation, four distinct hand-painted full-body poses arranged 2 by 2 on a 1024 square canvas. Preserve the reference man's brass helmet, beard, red quilted coat, cream sash, brown boots, tall red/blue/cream oval shield and long polearm. All four views face RIGHT in the same three-quarter tactical-game view. Top left: contact pose, near leg extends forward to the RIGHT, far leg extends back to LEFT. Top right: passing pose, planted near leg vertical, far knee bent lifted and moving forward. Bottom left: opposite contact, far leg extends forward RIGHT, near leg back LEFT. Bottom right: opposite passing, planted far leg vertical, near knee bent lifted moving forward. Actual articulated knee/hip/ankle and arm changes; do not give four stationary copies. Shield held outside the torso, spear angled slightly back, cloth swinging with each step. Same proportions, same camera, feet baseline y475 inside each 512 cell, all weapons and limbs at least 24 pixels from cell edges. Intended for a looping walk; no motion blur or effects. Entire backdrop perfectly uniform vivid chroma green RGB(0,255,0), including gaps between limbs and weapons. No floor, no shadow, no gradient, no grid, no lettering, no panels or cell borders.",
+      "alpha_source": "alpha/move.png",
+      "alpha_sha256": "ad3de34dc94cf49c9f35b0110f6fda370a3680684bcf107bd049855745db92fd",
+      "alpha_output": "exec-467f9672-e743-45c6-a282-2b33cbabe28a.png",
+      "alpha_prompt": "Remove the green background from this sprite strip. Preserve the four characters and their equipment unchanged. Return them isolated on a transparent background."
+    },
+    {
+      "source": "attack.png",
+      "source_sha256": "664d69b33a052d1cfd1e14e095768449aa93c5a965d140a8aad87eb1c8470e8d",
+      "source_output": "exec-545277a5-6c36-4d87-9fdb-e1fcfb1dd7f2.png",
+      "prompt": "Use case: identity-preserve. Original River Guard battle ATTACK animation, three separate poses across one wide image, evenly spaced in three equal square cells. Keep the reference man's brass helmet, beard, red quilted coat, cream sash, dark boots, red-blue-cream oval shield and hook-tipped spear, same painterly style and scale, facing RIGHT. Cell 1: knees bend, hips and torso twist back to wind up, spear tilted diagonally over right shoulder, shield held near chest. Cell 2: strong forward lunge, front knee deeply bent, back leg extended, right arm thrusts spear horizontally to RIGHT, point fully visible inside own cell; shield arm braces behind the spear. Cell 3: recovering from thrust, torso upright again, spear drawn back diagonally, front foot returns, shield lowered slightly. Distinct articulated poses; weapon, elbows, knees and torso change, NOT rotated standing copies. Fit the entire spear and body in each square with generous 35px gutters; keep the head/body size consistent even when pose spreads wide. All three full bodies visible, same camera, no blur, no trails, no enemies, no labels or panel lines. Flat uniform vivid chroma green RGB(0,255,0) backdrop, including every gap; no ground and no shadows. Each frame is an original raster character pose for game sprite animation.",
+      "alpha_source": "alpha/attack.png",
+      "alpha_sha256": "7cd0658213b869f9e4204681b4ddaf8f81d9200e11ee6cfd3733c2055f949939",
+      "alpha_output": "exec-382f0d8b-9dd9-476b-8b64-7edf37752c98.png",
+      "alpha_prompt": "Remove the green background from this sprite strip. Preserve the three characters and their equipment unchanged. Return them isolated on a transparent background."
+    },
+    {
+      "source": "defend.png",
+      "source_sha256": "a09ae29f01bba6a1d3aab87eb55db484b42310ef57cdf0bf0be912c03de9e1c5",
+      "source_output": "exec-44a54253-b7ee-48c8-9a99-88a4d4327eab.png",
+      "prompt": "Use case: identity-preserve. Original River Guard DEFEND animation. Two clearly separated full-body poses side by side with a wide empty gap. Keep this exact character's brass helmet, beard, red quilted armor, cream sash, dark boots, oval red/blue/cream shield, hooked spear and painterly style. Facing RIGHT three-quarter view, same scale. Left pose: crouched guarding stance, knees flexed, oval shield raised to protect head and upper torso toward RIGHT, spear held back with point above helmet. Right pose: impact recoil behind the raised shield, torso leaned backward, elbows flexed inward, knees compressing, one heel lifting, shield tilting slightly back. Do not rotate a standing cutout: articulate the joints and change the shield arm. No attack effects or enemy. Entire body and spear visible in each half; 50px margins around every silhouette. Flat uniform vivid chroma green RGB(0,255,0) background with no floor, shadows, labels, grid or panel lines.",
+      "alpha_source": "alpha/defend.png",
+      "alpha_sha256": "0877d6d1714decda887aadd01a2657f3c4fc501f7ccc735b5b5dbe49d15e83a3",
+      "alpha_output": "exec-67f91b93-97f1-4108-8e39-d7f23d47fa15.png",
+      "alpha_prompt": "Remove the green background from this sprite strip. Preserve the two characters and their equipment unchanged. Return them isolated on a transparent background."
+    },
+    {
+      "source": "death_dead.png",
+      "source_sha256": "4ce54a48d52ae3c374d5f053922554da5b7630260a0ffede2ff08072a69aa729",
+      "source_output": "exec-519e31f7-b4ed-4fd7-9a86-8cc3604fd831.png",
+      "prompt": "Use case: identity-preserve. Asset: original River Guard non-graphic DYING and DEAD animation poses. Three separated full-body poses in a wide horizontal strip, same character and anatomical scale, feet/ground at the same bottom baseline. Reference identity invariant: brass helmet, beard, red quilted coat, cream sash, brown boots, long hooked spear and tall red blue cream oval shield. Same painterly tactical-game three-quarter view facing right. LEFT: wounded collapse, knees buckling with one knee down, upper torso folding, shield slipping from arm, spear hand losing grip. CENTER: falling backward onto his side, hips lowered, legs bent awkwardly but naturally, one arm reaching toward ground, shield tipping flat, spear dropping alongside. RIGHT: completely dead and motionless on his side on the ground, torso and head horizontal, legs bent, eyes closed, shield lying beside him and spear resting beside the body; this must be a convincing drawn prone body, not a sideways rotated standing person. No blood, no wounds, no gore, no skeleton, no enemies, no supernatural effects. Keep body/helmet dimensions consistent across all three poses, don't enlarge the corpse. Wide empty gaps between all three silhouettes and their dropped equipment; fully visible with margins. Perfectly uniform vivid chroma green RGB(0,255,0) backdrop and gaps, no floor texture, no shadows, no text, no borders.",
+      "alpha_source": "alpha/death_dead.png",
+      "alpha_sha256": "1fd1c2e36941ccedb5ce46b479f9c4c30407ee7dac994a293a85644c4cfefe5b",
+      "alpha_output": "exec-191f47e0-4de5-47ae-9069-dfc579f8894a.png",
+      "alpha_prompt": "Remove the green background from this sprite strip. Preserve the three characters and their equipment unchanged. Return them isolated on a transparent background."
+    }
+  ],
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_river_guard.png",
+    "runtime_sha256": "6e9fabd7a9772bd99611ef86a3a560816c5e1710eb1814a8abd588e75e8598ba"
+  }
+}
