@@ -4,7 +4,7 @@
   "date": "2026-09-14",
   "tool_mode": "built_in_image_gen",
   "model": "not_exposed_by_tool",
-  "review_status": "source_pending_packing_and_playback_review",
+  "review_status": "candidate_pending_playback_acceptance",
   "reference": "art/units/source/curated/unit_neutral_quenchbell_ironbacks.png",
   "reference_sha256": "1f3e29b5de84bb6057c68d87756abe80a945f466fe79a8a61ca93e860c751b27",
   "outputs": [
@@ -43,6 +43,12 @@
     }
   ],
   "review_notes": [
-    "Original twelve-pose output has RGBA 0..254 and passes seven source-alpha checks. Actual 1280x720 light/dark capture inspected clean despite brown raw preview. No runtime registration. Packing and continuous gait/horn/brace/death review remain pending."
-  ]
+    "Twelve original articulated poses packed and enabled as a candidate. Source battle/packed-alpha checks pass 124/7; actual 1280x720 attack and light/dark captures inspected. Continuous gait/action/brace/death acceptance remains outstanding."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_quenchbell_ironbacks.png",
+    "runtime_sha256": "84e2585c17eaccb2b0e178145dc6283fe37644cb2f1005fc68011899978abb63",
+    "method": "Uniform 0.72 downsampling and segmented source rectangles retain horns and full limbs without painting or warping original poses."
+  }
 }

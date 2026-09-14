@@ -2,7 +2,35 @@
 
 Owner goal, Phase 6: `combat-unit-animation-and-size-20260913`.
 
-Current state: twenty-four original-art candidates enabled, zero of 160 final animation acceptances. Full repository, both official exports, package parity and packaged battle checks pass for this batch. Size/footprint implementation remains validated. Built-in generation only; earlier increment sections are historical, not current coverage claims.
+Current state: twenty-eight original-art candidates enabled and platform-validated, zero of 160 final animation acceptances. Gallowshell corrected source is prepared but not enabled. Size/footprint implementation remains validated. Built-in generation only; earlier increment sections are historical, not current coverage claims.
+
+## Twenty-eight-unit batch validation
+
+`twentyeight-pose-repository-20260914.log` reports VALIDATION PASSED. Official `twentyeight-pose-linux-20260914` and `twentyeight-pose-windows-20260914` exports pass. Packaged actions pass 4,136 Linux rendered checks at 1920x1080 and 4,108 Windows headless reduced-motion checks. Both final packaged reports pass, their processes are terminal, and all five compiled combat owner hashes match. Wide Barkhulk melee and Censerwing death captures were inspected alongside the four units' previously inspected small source/battle/alpha captures. These event stills do not establish continuous-motion acceptance; Windows headless Wine is not GPU certification.
+
+`twentyeight-pose-parity-20260914.json` passes at 538,611,864 bytes / 8,582 members per platform, only `project.binary` differs. Eight packing/provenance tests pass across twenty-eight recipes. This four-unit content batch changes original raster art and pose metadata only, not stats, rules, footprint profiles or saves. Final acceptance remains 0/160 and the full goal stays active.
+
+Fenmirror Gallowshell's original sheet had missing walking pincers and a third recoil pincer. Two targeted built-in art edits restore the walking pincers and remove the extra recoil pincer. Original attempts, corrected source, actual RGBA extraction and exact prompts/hashes are retained under `art/animation/source/poses/unit_neutral_fenmirror_gallowshells/`. `gallow-fixed-source-alpha-20260914` passes seven checks and its 1280x720 light/dark capture was inspected cleanly. This source is not packed or enabled; gait contacts and continuous action/death quality still require review.
+
+Cleanup verified six twenty-four-unit export/action/driver reports and no active references before deleting six obsolete twenty-unit executable/PCK/native-library payloads (1,248,032,384 rebuildable bytes). Twenty-unit reports/screenshots remain, alongside twenty-four-unit rollback and twenty-eight-unit current packages, original art/provenance, caches, Wine user data and unrelated retention files. No additional source or evidence deletion is authorized by size alone.
+
+## Cindervane Censerwing candidate
+
+Sixteen original built-in poses provide breathing, upstroke/downstroke/passing flight, beak/talon melee, folded-wing guard, distinct censer charge/fanned release/recoil/recovery, impact, loss of lift, side fall and a dimmed persistent corpse. Original RGB checkerboard, neutral-gray edit and real RGBA extraction remain with exact prompts/hashes under `art/animation/source/poses/unit_neutral_cindervane_censerwings/`. Uniform 0.70 downsampling and segmented wing/beak/tail rectangles preserve original raster articulation without painting or warping.
+
+Clean import and eight packing/provenance tests across twenty-eight recipes pass. `censer-actions-20260914` passes 169 battle checks and `censer-packed-alpha-20260914` passes seven; actual 1280x720 firing and source/packed light/dark captures were inspected. Continuous wingbeat/action/death motion acceptance remains outstanding. No stats, footprints, rules, balance or save changes. This four-unit increment remains uncommitted for consolidated repository/Linux/Windows validation. Cleanup retains required original art/provenance and focused evidence; no newly obsolete export exists, and caches/unrelated retention files remain untouched.
+
+## Saltwake Bellwhale candidate
+
+Sixteen original built-in poses supply breathing, raised/lowered/passing swimming strokes, head/flipper melee, folded-fin guard, separate swollen-throat/open-mouth sonar release/recoil/recovery, impact, loss of lift, side collapse and a dimmed grounded corpse. Original RGB checkerboard, neutral-gray edit and true RGBA extraction remain with exact prompts/hashes under `art/animation/source/poses/unit_neutral_saltwake_bellwhales/`. Uniform 0.80 downsampling preserves original fins, bells and body articulation without painting or warping replacement poses.
+
+Clean import and eight packing/provenance tests across twenty-seven recipes pass. `whale-actions-20260914` passes 175 battle checks; `whale-packed-alpha-20260914` passes seven. Actual 1280x720 sonar and source/packed light/dark captures were inspected. Continuous swimming/action/death motion acceptance remains outstanding. No stats, footprints, rules, balance or save changes. This three-unit increment remains uncommitted for the next consolidated repository/Linux/Windows content batch. Cleanup found no surviving temporary pose-test directories; required sources/provenance and focused evidence remain. No newly obsolete exports were created or deleted; caches and unrelated retention files remain untouched.
+
+## Barkhulk and Ironback candidates
+
+Rootvault Barkhulk now uses twelve original poses for breathing, root-knuckle steps, raised fist/slam, heartwood brace, recoil, knees buckling, side fall and its own dimmed corpse. Quenchbell Ironback has twelve for breathing, heavy steps, raised-horn anticipation/forward ram, low-horn brace, recoil and dimmed side collapse/corpse. Uniform 0.64 and 0.72 downsampling respectively and segmented source rectangles preserve original anatomy without painting or warping replacement poses. Both use the previously reviewed original RGBA sources; recipes and runtime hashes are recorded in their provenance.
+
+Clean imports and eight packing/provenance tests across twenty-six recipes pass. `bark-actions-20260914` passes 132 battle checks and `ironback-actions-20260914` passes 124; both packed-alpha reports pass seven. Actual 1280x720 attack and light/dark captures were inspected. Continuous gait contacts, attack weight and full brace/death motion acceptance remain outstanding. No stats, footprint profiles, rules, balance or save changes. This two-unit increment remains uncommitted for the next consolidated repository/Linux/Windows content batch. Cleanup found no surviving temporary pose-test directories; required original art/provenance, runtime atlases and focused captures remain. No newly obsolete exports were created or deleted; caches and unrelated retention files remain untouched.
 
 ## Twenty-four-unit batch validation
 

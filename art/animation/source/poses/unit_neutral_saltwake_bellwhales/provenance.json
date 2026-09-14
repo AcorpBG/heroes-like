@@ -1,0 +1,40 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_saltwake_bellwhales",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_saltwake_bellwhales.png",
+  "reference_sha256": "43b41662c2ac7b27c4fe4d095449da4da7754203dbac39642384023286a60725",
+  "outputs": [
+    {
+      "source": "poses-gray.png",
+      "source_sha256": "7a2f6102edb3dd3eedb6674fd07b477e4677575d8f116cef50f315ef4883562f",
+      "source_output": "exec-bf2761b3-5fc9-497c-a731-7112afdea305.png",
+      "prompt": "Replace only the checkerboard background behind these sixteen whale poses with uniform neutral gray RGB(190,190,190). Preserve exact creature positions, size, fins, tails, dark blue bodies, pale cyan throats, bronze bells and collapsed dead poses. No shadows, floor, gradients, haze, text or additional objects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "e33afd7c5e9203cef2c1830fe48534476a08a59ecd10db8695a0da14e42f129e",
+      "alpha_output": "exec-05552946-5aeb-496c-bb80-54a4a0017266.png",
+      "alpha_prompt": "Remove the neutral gray background entirely. Genuine transparent RGBA. Keep all sixteen original whale poses, navy bodies, pale cyan throat membranes, flowing fins/tails, salt encrustations, fine harness and bronze bells unchanged in size/position. Preserve fin interiors, no holes through pale cyan paint. Clean transparent gaps around silhouettes, no checkerboard, gray matte, exterior glow, speckles, floor, shadows or text."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "poses.png",
+      "sha256": "0c20dd7389b6be17d6799ad3df6d6a47b8699b9f02d2f842bd125e58a224a8bc",
+      "source_output": "exec-c3243d24-2595-47ce-883c-01214a81b8fa.png",
+      "prompt": "Use case: stylized-concept. Original fantasy strategy battle sprite atlas based on this Saltwake Bellwhale identity reference: enormous dark navy whale with pale glowing turquoise ribbed throat, cyan eyes, white salt encrustations on back/head, two broad flowing seafoam turquoise pectoral fins, large forked flowing tail, delicate bronze harness and hanging bronze bells with green clappers. Preserve this original identity. Sixteen complete articulated full-body poses in exactly FOUR columns by FOUR rows, same body size and elevated three-quarter side camera, facing RIGHT. Generous empty gutters; every fin, bell and tail inside its cell, no overlapping creatures. Row1: calm hovering swimming posture; breathing throat slightly inflated with fins relaxed differently; swim upstroke body curved tail/flippers raised; swim downstroke body curved opposite with tail/flippers swept down. Row2: swimming passing pose fins halfspread; melee anticipation head pulled back and near flipper cocked; forward head/flipper body bash with torso stretched; defense fins folded protectively across pale throat. Row3: sonar ranged charge throat swelling head lifting bells swinging forward; sonar release mouth opening throat contracting and fins swept back, no detached projectile; firing recoil head back and bells trailing; firing settle to hover with fins low. Row4: hit recoil twisting shoulder away; dying losing lift head dropping and tail slack; falling onto SIDE fins folding beneath body; final DEAD whale lying on its side, limp folded fins/tail, bells resting, cyan eye and throat unlit, no floating. No blood. Actual redrawn body curvature, fin articulation and weight shift, not rotated/resized duplicate cutouts. Detailed painterly original raster matching reference. Genuine transparent RGBA background, no checkerboard, scenery, ground, cast shadow disc, text, labels, panel borders, mist, particles or exterior glow. No copied copyrighted characters.",
+      "status": "RGB checkerboard original, not runtime alpha"
+    }
+  ],
+  "review_notes": [
+    "Sixteen original articulated poses packed and enabled as a candidate. Source battle/packed-alpha checks pass 175/7; actual 1280x720 sonar and light/dark captures inspected. Continuous swimming/action/guard/death acceptance remains outstanding."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_saltwake_bellwhales.png",
+    "runtime_sha256": "d13e606fe8abceeb6dd9946c96facd40c1d4b8182a5183a53f0707b86ab4527e",
+    "method": "Uniform 0.80 downsampling of individual original-raster pose rectangles, preserving fins/bells without painting or warping."
+  }
+}
