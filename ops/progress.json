@@ -16671,14 +16671,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Ten candidates enabled. Repository, both official exports, Linux 1523 and Windows 1513 packaged battle assertions and parity pass (8546 members, 523890800 bytes). Eight packing tests cover ten recipes. Prism Harrier source and verified RGBA cutout prepared but unregistered. Final accepted roster 0/160; full goal active.",
+  "currentNotes": "Twelve candidates enabled. Repository, official Linux/Windows exports, packaged battle probes (1826/1814 checks) and parity (8550 members, 525716688 bytes) pass. Small/wide and alpha captures inspected; eight packing tests cover twelve recipes. Vaultwyrm right-facing RGBA source prepared but unregistered. Final accepted roster 0/160; full goal active.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "combat-unit-animation-and-size-20260913",
   "currentSliceId": "combat-unit-animation-and-size-20260913",
-  "currentSliceNotes": "Ten candidates enabled. Repository, both official exports, Linux 1523 and Windows 1513 packaged battle assertions and parity pass (8546 members, 523890800 bytes). Eight packing tests cover ten recipes. Prism Harrier source and verified RGBA cutout prepared but unregistered. Final accepted roster 0/160; full goal active.",
+  "currentSliceNotes": "Twelve candidates enabled. Repository, official Linux/Windows exports, packaged battle probes (1826/1814 checks) and parity (8550 members, 525716688 bytes) pass. Small/wide and alpha captures inspected; eight packing tests cover twelve recipes. Vaultwyrm right-facing RGBA source prepared but unregistered. Final accepted roster 0/160; full goal active.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Complete Battle Unit Animation and Size",
-  "currentSliceUpdatedAt": "2026-09-14T09:35:44Z",
+  "currentSliceUpdatedAt": "2026-09-14T10:06:40Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22358,10 +22358,10 @@
         "packParity": "8526 members, 516867256 bytes per platform; only project.binary differs",
         "evidenceRoot": ".artifacts/battle-unit-animation-size-20260913",
         "repositoryValidation": "Passed: accepted-repository-validation.log",
-        "enabledCandidatePoseUnits": 10,
+        "enabledCandidatePoseUnits": 12,
         "candidateSourceChecks": 962,
         "candidatePackingTests": 8,
-        "candidateEvidence": "Ten-unit batch passes: repository log, both official exports, Linux 1523 / Windows 1513 packaged action assertions with matching compiled owners, parity 8546 members and 523890800 bytes. Eight packing tests cover ten recipes. Small/wide captures inspected. Prism Harrier source-only; full 160-unit final motion acceptance unfinished.",
+        "candidateEvidence": "Twelve-unit batch passes: repository, both official exports, Linux 1826 / Windows reduced-motion 1814 packaged battle assertions with matching five compiled owners. Parity 8550 members / 525716688 bytes. Eight packing tests cover twelve recipes; source Prism 183 and Mirror 124 checks. Small/wide and alpha captures inspected. Vaultwyrm right-facing source prepared only. Full 160-unit motion acceptance unfinished.",
         "remainingDependency": "Final original-art acceptance for all 160 units; River Guard candidate needs walk refinement and full action review, followed by roster rollout and refreshed repository/Linux/Windows validation. Built-in RGBA production works; no paid CLI/API dependency."
       },
       "notes": "Original-art production resumed with built-in image generation, smaller pose batches and visual iteration. Prior CLI-approval blocker was premature; no paid API fallback is needed or authorized. Full roster remains the goal."

@@ -1,0 +1,52 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_mirror_duelist",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_mirror_duelist.png",
+  "reference_sha256": "63045e93b1224aa4463d85de151b35274f4ac01aeaa69ae4b78f55554dad4ebf",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "1a48cc490b5b430456de5f9d9b0a568dab38b0aab1e9bbd7014a07dab01477c3",
+      "source_output": "exec-aa850d6a-b0df-455e-bf4a-16577d48d34a.png",
+      "prompt": "Change only the checkerboard background to solid pure green RGB(0,255,0), including every gap around and within the sixteen sprites. Preserve all character, staff, ponytail, armor and clothing pixels and all pose positions. No checkerboard or shadows.",
+      "input_source": "attempts/initial-checkerboard.png",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "468534c4ba27e66354644f3252ce0bbe0c039b639603f0301d9e9f7f9ee7e735",
+      "alpha_output": "exec-cb9bafeb-0b18-4b4c-b892-6572f1ebde73.png",
+      "alpha_prompt": "Remove the green background. Preserve the sixteen character sprites unchanged. Transparent background."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "attempts/initial-checkerboard.png",
+      "sha256": "0e61adc587d7e451eba884a860265d5c46398546de6827d3882166d30783698c",
+      "source_output": "exec-14410891-f225-4223-a342-da269645df7b.png",
+      "prompt": "Use case: stylized-concept. Create an original Mirror Skirmisher battle animation sprite sheet using the supplied original character reference. Preserve the closed angular silver-and-gold mask, long white ponytail, blue fitted clothing, ivory split coat, gold-edged silver armor, reflective round forearm buckler and slender double-ended blue-and-gold staff with star/crystal fittings. Exactly sixteen complete full-body poses in a strict 4-column by 4-row grid, same anatomical scale and RIGHT-facing three-quarter tactical camera. Row 1: standing relaxed staff diagonally low; breathing idle with shoulder and ponytail shift; walking contact NEAR leg stretched forward and FAR leg behind; low passing step near leg planted and far knee passing. Row 2: opposite walking contact FAR leg stretched forward and NEAR leg visibly behind; low passing step far leg planted and near knee passing; staff drawn behind shoulder winding up; forward staff thrust with torso and arms extended. Row 3: staff withdrawing attack recovery; guard crouch with buckler raised and staff across body; impact block buckler arm bent back; hit stagger torso leaning back and hair trailing. Row 4: dying knees giving way head lowered; falling onto side with staff slipping; landing on side with relaxed limbs; final fully horizontal motionless dead body with head resting on ground, ponytail spread and staff beside body. No blood. Keep all long staff ends, ponytail and coat tails fully inside their individual cells with generous clear gutters. No pose overlaps. Walking legs MUST swap front/back across the two contact frames, not four repetitions of one stance; natural low steps, no marching. Genuine articulated redraws, not rotations of a standing sprite. Match detailed original painterly raster style. Genuine transparent background with transparent gaps, no checkerboard, shadows, labels, grid lines, terrain, particles or traveling effects.",
+      "status": "Original poses retained as source reference; rejected as transparent runtime asset because RGB with painted checkerboard."
+    }
+  ],
+  "rejected_attempts": [
+    {
+      "source": "attempts/alpha-checkerboard.png",
+      "sha256": "d87a8ca0b6f58acc4a9d9323bfacfa8dba3d82a82000b511311a868f69ce3d4c",
+      "source_output": "exec-b854b974-4a42-4288-8b8e-27b3514799be.png",
+      "prompt": "Remove the checkerboard background from this sprite sheet. Keep all sixteen character sprites unchanged. Genuine transparent background.",
+      "reason": "RGB with painted checkerboard; not real transparency."
+    }
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_mirror_duelist.png",
+    "runtime_sha256": "923300952fea86ece00a6ff98462cf52f89fa4e0a6061bb298ce42541171dae8",
+    "method": "Uniform 0.70 downsampling with anatomical ground anchors; segmented crops separate the extended staff from recoil and preserve the falling ponytail. Low corpse poses have independent ground anchors. No alpha repainting or standing-cutout transforms."
+  },
+  "review_notes": [
+    "Packed atlas and actual Godot source-alpha light/dark capture visually inspected. Source compositing passes seven checks. Full continuous motion acceptance remains pending.",
+    "Sixteen original articulated poses retain masked identity, ponytail, staff and reflective buckler, with distinct thrust, guard and horizontal corpse. Walking contact alternation and continuous motion remain pending review.",
+    "Green-background edit followed by built-in extraction produced actual RGBA 0..255. No paid API or locally painted replacement."
+  ]
+}
