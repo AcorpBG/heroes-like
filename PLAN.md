@@ -24,7 +24,7 @@ Rules:
 
 ### Complete Battle Unit Animation and Size
 
-`combat-unit-animation-and-size-20260913` — in_progress, owner-directed Phase 6 goal. All 160 size profiles are authored; 37 long bodies use shared two-hex rules/AI/UI geometry. Twelve original-art candidates are enabled, adding Prism Harrier and Mirror Skirmisher. Twelve-unit repository, official exports, Linux/Windows battle probes (1826/1814 checks) and parity pass; eight packing tests cover twelve recipes. Vaultwyrm right-facing source is prepared but unregistered. Final accepted coverage remains 0/160 pending refinement and full motion review. Continue across all 160 identities; legacy affine sheets do not count. Requirements/evidence: `docs/combat-unit-animation-and-size.md`.
+`combat-unit-animation-and-size-20260913` — in_progress, owner-directed Phase 6 goal. All 160 size profiles are authored; 37 long bodies use shared two-hex rules/AI/UI geometry. Fourteen original-art candidates are enabled, including Deepforge Vaultwyrms and Gaugecoil Orewyrms. Event loops now follow each action's start and playback speed. Repository, official Linux/Windows exports, packaged actions (2,086/2,072), body checks (971/968), focused Fast playback and package parity pass. Skyray source is prepared but unregistered. Final accepted coverage remains 0/160 pending refinement and full motion review. Continue across all 160 identities; legacy affine sheets do not count. Requirements/evidence: `docs/combat-unit-animation-and-size.md`.
 
 ### Layered Combat Visual Effects
 

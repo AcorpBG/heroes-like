@@ -17,6 +17,16 @@ static func clip_name(state: String) -> String:
 static func has_authored_poses(animation: Dictionary) -> bool:
 	return not String(animation.get("pose_sheet", "")).is_empty() and animation.get("pose_clips", {}) is Dictionary and not animation.get("pose_clips", {}).is_empty()
 
+static func elapsed_msec(playback_record: Dictionary, now_msec: int) -> int:
+	# Idle loops use wall time. Event loops start at their own first contact,
+	# hold during queue delay and follow the same speed as the action's travel.
+	# These records are presentation-only; never put clock values into saves.
+	if playback_record.is_empty(): return maxi(0, now_msec)
+	var duration := maxi(1, int(playback_record.get("max_duration_ms", 1)))
+	var base_duration := maxi(1, int(playback_record.get("base_duration_ms", duration)))
+	var elapsed := maxi(0, now_msec - int(playback_record.get("started_at_msec", now_msec)))
+	return int(float(elapsed) * float(base_duration) / float(duration))
+
 static func grounded_rect(ground: Vector2, height: float, region: Rect2) -> Rect2:
 	# Preserve raster aspect for long weapons and prone bodies. Gameplay body
 	# cells are independent of this presentation-only transparent canvas.

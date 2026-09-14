@@ -2,7 +2,29 @@
 
 Owner goal, Phase 6: `combat-unit-animation-and-size-20260913`.
 
-Current state: twelve original-art candidates enabled and consolidated validation passed, zero of 160 final animation acceptances. The size/footprint implementation remains validated. Built-in generation only; the earlier paid-CLI approval blocker was premature and is withdrawn. Earlier increment sections are historical, not current coverage claims.
+Current state: fourteen original-art candidates enabled, zero of 160 final animation acceptances. The fourteen-unit content and event-clock increment passes consolidated repository/platform validation below. The size/footprint implementation remains validated. Built-in generation only; the earlier paid-CLI approval blocker was premature and is withdrawn. Earlier increment sections are historical, not current coverage claims.
+
+## Fourteen-unit batch validation
+
+`fourteen-pose-repository-20260914.log` reports VALIDATION PASSED. Both official `fourteen-pose-linux-20260914` and `fourteen-pose-windows-20260914` exports pass, including Windows generated-map/Town entry and managed Wine cleanup. Packaged real-action reports pass 2,086 Linux rendered checks and 2,072 Windows headless reduced-motion checks; body/footprint reports pass 971 Linux and 968 Windows checks. The five compiled action-render owner hashes match across platforms. Eight packing/provenance tests cover fourteen reproducible recipes.
+
+Focused Fast Orewyrm probes pass 156 source, 156 Linux packaged and 131 Windows headless checks (`event-clock-fast-orewyrm-20260914`, `fourteen-pose-linux-fast-20260914`, `fourteen-pose-windows-fast-20260914`). These exercise actual 294ms actions and original/scaled duration retention, not only synthetic clock arithmetic. The Windows driver exits zero. Source 1280x720 attack and packaged 1920x1080 corpse-context captures were visually inspected: the creature is readable; living units can obscure a corpse underneath, so these stills alone do not establish full death-motion readability or final acceptance.
+
+`fourteen-pose-parity-20260914.json` passes: 527,101,992 bytes / 8,554 members per platform, only `project.binary` differs. Cleanup removed exactly six obsolete ten-unit executable/PCK/native-library payloads, recovering 1,232,054,296 rebuildable bytes after checking active references. Reports, screenshots, originals/provenance, caches, user data and twelve-/fourteen-unit packages remain. Unrelated untracked retention files remain untouched.
+
+Tideglass Skyray original/RGBA sources are prepared under `art/animation/source/poses/unit_neutral_tideglass_skyrays/`, with exact built-in prompts and hashes. Its seven-check source-alpha capture was inspected; packing and live animation remain pending. It is not registered or counted among the fourteen candidates. All 160 final motion acceptances remain outstanding.
+
+## Event-relative pose playback clock
+
+Source inspection found that Board passed application uptime into authored loop clips. Movement could therefore begin at an arbitrary stride, queued reactions could advance before their start, and Fast travel did not accelerate the leg cycle. `BattleUnitPose.elapsed_msec` now derives event time from the presentation record's start and original/scaled durations. Idle retains wall time; reduced motion retains static poses. Original duration is presentation-only metadata, not save or simulation state.
+
+`event-clock-bodies-20260914` passes 967 checks; the strengthened `event-clock-accessible-bodies-20260914` passes 968, including delay/start behavior, legacy records, equivalent Normal/Fast phase, two live same-unit actors with different event phases, and the same pair frozen under reduced motion. The action report now samples loop regions using actual event times instead of repeating a fixed 300ms sample. `event-clock-orewyrm-20260914` passes 132 Normal real-action checks. Consolidated platform and Fast-speed results are recorded above.
+
+## Deepforge Vaultwyrms and Gaugecoil Orewyrms
+
+Both neutral creatures now resolve to twelve original articulated poses covering idle, alternating contacts/passing, mouth windup/attack, guard/recoil and collapsed persistent bodies. Vaultwyrm semantic order is restored from the built-in right-facing reflection. Per-pose crop boundaries exclude neighboring tails/claws and align the low corpse without rotating a standing sprite. Orewyrm's generated art retains its pressure gauges, segmented armor, tail valve and drill-petal mouth. Exact prompts, original/RGBA hashes and reproducible packing recipes are preserved in their source directories. Gameplay stats, footprints and save rules are unchanged.
+
+`vaultwyrm-actions-20260914` and `orewyrm-actions-20260914` each pass 132 actual battle assertions, including own-corpse/save identity; their 1280x720 bite captures were inspected. Both seven-check packed-alpha captures were visually inspected in Godot. Eight packing/provenance tests cover fourteen recipes; import and `git diff --check` pass. These are enabled candidates, not final motion acceptance. Consolidated platform validation and cleanup are recorded above.
 
 ## Twelve-unit batch validation
 

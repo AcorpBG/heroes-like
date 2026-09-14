@@ -1,0 +1,216 @@
+{
+  "unit_id": "unit_neutral_gaugecoil_orewyrms",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          366,
+          375
+        ]
+      ],
+      "anchor": [
+        189,
+        361
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "idle_breath",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          378,
+          0,
+          724,
+          375
+        ]
+      ],
+      "anchor": [
+        551,
+        361
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          735,
+          0,
+          1086,
+          375
+        ]
+      ],
+      "anchor": [
+        905,
+        361
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1086,
+          0,
+          1448,
+          375
+        ]
+      ],
+      "anchor": [
+        1267,
+        361
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "walk_pass",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          375,
+          378,
+          711
+        ]
+      ],
+      "anchor": [
+        189,
+        699
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          378,
+          375,
+          724,
+          711
+        ]
+      ],
+      "anchor": [
+        551,
+        699
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "bite",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          724,
+          375,
+          1106,
+          711
+        ]
+      ],
+      "anchor": [
+        905,
+        699
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "guard",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1106,
+          375,
+          1448,
+          711
+        ]
+      ],
+      "anchor": [
+        1267,
+        699
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          711,
+          360,
+          1040
+        ]
+      ],
+      "anchor": [
+        189,
+        1025
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "collapse",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          378,
+          711,
+          724,
+          1040
+        ]
+      ],
+      "anchor": [
+        551,
+        1025
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "roll",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          724,
+          775,
+          1084,
+          1030
+        ]
+      ],
+      "anchor": [
+        905,
+        1025
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "dead",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1084,
+          800,
+          1448,
+          1020
+        ]
+      ],
+      "anchor": [
+        1267,
+        1025
+      ],
+      "scale": 0.62
+    }
+  ]
+}
