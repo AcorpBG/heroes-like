@@ -1,0 +1,40 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_miremoon_crownmaws",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_miremoon_crownmaws.png",
+  "reference_sha256": "849a56acc13a425fe83245da9a8b10a3f8c3bfb7ee3d00e855ff091fda3bc9ab",
+  "outputs": [
+    {
+      "source": "poses-gray.png",
+      "source_sha256": "892357bdb106647f9c940b6a485090162c13a2085a1791b1505043ae5bce76f3",
+      "source_output": "exec-112f7a8e-9120-41f0-a502-dfb08d3a7620.png",
+      "prompt": "Change ONLY the checkerboard background behind these twelve creatures to flat pale gray RGB(220,220,220). Preserve every creature pixel and pose, moss beard, blue armor, crescent antlers, clawed feet, tail and fallen body, exact positions and size. No shadows, gradients, glow, particles, text or extra elements.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "7e0cdfca74f5013e3fa743f566e30305b6f0e558ca8fa8189d90478c435066cd",
+      "alpha_output": "exec-facb050d-59c9-44f2-8d8d-6395f6a402df.png",
+      "alpha_prompt": "Remove the pale gray background. Preserve all twelve original creature poses unchanged, including fine moss, blue armor, antler branches, claws, tails and fallen bodies. Genuine transparent background with clean edges, no extra halo, speckles, shadows or glow."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "poses.png",
+      "sha256": "a6f647f3e6ddd8ec6ac9f31fffe48bdf45ea3cda0453e18c92777ffeb20795ef",
+      "source_output": "exec-300ef367-6791-49ca-a203-344b80ca0fd8.png",
+      "prompt": "Use case: stylized-concept. Original Miremoon Crownmaw battle animation sprite sheet using this original creature reference. Preserve squat massive gray reptilian body, root-heavy clawed limbs, layered blue glowing peatglass scutes with crescent markings, moss and hanging beard, ivory tusks, enormous crescent-shaped antler crown, blue eyes, and thick tapered armored tail. Exactly TWELVE complete poses in FOUR columns by THREE rows. Every creature faces RIGHT, same elevated three-quarter tactical camera and same body size, generous empty gutters, full tail/antlers/claws inside each cell. Row1: idle low stance; chest breathing shoulders lifted slightly; walking contact A near foreclaw forward and opposite rear foot forward; walking contact B near foreclaw back and near rear foot forward. Row2: passing heavy step foreclaw lifted under shoulder; attack windup jaws opening head drawn back; forward crown-jaw BITE lunge, neck extended right and foreclaws braced, jaw closing; defensive low brace all limbs planted and antler crown protecting face. Row3: impact recoil shoulders back head twisted away; dying front knees buckling crown lowering; falling onto SIDE legs folded and jaw slack; final DEAD body flat on side with head/antlers resting on ground, limp claws/tail, eyes closed and blue markings dim. No blood. Actual redrawn articulation and weight shift, not repeated standing cutouts or rotation/scale tricks. Detailed painterly original raster style matching reference. Genuinely transparent background, no checkerboard, colored matte, scenery, ground, cast shadow, particles, fog, text, labels, grid or panel borders.",
+      "status": "Original articulated source; RGB checkerboard not runtime alpha"
+    }
+  ],
+  "review_notes": [
+    "Twelve original heavy-step, crown-jaw bite, brace, recoil and collapsed dead poses packed. Real RGBA 0..255. Candidate only; gait contacts and continuous motion require refinement/review."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_miremoon_crownmaws.png",
+    "runtime_sha256": "a1aa74dbec5cdda95e62d2c277c89c76c92fad0fdda6db9bf1638f0615698703",
+    "method": "Uniform 0.65 downsampling and segmented tail/moss/adjacent-body rectangles preserving original raster poses without painting or warping."
+  }
+}

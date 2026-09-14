@@ -1,0 +1,48 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_quenchbell_ironbacks",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_pending_packing_and_playback_review",
+  "reference": "art/units/source/curated/unit_neutral_quenchbell_ironbacks.png",
+  "reference_sha256": "1f3e29b5de84bb6057c68d87756abe80a945f466fe79a8a61ca93e860c751b27",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "34c529ba3078553582eb1e69d4860387dbac381f8bd1adc2104920fdc1f3fb9b",
+      "source_output": "exec-de3290f6-e9af-4287-9d08-95626f50137f.png",
+      "prompt": "Use case: stylized-concept. Original fantasy strategy battle sprite atlas based on reference identity Quenchbell Ironback: powerful stocky four-legged rhinoceros in layered black iron and brass armor, huge brass-edged forward horn plus smaller horns, fur collar and joint fur, red pressure gauges on shoulder, glowing red seams below arched overlapping spiked back plates, armored feet. Same original creature throughout, facing RIGHT (opposite the reference), elevated three-quarter side camera. Twelve complete articulated poses in FOUR columns by THREE rows with generous empty gutters, consistent body size, every horn/foot/spike inside its own cell. Row1: idle all feet grounded; breathing shoulders raised slightly; walking contact A near forefoot forward opposite rear foot forward; walking contact B near forefoot back near rear foot forward. Row2: heavy passing step forefoot lifted under shoulder; attack windup head pulled back horn angled up front knees flexed; attack forward horn ram with extended neck low head and weight committed onto front feet; defense low head horn forward all feet planted wider. Row3: impact recoil head lifted torso back; dying front knees buckle head dips gauges dim; falling onto side legs folding; fully DEAD side-lying rhino body, head and horn resting sideways, limp legs, red gauges and seams unlit. No blood. Distinct anatomy and weight shift between poses, not a rotated/resized standing cutout. Detailed painterly original raster matching reference materials. True transparent RGBA background, no checkerboard, shadows, scenery, floor, dust, smoke, sparks, text, frame or panel lines. No copyrighted art.",
+      "alpha_source": "poses.png",
+      "alpha_sha256": "34c529ba3078553582eb1e69d4860387dbac381f8bd1adc2104920fdc1f3fb9b",
+      "alpha_output": "exec-de3290f6-e9af-4287-9d08-95626f50137f.png",
+      "alpha_prompt": "Original output already contains real RGBA alpha 0..254; no extraction required."
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "alternatives/direct-alpha-attempt.png",
+      "sha256": "6dc799235d1d0f2213d0ff615cef9836f8c08cef5bb188d9406e27d8b363b667",
+      "source_output": "exec-8148e5a0-cd2f-46a8-956c-64d5cc34dc68.png",
+      "prompt": "Remove the brown background completely. Keep these exact twelve original armored rhino poses, same size and placement, preserving iron/brass armor, red gauges, fur, horns, four feet and collapsed bodies. Genuine transparent RGBA background with clean edges and transparent gaps. No colored matte, checkerboard, floor, shadows, haze, particles or text. Do not redraw or crop the creatures.",
+      "status": "Unselected alternative RGBA. Brown raw preview was misleading; original later passed actual Godot compositing."
+    },
+    {
+      "source": "poses-gray.png",
+      "sha256": "3cfdae1a4093b5f7d33ed998b5db43215443be949183b9548a1ab4f9d91cd231",
+      "source_output": "exec-ed904acb-2883-4587-968a-b5b1241f47d0.png",
+      "prompt": "Replace ONLY the brown background with completely flat pale gray RGB(210,210,210). Preserve all twelve armored rhino poses unchanged, exact size/positions and full horns/feet/fur/armor. No shadows, gradient, checkerboard or scenery. Gray background everywhere outside the creatures.",
+      "status": "Unselected RGB neutral-gray edit."
+    },
+    {
+      "source": "alternatives/gray-alpha-attempt.png",
+      "sha256": "ccd20a21b0686197f1a0caea4e28afb8f866832b1a6ff8bf18a4c9f2a266204c",
+      "source_output": "exec-3ae78648-18b6-4e7b-85e5-ad4de7c26311.png",
+      "prompt": "Remove the pale gray background. Output genuine transparent RGBA, not a gray or checkerboard image. Preserve all twelve original armored rhino poses, full horns, fur, brass/iron edges, feet and prone bodies unchanged at same size and location. Clean alpha edges, no shadows, speckles, halo, haze, text or new elements.",
+      "status": "Unselected RGBA alternative; no actual Godot review, not a proven alpha failure."
+    }
+  ],
+  "review_notes": [
+    "Original twelve-pose output has RGBA 0..254 and passes seven source-alpha checks. Actual 1280x720 light/dark capture inspected clean despite brown raw preview. No runtime registration. Packing and continuous gait/horn/brace/death review remain pending."
+  ]
+}

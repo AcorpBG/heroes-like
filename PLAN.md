@@ -24,7 +24,7 @@ Rules:
 
 ### Complete Battle Unit Animation and Size
 
-`combat-unit-animation-and-size-20260913` — in_progress, owner-directed Phase 6 goal. All 160 size profiles are authored; 37 long bodies use shared two-hex rules/AI/UI geometry. Twenty original-art candidates are enabled. Four-unit batch repository, official Linux/Windows exports, packaged battle checks 3003/2983 and parity pass; small/wide captures inspected. Skyraker source poses are prepared only. Final accepted coverage remains 0/160 pending refinement and full motion review. Continue across all 160 identities; legacy affine sheets do not count. Requirements/evidence: `docs/combat-unit-animation-and-size.md`.
+`combat-unit-animation-and-size-20260913` — in_progress, owner-directed Phase 6 goal. All 160 size profiles are authored; 37 long bodies use shared two-hex rules/AI/UI geometry. Twenty-four original-art candidates are enabled. Repository, both official exports/parity, Linux 3,544 and Windows reduced-motion 3,520 packaged battle checks pass; small/wide captures inspected. Barkhulk/Ironback sources are prepared, not registered. Continue roster production/refinement; final accepted coverage remains 0/160 pending full motion review. Legacy affine sheets do not count. Requirements/evidence: `docs/combat-unit-animation-and-size.md`.
 
 ### Layered Combat Visual Effects
 

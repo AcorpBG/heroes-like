@@ -1,0 +1,76 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_ashcrown_kilnelk",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_ashcrown_kilnelk.png",
+  "reference_sha256": "dcecf2fb244a0c83093bf013ed6b25d7242a10fe56542107daa290827d327d9a",
+  "outputs": [
+    {
+      "source": "poses-green.png",
+      "source_sha256": "8765c60f3608bf2fdea161c8d22520c01e34c85b18e1e57dfc3f8a1e57f85b5e",
+      "source_output": "exec-1a347b50-1dc1-40af-9f36-af3bf99a644a.png",
+      "prompt": "Change ONLY the checkerboard background behind these twelve elk creature sprites to completely flat pure green RGB(0,255,0). Preserve every original pose, ivory ceramic antlers, black basalt body, orange seams, mane, four hooves and fallen bodies, identical sizes and positions. No gradients, shadows, text or extra elements.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "aa78cfd7602c4c55314e1c9a5a1b80645c110360c860bd2780bbe81284fe8150",
+      "alpha_output": "exec-d39c5e79-6eaf-421b-bd39-8c15e66d3104.png",
+      "alpha_prompt": "Remove the green background. Preserve all twelve original elk creature sprites unchanged, including complete antlers, mane, four hoofed legs, lava seams and fallen bodies. Transparent background.",
+      "status": "Rejected for orange silhouette speckles in Godot; not enabled"
+    },
+    {
+      "source": "poses-gray.png",
+      "source_sha256": "acbb1f6fa13fc7e184fdb3bd5d388cfa7ae97851683079d1fc7de7fa8103939e",
+      "source_output": "exec-b1f55fca-9e93-4102-86cb-704e4ca1dcf7.png",
+      "prompt": "Change only the green background to a completely flat solid pale gray RGB(220,220,220). Keep all twelve elk poses intact in the exact same layout. Preserve every ivory antler branch, basalt body, mane, hooves and fallen body. Remove any glow outside the body silhouette and all detached particles. No shadows, gradients, transparency, text or extra elements.",
+      "alpha_source": "alternatives/gray-alpha-attempt.png",
+      "alpha_sha256": "3d9f68a0c50bc869f55a809d83bf835b7183f0550cb9443082100ceab01cb255",
+      "alpha_output": "exec-1136ee00-abb0-48c8-ae5f-461125500055.png",
+      "alpha_prompt": "Remove the pale gray background. Preserve all twelve elk sprites unchanged with clean antler, mane, hoof and corpse edges, exact same positions and sizes. Genuine transparent background. No extra glow, halo, speckles or shadows.",
+      "status": "Actual Godot source-alpha capture inspected clean; selected for packing"
+    }
+  ],
+  "intermediates": [
+    {
+      "source": "poses.png",
+      "sha256": "dba2739b92c63fa402e7b2c894b119c64c23dc983a083a14db129bfdad46677a",
+      "source_output": "exec-200913ec-4a24-4968-a12f-30935378c3df.png",
+      "prompt": "Use case: stylized-concept. ORIGINAL Ashcrown Kilnelk battle animation sprite sheet using this original creature as identity reference. Preserve FOUR cloven-hoof legs, bulky black basalt elk body with orange lava seams, long russet ember mane, glowing amber eyes and enormous branching IVORY CERAMIC ANTLERS with orange cracks. Exactly TWELVE complete poses in FOUR columns by THREE rows, generous clear gutters. Every pose faces RIGHT with same elevated three-quarter tactical camera, same body scale, full antlers and hooves inside each cell. Row1: relaxed standing; chest breathing and slight antler dip; walking contact A near foreleg clearly FORWARD near hindleg BACK; walking contact B near foreleg clearly BACK near hindleg FORWARD. Row2: passing step hoof lifted under chest, bent knee; attack windup rear legs braced head/antler crown lowered; attack antler sweep thrust neck extended right, front legs catching weight; defensive low stance legs planted antler rack shielding face. Row3: recoil head and shoulders back, forehooves lifting; dying knees buckling with crown descending; fallen on SIDE legs folding and antlers touching ground; fully DEAD elk lying flat on side with four limp legs, head heavy on ground, mane and lava seams dimmed, ceramic antlers intact. No blood. Real redrawn anatomical motion and weight transfer, no repeated standing cutouts, rotation or scale tricks. Detailed painterly original raster matching reference. Genuine transparent background, no checkerboard, colored matte, scenery, ground, shadows, detached sparks, smoke, text, labels or grid.",
+      "status": "Original articulated source; RGB checkerboard not runtime alpha"
+    },
+    {
+      "source": "alternatives/clean-alpha-attempt.png",
+      "sha256": "d21a7ea9d00eb0a43a48ebcfb02ae66b7d822c0a4c6bba95d937065fbe3605ce",
+      "source_output": "exec-c1d18fa4-7fde-4b0a-91c4-9885fe0ecd1f.png",
+      "prompt": "Extract these twelve elk sprites onto a genuine transparent background with CLEAN precise antialiased silhouette edges. Remove ALL green background, detached speckles, background residue and outer orange halo. Preserve original painted basalt body, orange seams INSIDE the body, russet mane, ivory antler branches, four hooves, every pose and all spacing. No new glow, no bloom, no sparks, no shadow, no colored edge fringe. Keep antlers and hooves intact. Exact same 4 by 3 layout and dimensions.",
+      "status": "Retry retains visible edge residue; not enabled"
+    },
+    {
+      "source": "poses-gray.png",
+      "sha256": "acbb1f6fa13fc7e184fdb3bd5d388cfa7ae97851683079d1fc7de7fa8103939e",
+      "source_output": "exec-b1f55fca-9e93-4102-86cb-704e4ca1dcf7.png",
+      "prompt": "Change only the green background to a completely flat solid pale gray RGB(220,220,220). Keep all twelve elk poses intact in the exact same layout. Preserve every ivory antler branch, basalt body, mane, hooves and fallen body. Remove any glow outside the body silhouette and all detached particles. No shadows, gradients, transparency, text or extra elements.",
+      "status": "Clean neutral-gray source, not transparent"
+    },
+    {
+      "source": "alternatives/gray-alpha-attempt.png",
+      "sha256": "3d9f68a0c50bc869f55a809d83bf835b7183f0550cb9443082100ceab01cb255",
+      "source_output": "exec-1136ee00-abb0-48c8-ae5f-461125500055.png",
+      "prompt": "Remove the pale gray background. Preserve all twelve elk sprites unchanged with clean antler, mane, hoof and corpse edges, exact same positions and sizes. Genuine transparent background. No extra glow, halo, speckles or shadows.",
+      "status": "Selected after actual Godot source-alpha visual inspection; raw preview is not compositing evidence"
+    }
+  ],
+  "review_notes": [
+    "Neutral-gray extraction selected after actual Godot contrast review; earlier rejected-alpha notes are historical. Enabled as candidate, continuous gait/crown/death acceptance remains pending.",
+    "Twelve original crown, gait, guard, recoil and fallen-body poses prepared; no new unit enabled.",
+    "First packed-alpha numeric checks pass but visual review exposes orange speckles and neighboring crop artifacts. Numeric pass is not visual acceptance.",
+    "Packing recipe is a draft; needs clean source alpha and full antler-boundary refinement before runtime registration."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_ashcrown_kilnelk.png",
+    "runtime_sha256": "b055309d7871547060eebe448e5af4c11f288aa5bc1d8080194f23c6bfb4513f",
+    "method": "Uniform 0.59 downsampling with segmented antler/crown/adjacent-body rectangles; no painted or warped replacement poses."
+  }
+}
