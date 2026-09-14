@@ -1,0 +1,39 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_deepforge_vaultwyrms",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_prepared_not_runtime_registered",
+  "reference": "art/units/source/curated/unit_neutral_deepforge_vaultwyrms.png",
+  "reference_sha256": "c68fd1d8dc8b2786db643264ec8183d4de912f7d32b95a822241c7517eaafbbc",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "9db0d1e24c8ee6ca553460210f5c9ffb6f5049d8eb1245e8b7bc36e32bf55f11",
+      "source_output": "exec-d5ff5d77-523d-459e-af59-1099139ffb7c.png",
+      "prompt": "Use case: stylized-concept. Original Deepforge Vaultwyrm battle sprite pose sheet based on the supplied original creature. Keep the heavy low QUADRUPED reptile anatomy, long thick tail, charcoal basalt plates, weathered brass armor bands with circular dark studs, glowing orange magma seams and claws, broad crocodilian jaw and small dorsal crystal spines. Exactly twelve whole-creature poses in a strict four-column by three-row grid. Same scale and RIGHT-facing three-quarter elevated tactical camera for every pose, generous gutters around all claws and tail. Row 1: idle low grounded stance mouth closed; subtle breathing chest expanded jaws slightly parted; heavy walking step near foreleg forward and near hindleg back; opposite step near foreleg back and near hindleg forward. Row 2: walking passing step all feet near body; attack windup head pulled back and foreclaws planted; bite attack extended head forward jaws fully open; defensive low crouch with armored shoulder turned slightly forward. Row 3: hit recoil head pulled away and forelegs buckling; dying front legs collapse chest hits ground; body rolls partly onto side with tail relaxing; final motionless DEAD creature lying heavily on its side with head resting flat, slack jaw, all legs relaxed and magma glow dimmed. Dead pose must be a real collapsed body, never a rotated standing sprite. No blood. Articulated limbs and jaws change shape across poses; armor design stays consistent. Original detailed painterly raster art, not a 3D toy. Uniform flat pure green RGB(0,255,0) backdrop throughout including gaps. No shadows, terrain, checkerboard, text, grid, particles or detached effects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "a79478d11af5384626ee2cb955ca7bb866d7bc2275b45d1fd766d1dd610e7bd2",
+      "alpha_output": "exec-e3f571fe-70d2-47c2-854c-9e4d09ea3eb1.png",
+      "alpha_prompt": "Remove the green background. Preserve the twelve creature sprites unchanged. Transparent background."
+    },
+    {
+      "source": "poses-right.png",
+      "source_sha256": "658fd9b9862885cf9084b2e7fb94b3eb7e2d3b32e1d07977a2a75a90c9a59da4",
+      "source_output": "exec-e07d3cf7-2dff-45ba-b1b7-e2bfa80768db.png",
+      "prompt": "Reflect this entire twelve-pose sprite sheet horizontally, left to right, so the creatures now face RIGHT instead of left. Mirror the whole image as one composition, reversing the column order in each row. Keep all original creatures, poses, colors, details and the flat green background unchanged. Do not invent or redraw poses; this is only a horizontal reflection.",
+      "input_source": "poses.png",
+      "alpha_source": "alpha/poses-right.png",
+      "alpha_sha256": "36351d832dcc6f874271327bc4183b2ade26fb4bf929f89fe5b42067d7d5674a",
+      "alpha_output": "exec-5f3cc33f-15ff-4dd2-9da3-dedd29bb0720.png",
+      "alpha_prompt": "Remove the green background. Preserve the twelve creature sprites unchanged. Transparent background."
+    }
+  ],
+  "review_notes": [
+    "Twelve original poses inspected. Heavy basalt/brass quadruped retains original identity, distinct jaw attack, planted defense and collapsed body.",
+    "Source is LEFT-facing despite right-facing request. Packing/runtime orientation must be resolved before registration. Actual alpha ranges 0..254; colored preview background is not proof of opaque pixels. No enabled or accepted count assigned.",
+    "Built-in whole-sheet horizontal reflection produced a right-facing version with columns reversed in each row. Original left source retained; use poses-right and restore semantic frame order during later packing. Source-only, not yet runtime registered.",
+    "Left-source alpha Godot light/dark capture visually inspected and seven checks passed; no opaque brown backdrop appears in actual rendering."
+  ]
+}

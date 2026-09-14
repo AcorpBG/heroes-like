@@ -4,7 +4,7 @@
   "date": "2026-09-14",
   "tool_mode": "built_in_image_gen",
   "model": "not_exposed_by_tool",
-  "review_status": "source_prepared_not_runtime_registered",
+  "review_status": "candidate_pending_playback_acceptance",
   "reference": "art/units/source/curated/unit_prism_adept.png",
   "reference_sha256": "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e",
   "outputs": [
@@ -27,7 +27,14 @@
       "reason": "RGB image with baked checkerboard, not real transparency."
     }
   ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_prism_adept.png",
+    "runtime_sha256": "b1bc5a0551eb27f1e2332a1b0abf4594873dcf0b92614820673c2e634b3bc5f3",
+    "method": "Uniform 0.72 downsampling with anatomical ground anchors and segmented regions preserving the extended crossbow, guard hood and trailing cloak. Generated RGBA preserved without repainting or standing-cutout transforms."
+  },
   "review_notes": [
+    "Packed guard hood corrected and light/dark Godot atlas render inspected. prism-packed-alpha-20260914 passes seven checks; prism-actions-20260914 passes 183 real battle checks including distinct ranged/melee and own corpse save/resume. Firing capture inspected at 1280x720. Candidate only, not full motion acceptance.",
     "Sixteen original poses visually inspected, including distinct crossbow aim/release, reload, defensive crouch and prone body. Walking alternation remains a final-review concern.",
     "Retry produced actual RGBA alpha 0..255. prism-source-alpha-20260914 passes seven checks and its light/dark Godot rendering was visually inspected with clean transparency. Source preparation only; crop and motion review required before registration."
   ]

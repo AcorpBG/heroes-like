@@ -1,0 +1,15 @@
+{
+  "unit_id": "unit_mirror_duelist",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "outputs": [
+    {
+      "source": "walk-camera-mismatch.png",
+      "sha256": "1841e301a149e09d5366a2665b12ece691651fec8d87fca1d43a23d43e56fd20",
+      "source_output": "exec-f3282426-1394-48d5-930c-6ca86e1575bb.png",
+      "prompt": "Use case: stylized-concept. Four-frame WALK CYCLE for the exact original armored Mirror Skirmisher in the reference. One horizontal row of FOUR complete isolated sprites. Same right-facing three-quarter camera, upright body, closed mask, long white ponytail, silver/gold armor and blue leggings, reflective buckler and double-ended staff held steadily diagonal across waist. This is walking in place with a stable pelvis and natural low steps, not lunging or leaping. Frame 1: the CAMERA-NEAR leg is straight forward to the RIGHT with heel on ground, CAMERA-FAR leg extends backward LEFT. Frame 2: near leg supports under pelvis, far foot passes it close to ground. Frame 3: camera-near thigh angles backward LEFT, its knee bends and boot trails clearly to the LEFT of pelvis; CAMERA-FAR leg is straight forward RIGHT with heel on ground. Frame 4: far leg supports under pelvis, near foot passes close to ground. Frame 3 must be a visibly opposite footfall to frame 1; never repeat the same leading leg. Keep shoulders and head steady, subtle counter-swing of hips, no knee raised above calf height. Full staff, hair and boots inside each frame with generous gutters. Detailed painterly raster matching the reference, not simplified or skeletal. Uniform pure green RGB(0,255,0) backdrop in all gaps, no checkerboard, cast shadows, text, lines or terrain.",
+      "status": "rejected_not_runtime_registered",
+      "reason": "Camera/front presentation differs from registered right-facing poses, and contact frames still repeat the same leading leg. Not a sound walk replacement."
+    }
+  ]
+}

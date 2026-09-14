@@ -2,7 +2,25 @@
 
 Owner goal, Phase 6: `combat-unit-animation-and-size-20260913`.
 
-Current state: ten original-art candidates enabled and consolidated platform validation passed, zero of 160 final animation acceptances. The size/footprint implementation remains validated. Built-in generation only; the earlier paid-CLI approval blocker was premature and is withdrawn. Earlier increment sections are historical, not current coverage claims.
+Current state: twelve original-art candidates enabled and consolidated validation passed, zero of 160 final animation acceptances. The size/footprint implementation remains validated. Built-in generation only; the earlier paid-CLI approval blocker was premature and is withdrawn. Earlier increment sections are historical, not current coverage claims.
+
+## Twelve-unit batch validation
+
+`twelve-pose-repository-20260914.log` reports VALIDATION PASSED. Both official `twelve-pose-linux-20260914` and `twelve-pose-windows-20260914` exports pass, including Windows generated-map entry and managed Wine cleanup. `twelve-pose-linux-actions-20260914` passes 1,826 assertions with 1920x1080 rendering; `twelve-pose-windows-actions-20260914` passes 1,814 headless reduced-motion assertions and exits zero. The five compiled combat owner hashes match across platforms. Wide Prism firing and Mirror corpse captures were visually inspected alongside source 1280x720 captures. The corpse stays beneath living units without its own readout; this does not claim continuous-motion acceptance.
+
+`twelve-pose-parity-20260914.json` passes: 525,716,688 bytes / 8,550 members each, only `project.binary` differs. Eight packing/provenance tests cover twelve reproducible recipes. No gameplay, footprint, save schema or simulation changes are part of this content increment. All 160 final animation acceptances remain outstanding.
+
+## Prism Harrier and Mirror Skirmisher candidates
+
+`unit_prism_adept` now uses sixteen original poses with separate crossbow aim/release/reload and melee bash, crouch/recoil, collapse and a persistent horizontal corpse. The packing recipe preserves the extended crossbow and restores the guard hood that the first crop clipped. `prism-actions-20260914` passes 183 actual action assertions, including the candidate's own corpse and save/resume. Its 1280x720 firing capture and `prism-packed-alpha-20260914` light/dark rendering were visually inspected; the latter passes seven checks.
+
+`unit_mirror_duelist` now has sixteen original staff, buckler, movement and death poses. Two RGB checkerboard attempts are rejected as transparent assets and retained with exact prompts/hashes. A built-in green-background edit followed by extraction produced real RGBA; the seven-check `mirror-source-alpha-20260914` Godot capture was visually inspected. Segmented packing keeps the long blocking staff out of the recoil frame and separates adjacent fallen bodies; low corpse anchors keep the body grounded. No local painted stand-in or paid API was used. Both units remain candidates: clearer alternating walking contacts and continuous playback review are still required. Consolidated current-content validation follows this two-unit batch.
+
+Mirror's packed-alpha probe passes seven checks and its actual Godot rendering was visually inspected. `mirror-actions-20260914` passes 124 battle checks; its 1280x720 staff attack was inspected. Eight packing/provenance tests cover all twelve recipes. A separate four-frame walk refinement is rejected for camera mismatch and repeated leading leg; exact prompt and image hash remain under `refinement-drafts/`.
+
+Cleanup removed six obsolete eight-unit export payloads (1,227,904,472 bytes), after checking no active process/file references and verifying all four ten-unit export/action reports pass. Eight-unit reports/captures and ten-/twelve-unit payloads remain. Original art, caches, Wine user data and pre-existing unrelated files were preserved.
+
+Deepforge Vaultwyrms source and RGBA extraction are prepared, not registered. A built-in whole-sheet reflection supplies a right-facing version with reversed columns; semantic frame order must be restored during packing. Both seven-check source-alpha captures pass. No extra enabled/accepted identity is claimed.
 
 ## Ten-unit batch validation
 
