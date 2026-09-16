@@ -1,0 +1,51 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_mossglass_sentinels",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_mossglass_sentinels.png",
+  "reference_sha256": "0170d88b2f5eef69d51419cbe1fcaabb147b6c27ceca9797a282428aada0c8ae",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "ab25ed754713074f6fde4935011d1687f11c8c1f91bd3f68692421a1c2897062",
+      "source_output": "exec-1ab40f8a-44c8-4597-8be6-0e22d4384acc.png",
+      "prompt": "Use case: stylized-concept. Original Mossglass Sentinel battle animation sheet based on attached identity reference: tall humanoid encased in emerald glass-and-tarnished-bronze plate armor, living moss, little branch crown, closed helmet with green eyes, long faded green tabard, large oval mossglass leaf-medallion shield in LEFT hand and short heavy glass-headed mace in RIGHT hand. Same identity/materials/body scale, elevated three-quarter tactical view facing RIGHT. Twelve full-body articulated poses FOUR columns THREE rows with generous clear gutters, every shield/mace/foot complete inside own cell. Row1: idle balanced stance shield resting; alert breathing shoulders lift shield slightly; heavy walk near leg forward right; opposite walk near leg BACK left visibly overlapping far forward thigh, shield and mace stay in same hands. Row2: passing step knee lifts under hip; attack windup right elbow raised mace behind helmet, shield protecting chest; full mace downward-forward strike toward RIGHT with waist twist and bent front knee; defense deep planted crouch left elbow tucked shield raised covering chest/head. Row3: hit recoil shoulders tilt back shield jolted; dying knees buckle mace slipping low; falling on SIDE torso low shield leaning beside body; final dead empty inert armor lying on SIDE head and torso horizontal, eyes dark, shield and mace resting beside, no standing cutout rotation. Real joint articulation, no duplicate standing sprites, no effects or projectiles. Original gritty painterly raster. Plain pale gray background no shadows, checkerboard, text, borders or scenery. All original legal art.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "09f6012abebe70f2b8ff51fb2d31bec83fd152f4140a4c3e25e6d2b2e9617b4d",
+      "alpha_output": "exec-87ff7576-53e9-4d48-8503-f9ee560269a5.png",
+      "alpha_prompt": "Use case: background-extraction. Remove pale gray background and all ground shadows from this twelve-pose original Mossglass Sentinel sheet. Genuine transparent RGBA. Preserve exact twelve poses and layout, all armor, moss, shield rims, mace tips and feet. Transparent gaps between limbs and equipment. No checkerboard, matte, blur, glow, text, new elements or changes to anatomy."
+    }
+  ],
+  "review_notes": [
+    "16 packed frames retain ten original RGBA paintings and add six planted-transfer, supported-lift, front-shield strike/recovery and deep-guard paintings. New strike replaces the original shield-on-back pose; one mace remains in the right hand and shield on the left.",
+    "Original alpha composites are clean. Pure blue backing for new paintings preserves the green glass armor during approved bounded chroma/edge preparation. Banded crops preserve boots and exclude the next-row branch crown from the passing pose.",
+    "Guide-led opposite contact remained planted rather than alternating and is recorded as transfer, not accepted opposite contact. Limb ownership/support, shield/grip and armor/body-scale continuity, edge finish and connected timing require full-roster review. Static production previews are not motion or gameplay acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve poses visually inspected: mace windup/strike, low shield brace, recoil and inert side corpse. Gait opposite contact and full continuous motion remain unaccepted. Extraction metadata RGBA 1536x1024 alpha 0..254; raw colored preview is not compositing evidence.",
+    "Source only, not packed or enabled. Automated tests/exports deferred until generation finishes per owner."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "new_or_corrected_selected_paintings": 6,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_mossglass_sentinels/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_mossglass_sentinels/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_mossglass_sentinels/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_mossglass_sentinels/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+    "runtime_sha256": "a82c18ebd7f99d2b5142aa7dd05f3cdfe121a53d19f1fe18c4879ce6adff5e3f",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_mossglass_sentinels/alpha/poses.png": "09f6012abebe70f2b8ff51fb2d31bec83fd152f4140a4c3e25e6d2b2e9617b4d",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_mossglass_sentinels/continuity-alpha/supported-stride-and-front-shield-actions.png": "403c2b3cf60910722d71e5f47652833d28e78ed4204d9c848788e313c4460188"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/mossglass-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

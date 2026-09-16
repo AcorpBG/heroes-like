@@ -1,0 +1,131 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_sunvault_prism_adepts",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "runtime_candidate_pending_consolidated_validation",
+  "reference": "art/units/source/curated/unit_sunvault_prism_adepts.png",
+  "reference_sha256": "71b5d4e1ee79e191e9032ffb3451e5ec398bbd37242bb325f96f96dfcb2c98b2",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/poses-draft.png",
+      "source_sha256": "e759fd5c1c08c349bd3af926341862ac3fd11c7051a4ddfb36ac78411e9db81e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a9d3b27a-c6a4-4889-9398-78ce4f9062aa.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle animation sprite sheet. Reference identity: brown-haired woman with bun and goggles above brow, ivory long coat blue lining gold trim, gray trousers gold boots, leather satchel with spare crystal lenses. Holds ONE shoulder-mounted brass prism projector: right hand rear trigger left hand under forward barrel, cylindrical gold body purple-blue circular front lens, triangular crystal prism above muzzle, small scope above rear. Generate sixteen articulated full-body poses in FOUR columns FOUR rows, constant body and weapon scale, fixed three-quarter side view facing screen RIGHT, generous gutters no overlapping equipment. Transparent RGBA background. Reading order: 1 relaxed idle projector held low in both hands; 2 inhaling idle projector lifted slightly; 3 walk right foot forward left back; 4 passing step feet near together right planted left knee raised; 5 opposite walk LEFT foot forward RIGHT back; 6 melee windup weapon retained in LEFT hand while RIGHT fist draws back; 7 melee right fist punches forward weapon retained LEFT; 8 ranged aim projector at shoulder right trigger hand left barrel support; 9 ranged recoil projector pitches slightly upward elbows flex; 10 recovery projector lowers; 11 defensive crouch projector across chest both hands; 12 hit torso recoils; 13 dying knees buckle; 14 collapse to side; 15 side-lying dead eyes closed projector beside hands satchel retained; 16 settled prone corpse eyes closed same complete equipment. Maintain exactly two hands, one complete projector with same lens/prism arrangement and attached satchel in EVERY pose. No projectile or muzzle effects, no scenery, shadows, labels, blood or extra objects. Original detailed painted game art; actual anatomical articulation not translated duplicates. True transparent empty background."
+    },
+    {
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/poses.png",
+      "source_sha256": "e5ea10cf00a537eeeeef4894dc0882e957e818ba7fe653c8178b7eba0b5e9104",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-37459eee-1c47-4689-9262-80cb106ee5af.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY ROW TWO COLUMN THREE, the punching Prism Adept. She must punch with her anatomical RIGHT arm, the NEAR arm bearing the visible near shoulder plate at screen left of her torso. Extend that near right arm across her chest toward screen right with right fist leading. Her FAR LEFT hand must cradle the prism projector underneath at waist level. Match the raised RIGHT fist windup immediately to its left in row two column two. Do not punch with the far arm. Keep every other pose, weapon, face, clothing, dimensions and positions identical. Preserve complete sheet and background; no additional edits.",
+      "alpha_source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "alpha_sha256": "48d54f81465aa6f07ebacbf47762c1cb25769b2e876c9b8000e415c4f3871619",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-73d74266-a738-4c15-bd29-d6b400382189.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only checkerboard from supplied sixteen-pose Prism Adept sheet into genuine transparent RGBA alpha. Preserve all sixteen painted figures, corrected near-right-arm punch, projector weapons, ivory coat interiors, blue lining, gold trim, all positions and scale. No replacement background, matte, colored halos, painted checkerboard, shadows or redraw. Transparent gaps around and between limbs/equipment, opaque character interiors."
+    }
+  ],
+  "review_notes": [
+    "Eighteen-frame atlas integrated as candidate33. Reuses clean original alpha for idle, near-arm melee, ranged aim/recoil/recovery, defense, hit and four-stage death/corpse.",
+    "Four new guide-driven contact/passing paintings alternate near/far leg support while preserving visible near-side satchel and right-trigger/left-support projector grip. A second defensive crouch adds breathing motion.",
+    "New masters are processed locally with pinned sources and exact neutral-matte/edge recipes, not generative extraction. Original alpha is not re-keyed. Crop/scale/ground anchors retain original paint and avoid bounding-box normalization.",
+    "All-state assembly remains a runtime candidate, not final motion or platform acceptance. Cross-sheet detail/proportion continuity, fine hair edges, connected event timing and facing remain for consolidated in-game review.",
+    "No tests/imports/exports, gameplay/save/footprint changes or paid API."
+  ],
+  "local_processing_review": {
+    "owner_approval": "2026-09-15 explicit local raster permission",
+    "recipe": "art/animation/source/cutout-recovery-20260915/recipes.json",
+    "status": "prefer_existing_generated_alpha",
+    "notes": "Actual green alpha composite of prior alpha/poses.png is clean; earlier raw-preview fringe diagnosis is not supported by actual compositing. Existing generated alpha is preferable to the local neutral-key derivative. Keep new derivative as rejected processing evidence; do not register it. Pose/equipment continuity still pending."
+  },
+  "prior_review_notes": [
+    "Sixteen source poses visually inspected; punch corrected to near right arm matching windup.",
+    "Ranged aim/recoil, defensive crouch, collapse and equipped corpses present. Not packed or enabled.",
+    "Walk contacts repeat leading leg; passing raised-knee pose requires refinement. Idle differentiation, projector size/prism shape and support/trigger grip continuity pending.",
+    "Broad extraction fringes visible in preview; alpha and in-context compositing acceptance pending. No claim of clean runtime art.",
+    "No tests/exports or disposable test intermediates created. 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "authoring_crops": {
+      "source": "alpha/poses.png",
+      "source_sha256": "48d54f81465aa6f07ebacbf47762c1cb25769b2e876c9b8000e415c4f3871619",
+      "outputs": {
+        "identity-reference.png": [
+          0,
+          0,
+          328,
+          334
+        ],
+        "defense-reference.png": [
+          669,
+          680,
+          986,
+          960
+        ]
+      }
+    },
+    "outputs": [
+      {
+        "source": "walk-contact-a.png",
+        "source_sha256": "10f16093ff3a5add3d53c73f686b7947832ce20a972a47ac91663f4881da867e",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-81d51ad2-e105-4fd6-9377-7d6f292be100.png",
+        "prompt": "Use case: sketch-to-render. Image1 is the AUTHORITATIVE leg-pose diagram, not final artwork. Image2 is the EXACT identity, equipment and painterly style reference. Render ONE full-body original Prism Adept in the pose of Image1 with the identity of Image2. CONTACT A: the NEAR/right leg (BLUE guide, attached at the visible satchel-side near hip) crosses IN FRONT of the far thigh and strides to SCREEN RIGHT, front heel down; the FAR/left leg (ORANGE guide) extends BACK to SCREEN LEFT, rear toe down. Match the crossing and depth ordering in Image1; this is NOT the reference idle stance. Keep torso/head facing RIGHT in the reference three-quarter camera, not a side switch. Brown-haired woman with bun, goggles above brow, ivory long split coat with blue lining and gold trim, gray trousers, gold boots and purple knee gems, brown satchel at visible near/right hip. ONE compact brass prism projector held level low across waist, anatomical RIGHT hand at rear grip/trigger and LEFT supporting underside near muzzle, one triangular purple prism above front and small rear scope, same complete assembly in all frames. Keep reference body proportions, relaxed shoulder posture, projector length and scale; only legs/coat follow walking action. Coat may part enough to show the two upper-thigh attachments; do not hide an incorrectly placed leg behind fabric. Exactly two legs, two arms and one weapon. No guide colors, diagram strokes, labels, ground line, text, shadow, scenery or glow effects. Full head/hair/boots/weapon visible with generous margins. Uniform neutral gray backdrop RGB(160,160,160), no checkerboard, for approved local non-generative alpha extraction. Original detailed painted raster, not geometry; preserve outfit colors and near-side satchel.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-0.png",
+          "art/animation/source/poses/unit_sunvault_prism_adepts/identity-reference.png"
+        ]
+      },
+      {
+        "source": "walk-passing-a.png",
+        "source_sha256": "e5fe1c3c06bb4dc95a1c9454b1839c524049885d5b48414df80d8df34198a1d5",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e12ca405-b7d5-4f46-9e36-32f4466453f9.png",
+        "prompt": "Use case: sketch-to-render. Image1 is the AUTHORITATIVE leg-pose diagram, not final artwork. Image2 is the EXACT identity, equipment and painterly style reference. Render ONE full-body original Prism Adept in the pose of Image1 with the identity of Image2. PASSING A: the NEAR/right leg (BLUE guide at satchel-side hip) is the straight planted SUPPORT leg under the pelvis; the FAR/left leg (ORANGE) is bent and lifted, knee passing forward, its foot clearly above the ground behind the supporting shin. Follow Image1 rather than a high marching knee. Keep torso/head facing RIGHT in the reference three-quarter camera, not a side switch. Brown-haired woman with bun, goggles above brow, ivory long split coat with blue lining and gold trim, gray trousers, gold boots and purple knee gems, brown satchel at visible near/right hip. ONE compact brass prism projector held level low across waist, anatomical RIGHT hand at rear grip/trigger and LEFT supporting underside near muzzle, one triangular purple prism above front and small rear scope, same complete assembly in all frames. Keep reference body proportions, relaxed shoulder posture, projector length and scale; only legs/coat follow walking action. Coat may part enough to show the two upper-thigh attachments; do not hide an incorrectly placed leg behind fabric. Exactly two legs, two arms and one weapon. No guide colors, diagram strokes, labels, ground line, text, shadow, scenery or glow effects. Full head/hair/boots/weapon visible with generous margins. Uniform neutral gray backdrop RGB(160,160,160), no checkerboard, for approved local non-generative alpha extraction. Original detailed painted raster, not geometry; preserve outfit colors and near-side satchel.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+          "art/animation/source/poses/unit_sunvault_prism_adepts/identity-reference.png"
+        ]
+      },
+      {
+        "source": "walk-contact-b.png",
+        "source_sha256": "5e4538b669c19ed267432f38a9e05517b7bd02e60f4252e323f3d7d2a7f0678e",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-60c913ac-6d48-4837-a613-c74f864b096e.png",
+        "prompt": "Use case: sketch-to-render. Image1 is the AUTHORITATIVE leg-pose diagram, not final artwork. Image2 is the EXACT identity, equipment and painterly style reference. Render ONE full-body original Prism Adept in the pose of Image1 with the identity of Image2. CONTACT B: the NEAR/right leg (BLUE guide at satchel-side hip) extends BACK to SCREEN LEFT; the FAR/left leg (ORANGE) strides FORWARD to SCREEN RIGHT with heel down. Match Image1, no body or costume mirroring. Keep torso/head facing RIGHT in the reference three-quarter camera, not a side switch. Brown-haired woman with bun, goggles above brow, ivory long split coat with blue lining and gold trim, gray trousers, gold boots and purple knee gems, brown satchel at visible near/right hip. ONE compact brass prism projector held level low across waist, anatomical RIGHT hand at rear grip/trigger and LEFT supporting underside near muzzle, one triangular purple prism above front and small rear scope, same complete assembly in all frames. Keep reference body proportions, relaxed shoulder posture, projector length and scale; only legs/coat follow walking action. Coat may part enough to show the two upper-thigh attachments; do not hide an incorrectly placed leg behind fabric. Exactly two legs, two arms and one weapon. No guide colors, diagram strokes, labels, ground line, text, shadow, scenery or glow effects. Full head/hair/boots/weapon visible with generous margins. Uniform neutral gray backdrop RGB(160,160,160), no checkerboard, for approved local non-generative alpha extraction. Original detailed painted raster, not geometry; preserve outfit colors and near-side satchel.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+          "art/animation/source/poses/unit_sunvault_prism_adepts/identity-reference.png"
+        ]
+      },
+      {
+        "source": "walk-passing-b.png",
+        "source_sha256": "28ca2eb217ba0fdc225f1c7603aadc79b6444659031fdcd80413dc5ddc2632f3",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4e67d7df-dcd7-45b4-82b9-3d070317a811.png",
+        "prompt": "Use case: sketch-to-render. Image1 is the AUTHORITATIVE leg-pose diagram, not final artwork. Image2 is the EXACT identity, equipment and painterly style reference. Render ONE full-body original Prism Adept in the pose of Image1 with the identity of Image2. PASSING B: the FAR/left leg (ORANGE guide) is the straight planted SUPPORT leg beneath the body; the NEAR/right leg (BLUE at satchel-side hip) is bent with the knee moving forward and the foot lifted clearly off ground, crossing in front of the far shin. Follow Image1 rather than a high marching knee. Keep torso/head facing RIGHT in the reference three-quarter camera, not a side switch. Brown-haired woman with bun, goggles above brow, ivory long split coat with blue lining and gold trim, gray trousers, gold boots and purple knee gems, brown satchel at visible near/right hip. ONE compact brass prism projector held level low across waist, anatomical RIGHT hand at rear grip/trigger and LEFT supporting underside near muzzle, one triangular purple prism above front and small rear scope, same complete assembly in all frames. Keep reference body proportions, relaxed shoulder posture, projector length and scale; only legs/coat follow walking action. Coat may part enough to show the two upper-thigh attachments; do not hide an incorrectly placed leg behind fabric. Exactly two legs, two arms and one weapon. No guide colors, diagram strokes, labels, ground line, text, shadow, scenery or glow effects. Full head/hair/boots/weapon visible with generous margins. Uniform neutral gray backdrop RGB(160,160,160), no checkerboard, for approved local non-generative alpha extraction. Original detailed painted raster, not geometry; preserve outfit colors and near-side satchel.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+          "art/animation/source/poses/unit_sunvault_prism_adepts/identity-reference.png"
+        ]
+      },
+      {
+        "source": "defend-breath.png",
+        "source_sha256": "801ea9d92b63635c310b87265caf6defc1ff3dde6c7e24580cf0ba94251be104",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-42810fc7-61c8-4d02-914f-0a44711d4e68.png",
+        "prompt": "Use case: identity-preserve. Image1 is the precise defensive-pose reference. Image2 is identity/equipment reference. Draw ONE full-body second frame of the SAME defensive crouch as Image1, to loop a gentle defensive breath. Preserve exact bent knee/boot stance, lowered hips, ivory split coat blue lining gold trim, satchel at near/right hip, brown bun and forehead goggles, purple knee gems and gold boots. Both hands retain the ONE brass prism projector across chest: right rear trigger, left supports forward underside. Same circular violet front lens, upper triangular crystal prism and small scope. Change only small articulation: chest inhales slightly, elbows flex a little to raise projector a few degrees, head lifts a fraction looking RIGHT. Remain in deep protective crouch, not upright or walking; do not swap knees or hands, equipment or facing. Same elevated three-quarter camera and original detailed painted style. Fully visible hair, coat, feet and entire weapon with generous margins. Uniform neutral gray RGB(160,160,160) backdrop for approved local extraction; no floor/shadow, checkerboard, extra body parts, text or effects.",
+        "references": [
+          "art/animation/source/poses/unit_sunvault_prism_adepts/defense-reference.png",
+          "art/animation/source/poses/unit_sunvault_prism_adepts/identity-reference.png"
+        ]
+      }
+    ],
+    "processing_recipe": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-cutouts.json",
+    "processing_proofs": "continuity-alpha/*.processing.json",
+    "packing_recipe": "packing.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_sunvault_prism_adepts.png",
+    "runtime_sha256": "4f9db27531f5a923146c72c6eb1d1abd247f0b59f7ee7fe2fbcb66198eabbbde",
+    "frame_count": 18,
+    "review_evidence": ".artifacts/battle-unit-animation-size-20260913/prism-adept-continuity-20260915/",
+    "status": "runtime_candidate_pending_consolidated_validation"
+  }
+}

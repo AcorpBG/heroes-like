@@ -1,0 +1,319 @@
+{
+  "unit_id": "unit_mireclaw_ferrychain_lashers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          340,
+          381
+        ]
+      ],
+      "anchor": [
+        194,
+        374
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "idle_1",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          365,
+          0,
+          656,
+          380
+        ]
+      ],
+      "anchor": [
+        518,
+        373
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "travel_carry",
+      "source": "continuity-alpha/travel-carry-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1184,
+          1328
+        ]
+      ],
+      "anchor": [
+        660,
+        1260
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "travel_step_left",
+      "source": "continuity-alpha/travel-step-left-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1184,
+          1328
+        ]
+      ],
+      "anchor": [
+        660,
+        1260
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "travel_step_right",
+      "source": "continuity-alpha/travel-step-right-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1184,
+          1328
+        ]
+      ],
+      "anchor": [
+        660,
+        1260
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "lash_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          382,
+          380,
+          660,
+          468
+        ],
+        [
+          290,
+          468,
+          660,
+          548
+        ],
+        [
+          388,
+          548,
+          667,
+          733
+        ]
+      ],
+      "anchor": [
+        523,
+        719
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "lash_contact_connected",
+      "source": "continuity-alpha/lash-connected-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1500,
+          1049
+        ]
+      ],
+      "anchor": [
+        440,
+        1015
+      ],
+      "scale": 0.2
+    },
+    {
+      "name": "defend",
+      "source": "continuity-alpha/guard-hook-hand-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1184,
+          1328
+        ]
+      ],
+      "anchor": [
+        670,
+        1250
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "hit",
+      "source": "continuity-alpha/hit-hook-hand-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1184,
+          1328
+        ]
+      ],
+      "anchor": [
+        670,
+        1250
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          388,
+          760,
+          680,
+          985
+        ],
+        [
+          388,
+          985,
+          706,
+          1078
+        ]
+      ],
+      "anchor": [
+        524,
+        1040
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "death_collapse",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          678,
+          807,
+          1051,
+          980
+        ],
+        [
+          706,
+          980,
+          1051,
+          1067
+        ]
+      ],
+      "anchor": [
+        861,
+        1023
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "dead",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1049,
+          863,
+          1448,
+          1052
+        ]
+      ],
+      "anchor": [
+        1258,
+        1026
+      ],
+      "scale": 0.58
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        2,
+        4
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        5,
+        6,
+        5,
+        2
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        7
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        8,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        9,
+        10,
+        11
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        11
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

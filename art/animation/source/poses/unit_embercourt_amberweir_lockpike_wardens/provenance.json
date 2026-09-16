@@ -1,0 +1,115 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_embercourt_amberweir_lockpike_wardens",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_embercourt_amberweir_lockpike_wardens.png",
+  "reference_sha256": "2972cd9867d42496dd71aab7cf126ec6bf63bf100f2263a1b35b87e6e719e308",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/poses.png",
+      "source_sha256": "d3e667987c5615b5b2158f9fbe62b5c5060dc0484f0e724565bd909601dd0624",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cd997bee-3a35-4652-988f-23611ef4cb96.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle animation sheet matching attached Amberweir Lockpike Warden reference. Twelve full body isolated poses in FOUR columns THREE rows. Same scale fixed three-quarter camera facing RIGHT roomy gutters. Actual transparent RGBA background no painted checkerboard no ground no labels. Human young woman short dark tousled hair rust orange scarf short cape dark quilted armor brass shoulder and knee plates black boots belt keys wax seals and small brass cylinder. Anatomical RIGHT hand holds very long black shaft pike with narrow forked two-pronged gold spearhead. LEFT forearm holds tall rectangular dark plank shield brass edges bands and central lock-shaped slot with red wax seal hanging ivory ribbon. Keep exactly one pike and shield same proportions, attached proper arms. Row1 relaxed idle pike upright; breathing idle shield and shoulders lift scarf shifts; walking LEFT foot forward right back; walking RIGHT foot forward left back visibly opposite anatomy no whole body mirror. Row2 passing step lifted bent knee; attack windup RIGHT arm draws pike back shaft angled horizontal LEFT shield protects chest; attack contact RIGHT arm thrusts full pike towards enemy right rear shaft remains visible behind grip LEFT shield retained; defense low brace shield raised right pike angled outward beside shield. Row3 hit recoil torso back both equipment retained; death knees buckle pike tilts shield supported; collapse sideways pike and shield lowering to ground; prone persistent corpse eyes closed pike and shield fully on ground alongside body. Genuine articulated elbows knees hips shoulders no shifted copies or extra limbs. Preserve fork head, full shaft, keyhole shield and seal ribbon. Painterly original game art matching reference readable at combat scale; contain FULL long pike in each cell use generous wide margins no cropping or adjacent pose overlaps."
+    }
+  ],
+  "review_notes": [
+    "Eleven packed candidate frames combine eight original poses, two matching original-art opposite-foot lifts and a closed-eyed equipped corpse.",
+    "New movement pair retains the same full-length fork pike and rectangular keyhole shield. Original passing pose shortened the pike; it and repeated contacts are excluded. Planted idle transitions separate the new lifted-foot states; actual translated gait remains pending.",
+    "Targeted dead-pose edit closes visible eyes, preserves prone body and grounded shield/full pike, and excludes the neighbouring detached fork fragment from the source crop.",
+    "Connected neutral preparation removes real opaque checkerboard with explicit inspected seeds in pike/arm/leg/shield gaps. New green preparation preserves original paint and exact hashes. Row-band packing isolates long horizontal weapons without neighbouring guard boots or spear tips.",
+    "Candidate atlas and offline art desk visually inspected as production evidence only. Face/gear/shaft-scale continuity, partly occluded shield support, fine hair/cloth/metal edges, seated-to-prone transition and actual move/attack/death timing remain for full-roster refinement and consolidated acceptance.",
+    "No tests/imports/exports, paid API or gameplay/save/footprint edits. Full160 production and Linux/Windows acceptance remain open."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses include horizontal pike thrust, low shield brace and equipped corpse.",
+    "Walking contacts repeat lead; need opposite contact and continuous passing. Idle subtle.",
+    "Pike grip travel/shaft length and fork proportions vary. Wind-up and contact exceed nominal cell boundaries requiring explicit individual crops.",
+    "Shield support obscured in attack and defense; preserve left forearm straps. Shield scale/keyhole/seal and belt keys change.",
+    "Seated collapse remains propped before prone. Final eyes appear open or insufficiently closed; correct corpse expression.",
+    "Checker background visible; transparency/compositing unresolved. Source-only not packed or enabled; no tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "reference_crops": [
+      {
+        "file": "standing-reference-light.png",
+        "sha256": "72cce8dbe1c6fae379f71ad69ee90c9b0f174f612df3547d207d277786f20805",
+        "source": "poses.png",
+        "source_sha256": "d3e667987c5615b5b2158f9fbe62b5c5060dc0484f0e724565bd909601dd0624",
+        "rect": [
+          66,
+          0,
+          272,
+          409
+        ],
+        "method": "Prepared crop and nearest light composite, before final enclosed-gap seeds. Exact PNG retained; prompt excludes tiny neighboring pike tip."
+      },
+      {
+        "file": "dead-reference-light.png",
+        "sha256": "db7a4b9121436b87574808b96739842587248eccedb92a1744237b150329a62f",
+        "source": "poses.png",
+        "source_sha256": "d3e667987c5615b5b2158f9fbe62b5c5060dc0484f0e724565bd909601dd0624",
+        "rect": [
+          1053,
+          922,
+          1423,
+          1062
+        ],
+        "method": "Prepared corpse crop and nearest light composite; includes tiny neighboring fork fragment explicitly excluded by edit."
+      }
+    ],
+    "sources": [
+      {
+        "file": "walk-pike-side-lift-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7ec7a6ff-f9e7-4da2-8655-40a8ecbc1ba2.png",
+        "prompt": "Use case: precise-object-edit. ONE original Amberweir Lockpike Warden walking passing pose matching this exact standing reference. Young woman short dark tousled hair, orange scarf/short cape, dark quilted armor brass shoulder/knee plates, black boots, belt keys/wax seals/brass cylinder. Keep RIGHT hand on full long black pike at screen LEFT, narrow two-prong gold fork head and pointed butt intact. LEFT forearm remains behind rectangular dark plank shield at screen RIGHT, brass bands/keyhole slot/red wax seal/ivory ribbon unchanged. Change legs: SHIELD-SIDE boot at screen RIGHT plants under pelvis, STANDARD/PIKE-SIDE leg at screen LEFT bends and lifts its boot behind the supporting shin, clear air gap under sole. A restrained walking passing step, not a high kick; shield stays close to torso and pike carried a few inches above ground. Both hands/arms and gear stay same screen sides, no mirror, no short spear, exactly two legs. Same elevated three-quarter RIGHT-facing camera and original painterly raster, figure proportions and entire pike preserved. Entire body, shield and BOTH pike tips in broad empty margins. Flat vivid GREEN #00ff00 through all empty gaps, neutral light no green spill on brass. No floor/shadow/text/effects/extra objects; ignore the tiny detached neighboring tip at bottom-left of reference.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/standing-reference-light.png"
+        ],
+        "sha256": "926735c2ba00959004082f017f675b55058fb58885b8f58bcc209e29c1b20136",
+        "selected": true,
+        "selection": "Pike-side foot lifted, shield-side foot planted; use with matching new shield-side lift and original planted poses."
+      },
+      {
+        "file": "dead-closed-eyes-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3cff183d-7611-4914-9024-9b32783f08cb.png",
+        "prompt": "Use case: precise-object-edit. Edit this original Amberweir Lockpike Warden final corpse cutout. Close the woman's visible eyes fully, with relaxed lids and limp expression, no visible iris or stare. Preserve EXACT prone body pose, short dark hair, orange scarf/cape, armor, all limbs, grounded rectangular keyhole shield with wax seal/ribbon, and COMPLETE long fork-headed pike lying in front. No gore or added wounds. This is a persistent dead sprite, not a newly posed character. Remove only the tiny detached neighboring spear-tip fragment at bottom LEFT; keep the full owned pike from rear shaft to gold fork at bottom RIGHT. Keep same camera/proportions and full gear inside generous margins. Replace empty backing and enclosed gaps with flat vivid GREEN #00ff00, no green spill/reflections on art. Original painterly raster, no floor/shadow/text/effects/extra objects.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/dead-reference-light.png"
+        ],
+        "sha256": "8af66900f09b44933b47a563e35fe48ff3d2d5322b2f4dc499c4b15975575044",
+        "selected": true,
+        "selection": "Visible eyes closed; full grounded shield/pike retained; neighboring detached spear tip removed."
+      },
+      {
+        "file": "walk-shield-side-lift-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1300f80d-963f-4b81-83ee-0f1095ac97a7.png",
+        "prompt": "Use case: precise-object-edit. Opposite-foot walking passing pose of this exact Amberweir Lockpike Warden. Keep face, upper body, BOTH arms/hands, full-length fork pike, rectangular keyhole shield and all gear absolutely unchanged, same camera/framing/size. Change ONLY legs and cloth over knees: lower the currently raised PIKE-SIDE boot at screen LEFT into a planted weight-bearing leg under its hip, sole near x380,y1660. Raise the currently planted SHIELD-SIDE boot at screen RIGHT: bend knee modestly forward and lift foot near x560,y1450, clear green gap below boot; its knee may be partly behind shield but lower shin and boot visible below. Exactly two legs from same hips, one left planted foot and one right lifted foot. No torso mirror, no hand or equipment swap. Keep the complete long pike from both gold prongs to pointed butt at same length; shield scale/slot/seal/ribbon unchanged. Natural short passing step not high kick. Original painterly raster, flat GREEN #00ff00 in all empty gaps, neutral light no green spill; no ground/shadow/text/effects or additional objects.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/walk-pike-side-lift-green.png"
+        ],
+        "sha256": "713c7ea4c30951d2578b7b56c79eb9df8b525ead3ee5e0d39ac860fa669ee6b5",
+        "selected": true,
+        "selection": "Opposite supporting foot with same full-length pike; replaces the shorter-pike original passing pose."
+      }
+    ],
+    "generation": "continuity-generation.json",
+    "reused_source": {
+      "source": "poses.png",
+      "sha256": "d3e667987c5615b5b2158f9fbe62b5c5060dc0484f0e724565bd909601dd0624",
+      "selection": "Eight original poses: idle pair, pike windup/contact, guard, hit, kneel and collapse. Exclude repeated walking contacts, shorter-pike passing and open-eyed corpse."
+    },
+    "preparation": "continuity-cutouts.json: connected neutral matte and explicit enclosed-gap seeds for original checkerboard; green color-distance preparation for three selected new paintings. Exact source/tool/recipe/output hashes retained.",
+    "packing": "packing.json",
+    "packed_frames": 11,
+    "runtime_candidate": "art/animation/runtime/poses/unit_embercourt_amberweir_lockpike_wardens.png",
+    "runtime_sha256": "32449f9089fd7cdb83fe5a0113aca4300e8761878e481b9f2b26b5c69b132285",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/lockpike-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted"
+  }
+}

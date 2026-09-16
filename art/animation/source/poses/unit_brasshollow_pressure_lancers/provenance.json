@@ -1,0 +1,96 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_pressure_lancers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_pending_refinement_and_packing",
+  "reference": "art/units/source/curated/unit_brasshollow_pressure_lancers.png",
+  "reference_sha256": "c15103c653201bae2045e407b06dedd2bc78ec681ecac7ed89af70189c5db4b8",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/poses.png",
+      "source_sha256": "4219b268057d2017016b64b7175338909f8fb0b23f2a9630be3a0c9e3d9c395b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d6481b51-8942-4426-92f1-d1974d3d7a82.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle animation sprite sheet. Reference defines ONE Pressure Lancer: brass/black riveted steam automaton on THREE jointed mechanical legs with broad conical hoof feet, cylindrical vertical boiler body with pressure gauge and orange furnace slots, tall smokestack with red pennant, side reservoir, copper flexible hoses, ONE long horizontal piston lance mounted centrally with triangular steel spear tip. No arms, riders or shield. Preserve exact tripod identity, three legs and lance. Create TWELVE fully articulated poses FOUR columns THREE rows with generous wide gutters to contain complete lance and feet. Fixed elevated three-quarter camera facing screen-right constant body/lance size. Genuine transparent RGBA background no painted checkerboard, scenery/floor/grid/text. Row1 idle planted tripod; idle pressure rises body lifts slightly hoses flex steam puffs; step near leg forward far leg back rear leg supports; next step far leg forward near leg back rear leg advances, true three-leg gait articulation. Row2 passing lifted leg folds beneath boiler; attack anticipation tripod braces piston lance retracts into sleeve; attack piston lance extends straight forward screen-right while three feet brace, no extra spear or changed tip; defense crouches tripod low lance angled upward. Row3 hit recoil boiler tips back hoses flex legs bend; dying front legs buckle lance dips furnace dims; side collapse boiler rolls legs fold lance points along ground; dead inert machine lying on side THREE folded legs retained lance and hoses intact furnace dark no steam pennant limp. Actual mechanical joints change, not rotated standing cutouts. Constant spear tip shape and boiler scale, no missing feet or extra limbs. Original art only no copyrighted franchise assets.",
+      "alpha_source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/alpha/poses.png",
+      "alpha_sha256": "e2b70e98fbdda5931ed94ad20f4c47a68338b77b4c59278c4df916c9bd56168f",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-53bede63-0983-44d2-9301-a1211904a127.png",
+      "alpha_prompt": "Use case: background-extraction. Remove ONLY checkerboard from supplied twelve-pose Pressure Lancer sheet to actual transparent RGBA. Preserve all twelve machines, three legs, lance, hoses, pennant, steam, colors, scale, locations and canvas exactly. Keep final wreck dark without steam. No repainting, no replacement backdrop, no painted checkerboard, no colored matte."
+    }
+  ],
+  "review_notes": "14-frame candidate: eight original paintings plus six new paintings from one built-in output. Exactly three leg chains remain, with near-front/rear/far-middle foot lifts separated by planted support. Two low guard poses keep lance attached. Original retracted/extended piston strike and cold folded corpse retained; prior RGB checker-backed alpha attempt remains unselected. Inspected seeds remove enclosed shaft/leg backing; crop bands exclude neighboring feet and lance fragments. Full-roster support/travel, boiler/lance/hose scale, steam/guard/death transitions and timing remain unaccepted.",
+  "prior_review_notes": [
+    "Twelve source poses include retracted/extended lance and folded wreck.",
+    "Tripod contacts repeat leg positions; passing folded leg attachment unclear. Refine actual three-leg gait and support sequence.",
+    "Lance telescoping sleeve/length, spear tip scale, hose endpoints and boiler/gauge/pennant continuity require refinement.",
+    "Defense lance pivot must remain mechanically attached; death leg count/attachments and inactive furnace need close review.",
+    "Extraction displays checker pattern, changes detail and smoke. Transparency/compositing not accepted; extended lance needs explicit crop margin.",
+    "Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "status": "candidate_pending_playback_acceptance",
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 8,
+    "quiet_vent_derivative_paintings": 0,
+    "new_selected_paintings": 6,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_brasshollow_pressure_lancers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_brasshollow_pressure_lancers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_pressure_lancers.png",
+    "runtime_sha256": "6fd069f6e09e469bc4c58a2756dae49fbbee6db223ea0c2042592bc9f5029a9a",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png": "06e5b243f7cf18da634c531512c91384f04721d671a15d2f3bcbc68f69f7f8cd",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png": "011ee1a674cb0173d7765fff56ea4aa7748c80533274c6433d63ec3b4e240371"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/pressure-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Static source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "date": "2026-09-16",
+      "policy": "Only task-owned byte-identical preview duplicates; exact SHA-256 rechecked and fuser found no open handles. All original/rejected paintings, unique evidence, processing proofs and caches retained.",
+      "removed_files": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/pressure-continuity-20260916/identity/unit_brasshollow_pressure_lancers-original-poses-rect-15-0-384-360-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_pressure_lancers/identity-reference.png",
+          "sha256": "b53961d26aaf9bb81390e753d18306d9a8ba51db8c4889f28ee96bf0e9ec297b",
+          "bytes": 754581
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/pressure-continuity-20260916/third/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/pressure-continuity-20260916/first/original-poses-green.png",
+          "sha256": "aa7fc39f368f41743f9d3b9130517bdfe4c26e9a06e6d78cc919365e167815f9",
+          "bytes": 1131948
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/pressure-continuity-20260916/third/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/pressure-continuity-20260916/first/original-poses-light.png",
+          "sha256": "fce745244299d8d215d36f0480f162affa759b05f83a59147a1b95b1c4ee36af",
+          "bytes": 1148909
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/pressure-continuity-20260916/original/unit_brasshollow_pressure_lancers-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/pressure-continuity-20260916/original/unit_brasshollow_pressure_lancers-poses-green.png",
+          "sha256": "e4f8c1959e08df670decdc581238f31ece816c3fffcee362876896cc359af4c7",
+          "bytes": 3191123
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/pressure-continuity-20260916/third/tripod-creep-and-guard-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/pressure-continuity-20260916/fifth/tripod-creep-and-guard-light.png",
+          "sha256": "ea48682d136c68bae7b981227a4e6c09c9375d6b66f321e25ab25a9847d6b638",
+          "bytes": 1223452
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/pressure-continuity-20260916/third/tripod-creep-and-guard-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/pressure-continuity-20260916/fifth/tripod-creep-and-guard-green.png",
+          "sha256": "fef86940b051e87439ae43856e3b2daed08b2ece93f617c7c14539843d9fd3d8",
+          "bytes": 1210779
+        }
+      ],
+      "removed_bytes": 8660792
+    }
+  }
+}

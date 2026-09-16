@@ -1,0 +1,759 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_thornwake_canopy_rammers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_thornwake_canopy_rammers.png",
+  "reference_sha256": "a072a8af177c4f41dcae2b28a775f018a9793a22c4a6e51dbd670bf7ebc4c8ae",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/poses.png",
+      "source_sha256": "7a17d2eaa3833fa3ba2b8c7cbbb687ba1bb320f0da0a25e7fa5d2b25a0698cc5",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-af6ce77e-f436-42b4-a226-b7e98e9f3886.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle animation sheet. Reference defines ONE Canopy Rammer: huge biped tree creature with TWO massive wooden fists, TWO thick root legs with broad rooted feet, twisted bark/vine body, moss/leaf shoulder canopy, pale lichen rosettes, amber seams in chest/shoulders. Head is a dense knotted brow with huge upward-forward branching wooden ram horns, green moss hanging from horns. No carried equipment, no human rider. Preserve exactly this anatomy, horn arrangement and original painterly style. Create TWELVE full-body articulated poses FOUR columns THREE rows with wide generous gutters containing complete horns and feet. Constant body scale fixed elevated three-quarter view facing screen-right. Genuine transparent RGBA background no painted checkerboard, scenery/floor/grid/text. Row1: idle settled fists at sides; idle chest expands shoulders lift leaves tremble; walk right root foot forward left behind; opposite walk LEFT root foot forward RIGHT behind, visibly exchange leg lead. Row2: passing rear root foot lifted beneath hips; attack wind-up head/horns drawn back torso coils knees bend fists brace; attack head/horns drive forward screen-right at enemy chest height torso folds hips stay grounded, two fists retained alongside; defense cross massive forearms before chest lower horned head. Row3: hit recoil torso arches back head turns slightly fists spread; dying kneels amber seams fading crown lowered; side collapse hips knees and elbows bend horns settle sideways; dead inert side-lying wooden body with TWO limp arms TWO folded root legs, all horns and moss retained, amber seams completely dark, no magical effects. Actual joint/torso articulation not translated or rotated standing cutouts. No additional limbs, no extra branches replacing hands, no broken/missing horns. Original art only no copyrighted franchise assets."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-84b23ac6-a2f0-4c4a-8836-675209307a28.png",
+      "prompt": "Use case: background-extraction. Remove ONLY checkerboard from this twelve-pose Canopy Rammer sheet to genuine transparent RGBA. Preserve all twelve tree creatures, complete horns, fists, feet, moss/lichen, colors, placement, scale and canvas exactly. No repainting, no replacement backdrop, no painted checkerboard, no colored matte.",
+      "reason": "Colored brown/green backdrop instead of transparency; not selected."
+    }
+  ],
+  "review_notes": [
+    "14 candidate frames: seven retained original paintings from indices0,1,2,7,9,10,11 plus seven new selected paintings among nine built-in outputs. Originals, both unselected new precursors and exact references are preserved.",
+    "Source walking labels did not establish near/far ownership. First new opposite-contact also repeated lead; the new near passing is useful but does not fill the far passing gap. Diagram-first B contact and A passing explicitly fix near/far limb paths. Slender guided far-passing precursor is excluded; a subsequent built-in body-mass correction retains the far lift while restoring a broad torso, thick fists and flexed support leg. No local mirroring or warping.",
+    "New windup/forward horn-ram/recoil preserve the four-horn head, with occlusion through turns; crossed-arm defense gains a settling frame. Original kneel, side fall and dark inert corpse retain two arms and two root legs. Exact horn/body/foot proportions and continuous motion remain unaccepted.",
+    "Source and new masters are opaque RGB, not alpha. Owner-approved connected neutral preparation minimum175, tolerance16 (warm windup/guard24), edge2 plus explicitly inspected horn/leaf/arm gap seeds. Pale lichen and amber material are not blanket-keyed. Unselected source cells are not claimed background-clean.",
+    "Explicit uniform per-source scales and ground anchors assemble a512x256 four-column atlas. Actual-alpha atlas and registered offline art-desk capture visually inspected after guided passing body-mass correction; this is production review, not proof of timing or translated gait.",
+    "Whole160 refinement still covers changing moss/lichen/crack patterns, horn occlusion and topology, body/fist/foot proportions, near/far support/travel continuity, subtle idle/guard motion, fine edges and actual attack/death event timing. No automated tests/imports/exports, paid API or gameplay/save/footprint changes."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses include horn strike, crossed-arm defense and collapsed body.",
+    "Walking contacts repeat lead; torso orientation changes. Idle subtle and passing must bridge opposite contacts.",
+    "Horn branching/count and shape vary especially wind-up/recoil; preserve exact reference horns through articulation.",
+    "Root/fist size, moss and lichen continuity require refinement. Horn strike requires more neck/hip anticipation and contact distinction.",
+    "Death transition resembles progressively lowered crouch; confirm two arms/two legs and fully inactive amber seams in corpse.",
+    "Transparency/compositing unresolved. Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "reference_crops": [
+      {
+        "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+        "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9",
+        "source": "continuity-alpha/original.png",
+        "source_sha256": "41645c5ff11553ce1cd60280d95ddedaa9fe8f71f33f09da923896d940db1395",
+        "rect": [
+          40,
+          0,
+          380,
+          343
+        ],
+        "method": "Approved prepared original cropped/enlarged nearest4 on light; no pose invention."
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/guard-reference-light.png",
+        "sha256": "9eb7d9df8ad479527e68d25bcb45b77cc07033f41cb820b2d1151e92f7440648",
+        "source": "continuity-alpha/original.png",
+        "source_sha256": "41645c5ff11553ce1cd60280d95ddedaa9fe8f71f33f09da923896d940db1395",
+        "rect": [
+          1190,
+          344,
+          1510,
+          686
+        ],
+        "method": "Prepared crossed-arm guard cropped/enlarged nearest4 on light."
+      }
+    ],
+    "guides": {
+      "tool": "tools/battle_pose_guide.py",
+      "files": [
+        "guides/biped-walk-phase-2.svg",
+        "guides/biped-walk-phase-2.png",
+        "guides/biped-walk-phase-1.svg",
+        "guides/biped-walk-phase-1.png"
+      ],
+      "purpose": "Authoring only. Diagram-first references disambiguate near/far paths; no guide pixels are runtime assets."
+    },
+    "sources": [
+      {
+        "source": "opposite-contact.png",
+        "sha256": "d0cf547ab31e16da0419ccf13ccbb7ba6a8d48d01707d6970d14185555e5d925",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-26b76097-3052-425d-9a94-4233f61b0eaa.png",
+        "selected": false,
+        "selected_source_indices": [],
+        "prompt": "Edit the supplied original game creature reference into ONE new animation pose, not a sheet. Maintain the EXACT same Thornwake Canopy Rammer: hulking moss-covered bark humanoid, exactly TWO thick wooden legs with root feet and TWO arms with huge closed wooden fists, amber cracks, pale lichen patches, leafy shoulder canopy. Head anatomy locked: TWO long pointed horns projecting forward/up toward screen RIGHT, plus TWO upright rear branch antlers with the same small offshoots/leaves. Preserve horn identity/count/shape and original hand-painted strategy-game cutout appearance, body proportions and three-quarter facing RIGHT camera. Do not redesign, mirror, make rear view, add weapons/limbs, floor/scene, effects, labels or interface. Complete figure, every root toe and horn tip uncut, leave 6 percent clear margin. Transparent background; if transparency is unavailable use a uniform light neutral gray, no shadow or checkerboard. POSE: the opposite grounded walking contact. The NEAR leg (large foreground leg originally on the LEFT side of the standing reference, connected to the large foreground thigh) has stepped BACK toward screen LEFT and bears weight on the rear root foot. The FAR leg has stepped FORWARD toward screen RIGHT, its smaller foot clearly in FRONT of the hips. Both soles on ground. Show the far shin passing behind the near thigh but extending forward-right; do NOT repeat near foot forward. Torso stays right-facing and upright, fists gently counter-swing. This is a readable one-step walking contact, not running, attacking, rotating, or floating.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+            "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+          }
+        ],
+        "review": "Unselected first opposite-contact attempt repeats near-leg lead when traced from the hips; replaced with explicit diagram-first opposite contact."
+      },
+      {
+        "source": "opposite-passing.png",
+        "sha256": "87def324d798fc25415074a35117c1457e4dc297d5ee6d0d31c84b333f7dd913",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7c274748-bf95-4a43-b83e-597da5b6f671.png",
+        "selected": true,
+        "selected_source_indices": [
+          0
+        ],
+        "prompt": "Edit the supplied original game creature reference into ONE new animation pose, not a sheet. Maintain the EXACT same Thornwake Canopy Rammer: hulking moss-covered bark humanoid, exactly TWO thick wooden legs with root feet and TWO arms with huge closed wooden fists, amber cracks, pale lichen patches, leafy shoulder canopy. Head anatomy locked: TWO long pointed horns projecting forward/up toward screen RIGHT, plus TWO upright rear branch antlers with the same small offshoots/leaves. Preserve horn identity/count/shape and original hand-painted strategy-game cutout appearance, body proportions and three-quarter facing RIGHT camera. Do not redesign, mirror, make rear view, add weapons/limbs, floor/scene, effects, labels or interface. Complete figure, every root toe and horn tip uncut, leave 6 percent clear margin. Transparent background; if transparency is unavailable use a uniform light neutral gray, no shadow or checkerboard. POSE: the NEAR-leg lifted walking passing pose. The large FOREGROUND thigh on the left side of the standing reference is now lifted: near knee bends UP under the belly toward screen RIGHT, near root foot hangs CLEARLY OFF THE GROUND, visible in front of the far shin. The FAR leg remains straight and planted under the torso, supporting the full weight. Exactly one lifted root foot and one planted root foot; keep the lifted knee and foot visibly connected to the large near hip and don't lift the back leg instead. Torso upright facing right, closed fists gently counter-swing. No charge, no weapon action.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+            "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+          }
+        ],
+        "review": "Selected NEAR-foot-lift passing pose; despite filename it is not the missing far-foot passing. Foreground thigh flexes and far leg bears weight."
+      },
+      {
+        "source": "ram-windup.png",
+        "sha256": "8adbf3b90d41a1c390599e76d2e00f0236da3d06bcf25ca8b209867f7e3e3dec",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-71f459c7-65e2-470b-9923-8e40e8f83690.png",
+        "selected": true,
+        "selected_source_indices": [
+          0
+        ],
+        "prompt": "Edit the supplied original game creature reference into ONE new animation pose, not a sheet. Maintain the EXACT same Thornwake Canopy Rammer: hulking moss-covered bark humanoid, exactly TWO thick wooden legs with root feet and TWO arms with huge closed wooden fists, amber cracks, pale lichen patches, leafy shoulder canopy. Head anatomy locked: TWO long pointed horns projecting forward/up toward screen RIGHT, plus TWO upright rear branch antlers with the same small offshoots/leaves. Preserve horn identity/count/shape and original hand-painted strategy-game cutout appearance, body proportions and three-quarter facing RIGHT camera. Do not redesign, mirror, make rear view, add weapons/limbs, floor/scene, effects, labels or interface. Complete figure, every root toe and horn tip uncut, leave 6 percent clear margin. Transparent background; if transparency is unavailable use a uniform light neutral gray, no shadow or checkerboard. POSE: anticipation for a head-first horn ram toward screen RIGHT. BOTH root feet remain firmly planted in a broad support stance, knees flexed. Lean the upper trunk and head BACK to screen LEFT, draw the fists back close beside the ribcage, chin tucked and both long front horns still pointing forward-right. Preserve the four original horns exactly (two long front tusk-horns, two smaller upright rear antlers). Clear gathering of weight through hips and bent knees, not a strike yet. Do not turn the body away.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+            "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+          }
+        ],
+        "review": "Flexed-knee anticipation with fists gathered and original four-horn head; actual timing/readability unaccepted."
+      },
+      {
+        "source": "ram-contact.png",
+        "sha256": "ce8e3e66578cddc87a5f62ab7774bcda63297dd6aceb18493077a7f64572830e",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-33b8c267-3b9a-4e84-a6c2-b4f3ac36b9b8.png",
+        "selected": true,
+        "selected_source_indices": [
+          0
+        ],
+        "prompt": "Create ONE original battle sprite animation pose by editing the supplied Canopy Rammer reference. Exact same hand-painted mossy bark monster, same warm wood/amber seams/pale lichen, 2 arms ending in oversized fists, 2 thick root legs, leafy shoulder canopy. Keep the original four-horn head identity: two long forward-curved pointed horns aimed toward screen RIGHT, two shorter upright rear branch antlers. Exact same right-facing three-quarter camera and bodily proportions. No redesign or mirrors, no additional creature, weapon, effects, ground, text or panels. Whole figure including every horn and root toe with ample uncropped margin on every side. Transparent background or flat neutral light gray if transparency unavailable; no checker. POSE: powerful HEAD-FIRST RAM CONTACT toward screen RIGHT. Clear silhouette change: hips low, knees bent, trunk leaning diagonally FORWARD-right by about 35 degrees, head lowered, both front horns projecting mostly HORIZONTALLY RIGHT ready to hit an unseen enemy. The rear antlers rotate with the SAME head, not replaced by new horns. Both root feet stay planted, left/rear leg pushes, right/front knee receives weight. Fists tucked near ribs, don't turn this into a punch. Show effort through body articulation, no speed streaks, no impact graphics, no enemy. Give the extended horns enough room on the right.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+            "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+          }
+        ],
+        "review": "Forward/downward body and head ram toward screen-right with both long horns retained and feet planted."
+      },
+      {
+        "source": "hit-recoil.png",
+        "sha256": "569d2b09a5a3fb6c347dfec04caea2deec334982b8c0da1c3bc513a4c86766d0",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f5a80f1d-38bd-49a1-bd09-b8dbcd81dffb.png",
+        "selected": true,
+        "selected_source_indices": [
+          0
+        ],
+        "prompt": "Create ONE original battle sprite animation pose by editing the supplied Canopy Rammer reference. Exact same hand-painted mossy bark monster, same warm wood/amber seams/pale lichen, 2 arms ending in oversized fists, 2 thick root legs, leafy shoulder canopy. Keep the original four-horn head identity: two long forward-curved pointed horns aimed toward screen RIGHT, two shorter upright rear branch antlers. Exact same right-facing three-quarter camera and bodily proportions. No redesign or mirrors, no additional creature, weapon, effects, ground, text or panels. Whole figure including every horn and root toe with ample uncropped margin on every side. Transparent background or flat neutral light gray if transparency unavailable; no checker. POSE: reacting to a hit from the RIGHT. Both feet planted but knees buckling; upper chest and head recoil distinctly BACK toward screen LEFT, fists move apart with elbows flexed, shoulders recoiling. Keep the creature facing RIGHT, four horns rotate backward with its head, no rotation toward camera or rear. No blood, wound graphics or magic effect. Full two feet and two hands.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+            "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+          }
+        ],
+        "review": "Backward recoil with intact limbs; overlapping horns are occluded rather than dropped."
+      },
+      {
+        "source": "guard-breath.png",
+        "sha256": "5c80fc4c440731bb819b46c2ecc00fe27ccae5a11390f3a00a847bfa97866080",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ae1c4f76-5ad7-4d78-9183-b8a5e5e3ffc6.png",
+        "selected": true,
+        "selected_source_indices": [
+          0
+        ],
+        "prompt": "Create ONE original battle sprite animation pose by editing the supplied Canopy Rammer reference. Exact same hand-painted mossy bark monster, same warm wood/amber seams/pale lichen, 2 arms ending in oversized fists, 2 thick root legs, leafy shoulder canopy. Keep the original four-horn head identity: two long forward-curved pointed horns aimed toward screen RIGHT, two shorter upright rear branch antlers. Exact same right-facing three-quarter camera and bodily proportions. No redesign or mirrors, no additional creature, weapon, effects, ground, text or panels. Whole figure including every horn and root toe with ample uncropped margin on every side. Transparent background or flat neutral light gray if transparency unavailable; no checker. POSE: the next subtle breathing frame in the supplied crossed-arm defensive guard. Keep BOTH fists/forearms crossed in exactly the same guarding relationship in front of the chest, both wide-spaced feet planted, same head angle and head-horn occlusion. A small shoulder settling and slightly shifted hanging leaves, not a different stance, no extra hands. Preserve the large guarded body's silhouette and scale.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/guard-reference-light.png",
+            "sha256": "9eb7d9df8ad479527e68d25bcb45b77cc07033f41cb820b2d1151e92f7440648"
+          }
+        ],
+        "review": "Adjacent original crossed-arm guard settling, not a new defensive stance."
+      },
+      {
+        "source": "guided-opposite-contact.png",
+        "sha256": "07aa14ea59bac6dbd15dea79d1a501791f61d3f0db063bd573c2e0cdf4044238",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f2c994ae-a6dc-4bc4-a033-9bdadb8262eb.png",
+        "selected": true,
+        "selected_source_indices": [
+          0
+        ],
+        "prompt": "Use IMAGE ONE as the PRIMARY POSE GUIDE, replacing the simple figure with the original painted forest monster in IMAGE TWO. Image TWO supplies ONLY appearance and fixed RIGHT-facing three-quarter camera, NOT its standing leg arrangement. Final is one full-body Canopy Rammer sprite: massive mossy bark body, exactly two thick wooden root legs, two enormous closed-fist arms, pale lichen, amber cracks, leafy shoulder canopy, same four-horn head (two long forward upward horns and two upright rear antlers). Full uncut horns and toes with margin. Original hand-painted game cutout, NOT a diagram. NO BLUE/ORANGE COLOR IN FINAL, no lines, labels, guide, floor, shadow, effects or background scene. Put figure on clean uniform white if genuine transparent alpha unavailable. Keep upper body same reference identity, fists low, looking RIGHT, NOT mirrored. The large foreground/near leg has the broad lichen-covered thigh from reference's LEFT HIP; its entire chain must follow BLUE in guide. The other leg from rear/right hip follows ORANGE and is behind near limb in overlap. POSE EXACTLY guide B contact: BLUE/NEAR hip to knee slopes down LEFT and its big root foot is grounded far LEFT BEHIND hips; ORANGE/FAR leg extends diagonally down RIGHT, its foot grounded far RIGHT IN FRONT of hips. Both feet planted, clearly separated. The foreground thigh must slope down-left, not travel across the belly to the right foot. Do not reverse the leg ownership or change the torso view.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/guides/biped-walk-phase-2.png",
+            "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+          },
+          {
+            "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+            "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+          }
+        ],
+        "review": "Diagram-first B contact puts the near foreground leg backward/left and far foot forward/right without mirroring the body."
+      },
+      {
+        "source": "guided-far-passing.png",
+        "sha256": "8b6416f1e2529b5a57cc0464627ae586f828663697917e03e637b1633e9da81c",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4c4ff34c-3a18-43bc-9b6d-36ff12f213c1.png",
+        "selected": false,
+        "selected_source_indices": [],
+        "prompt": "Use IMAGE ONE as the PRIMARY POSE GUIDE, replacing the simple figure with the original painted forest monster in IMAGE TWO. Image TWO supplies ONLY appearance and fixed RIGHT-facing three-quarter camera, NOT its standing leg arrangement. Final is one full-body Canopy Rammer sprite: massive mossy bark body, exactly two thick wooden root legs, two enormous closed-fist arms, pale lichen, amber cracks, leafy shoulder canopy, same four-horn head (two long forward upward horns and two upright rear antlers). Full uncut horns and toes with margin. Original hand-painted game cutout, NOT a diagram. NO BLUE/ORANGE COLOR IN FINAL, no lines, labels, guide, floor, shadow, effects or background scene. Put figure on clean uniform white if genuine transparent alpha unavailable. Keep upper body same reference identity, fists low, looking RIGHT, NOT mirrored. The large foreground/near leg has the broad lichen-covered thigh from reference's LEFT HIP; its entire chain must follow BLUE in guide. The other leg from rear/right hip follows ORANGE and is behind near limb in overlap. POSE EXACTLY guide A passing: BLUE/NEAR foreground leg stays straight and weight-bearing, big root foot GROUNDED below hips. ORANGE/FAR leg behind bends at the knee UP toward RIGHT, smaller root foot curled BACK above the ground behind the foreground shin. Its foot and knee are clearly lifted while the large foreground leg stays planted. Exactly one small far foot raised; do not raise the large foreground thigh/foot.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/guides/biped-walk-phase-1.png",
+            "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+          },
+          {
+            "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+            "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+          }
+        ],
+        "review": "Unselected slender guided far-passing precursor: correct limb ownership but too narrow/stretched beside atlas neighbors. Retained as input to body-mass correction."
+      },
+      {
+        "source": "far-passing-stout.png",
+        "sha256": "9cf8982052552c1c4e8bf5307e8a69f2ce370e3f482148312b0318ff7a0fd6a3",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b28c3ed4-ca53-4d59-a8c1-699bdb2bd66b.png",
+        "selected": true,
+        "selected_source_indices": [
+          0
+        ],
+        "prompt": "Refine the body proportions of IMAGE ONE, the original Canopy Rammer FAR-FOOT-LIFT animation pose. IMAGE TWO is the SAME creature's authoritative stout body reference. Preserve IMAGE ONE's correct leg ownership: large FOREGROUND leg is the ONLY planted support, smaller FAR leg bent and lifted behind it, far foot visible off-ground to screen LEFT of the support shin. Do NOT swap which foot is raised, add a third leg, rotate or mirror the body. Correct the overly slender upright stretched figure: restore IMAGE TWO's broad bulky shoulder canopy, thick barrel chest, oversized heavy fists, very thick short wooden thighs and squat root shins. Flex the planted foreground knee modestly to carry weight at the same hip height as the reference; it remains grounded. The lifted far foot remains clear of the ground. Keep the full original four-horn head (two long curved forward horns plus two rear antlers), bark/lichen/amber crack details, RIGHT-facing three-quarter camera and original hand-painted fantasy game appearance. This is a hulking stump-like biped, not a slim tall humanoid. Keep the torso's original mass and head size while changing only the weight-bearing leg pose. Full-body ONE sprite, all horns and toes uncut with generous margins, clean uniform WHITE background, no checker, no ground, shadow, guide marks, labels, weapon, scenery or effects.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/guided-far-passing.png",
+            "sha256": "8b6416f1e2529b5a57cc0464627ae586f828663697917e03e637b1633e9da81c"
+          },
+          {
+            "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+            "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+          }
+        ],
+        "review": "Selected body-mass refinement restores broad torso, thick fists and squat flexed support leg while keeping far foot lifted. Original pose and identity supplied together; no local warp."
+      }
+    ],
+    "retained_original_source": "poses.png",
+    "retained_original_source_sha256": "7a17d2eaa3833fa3ba2b8c7cbbb687ba1bb320f0da0a25e7fa5d2b25a0698cc5",
+    "retained_original_source_indices": [
+      0,
+      1,
+      2,
+      7,
+      9,
+      10,
+      11
+    ],
+    "retained_original_frames": 7,
+    "new_selected_frames": 7,
+    "total_candidate_frames": 14,
+    "preparation_recipe": "continuity-cutouts.json",
+    "packing_recipe": "packing.json",
+    "packing_result": "packing-result.json",
+    "runtime_path": "art/animation/runtime/poses/unit_thornwake_canopy_rammers.png",
+    "runtime_sha256": "69722f2ae7207b9dca93552935a143909635b358890989072fb5b3af3c648821",
+    "evidence": {
+      "initial_preparation": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-initial",
+      "prepared_alpha": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final",
+      "initial_atlas": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/packed-initial/poses-candidate-atlas-green.png",
+      "final_atlas": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/packed-final/poses-candidate-atlas-green.png",
+      "art_desk": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/art-desk-registered.html",
+      "art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/art-desk-registered.png"
+    },
+    "status": "candidate_registered_not_final_accepted",
+    "cleanup": {
+      "removed_duplicate_previews": 68,
+      "bytes": 98461167,
+      "retained": "All unique before/final previews, generated and original masters, rejected precursors, input references and guides, processing proofs, caches and unrelated files. Byte-identical retained copies named below remain; no live task process or open handle on deletion targets.",
+      "targets": [
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-gaps/canopy-original-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-original-green.png",
+          "sha256": "74167b9b1fc70e833058eefb6345acb7f56fee3f3b069fbb7f5082fb1bbc5db8",
+          "identical": true,
+          "bytes": 1708973
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-gaps/canopy-original-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-original-light.png",
+          "sha256": "96c4ee2950c40719d3423607c5aa94a3745e4f69d190238f23b4238d663ea916",
+          "identical": true,
+          "bytes": 1729563
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/guard-clean/unit_thornwake_canopy_rammers-original-rect-1190-344-1510-686-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_canopy_rammers/guard-reference-light.png",
+          "sha256": "9eb7d9df8ad479527e68d25bcb45b77cc07033f41cb820b2d1151e92f7440648",
+          "identical": true,
+          "bytes": 199646
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-guard-breath-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-guard-breath-green.png",
+          "sha256": "36dfbd5c6f0cd9f9472537944c39938f71d842c723a60e8556e905a801acb8c8",
+          "identical": true,
+          "bytes": 1203377
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-guard-breath-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-guard-breath-light.png",
+          "sha256": "a8740c061ab88916f4413bd6abff8210c349770158a129c23be8342dab458aa4",
+          "identical": true,
+          "bytes": 1231662
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-guided-far-passing-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-guided-far-passing-green.png",
+          "sha256": "0683a1b18e096d4cad330ff411227eceeb8677a0cddaf68618cc58dc14315718",
+          "identical": true,
+          "bytes": 1159292
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-guided-far-passing-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-guided-far-passing-light.png",
+          "sha256": "bef9711970ab8504092a1057758235f2e13fc04ef961407c6121ce733c083c50",
+          "identical": true,
+          "bytes": 1180285
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-guided-opposite-contact-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-guided-opposite-contact-green.png",
+          "sha256": "cd5de3eeb1c4425e8442341f5ecf700e2932874c16d6c521b8915904c9f0721f",
+          "identical": true,
+          "bytes": 1580980
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-guided-opposite-contact-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-guided-opposite-contact-light.png",
+          "sha256": "a04ba7c677f3ba8c2aabb904f2408fab8548ce4c0fa671b52014e5b07490cd55",
+          "identical": true,
+          "bytes": 1607676
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-hit-recoil-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-hit-recoil-green.png",
+          "sha256": "fd0c79ec4cd5d740b86b6b0809c99724781941aa5b17ac28499657c4ba24ea84",
+          "identical": true,
+          "bytes": 1441053
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-hit-recoil-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-hit-recoil-light.png",
+          "sha256": "39e7b60a9959f67e8fce40406f7fdcdcc5a452dc409f88e2339ec2e857a18326",
+          "identical": true,
+          "bytes": 1473299
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-opposite-contact-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-contact-green.png",
+          "sha256": "27027a03e418c8bc72d138ecf9da2c6b8bee636333496d0bece5bccf4ffb8f70",
+          "identical": true,
+          "bytes": 1598667
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-opposite-contact-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-contact-light.png",
+          "sha256": "cae147c6452f463c6af53342352f378e9d5a6ff4bb745195f5adb638a70e751a",
+          "identical": true,
+          "bytes": 1629644
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-opposite-passing-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-passing-green.png",
+          "sha256": "3e2b7a4603c63e198b1206c038f5ac9e3e044fe543540675defa202b059522d5",
+          "identical": true,
+          "bytes": 1406110
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-opposite-passing-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-passing-light.png",
+          "sha256": "c0acfcd488d58ce3033b2be6ab9504dc091d220d52987e418a9ae2ffa8a1ea1c",
+          "identical": true,
+          "bytes": 1438016
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-original-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-original-green.png",
+          "sha256": "74167b9b1fc70e833058eefb6345acb7f56fee3f3b069fbb7f5082fb1bbc5db8",
+          "identical": true,
+          "bytes": 1708973
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-original-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-original-light.png",
+          "sha256": "96c4ee2950c40719d3423607c5aa94a3745e4f69d190238f23b4238d663ea916",
+          "identical": true,
+          "bytes": 1729563
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-ram-contact-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-ram-contact-green.png",
+          "sha256": "b898c560881d4d849a03a0d634f9ba2dd437a557e23be547bff9cecbe852fefc",
+          "identical": true,
+          "bytes": 1264038
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-ram-contact-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-ram-contact-light.png",
+          "sha256": "b69dc69e595930c94a3ae9226cf7446af8b5a90141a52b872890296856fa70f0",
+          "identical": true,
+          "bytes": 1286515
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-ram-windup-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-ram-windup-green.png",
+          "sha256": "2f3d49646314afb0fa997f3ad18dc69a3191190d6fe051ddef82e21cf4c6c518",
+          "identical": true,
+          "bytes": 1565197
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final-gaps/canopy-ram-windup-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-ram-windup-light.png",
+          "sha256": "888827548a8140b5125dfc201ab0ac925d5209b50d2c35c0d0d8dd8fc0c68f82",
+          "identical": true,
+          "bytes": 1599896
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-opposite-contact-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-contact-green.png",
+          "sha256": "27027a03e418c8bc72d138ecf9da2c6b8bee636333496d0bece5bccf4ffb8f70",
+          "identical": true,
+          "bytes": 1598667
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-opposite-contact-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-contact-light.png",
+          "sha256": "cae147c6452f463c6af53342352f378e9d5a6ff4bb745195f5adb638a70e751a",
+          "identical": true,
+          "bytes": 1629644
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-original-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-original-green.png",
+          "sha256": "74167b9b1fc70e833058eefb6345acb7f56fee3f3b069fbb7f5082fb1bbc5db8",
+          "identical": true,
+          "bytes": 1708973
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-original-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-original-light.png",
+          "sha256": "96c4ee2950c40719d3423607c5aa94a3745e4f69d190238f23b4238d663ea916",
+          "identical": true,
+          "bytes": 1729563
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-six/canopy-hit-recoil-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-hit-recoil-green.png",
+          "sha256": "310320000e0734f19119158316b89fb6a154a6869b75e3c9f0f1ba9239ea728a",
+          "identical": true,
+          "bytes": 1446717
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-six/canopy-hit-recoil-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-hit-recoil-light.png",
+          "sha256": "d95ee7a03b94951bed2bff21067253e32c10e0317fc2a5c17ccce2b962735f33",
+          "identical": true,
+          "bytes": 1476788
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-six/canopy-opposite-contact-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-contact-green.png",
+          "sha256": "27027a03e418c8bc72d138ecf9da2c6b8bee636333496d0bece5bccf4ffb8f70",
+          "identical": true,
+          "bytes": 1598667
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-six/canopy-opposite-contact-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-contact-light.png",
+          "sha256": "cae147c6452f463c6af53342352f378e9d5a6ff4bb745195f5adb638a70e751a",
+          "identical": true,
+          "bytes": 1629644
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-six/canopy-opposite-passing-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-opposite-passing-green.png",
+          "sha256": "8f3538a91f476878a00f68e86575a79213b7189215234ba75cd733b4c0cbcc39",
+          "identical": true,
+          "bytes": 1413840
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-six/canopy-opposite-passing-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-opposite-passing-light.png",
+          "sha256": "11ddc1f2ab7c920defb3ff8097e32bec8b4570ffa1d82ada581fe245cd6080ff",
+          "identical": true,
+          "bytes": 1444410
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-six/canopy-original-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-original-green.png",
+          "sha256": "74167b9b1fc70e833058eefb6345acb7f56fee3f3b069fbb7f5082fb1bbc5db8",
+          "identical": true,
+          "bytes": 1708973
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-six/canopy-original-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-original-light.png",
+          "sha256": "96c4ee2950c40719d3423607c5aa94a3745e4f69d190238f23b4238d663ea916",
+          "identical": true,
+          "bytes": 1729563
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-six/canopy-ram-contact-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-ram-contact-green.png",
+          "sha256": "643421eec0298020173f197f1a59e77d7b6b0837667b2bae6da9a0ed7524e0e5",
+          "identical": true,
+          "bytes": 1280865
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-six/canopy-ram-contact-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-ram-contact-light.png",
+          "sha256": "d8649b8fd59b2f2a80b0d38fd0ade91ca55772ef0f9c4468fedbdc71353337f6",
+          "identical": true,
+          "bytes": 1299145
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-guard-breath-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-guard-breath-green.png",
+          "sha256": "36dfbd5c6f0cd9f9472537944c39938f71d842c723a60e8556e905a801acb8c8",
+          "identical": true,
+          "bytes": 1203377
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-guard-breath-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-guard-breath-light.png",
+          "sha256": "a8740c061ab88916f4413bd6abff8210c349770158a129c23be8342dab458aa4",
+          "identical": true,
+          "bytes": 1231662
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-guided-far-passing-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-guided-far-passing-green.png",
+          "sha256": "0683a1b18e096d4cad330ff411227eceeb8677a0cddaf68618cc58dc14315718",
+          "identical": true,
+          "bytes": 1159292
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-guided-far-passing-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-guided-far-passing-light.png",
+          "sha256": "bef9711970ab8504092a1057758235f2e13fc04ef961407c6121ce733c083c50",
+          "identical": true,
+          "bytes": 1180285
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-guided-opposite-contact-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-guided-opposite-contact-green.png",
+          "sha256": "cd5de3eeb1c4425e8442341f5ecf700e2932874c16d6c521b8915904c9f0721f",
+          "identical": true,
+          "bytes": 1580980
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-guided-opposite-contact-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-guided-opposite-contact-light.png",
+          "sha256": "a04ba7c677f3ba8c2aabb904f2408fab8548ce4c0fa671b52014e5b07490cd55",
+          "identical": true,
+          "bytes": 1607676
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-hit-recoil-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-hit-recoil-green.png",
+          "sha256": "fd0c79ec4cd5d740b86b6b0809c99724781941aa5b17ac28499657c4ba24ea84",
+          "identical": true,
+          "bytes": 1441053
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-hit-recoil-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-hit-recoil-light.png",
+          "sha256": "39e7b60a9959f67e8fce40406f7fdcdcc5a452dc409f88e2339ec2e857a18326",
+          "identical": true,
+          "bytes": 1473299
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-opposite-contact-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-contact-green.png",
+          "sha256": "27027a03e418c8bc72d138ecf9da2c6b8bee636333496d0bece5bccf4ffb8f70",
+          "identical": true,
+          "bytes": 1598667
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-opposite-contact-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-contact-light.png",
+          "sha256": "cae147c6452f463c6af53342352f378e9d5a6ff4bb745195f5adb638a70e751a",
+          "identical": true,
+          "bytes": 1629644
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-opposite-passing-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-passing-green.png",
+          "sha256": "3e2b7a4603c63e198b1206c038f5ac9e3e044fe543540675defa202b059522d5",
+          "identical": true,
+          "bytes": 1406110
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-opposite-passing-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-passing-light.png",
+          "sha256": "c0acfcd488d58ce3033b2be6ab9504dc091d220d52987e418a9ae2ffa8a1ea1c",
+          "identical": true,
+          "bytes": 1438016
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-original-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-original-green.png",
+          "sha256": "74167b9b1fc70e833058eefb6345acb7f56fee3f3b069fbb7f5082fb1bbc5db8",
+          "identical": true,
+          "bytes": 1708973
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-original-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-original-light.png",
+          "sha256": "96c4ee2950c40719d3423607c5aa94a3745e4f69d190238f23b4238d663ea916",
+          "identical": true,
+          "bytes": 1729563
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-ram-contact-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-ram-contact-green.png",
+          "sha256": "b898c560881d4d849a03a0d634f9ba2dd437a557e23be547bff9cecbe852fefc",
+          "identical": true,
+          "bytes": 1264038
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-ram-contact-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-ram-contact-light.png",
+          "sha256": "b69dc69e595930c94a3ae9226cf7446af8b5a90141a52b872890296856fa70f0",
+          "identical": true,
+          "bytes": 1286515
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-ram-windup-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-ram-windup-green.png",
+          "sha256": "2f3d49646314afb0fa997f3ad18dc69a3191190d6fe051ddef82e21cf4c6c518",
+          "identical": true,
+          "bytes": 1565197
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-stout/canopy-ram-windup-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-ram-windup-light.png",
+          "sha256": "888827548a8140b5125dfc201ab0ac925d5209b50d2c35c0d0d8dd8fc0c68f82",
+          "identical": true,
+          "bytes": 1599896
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-guard-breath-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-guard-breath-green.png",
+          "sha256": "1f5b0ad4bab80f91b4ac10aac50def17439b29f95c83837d2be6993477e7c230",
+          "identical": true,
+          "bytes": 1213100
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-guard-breath-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-guard-breath-light.png",
+          "sha256": "539e58cb2ba902249d311edc488704ca0bdf20fa7790765b5f6a89a5f8f6a5c9",
+          "identical": true,
+          "bytes": 1238754
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-hit-recoil-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-hit-recoil-green.png",
+          "sha256": "310320000e0734f19119158316b89fb6a154a6869b75e3c9f0f1ba9239ea728a",
+          "identical": true,
+          "bytes": 1446717
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-hit-recoil-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-hit-recoil-light.png",
+          "sha256": "d95ee7a03b94951bed2bff21067253e32c10e0317fc2a5c17ccce2b962735f33",
+          "identical": true,
+          "bytes": 1476788
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-opposite-contact-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-contact-green.png",
+          "sha256": "27027a03e418c8bc72d138ecf9da2c6b8bee636333496d0bece5bccf4ffb8f70",
+          "identical": true,
+          "bytes": 1598667
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-opposite-contact-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-opposite-contact-light.png",
+          "sha256": "cae147c6452f463c6af53342352f378e9d5a6ff4bb745195f5adb638a70e751a",
+          "identical": true,
+          "bytes": 1629644
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-opposite-passing-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-opposite-passing-green.png",
+          "sha256": "8f3538a91f476878a00f68e86575a79213b7189215234ba75cd733b4c0cbcc39",
+          "identical": true,
+          "bytes": 1413840
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-opposite-passing-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-opposite-passing-light.png",
+          "sha256": "11ddc1f2ab7c920defb3ff8097e32bec8b4570ffa1d82ada581fe245cd6080ff",
+          "identical": true,
+          "bytes": 1444410
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-original-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-original-green.png",
+          "sha256": "74167b9b1fc70e833058eefb6345acb7f56fee3f3b069fbb7f5082fb1bbc5db8",
+          "identical": true,
+          "bytes": 1708973
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-original-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-final/canopy-original-light.png",
+          "sha256": "96c4ee2950c40719d3423607c5aa94a3745e4f69d190238f23b4238d663ea916",
+          "identical": true,
+          "bytes": 1729563
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-ram-contact-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-ram-contact-green.png",
+          "sha256": "643421eec0298020173f197f1a59e77d7b6b0837667b2bae6da9a0ed7524e0e5",
+          "identical": true,
+          "bytes": 1280865
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-ram-contact-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-ram-contact-light.png",
+          "sha256": "d8649b8fd59b2f2a80b0d38fd0ade91ca55772ef0f9c4468fedbdc71353337f6",
+          "identical": true,
+          "bytes": 1299145
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-ram-windup-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-ram-windup-green.png",
+          "sha256": "bdfbb5f832fb6f4a296eacc2bb6f032094f64a0f7a8a94d3c8a706bc64aca1f6",
+          "identical": true,
+          "bytes": 1579896
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-warm-matte/canopy-ram-windup-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/prepared-guided/canopy-ram-windup-light.png",
+          "sha256": "dffc176a19eafd6f61b4513ff7be743bb2fbd31dc58c203148f288f2864000ec",
+          "identical": true,
+          "bytes": 1610264
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/canopy-continuity-20260915/standing-clean/unit_thornwake_canopy_rammers-original-rect-40-0-380-343-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+          "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9",
+          "identical": true,
+          "bytes": 248414
+        }
+      ]
+    }
+  }
+}

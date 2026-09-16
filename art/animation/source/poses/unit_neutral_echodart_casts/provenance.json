@@ -1,0 +1,49 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_echodart_casts",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
+  "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "127c8ecda6d2f3b0f38d3a73c438c5cddd6079db60a4e1d9151d8b9226fc6a17",
+      "source_output": "exec-b6e46b58-9567-4154-8c02-718c56310c54.png",
+      "prompt": "Use case: stylized-concept. Original Echodart Cast battle animation sheet matching reference identity: agile human woman dark high ponytail blue crystal ear ornament, fitted charcoal leather armor bronze edging, gray scarf long split cape, dark strapped boots and asymmetrical knee plates, waist quiver of short cyan-tipped darts and crystal pendants. Compact wood/brass crossbow with cyan dart, RIGHT hand trigger grip LEFT hand fore-end. SIXTEEN full-body articulated poses FOUR columns FOUR rows, identical body size elevated three-quarter camera facing RIGHT. Row1 idle crossbow lowered; alert breath shoulders/cape; running extended stride crossbow carried low both hands; running gathered stride knees underneath body. Row2 opposite leg running contact without mirroring upper body; melee anticipation pull crossbow close both hands at chest; two-hand crossbow shove toward RIGHT stock and limbs retain shape; crouched defense crossbow held close above knees. Row3 reload LEFT hand fits cyan dart into rail while RIGHT holds stock; aim shoulder crossbow level RIGHT; firing slight recoil and trigger pull EMPTY rail no airborne dart/effects; hit recoil. Row4 knees buckle; tipping sideways torso low both hands lower crossbow; side landing body curved crossbow on ground beside; final dead relaxed horizontal SIDE eyes closed cape draped flat, intact single crossbow beside arms and dart quiver at belt. Actual joint articulation distinct poses, preserve one weapon/string continuity all frames no bow changing into gun no swords no detached hands. Generous gutters fit full cape/weapon no overlapping cells, original painterly raster plain pale gray background no shadow/text/grid/blood/effects/scenery.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "bf20112d5937ece875adb86c0e2df0ec917eaba4f810208a9af128bcd6f85aae",
+      "alpha_output": "exec-dc82eedd-4096-4308-a5d0-eefadd5ef0da.png",
+      "alpha_prompt": "Use case: background-extraction. Make a true transparent RGBA cutout of all sixteen Echodart Cast poses. Keep every pose and exact layout/scale, complete crossbow/string/dart detail, fine hair, gray scarf/cape, limb gaps and corpse. Remove pale gray background and ground shadows, empty space alpha zero. No colored matte, checkerboard, haze, new effects, redraw or reframing."
+    }
+  ],
+  "review_notes": [
+    "Sixteen poses and extraction visually inspected: reload/aim/empty-rail release, two-hand crossbow shove, crouched defense and collapse to equipped side corpse. Opposite running contact repeats; grip/weapon/string continuity and full-motion review remain pending. Extraction changes some cape shapes and reaches canvas edge on left running pose; compare/crop margins before packing. Final alpha compositing unaccepted. Source-only not enabled, no tests or exports run.",
+    "17 frames retain fourteen original paintings and select three new loaded-crossbow shove recovery, empty-rail ranged recovery and head-left resting corpse paintings. Separate reload/aim/release/empty recovery remains distinct from melee. New corpse continues the original head-left fall; the old head-right corpse is unselected.",
+    "The new bottom-left travel attempt remains unselected: it did not achieve a planted passing step and changes knee-plate ownership. Original extension/gather candidates are retained explicitly unaccepted, not described as a corrected walking cycle. Original duplicate contact near the source edge is also unselected.",
+    "Clean original alpha is reused; new green backing uses approved bounded preparation. Uniform old/new standing scales 0.63/0.40, with enlarged new corpse normalized at 0.29 by head/body comparison rather than silhouette fitting. Inspected crop bands exclude neighboring dart tips, cape, hair and boots without repainting.",
+    "Grounded alternating gait, consistent knee/arm/weapon ownership, cape/body/gear/palette/edge continuity and event timing remain refinement. Static production review is not motion/gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 14,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_echodart_casts/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_echodart_casts/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_echodart_casts/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_echodart_casts/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_echodart_casts.png",
+    "runtime_sha256": "3e3fa4d024e3f620aacc22805201f851982c4c8b76fcebf4f9145cdc5fd3fc67",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png": "bf20112d5937ece875adb86c0e2df0ec917eaba4f810208a9af128bcd6f85aae",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_echodart_casts/continuity-alpha/crossbow-recoveries-grounded-step-and-directional-rest.png": "1a622a8b97a995b9a3f5e4a5889f48a1c120cc1e0e71dd20e1753f3099ec5402"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/echodart-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

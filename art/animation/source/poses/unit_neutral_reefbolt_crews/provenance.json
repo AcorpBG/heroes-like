@@ -1,0 +1,134 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_reefbolt_crews",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_reefbolt_crews.png",
+  "reference_sha256": "5b5a3914013dd48a07b661b8541be781fc0f56f1b8dc57cf1a2fa88df580b8f3",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/carry-opposite-lowered-draft.png",
+      "source_sha256": "67b295cb8cd312dccd03fe772c0639bbcf17d0cad180f613e29c833e5f52b956",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5ca63e80-b22c-4f18-bf45-f93bf66376b3.png",
+      "prompt": "Precise edit only tall man's high raised leg at image right. Lower that thigh from near horizontal to a natural walking angle pointing mostly DOWN, knee only slightly forward of hip and well BELOW brass tripod hub. Keep knee visibly bent about 35 degrees, full normal thigh/shin length, raised boot sole only slightly above his planted boot sole, not hip-high marching. Leg stays behind right tripod leg, boot visible beneath/right of wooden foot. Do not move planted leg, woman, hands, hats, weapon, basket or any of three tripod legs. Exactly four human legs. Same original painterly sprite camera proportions gray background no effects/text.",
+      "review": "Operator knee/boot lowered relative to exaggerated draft, all legs and tripod retained. Still relatively high forward step and boot partly occluded by wooden foot; not accepted normal gait. Scale/contacts/ribbon/alpha matching pending, source-only not enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/carry-opposite-knee-draft.png",
+      "source_sha256": "8b1e0e5972816f3d4a4f091299eff17811245a0ed36cc0356d2d74b5c6508a91",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e8383873-7573-42f2-be1f-e293a7f06c0f.png",
+      "prompt": "Precise edit ONLY tall man's far raised leg (rightmost HUMAN boot, just left of right tripod foot). Give it natural full-length thigh and shin with a clearly BENT KNEE pushed forward-right, boot swinging below knee, toe slightly down. Knee and trouser fold should show to RIGHT of hanging green ribbon and behind right wooden tripod leg; boot visible below/right of tripod foot with gap from ground. His other leg remains planted. Do not simply shorten straight leg. Keep both woman's legs, all hands, upper bodies, three wooden tripod legs, weapon, basket, camera and scale unchanged. Exactly four human legs total. Plain gray source background unchanged, no text/effects.",
+      "review": "Operator far leg now full-length with visible bent knee, four human legs and three tripod feet retained. Knee lift exaggerated near hip level, unsuitable for ordinary gait without lowering; ribbon shortened. Correction source only, no accepted gait, alpha/assembly pending."
+    },
+    {
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/carry-opposite-passing-draft.png",
+      "source_sha256": "ace17444846c0ad5c48ca1b9eb87790a0eaf65ae3f3f8eb248d5022dcace0d8f",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-78fbfb8b-2b50-4c82-afd4-442748746a61.png",
+      "prompt": "Precise edit: tall man's missing second human leg must be visible. Keep his existing near-center straight supporting trouser leg and boot unchanged. Add his far leg from right hip, knee bent forward-right, brown boot lifted clear of ground just RIGHT of his supporting boot and BELOW right wooden tripod foot, with visible trouser connection behind tripod. Exactly two human legs for man. Woman's two legs unchanged. All three WOODEN tripod legs unchanged, no confusion between boot and wood. Keep upper bodies hands weapon basket scale gray background same. No extra limbs/text/effects.",
+      "input_generation": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-05f931b7-c54e-4e53-9e76-df3fa774e0e2.png",
+        "prompt": "Precise object edit: complementary passing walk frame for this original Reefbolt crew. Change ONLY the four HUMAN legs. Each person's currently planted leg bends at knee and lifts boot forward; each person's currently lifted trailing leg extends down and plants under hip. Woman foreground near boot now lifted forward-right, other boot planted behind-left. Man's rightmost boot now lifted forward-right, other boot planted nearer center. Exactly TWO legs per person, natural hip connections. Keep upper bodies, hands/grips, both hats, basket and ALL THREE tripod legs exactly unchanged, same weapon height facing right, not mirrored. Plain gray background, same full group scale and camera, no effects/text.",
+        "review": "Operator second leg missing; unselected."
+      },
+      "review": "Loader lead switches; operator's opposite boot restored raised beside supporting leg. Four human legs and three tripod feet visible. Operator raised leg short/straight versus requested bent knee, proportions and contacts require matching. Source-only, alpha/assembly pending, not enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/carry-passing-tripod.png",
+      "source_sha256": "487f93a28541c48a255000e9c107605bcd49dc3421527ea4dfd1fd5840b53da2",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-75c33e48-4109-498c-9446-1436c11b3c01.png",
+      "prompt": "Use case: precise-object-edit. Restore missing THIRD wooden tripod leg in this original two-person carrying sprite. Existing two thick rope-bound legs extend down-left and down-right from brass hub, keep those unchanged. Third REAR leg connects to back of SAME hub and extends diagonally backward-left behind woman's hip, with a visible short wood section, rope wrap and brass-capped foot projecting left of her trailing boot. It is carried clear of ground, not touching ground. Exactly THREE tripod legs, no fourth. Preserve both crew bodies, all four human legs and four arms, hats, basket, weapon, scale, camera, gray background. Do not remove or move human legs. One isolated full sprite, no text/effects.",
+      "review": "Third rope-bound brass-capped tripod foot now visible behind loader, both people's four legs retained. Prefer over prior passing draft. Rear leg connection occluded by loader, projected length and rig scale need continuity review. Opposite step/alpha/assembly pending. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/carry-passing-draft.png",
+      "source_sha256": "6b473bc7e89b70f57865da9b1b83c3e26dca24b2a8e9966f26f85a8db05c5015",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8986c4e1-9f93-4b56-b6a5-72fa9c08436e.png",
+      "prompt": "Precise edit original two-person carrying sprite: restore tall MAN'S missing supporting leg. From his far hip behind tripod, show dark trouser leg and brown boot extending down to ground at image right, behind/right of current raised boot. Current raised bent leg remains raised. Man must have TWO legs, one planted and one lifted. Woman's two legs unchanged. Keep both people's hands/grips, weapon/basket, scale and poses unchanged. Preserve three tripod legs, no extra human limbs, same plain gray background, no text/effects.",
+      "input_generation": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e97426fc-1e8d-46d0-b89a-dcfd7c641a82.png",
+        "prompt": "Use case: precise-object-edit. Original Reefbolt two-human crew reference sheet. Create ONE isolated carrying PASSING STEP sprite based on row1 col3. Tall bearded man teal brimmed hat behind/right, shorter woman teal bandana in front/left with bolt basket strapped to BACK. Both carry same wooden brass crossbow and all THREE attached rope-bound tripod legs slightly off ground, weapon facing right. Passing step: EACH person has one boot planted directly below hip, other knee bent and boot clearly lifted passing close beside planted leg, not wide stride or crouch. Preserve four human arms, four human legs, natural firm grips on rig, same hats clothes equipment and shell harpoon loaded. No missing person/basket/tripod leg, no extra limbs, no mirror, fixed three-quarter camera. Full group generous margins, plain pale gray background, no shadow text effects or scenery. Original painterly style matching reference.",
+        "review": "Operator supporting leg missing; unselected."
+      },
+      "review": "Both operators now have one raised boot and one supporting leg, basket retained. Third tripod leg obscured/unclear, rig size enlarged versus source, hip/knee and opposite step continuity pending. Source-only, alpha/assembly unfinished, not enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/poses-empty-reset.png",
+      "source_sha256": "85b0e7f342d693a5890badaabdef291d53f420579f4bced8406970d48b38d0d3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3cc85d49-9280-4ffd-b7d6-dccbad30e675.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY row3 column4, twelfth sprite in this 4x4 original Reefbolt team sheet. It is post-shot winch reset BEFORE reloading: remove shell-tipped bolt and its shaft from weapon rail, leaving same empty rail/front hardware as adjacent firing frame row3 col3. Operator hand remains at winch, woman remains reaching into bolt basket. Spare bolts in basket stay. Preserve BOTH crew and every limb/hat, tripod and crossbow geometry and red string, exact cell position scale and gray background. Other fifteen sprites unchanged. No extra projectile or weapon, no effects or text.",
+      "review": "Select frame12 only: premature loaded bolt removed from reset pose, spare basket bolts and both crew retained. Empty front hardware matches firing source better. Winch/loader movement still subtle and complete mechanical continuity/extraction pending. Other frames not selected. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/poses-released-string-draft.png",
+      "source_sha256": "3da16192e86c06aa7a9a67800428e7797c6ba68070df72c3bbcf35a794245c1d",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9dccf2e7-31e1-4e26-be42-181579474f47.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY row THREE column THREE (11th pose) of this 4x4 original Reefbolt crew animation sheet. It is firing after bolt departure. Correct red crossbow STRING to released position: string spans between bow tips at FRONT of weapon, near image right, no long red segment running back toward operator or winch. Bow limbs spring forward but retain same construction. Empty bolt rail, no loaded harpoon, no projectile in image. Preserve both crew poses/hats/hands, basket and tripod, exact weapon scale and camera. Other fifteen sprites unchanged, gray background unchanged, no text or effects. Only change released string/limb tension in frame11.",
+      "review": "Select frame11 only: rearward red string segment removed, shorter front segment remains; empty rail and crew retained. Complete tip-to-tip string attachment not yet clear at sheet scale; mechanical continuity, extraction and assembly pending. Other frames not selected. Not packed/enabled or accepted."
+    },
+    {
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses-hit-death-basket.png",
+      "source_sha256": "e3ed85340937bea7373ace8c38a36e5edb0ebe2b0f4e88063f8338327333cc1c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d01a070d-f200-4b99-a7ed-fa4bb060e2ea.png",
+      "prompt": "Use case: background-extraction. Remove plain gray background from this 4x4 original Reefbolt Crew sprite sheet, replace with genuine alpha transparency. Preserve exact sixteen two-person teams, full bodies, crossbow/tripod, thin red strings, baskets including bottom row first and second frames, and toppled rig/corpses. Preserve exact image positions scale and camera, do not redraw or move anything. Clear gray in all gaps between limbs, rig legs and bowstrings. No checkerboard painted background, matte, shadow, glow, text or new objects. Transparent RGBA PNG.",
+      "review": "Gray backdrop removed in preview; baskets and both crew retained in frames13/14. Red/yellow fringes visible around rig/strings, alpha/compositing not accepted. Layout may shift during extraction; explicit crops required. Only corrected target frames intended for assembly. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/poses-hit-death-basket.png",
+      "source_sha256": "3a74705c0637a0415206d6d6d4104cccf41256ee201b7f9454f69b5a6bbe23b7",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bf308586-fb9e-41bc-8308-dbae2229d160.png",
+      "prompt": "Use case: precise-object-edit. Edit original 4x4 Reefbolt two-person crew sprite sheet. ONLY bottom row column1 (hit) and bottom row column2 (kneeling death): restore the missing ONE wooden rope-bound basket containing shell-tipped spare bolts, placed on ground just LEFT of woman loader, like basket in row3 col1/2. Basket fully visible within each cell, no overlap with adjacent sprites; crew poses and rig unchanged. Both humans, same hats and clothes, ONE crossbow/tripod, all hands/legs unchanged. Remaining fourteen frames exactly unchanged. Keep gray source background and 4x4 layout, original painterly style same scale; no extra people, no labels/effects.",
+      "review": "Select frames 13 and 14 only: bolt basket restored beside loader in hit and kneeling death. Both crew were already present; missing equipment, not people, was corrected. Basket in frame14 crosses nominal column boundary; explicit crop needed. Other frames not selected. Extraction/rig/gait continuity pending, not packed/enabled."
+    },
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "7a6d8d1c1e9bf6144eacc8207e3c72b14d12eb21f5eb446b416965b91d3bb086",
+      "source_output": "exec-bd572952-dee8-490f-aa2c-e89c119eb9de.png",
+      "prompt": "Use case: stylized-concept. Original Reefbolt Crew battle animation sheet, reference is identity. TWO humans and ONE portable tripod shore arbalest in EACH pose: tall bearded man teal brimmed sailor hat anchor badge and teal brass-trimmed coat operates; shorter woman teal bandana braid and teal coat loads. Heavy wooden/brass crossbow with transverse bow limbs red strings, winch spool, three rope-bound wood tripod legs; shell-encrusted triangular harpoon bolt and wooden bolt basket. SIXTEEN complete TEAM poses FOUR columns FOUR rows, identical character/equipment scale elevated three-quarter camera facing RIGHT, generous gutters. Row1 idle operator at grips loader kneels basket; alert operator leans loader looks up; movement both stand lift rig just off ground knees forward/back; movement both gather bent knees feet under hips while carrying intact tripod. Row2 opposite carrying contact both change lead foot; melee windup both hold rig tilt back slightly, no lost bow limbs; melee short forward shove entire weapon held intact by both, tripod feet near ground; defense both duck behind intact rig. Row3 loader places ONE bolt on rail operator holds grips; aim operator braces shoulders bolt loaded red string drawn back; fire operator leans into grips string relaxed forward bolt gone, loader crouches; recovery operator reaches winch loader reaches basket. Row4 hit both recoil; dying both knees buckle rig tips; side collapse both bodies low rig sideways; dead BOTH crew relaxed horizontal eyes closed with intact toppled crossbow/tripod and basket beside them. No missing crew, no third person, no rifle barrels, no detached hands. Original painterly fantasy raster same nautical identity. Pale gray no shadows/text/grid/projectiles/blood/effects/scenery."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "aa342837d5d3ba397a4e904bb54242702a12d87b68e980a4f3aa472ce44577d0",
+      "source_output": "exec-3cdfa5f7-9c76-4ef3-87f2-98939dbeaebc.png",
+      "prompt": "Use case: precise-object-edit. Preserve this 4x4 Reefbolt Crew animation sheet. Add the missing wooden bolt basket strapped securely to woman loader's BACK in row1 columns3/4 and row2 columns1/2/3/4, with same shell-tipped spare bolts as existing basket. Basket should be partly visible behind loader shoulder/hip, never replace either person or rig. All other frames stay unchanged, exact bodies/weapon/layout/scale/pale gray background. No extra people, no scenery/text/effects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "0891117eb188006373148c49bf07e69146101b4c74578aa4878c1522760649fc",
+      "alpha_output": "exec-089febe5-1582-416b-affd-09a876f1976b.png",
+      "alpha_prompt": "Use case: background-extraction. Remove gray from corrected sixteen-pose Reefbolt Crew sheet onto genuinely transparent RGBA. Preserve exact two-person teams, crossbow/tripod/red strings, carried bolt baskets, full layout/body scale and both corpses. Transparent gaps between crew and rig. No checkerboard/matte/shadow/text/effects/redraw/reframing."
+    }
+  ],
+  "review_notes": [
+    "Sixteen team poses, basket correction and extraction visually inspected. Both crew and rig retained through collapse/corpse; carrying/melee/defense now retain strapped bolt basket. Hit/kneeling basket remains missing. Gait alternation/gather, weapon/tripod/string continuity and full-motion/compositing require refinement/review. Source-only not packed/enabled; no tests/exports or disposable test intermediates created.",
+    "16 packed frames retain fourteen previously generated paintings and select two new paintings: original continuation top-panel equipped recovery, and corrected continuation bottom-panel head-right resting crew. Separate bolt load/aim/release/empty reset remains distinct from melee. Both crew members move and keep the basket and complete tripod.",
+    "The original new corpse had a detached glove beneath the crossbow rail. A targeted built-in edit removes it, but also removes a legitimate glove in its top panel: select only the corrected bottom and preserve the original top. Retain both outputs and exact prompts as evidence.",
+    "Reuse clean original RGBA including corrected basket hit/kneel. Approved bounded gray preparation with inspected enclosed-background seeds opens carry-rig apertures; green preparation handles new paintings. Banded crops exclude neighboring harpoon tips, boots, hands and basket fragments. Source scales 0.75/0.225/0.30 and fixed anatomical anchors are explicit.",
+    "Carry steps remain incomplete gait; crew/rig relative scale, hand/string/leg consistency, palette/edges and connected transition timing need whole-roster refinement. Static production review is not motion/gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 14,
+    "new_or_corrected_selected_paintings": 2,
+    "generated_outputs": 2,
+    "generation": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_reefbolt_crews/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_reefbolt_crews/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_reefbolt_crews.png",
+    "runtime_sha256": "eb20f14a549c314cba538c9c977f098606530d69e31cccd533263ff57c65b682",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses.png": "0891117eb188006373148c49bf07e69146101b4c74578aa4878c1522760649fc",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/carry-passing-tripod.png": "ca5517f467834c8a93d1766ff057f2ca60314d5b819cbab4eb27b3463d4038c4",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/carry-opposite-lowered-draft.png": "e87961d0b20c0f6f32388f446eadc84f59ad10873a582e601fb8155d744e05ab",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/crew-recovery-and-directional-rest.png": "d5defbc82b42745519f45d53baca7c3e3e6a35bcd98e19810dda291e39c1da2a",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/poses-released-string-draft.png": "569b278649ed21a4c7b590991953187610f46dcc8df576289dc7b6580342e42c",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/poses-empty-reset.png": "e2cd877b1ba25debbf8faff3bde9c3ab296badd4e8eecd7bc807e119a102bda2",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses-hit-death-basket.png": "e3ed85340937bea7373ace8c38a36e5edb0ebe2b0f4e88063f8338327333cc1c",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/crew-recovery-and-directional-rest-corrected.png": "ef5feba686a35fa2fe852deb090474e51dc8cf9f2e49cc2fd503cf058059aaac"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/reefbolt-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

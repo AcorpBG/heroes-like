@@ -1,0 +1,81 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_basalt_wardens",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_basalt_wardens.png",
+  "reference_sha256": "81f748fafeec18bd318af244059458edc22ca3646acfad8e16685a804dc509c8",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "990418af2654e4a3d0d44b33512286262d64d162d56b9bf2b60d1404a5375fce",
+      "source_output": "exec-e9edf088-1d57-41f8-a94e-490db185f53c.png",
+      "prompt": "Use case: stylized-concept. Original Basalt Warden battle sheet reference identity: young adult pale face shoulder-length wavy brown hair charcoal scarf dark plate/lamellar armor silver shoulder/knee plates brown straps boots gray long split tabard. LEFT arm enormous tall angular BLACK BASALT slab shield peaked upper corners copper bands. RIGHT hand short metal haft faceted dark stone mace. Twelve full-body articulated poses FOUR columns THREE rows same scale elevated three-quarter camera facing RIGHT generous gutters entire shield visible. Row1 idle mace low shield upright; alert breathing shoulder/head subtle shift; walking near leg forward far back; passing knees under body. Row2 opposite contact far leg forward near back same torso orientation; right mace overhead anticipation shield held left; completed right mace downward strike toward RIGHT shield still protects torso; deep brace behind raised basalt shield. Row3 hit recoil shield tilts; knees buckle mace drops low; side fall torso raised own shield rests edge beside left arm mace near right; final relaxed horizontal side corpse eyes closed full basalt shield flat beside body own complete mace nearby. Shield must retain stone slab shape height thickness copper straps all poses, no missing equipment, real joints not rotated upright corpse. Original painterly raster pale gray background no shadow text grid effects blood scenery."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "2234389a320d1455495a29364a42f1dbcecde35b34f5cada5cb21d1a306f59bb",
+      "source_output": "exec-416190e7-342b-4918-a702-506329f71c51.png",
+      "prompt": "Use case: precise-object-edit. Restore missing mace equipment in THREE cells only of attached 4x3 sheet. TOP ROW THIRD walking figure: RIGHT hand at screen LEFT holds short brown/metal haft with full faceted basalt mace head hanging low beside thigh, same mace as top-row fourth. BOTTOM ROW FIRST recoil: RIGHT hand at screen LEFT grips same complete short mace hanging low outward beside hip. SECOND ROW FOURTH brace: right hand holds mace near chest with faceted head visible outside screen LEFT edge of shield near shoulder; shield remains LEFT arm. Keep all faces, body poses, shield geometry, other nine poses and gray background layout/scale unchanged. No extra weapons/limbs.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "f25f8abff4b70563e0b35dc9ea175029feeba3426eefc99709a0694c92886395",
+      "alpha_output": "exec-60f444ee-97ae-4460-86f3-90a59a076aa3.png",
+      "alpha_prompt": "Use case: background-extraction. Extract twelve Basalt Warden poses onto genuine transparent RGBA. Keep exact layout scale armor hair scarf tall angular basalt shields copper bands all mace heads and shafts and corpse. Remove gray background and floor shadows only. Preserve all equipment gaps; no cloudy matte checkerboard halos redraw reframing text effects."
+    }
+  ],
+  "review_notes": [
+    "Twelve poses/extraction visually inspected. Restored mace in first walk and hit; brace mace head now visible beyond shield but shaft/grip occluded requires anatomical review. Shield and mace retained through equipped corpse. Gait repeats lead with no clear passing; shield/corpse scale, mace shape and alpha-edge/full-motion review pending. Source-only not packed/enabled; no tests/exports.",
+    "13 frames retain nine original paintings and select four new paintings. Mace recovery, clearly gripped ready defense, planted passing and deeper guarded knee-flex are packed. The old obscured-grip defense remains unselected. New guard keeps complete right glove/shaft/head outside shield.",
+    "The first new guard clipped its shield at the source canvas; retained unselected. Built-in reframing reconstructs the missing shield edge with complete corners/straps. Approved bounded preparation and uniform anatomical scales preserve paintings. Inspected narrow crop bands separate overlapping neighbor corpse hair/shield/boots without losing this unit's own shield and detached corpse mace.",
+    "Candidate only: full alternating gait, shield/mace/body dimensions and limb/grip/stance continuity, palette/edges and connected timing need full-roster refinement. Final whole atlas inspected; no automated/import/gameplay/platform acceptance.",
+    "2026-09-16 gait refinement: retain thirteen paintings and add opposite contact/passing using single-phase near/far leg guides. Four-frame 640ms loop replaces repeated two-pose 420ms half-stride; no local limb synthesis or mirrored equipment. Full atlas inspected; all-state runtime/reflection/small-scale motion acceptance remains pending."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_neutral_basalt_wardens/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_basalt_wardens/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_basalt_wardens/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_basalt_wardens/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_basalt_wardens.png",
+    "runtime_sha256": "714d1848b30ad6d6a1594abcc0040f07b6a01cbb7fa935b39a589b9835a882a2",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/alpha/poses.png": "f25f8abff4b70563e0b35dc9ea175029feeba3426eefc99709a0694c92886395",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/continuity-alpha/mace-recovery-ready-and-passing.png": "ef50730154dad7837e6876daf91b722ab17a02942af422740d1aac3eefb0052f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/continuity-alpha/visible-grip-crouched-shield-guard-full.png": "9c4ffa10bbd27f2bf4390f0b7951d29fd6c1faf14b22f46dc2c664971cfcfa25"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/basalt-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  },
+  "gait_refinement": {
+    "date": "2026-09-16",
+    "status": "candidate_pending_playback_acceptance",
+    "generation": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/cutouts.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/packing-result.json",
+    "previous_recipe": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/packing-before-refinement.json",
+    "previous_runtime_sha256": "714d1848b30ad6d6a1594abcc0040f07b6a01cbb7fa935b39a589b9835a882a2",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_basalt_wardens.png",
+    "runtime_sha256": "7814dcd75e6ca2555673b5ff141177077b22c6671d385210b91ac247720c1421",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/alpha/poses.png": "f25f8abff4b70563e0b35dc9ea175029feeba3426eefc99709a0694c92886395",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/continuity-alpha/mace-recovery-ready-and-passing.png": "ef50730154dad7837e6876daf91b722ab17a02942af422740d1aac3eefb0052f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/alpha/contact-b-matte.png": "445876512cc2afa879debd7b3f2decf66185f52c3678ca40b3d31e26184a554e",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/alpha/passing-b-matte.png": "34d8fddaf4ab67f2fdf8c24cb1b5268c273b18fde8a5ab0332b3423e4a09e2f8",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/continuity-alpha/visible-grip-crouched-shield-guard-full.png": "9c4ffa10bbd27f2bf4390f0b7951d29fd6c1faf14b22f46dc2c664971cfcfa25"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/basalt-gait-refinement-20260916",
+    "review": "Contact A keeps near leg forward, passing A keeps near leg planted; opposite B poses put near leg back then raised, without changing weapon hands. Body/head/gear proportions and thin hair-edge tint still require complete connected motion review; not final acceptance."
+  },
+  "packing": {
+    "recipe": "art/animation/source/poses/unit_neutral_basalt_wardens/packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_basalt_wardens.png",
+    "runtime_sha256": "7814dcd75e6ca2555673b5ff141177077b22c6671d385210b91ac247720c1421"
+  }
+}

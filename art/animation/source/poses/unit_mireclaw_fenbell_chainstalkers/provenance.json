@@ -1,0 +1,119 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "runtime_candidate_pending_consolidated_validation",
+  "reference": "art/units/source/curated/unit_mireclaw_fenbell_chainstalkers.png",
+  "reference_sha256": "6c93d3a6302d21f710de10a718b85e6d9c855213d7f64ab3f745cd6f951b3e15",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/walk-passing-b.png",
+      "source_sha256": "e95f4db33e4f2f31b7ad7b50c35eeb2a70020de0a95b4ac70d1533adceeb99fb",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e7a07415-365a-4ef2-a2d5-41681413d81b.png",
+      "prompt": "Remove ONLY pale gray background from this original Fenbell passing-step sprite. Output true transparent RGBA. Preserve exact pose, scale, location, feet, leaf cloak, mask, bell, coil, every chain link and hook. Clear holes between links, under raised boot, between limbs and cloak. No backdrop, checkerboard, floor, haze, colored halo or new detail. Do not redraw character or change foot positions.",
+      "intermediate": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-73914aa0-b7e2-4d68-a89c-4de6c9c85cfa.png",
+        "prompt": "Use case: precise-object-edit. Extract ONLY TOP RIGHT sprite row1 col4 from this Fenbell Chainstalker sheet into one standalone sprite on perfectly uniform pale gray. Preserve exact passing pose: foot on screen-right planted, boot on screen-left lifted, mask facing right, leaf cloak, right-hand bell, left-hand coil, connected chain and one hook forward. Entire character and hook centered with ample margin. Preserve pose and anatomy, no new pose, no mirrored legs, no extra feet. Remove checkerboard from background and holes, no floor shadows or effects. Same painterly identity, no redesign."
+      },
+      "review": "Standalone passing-b candidate retains planted right-screen foot/lifted left-screen boot and equipment. Alpha min0 max254, corner and left-gap fully clear despite brown preview. Packed at0.23 scale as index12 in thirteen-frame candidate atlas SHA4da8f7f46c4e1a784e0a6d7e623a1e6448fd83d89ece939cf91e4a9c21caf453. Packed visual shows clear surrounding, brighter/redrawn face/cloak than sheet and colored edges. Alignment/continuity/edge cleanup remain unaccepted; not runtime enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "source_sha256": "8122fa6db0f461b21c2caac3c50c6c29b0cfce4a9e6b6b4ea21bdf751b7d5bb8",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-81494a7a-7a9a-4c01-81d0-e3e1c5098a87.png",
+      "prompt": "Remove ONLY pale gray backdrop from this twelve-pose original Fenbell Chainstalker sheet. Genuine transparent RGBA output; no painted checkerboard or matte. Preserve exact leaf-cloak edges, all chain links including holes, bell, hook, spare coils, poses, layout, dimensions and character pixels. Clear transparent gaps between limbs, chains and leaves. No halos, colored speckles, shadows, floor, haze, new objects or changed anatomy. Same four columns three rows, do not reposition or crop sprites.",
+      "review": "Recovered candidate after investigating misleading brown preview. ImageMagick reports alpha min0 max254/255 mean0.278333; pixels (0,0),(760,700),(400,30),(750,350),(20,500),(1000,750) all RGBA(0,0,0,0). Earlier brown-backdrop rejection is not established by actual sampled pixels; superseded as an absolute assertion. Preserve as alpha candidate, not final acceptance. Needs reliable composited visual inspection, chain/leaf-edge review, complementary passing alpha and runtime assembly. No new generation or gameplay tests/exports this turn."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/poses-consolidated-gray.png",
+      "source_sha256": "ba0aeb8695ed78a9c56c5a7fb2100de4de530f9b1e914bcd940661859f27ecb4",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a2b83e91-c880-4ed3-b8a5-3935e8a256d3.png",
+      "prompt": "Use case: compositing. Consolidate four corrected versions of SAME original Fenbell Chainstalker 4-column 3-row sprite sheet into ONE sheet. Image1 is base and preserves its corrected top-right walking stride with bell and coil. Replace ONLY row2 col4 with defense pose from Image2 (coil over left forearm); row3 col1 with hit pose from Image3 (raised hand holding coil); row3 col3 with lowered side-collapse from Image4. All other cells from Image1 unchanged. Preserve exact source pose anatomy, equipment, camera, scale, locations; every live pose ONE bell ONE hook spare coil. Do not redesign, add extra poses or change handedness. Output same 4x3 sheet on perfectly uniform pale neutral gray background with no checkerboard, ground, shadows, labels or panels. Keep complete appendages within sheet. This is selected-pose assembly, not new concept art.",
+      "review": "Consolidated source candidate includes stride4, defense coil8, hit coil9, lowered collapse11 on gray. Original source corrections remain authoritative references; generated compositing softened details, coil shapes changed. Additional opposite passing remains separate. Not transparent/packed/enabled.",
+      "rejected_alpha": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-81494a7a-7a9a-4c01-81d0-e3e1c5098a87.png",
+        "prompt": "Remove ONLY pale gray backdrop from this twelve-pose original Fenbell Chainstalker sheet. Genuine transparent RGBA output; no painted checkerboard or matte. Preserve exact leaf-cloak edges, all chain links including holes, bell, hook, spare coils, poses, layout, dimensions and character pixels. Clear transparent gaps between limbs, chains and leaves. No halos, colored speckles, shadows, floor, haze, new objects or changed anatomy. Same four columns three rows, do not reposition or crop sprites.",
+        "review": "File is RGBA but visual output has pervasive brown backdrop and softened edge detail; rejected for runtime use, not copied. RGBA encoding alone is not clean alpha proof. Reliable background cleanup still unresolved."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/poses-defense-coil.png",
+      "source_sha256": "b4005a39fc26fe765f37a4ad6feefbfb93b1c7dddee9da8071700eeb0df5389d",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-024dcc05-8dd0-43a4-8c1e-e99518d01f60.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY row2 column4 crouching defense pose in original Fenbell Chainstalker 4x3 sprite sheet. Restore spare bronze chain COIL looped over LEFT forearm (screen-right bracer), visible hanging below forearm beside left knee. Three loose loops of SAME chain as idle held coil, physically draped over bracer, connected slack to existing weapon chain. Both hands continue gripping taut chain across chest, exactly ONE bell hangs central and ONE crescent hook on right. Preserve all pose anatomy clothing mask scale framing. No extra hand, bell, hook, chain weapon or arm. Other eleven sprites unchanged. Same grid/background, no effects or labels.",
+      "review": "Select frame8 only. Spare coil visible over screen-right forearm while both hands brace chain; one bell and hook retained. Coil appears larger than idle and connection overlaps hook-side chain; scale/transfer continuity, alpha and assembly remain pending. Other frames unselected. Not packed/enabled; tests/exports deferred."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/poses-opposite-passing.png",
+      "source_sha256": "5b7aecfd2e1e876ce4888cabea83286d2f5615ef7ff11accb5e6d61b3742f998",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9b6609d9-ba30-45a8-a667-043e40e76d96.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY legs of TOP RIGHT sprite. Currently its screen-right knee is lifted: REVERSE this. Plant screen-right foot under screen-right hip, straighten that supporting leg. Bend screen-left knee and lift screen-left boot off ground, knee visible on LEFT of support leg. Two feet only, low walking passing motion, not march. Keep torso/head facing right unchanged, bell-hand and coil-hand exact, chain hook exact. Do not mirror character or change clothing. Other eleven sprites unchanged. Same grid scale background.",
+      "intermediate": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c0b48c96-7e6a-41da-a9ee-7b0fbb97eb97.png",
+        "prompt": "Use case: precise-object-edit. Change ONLY row1 column4 Fenbell Chainstalker into passing step AFTER its current forward stride. Same character facing screen-right, mask leaf cloak, same scale/camera. NEAR leg supports body straight beneath pelvis with foot flat; FAR knee bends and passes forward beside support knee, far boot lifted clear of ground. Opposite lifted leg to existing row2 column1 passing pose. Exactly two legs/feet, natural low walk not high-knee march. Keep bell in right hand, ONE hook on connected chain, spare coil in left hand; chain drapes without intersecting knee, hook remains in front. Preserve upper body and handedness, no torso mirror, no new equipment. Other eleven sprites unchanged, same grid/background. This is additional transition not replacement contact.",
+        "review": "Repeated same apparent lifted leg as original frame5; superseded."
+      },
+      "review": "Select cell4 as additional passing source, retaining contact from walk-stride. Screen-right foot planted, screen-left boot lifted; bell/hook/coil retained. Knee crosses near chain; hip ownership under cloak, limb scale, shoulder continuity and alpha need assembly matching. Other sprites softened/redrawn and unselected. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/poses-walk-stride.png",
+      "source_sha256": "086cd914395d23bfbabd0326cd3680599c8b0d7b6f90fce2021d839ea19b2466",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c2284aff-2e14-4c00-9037-4d3c5e30f5af.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY TOP RIGHT pose row1 column4 in this original Fenbell Chainstalker 4x3 sheet. Replace standing legs with clear opposite walking contact to row1 column3. Character faces screen-right unchanged. NEAR leg from screen-left hip strides across FRONT toward lower-right heel planted; FAR leg from screen-right hip trails toward lower-left toe planted heel raised. Visible crossing thigh/knee articulation, same leg length, not duplicate stance. Preserve upper body camera, mask, leaf cloak, right-hand bell and connected chain ONE hook, left-hand spare chain coil. Let cloak hem lift slightly with stride; chain hangs clear of crossing legs with hook retained ahead. No extra hands feet hooks or bells. Match original scale and grid; other eleven sprites unchanged. No whole-body mirroring, new effects, labels or background changes.",
+      "review": "Select frame4 as stride candidate instead of standing walk-equipment frame4. One forward planted foot and rear toe, cloak trails; one bell/hook and spare coil retained. Shoulder turns and bell hand swings inward, upper-body preservation not exact. Hip ownership beneath cloak and complementary gait continuity, chain length, scale and alpha require matching; other frames unselected. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/poses-lowered-collapse.png",
+      "source_sha256": "29b2adc8b56dbd64301b6a67a8b0a455f918af7c3684517f6ca4356f756409c6",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-45ef32cb-1c52-45e2-b0cc-0a2be81e9691.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY bottom row column3 falling pose frame11 in original Fenbell Chainstalker 4x3 sheet. Lower supporting elbow so torso and head sink halfway toward ground, shoulders slumped and masked face looking down rather than propped up at viewer. Both knees bend together screen-right with hip grounded, hands slack retaining bell/chain coil. Preserve one brass bell, one rusty crescent hook and connected chain resting nearby, same leaf cloak bone mask boots proportions camera scale. This is intermediate collapse before final corpse beside it, not another fully flat corpse. Other eleven poses unchanged; keep grid background no text.",
+      "review": "Select frame11 only. Elbow/torso lowered, head bows and knees fold together; bell, coil and hook remain. Mask turns more frontal and coil/chain shifts; transition to side-facing corpse requires assembly matching. Not fully flat, usable intermediate source; gait/alpha unresolved and not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/poses-hit-chain-coil.png",
+      "source_sha256": "e1a1de314ec07aaa06f8a12e19888e79c62e17d6716596f82cc3716e88e0d3aa",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e9082a37-80b1-4766-8a6f-37ed90e25ca9.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY bottom row column1 hit-recoil sprite in original Fenbell Chainstalker 4x3 sheet. Close raised anatomical LEFT hand (screen-right) around spare loops of rusty chain matching idle frame1. Restore a few hanging loops beneath raised fist, with slack connecting back to existing chain at right bell-hand; ONE continuous chain ending at existing single hook. Preserve recoil leaned-back torso, raised arm position, both legs, right-hand bell and hook, mask and leaf cloak. Exactly two hands, no extra bell/hook. Other eleven sprites unchanged, same layout scale camera background. No text effects.",
+      "review": "Select hit frame9 only. Raised left hand retains hanging coil and slack crosses torso toward right bell hand; original recoil legs/torso and one hook/bell retained. Chain connection behind torso partly occluded, length/scale/gait/alpha and assembly pending. Other frames unselected; not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/poses-walk-equipment.png",
+      "source_sha256": "95248a683f7beb5578160efc50513b49cbf76ca5b6ba2a89a6d8d88aca684f6e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ec65e54a-b3ed-4986-a419-11fb3e8b8beb.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY top row column4 walking sprite in original Fenbell Chainstalker 4x3 battle sheet. Restore ONE brass bell hanging directly below anatomical RIGHT hand (forward image-left arm gripping chain) and a small bundle of spare chain loops held in anatomical LEFT hand near waist (image-right). Same bell and chain loops as adjacent top row column3. Connect existing hook chain through right grip and along slack to left-hand coils; ONE continuous chain, ONE hook, ONE bell. Preserve exact walking body, two arms/hands, two legs, mask cloak hook and camera. Keep all gear inside cell; other eleven sprites unchanged. Same background scale layout no text.",
+      "review": "Frame4 equipment source: bell restored at right grip and spare loops at left hand, hook retained. Torso/arms/stance changed toward upright idle, so NOT accepted as finished movement contact. Inter-hand chain continuity partly occluded; gait, alpha and assembly unfinished. Other frames unselected."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/poses.png",
+      "source_sha256": "30274af45604df056900e34a4d58c0476077c73b26abafdb54377f7c2c3ea724",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9d22d3f4-f625-4192-b357-f00b39fbbff0.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle sprite sheet. Reference defines ONE Fenbell Chainstalker, masked marsh human with reed/grass hood and shaggy leaf cloak, dark leather wrapped forearms and boots, bone-like face mask, brown belts, green moss hanging from weapon. Anatomical RIGHT hand grips a brass bell handle attached to long chain ending in ONE large rusty crescent hook. LEFT hand holds spare loops of the same chain. Preserve one connected chain, one bell, one hook and costume. Exactly TWELVE articulated full-body poses FOUR columns THREE rows, constant body size fixed elevated three-quarter camera facing screen-right, wide gutters for full swung chain. Genuine transparent RGBA no painted checkerboard, scenery/floor/grid/text. Row1 idle chain hanging diagonally hook low right; idle breath reed cloak sways chain settles; walk right leg forward left behind; opposite contact LEFT leg forward RIGHT behind truly swap lead. Row2 passing foot lifted beneath hips; wind-up RIGHT bell hand draws back chain hook swings behind LEFT hand feeds chain loops; attack RIGHT arm lashes forward screen-right chain extends in broad arc with hook leading, LEFT hand retains slack loops continuous chain; defense crouch hands draw chain across front bell/hook close. Row3 hit recoil torso back knees bend retain all gear; dying kneels head bows chain lowers; falling sideways hips knees bent bell chain hook land beside; dead side-lying eyes CLOSED mask retained all chain gear resting beside body no active light, cloth limp. Exactly two arms two legs, chain never detached or duplicated, consistent bell/hook size. Actual articulation not rotated standing cutouts. Original art only no copyrighted franchise assets."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-77d96ec2-2c86-44ee-a552-263489cf44a9.png",
+      "prompt": "Use case: background-extraction. Remove ONLY checkerboard from this twelve-pose Fenbell Chainstalker sheet to genuine transparent RGBA. Preserve all twelve figures, thin connected chains, bell, hook, reeds/moss, faces, positions, sizes and canvas exactly. No repainting, no replacement backdrop, no painted checkerboard, no colored matte.",
+      "reason": "Brown/green replacement backdrop, not transparent; unselected."
+    }
+  ],
+  "review_notes": [
+    "The locally registered thirteen-frame sheet selects original alpha/poses-consolidated.png plus the opposite passing correction in alpha/walk-passing-b.png; packing.json is authoritative. Earlier source-only notes are historical, not current status.",
+    "2026-09-16: defense transitions from authored ready to guard and holds it. Current runtime packing hash is now explicitly recorded; deterministic repacking and full gameplay/platform acceptance remain required."
+  ],
+  "packing": {
+    "recipe": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/packing.json",
+    "runtime": "art/animation/runtime/poses/unit_mireclaw_fenbell_chainstalkers.png",
+    "runtime_sha256": "4da8f7f46c4e1a784e0a6d7e623a1e6448fd83d89ece939cf91e4a9c21caf453"
+  },
+  "prior_review_notes": [
+    "Twelve source poses with extended chain lash and equipped corpse.",
+    "Top-right walk omits bell/held spare coil; restore all equipment and connected chain. Hit releases coil without clear location.",
+    "Chain attachment to bell/hand and spare loops, consistent length and hook/bell scale require refinement.",
+    "Walking orientation/lead and passing inconsistent; idle subtle. Mask/cloth/limb continuity and final eye closure need review.",
+    "Wide lash requires explicit crop and margin; side fall propped on elbow requires smoother collapse.",
+    "Transparency/compositing unresolved. Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_gloambell_wake_mantas",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "runtime_candidate_pending_consolidated_validation",
+  "reference": "art/units/source/curated/unit_neutral_gloambell_wake_mantas.png",
+  "reference_sha256": "c1c83e87ee50a0079e90c61b15c99b05ba15df0ca3066a66dd2b11263d72a548",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "8253b3d41d2af687e4df6dd4d236d921ecb9d3171dc234eb9bab265795e7449a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b1220ff1-af66-44fb-914f-3410d4e8effc.png",
+      "prompt": "Use case: stylized-concept. Image1 identity reference: original Gloambell Wake Manta. Broad silver-blue manta with navy spotted upper fins and pale rippled ribbed belly, ivory wedge head tiny dark eyes, TWO broad scalloped side fins, ONE narrow tail to LEFT ending forked ragged fluke, FOUR dangling flexible thin tendrils each ending golden bell. No legs or arms or added tentacles. TWELVE separate full-body animation poses FOUR columns THREE rows fixed elevated three-quarter camera facing RIGHT same scale generous gutters. Row1 idle fins softly raised bells hanging; breathing fins ease down bells swing slightly; flying upstroke fins arch upward; flying downstroke fins sweep below belly. Row2 midstroke fins horizontal tail curled gently bells trailing; attack windup head tucks fins swept back bells drawn under belly; forward head ram fins back tail straight bells trail LEFT; defending fins fold around belly with head visible. Row3 hit recoil head lifted body contracts fins uneven; death begins fins sag bells dim head drops; side collapse body lowered with one fin crumpled belly near ground tail slack; dead flattened folded fins on ground ivory head down eye closed all FOUR dark bell tips resting with slack tendrils tail fluke intact. Painterly original raster pale gray background no ground/shadow/water/effects/text/grid. Articulated fin/body motion not rotated idle. Preserve body and bell identity throughout death.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "ff06d5f96ddcac79ed44c72efe0fa49d8a58434d0067be5d4b47aea5eee975de",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-dec23ac4-ec35-4425-a644-b7d7d232210c.png",
+      "alpha_prompt": "Use case: background-extraction. Image1 edit target. Extract all twelve painted manta sprites onto genuine transparent RGBA background. Keep exact original canvas, positions, scale, ivory heads, navy spotted fins, thin tendrils and bell tips, forked tails. Remove only gray background including spaces between tendrils and fins; no glow halos or shadows, no painted checker or colored backdrop. Do not change pose or anatomy; preserve dark grounded corpse."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-731770a1-3f59-49b0-9770-5c26cfb18164.png",
+      "prompt": "Use case: precise-object-edit. Image1 edit target sprite sheet. Correct bell continuity ONLY: each of twelve mantas has exactly FOUR separate thin underside tendrils ending four golden bell tips, as first idle. Restore missing fourth bell/tendril in frames with only three, tuck fourth partially behind others for curled defense but tip visible. In last corpse all FOUR tips lie grounded dark and slack. Preserve every body/fin/head/tail pose scale and exact sheet layout gray background. No fifth bell, no other redesign.",
+      "reason": "Partial correction: extra fifth idle bell; upstroke/downstroke and corpse still show three. Not selected."
+    }
+  ],
+  "review_notes": [
+    "Fifteen-frame original-art atlas integrated as candidate32, not final animation acceptance. Existing clean alpha idle frames reused; former three-bell flight/action/death frames are not selected.",
+    "Corrected sources provide three fin-stroke phases, head-ram windup/contact, separate bell-aim/release ranged poses, two defensive breathing frames, hit recoil, descent/collapse and persistent grounded corpse.",
+    "Every selected source pose visibly retains four bells. Local extraction removes neutral backdrops and enclosed background gaps; conservative narrow edge processing preserves original paint and exposes exact recipes/hashes.",
+    "All-state composite and registered art desk inspected. Dynamic battle timing, facing, cross-sheet proportion/attachment continuity, fine pale fringes and event transitions remain for consolidated in-game review; static/source inspection is not final motion acceptance.",
+    "No gameplay, RNG, footprint, save, import or package behavior changed. No tests/imports/exports run during production."
+  ],
+  "local_processing_review": {
+    "owner_approval": "2026-09-15 explicit local raster permission",
+    "recipe": "art/animation/source/cutout-recovery-20260915/recipes.json",
+    "status": "prefer_existing_generated_alpha",
+    "notes": "Actual green alpha composite of prior alpha/poses.png is clean; earlier raw-preview fringe diagnosis is not supported by actual compositing. Existing generated alpha is preferable to the local neutral-key derivative. Keep new derivative as rejected processing evidence; do not register it. Pose/equipment continuity still pending."
+  },
+  "prior_review_notes": [
+    "Twelve poses with fin strokes, forward ram, defensive curl and flattened dark-bell corpse.",
+    "Four-bell continuity is incomplete in multiple source frames. Refine individual frames rather than accepting the partial global correction.",
+    "Fin/head/tail scale and tendril attachment/occlusion need full-motion review.",
+    "Extracted preview has visible colored/gray fringes requiring in-context review and correction before runtime use.",
+    "Source only, not packed/enabled. No tests/exports; consolidated validation deferred until generation and integration finish."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "authoring_crops": [
+      {
+        "source": "alpha/poses.png",
+        "outputs": {
+          "identity-reference.png": [
+            0,
+            0,
+            340,
+            425
+          ],
+          "upstroke-reference.png": [
+            644,
+            0,
+            942,
+            425
+          ],
+          "downstroke-reference.png": [
+            942,
+            0,
+            1254,
+            425
+          ],
+          "midstroke-reference.png": [
+            0,
+            425,
+            344,
+            790
+          ],
+          "collapse-reference.png": [
+            612,
+            920,
+            924,
+            1120
+          ],
+          "corpse-reference.png": [
+            930,
+            940,
+            1254,
+            1115
+          ]
+        },
+        "note": "Identity crop actual width340. Collapse/corpse authoring crops truncate tail tips; generation explicitly restores full fork from identity, no cropped tail used in runtime."
+      },
+      {
+        "source": "defense-hit-draft.png",
+        "outputs": {
+          "defense-pair-reference.png": [
+            0,
+            0,
+            1448,
+            724
+          ]
+        }
+      }
+    ],
+    "outputs": [
+      {
+        "source": "flight-four-bells.png",
+        "source_sha256": "b5c8e0148041aedf30a947b54950530bdecaac0f4a18aea9152788920cd8d1ff",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-97854b57-d20a-4e44-9666-7e9007021fd9.png",
+        "prompt": "Use case: identity-preserve. Asset: original painted battle sprite animation, not concept art. Image 1 is the authoritative Gloambell Wake Manta identity (FOUR thin belly tendrils, each ending one small gold bell); images 2, 3, 4 are upstroke/downstroke/midstroke pose references ONLY and mistakenly omit the fourth bell. Create ONE horizontal strip of THREE separate complete sprites at identical body scale and camera, facing RIGHT: left matches the UPSTROKE with both broad side fins arched above the body; center matches DOWNSTROKE with both broad side fins bent below the body; right matches LEVEL MIDSTROKE with broad fins stretched horizontally. Same navy spotted fin tops, ivory ribbed belly, ivory wedge head with tiny dark eye, one thin tail pointing LEFT ending forked fluke. Correct each pose to FOUR distinct slender tendrils ending FOUR separate dangling gold bells, with clearly separated tips so their count is unambiguous; keep all four attached to the same underside locations while they trail/sway naturally. No fifth bell, no extra fins, no feet or human arms. Do not copy any stray neighboring sprite fragments from the cropped references. Preserve original painted detail and lighting, body length and fin anatomy, no redesign. Full figures and tails visible with generous gutters. Genuine transparent RGBA background, no floor, shadows, glow clouds, motion lines, checkerboard, grids or text. This is a connected three-phase fin stroke for real playback, not three copies of idle.",
+        "selection": "All three flight phases; four bells each. Opaque painted checker removed locally, original preserved."
+      },
+      {
+        "source": "actions-four-bells.png",
+        "source_sha256": "e29ccb4f12e76ef90ed1ef6f1d055f732650860fae3186697d4805360d6a05f6",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3ee5022a-ad55-443c-849c-0c0daec38799.png",
+        "prompt": "Use case: identity-preserve. Image 1 is the identity reference of the ORIGINAL Gloambell Wake Manta; image 2 is its corrected flight strip showing FOUR bells. Make a 2-column 2-row animation sheet of FOUR full-body action poses, equal body size, elevated three-quarter camera facing RIGHT. Navy spotted broad fins, ivory ribbed belly and wedge face, tiny dark eye, ONE LEFT-trailing tail with forked fluke, FOUR thin belly tendrils each terminating ONE small golden bell throughout. Upper left: melee anticipation, tuck head back, sweep the two fins rearward, bells trail left under body. Upper right: decisive forward head ram, extend the head and chest right, long fins swept back, tail extended left, all four bells lag left; real bent fin/body action, not a rotated idle. Lower left: ranged anticipation, raise all FOUR bell-bearing tendrils forward to aim bell mouths to RIGHT while fins brace; maintain four distinct complete tips and their body attachments. Lower right: ranged release, bells extend a little further right and body recoils gently left, mouths bright locally but NO emitted projectiles, rings, beams, auras or clouds (engine owns effects). Same anatomy and small bell scale through all poses. No extra limbs, no third fin or second tail, no bells missing or becoming giant. Generous empty gutters; every tail, bell and fin inside its cell. Uniform neutral gray background RGB(205,205,205) for owner-approved local extraction, no painted checker, no labels/text/floor/shadow. Preserve reference palette, original fine painted style and proportions.",
+        "selection": "All four poses: melee windup/contact and explicit ranged aim/release. Engine continues owning projectile effects."
+      },
+      {
+        "source": "defense-hit-draft.png",
+        "source_sha256": "88f9f2657e27243f3cdaf8a4564b1cf30942c33da54ba0ec5fafc5d7d82f37fe",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4c1474a3-bccd-412a-ba50-802fa9adfab1.png",
+        "prompt": "Use case: identity-preserve. Image 1: authoritative original Gloambell Wake Manta identity; Image 2: four-bell flight continuity reference. Create THREE separate full-body animation sprites in a horizontal strip, same body scale/camera, facing RIGHT. Preserve ivory wedge head tiny dark eye, ribbed ivory/silver-blue belly, two large navy-spotted fins with scalloped pale edges, one long leftward tail ending forked fluke, FOUR thin underside tendrils each ending a small gold bell. LEFT: defend, curl both broad fins into protective cup around belly, leave face visible; all FOUR small bell tips visible within cup, thin stems still attached. CENTER: second frame of SAME protective posture, gentle defensive breath bends fin rims slightly outward, belly gently expands, bells ease a little lower; no uncurl into idle and no extra appendages. RIGHT: hit recoil, head draws up/back, fins flinch asymmetrically, all FOUR bells swing below belly and tail bends; keep proportions and count. Uniform neutral gray background RGB(205,205,205) for owner-approved local extraction, all extremities inside separate generous cells. No text/grid/checkerboard, floor, shadows, spell effects, equipment redesign or scenery. Original painted raster, not geometry.",
+        "selection": "Only rightmost hit pose selected; left two defensive poses rejected because only three bells."
+      },
+      {
+        "source": "death-four-bells-draft.png",
+        "source_sha256": "7d4c0c17aa6fae7a569ff2073f849e0b11ce9aadf31697c22b4db8ebcad3338a",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8acf5ad8-5c8a-42d5-bb22-bcb25a692a92.png",
+        "prompt": "Use case: identity-preserve. Image 1: original Gloambell Wake Manta identity; image 2: corrected four-bell anatomical reference. Create THREE separate full-body connected death animation poses left to right in a wide strip, equal body size, elevated three-quarter camera, head facing RIGHT. Preserve the SAME creature: ivory wedge head, ribbed pale belly, exactly TWO navy-spotted broad scalloped fins, ONE narrow tail to LEFT ending forked fluke, FOUR flexible belly tendrils each ending one small golden bell. LEFT: dying descent, head droops, broad fins sag and bend, all FOUR bells lower with fading light; body visibly loses lift. CENTER: impact/collapse, body lowers nearly onto ground, nearer fin crumples, head bowed, other fin folds over back, tail slack, FOUR bells spill forward/slightly left on slack tendrils. RIGHT: persistent dead sprite, flattened grounded body, both fins folded and limp, head lowered and eye closed, tail lying slack to left fork visible; exactly FOUR dark unlit bell tips rest on ground on four slack connected tendrils. No detached extra bells, vanishing equipment, levitation, gore or skeleton redesign. Progressively articulated collapse not simply rotating/scaling idle. No ground drawing/shadow, no text/checkerboard/grid, no glow cloud/effects/scenery. Uniform neutral gray background RGB(205,205,205) for owner-approved local extraction, generous clean margins and separated cells, all extremities fully visible. Preserve original navy/ivory painted texture.",
+        "selection": "Only first descent pose selected; other two retain raised belly/bright bells and are not selected."
+      },
+      {
+        "source": "defense-four-bells.png",
+        "source_sha256": "19537988e58e5471aa98764f31e95b94c641095677cc87d7e77f1feeb41a9125",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8b586395-8350-42ab-932a-046b8e4c34d7.png",
+        "prompt": "Use case: precise-object-edit. Image1 is the EDIT TARGET, two defensive breathing frames. Make just one anatomical correction: BOTH sprites currently have three bells, but must have FOUR. Add ONE additional thin flexible tendril attached to the underside with ONE small matching gold bell to EACH sprite, place its tip distinctly to the RIGHT of the existing three bell tips, inside the protective fin cup. Result: four clearly separate small bells in each frame. Keep all existing three bells intact, maintain their size and appearance; do not combine or replace any. Preserve every head, eye, fin, belly, tail, pose difference, camera, body scale, original painted palette, and two-cell layout. Expand the rightmost opening minimally only if needed to fit fourth bell. Keep neutral gray background. No new pose, no crop, no text or effects, no fifth bell.",
+        "selection": "Both defensive breathing frames selected; fourth connected bell visibly restored."
+      },
+      {
+        "source": "grounded-pair-draft.png",
+        "source_sha256": "e5437d682ca8fdf9c53debc6d39c72840d57931c9a8963922eab28c10484b712",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c96272b8-ff6d-4cea-b0c0-0b78c53a74e0.png",
+        "prompt": "Use case: identity-preserve. Image1 is the COLLAPSE pose reference. Image2 is the FINAL CORPSE pose reference. Image3 is intact live identity for the tail and four-bell count only. Make a horizontal pair of TWO original painted sprites, facing RIGHT in the same elevated three-quarter camera as references. Preserve the low collapsed silhouette and folded navy spotted fins from Images1/2, NOT the upright live pose. LEFT: collapsed body halfway settled, head bowed, fins bent/folded over torso, belly almost on ground, exactly FOUR slack tendrils with FOUR small unlit bells at ground level. RIGHT: final DEAD body flattened fully onto ground, ivory head fully lowered, eye CLOSED no bright pupil, both broad fins limp folded over body, ONE tail lying flat to LEFT ending complete forked fluke, FOUR thin tendrils extend sideways ON the ground ending FOUR separate DARK unlit small brass bells. Important: belly, head tip, folded fin tips and bells all rest on the same ground surface; no space beneath belly, no hanging vertical stems. Bell interiors gray bronze, not white-yellow glowing. Do not add a painted ground or shadow. Tail tip in pose references was clipped by authoring crop; restore complete fork using Image3, allow generous outside margin. Body mass, palette, textures and anatomy otherwise match original. Uniform neutral gray RGB205 background; no checkerboard, no labels, no gore, no added limbs or detached equipment. Two distinct stages of same grounded corpse, not floating idle.",
+        "selection": "Low, dark grounded silhouettes recovered; both still have three bells, superseded by next precise edit."
+      },
+      {
+        "source": "grounded-four-bells.png",
+        "source_sha256": "84d21bb87a5e64b0c768961be7b7a8c959c09fe7df3aa763d9228a5fa746ca47",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-151466e8-a72f-4bde-9b6e-bdd7748c5dd3.png",
+        "prompt": "Use case: precise-object-edit. Image1 is the EDIT TARGET. Two grounded death poses currently have THREE bells apiece. Correct only these two details: (1) add ONE matching small DARK UNLIT brass bell on ONE extra slack connected belly tendril to EACH creature, placed in the empty ground gap between the existing center and rightmost bells. FOUR clearly distinct small bells per creature afterward, NOT three, NOT five. Preserve existing three, their small size and dead dark bronze material. (2) In RIGHT final corpse, remove the tiny golden eye point, make it a closed dark eye crease. Keep every other pixel/shape/pose/layout/body scale/palette/fin/tail/ground contact unchanged. No glowing bell interiors, no extra limbs, no levitation, no upright redraw. Uniform gray background, no text or grid.",
+        "selection": "Both low collapse/final corpse poses selected, four dark grounded bell tips retained."
+      }
+    ],
+    "processing_recipe": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-cutouts.json",
+    "processing_proofs": "continuity-alpha/*.processing.json",
+    "packing_recipe": "packing.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_gloambell_wake_mantas.png",
+    "runtime_sha256": "6cb515d0526db6b4e88e5588bab7dacdf594ff91070a000404ac77b485ff6f01",
+    "frame_count": 15,
+    "review_evidence": ".artifacts/battle-unit-animation-size-20260913/gloambell-continuity-20260915/",
+    "status": "runtime_candidate_pending_consolidated_validation"
+  }
+}

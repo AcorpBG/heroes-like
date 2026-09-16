@@ -1,0 +1,73 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_snowglass_markers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_snowglass_markers.png",
+  "reference_sha256": "8177175e3b32c805c907844949e3cbab3f5d4906258a83cbb85cc6119f7d6e90",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "9e9a78a99be35fb458946d8e7350f5e56faeba3e589c5a51582346e5c2959018",
+      "source_output": "exec-5845bf2b-3b94-4bc4-8ea8-8121446057ec.png",
+      "prompt": "Use case: stylized-concept. Original Snowglass Marker battle animation sprite sheet based on reference identity: woman archer in white fur-lined hood and white split coat with cobalt embroidered panels, blue cape and scarf, brass blue-lens goggles, brown belts, dark trousers knee guards and fur boots; back quiver blue-fletched arrows, compact curved wooden bow brass fittings and blue sight lens. LEFT hand always holds bow, RIGHT draws string. Exactly sixteen full-body articulated poses FOUR columns FOUR rows, consistent scale elevated three-quarter camera facing RIGHT, complete bow and boots within generous gutters. Row1 idle relaxed bow lowered; alert breathing; walk near leg forward; opposite walk near thigh backward crossing far forward thigh, same torso orientation. Row2 passing step knee raised; melee anticipation both hands grasp bow stave crosswise away from string; forward two-hand bow-stave shove; defensive crouch bow held close protecting torso. Row3 nock one arrow right hand; full draw right hand at cheek left bow arm extending RIGHT; release right hand back beside cheek string relaxed and arrow GONE, left keeps bow; recovery bow lowers right hand approaches quiver. Row4 hit recoil; dying kneel; falling side torso low; dead lying SIDE eyes closed goggles intact, horizontal relaxed body bow resting beside hand. Original painterly fantasy raster matching reference, not copied historical game art. Real elbow/knee/torso changes not repeated upright cutouts. Plain pale gray background no shadows/checker/text/gridlines/effects/trails/floating arrows. Keep bow assembly, goggles, quiver and coat consistent in every frame.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "3c4e63c44f8e7c28288a8ab6bfe4f9798cf6f1926c5cef371075c7fb7de28767",
+      "alpha_output": "exec-87937e6a-0f6d-4f59-9649-6f9f62c4f52f.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all sixteen Snowglass Marker poses onto genuine transparent RGBA. Preserve original layout and body sizes, all bows/strings, fur and cape, boots, corpse and limb gaps. Remove gray only. No checkerboard, matte, shadows, effects, text or reframing."
+    },
+    {
+      "source": "poses-melee-draft.png",
+      "source_sha256": "c1120129fd5ba2df3847a878f7efa9fe1e6bc0d3ff9a4374b76f02be4f9f8dbc",
+      "source_output": "exec-59783946-871d-47a3-8cef-4586b2e788e2.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY row2 column3 of this 4x4 Snowglass Marker sheet: melee strike must hold the curved bow HORIZONTALLY across chest in BOTH widely separated hands gripping wooden stave, thrusting it forward in a two-handed shove. Match two-hand horizontal stave grip of previous frame row2 column2, extend both elbows, same lunging legs. No arrow or drawn string in this melee frame. Keep entire bow with sight lens and unpulled string attached between tips. All other fifteen frames, scale, costume, layout and gray background unchanged."
+    },
+    {
+      "source": "melee-shove.png",
+      "source_sha256": "4b3173ca7f2e5d739eef49d4b07e06af440ee96390b2b73f56bd90e42f644bf7",
+      "source_output": "exec-82c4847b-931b-437a-bb73-b0742c984989.png",
+      "prompt": "Use case: stylized-concept. ONE full-body Snowglass Marker melee shove animation pose, original same white fur hood blue embroidered coat, blue cape, goggles, quiver and boots as reference. Three-quarter elevated camera facing right. Feet in deep forward lunge. BOTH hands grip separated portions of ONE continuous curved wooden BOW STAVE held HORIZONTALLY across chest, both elbows pushing forward. Bow is rotated sideways as a single rigid object, curved stave forms shallow horizontal arc, one relaxed string joins its two tips behind the hands. No extra straight rod, no arrow, no T-shaped appendage, no vertical bow section. Brass blue sight stays attached midpoint of bow. Hands grasp wood not string. Keep body completely visible and generous margins, plain pale gray background no shadows, no text or effects. Painterly game raster.",
+      "alpha_source": "alpha/melee-shove.png",
+      "alpha_sha256": "1a69b1ecae9d549eba79b0b84550b39b4dd85b0faa13232f214e3e1083d822a9",
+      "alpha_output": "exec-ffd35dde-aa62-4a50-8a74-fca35d89f8e7.png",
+      "alpha_prompt": "Use case: background-extraction. Extract this single Snowglass Marker melee shove onto genuine transparent RGBA. Preserve full pose, body scale, canvas, complete horizontal bow and string, both gripping hands, fur edges, cape and boots. Remove only gray background including gaps. No checkerboard, matte, shadow, redraw, reframing or text."
+    },
+    {
+      "source": "opposite-contact-draft.png",
+      "source_sha256": "0190c773c43844260b41a03b7dc890a5d2b53ce9df6e0f21e3417d890bbd088c",
+      "source_output": "exec-d7b3a0bf-9767-4b69-bbad-9d634a103202.png",
+      "prompt": "Use case: stylized-concept. ONE original Snowglass Marker walking contact animation pose. Reference is identity only: white fur hood and blue embroidered white coat, blue cape goggles quiver, brass-trimmed wooden bow carried lowered in LEFT hand, free right hand swings gently. Full body elevated three-quarter camera facing RIGHT. Crucial opposite gait anatomy: character's RIGHT leg (near camera, on viewer LEFT at hip) reaches BACKWARD toward lower LEFT, toe pushing off behind. Character's LEFT leg (far camera, on viewer RIGHT at hip) reaches FORWARD toward lower RIGHT, heel contacting. Near thigh visually crosses IN FRONT OF far thigh at crotch, showing the leg swap; two separate boots, not two copies of the near-leg-forward pose. Torso upright facing right unchanged, coat opens enough to see crossing thighs. Entire body and bow inside wide margins. Plain gray background, no text, shadows or effects. Original painterly raster matching reference."
+    }
+  ],
+  "review_notes": [
+    "17 packed frames retain thirteen original paintings, including the corrected separate two-hand melee shove, and select four new recovery/ready-guard/low-nock/head-left-corpse paintings. New low nocking differs from aimed draw; melee and firing stay separate. New relaxed head-left body follows the original fall with goggles, quiver, cape and complete bow retained; reversed original corpse is unselected.",
+    "Original sheet and corrected shove alpha composites are clean and reused. New green-backed source uses approved bounded edge preparation preserving white fur. Source scales 0.65/0.17/0.42 and anatomical anchors; inspected banded crops exclude neighboring bow tips, boots and next-row hood pixels without clipping own string/bow or recoil tip.",
+    "Original contact/passing remain migration candidates, not a complete alternating gait. Nock/string mechanics, bow length/sight/grip continuity, body/cape/palette/edges, stance transition and connected timing remain refinement. Static art review is not motion/gameplay acceptance."
+  ],
+  "prior_review_notes": [
+    "Sixteen-pose source and transparent extraction visually inspected: nock/draw/release/recovery, guard, recoil, collapse and own corpse. Original melee strike loses two-hand grip. Whole-sheet correction creates malformed bow and is unselected. Separate melee-shove source preserves one curved stave and two grips; replace frame6 during packing, normalizing scale/anchor because extraction reframed it. Sheet and separate opposite-contact draft repeat leading leg, so gait remains unaccepted. Nock-vs-draw distinction, weapon continuity and alpha compositing remain review/refinement work. No runtime enablement or tests/exports; source-only."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 13,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_snowglass_markers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_snowglass_markers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_snowglass_markers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_snowglass_markers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_snowglass_markers.png",
+    "runtime_sha256": "12acb241f801511c7705212693099ec28c664ba95aebfdc838329f08e35e90d5",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png": "3c4e63c44f8e7c28288a8ab6bfe4f9798cf6f1926c5cef371075c7fb7de28767",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_snowglass_markers/alpha/melee-shove.png": "1a69b1ecae9d549eba79b0b84550b39b4dd85b0faa13232f214e3e1083d822a9",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_snowglass_markers/continuity-alpha/bow-recovery-nock-and-resting-corpse.png": "d27dd4e205deade585a16215236b08b1127fd122ad6be5886050548853c911a1"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/snowglass-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

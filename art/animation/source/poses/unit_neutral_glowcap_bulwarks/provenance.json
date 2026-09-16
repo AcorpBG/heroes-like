@@ -1,0 +1,50 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_glowcap_bulwarks",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_glowcap_bulwarks.png",
+  "reference_sha256": "f52f0a9b0ca54f4554bf1fd518f9620ce57b9a71abb7857ad0ece4784e2631c0",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "31c6243e4b7b80c3c1fe5f27fe41e6ad642b73c37c542385a9e2f124eb36d82e",
+      "source_output": "exec-dbf1826d-767e-4a95-bd5a-616a91084b8f.png",
+      "prompt": "Use case: stylized-concept. Original Glowcap Bulwark battle sprite sheet based on attached identity: stocky short broad male dwarf-like warrior, gray beard, stern face, conical layered fungus helmet and shoulder plates with tiny cyan mushrooms, green scarf and split green rune tabard, worn brown leather armor and strapped boots, oversized layered gray-brown shelf-fungus shield in LEFT hand, short dark-shafted leaf-point spear in RIGHT hand. Twelve complete independently articulated poses FOUR columns THREE rows, consistent proportions/body size and elevated three-quarter camera facing RIGHT, generous gutters around full shield and spear. Row1 idle shield forward spear angled upright; breathing alert elbows/shoulders slightly adjust; short heavy walk near foot forward; opposite walk near thigh back overlapping far thigh stepping right, no mirrored equipment. Row2 passing step knee raised below belly; spear attack windup right elbow drawn back shaft beside shoulder shield protects torso; spear thrust RIGHT front knee bent right arm extended shield stays on LEFT; defense deep squat shield raised covering beard and chest spear tucked alongside. Row3 hit recoil torso tilts back shield jolted; dying knees buckle shield drops and mushroom lights dim; falling on SIDE torso low spear drops beside; final DEAD warrior lying on SIDE eyes shut horizontal head/torso all cyan mushrooms dark, shield and spear resting beside. No blood. Real joint articulation, no rotated standing corpse. Original gritty painterly raster, retain fungus layers and anatomy, no magic trails/clouds or extra limbs. Plain pale gray background no shadow, checkerboard, scenery, labels or borders.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "fc2d44fae57f33007be142436fdd6af1ca9a21e0804e57525ed52bfe33ad67df",
+      "alpha_output": "exec-48b2c917-7829-460c-bec9-7ec83710ba66.png",
+      "alpha_prompt": "Use case: background-extraction. Remove pale gray backdrop and any floor shadows from this twelve-pose original Glowcap Bulwark sheet. Genuine transparent RGBA. Preserve exact layout/body scale/poses, fungus layers and tiny mushrooms, complete spear tips, shield, beard and corpse with dim mushrooms. Clean transparent gaps between limbs/equipment. No checkerboard, matte, glow haze, text, blur, effects, new objects or anatomy changes."
+    }
+  ],
+  "review_notes": [
+    "17 packed frames retain all 12 original RGBA paintings and select five new travel/recovery/guard paintings. New upright-spear supported steps, horizontal spear recovery and ready brace preserve one shield and one spear.",
+    "Original alpha composites are clean. Approved magenta-key preparation preserves green cloth and cyan mushrooms. Inspected banded crops exclude the preceding boot from windup/thrust and neighboring spear tip from guard without clipping the selected equipment.",
+    "The four-phase guide did not produce alternating contacts/passing support. Unselected top-right duplicate is retained. Leg ownership/travel, spear length/grip, shield/body scale, edge consistency and connected timing remain full-roster refinement; static previews are not playback acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses and extraction visually inspected: spear thrust, deep shield brace, knees buckling and own dimmed side corpse. Gait alternation, spear-length consistency and cyan edge compositing need refinement/final in-context review. Source only, not packed or enabled. No tests/exports launched under owner generation-first sequencing."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 12,
+    "new_or_corrected_selected_paintings": 5,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_glowcap_bulwarks.png",
+    "runtime_sha256": "19c1cef2640e69b13522d19f69ff8acd2f19f6b3163a86726be8cdbb5c24e327",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png": "fc2d44fae57f33007be142436fdd6af1ca9a21e0804e57525ed52bfe33ad67df",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_glowcap_bulwarks/continuity-alpha/four-phase-step-and-spear-recovery.png": "6ac5b3e161e1bffa57f709660c79e43d27e2529ee2327297c93792334fd41ad2"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/glowcap-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

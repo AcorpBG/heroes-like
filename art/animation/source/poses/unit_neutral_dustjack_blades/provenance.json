@@ -1,0 +1,56 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_dustjack_blades",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
+  "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "726a6c89684e2cea8f57682d2402e0bac35657270a86b8be8aff0d08520170d8",
+      "source_output": "exec-13d0bfdc-8127-4138-a42f-f4c3fd5475da.png",
+      "prompt": "Use case: stylized-concept. Original Dustjack Blades battle animation sheet matching attached identity: athletic short-haired adult human woman, bronze goggles on forehead, teal scarf with trailing ends, tan sleeveless leather tunic, asymmetrical scrap bronze shoulder plate, leather bracers/belts, tan trousers and reinforced knee guards/boots. TWO distinct broad hooked scrap-steel short blades, one in each hand, same blades through all poses. Exactly twelve full-body articulated poses FOUR columns THREE rows, same body scale and elevated three-quarter camera facing RIGHT, clear generous gutters complete blades/boots. Row1 idle blades lowered; alert breathing shoulder/scarf changes; running extended stride near leg forward far back; gathered running phase both knees bent beneath hips near leg back and far forward, torso unchanged direction. Row2 passing step near knee lifts in front of hip and back foot pushes off; attack windup right blade drawn behind right shoulder left blade guards chest; powerful right-hand slash forward RIGHT and down with hip twist/front knee bent, left blade near ribs; defense low crouch crossed blades before chest. Row3 hit recoil shoulders back and elbows compress; dying knees buckle grip loosens; side fall torso low both weapons dropping alongside; DEAD woman lying on SIDE eyes closed horizontal torso/head slack limbs two blades resting beside. No blood, no rotated standing cutout, actual hip/knee/elbow articulation. Original gritty painterly raster. Plain pale gray backdrop no shadows/scenery/checkerboard/text/borders/motion trails or effects."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "ee66bfb9239abe24c8662449f7ea384ac4b3ac5c4704cf6bdac38a4b26330259",
+      "source_output": "exec-4e47cda9-7043-4997-99a9-310813546078.png",
+      "prompt": "Use case: precise-object-edit. In row1 column3 ONLY of this twelve-pose Dustjack sheet, restore the missing SECOND broad hooked scrap-steel short blade to the forward clenched hand on viewer right. Match the corresponding blade held by the next running figure, pointing down/right, complete inside cell. Keep first blade, both hands, running pose and all other eleven poses unchanged. Preserve character, proportions, 4x3 layout, gray background. No other edits, no text/effects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "1b627fa7fa21ded26875bf79378a565368d08cc03396e6b24a2f0589ce469104",
+      "alpha_output": "exec-c5625d80-bcaf-4e1d-83d0-1deeb97cb87f.png",
+      "alpha_prompt": "Use case: background-extraction. Remove gray background from this twelve-pose original Dustjack sheet onto genuine transparent RGBA. Preserve exact poses/layout/scale and TWO complete blades in every pose, including corrected running frame, goggles, scarf and side corpse. Transparent gaps between limbs and blades. No shadows, matte, checkerboard, blur, text, effects or new elements."
+    }
+  ],
+  "review_notes": [
+    "17 packed frames retain all 12 original RGBA paintings and select five supported step/two-blade recovery/ready-guard paintings. Original extended/gathered run, slash, crossed guard and head-right collapse/corpse remain distinct; exactly two blades are selected throughout.",
+    "Original alpha composites are clean. Approved green-key preparation preserves tan cloth and teal scarf. Inspected banded crops remove neighboring boot, scarf, blade and corpse-foot fragments. Final corpse crop excludes only faint alpha below the intact body/blades so atlas packing does not clip.",
+    "Four-phase guide still repeats leading contact and lifted-leg geometry; top-right duplicate is retained unselected. Anatomical near/far ownership, asymmetrical shoulder/hand consistency, stance-to-run transitions, scale/grounding and continuous action/death timing remain review, not final acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve poses and extraction visually inspected. Missing second blade in first running frame restored. Distinct running extension/gather, slash, crossed-blade crouch and own side corpse. Running contact alternation, blade gutters and equipment/shoulder continuity remain refinement/final motion review work. Source only, not packed or enabled. No automated tests or exports launched."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 12,
+    "new_or_corrected_selected_paintings": 5,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_dustjack_blades/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_dustjack_blades/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_dustjack_blades/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_dustjack_blades/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_dustjack_blades.png",
+    "runtime_sha256": "6669616a90a9286243856f3a34deda0839259549c7478237dea41bff21db38b5",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_dustjack_blades/alpha/poses.png": "1b627fa7fa21ded26875bf79378a565368d08cc03396e6b24a2f0589ce469104",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_dustjack_blades/continuity-alpha/four-phase-step-and-two-blade-recovery.png": "7f018af68ec34937391d14b554e5b53a3f9325895ae07b53b6ac2a25eab34d0b"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/dustjack-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

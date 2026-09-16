@@ -1,0 +1,101 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_scrip_haulers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_brasshollow_scrip_haulers.png",
+  "reference_sha256": "759022e21b7781df3c88ba853b32905b52a820cafe45d2814a2006629d26e028",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/poses.png",
+      "source_sha256": "fe1e8f9ae21367e545a8340ceb6a3b41f24c9666fad54c40d3bc7063633a1aeb",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-75b964e8-6a32-4fa7-b890-fe63de56ba5a.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle animation sheet. Reference Scrip Hauler: young brown-haired human worker-soldier in rounded riveted brass helmet with ear discs, brass shoulder/chest/knee plates over dark brown quilted leather, dark scarf, heavy brass-toed boots, small canvas bedroll backpack, ledger tags and round brass tokens at belt. RIGHT hand short wooden-haft iron hooked bill tool with brass ferrules, LEFT arm tall rectangular blackened metal shield with brass border and oval central boss. Twelve full-body poses in FOUR columns THREE rows, constant body/shield/tool scale, three-quarter side view facing right, generous gutters. Transparent RGBA background. Reading order: 1 relaxed idle hook low shield upright; 2 inhaling idle chest rises shield tilts slightly; 3 walk RIGHT foot forward LEFT back; 4 passing RIGHT planted LEFT knee advancing feet near together; 5 opposite contact LEFT forward RIGHT back torso unchanged; 6 attack windup RIGHT hooked tool above and behind shoulder LEFT shield forward; 7 attack contact RIGHT arm extends hooked tool forward and down LEFT shield guards torso; 8 defense crouch behind shield tool close; 9 hit recoil shield tips backward; 10 dying knees buckle head bows tool lowers; 11 collapse sideways shield tips with left arm; 12 dead side-lying eyes closed helmet still on, hook and shield beside correct hands backpack attached. Same hook shape and tool length, rectangular shield dimensions, costume and hand ownership throughout. No missing gear or extra limbs. Original detailed painted strategy game art matching reference, genuine articulated movement not translated copies. No scenery, ground shadows, effects, labels or gore. Full boots/shield/tool uncropped."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9b639502-3c6f-40ec-b21e-312e9a167bbb.png",
+      "prompt": "Use case: background-extraction. Remove only checkerboard from supplied twelve-pose Scrip Hauler sheet into genuine transparent RGBA alpha. Preserve all painted characters, hooked tool, rectangular shield, brass armor, backpack, opaque interiors and exact size/positions. Clear gaps around weapons and limbs. No replacement backdrop, matte, shadows, colored fringe, painted checkerboard or redraw. Full sheet retained.",
+      "reason": "Extraction introduced brown backdrop; not accepted as runtime alpha."
+    }
+  ],
+  "review_notes": [
+    "14 candidate frames: nine original paintings (sheet indices0,1,5,6,7,8,9,10,11) plus five new paintings for contact/passing and braced guard.",
+    "The unfolded-contact draft has duplicated knee armor and is excluded. Guide-first contact removes duplicate armor but does not yet establish opposite leg lead; frame names explicitly retain limb-review qualification. Guided passing poses show separate support/airborne feet.",
+    "Original hook attack, recoil, kneeling/seated collapse and equipped closed-eye corpse retained. Hook shaft/head and grip continuity, seated-to-prone transition, body/gear/palette and subtle loop changes remain full-roster refinement.",
+    "Approved connected neutral175/tolerance16/edge2 removes backing and explicitly inspected arm gaps. Ivory ledger tags and steel hook highlights preserved. No local pose painting/mirroring/warping; source shapes retained before uniform packing.",
+    "512x256 four-column candidate atlas, explicit idle/move/attack/defend/hit/death/dead and action aliases. Actual-alpha packed art visually inspected; registered offline art-desk screenshot visually inspected. Browser VAAPI warning did not prevent capture; exit0. Static art evidence is not timed/gameplay acceptance.",
+    "Final roster acceptance0/160. No tests/imports/exports, paid API, runtime/tool-code, gameplay/save/footprint changes, staging, commit or push. Full roster production/refinement precedes consolidated validation."
+  ],
+  "prior_review_notes": [
+    "Twelve poses inspected with hooked-tool attack, shield defense, kneeling/seated collapse and equipped closed-eye corpse.",
+    "Walking contacts repeat lead; passing and idle differentiation need refinement.",
+    "Hook shape/shaft length, hand grip and shield/backpack scale continuity need review. Seated fall needs transition refinement.",
+    "Clean alpha extraction required. Source-only not enabled.",
+    "No tests/exports or disposable test intermediates created; 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "candidate_frames": 14,
+    "retained_paintings": 9,
+    "new_paintings": 5,
+    "new_outputs": 6,
+    "source_preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_scrip_haulers.png",
+    "runtime_atlas_sha256": "f55317aa6d02b9a65b4c46a78ff6841275669ca9667f1d34b3377e1ee12b6207",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/poses.png": "eb777f9d5f5caae75bc0ffa25c5fde120e4d86c70f674ddbeb59cbb5c00d53f7",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/near-contact-guide-first.png": "39988203bd1712699d8d0af700c5b1fd6cf77b881dba3951d8cc71ca3f181a96",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/walk-1.png": "5063eaa90a76e454ed3cd9663d979c80e84afe5f55339c36f946f38be8b5f08a",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/walk-2.png": "688b458f291b219ac5485b5877091713dcdea7895f9be3f4f08228fd09cf586b",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/walk-3.png": "68119535e5f396605958c498bc20fffab12df742500065a1b2f87d24f8d82d46",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/guard-braced.png": "ee869daca8dcf5072117c448ecc0532cca29613af0040dd833e035c5ea3365b8"
+    },
+    "reference_crop": {
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/poses.png",
+      "rect": [
+        50,
+        0,
+        302,
+        356
+      ],
+      "reference": "art/animation/source/poses/unit_brasshollow_scrip_haulers/identity-reference.png",
+      "purpose": "Inspection composite and fixed identity reference only; never a runtime pose. Generated before final enclosed-gap seeds; that earlier reference backing remains preserved."
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/scrip-continuity-20260916",
+    "status": "candidate_registered_not_final_accepted",
+    "cleanup": {
+      "status": "byte_identical_preview_cleanup_completed",
+      "pairs": [
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/scrip-continuity-20260916/identity/unit_brasshollow_scrip_haulers-poses-rect-50-0-302-356-green.png",
+          "retain": "art/animation/source/poses/unit_brasshollow_scrip_haulers/identity-reference.png",
+          "sha256": "266a75ad9ca3fbf33b4a28794fdc2551dec06a8860215bfb7f5667a4eabf9a38",
+          "bytes": 731215
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/scrip-continuity-20260916/source-alpha/poses-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/scrip-continuity-20260916/alpha-first/poses-green.png",
+          "sha256": "a8ad5f66b066233ec64b958cc1880fe40ac639f787c9d683c8fea43d588dd184",
+          "bytes": 1191281
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/scrip-continuity-20260916/source-alpha/poses-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/scrip-continuity-20260916/alpha-first/poses-light.png",
+          "sha256": "e23c46e696769ca6d4e857cdbab3da57cf77ed6e33f080caccc53996d6d693f1",
+          "bytes": 1213283
+        }
+      ],
+      "removed_bytes": 3135779,
+      "preserved": "Original/new/rejected masters, exact prompts/input hashes, source/runtime atlases, recipes/proofs, unique before/final evidence, caches and unrelated files."
+    }
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_mireclaw_reedsnare_kin",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_mireclaw_reedsnare_kin.png",
+  "reference_sha256": "f13f170113fe2d8ae0ccd354c8332ba293e376c764f95d2c7de491ccf8b4c68c",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "62eaff24fa41023ee2dcf0179841561778b6572e54a6d2512c32f1b334087948",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d95277fa-ca2f-4e1d-9cbc-0436c029da6e.png",
+      "prompt": "Use case: stylized-concept. Image1 identity reference. Original Reedsnare Kin battle sprite sheet TWELVE full body poses FOUR columns THREE rows fixed elevated three-quarter camera facing RIGHT same body scale generous gutters. Lean young man long dark hair tied topknot green face paint moss green reed-fringe leather armor olive scarf brown trousers wrapped green boots bone charms rope net at right hip. Two hands grip long green wooden fork staff with TWO prongs at RIGHT end, attached weighted rope loop hangs between prongs. Row1 idle staff low diagonal right; breathing shoulder rises head slightly turns; walking near leg forward far back staff supported two hands; passing knees under hips. Row2 opposite contact far leg forward near back no mirrored torso; windup pull staff back both hands fork right loop gathers; thrust both arms extend fork RIGHT rope loop trails hangs weighted end retained; defend crouch staff across chest fork right. Row3 hit recoil staff and net retained; death knees buckle staff lowers; side collapse torso raised staff on ground at hands; dead horizontal side eyes CLOSED legs relaxed net attached full fork staff and slack weighted loop beside body. Preserve TWO prongs, complete shaft, both hands, net, rope attachment, original clothes no missing gear extra arms. Genuine articulated joints not rotated standing corpse. Painterly original raster pale gray background no scenery shadows effects text grid blood.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "78a4bb0df9bddf36190a6ce5505f13d9e59ec8fe6f42809a4ffdee457e945621",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-994880ad-068c-4771-8215-2a56c1d5a6a9.png",
+      "alpha_prompt": "Use case: background-extraction. Image1 edit target. Extract all ELEVEN green-clad warrior poses onto genuine transparent RGBA background. Preserve exact canvas irregular 4/3/4 layout dimensions positions all bodies complete two-prong fork staffs weighted rope loops net mesh cloth fringe hair and closed-eye corpse. Remove only pale gray background and shadows including inside rope loops net holes between limbs. No halos painted checker scene effects text or altered poses."
+    }
+  ],
+  "review_notes": [
+    "Thirteen packed candidate frames combine seven viable original real-alpha poses with six selected new paintings from eight built-in masters.",
+    "Four individual pose-guide inputs provide walking contacts/passing candidates. Near/far anatomical ownership, overlap, foot travel and connected gait remain unaccepted; guide compliance is not proof. Corrected passing source removes an overlong staff tail; original draft retained unselected.",
+    "New anticipation/contact maintain two separate shaft grips, two-prong fork, hanging weighted loop and hip net. Contact repair shortens overlong shaft and extends rear forearm; first contact draft is retained unselected.",
+    "Reuse original idle pair, guard, hit, kneel, collapse and equipped closed-eye corpse with unchanged generated alpha. Exclude repeated original movement and unsupported original attack. Explicit crop bands remove neighboring boot/fork fragments from the irregular4/3/4 source layout without clipping owned equipment.",
+    "Approved green color-distance preparation is limited to new paintings. Original alpha is not rekeyed; olive clothing/face paint/net and full source masters preserved. Exact prompts/references and source/tool/recipe/output hashes retained.",
+    "Final composited atlas and offline art desk visually inspected as production only. Face/body/shaft/rope-net scale, grip continuity, low-opacity edge residues, translated gait and real attack/death duration remain for full-roster refinement and consolidated gameplay/Linux/Windows acceptance.",
+    "No tests/imports/exports, paid API or gameplay/save/footprint edits. Full160 goal remains in progress."
+  ],
+  "prior_review_notes": [
+    "Eleven actual poses in 4/3/4 layout; twelve requested. Opposite contact missing, remaining movement pair repeats lead without passing.",
+    "Fork staff, weighted loop and net retained through equipped closed-eye corpse.",
+    "Thrust rear hand/shaft obscured or missing; grip continuity, fork/rope/net scale and idle differentiation need refinement.",
+    "Explicit crops required for wide middle-row thrust, not a regular twelve-cell recipe.",
+    "Extraction fringes need in-context review. Source only, not packed/enabled. No tests/exports; consolidated validation deferred until generation and integration finish."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "reference_crops": [
+      {
+        "file": "standing-reference-light.png",
+        "sha256": "486e12e99196a5f1365e2a0af85f782d4dae6d00e32d3e9fbbf9b845624ac251",
+        "source": "alpha/poses.png",
+        "source_sha256": "78a4bb0df9bddf36190a6ce5505f13d9e59ec8fe6f42809a4ffdee457e945621",
+        "rect": [
+          0,
+          0,
+          362,
+          389
+        ],
+        "method": "Real-alpha source crop and nearest light composite. Tiny lower neighboring hair explicitly excluded in generation prompts; full boot retained. Narrower isolated reference was inspected but not used."
+      }
+    ],
+    "reference_guides": [
+      {
+        "file": "art/animation/source/workflow_20260915/biped-walk-phase-0.png",
+        "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716",
+        "purpose": "Authoring-only pose diagram, never a shipped unit sprite; guide colors/labels are not acceptance of actual limbs."
+      },
+      {
+        "file": "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+        "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734",
+        "purpose": "Authoring-only pose diagram, never a shipped unit sprite; guide colors/labels are not acceptance of actual limbs."
+      },
+      {
+        "file": "art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+        "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d",
+        "purpose": "Authoring-only pose diagram, never a shipped unit sprite; guide colors/labels are not acceptance of actual limbs."
+      },
+      {
+        "file": "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+        "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9",
+        "purpose": "Authoring-only pose diagram, never a shipped unit sprite; guide colors/labels are not acceptance of actual limbs."
+      }
+    ],
+    "sources": [
+      {
+        "file": "walk-phase-0-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d0fbe46f-25c4-4381-bf1e-e0ea41620b9f.png",
+        "prompt": "Use case: sketch-to-render. Image1 is the PRIMARY POSE EDIT TARGET; transfer its exact hip/knee/ankle positions and front/back limb overlap into ONE original Reedsnare Kin walking sprite. Image2 is costume/face/equipment reference ONLY, not its standing leg pose. CONTACT A: blue/near hip chain extends forward to screen right and overlaps in FRONT of orange/far leg; far foot back left. Both boots touch their ground plane. Keep the same elevated three-quarter camera facing RIGHT, no mirrored torso. Lean young man, tied long dark hair, green face paint, moss/olive reed-fringe leather armor and scarf, rope/bone charms, green wrapped boots. Carry full long olive wooden TWO-prong fork staff horizontally at waist with TWO separated gripping hands; full rear shaft and fork inside frame, weighted rope loop hangs from fork, rope net remains on right hip at screen left. Original rich painterly raster matching image2, not diagram lines or blue/orange-colored legs. Correct original torso/limb proportions, exact two legs from unchanged hips, no extra limbs. Full figure/net/weighted loop/both staff ends inside broad empty margins. Pure flat green RGB0,255,0 background including net/rope/limb gaps; no green spill on olive material. No ground, shadow, guide, text, labels, effects or extra objects. Ignore tiny neighboring hair fragment at bottom of image2.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-0.png",
+          "art/animation/source/poses/unit_mireclaw_reedsnare_kin/standing-reference-light.png"
+        ],
+        "sha256": "e379424267f8a1e8eded418d63f9acc2c156a6f63b319722da93bef1b8961744",
+        "selected": true,
+        "selection": "Guided walking phase 0 retained; actual near/far hip ownership and connected translated gait remain for motion review, not proven by guide labels."
+      },
+      {
+        "file": "walk-phase-1-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5f0e0fa4-01bb-4232-a852-e210fdb5bdc1.png",
+        "prompt": "Use case: sketch-to-render. Image1 is the PRIMARY POSE EDIT TARGET; transfer its exact hip/knee/ankle positions and front/back limb overlap into ONE original Reedsnare Kin walking sprite. Image2 is costume/face/equipment reference ONLY, not its standing leg pose. PASSING A: blue/near leg straight supporting under pelvis. Orange/far knee bends forward and its boot lifts off ground BEHIND the near shin. One grounded boot and one lifted boot. Keep the same elevated three-quarter camera facing RIGHT, no mirrored torso. Lean young man, tied long dark hair, green face paint, moss/olive reed-fringe leather armor and scarf, rope/bone charms, green wrapped boots. Carry full long olive wooden TWO-prong fork staff horizontally at waist with TWO separated gripping hands; full rear shaft and fork inside frame, weighted rope loop hangs from fork, rope net remains on right hip at screen left. Original rich painterly raster matching image2, not diagram lines or blue/orange-colored legs. Correct original torso/limb proportions, exact two legs from unchanged hips, no extra limbs. Full figure/net/weighted loop/both staff ends inside broad empty margins. Pure flat green RGB0,255,0 background including net/rope/limb gaps; no green spill on olive material. No ground, shadow, guide, text, labels, effects or extra objects. Ignore tiny neighboring hair fragment at bottom of image2.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+          "art/animation/source/poses/unit_mireclaw_reedsnare_kin/standing-reference-light.png"
+        ],
+        "sha256": "a323c97f4ecec5c4c8c3d698bc089a9ff73bf0ad2ccf97cac07e070fec3d14d9",
+        "selected": false,
+        "selection": "Unselected: exposed rear staff tail lengthened; targeted corrected sibling selected instead."
+      },
+      {
+        "file": "walk-phase-2-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2fdb5e48-df05-4cea-ad2e-05861fe5ec82.png",
+        "prompt": "Use case: sketch-to-render. Image1 is PRIMARY POSE EDIT TARGET and must dictate exact hip/knee/ankle positions and limb OVERLAP. Image2 is only original Reedsnare Kin face/costume/gear reference. Produce ONE original painted full-body walking pose: CONTACT B: BLUE/near leg visibly runs BACK to screen LEFT from its near hip and overlaps in FRONT at the thigh crossing. ORANGE/far leg extends FORWARD to screen RIGHT from its far hip, behind the near thigh at crossing. This is the opposite support from a near-leg-forward step; do not redraw the usual near leg forward. Both boots contact ground. Keep same fixed elevated three-quarter RIGHT-facing torso; no mirror or leg ownership swap. Lean young man, long dark tied hair, green face paint, olive/moss reed-fringe leather armor and scarf, bone/rope charms, green wrapped boots. Full long olive wooden two-prong fork staff carried horizontally at waist, TWO separated gripping hands on same shaft, complete rear end, one weighted rope loop at fork, coiled rope net on right hip at screen LEFT. Same painterly raster proportions and original colors; guide blue/orange colors are not clothing colors. Two complete legs joined to unchanged hips, full figure/boots/staff/net/loop in broad empty margins. Background flat pure green RGB0,255,0 through every empty gap, no green spill. No ground/shadow, diagrams, text, effects or extra props; ignore tiny neighboring hair fragment at bottom of image2.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+          "art/animation/source/poses/unit_mireclaw_reedsnare_kin/standing-reference-light.png"
+        ],
+        "sha256": "e4748353fb98eebc8a3a0f4ef15205f38ddeaf8b240016604a7e240385ea1113",
+        "selected": true,
+        "selection": "Guided walking phase 2 retained; actual near/far hip ownership and connected translated gait remain for motion review, not proven by guide labels."
+      },
+      {
+        "file": "walk-phase-3-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-652e1ed5-1521-411c-846c-2ed62376f16c.png",
+        "prompt": "Use case: sketch-to-render. Image1 is PRIMARY POSE EDIT TARGET and must dictate exact hip/knee/ankle positions and limb OVERLAP. Image2 is only original Reedsnare Kin face/costume/gear reference. Produce ONE original painted full-body walking pose: PASSING B: ORANGE/far leg planted vertical under pelvis. BLUE/near thigh and knee bend forward, its boot lifted clearly in FRONT of the far shin. Show one planted far boot and one lifted near boot, not a duplicate of far leg passing behind. Keep same fixed elevated three-quarter RIGHT-facing torso; no mirror or leg ownership swap. Lean young man, long dark tied hair, green face paint, olive/moss reed-fringe leather armor and scarf, bone/rope charms, green wrapped boots. Full long olive wooden two-prong fork staff carried horizontally at waist, TWO separated gripping hands on same shaft, complete rear end, one weighted rope loop at fork, coiled rope net on right hip at screen LEFT. Same painterly raster proportions and original colors; guide blue/orange colors are not clothing colors. Two complete legs joined to unchanged hips, full figure/boots/staff/net/loop in broad empty margins. Background flat pure green RGB0,255,0 through every empty gap, no green spill. No ground/shadow, diagrams, text, effects or extra props; ignore tiny neighboring hair fragment at bottom of image2.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+          "art/animation/source/poses/unit_mireclaw_reedsnare_kin/standing-reference-light.png"
+        ],
+        "sha256": "518b22d999180cc9032cca2a20fb513600b99c7402847f28056dc7e4054e6bc3",
+        "selected": true,
+        "selection": "Guided walking phase 3 retained; actual near/far hip ownership and connected translated gait remain for motion review, not proven by guide labels."
+      },
+      {
+        "file": "walk-phase-1-tail-corrected-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-badda77e-8818-4df3-9d70-697850364f25.png",
+        "prompt": "Use case: precise-object-edit. Input is exact Reedsnare Kin walking passing edit target. Change ONLY the small free rear end of the fork staff LEFT of his screen-left gripping hand: shorten that exposed rear tail so it extends about one palm width left of that hand, matching the other walking frames. Right now it extends too far. Keep the entire shaft BETWEEN hands and toward both fork prongs unchanged; full weighted loop, rope net, both hands, standing/lifted leg pose, face/hair/clothing, camera, canvas dimensions and body proportions stay unchanged. Do not alter grips or remove staff from either hand. Preserve original painterly raster and flat pure green background RGB0,255,0, no shadows or extra objects.",
+        "references": [
+          "art/animation/source/poses/unit_mireclaw_reedsnare_kin/walk-phase-1-green.png"
+        ],
+        "sha256": "6a901d5f962273669a349296cfe633c6d7789df39c83089984fa4c4ecbecfc38",
+        "selected": true,
+        "selection": "Only overlong exposed rear staff tail shortened; passing pose retained."
+      },
+      {
+        "file": "melee-windup-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-72e820a9-cf66-4907-8092-15142199f94c.png",
+        "prompt": "Use case: precise-object-edit. Input is original Reedsnare Kin identity reference. Paint ONE melee thrust ANTICIPATION pose, same fixed elevated three-quarter camera facing RIGHT. He bends knees into a grounded lunge stance and pulls the WHOLE two-prong fork staff back across his chest toward LEFT, fork still pointing RIGHT. His RIGHT/rear hand stays at screen LEFT gripping near the rear shaft, elbow pulled back; LEFT/forward hand is a palm-up support grip under mid-shaft in front of sternum, visibly separate from rear hand, both forearms anatomically connected to shoulders. Maintain same staff length and TWO prongs with the weighted hanging rope loop, coiled weighted net on right hip screen LEFT; no new weapon and no missing rear shaft. Young lean man with dark topknot, green cheek paint, olive reed-fringe leather/green scarf, rope/bone ornaments and wrapped green boots exactly like reference. Full body/boots/net/whole shaft in generous margins, original painterly raster, same size/proportions. Pure flat green RGB0,255,0 backing in all empty net/loop/body gaps, no green reflected spill on olive clothing. No ground, shadow, text, effects, duplicate arms/hands or extra objects; ignore tiny neighboring hair at bottom of reference.",
+        "references": [
+          "art/animation/source/poses/unit_mireclaw_reedsnare_kin/standing-reference-light.png"
+        ],
+        "sha256": "9ac0ffb43999bbb77bb768be09fcdd37f5481eabb229a23c431dee763b3751c3",
+        "selected": true,
+        "selection": "Grounded anticipation with two visibly separate supporting grips and complete fork/weighted loop/net."
+      },
+      {
+        "file": "melee-contact-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-aae5212f-6193-4153-84e9-8383b202386b.png",
+        "prompt": "Use case: precise-object-edit. Image is exact preceding Reedsnare Kin thrust anticipation. Create ONE connected CONTACT pose: extend BOTH arms toward screen RIGHT and lean chest into a forward lunge. Rear/RIGHT hand remains wrapped over rear shaft; forward/LEFT hand remains palm-up under mid-shaft, visibly SEPARATED on shaft by at least two hand widths. Both hands and both forearms must be visible and anatomically connected; never collapse them into one hand. Move the entire original staff forward at the same length, fork points right, full rear end protrudes beyond rear fist. Preserve TWO prongs, attached weighted hanging rope loop, hip net, original head/hair/green paint, olive reed-fringe armor, scarf, charms and complete feet. Rear foot drives with extended knee, forward knee bends braced. Same fixed elevated three-quarter camera and original body proportions/materials; only action pose changes. Make canvas wider to retain both fork tips, full rear shaft, net and both boots with broad margins; do not shorten staff or shrink body. Flat pure green RGB0,255,0 backing through empty gaps, no green spill or new colors. No effect, projectile, floor, shadow, text, extra limbs or added weapon.",
+        "references": [
+          "art/animation/source/poses/unit_mireclaw_reedsnare_kin/melee-windup-green.png"
+        ],
+        "sha256": "d912749780de641d36f0bff86fd70699e75511a13ca0303ce8e4cf06cd2b7d9d",
+        "selected": false,
+        "selection": "Restores both grips but extends weapon too far; targeted length/rear-arm repair selected instead."
+      },
+      {
+        "file": "melee-contact-length-corrected-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f4853297-f6a6-48a4-9903-59a4beb03620.png",
+        "prompt": "Use case: precise-object-edit. Precise continuity repair of this Reedsnare Kin contact sprite, preserve same1536x1024 canvas and character body. The contact staff is too long and rear elbow too tucked. Change only the staff and RIGHT/rear forearm-hand as follows: extend the rear forearm further RIGHT so its overhand fist now grips around canvas x650,y322 instead of x500,y322, elbow naturally following from same shoulder. LEFT/forward palm-up hand remains gripping around x1040,y320, visibly separate. Shorten exposed rear staff end so it ends near x570,y322, just LEFT of the rear fist. Move complete unchanged fork head AND attached weighted loop100pixels LEFT, its tips now near x1420 rather than x1520; shorten only adjoining shaft to connect. Keep full shaft continuous through both hands and fork, TWO prongs, weighted loop intact and not intersecting fingers. Total staff should read the same ordinary long pole as anticipation, not an enormous extra-long lance. Keep face, hair, all torso/legs/boots, hip net, original clothes, proportions, camera, canvas and colors otherwise exactly unchanged. Both arms should visibly reach into the thrust with natural joints, no floating hand or extra fingers. Flat pure green RGB0,255,0 backing in all empty gaps, no new effects/text/shadows. Original painted raster.",
+        "references": [
+          "art/animation/source/poses/unit_mireclaw_reedsnare_kin/melee-contact-green.png"
+        ],
+        "sha256": "81c9df53e88e26d9c4ba1f490a8f438fc137e546fff2c0a0db965ab640102cfe",
+        "selected": true,
+        "selection": "Rear forearm reaches farther into thrust and staff shortened while preserving both grips, complete prongs/weighted loop and body."
+      }
+    ],
+    "generation": "continuity-generation.json",
+    "reused_source": {
+      "source": "alpha/poses.png",
+      "sha256": "78a4bb0df9bddf36190a6ce5505f13d9e59ec8fe6f42809a4ffdee457e945621",
+      "selection": "Seven original poses: two idles, guard, hit, kneel, side collapse and equipped closed-eye corpse. Original gray painting and original built-in extraction provenance retained."
+    },
+    "preparation": "continuity-cutouts.json: owner-approved green color-distance preparation for selected new paintings and preserved first-contact derivative; original real-alpha sheet reused unchanged.",
+    "packing": "packing.json",
+    "packed_frames": 13,
+    "runtime_candidate": "art/animation/runtime/poses/unit_mireclaw_reedsnare_kin.png",
+    "runtime_sha256": "b3d681946bb399f291707f6d0fdb71d8151298052f2bd9941892ee421ed98ecd",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/reedsnare-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted"
+  }
+}

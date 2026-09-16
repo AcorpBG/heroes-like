@@ -1,0 +1,101 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_rivet_hounds",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_brasshollow_rivet_hounds.png",
+  "reference_sha256": "46aa988fafeb9052785bbae6735e210a9fb841f2e3f5fece76328e2cbc596ccf",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_rivet_hounds/poses.png",
+      "source_sha256": "f29ebbf31a211bcd9e336ebad3e7678148cddc7e7bc28a28a7c183bcf650c306",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cb8c35da-cf69-4bb5-a110-8198b62fe3e3.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle sprite animation sheet. Reference Rivet Hound: FOUR-legged mechanical dog with angular dark iron plates, brass riveted edging and linkage bars, blue-steel cylindrical hip/shoulder joints, three-toed metal paws, long segmented brass/iron tail ending triangular spear tip, wedge head with two dorsal fins, orange eye slit and three orange side vents, short forward orange-tipped drill/spike snout. No organic fur or human rider. Twelve complete articulated poses in FOUR columns THREE rows, fixed three-quarter facing screen right, constant body/head/tail scale, generous gutters. Transparent RGBA background. Reading order: 1 alert idle planted paws; 2 idle suspension rises head turns slightly tail lifts; 3 run extended near forepaw forward near hind back; 4 gathered running suspension all knees flex beneath torso; 5 opposite diagonal stride far forepaw forward near forepaw back; 6 attack crouch head pulled back drill aimed forward; 7 lunging drill strike head extended straight right forepaws reaching hindlegs driving; 8 defense low body paws planted head protects front; 9 hit recoil body tilted back head pulled aside; 10 death front joints buckle chest drops; 11 collapse onto side all legs fold tail settles; 12 inert side-lying wreck all FOUR legs tail and drill retained eyes/vents/drill dark unlit orange-brown. Exact same plating, four limbs, tail segments and drill/head dimensions throughout. No sparks, beams, smoke, ground shadows, scenery, labels or gore. Original detailed painted game art matching reference, joint articulation not translated copies. Full tail/paws/snouts inside each cell."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-76e033d0-eba8-421d-bcdd-bd7a8f0b04cf.png",
+      "prompt": "Use case: precise-object-edit. Preserve all twelve Rivet Hound poses exactly. Expand transparent canvas padding at right by about 10 percent and complete any cropped drill/snouts on the top-right and bottom-right poses, matching the short pointed drill of the other poses. Do not resize or move existing bodies, do not change anatomy or design. True transparent background; no matte, scene, shadows or new objects. All twelve machines fully contained with clear right margin.",
+      "reason": "Margins improved but final wreck relit, surface detail changed and poses rescaled; not selected."
+    }
+  ],
+  "review_notes": [
+    "14 candidate frames: nine original real-alpha paintings (sheet indices0,2,5,6,7,8,9,10,11) plus five new paintings from four selected outputs for compact-head idle, gathered/other stride states and braced guard.",
+    "Original rightmost gathered snout is clipped and original raised idle stretches neck; neither selected. New gathered left pose retains full snout/tail/four paws; new idle keeps short neck. Original source RGBA reused without rekeying.",
+    "Motion pair right half repeats lead and is unselected. First guided opposite-stride draft repeats lead and is excluded. The two selected single motion candidates vary knee/forepaw flexion, but do NOT resolve consistent opposite diagonal ownership: rear near/far attachment and four-phase travel require explicit full-roster refinement. Prompt/filenames are not proof.",
+    "Original drill windup/lunge, low guard, recoil, buckle, collapse and dark inert wreck retained. Banded source crops remove adjacent snout/paw/tail fragments while preserving intended whole subjects. Body/neck/tail/plate dimensions and guard depth remain continuity work.",
+    "New RGB paintings use approved neutral175/tolerance16/edge2 with inspected linkage gaps. Original alpha never keyed; gray steel highlights preserved, no local pose drawing/warping/mirroring.",
+    "512x256 four-column candidate atlas, explicit idle/move/attack/defend/hit/death/dead and action aliases. Actual-alpha packed art visually inspected; registered offline art-desk screenshot visually inspected. Browser VAAPI warning did not prevent capture; exit0. Static art evidence is not timed/gameplay acceptance.",
+    "Final roster acceptance0/160. No tests/imports/exports, paid API, runtime/tool-code, gameplay/save/footprint changes, staging, commit or push. Full roster production/refinement precedes consolidated validation."
+  ],
+  "prior_review_notes": [
+    "Twelve poses inspected with gathered stride, drill lunge, collapse and inactive wreck. Source-only not enabled.",
+    "Rightmost snouts clipped/crowd canvas; targeted repair needed without relighting dead state.",
+    "Opposite gait repeats lead; four-leg linkage and tail segment continuity need refinement. Head shape changes between raised and lowered poses.",
+    "Source transparency/edge fringes and in-context motion acceptance pending. No additional extraction performed.",
+    "No tests/exports or disposable test intermediates created; 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "candidate_frames": 14,
+    "retained_paintings": 9,
+    "new_paintings": 5,
+    "new_outputs": 5,
+    "source_preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_rivet_hounds.png",
+    "runtime_atlas_sha256": "6a7034f9b10acd9e2e8a2391b2905a3b581f8fb9bade0c964bca56d0d7180ade",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_rivet_hounds/poses.png": "f29ebbf31a211bcd9e336ebad3e7678148cddc7e7bc28a28a7c183bcf650c306",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/breath-guard-pair.png": "cdcafc5aaadbc99eaf7ce2cf65cc461a0c8628e32b8efe4151712e659e94fd9d",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/motion-pair.png": "326c70c95214265ff93cacd85179d7c898233b8b7379bb2b30358e5d6ac0a7e9",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/opposite-guide-first.png": "57bbe94cbe5e740202d0dc67dac051b4404b4148d035ba9a0b85f2049560b41c",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/opposite-stride.png": "ea8d365619cf0119fd3d93dcbef93dd54ad3bc3f93c4bcd2c2e66f9df9c6e11e"
+    },
+    "reference_crop": {
+      "source": "art/animation/source/poses/unit_brasshollow_rivet_hounds/poses.png",
+      "rect": [
+        0,
+        96,
+        380,
+        390
+      ],
+      "reference": "art/animation/source/poses/unit_brasshollow_rivet_hounds/identity-reference.png",
+      "purpose": "Inspection composite and fixed identity reference only; never a runtime pose. Generated before final enclosed-gap seeds; that earlier reference backing remains preserved."
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/rivet-continuity-20260916",
+    "status": "candidate_registered_not_final_accepted",
+    "cleanup": {
+      "status": "byte_identical_preview_cleanup_completed",
+      "pairs": [
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/rivet-continuity-20260916/identity/poses-poses-rect-0-96-380-390-green.png",
+          "retain": "art/animation/source/poses/unit_brasshollow_rivet_hounds/identity-reference.png",
+          "sha256": "cfa0cde7c478b6cede795337d07311047770573952f0942f381dcc36c64d4b67",
+          "bytes": 173709
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/rivet-continuity-20260916/alpha-first/opposite-stride-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/rivet-continuity-20260916/alpha-final/opposite-stride-green.png",
+          "sha256": "f8e5404a8b958b3a4a3b9c2c84cb99a19b9a44e07cbf7488c4cba67062ed6865",
+          "bytes": 1021396
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/rivet-continuity-20260916/alpha-first/opposite-stride-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/rivet-continuity-20260916/alpha-final/opposite-stride-light.png",
+          "sha256": "a1d42aba12628b6415001353ab6ee5297f99449af5d661dce70aae5c0a47049f",
+          "bytes": 1034833
+        }
+      ],
+      "removed_bytes": 2229938,
+      "preserved": "Original/new/rejected masters, exact prompts/input hashes, source/runtime atlases, recipes/proofs, unique before/final evidence, caches and unrelated files."
+    }
+  }
+}

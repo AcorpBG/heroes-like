@@ -1,0 +1,184 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_brasshollow_gaugefire_arbalists.png",
+  "reference_sha256": "cd0581b664a61a385cecb956af6d1284f12c46bfe142ffe82e8e5cacd4c2a6c6",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/poses.png",
+      "source_sha256": "8a49b830da8bd7c2c994288455dcf543d308c2f593224fc08bd0a928d21bc0db",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b0b7d4bd-afcd-4143-8a5c-8a03b3efc860.png",
+      "prompt": "Use case: stylized-concept. Original tactical combat sprite sheet for Gaugefire Arbalist from attached original reference. Exactly 16 isolated full-body poses FOUR columns FOUR rows same scale fixed 3/4 camera facing RIGHT. True transparent RGBA background, no painted checkerboard no ground no labels. Black iron/brass armored human closed visor, orange lit narrow slit, long dark leather split coat rust inner cloth, side bolt quiver, small orange boiler behind shoulder. ONE large mechanical crossbow with paired metal limbs taut strings orange furnace chamber and red round pressure gauge. Anatomical RIGHT hand trigger stock, LEFT hand supports front underside. Keep equipment count scale grip and geometry throughout. Row1 idle crossbow lowered; breathing idle shoulders and elbows change slightly; walk LEFT foot forward right back; walk RIGHT foot forward left back do not mirror whole soldier. Row2 passing step bent raised knee; close melee wind-up BOTH hands drawing crossbow back near chest; close melee contact BOTH hands drive wooden stock/front body of crossbow into adjacent enemy towards right no shooting no fist punches; defense crouch holding crossbow protectively across chest. Row3 hit recoil torso bends backward both grips retained; ranged aim crossbow horizontal braced at shoulder loaded bolt; firing string snaps forward bolt leaves toward right slight shoulder recoil; reload RIGHT hand works cocking lever left hand supports weapon no duplicate bolts. Row4 knees buckle wounded weapon held; falling sideways dropping weapon; prone dead with crossbow on ground beside him boiler dimming; persistent same corpse settled completely dark visor/boiler/crossbow no smoke. Articulated shoulder elbow knee changes, visibly opposite gait contacts, continuous equipment. Painterly original fantasy game sprite cutouts matching reference crisp readable small-scale forms. Generous cell gutters, entire crossbow and projectile within their own cells no clipping no extra limbs."
+    }
+  ],
+  "review_notes": "19-frame candidate: ten original paintings plus nine selected new paintings from five built-in outputs. Empty-rail discharge, cocking and single-bolt insertion replace original duplicate projectile/unclear reload. Two guards and distinct foot-lift poses retained. Guide-led opposite contact still repeats leading leg; selected as planted bridge only, not an accepted opposite-contact gait. Clipped bow/duplicate contact and loaded cocking precursor excluded. Full-roster leg ownership/support/travel, body/gear scale, transitions and event timing remain unaccepted.",
+  "prior_review_notes": [
+    "Sixteen source poses; two-handed close shove, aim/fire, falling and dark persistent corpse present.",
+    "Walking contacts repeat same lead; need opposite anatomical contact and continuous passing. Idle subtle.",
+    "Firing retains loaded bolt while another projectile leaves: remove duplicate and connect to visible reload. Reload hand remains near normal grip without clear cocking action.",
+    "Crossbow limb/string shape, chamber/gauge scale, hand supports and boiler/quiver continuity require refinement. Close shove still reads similar to aim without clear contact accent.",
+    "Corpse visor and chamber appear dark in final frame; fallen crossbow and body continuity need packing-scale review.",
+    "Checker pattern visible; transparency/compositing unresolved. Source only, not enabled; no tests/exports this batch."
+  ],
+  "status": "candidate_pending_playback_acceptance",
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "new_selected_paintings": 9,
+    "generated_outputs": 5,
+    "generation": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/packing.json",
+    "packing_result": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_gaugefire_arbalists.png",
+    "runtime_sha256": "db001c8b63b1240c98e75789eb20233d5bcb01ba0477b48e9b33fd73b0714e33",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png": "92b1019b6ac11894ba2d4ea6616a20d51e408dcffa02a9b6f50750583551eb89",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-gait-and-guard.png": "58fc4bc3086c87dbe06bd009c9b1c05735bdbcb4608587daa5ea10ba16386a3b",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-opposite-contact.png": "6b2e24483a42a6222190a0a8b36ddd2fd075cf2ef5c0bcff68de94305cbc7514",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-near-passing.png": "af38c52c503fe0b5ae4c4a13df86f399c58e968aabd7c46f727c552939e9c6b0",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload-empty-rail.png": "f2beb5def04aed3deb64bbada50f28ffd1fde8fcb96887d938ff356f83161fb8"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Static source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "date": "2026-09-16",
+      "policy": "Only task-owned byte-identical preview duplicates; exact SHA-256 rechecked and fuser found no open handles. All original/rejected paintings, unique evidence, processing proofs and caches retained.",
+      "removed_files": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/ranged-reference/unit_brasshollow_gaugefire_arbalists-original-poses-rect-325-672-635-969-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/ranged-aim-reference.png",
+          "sha256": "cc8f7a844fef9db24d116c8366c9a6c42a29686e44a4d9b1a4856402d8f523f9",
+          "bytes": 126248
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/identity-second/unit_brasshollow_gaugefire_arbalists-original-poses-rect-15-0-309-337-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/identity-reference.png",
+          "sha256": "d126594f8cab5ef946d7a6501988f05ce6ca6f43b4b31854ddc843310fad41cc",
+          "bytes": 134466
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/actions/guided-gait-and-guard-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/guided-gait-and-guard-green.png",
+          "sha256": "125850d81299164be83eb45324a1eae17f4f1d9f07ea5806047c3695c93bbf74",
+          "bytes": 1107075
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/supplements/guided-gait-and-guard-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/guided-gait-and-guard-green.png",
+          "sha256": "125850d81299164be83eb45324a1eae17f4f1d9f07ea5806047c3695c93bbf74",
+          "bytes": 1107075
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/actions/guided-gait-and-guard-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/guided-gait-and-guard-light.png",
+          "sha256": "ab395d81e546d21e2fc3414520610299cd00ec739a1e8128db9ec4640fe0ff42",
+          "bytes": 1129411
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/supplements/guided-gait-and-guard-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/guided-gait-and-guard-light.png",
+          "sha256": "ab395d81e546d21e2fc3414520610299cd00ec739a1e8128db9ec4640fe0ff42",
+          "bytes": 1129411
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/actions/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/original-poses-green.png",
+          "sha256": "b186b1c9fd05cdf83edfb8fb89fef61147db21d9b190afbbaa8f3b96b91d658a",
+          "bytes": 1228563
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/supplements/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/original-poses-green.png",
+          "sha256": "b186b1c9fd05cdf83edfb8fb89fef61147db21d9b190afbbaa8f3b96b91d658a",
+          "bytes": 1228563
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/third/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/original-poses-green.png",
+          "sha256": "b186b1c9fd05cdf83edfb8fb89fef61147db21d9b190afbbaa8f3b96b91d658a",
+          "bytes": 1228563
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/actions/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/original-poses-light.png",
+          "sha256": "6aef1d615a4c8e18513caf5391d687f121f816128ba978af0976ff7b6d07b97a",
+          "bytes": 1266081
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/supplements/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/original-poses-light.png",
+          "sha256": "6aef1d615a4c8e18513caf5391d687f121f816128ba978af0976ff7b6d07b97a",
+          "bytes": 1266081
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/third/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/original-poses-light.png",
+          "sha256": "6aef1d615a4c8e18513caf5391d687f121f816128ba978af0976ff7b6d07b97a",
+          "bytes": 1266081
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/identity-third/unit_brasshollow_gaugefire_arbalists-original-poses-rect-15-0-309-337-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/identity-reference-v2.png",
+          "sha256": "746bda991810505996642e9ac179b1178434a7167eec072e4d463c11be2e9a0e",
+          "bytes": 133418
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/actions/guided-opposite-contact-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/guided-opposite-contact-green.png",
+          "sha256": "04b748d1e20e988428459b06d45853e399a586b5a2d35f34f69ff35b632e3e17",
+          "bytes": 981336
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/discharge-and-visible-reload-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/prepared/discharge-and-visible-reload-green.png",
+          "sha256": "061df208c16bf43a4fcf4318b56f476663230c379d7d7b4b8fc0dab20a16a6f9",
+          "bytes": 1019311
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/actions/discharge-and-visible-reload-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/prepared/discharge-and-visible-reload-green.png",
+          "sha256": "061df208c16bf43a4fcf4318b56f476663230c379d7d7b4b8fc0dab20a16a6f9",
+          "bytes": 1019311
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/discharge-and-visible-reload-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/prepared/discharge-and-visible-reload-light.png",
+          "sha256": "c35d657c5bb8adc3ae58e4109a92b8ebb3cb6fcde59b0b3e86441cc3a9dce868",
+          "bytes": 1049843
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/actions/discharge-and-visible-reload-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/prepared/discharge-and-visible-reload-light.png",
+          "sha256": "c35d657c5bb8adc3ae58e4109a92b8ebb3cb6fcde59b0b3e86441cc3a9dce868",
+          "bytes": 1049843
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/actions/guided-opposite-contact-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/guided-opposite-contact-light.png",
+          "sha256": "3df34c302f9428f4c826a83d98abfba9bba228fa886fa86d83ac5821c99571f1",
+          "bytes": 994479
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/actions/guided-near-passing-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/guided-near-passing-light.png",
+          "sha256": "a6069042c3e13a2a8a6db76cdd408d4446c01d66580bbb01f427770adf2cf6d9",
+          "bytes": 962837
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/actions/guided-near-passing-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/arbalist-continuity-20260916/fixed-actions/guided-near-passing-green.png",
+          "sha256": "5db09fb02f19b669ae7c9a7a74aea1221636378df67c2281be66b10e2ec21936",
+          "bytes": 948787
+        }
+      ],
+      "removed_bytes": 20376783
+    }
+  }
+}

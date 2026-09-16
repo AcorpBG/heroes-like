@@ -1,0 +1,372 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 25,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          77,
+          4,
+          336,
+          386
+        ],
+        [
+          150,
+          386,
+          336,
+          403
+        ]
+      ],
+      "anchor": [
+        215,
+        393
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "idle_1",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          388,
+          4,
+          730,
+          386
+        ],
+        [
+          480,
+          386,
+          730,
+          405
+        ]
+      ],
+      "anchor": [
+        548,
+        393
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "contact_standard_side",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          732,
+          4,
+          990,
+          385
+        ],
+        [
+          825,
+          385,
+          990,
+          401
+        ]
+      ],
+      "anchor": [
+        867,
+        389
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "passing_shield_side",
+      "source": "continuity-alpha/walk-shield-side-lift-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1020,
+          1542
+        ]
+      ],
+      "anchor": [
+        560,
+        1460
+      ],
+      "scale": 0.145
+    },
+    {
+      "name": "contact_shield_side",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          1134,
+          4,
+          1399,
+          389
+        ]
+      ],
+      "anchor": [
+        1290,
+        382
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "passing_standard_side",
+      "source": "continuity-alpha/walk-standard-side-lift-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1020,
+          1542
+        ]
+      ],
+      "anchor": [
+        560,
+        1460
+      ],
+      "scale": 0.145
+    },
+    {
+      "name": "attack_windup",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          400,
+          388,
+          510,
+          441
+        ],
+        [
+          388,
+          441,
+          728,
+          738
+        ],
+        [
+          530,
+          738,
+          728,
+          761
+        ]
+      ],
+      "anchor": [
+        550,
+        748
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "attack_contact",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          740,
+          386,
+          842,
+          443
+        ],
+        [
+          740,
+          443,
+          1072,
+          767
+        ]
+      ],
+      "anchor": [
+        877,
+        750
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "defend",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          1110,
+          389,
+          1405,
+          766
+        ]
+      ],
+      "anchor": [
+        1254,
+        750
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "hit",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          35,
+          735,
+          139,
+          800
+        ],
+        [
+          35,
+          800,
+          381,
+          1065
+        ]
+      ],
+      "anchor": [
+        217,
+        1044
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "death_kneel",
+      "source": "continuity-alpha/poses-collapse-forearm-shield.png",
+      "rects": [
+        [
+          427,
+          744,
+          543,
+          840
+        ],
+        [
+          427,
+          840,
+          694,
+          993
+        ],
+        [
+          427,
+          993,
+          727,
+          1047
+        ]
+      ],
+      "anchor": [
+        560,
+        1033
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "death_collapse",
+      "source": "continuity-alpha/poses-collapse-forearm-shield.png",
+      "rects": [
+        [
+          695,
+          833,
+          1093,
+          990
+        ],
+        [
+          730,
+          990,
+          1093,
+          1049
+        ]
+      ],
+      "anchor": [
+        883,
+        1033
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "dead",
+      "source": "continuity-alpha/poses-collapse-forearm-shield.png",
+      "rects": [
+        [
+          1095,
+          870,
+          1434,
+          1054
+        ]
+      ],
+      "anchor": [
+        1260,
+        1033
+      ],
+      "scale": 0.55
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        8
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

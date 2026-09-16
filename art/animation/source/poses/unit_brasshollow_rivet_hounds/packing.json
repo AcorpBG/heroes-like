@@ -1,0 +1,410 @@
+{
+  "unit_id": "unit_brasshollow_rivet_hounds",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "poses.png",
+      "rects": [
+        [
+          0,
+          108,
+          361,
+          392
+        ],
+        [
+          361,
+          225,
+          384,
+          313
+        ]
+      ],
+      "anchor": [
+        209,
+        375
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "compact_head_idle_breath",
+      "source": "continuity-alpha/breath-guard-pair.png",
+      "rects": [
+        [
+          10,
+          35,
+          977,
+          768
+        ],
+        [
+          977,
+          340,
+          1018,
+          530
+        ]
+      ],
+      "anchor": [
+        524,
+        741
+      ],
+      "scale": 0.255
+    },
+    {
+      "name": "run_extended",
+      "source": "poses.png",
+      "rects": [
+        [
+          730,
+          143,
+          1098,
+          395
+        ],
+        [
+          1098,
+          227,
+          1146,
+          314
+        ]
+      ],
+      "anchor": [
+        948,
+        377
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "run_gathered",
+      "source": "continuity-alpha/motion-pair.png",
+      "rects": [
+        [
+          10,
+          56,
+          955,
+          638
+        ]
+      ],
+      "anchor": [
+        472,
+        693
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "run_gathered_support_requires_limb_review",
+      "source": "continuity-alpha/opposite-guide-first.png",
+      "rects": [
+        [
+          34,
+          80,
+          1409,
+          1004
+        ]
+      ],
+      "anchor": [
+        745,
+        983
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "run_passing_requires_limb_review",
+      "source": "continuity-alpha/opposite-stride.png",
+      "rects": [
+        [
+          26,
+          29,
+          1580,
+          949
+        ]
+      ],
+      "anchor": [
+        854,
+        924
+      ],
+      "scale": 0.19
+    },
+    {
+      "name": "drill_windup",
+      "source": "poses.png",
+      "rects": [
+        [
+          370,
+          420,
+          730,
+          562
+        ],
+        [
+          397,
+          562,
+          733,
+          620
+        ],
+        [
+          383,
+          620,
+          719,
+          711
+        ]
+      ],
+      "anchor": [
+        555,
+        691
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "drill_lunge",
+      "source": "poses.png",
+      "rects": [
+        [
+          718,
+          477,
+          1098,
+          577
+        ],
+        [
+          733,
+          577,
+          1098,
+          604
+        ],
+        [
+          718,
+          604,
+          1098,
+          704
+        ],
+        [
+          1098,
+          550,
+          1168,
+          590
+        ]
+      ],
+      "anchor": [
+        941,
+        681
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "guard",
+      "source": "poses.png",
+      "rects": [
+        [
+          1096,
+          477,
+          1448,
+          535
+        ],
+        [
+          1168,
+          535,
+          1448,
+          710
+        ],
+        [
+          1130,
+          592,
+          1168,
+          710
+        ]
+      ],
+      "anchor": [
+        1296,
+        691
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "guard_braced",
+      "source": "continuity-alpha/breath-guard-pair.png",
+      "rects": [
+        [
+          977,
+          100,
+          2048,
+          340
+        ],
+        [
+          1020,
+          340,
+          2048,
+          768
+        ]
+      ],
+      "anchor": [
+        1540,
+        741
+      ],
+      "scale": 0.255
+    },
+    {
+      "name": "hit_recoil",
+      "source": "poses.png",
+      "rects": [
+        [
+          0,
+          723,
+          363,
+          1060
+        ]
+      ],
+      "anchor": [
+        161,
+        1033
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "front_joints_buckle",
+      "source": "poses.png",
+      "rects": [
+        [
+          384,
+          810,
+          707,
+          1060
+        ]
+      ],
+      "anchor": [
+        535,
+        1032
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "collapse_unlit",
+      "source": "poses.png",
+      "rects": [
+        [
+          711,
+          887,
+          1057,
+          997
+        ],
+        [
+          711,
+          997,
+          1084,
+          1060
+        ]
+      ],
+      "anchor": [
+        895,
+        1034
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "dead_unlit",
+      "source": "poses.png",
+      "rects": [
+        [
+          1063,
+          898,
+          1448,
+          996
+        ],
+        [
+          1086,
+          996,
+          1448,
+          1060
+        ]
+      ],
+      "anchor": [
+        1284,
+        1032
+      ],
+      "scale": 0.65
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 230,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

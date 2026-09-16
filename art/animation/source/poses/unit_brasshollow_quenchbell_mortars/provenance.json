@@ -1,0 +1,327 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_quenchbell_mortars",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_brasshollow_quenchbell_mortars.png",
+  "reference_sha256": "d13d6b5da5bd7284e51360a70bc2611e5effcb1ab2d0048af06fded673408bdb",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/loading.png",
+      "source_sha256": "51b5eafdb1d987e59f9fef0bb32a035431198f2f3030514d125ea3fb31073658",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c11cfd3f-0ed9-4eb8-b36a-db4301b396d3.png",
+      "prompt": "Use case: background-extraction. Image1 is the edit target. Extract ONLY row3 column2 (cell10) as ONE standalone Quenchbell loading sprite on genuine transparent RGBA. Preserve the exact original pose: raised screen-left loader holds ONE round shell above the dark upper-left-facing mortar bore, furnace and gauge on the same sides, exactly TWO planted piston legs. No premature discharge, muzzle flash, sparks, flying projectile, extra shell, mirror or new machinery. Keep original proportions, full-body silhouette and brass/black iron painted style. Center sprite with transparent margins; remove checkerboard from all exterior and interior gaps, no matte, ground shadow, outlines or background. Do not change the loading action.",
+      "review": "Non-opaque RGBA, raised held shell and dark bore retained. Replaces index9 premature flame. Redrawn machinery and scale matching unaccepted; production packing only."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/shell-insertion.png",
+      "source_sha256": "0566db653e4d674aa2c02ccee481e4ad3c51dcce3dda896e24b3d8a310279cbf",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-43a6db41-86ff-484b-822e-a544eef9ae0b.png",
+      "prompt": "Use case: background-extraction. Extract ONLY row3 column2 (cell10) of this Quenchbell sheet as ONE standalone transparent RGBA sprite. Preserve this shell-insertion pose: ONE shell partly down inside upper-left-facing mortar bore, brass rim occludes lower shell, open raised loader claw screen-left releasing above it. Exactly two planted piston legs, orange furnace, gauge/hoses screen-right. Keep precise machinery proportions and original painted rendering. No firing, flame, sparks, flying shell or extra shell. No mirror or new machinery. Entire machine centered with transparent margins; remove all checkerboard including interior gaps, no ground shadow or matte background.",
+      "review": "Non-opaque RGBA with partially inserted shell and open claw. Appended index17. Eighteen-frame partial atlas SHA3239ac7f3e32e2a3ceca6cb54e52e8b9597a1a2bfbaa7e385fa1e6d379cb8c15 visually inspected. Shell proportions/occlusion, machinery redraw, ground/scale and colored edges remain unfinished. Loaded-claw-clear transition and resupply unresolved. Not runtime registered; no tests/exports."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/recoil.png",
+      "source_sha256": "044cfebd5f225652b5a52964c62ba7f2767b4b57a1911f5ec90d9e348461fb7f",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2bf7282e-2e5d-43e7-977d-ce44c6923e21.png",
+      "prompt": "Use case: background-extraction. Extract ONLY ROW3 COLUMN2 (cell10) Quenchbell recoil pose as ONE standalone sprite on genuine transparent RGBA. It has DARK muzzle facing upper-left, EMPTY open claw raised screen-left, lowered furnace chassis and TWO bent braced legs with planted feet. Preserve this precise pose and facing, gauge on right, hoses and original machinery. Do not choose adjacent mirrored cell11. No shell anywhere, muzzle flash, projectile, fire burst or added smoke. Center full body/arm/feet with transparent margins. Remove checkerboard including interior gaps, no solid backdrop/shadow/glow; keep original proportions, not redesign.",
+      "review": "Recovered generated output, inspected non-opaque RGBA and packed at index10 replacing mirrored firing draft. Upper-left dark bore and empty raised claw retained; no baked projectile burst. Source machinery details redrawn; packed pose smaller than adjacent frames, edge and scale/ground matching remain unfinished. Partial atlas SHA14bfae5d10b6ba3f111d3671fa1efc2a502e23ac663644153e970143ebc12a65; loading remains pending, not runtime registered. No tests/exports."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/walk-passing-b.png",
+      "source_sha256": "951a2e423b7bde78da03269533a0a0f2087b96d1375b392af2300d3f2b1831fa",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f5c811fa-c0dd-4664-b108-0e177928ece0.png",
+      "prompt": "Use case: background-extraction. Extract ONLY top-right cell4 Quenchbell walking PASSING pose as ONE standalone original sprite with genuine transparent RGBA. Preserve exact pose: one supporting flat foot under furnace, other leg bent with foot lifted behind on screen-right. Exactly TWO legs, loaded claw screen-left holds one shell, barrel faces upper-left, gauge/red tube screen-right. Keep original machinery proportions and stance; no mirror, new leg, idle replacement or redesign. Center full machine/steam/feet with margin. Remove checkerboard and all background including internal gaps; no floor shadow, solid matte, glow or new effects.",
+      "review": "Standalone non-opaque RGBA passing source retains one supporting foot, bent raised rear foot and loaded claw. Appended at index16 with scale0.17 to partial atlas SHA9996a174dd553a108eae6219fc78ecc84154ce5c97a28d9b84089ac363ad9104. Gauge/loader/body details redrawn, joint ownership and ground/scale matching remain unaccepted. Loading/recoil replacements and edge cleanup still pending; not runtime enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/walk-contact-b.png",
+      "source_sha256": "f91919149698eb0c90297bd0a3f0adeb3cdc9c57ac627e554a88735b8a35b689",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-04904961-99f7-4b5e-9a13-0080b9e4f6b0.png",
+      "prompt": "Use case: background-extraction. Extract ONLY TOP RIGHT cell4 of this original Quenchbell sheet as a single standalone sprite, genuine transparent RGBA background. Preserve its crossed-leg opposite walking contact EXACTLY: front leg crosses under furnace toward lower-left, rear leg trails right. Barrel faces upper-left, shell-holding loader screen-left, gauge screen-right. Exactly two legs, one loaded claw. Keep original machinery/proportions/pose; no mirror or idle substitution. Fully contain entire machine, feet, shell and steam with transparent margin. Remove ALL checkerboard including internal gaps, no solid matte, ground/shadow, added effects or labels. Do not redesign.",
+      "review": "Standalone RGBA contact retains crossed legs and upper-left facing, replacing mirrored index3 in deterministic draft pack. Machinery redrawn (gauge/loader pivots), edge and ground alignment remain unaccepted. Packing first rejected lower-alpha clipping; draft anchor1254 preserves full source bounds. Other passing/loading/recoil replacements pending; not runtime enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/dead.png",
+      "source_sha256": "a19ad644482afdb7ed7ae1df166a5676b8c03df6559a685e55e632af2bc6db27",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0e8014de-e6e0-4fa6-a8f2-ce3ca5c24857.png",
+      "prompt": "Use case: background-extraction. Extract ONLY bottom-right cell16 cooled Quenchbell wreck as ONE standalone sprite on genuinely transparent RGBA. Preserve exact dead machine on side, dark empty barrel facing right, dark furnace vent, two folded piston legs and ONE dark loose shell below barrel. No glowing seams, smoke, sparks, blood or added debris. Keep shape/proportions and original painterly metal; not redesign. Entire wreck and shell centered with transparent margin, all other fifteen poses excluded. Remove gray background and internal gaps fully, no checkerboard, solid matte, floor or shadow.",
+      "review": "Standalone dark wreck candidate. RGBA alpha min0 max254, corner/top-gap clear despite brown preview. Shell/furnace/barrel dark; small warm hardware marks and redraw remain, two folded legs retained. Added to explicit packing.json as index15; partial candidate atlas b128bffe19b1306c443d6b04b2bd6d82ab6f32fb60def02beb07bfb2bf46d621 includes corrected hit8, buckle12, melee6, but movement/loading/recoil replacements still pending. Not runtime enabled or final accepted."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-wreck-gray.png",
+      "source_sha256": "9a493e9083d67c155e30210edc8d68c417267e054dfda9896f99485525d63bdd",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e1ed9df8-b54e-4d7e-8784-f949c887befd.png",
+      "prompt": "Use case: precise-object-edit. Replace ONLY checkerboard background on this original Quenchbell 4x4 sprite sheet with uniform pale gray. Preserve all exact poses, most importantly bottom-right cell16 dead wreck with DARK loose shell seam, inactive furnace/barrel and two folded legs. No new glow, flame or steam in corpse. Same size layout machinery, clear gaps, no shadows/labels or redesign.",
+      "review": "Gray preparation retains dark shell/furnace in cell16; not alpha or runtime-ready. Original pose-wreck-cold-shell remains reference.",
+      "rejected_alpha": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1e69f2be-be76-4212-9d02-12e088032598.png",
+        "prompt": "Remove ONLY uniform pale gray background from this original Quenchbell 4x4 sheet. Output genuine transparent RGBA, preserve exact grid, poses, machinery and pixels. Especially bottom-right cell16: dark loose shell, inactive furnace/barrel, folded two legs, no steam. Clear gaps around/inside machine silhouettes. No matte, checkerboard, new glow, sparks, colored halo, shadows, labels or new details. Do not relight shell or change corpse.",
+        "review": "RGB opaque=true, corner(189,190,189): checkerboard genuinely baked, unlike Fenbell preview discrepancy. Not copied/enabled. Wreck alpha still required; do not treat this preparation as completed death sprite."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/poses-knee-buckle.png",
+      "source_sha256": "0b22fb61c40212d4a37a3636d587e8d5e8d95a3ce5ec1eccbf57c5c9406946ef",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-de09a683-493b-4803-97d4-8804b8049885.png",
+      "prompt": "Remove ONLY pale gray background from this original 4x4 Quenchbell machine sheet. Genuine transparent RGBA. Preserve exact all poses especially bottom-left deeply bent knees and held shell; do not straighten legs. Preserve scale, layout, machinery, copper hoses, two feet, brass and furnace colors. Transparent gaps under body and loader. No background matte/checkerboard, added glow or colored halos, no pose changes.",
+      "intermediate": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c5c54604-ac38-405d-9f66-25b2d42532bb.png",
+        "prompt": "Use case: precise-object-edit. Replace ONLY checkerboard background of this original Quenchbell 4x4 sheet with uniform pale gray, including internal gaps. Preserve all poses exactly, especially BOTTOM LEFT cell13 with deeply buckled knees, lowered furnace and shell held in loader. Exactly two legs. Keep machinery, shell, barrel, scale, grid, smoke and colors. No anatomy corrections, new poses, repositioning, cropping, shadows or labels."
+      },
+      "review": "Select cell13 only. Bent knees, lowered furnace and held shell survive background preparation; srgba opaque=false. Steam enlarged, colored fringe and added sparks remain unaccepted, matching into fall pending. Other cells unselected; deterministic assembly not yet packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/poses-hit-shell.png",
+      "source_sha256": "5cffa75066dca26a199631867171a43b71681ea9a31d30fce578a939e663f501",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0b6db615-782d-4a72-97f4-7773531a4743.png",
+      "prompt": "Remove ONLY pale gray background from this original Quenchbell 4x4 sheet. True transparent RGBA. Preserve all exact poses and positions, particularly row3 col1 raised claw HOLDING shell. Preserve two legs, furnace, barrel, loader hose, shell and smoke. Clear transparent gaps between limbs, pipes and claw. No background, checkerboard, colored fringe, added glow or new detail. No pose changes or rescaling.",
+      "intermediate": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3559680f-43d4-4398-868c-b3863e4decb7.png",
+        "prompt": "Use case: precise-object-edit. Replace ONLY checkerboard background of this original 4x4 Quenchbell sprite sheet with uniform pale gray. Preserve all poses and machinery exactly, especially row3 col1 hit sprite holding ONE shell in raised claw. Keep shell, claw, two legs, furnace, barrel, pipes, smoke and effects. No repositioning, cropping, pose corrections or new elements. Same grid scale. Remove checker inside gaps too."
+      },
+      "review": "Select cell9 only for deterministic assembly. Raised claw retains shell after two-stage alpha extraction; srgba opaque=false. Colored fringe/steam residues and softer machine details remain unaccepted. Other cells not replacements for corrected sources. Not packed/enabled; all other corrected sheets still RGB except prior melee alpha, so their alpha preparation remains required."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/poses-base.png",
+      "source_sha256": "bbeb2a4876cec71a6dc0bf92d7b27fdaa4e426f309f34b82586c792dc56353b0",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a4086dd9-a7b2-4218-8e53-8f78053a2e84.png",
+      "prompt": "Remove ONLY the pale gray background from this sixteen-pose original mortar machine sheet. Output genuine transparent RGBA, preserving exact machine pixels, poses, layout, size, two legs per body, shells, hydraulic loops, barrel rims and furnace details. Transparent gaps between legs and under loops. No matte, checkerboard, shadows, floor, added glow, haze, text or new anatomy. Preserve existing smoke/fire with translucent alpha. Keep exact 4x4 grid, no resizing or repositioning, no cropping any appendage.",
+      "intermediate": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-831f863c-73b1-444f-890f-f1c4310eb26d.png",
+        "prompt": "Use case: precise-object-edit. Replace ONLY the painted gray-white checkerboard of this sixteen-pose original mortar machine sprite sheet with perfectly uniform pale neutral gray. Include gaps between legs and inside loader arms. Preserve EVERY sprite pixel, pose, layout, scale, two-leg anatomy, shell, pipes, furnace, brass rims, particles and smoke. Do not correct or redesign any pose in this step. Same 4x4 grid, no shifting, resizing or cropping. No checker pattern, texture, floor, shadow, border or labels."
+      },
+      "review": "RGBA source candidate, identify srgba opaque=false. Sixteen base poses remain, but preview has pronounced red/yellow speckles and white residues around silhouettes/smoke, especially upper gutters. Not final alpha acceptance. Do not use original wrong-facing/equipment-error frames where correction sources supersede them; all selections remain per prior entries. Source redrawing/smoke shapes changed. Requires cleanup and corrected-frame assembly before packing/enabling; tests/exports deferred."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/melee-contact.png",
+      "source_sha256": "a7146492465439e11dbaf1cb82f65d18fd4d27280e390cddff8645233e73cf01",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-feca2487-77c2-4b6f-b336-11f8b955eb43.png",
+      "prompt": "Remove ONLY the pale gray background from this original machine sprite. Output genuine transparent RGBA, preserving exact machine pixels, pose, layout, size, two legs, one shell-holding claw and hanging hydraulic loop. Transparent gaps between legs and under loop. No matte, checkerboard, shadows, floor, glow, haze, text or new anatomy. Preserve existing steam with translucent alpha; retain all metal parts and orange furnace.",
+      "intermediate": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e6fe197b-90a7-49b2-aab4-615830a4aca7.png",
+        "prompt": "Use case: precise-object-edit. Replace ONLY the painted checkerboard backdrop with perfectly uniform pale neutral gray, including holes between legs and under hydraulic hose. Preserve exact machine pose, dimensions, details and silhouette: two feet, loaded extended left claw, copper loop, mortar, furnace and gauge. Remove checkerboard completely, no pattern, texture, wrinkles, floor or shadow. Do not change machine or steam. This is background preparation, not a redesign.",
+        "input": "exec-f56f81b2-7c89-45a1-b26d-985d6967ec25.png"
+      },
+      "review": "Two-stage checker removal to gray then alpha extraction produced 1254x1254 RGBA, identify srgba opaque=false. Full standalone melee sprite retained, transparent surrounding and openings visible. Source candidate not final accepted: colored edge fringe and steam edges, redrawn highlights/gauge/scale require matching. Not packed/enabled. No automated gameplay tests/exports; file format inspected as production selection."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-melee-same-facing.png",
+      "source_sha256": "8ed6b5890d9ab9ce948f107808249bf3dbfa6e2cc9720a12d4b1d8fc335effd3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3543188e-3c72-470a-a62b-bc92cbd78c56.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY row2 column2 extended-loader melee sprite: restore ONE flexible copper-lined dark hydraulic hose beneath extended screen-left loader arm, connecting body-side loader shoulder to wrist joint just behind shell claw. Hose hangs in a shallow natural U below arm, physically connected at both ends, same thickness/material as hose on idle row1 column1. Do not add a second arm or any loose cable. Preserve straight articulated loader, gripped shell, barrel facing upper-left, gauge screen-right, two legs, exact pose/camera/scale. Other fifteen sprites unchanged. Same grid background. No effects. Keep all shell and hose pixels unobstructed by neighboring sprite.",
+      "intermediate": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6f097e5e-b90b-4aeb-8768-e7881a6232d7.png",
+        "prompt": "Use case: precise-object-edit. Edit ONLY row2 column2 sprite of original Quenchbell Mortar 4x4 sheet: create melee CONTACT variant following its current wind-up. Extend its existing screen-left loader arm outward toward LEFT at furnace height, elbow nearly straight, ONE orange-seamed iron shell still firmly gripped in claw as striking implement. Torso leans slightly left with both piston feet braced. SAME facing as current cell: barrel mouth upper-left, loader screen-left, red gauge tube screen-right. No whole-machine mirror, no new arm, no thrown shell, no explosion. Exactly TWO legs, original barrel diameter/hoses/gauge/furnace and painterly scale retained. Fully contain extended claw inside cell; do not shrink machine. Other fifteen sprites unchanged. Same grid camera background. This cell will replace the wrong-facing row2 column3 strike during assembly.",
+        "review": "Same-facing extended strike but hydraulic loop missing; superseded."
+      },
+      "review": "Select cell6 as melee contact replacing mirrored original cell7; original cell6 remains windup. Loader extends left holding one shell, gauge remains right, two braced legs. Hose loop restored between arm joints. Shell protrudes beyond nominal left cell boundary, requiring explicit extraction region; no neighboring sprite overlap apparent. Arm reach/loop length, strike height and body lean require continuity matching, alpha and runtime assembly pending. Other cells unselected."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-passing-step.png",
+      "source_sha256": "f522650f795d301f7bed221c4740994e4dd3b28bd2aa3311a76ed03062fd30ef",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0691fc76-441c-4edb-aa31-2789c1dd716c.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY TOP RIGHT sprite row1 column4 of original Quenchbell Mortar sheet into walking PASSING pose following its crossed-leg contact. Keep torso/barrel facing upper-left, loaded claw screen-left, gauge/red tube screen-right, same exact camera and equipment. Supporting NEAR leg from screen-right hip now straightens down under furnace with broad foot flat beneath body center. FAR leg bends sharply at knee, its foot lifted clearly off ground behind and passing close beside support ankle. Exactly TWO piston legs and TWO feet; one grounded one airborne, no wide contact stance. Chassis rises slightly over supporting foot. Preserve leg lengths and all machinery; other fifteen sprites unchanged. Same sheet layout scale background, no effects or new equipment. This is an additional transition, not a new idle.",
+      "review": "Select cell4 as additional passing source, not replacement of opposite contact. One flat supporting foot beneath furnace and one curled airborne foot; facing and loaded claw preserved. Hip-to-leg ownership partly occluded and may revert from crossing contact; matching joints, raised foot scale, complementary passing sequence, alpha and runtime assembly remain unaccepted. Other cells unselected; no tests/exports."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-opposite-contact.png",
+      "source_sha256": "7e4d55cd9bf5ef2f42d2b337345eeedd643cb698c99b824ab539f65d38bf2676",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f79fa6fb-6917-4d55-a730-07fecd34d270.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY TOP RIGHT sprite (row1 col4). Keep its upper body EXACTLY unchanged: mortar faces upper-left, loaded claw screen-left, red tube screen-right. Change ONLY its two legs into opposite contact. The leg attached to hip on SCREEN-RIGHT below red tube must reach DIAGONALLY DOWN-LEFT crossing visibly in FRONT of belly, its broad foot landing at far lower-left of sprite. The leg attached to SCREEN-LEFT hip below loader must extend DIAGONALLY DOWN-RIGHT BEHIND that crossing leg, with trailing toe at lower-right. There are exactly TWO legs crossing at shins in perspective, not extra feet. This is the opposite contact to adjacent sprite. One front heel planted left, rear heel lifted right. Preserve jointed piston anatomy and leg length. Do not rotate torso, swap gauge/loader sides or simply reuse existing legs. Other fifteen sprites unchanged. Same sheet scale background.",
+      "intermediate": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-18a0f6db-b96c-4784-989a-d007274f262b.png",
+        "prompt": "Use case: precise-object-edit. Edit target: original Quenchbell Mortar 4x4 sheet. Replace ONLY row1 column4 mirrored walking sprite with SAME CAMERA and SAME BODY FACING as row1 column3. Barrel opening faces upper-left, shell-holding loader on screen-left, gauge and red glass tube screen-right, exactly TWO piston legs. Opposite walking contact: near leg beneath gauge reaches forward toward screen-left across front of body with broad heel planted; far leg beneath loader trails toward screen-right behind body, toe planted heel raised. Knees visibly bend opposite to neighboring walk frame. Do not mirror the entire machine. Keep torso barrel, shell, hoses and loader fixed to their anatomical sides. Match neighboring pose scale and painterly material exactly. Other fifteen sprites unchanged. Same grid/background. No added equipment or effects. Distinct articulated gait, not translated copy of idle.",
+        "review": "Facing corrected but same leading leg retained; not selected."
+      },
+      "review": "Select frame4 only. Facing/loader/gauge now match frame3; near leg crosses forward under furnace with far leg trailing. Two feet retained. Crossing hip ownership partly occluded, extended knee/leg length and trailing ground contact need matching; passing transitions, alpha and assembly unfinished. Other frames unselected; not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-recoil-same-facing.png",
+      "source_sha256": "77110d56079263431f1dc36f859665e78b21fd7ee9cc041a6c2ef37275bb64ca",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b60b6af3-b2f9-4935-8031-33f83c47364e.png",
+      "prompt": "Use case: precise-object-edit. Input is edit target: original Quenchbell Mortar 4x4 pose sheet. Change ONLY row3 column2, the loaded empty-claw sprite, into its immediate FIRING RECOIL transition. Preserve its SAME facing direction: barrel mouth points upper-left, loader stays screen-left, gauge stays screen-right. Do not mirror or turn machine. Slide barrel slightly DOWN-RIGHT along its own bore axis into mount, bend both knees slightly to absorb recoil, keep both broad feet planted at same positions. Empty open claw folds slightly lower away from muzzle. Preserve exactly TWO legs, brass rim, dark bore, furnace belly, hoses and original scale/camera. No shell, projectile, muzzle flash, sparks, smoke or added effects. Other fifteen sprites unchanged. Same grid and background. This additional frame must connect smoothly to the existing loaded row3 column2 pose.",
+      "review": "Select cell10 as firing recoil after loaded-claw-clear cell10, replacing mirrored original frame11. Same facing and loader side retained; knees/chassis compress and barrel lowers. Empty claw stays raised rather than folding lower. Barrel travel versus whole chassis compression, matching pivots, alpha and event alignment require assembly. Other cells unselected. Not packed or enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-loaded-claw-clear.png",
+      "source_sha256": "14ad1db61006780e811b7e38e10852a98995ca17b16fb5ff44d0af045a664ad2",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7fa608df-44a6-46b2-b86b-c55ffd75ded1.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY row3 column2 of original Quenchbell Mortar 4x4 sheet to next loading transition. Shell has dropped fully INSIDE barrel and is no longer visible. Empty loader claw retracts screen-left away from muzzle by bending elbow, claw open at shoulder height with clear gap from rim. Preserve EXACT barrel orientation, brass rim dark interior, two planted feet, chassis, furnace and hoses. No projectile, fire or sparks. Other fifteen sprites unchanged, same camera scale grid background. Do not turn machine or move barrel; only shell disappears into bore and loader folds away.",
+      "review": "Select cell10 as additional loaded transition after shell-insertion cell10. Shell no longer visible; open empty claw clear of barrel on screen-left. Barrel facing retained with two planted feet. Loader joint/scale matching, alpha, empty-to-loaded resupply and assembly unfinished. Other cells unselected. Recovered completed generation output before initiating next edit; not regenerated."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-shell-insertion.png",
+      "source_sha256": "edbcd3a42723f0438ab02c4221e957d53cde549ff6c5f720a859ad8ca7cf3748",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-25c5b017-c19d-45f9-80f4-e78ed53c2590.png",
+      "prompt": "Use case: precise-object-edit. Create insertion variant by changing ONLY row3 column2 loading sprite of original Quenchbell Mortar sheet. Move its ONE loader-held round shell diagonally down-right into the muzzle opening, coaxial with barrel bore, lower half occluded INSIDE rim. Loader elbow bends and claw fingers open just outside rim releasing shell. Shell smaller than inner bore so it physically fits. Keep exact barrel pose, chassis, two planted feet, furnace hoses camera scale. No muzzle glow, sparks, projectile or smoke added. Other fifteen sprites unchanged. Same sheet layout background. This is an additional loading transition source, not firing.",
+      "review": "Take cell10 as ADDITIONAL loading transition after clean-loading cell10, not replacement. Shell partially seated within muzzle and claw opens above, no discharge. Shell diameter/occlusion and loader joint matching needed; barrel-facing jump before recoil and empty-to-loaded resupply unresolved. Other cells unselected; alpha/assembly pending."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-clean-loading.png",
+      "source_sha256": "4533481870adb72d250e2280da05163d66ca780dacd7273752682719e8b57a0a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-09d8cc46-5e1e-459d-9cc2-f4cac9f52913.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY loading pose row3 column2 frame10 in original Quenchbell Mortar 4x4 sheet. Remove bright muzzle fire burst, airborne orange sparks and glow between shell and barrel. Show dark warm empty muzzle interior and intact brass rim. KEEP the ONE iron orange-seamed shell held in loader claw just above the opening, not yet fired; preserve shell size, claw fingers and arm, barrel pose two legs furnace hoses. This is loading preparation, no discharge. Other fifteen sprites unchanged, same grid camera scale background no text.",
+      "review": "Select loading frame10 only. Premature muzzle flame/sparks removed, shell held above clear dark muzzle by loader. Two feet and furnace retained; loader-to-bore insertion alignment, facing and barrel geometry continuity still pending. Other frames unselected, no runtime integration or alpha acceptance."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-clean-recoil.png",
+      "source_sha256": "f8fc1dca28d80570e9fb16e795ef11aa13646a7db28cc4c57541a0cd044b495b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-00d3b95d-abbf-400a-9d93-871a43caeb47.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY firing sprite row3 column3 frame11 on original Quenchbell Mortar 4x4 sheet. Remove flying shell above muzzle and ALL external orange/yellow flame, sparks and smoke around that shell/muzzle; replace with same background. Show complete brass muzzle rim and dark warm interior, unobstructed. Preserve exact recoiling barrel angle, two braced legs, furnace, hoses and empty loader arm. No shell held in loader after shot. Other fifteen sprites unchanged. Same layout scale camera. No new effects or text.",
+      "review": "Select firing recoil frame11 only. Flying shell, flame/sparks and nearby smoke removed; brass rim/dark muzzle interior, two planted legs and empty retracted loader retained. Some barrel interior/rim redraw; geometry, facing and event-effect synchronization pending. Original preserved as effects reference; no runtime integration or alpha acceptance."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-knee-buckle.png",
+      "source_sha256": "8f455b3a2cfa5d0ca46b198ad1ad2e859ed1cadd94f631eca429e46a64cdb66c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-23cd86a0-ecda-4f24-a74b-4c2a7fa69e14.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY bottom row column1 death-start frame13 in original Quenchbell Mortar 4x4 sprite sheet. TWO piston knees buckle deeply and asymmetrically: screen-left knee nearly grounded with foot folded under, screen-right knee flexed supporting briefly, furnace belly drops halfway toward ground and tilts to screen-right preparing next sideways fall. Keep mortar barrel attached, same loader arm retaining ONE shell at screen-left, hoses and gauge intact. Do not shorten limb parts: bend joints. Same body/barrel size, same facing and camera, fully inside cell. Other fifteen sprites unchanged. No extra legs, new gear or text.",
+      "review": "Select frame13 only. Furnace lowered on deeply bent screen-left knee, opposite leg supports higher hip, shell/loader/barrel retained. Leg geometry compressed and torso tilt differs from next fall; matching pending. Added sparks under chassis need separate effect handling. Other sprites changed, unselected. Alpha/reload/facing and assembly unresolved."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-wreck-cold-shell.png",
+      "source_sha256": "6f19f85a9bc5bf3cfab4808992d6f1143636469b70e24c1bde9c1f1b6f3be1a4",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-47a570d7-d236-44dc-ada3-b17fad93506e.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY final bottom-right wreck frame16 of original Quenchbell Mortar 4x4 sprite sheet. Extinguish loose round shell's bright orange seam: replace with dark brown/black recessed joint, ordinary dull iron reflections, no red orange glow or spark. Also extinguish any residual red point on wreck gauge/hoses. Keep shell shape location brass attachment, dark furnace/barrel, TWO folded legs, all machinery exact. All other fifteen sprites unchanged. Same grid camera scale background no text effects.",
+      "review": "Select frame16 only. Loose shell orange seam removed, dark iron joint retained; furnace/barrel inactive. Tiny warm hardware highlight remains on chassis, no broad glow. Tool also darkened preceding shell but frame15 unselected. Geometry/alpha/reload and assembly remain unfinished."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-hit-shell.png",
+      "source_sha256": "3e2d58ce36986fbb25237361a7cf6ac506aa4d021edfcd288034e12914cab0f2",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c56e3bf5-eabb-4002-85a1-2951c51231da.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY hit-recoil sprite row3 column1 (frame9) of original Quenchbell Mortar 4x4 sheet. Restore ONE round black iron shell with orange seam in its raised empty loader claw at upper-left. Same shell size as idle frame1, claw fingers wrap around shell, fully attached to existing arm. Preserve recoiling tilted machine, lifted foot, exactly TWO legs, mortar barrel, furnace, hoses and all other fifteen sprites. Do not fire shell, add projectile or change camera. Same grid scale background; no text.",
+      "review": "Select frame9 only. Raised loader claw now retains one shell during recoil, two legs and tilted chassis retained. Arm pivots/hoses and shell scale need matching; reload from empty recovery still missing. Alpha/event effects and facing continuity unresolved; not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses.png",
+      "source_sha256": "40cf3f34cec349cc509050374dca76bd3f3a3a45868047cccc41ff1d7a8efce2",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5227cd54-2543-4a01-ae14-8d2ae7e8d319.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle sprite animation sheet for the attached Quenchbell Mortar machine; reference establishes exact identity. 16 full body isolated poses, 4 columns x4 rows, generous empty gutters, fixed 3/4 camera facing RIGHT and consistent scale. Actual transparent RGBA background, no ground or checkerboard drawing, no labels. Machine has EXACTLY TWO jointed piston legs with broad feet, ONE massive upward-angled black iron brass-rimmed mortar barrel pivoted above an orange furnace belly, front gauge/red glass tube, ONE side articulated loader arm carrying a single iron orange-seamed round shell, copper hoses, rear steam pipes. No human crew. Preserve counts, proportions and connected joints throughout. Row1: idle resting; idle boiler breathing subtle loader motion; walking LEFT foot forward RIGHT back; walking RIGHT foot forward LEFT back with opposite knee bends clearly visible. Row2: passing step lifted foot bent knee; melee wind-up loader arm shell pulled close back; melee strike loader arm extends shell toward enemy right with torso leaning forward; defense braced feet crouched barrel tilted away loader shields furnace. Row3: hit recoil rocked backward; ranged preparation two feet planted barrel raised loader guiding shell toward open muzzle; firing barrel recoil short orange muzzle burst shell emerging toward upper right; recovery barrel returning loader empty. Row4: death beginning knees buckling steam vent; collapse machine tipping side barrel falling with torso; dead machine on side intact two legs and detached shell beside it; same persistent wreck settled dark unlit furnace/muzzle/shell no active steam. Real articulated mechanical pose differences, no simple translated or rotated duplicates. Keep barrel diameter and leg number constant, readable piston motion. Painterly metal original game art matching reference, clean cutout edges; fully contain shell/projectile and every appendage within each cell."
+    }
+  ],
+  "review_notes": "20-frame candidate: fourteen retained prepared paintings and six new paintings from one built-in output. Original true RGBA is preserved without rekeying. Rear resupply reach/return, alternate foot lifts and two guards supplement visible shell loading/insertion, discharged claw and equipped cold wreck. Canonical source faces left and is explicitly registered. Original hit turns body/barrel toward the opposite side; this rotation, steam/quiet transitions, resupply arm occlusion, foot support/travel and action timing remain unaccepted and require full-roster refinement.",
+  "local_processing": {
+    "owner_approval": "2026-09-15 explicit permission for local background removal and edge cleanup",
+    "recipe": "art/animation/source/cutout-recovery-20260915/recipes.json",
+    "proof": "local-alpha/loaded-ready.processing.json",
+    "source": "poses-loaded-claw-clear.png",
+    "source_rect": [
+      325,
+      640,
+      627,
+      945
+    ],
+    "packing": "packing.json",
+    "retained_previous_packing": "packing-before-local-cutout.json",
+    "candidate_atlas_sha256": "d9220704cbbd8fcd9a8ebae5c664452fa24c920d4b56d1447b8f20e959bae7b9",
+    "frames": 19,
+    "review": "Loaded-ready transparency gap resolved and appended at index18; original machinery pixels retained outside matte/edge band. Still unregistered: resupply, cross-state alignment/continuity and older cutout edge work remain."
+  },
+  "prior_review_notes": [
+    "Sixteen poses include shell loading, firing, empty loader recovery and cooled final wreck.",
+    "Whole-body facing reverses between contacts, attack and firing; normalize without changing anatomical loader side. Passing contact repeats raised-foot pose.",
+    "Hit pose loses held shell; must preserve or account for it. Loader disappears/changes shape during firing. Reload cycle from empty recovery to loaded idle not complete.",
+    "Barrel/loader pivots, hoses/gauge placements and leg proportions need continuity refinement. Death starts near standing and final shell retains orange seam.",
+    "Checker pattern visible; transparency and event-synchronized projectile/effect extraction remain unaccepted. Source-only, not packed or enabled."
+  ],
+  "status": "candidate_pending_playback_acceptance",
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 14,
+    "new_selected_paintings": 6,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/packing.json",
+    "packing_result": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_quenchbell_mortars.png",
+    "runtime_sha256": "0e7819721682d2003d0da3d41cd9256119fc68231ab298f7f9b00f53559c8d3c",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/poses-base.png": "bbeb2a4876cec71a6dc0bf92d7b27fdaa4e426f309f34b82586c792dc56353b0",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/melee-contact.png": "a7146492465439e11dbaf1cb82f65d18fd4d27280e390cddff8645233e73cf01",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/poses-hit-shell.png": "5cffa75066dca26a199631867171a43b71681ea9a31d30fce578a939e663f501",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/loading.png": "51b5eafdb1d987e59f9fef0bb32a035431198f2f3030514d125ea3fb31073658",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/recoil.png": "044cfebd5f225652b5a52964c62ba7f2767b4b57a1911f5ec90d9e348461fb7f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/poses-knee-buckle.png": "0b22fb61c40212d4a37a3636d587e8d5e8d95a3ce5ec1eccbf57c5c9406946ef",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/dead.png": "a19ad644482afdb7ed7ae1df166a5676b8c03df6559a685e55e632af2bc6db27",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/shell-insertion.png": "0566db653e4d674aa2c02ccee481e4ad3c51dcce3dda896e24b3d8a310279cbf",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/local-alpha/loaded-ready.png": "389f58b5c91a6053deb0d631274f023d13dcf922f416be76ec060591b045f342",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/continuity-alpha/resupply-creep-and-guard.png": "dc3fa157cea2400e5f8cbeb5c1edf08e733f8ec3dd2573454664ddea70743712"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/mortar-continuity-20260916",
+    "pose_source_facing": "left",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Static source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "date": "2026-09-16",
+      "policy": "Only task-owned byte-identical preview duplicates; exact SHA-256 rechecked and fuser found no open handles. All original/rejected paintings, unique evidence, processing proofs and caches retained.",
+      "removed_files": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/mortar-continuity-20260916/identity/unit_brasshollow_quenchbell_mortars-poses-base-rect-0-0-314-319-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/identity-reference.png",
+          "sha256": "67cc8729430373486c688cd9037bb64d8239c42f76f47e3826588ba0a995ecf0",
+          "bytes": 173338
+        }
+      ],
+      "removed_bytes": 173338
+    }
+  },
+  "historical_non_source_records": [
+    {
+      "operation": "deterministic_neighbor_frame_crop",
+      "recipe": "packing.json",
+      "output": "candidate-atlas.png",
+      "sha256": "cb7ccae6d012107de04b6dedba114de96b5b279cd902c0ad3da0f61da84aba50",
+      "review": "Adjusted crop bounds for indices4,5,7,11,12,13,14 after source/atlas inspection. Removes preceding-row foot strips and adjacent shell/steam fragments from frame margins; passing crop includes its own steam beyond nominal cell edge. Source pixels and alpha unchanged. Packed draft inspected; colored alpha fringes and loaded-ready/resupply/continuity remain unaccepted. No tests/exports or new generation."
+    },
+    {
+      "operation": "deterministic_packing_alignment",
+      "recipe": "packing.json",
+      "output": "candidate-atlas.png",
+      "sha256": "15eb1a417c32fca90ec7ce37bc6a9fcd46abd20f61db94d3fa5630241739651b",
+      "review": "Loading/insertion scale0.18; recoil scale0.20 anchor[665,1220]. Reduces visibly undersized recoil relative to loading. Original source pixels/alpha preserved by existing crop/scale packer; no background processing. Eighteen-frame unregistered draft, continuity and edges unaccepted; tests deferred."
+    },
+    {
+      "status": "rejected_opaque_background",
+      "outputs": [
+        "exec-169ac969-12be-4db1-818f-5497f0da21dd.png",
+        "exec-fbce7c61-6126-4154-a421-b8a1433ef9ba.png",
+        "exec-6f894c63-b9c2-44c5-aded-f19b2b84406a.png"
+      ],
+      "output_directory": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc",
+      "prompts": [
+        "Use case: background-extraction. Extract ONLY row3 column2 (cell10) as ONE standalone original Quenchbell loaded-ready sprite with genuine transparent RGBA. Preserve precisely this pose: mortar faces upper-left with dark bore, shell entirely hidden inside; EMPTY OPEN raised loader claw withdrawn to screen-left, standing furnace chassis and exactly TWO planted piston legs. Gauge and hoses remain screen-right. No shell visible anywhere, no fire/projectile/sparks, no mirror, no redesign or additional machinery. Match original proportions and painted brass/black iron. Fully contain machine and feet with transparent margin. Remove all checkerboard including inside gaps, no ground shadow, matte, outline or halo.",
+        "Use case: precise-object-edit. Image1 is transparent RGBA edit target; image2 is pose reference ONLY (row3 column2). Change ONLY the knee/chassis posture of image1 from compressed firing recoil to taller loaded-ready stance like that reference: extend the two knee joints slightly, raise furnace and barrel, keep both feet planted. Keep EMPTY open claw raised screen-left, dark bore upper-left, same machinery, scale, palette, hoses and gauge. No shell visible, no effects. Preserve image1 genuine transparent background and clean interior gaps; NEVER paint the checkerboard from reference. Full machine remains in frame. This is a pre-fire ready pose, not a redesign.",
+        "Use case: background-extraction. Remove the checkerboard background from this single machine sprite. Output genuinely transparent RGBA, not a drawing of a checkerboard. Keep the machine unchanged including open empty claw, dark bore, two feet, posture, brass and iron texture. All space outside machine and holes between its parts must be transparent. No backdrop, shadows, steam, new effects, resizing or redesign."
+      ],
+      "review": "Loaded-ready extraction, transparent-recoil-target edit, and standalone background extraction each returned opaque RGB checkerboard. No output copied or packed. Stop repeating these requests for this pose. Existing eighteen-frame atlas unchanged. Need an approved transparency-preserving raster cleanup path; no paid API authorized. Tests deferred."
+    },
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0289e711-8145-45ec-a80f-b55c14691bfc.png",
+      "prompt": "Use case: compositing. Assemble corrected original Quenchbell Mortar 4x4 sheet using five versions of SAME machine. Image1 is base; keep corrected top-right opposite walking contact. Replace base cell7 (row2 col3) with Image2 cell6 extended LEFT loader melee strike. Replace cell9 with Image3 cell9 holding shell during hit. Replace cell13 with Image4 cell13 bent-knee death start. Replace cell16 with Image5 cell16 dark wreck and dark loose shell. Other base cells unchanged. Precisely preserve selected poses, two legs, loader/gauge sides, machinery, proportions and 4x4 layout. Do not mirror or redesign poses. Keep extended loader pixels separated from neighboring sprites. Plain uniform pale gray backdrop instead of checkerboard, no new shadows, effects, labels or scenery. Separate loading/recoil variants remain separate.",
+      "references": [
+        "poses-opposite-contact.png",
+        "poses-melee-same-facing.png",
+        "poses-hit-shell.png",
+        "poses-knee-buckle.png",
+        "poses-wreck-cold-shell.png"
+      ],
+      "review_status": "rejected_pose_selection_regression",
+      "review": "Five-reference generated consolidation did not preserve source selections: cell4 mirrored again, cell9 lost held shell, cell13 standing instead of buckle, cell16 shell seam still warm; melee copied to6 rather than replacing7. Not copied/enabled. Stop generative multi-sheet merging for this unit; retain original corrected files and use explicit source rectangles in existing deterministic packer once each required source has usable alpha. Initial six-reference call rejected by tool (max5), no output."
+    },
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d34bed31-5827-468c-af8e-c1497b96120e.png",
+      "prompt": "Use case: precise-object-edit. Clean ONLY erroneous isolated red/yellow/white speckles and jagged colored halo OUTSIDE the silhouettes of this transparent sixteen-pose sprite sheet, especially empty top gutter between sprites and around steam. Preserve genuine furnace/shell orange details INSIDE machines and real fire/smoke effects. Keep every machine pose, scale, location, machinery and 4x4 layout unchanged. Output genuinely transparent RGBA with clean antialiased contour, transparent empty gutters and holes. Do not fill transparency black or checkerboard, do not add background or glow, do not shrink or crop sprites. Clean alpha boundary, not redesign.",
+      "review_status": "rejected_alpha_lost",
+      "review": "Attempt to remove colored fringe from alpha/poses-base.png returned 1254x1254 RGB with painted checkerboard. Not copied or enabled. Existing RGBA base candidate preserved unchanged. Stop repeating alpha-cleanup-through-generation loop; requires a reliable transparency-preserving cleanup workflow. No accepted new art in this attempt."
+    },
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f56f81b2-7c89-45a1-b26d-985d6967ec25.png",
+      "prompt": "Use case: background-extraction. Extract ONLY the melee-contact machine at ROW2 COLUMN2 from this 4x4 sheet into ONE standalone sprite on genuinely transparent RGBA background. Include its entire shell at left, straight loader arm and hanging copper hydraulic loop, barrel, furnace, two planted feet and rear pipes. Preserve exact pose and proportions, muzzle upper-left, gauge right, shell gripped left. Do not include any pixels from neighboring sprites. Remove ALL gray/white checkerboard including enclosed holes between legs and under hydraulic loop; output actual alpha, no painted checker or solid backdrop, no ground shadow. Center entire cutout with generous transparent margin. Do not redesign or change armor, add limbs, flame/projectiles or perspective. Original painterly sprite identity unchanged.",
+      "review_status": "rejected_no_transparency",
+      "review": "Standalone extraction retains full melee silhouette but output is 1254x1254 RGB, not RGBA; visible warped checkerboard is painted into background. Not copied into project, not packable, not runtime art. Do not repeat identical checker extraction. Existing pack_unit_pose_art.py deliberately only accepts true-alpha source and must not be weakened. Original same-facing source remains selected pending a sound alpha workflow."
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_scarshield_veterans.png",
+  "reference_sha256": "f4abbcf7623c0767597d6cdd8c51bb32cc1708e468aaf249904d67f9c50923ef",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "31f72b3eb14461a279544897c82e6dbae2a4b9cd8705233c0b2ba5ea84e8905f",
+      "source_output": "exec-6f3295b2-5818-4454-806b-1e351c1cd2ed.png",
+      "prompt": "Use case: stylized-concept. Original Scarshield Veteran battle animation matching reference: weathered middle-aged man gray dark hair short beard, gray scarf, blackened plate/chain armor bronze edging, tattered red cloth tabard and shoulder mantle, battered iron boots. LEFT arm large jagged black stone kite shield bronze rim/boss thin ember-orange fissures; RIGHT hand short broad rectangular-headed warhammer with bronze corners ember cracks and red handle ribbons. Twelve articulated full-body poses FOUR columns THREE rows elevated three-quarter camera facing RIGHT consistent scale generous gutters. Row1 idle planted shield forward hammer low; breathing shoulders/scarf; heavy walking contact near foot forward heel lands; passing foot under pelvis other knee raised. Row2 opposite walking contact far leg forward near leg behind same torso no mirror; RIGHT hammer windup above shoulder LEFT shield guards ribs; RIGHT arm swings hammer down toward RIGHT front lunge LEFT shield stays chest; deep crouched guard shield high hammer close. Row3 hit recoil equipment retained; knees buckle hammer lowers shield tips; sideways fall body low equipment lands alongside; final relaxed horizontal SIDE corpse eyes closed with entire shield flat beside LEFT arm and hammer beside RIGHT hand, ember cracks subdued. Keep one shield one hammer all frames same head size/design, actual hips/knees/elbows not duplicated standing cutouts or rotated standing corpse. Plain pale gray background original painterly raster no shadow/text/grid/blood/scenery/effects."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "a54675f7aa5d7b62f7614a8ec26315741179e8744682df02104132425dcf77fc",
+      "source_output": "exec-6d3154c6-8e35-450d-af02-bfac433105e7.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY second row second figure in this Scarshield Veteran sheet. Replace its raised-hammer windup with completed downward hammer strike: RIGHT shoulder rotates forward, RIGHT elbow extends across front of torso, RIGHT hand drives hammer down toward screen RIGHT at leading knee height, hammer head visible just beyond right edge of shield; LEFT arm keeps shield close to chest tilted slightly away to allow swing; low forward lunge weight over bent front knee. One unchanged black/bronze rectangular hammer with red ribbons, same whole shield. Keep exact figure location/scale face/costume and every other pose unchanged. Pale gray background. Do not add extra limbs or weapons.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "ed0c188d198b24448a70e02232c326fa6b233e1a3610d177a8b0b9fe1eb42b1c",
+      "alpha_output": "exec-b0eba171-550b-46e3-bf3f-26b0c9313a5f.png",
+      "alpha_prompt": "Use case: background-extraction. Extract these ELEVEN Scarshield Veteran poses onto genuine transparent RGBA. Preserve exact layout/scale, complete shield/hammer/ribbons, armor silhouette, hair, limb gaps and corpse. Remove pale gray background and ground shadows only. No matte/clouds/checkerboard, redraw, reframing, effects or text."
+    }
+  ],
+  "review_notes": [
+    "Eleven actual poses, not requested twelve: missing opposite walking contact. Corrected duplicate windup into completed right-hand hammer strike. Shield defense and equipped side corpse visually inspected. Need opposite contact/passing, equipment scale/grip continuity and final alpha compositing review. Extraction leftmost hammer approaches canvas edge; preserve custom margins/crops. Source-only not packed/enabled; no tests or exports.",
+    "13 frames retain nine original paintings and select four new hammer recovery, shield-ready brace and grounded travel paintings. Original corrected hammer contact, equipped collapse and head-right resting corpse remain. Replaced original repeated movement pair with two new travel candidates, not a complete accepted gait.",
+    "Reused clean original alpha; new green backing uses approved bounded preparation. Uniform original/new scales 0.52/0.31. Inspected source bands remove previous-pose boots and neighboring glove/ribbon fragments around the hammer while retaining shield, hammer, boots and cloak.",
+    "Full alternating gait, hammer/left-shield grip and crack-pattern consistency, body/gear/palette/edges and connected timing remain refinement. New guard raises hammer and shield differently from deep crouch; inspect the transition in consolidated playback. Static production review is not motion/gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_scarshield_veterans/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_scarshield_veterans/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_scarshield_veterans/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_scarshield_veterans/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_scarshield_veterans.png",
+    "runtime_sha256": "5bb7a55ac3d33c36ccbf8afb115b8ec51f303ec40791bc5e7871f8cedd5d943c",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png": "ed0c188d198b24448a70e02232c326fa6b233e1a3610d177a8b0b9fe1eb42b1c",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_scarshield_veterans/continuity-alpha/hammer-recovery-shield-brace-and-travel.png": "ca85940c4db5f5f6dace1a991515188b536feb5a580709987f5b9219e1674cf8"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/scarshield-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

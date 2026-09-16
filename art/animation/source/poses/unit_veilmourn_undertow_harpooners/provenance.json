@@ -1,0 +1,110 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_undertow_harpooners",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_undertow_harpooners.png",
+  "reference_sha256": "67fe206ecf232bd288ce8823db020298774727f0f769e2b7b431e0ece237b76d",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/poses.png",
+      "source_sha256": "d839766250010228def6f7870c61b728ec76e7d9855c811280a796a5cb7df692",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-850be209-8167-40b7-915d-3b15adfeb39d.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle sprite sheet. Reference defines ONE Undertow Harpooner, masked adult in dark teal barnacled armor, swept tricorn-like helmet, smooth ivory beaked full face mask, ragged ivory/teal cloak, fishing net skirt, rope belt, blue glass floats and purple belt lantern, pointed armored boots. Holds ONE two-handed wooden/metal harpoon launcher with central rope spool and ONE long steel barbed bolt projecting forward. Preserve reference equipment and proportions. Create SIXTEEN articulated full-body poses, 4 columns x 4 rows, constant scale fixed elevated three-quarter view facing screen right, generous margins for weapon and cloth. Actual transparent RGBA background, no painted checkerboard, no scenery/floor/grid/text. Row1: idle launcher lowered; idle breathe shoulders shift cloak sways; walk right foot forward left back; opposite walk LEFT foot forward RIGHT back, visibly swap leading leg. Row2: passing raised foot beneath hips; melee wind-up pull launcher stock to chest; melee shove launcher stock forward screen-right using both hands, harpoon tip angled safely down; defend crouch launcher diagonally guarding torso. Row3: aim launcher level with loaded barbed bolt; fire with bolt leaving muzzle short distance screen-right thin attached rope unwinds, no second loaded bolt; recovery muzzle drops empty guide with rope taut; hit recoil torso back. Row4: kneeling death legs buckling weapon lowering; deeper kneel head bowed hands slack; fall sideways hips knees bent launcher landing beside; dead side-lying inert masked figure with intact equipment beside and purple lantern dark. Two hands two legs, no duplicate weapons or arms. Keep net, floats and helm throughout. Actual joints articulate, not whole-body cutout rotations. Original art only, no copyrighted franchise assets.",
+      "alpha_source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png",
+      "alpha_sha256": "64b200fbd0518388fef3e60da6bfca47144526f1966de24ed02346108e86d417",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-dbde56fa-f976-4f10-901a-bf920806f520.png",
+      "alpha_prompt": "Use case: background-extraction. Remove ONLY checkerboard from supplied sixteen-pose Undertow Harpooner sheet to genuine transparent RGBA pixels. Preserve complete figures, every harpoon and thin rope, masks, capes, nets, equipment and all placements, sizes, colors and canvas. No painted checkerboard, no replacement backdrop, no repainting, no colored edge matte."
+    }
+  ],
+  "review_notes": [
+    "20-frame candidate: eleven original RGBA paintings reused unchanged, two whole-sheet cold-lantern derivatives and seven selected new contact/guard/action paintings across five built-in outputs including one fully rejected corpse edit.",
+    "Single-corpse edit changes paint style and clips helmet; excluded. Whole-sheet edit preserves style and extinguishes fall/corpse waist lantern without removing its cage, harness or grounded launcher.",
+    "Ranged sequence retains loaded aim then empty-guide recoil, contained retrieved barb, one lifted bolt above an empty rail, and insertion. Original off-cell tether retrieval excluded.",
+    "Retrieved barb shaft length/attachment changes before next full-bolt lift and hand/mechanism ownership still require refinement; selected retrieval is not final mechanical acceptance.",
+    "New contact still resembles original leading leg, so it is a planted bridge rather than an accepted opposite contact. New/original body scale/palette and full-roster support/travel and transitions/timing remain unaccepted.",
+    "Original real RGBA is not rekeyed. Banded crop excludes neighboring hats, boots, tether, fall body and kneeling spearhead while preserving selected cloak, weapon and extremities."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses include fired tethered bolt and empty guide recovery, crouched defense and fallen corpse.",
+    "Melee shove is forward launcher thrust rather than stock contact; requires clearer intended melee articulation.",
+    "Walking contacts repeat lead; idle near-static. Hand grips, spool/rope attachment, launcher size and helm/net continuity need refinement.",
+    "Reload/retrieval transition absent; do not jump directly from empty recovery to loaded idle without authored transition.",
+    "Final lantern retains purple color and requires clear extinguished state. Extraction colored fringes and long rope/cell margins unaccepted.",
+    "Source only, not packed/enabled; 29 candidates and final acceptance 0/160 unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 11,
+    "edited_retained_paintings": 2,
+    "new_selected_paintings": 7,
+    "generated_outputs": 5,
+    "generation": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners.png",
+    "runtime_sha256": "f7560cc0fb3aa9543745bb6aa56864309989acabadc92df65410ceb26eae371f",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png": "64b200fbd0518388fef3e60da6bfca47144526f1966de24ed02346108e86d417",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/opposite-contact-and-guards.png": "e33173283101fd80906db565a530c390a2b891fd0897d6505c980591de28a948",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/recoil-retrieval-and-reload.png": "d7a3c2cceef6adc5c3b3920a2e0d2636e5a31eeefe89b9924dc87229c4d5b153",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/retrieval-contained.png": "3cdff63f47a1632f19f4e69507687d504abc6bed6232f350e6e9eb465926b34d",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/poses-cold-lanterns.png": "a68c98f335977dbb4e9fc98ba5f221d7f410c8fcb7465c2896e7fe2db3421636"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "policy": "Removed only exact byte-identical task preview copies after SHA-256 and no-live-handle checks. Identical retained copies permit restoration. Used generation references, original/rejected masters, unique evidence, processing proofs, caches and unrelated artifacts remain.",
+      "duplicates_removed": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/supplements/poses-cold-lanterns-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/prepared/poses-cold-lanterns-light.png",
+          "sha256": "6ca833fa50758883561d4cb72f0034bdafdbcc89b5882595f9c3734f3cfb6f86",
+          "bytes": 1555675
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/supplements/poses-cold-lanterns-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/prepared/poses-cold-lanterns-green.png",
+          "sha256": "1b3b7807b5e041e0dc915824961f1166e9d0ec5b6f51803215e6c9dacfe18762",
+          "bytes": 1511380
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/atlas-first/poses-candidate-atlas-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/current-atlas/poses-candidate-atlas-light.png",
+          "sha256": "3d4de894db14d0461aac99bda9fd87e3b2d4b786be5e70ee10c2a2ff55d34a8a",
+          "bytes": 754113
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/atlas-first/poses-candidate-atlas-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/current-atlas/poses-candidate-atlas-green.png",
+          "sha256": "9ce4f5c2944971db76ebdabbb7a5cb78f89591413b2ab2c569fce901961bf358",
+          "bytes": 702023
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/actions/retrieval-contained-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/prepared/retrieval-contained-light.png",
+          "sha256": "fea3475a5d7266e1c58a7e6761cc6c322d9a8ae9a18bf19120a6cd57f9f289cd",
+          "bytes": 1716056
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/actions/retrieval-contained-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/prepared/retrieval-contained-green.png",
+          "sha256": "0046b15fe9d5fa41944195f12b85b3870490e5df5f29f2972db881d3fd087aac",
+          "bytes": 1692132
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/identity/unit_veilmourn_undertow_harpooners-poses-rect-0-0-284-345-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/identity-reference.png",
+          "sha256": "21aa35b9d45d0c41329a69caedd1988e1ac24a26009c724923e2d98e1299d344",
+          "bytes": 182840
+        }
+      ],
+      "removed_bytes": 8114219
+    }
+  }
+}

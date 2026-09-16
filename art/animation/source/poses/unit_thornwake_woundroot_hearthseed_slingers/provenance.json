@@ -1,0 +1,117 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_thornwake_woundroot_hearthseed_slingers.png",
+  "reference_sha256": "17e1997fe7a834599a75793fd412861aab0f0e3448f17904ce8829b564adc08d",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/poses.png",
+      "source_sha256": "e216a556b2a08664fa640c770f6950b6ce384e78611e9956c15cdc02c554f103",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e987fa28-ef05-4ccf-aeaf-cc778abf7b74.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle animation sheet matching attached Woundroot Hearthseed Slinger reference. Sixteen full-body isolated poses regular FOUR columns FOUR rows same scale fixed 3/4 camera facing RIGHT generous gutters. True transparent RGBA background no painted checkerboard no ground labels. Human woman curly brown hair leaf sprigs green scarf cream sleeves layered brown bark/leather armor green ragged skirt vine greaves brown boots. RIGHT hand tall wooden forked staff-sling, TWO green cords descending from fork to leather pouch holding ONE amber seed; LEFT forearm oval wicker/vine buckler with amber inset, LEFT hand can reach seed basket at left hip. Preserve staff length two cord attachments pouch shield and belt seed containers. Row1 idle staff upright pouch hanging; breathing idle shoulders lift cords sway; walk LEFT leg forward RIGHT back; walk RIGHT leg forward LEFT back opposite anatomical contacts do not mirror body. Row2 passing raised bent knee; melee windup RIGHT hand pulls staff back LEFT buckler at chest; melee contact RIGHT arm thrusts lower staff butt rightward into nearby opponent fork stays behind LEFT buckler retained; defense crouch shield raised staff close cord pouch controlled. Row3 hit recoil equipment retained; ranged anticipation RIGHT arm swings forked staff back pouch trailing cords taut seed loaded; ranged release RIGHT drives staff forward ONE seed leaves pouch toward right free release cord opens pouch while other cord remains attached; reload LEFT hand takes seed from belt basket RIGHT steadies upright staff empty pouch hangs. Row4 wounded knees buckle staff lowers; fall sideways staff sling settles; prone dead staff cords pouch and buckler grounded alongside body seed glow fading; same persistent corpse eyes closed amber seeds dark no light. Clearly articulated elbows hips knees shoulders no extra arms weapons cords. Painterly original game art matching reference clean readable cutouts, contain full staff and seed in each roomy cell no clipping overlap or motion blur."
+    }
+  ],
+  "review_notes": [
+    "18 candidate frames: seven original paintings (sheet indices8,9,11,12,13,14,15) plus11 selected new paintings from eight built-in outputs: idle pair, shield-bash pair, guard pair, four gait paintings and one empty release.",
+    "Right-facing idle pair replaces left-looking idle. Guided gait uses fixed identity and explicit foreground/far leg diagrams, then unfolds the near passing knee into the next contact. No local pose synthesis or mirroring; source-driven body/leg/gear continuity still needs timed review.",
+    "Full-length staff remains in RIGHT hand while LEFT buckler performs a windup/contact shield bash, replacing the original shortened-fork jab. Both new guard frames retain a loaded pouch and two cords.",
+    "New ranged release retains full staff, ONE fixed cord and ONE free-ended cord with open EMPTY pouch and no baked projectile. Original loaded windup, reload, hit and connected kneel/fall/prone/closed-eye corpse retained; staff-length/carry-to-release mechanics and event timing remain refinement work.",
+    "Owner-approved connected neutral175/tolerance16/edge2 with inspected sling/arm/hair gaps preserves ivory sleeves/skirts and metal clips. Banded original crops exclude neighboring boots while preserving staff tips. Explicit anatomical anchors and scales pack512x256 cells.",
+    "Final actual-alpha atlas and candidate/registered offline art-desk screenshots visually inspected. Static art evidence is not final movement, mechanics, palette, equipment continuity, subtle-loop or death acceptance.",
+    "Final roster acceptance remains0/160. No automated tests/imports/exports, paid API, runtime/tool-code, gameplay/save/footprint changes or unvalidated commit/push."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses with seed reload and prone equipped corpse.",
+    "Gait repeats lead; facing changes from idle. Need opposite anatomical contact/passing without swapping gear ownership.",
+    "Melee contact uses fork not butt, shortens staff and omits both cords/pouch; restore full equipment and continuous grip/strike.",
+    "Ranged release retains seed in pouch while another leaves. Release cord remains taut like slingshot rather than staff-sling; correct mechanism and projectile uniqueness.",
+    "Shield strap support, belt basket seed count and staff fork/length vary. Defense pouch becomes empty unexpectedly.",
+    "Seated collapse propped before prone; final seeds mostly dark but shield inset and eyes require review. Checker background visible, transparency unaccepted. Source-only no packing/enabling/tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "candidate_frames": 18,
+    "retained_paintings": 7,
+    "new_paintings": 11,
+    "new_outputs": 8,
+    "source_preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_thornwake_woundroot_hearthseed_slingers.png",
+    "runtime_atlas_sha256": "b67c73d272c310b04ce1ff619b5297a33004ae54feab7ca84bd43ef0284aae58",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/idle-pair.png": "0a7d37153f27975071834218fd49d665f037a733b7b478a18253064284db7118",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/near-contact-unfolded.png": "3428031e3e63f86bd1cdfded31ba325ed866e0cb51d4dfde1e511bb715efb187",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/walk-1.png": "0f06ff2ce51b93d8e3f5037120c12a88f160e130ec127d7d9b2ce3457dcdd204",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/walk-2.png": "4c9a79ffc0e602c915071a38d2b6441eea32b54a68aec0635ff22df50148339d",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/walk-3.png": "880a0114accb4aa378d3161d9f8e3228666f18d3605f95d19697f6afdc1032ad",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/shield-bash-pair.png": "31b9506656a288b92a063f622cd540c74f84329f48e8f57e0bfcff30ef5de118",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/guard-pair.png": "e289d888125d6c3c8018bf78a3156da5d53195a12fd5f4f61aaaf836e3c7635f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/poses.png": "599e93098094bc10103735475ced29cb4110458a15a4a01c20a7c1e919e24f9d",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/release-empty.png": "4b42f812d4de8221297a48f70dcb34251d80f569c4efc89ebfe195b746a087da"
+    },
+    "reference_crop": {
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/poses.png",
+      "rect": [
+        613,
+        0,
+        925,
+        344
+      ],
+      "reference": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/identity-reference.png",
+      "purpose": "Inspection composite and fixed identity input only, not a runtime pose."
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/hearthseed-continuity-20260916",
+    "status": "candidate_registered_not_final_accepted",
+    "cleanup": {
+      "status": "byte_identical_preview_cleanup_completed",
+      "pairs": [
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/hearthseed-continuity-20260916/identity/poses-poses-rect-613-0-925-344-green.png",
+          "retain": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/identity-reference.png",
+          "sha256": "8f1b67ad1ec8e8f356cb2d65ee00b6ae1193b53a1ac15c9d8ce062d416d2980d",
+          "bytes": 285276
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/hearthseed-continuity-20260916/identity/poses-poses-rect-613-0-925-344-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/identity-reference.png",
+          "sha256": "8f1b67ad1ec8e8f356cb2d65ee00b6ae1193b53a1ac15c9d8ce062d416d2980d",
+          "bytes": 285276
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/hearthseed-continuity-20260916/alpha/release-empty-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/hearthseed-continuity-20260916/alpha-final/release-empty-green.png",
+          "sha256": "676334daf150f2b9b40d6a3f38774cfcab99b2d80e39723e5096f57667f8586d",
+          "bytes": 939990
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/hearthseed-continuity-20260916/alpha/walk-3-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/hearthseed-continuity-20260916/alpha-final/walk-3-light.png",
+          "sha256": "3773277cec605b94fba014262b887789682c7bcb67c0a809d0e548e34407a745",
+          "bytes": 907100
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/hearthseed-continuity-20260916/alpha/walk-3-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/hearthseed-continuity-20260916/alpha-final/walk-3-green.png",
+          "sha256": "ef3bb9b6d6d37263a23b809751ef243c4a9e20b493b6257507e2156ddfdbffce",
+          "bytes": 881946
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/hearthseed-continuity-20260916/alpha/release-empty-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/hearthseed-continuity-20260916/alpha-final/release-empty-light.png",
+          "sha256": "a6e047e04d1c026948f1b0929ae6a99e25a874b9e42a2c1a6e3546e5e535640c",
+          "bytes": 962088
+        }
+      ],
+      "preserved": "Original/new/rejected masters, exact prompts/reference hashes, all unique before/final evidence, cutout recipes/proofs, source/runtime atlases, caches and unrelated files.",
+      "removed_bytes": 4261676
+    }
+  }
+}

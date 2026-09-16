@@ -1,0 +1,48 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_greenbranch_cudgels",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_greenbranch_cudgels.png",
+  "reference_sha256": "0dcdb52543120420ccd09c94453fa34d8b82288b873affc2f3dd7e8f98c6fb8d",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "64d1892ac0956aa574827538e2296c00758623d42dd8d2151615507f4345d043",
+      "source_output": "exec-29fdc8b9-54dd-464c-a1ab-a33f5b0d6c34.png",
+      "prompt": "Use case: stylized-concept. Original Greenbranch Cudgel battle animation sheet matching reference: sturdy bearded middle-aged man, wooden cap with branching twig crown, green scarf/tunic, bark-slat chest armor, layered brown bark shoulder plates with moss/leaves, leather belt/bracers/boots. RIGHT hand long knotted wooden cudgel head like a burl wrapped with green vines; LEFT arm round woven-branch shield with radial thick sticks central knot boss green moss. Twelve full-body articulated poses FOUR columns THREE rows same elevated three-quarter camera facing RIGHT consistent scale generous gutters for twig crown club and shield. Row1 relaxed idle club upright shield forward; breathing shoulders scarf leaves shift; walking contact near foot forward far leg back; passing foot under hips other knee lifting. Row2 opposite contact far leg forward near leg behind SAME torso not mirrored; RIGHT club windup raised behind shoulder LEFT shield guards chest; RIGHT club downward strike toward RIGHT knee height weight forward LEFT shield ribs; deep squat behind raised shield club close. Row3 hit recoil; dying knees buckle club lowers; side fall torso low shield tilts to ground club retained; final relaxed horizontal SIDE corpse eyes closed twig crown intact shield flat beside LEFT arm and complete club beside RIGHT hand. Keep one club one shield all frames same knot shape/length, actual hips/knees/elbows not repeated standing cutouts or rotated upright corpse. Plain pale gray background original painterly raster no shadows/scenery/effects/blood/text/grid.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "24165b26c1b3467bc1a6370ad72370d488debad146794b2affe05c4b73f384e8",
+      "alpha_output": "exec-6f6d22d1-f8e2-4b09-a7f5-00d327333c57.png",
+      "alpha_prompt": "Use case: background-extraction. Extract these eleven Greenbranch Cudgel poses onto true transparent RGBA. Preserve exact layout/scale, twig crown and leaves, full club and woven shield, body anatomy, limb gaps, boots and corpse. Remove gray background and all ground shadows only. No matte/clouds/checkerboard, redraw, reframing, text or effects."
+    }
+  ],
+  "review_notes": [
+    "Eleven actual poses instead of requested twelve; opposite walking contact omitted. Visually inspected distinct club windup/strike, shield defense and equipped relaxed corpse. Need missing contact/passing refinement, club/shield scale and grip continuity, corpse orientation transition review and final alpha compositing. Source-only not packed/enabled; no tests or exports.",
+    "13 frames retain ten original paintings and select three new cudgel recovery, upright shield-ready and head-right corpse paintings. Original head-right low fall now leads to a head-right corpse instead of the old head-left rest. Correct original alpha is reused unchanged; original movement contact/passing remain candidates, not a full alternating gait.",
+    "New walking attempts are unselected: the first sheet repeats contact rather than passing; the four-phase diagram attempt repeats phases with backward-pointing feet; the single-phase diagram still repeats the wrong leading leg. Changed reference mechanisms were inspected, not claimed successful. Stop further same-constraint retries and retain exact unresolved near/right contact plus alternating support ownership for later refinement.",
+    "Approved blue extraction and explicit source bands preserve original paint, crown, club and shield. Old/new standing scales 0.54/0.45; corpse 0.42 is anatomy-normalized without warping. Ground anchors keep lowered club ends inside the frame. Club/shield size, bark-pattern/body/palette/edge continuity and connected motion remain unaccepted."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_greenbranch_cudgels.png",
+    "runtime_sha256": "fec6bd6a7683096beed1a81ba543dcbc254be6c4d7b4fb41afa3e6216ead9d60",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_greenbranch_cudgels/alpha/poses.png": "24165b26c1b3467bc1a6370ad72370d488debad146794b2affe05c4b73f384e8",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_greenbranch_cudgels/continuity-alpha/cudgel-recovery-ready-step-and-directional-rest.png": "15924844e7cb4450a2a0b2913bd3154d5fe4ed3017c4051ca6fb3a5b7b4ff8c6"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/greenbranch-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

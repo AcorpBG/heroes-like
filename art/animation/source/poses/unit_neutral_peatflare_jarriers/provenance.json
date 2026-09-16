@@ -1,0 +1,54 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_peatflare_jarriers.png",
+  "reference_sha256": "8d04392a2b9abece6a2e991395976f67e44b2492c2b2c6e424cc930e78fd6ff5",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "097ab47fe2288ec62d7af5974e16f44dccc129b92188f8e52b91cd8612014696",
+      "source_output": "exec-71dd1a26-90db-43ea-8822-b7260379216e.png",
+      "prompt": "Use case: stylized-concept. Original Peatflare Jarrier battle animation sheet reference identity: wiry adult woman dark hair bun loose forelock, olive scarf, ragged brown leather armor crisscross straps dark teal cape tails, charcoal trousers wrapped brown boots, belt soot-dark corked ceramic jars with dim orange ember cracks. RIGHT hand throwing jar LEFT empty balancing. SIXTEEN full body articulated poses FOUR columns FOUR rows elevated three-quarter camera facing RIGHT same scale generous gutters. Row1 idle right jar at hip; alert breath shoulders head scarf shift; run near leg forward far back jar close torso; passing knees cross beneath hips. Row2 opposite run far leg forward near back same torso orientation; melee right fist drawn back jar stowed belt; right punch extends toward RIGHT across chest left fist protects ribs; crouched guard forearms protecting head jars belt. Row3 hit recoil; right hand draws jar from belt; right jar arm cocked behind head left arm aims forward; right arm completes overhand throw toward RIGHT palm OPEN EMPTY left lowered. Row4 recovery empty right hand descends; knees buckle; side fall torso supported forearm; relaxed fully horizontal side corpse eyes closed loose hair scarf and intact belt jars, detached jar lying beside hand no fire. Actual changing hips knees elbows no repeated static cutouts no mirrored torso. Original painterly raster pale gray background no shadows grid labels blood particles smoke explosions projectiles or scenery."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "660431a3aba329408e2035b13fe7984ba1a7bd8eaf6f4f69c40c3c08c27024bf",
+      "source_output": "exec-9a17c1fd-a739-4477-b2de-64c094519c9f.png",
+      "prompt": "Use case: precise-object-edit. Three precise corrections to attached 4x4 sheet only. TOP ROW SECOND: restore soot-dark corked orange-cracked jar held in RIGHT hand by right hip at screen LEFT, matching first idle equipment. SECOND ROW THIRD: punch with RIGHT arm from screen LEFT shoulder reaching across chest toward RIGHT, left fist stays close ribs; must follow second-row second right-fist windup without switching arms. BOTTOM ROW FOURTH corpse eyes fully closed relaxed expression, belt jars dark no orange glow. Keep all other poses, proportions, costume, sheet framing and gray background unchanged.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04",
+      "alpha_output": "exec-86e541a7-ae3d-49b8-ab8c-32a2ddd6e8dd.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all sixteen Peatflare Jarrier poses onto genuine transparent RGBA. Preserve exact layout scale anatomy equipment jars frayed cape scarf hair fingertips and horizontal corpse. Remove pale gray backdrop and floor shadows only. No cloudy matte checkerboard halos redraw reframing effects text. Preserve empty throwing hand, corrected right-arm punch, closed corpse eyes and dark corpse jars."
+    }
+  ],
+  "review_notes": [
+    "Sixteen poses/extraction visually inspected. Restored second-idle jar, corrected same right-arm punch, closed corpse eyes/darkened jars. Throw release empty hand, guard and staged collapse present. Gait repeats contact and lacks passing/opposite lead. Jar belt/hand continuity, scale and alpha-edge/full-motion review pending. Source-only not packed/enabled; no tests/exports.",
+    "17 frames retain fourteen original paintings and add three new candidates: empty right-fist melee recovery, empty-fist ready guard and jar-carrying bent-knee passing. Original right-fist windup/strike, draw/aim/empty release/recovery and head-right collapse/dark-jar corpse remain. Repeated extra contacts are unselected.",
+    "Reuse original genuine alpha. Approved magenta preparation uses bounded four-source-pixel edge cleanup; original interiors are unchanged. Uniform original/new scales 0.70/0.295 and inspected crop bands preserve hair, fingertips and corpse jar while excluding neighboring boots/head/cape fragments.",
+    "All-state candidate only. Full alternating gait is not achieved; contact/passing, jar stow/retrieval continuity, body/head/cape/glove proportions, palette and fine chroma edges, and connected timing need full-roster refinement. No tests/imports/gameplay/platform acceptance in this increment."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 14,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_peatflare_jarriers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_peatflare_jarriers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_peatflare_jarriers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_peatflare_jarriers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_peatflare_jarriers.png",
+    "runtime_sha256": "1d4ef77f6503cac1d897e7e74f442043ca19645772db1c5ffa36530550d3fab3",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_peatflare_jarriers/continuity-alpha/fist-recovery-ready-and-passing-step.png": "3a649e00fa9817b93355c8d6c450aa7ca7cb81f966ccecdf556bdc5e461f2a24"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/peatflare-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

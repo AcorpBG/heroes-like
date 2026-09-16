@@ -1,0 +1,270 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_thornwake_bramblekite_needlers",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_thornwake_bramblekite_needlers.png",
+  "reference_sha256": "3550f9978d09a49ff29382ef9fcb06db350bb394425475afba7944ebb42aecf8",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/reload-ready-draft.png",
+      "source_sha256": "06709f4e5dc5c669dfde0d6793518ac328a295dab2fb5a7d635eea8bd4887f55",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-389d0e7e-41a1-4f44-a2d0-74b583c91afd.png",
+      "prompt": "Use case: precise-object-edit. Reference reload pose: create next settled LOADED READY frame of same original Bramblekite. Needle now fully inside pipe, NO exposed needle anywhere. Right hand (arm from image LEFT) grips rear of pipe as in reference. Left hand (arm from image RIGHT) returns to supporting forward barrel from below. Pipe lowered diagonally across torso toward lower right, same original length, open rear mouthpiece visible with no hand covering opening. Head lifts slightly looking right. Keep identical wings, crown, pouch, feet, proportions camera and painterly style. Exactly two arms/hands, one pipe. Full sprite with margins, genuinely transparent background, no checker or effects.",
+      "review": "Right rear grip and left forward support restored, no exposed needle; ready endpoint source. Head/neck rises and pipe end shapes change; scale/gear continuity and alpha remain unfinished. Insertion itself still unresolved. Not packed/enabled.",
+      "unselected_alignment_attempt": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9a61bdc0-9608-42eb-81de-a6061afa705b.png",
+        "prompt": "Precise object edit, original game reload sprite. Change ONLY left hand and needle placement: the needle must align along the SAME diagonal axis as blowpipe, from upper LEFT to lower RIGHT, not its current opposing diagonal. Move the anatomical LEFT hand (arm from image right) across chest toward image left, pinching the exposed tail immediately above-left of rear mouthpiece. Needle point already inside bore, only short straight tail remains visible between fingers and opening. Anatomical RIGHT hand (arm from image left) keeps existing barrel grip unchanged. Exactly two hands and one pipe. Preserve head, wings, pouch, feet, body, camera, scale, painting. No extra fingers/needles. Genuinely transparent background without checker pattern, no effects or text.",
+        "review": "Swapped hands again and needle appears across barrel; not selected."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/reload-insert-draft.png",
+      "source_sha256": "e70fe0aabde7bf42c6dc7641738659392c3b8adffbf74ec0ad7d88f7249cdafc",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b92ec2df-2c9b-4872-b2d9-f32e8d2c3763.png",
+      "prompt": "Precise edit: fix swapped hands in this reload sprite. Anatomical RIGHT arm is on image LEFT: that hand must grip and support the pipe at center chest. Anatomical LEFT arm is on image RIGHT: that hand must pinch the needle and insert it into rear mouthpiece from above-right. Move pipe rear opening slightly toward image right to make this natural; barrel still angles down-right. Right hand never holds needle, left hand never supports barrel in this frame. Exactly two hands, two arms, one pipe and one needle. Preserve all other body wings head feet pouch, camera style and scale. Genuine transparent background, no checkerboard or effects.",
+      "input_generation": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cbbf95e0-b98b-4a7b-90f0-5df4d0a3064a.png",
+        "prompt": "Use case: precise-object-edit. Create next reload frame of this original Bramblekite sprite. Preserve exact planted feet, two wings, body, head/crown, open acorn pouch and camera/scale. RIGHT hand still holds wooden blowpipe but raises it diagonally so small rear mouthpiece is near center chest and flared muzzle points down-right. LEFT hand brings the single slender thorn needle from pouch to the small rear mouthpiece, aligning it with bore and inserting tip into opening. Show fingers and short exposed rear of needle, no needle through pipe side, no floating projectile. Exactly two arms and ONE pipe same length/design. Head looks at insertion point. Full isolated sprite, generous margins, genuine transparent background, no checkerboard, text, effects, extra equipment or colored outline.",
+        "review": "Swapped weapon and needle hands; unselected."
+      },
+      "review": "Right hand now holds pipe, left brings needle above rear opening. Needle angle not yet collinear with bore; this is approach rather than seated insertion. Pouch/body continuity and alpha pending, checker visible. Source-only not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/reload-pouch-draft.png",
+      "source_sha256": "6cec9c08c4e1163d06befda461a717d552bcb2f6a8015e4161e32aa09f85e6ae",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ec9efa79-835a-498d-b787-f75b18ccf06c.png",
+      "prompt": "Use case: precise-object-edit. Original Bramblekite Needler animation reference. Produce ONE isolated RELOAD preparation sprite, same planted stance, relaxed hanging two leaf-membrane wings, ivory bark face/crown amber eyes and two root feet as row3 column4. Anatomical RIGHT hand retains ONE wooden blowpipe around rear grip, pipe lowered diagonally across body pointing down-right. Anatomical LEFT hand has RELEASED front pipe support and reaches down into open acorn belt pouch, pinching one small thorn needle just emerging from pouch. Show clear gap between that hand and pipe, exactly two arms/hands. Head looks down toward pouch. Preserve exact costume, two wings branched frames and proportion, fixed three-quarter right-facing camera. Full body with generous margins, original painterly sprite. Genuine transparent background, no painted checkerboard or colored fringes, no labels scene or projectile in flight.",
+      "review": "Left hand now visibly retrieves slim needle from open belt pouch, right hand retains lowered pipe. Both wings and feet present. Pouch count/shape differs from base, body/pipe scale and insertion transition unfinished. Red/yellow edge fringes visible; alpha/compositing not accepted. Source only, not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/flight-downstroke-tip-repaired.png",
+      "source_sha256": "15b53cbfc28f0fac7f6ad109f9431beca305f74b5f4e00f591955d5ec66b27c0",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1eab3275-5b54-4d5a-abd2-9f5340fc3644.png",
+      "prompt": "Use case: precise-object-edit. Repair ONLY the bright white torn-looking patch near bottom tip of image-RIGHT leaf wing. Fill it with intact olive green and golden leaf membrane and continuous delicate veins matching surrounding wing. No hole, white patch or new damage. Preserve lowered wing joints, both wing outlines, all body/weapon/limb pixels and exact camera/proportions. Keep complete tips inside canvas, no clipping. Original painted game sprite with genuinely transparent background, no checkerboard, text, effects or added objects.",
+      "review": "White torn-looking patch repaired with continuous gold/green leaf membrane; lowered joints retained. Prefer this over joints draft for downstroke assembly. Bottom margin still tight, rendering softer and pipe/body scale differ from base sheet. Alpha and sequence continuity unresolved. Not packed/enabled or accepted."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/flight-downstroke-joints-draft.png",
+      "source_sha256": "65a915fe1edaf35a37955fd0b9bcb7ace85732643d1d85be2cf71feaa6990939",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-95a279b2-b39e-4621-bc9c-498cdafdc8b7.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY the TWO leaf wings in this original Bramblekite flight sprite into bottom of power downstroke. Their roots remain attached upper back. Rotate the branched leading spars downward at shoulder joints: outer knuckle of LEFT image wing moves from beside head down to WAIST height; outer knuckle of RIGHT image wing moves down below elbow. Leaf membrane fingers fan down and slightly inward below hips. No wing knuckle above shoulder level. Preserve same leaf membrane and branched frame design, two complete wings, visible tip margins. Keep body, ivory face crown, both hands holding blowpipe, two trailing legs, acorn belt, camera scale and painting unchanged. Do not add limbs, duplicate wings, effects or text. Truly transparent background, not checkerboard.",
+      "review": "Wing frame joints lower, giving stronger downstroke silhouette. Left upper joint remains near shoulder rather than waist. Rendering softens, right wing tip has pale tear-like patch and tight bottom margin; not accepted final frame. Preserve as articulation source, alpha/style/scale matching pending. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/flight-downstroke-draft.png",
+      "source_sha256": "da81dcaeb6114f274ed8b8024286c5d2614be6fb38e196328ffe0b3140b67d11",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a1587d9a-8c1b-41fc-9d1c-ac838ed1656a.png",
+      "prompt": "Use case: precise-object-edit. Reference original Bramblekite Needler sheet. Generate ONE isolated downstroke flying frame matching third sprite (row1 col3), same original ivory bark face, leafy crown amber eyes, two arms holding ONE hollow wooden blowpipe toward RIGHT, acorn belt green leaf skirt two root legs trailing behind left. Critical action: TWO broad leaf membrane wings attached upper back have swept DOWN below shoulder/body level, not raised above head. Near wing extends down-left below belly, far wing extends down-right behind body, both branched frames intact, complete tips visible. Torso tilted forward in flight same three-quarter right-facing camera as reference; no standing stance, no new wings or limbs. Keep pipe grip, head identity and proportions. Generous margins around all wing tips. Painterly original sprite, genuinely transparent background with clean edges no red/yellow outline, no checkerboard ground text projectile or effects.",
+      "review": "Both wing membranes extend below body, visibly distinct from raised-wing flight; two trailing legs and two-handed pipe retained. Upper wing joints still high, torso more upright and pipe enlarged versus source; articulation/scale continuity and alpha unfinished. Source-only not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "source_sha256": "3282dfd65e23d313877cee84ac165a2295c8547b056b39412ecdca3c02828cbd",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-10ea3e14-b81e-42d3-bdf3-41bd672ee78b.png",
+      "prompt": "Use case: stylized-concept. Original battle animation sheet matching supplied Bramblekite Needler reference. Exactly 16 full body poses in regular 4x4 grid, same scale fixed 3/4 camera facing RIGHT, generous clear gutters. True transparent RGBA background no drawn checkerboard, ground, labels. Slender living wood humanoid ivory bark face pointed leafy crown amber eyes, TWO legs root claw feet, TWO arms, TWO broad leaf-membrane wings on branched frames attached upper back, green leaf skirt and acorn belt pouches. ONE hollow wooden thorn blowpipe held near mouth anatomical RIGHT hand rear grip LEFT hand supports front. Wings remain attached and same leaf vein/frame design throughout. Row1 idle standing tube lowered wings relaxed; idle inhale shoulders lift wing tips flex; moving airborne wings raised legs trailing bent; moving airborne wings down legs trailing opposite gentle bend. Row2 flying passing wings half folded knees drawn forward preparing landing; melee windup BOTH hands hold blowpipe across chest drawing back; melee contact both hands shove pipe horizontally toward adjacent enemy right arms extended; defense crouching wings wrap partly around sides both hands protect tube across chest. Row3 hit recoil wings splay torso backward tube retained; ranged aim planted feet wings stabilized pipe at mouth cheeks ready; ranged firing small thorn dart leaves pipe right cheeks exhale no duplicate dart; ranged recovery tube lowers LEFT hand reaches belt pouch while RIGHT retains pipe. Row4 dying knees buckle wings droop; fall sideways wings fold and pipe releases; prone dead wings partly folded pipe on ground beside body; same persistent corpse settled dark eyes no active glow wings limp. Articulated shoulder elbow knee and wing joints; no swapped limbs no extra wings no disappearing tube. Painterly original tactical game cutouts matching reference, fully contain wings and dart within cells with clean edges, no overlap or clipping."
+    }
+  ],
+  "unselected_downstroke_extractions": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e49cc2fb-0589-4a62-8ca0-9f7e4b422ba3.png",
+      "sha256": "b5a2351464ca60d3da04032e6e04f3b4b9a6d4d770ea14fc10cafcd4515800bd",
+      "prompt": "Use case: background-extraction. Remove only gray-white checkerboard from this original game sprite and replace with actual transparent alpha. Preserve exact subject artwork and framing, both complete leaf wings with intact repaired tips, two root legs, two arms holding pipe, crown and thin twig edges. Make empty gaps between limbs and wings transparent too. No redraw, blur, colored fringes, outline glow, shadows, scenery, text or checkerboard pixels. Output genuine transparent PNG cutout.",
+      "review": "Distorted checker remains in preview; not selected."
+    },
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-15ac37c9-abfa-46c6-92fd-9b8b7c33a53f.png",
+      "sha256": "3c56c175d6a1b7fad9306ec2a83f2afb09628ef08204d422480164391781ac2a",
+      "prompt": "Background extraction ONLY. The gray checker squares visible in input are unwanted painted background, NOT transparency. Delete ALL gray/white background squares and leave alpha zero outside character, including spaces between legs and wings. Preserve original leaf-winged wooden character with pipe, no recoloring/redrawing. Output actual RGBA PNG with transparent empty background, not a transparency illustration, no checker squares, no scene or shadows.",
+      "review": "Checker remains visible; alpha not proven. Not selected or copied into runtime. Stop repeating this extraction approach; retain repaired source for later production extraction."
+    }
+  ],
+  "review_notes": [
+    "18 packed candidate frames: thirteen retained original real-alpha sheet paintings plus the existing clean real-alpha pouch-retrieval painting, and four newly selected downstroke/firing/seating/guard-breath paintings from four built-in masters.",
+    "Original poses.png and reload-pouch-draft.png composite cleanly. Earlier fringe claims based on raw RGB are superseded by real compositing; neither selected alpha source is rekeyed. Older downstroke and insertion attempts are preserved unselected.",
+    "New downstroke uses the original flying crop as body/pipe identity and prior repaired downstroke only as wing-joint reference. Both wings lower, two root legs trail, both hands retain one pipe. Initial packed scale was too small; anatomy-based uniform scale0.225 corrects relative body size, not bounding-box normalization.",
+    "Separate melee shove, mouth-aim/fire, guard/hit and equipped four-stage death remain. New firing removes the baked projectile/trail so existing combat VFX remains projectile owner. Pouch retrieval and rear-mouthpiece hand seating extend ranged recovery; exact tiny needle-axis/seating, two-pouch continuity and pipe-length/hand continuity still require full-motion refinement.",
+    "Explicit crop bands remove neighboring foot and tube fragments from aim, fall and corpse. The original falling pipe remains intentional source motion, not a neighboring fragment; its timing into grounded corpse is unaccepted. Final corpse has dark eyes, folded wings and grounded pipe. Guard now has a second breathing pose.",
+    "Four new opaque checker paintings use connected neutral preparation with inspected enclosed wing/arm/leg gaps, minima175/110/160/160, tolerance16, edge2. Pale bark/leaf interiors are not globally keyed. Body/head/wing/pipe scale, membrane/vein/crown style, grip/pouch/needle topology, fine edges and actual event/flight/death timing remain full160 refinement. No tests/imports/exports, paid API or gameplay/save/footprint changes."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses include airborne movement, two-handed shove, ranged attack, defense and persistent prone corpse.",
+    "Airborne poses both keep wings raised; need genuine downstroke and complete wing-joint/frame continuity. Reference flying behavior must agree with existing movement rules; no rules change authorized.",
+    "Melee shove resembles aim, pipe lengths and hand support change. Reload does not visibly reach pouch. Projectile oversized and crosses nominal cell edge; event synchronized extraction/crop required.",
+    "Passing wing tips crowd sheet edges. Hit releases supporting hand; collapse launches pipe upward before grounded corpse requiring transition refinement.",
+    "Final corpse eye appears dark and pipe grounded; wing anatomy/crown/acorn continuity need small-scale review.",
+    "Preview displays strong red/yellow fringes around cutouts; alpha/compositing not accepted. Source-only not packed or enabled; no tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "reference_crops": [
+      {
+        "path": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/flight-reference-light.png",
+        "sha256": "80ce1ec831d684aec579603b524f7919218eedee3c931b01ed1371f6af7ae169",
+        "source": "poses.png",
+        "source_sha256": "3282dfd65e23d313877cee84ac165a2295c8547b056b39412ecdca3c02828cbd",
+        "rect": [
+          620,
+          0,
+          944,
+          328
+        ],
+        "method": "Actual alpha cropped and enlarged nearest4x on light; flight body/identity reference."
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/firing-reference-light.png",
+        "sha256": "545e1c7e5f4d75845895d085547d2e8159efb151b05879985b2e394e224972ff",
+        "source": "poses.png",
+        "source_sha256": "3282dfd65e23d313877cee84ac165a2295c8547b056b39412ecdca3c02828cbd",
+        "rect": [
+          621,
+          635,
+          902,
+          942
+        ],
+        "method": "Actual alpha cropped and enlarged nearest4x on light; projectile-free firing edit reference, complete extremities required in output."
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/reload-reference-green.png",
+        "sha256": "c346b323b25e5b978a3adb60c5e975ea4bc00923865de4623cd5c52d6f96c125",
+        "source": "reload-pouch-draft.png",
+        "source_sha256": "6cec9c08c4e1163d06befda461a717d552bcb2f6a8015e4161e32aa09f85e6ae",
+        "rect": [
+          0,
+          0,
+          1176,
+          1338
+        ],
+        "method": "Existing true alpha composited on green unchanged; reload fixed body/equipment reference."
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/guard-reference-light.png",
+        "sha256": "9b5c1ec76e282184d7a2d406626c6a0d55d2215263018ce46946e38a23306216",
+        "source": "poses.png",
+        "source_sha256": "3282dfd65e23d313877cee84ac165a2295c8547b056b39412ecdca3c02828cbd",
+        "rect": [
+          963,
+          329,
+          1254,
+          632
+        ],
+        "method": "Actual alpha cropped and enlarged nearest4x on light; defensive-breath edit target."
+      }
+    ],
+    "sources": [
+      {
+        "source": "flight-downstroke-matched.png",
+        "sha256": "dce2044d5b894923713d8aae445f63eb94ea26fdff30fb1f36b22bd86e2f4499",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-704603be-f420-42c7-8b3f-bb479f6532b9.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Image1 is the exact original Bramblekite Needler flying pose to edit (nearest-neighbor enlarged original alpha composite). Image2 is supporting anatomy reference ONLY for the lowered wing-joint shape, not its enlarged pipe or softer paint.\nChange ONLY the two leaf wings into the bottom of a power downstroke. Keep exact original tilted flying torso, small head/crown, both arms/hands holding the original thin blowpipe toward screen RIGHT, two trailing root legs, two acorn pouches and original scale/proportions/painterly texture from Image1. Both wings stay attached upper back. Lower BOTH main wing spars at their roots so outer joints sit below shoulder height, membranes fan down alongside hips, complete leaf tips visible below feet. Preserve all original branched ribs and olive/gold leaf membranes without holes. Do not enlarge or thicken the pipe, inflate body, change hand placement, bring feet to ground or turn upright.\nOne full isolated flying sprite with generous margin on every side. Genuinely transparent RGBA background; no checker pattern, colored matte, shadows, projectile, effects, text or extra wings/limbs.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/flight-reference-light.png",
+            "sha256": "80ce1ec831d684aec579603b524f7919218eedee3c931b01ed1371f6af7ae169"
+          },
+          {
+            "path": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/flight-downstroke-tip-repaired.png",
+            "sha256": "15b53cbfc28f0fac7f6ad109f9431beca305f74b5f4e00f591955d5ec66b27c0"
+          }
+        ],
+        "selected_source_indices": [
+          0
+        ]
+      },
+      {
+        "source": "reload-seating.png",
+        "sha256": "d0de148c71e6149c44b2b5aa964f8462f3a520eb7f6b02b731472eeaafbd6399",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e39305ca-8c1e-44b9-a02a-992e7b95c2a3.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Image1 exact original game sprite edit target, Bramblekite Needler taking a needle from its belt pouch. Make the NEXT reload pose: anatomical RIGHT hand (arm from image LEFT) continues supporting same blowpipe around its middle. LEFT hand (arm from image RIGHT) crosses naturally toward upper-left chest holding one tiny thorn dart; its tip is already INSIDE the rear mouthpiece of the pipe. The dart and pipe must share the SAME straight diagonal axis from upper LEFT to lower RIGHT. Only a short tail of the dart remains outside bore between left fingertips. Never pierce the pipe side or hold dart across barrel. Rear mouthpiece is above-left of the supporting right hand; flared muzzle remains down-right. Exactly two arms, two hands, one pipe, one tiny dart. Same pipe length/thickness and grip ownership, wings, planted feet, leafy crown/ivory face, open acorn pouch, body proportions and painting as reference. Do not add equipment or enlarge tube/head. Head looks down at insertion. Genuinely transparent RGBA; no matte/checker pattern, ground, projectile in flight, effects or text. Full sprite with generous margins.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/reload-reference-green.png",
+            "sha256": "c346b323b25e5b978a3adb60c5e975ea4bc00923865de4623cd5c52d6f96c125"
+          }
+        ],
+        "selected_source_indices": [
+          0
+        ],
+        "review": "Retains right supporting hand and left hand at rear mouthpiece. Tiny needle-axis/seating and pouch/pipe-length continuity remain full-motion refinement, not accepted from this still."
+      },
+      {
+        "source": "firing-no-projectile.png",
+        "sha256": "b5d4d33f832543e136d07710d5eeefad8076da13fa25ba3b24068b57c06db3e7",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-625fb8c9-730d-4a73-b4e8-06081bd9ec47.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Image1 exact original Bramblekite Needler firing sprite. Remove ONLY the thin pale projectile trail protruding from the flared blowpipe muzzle at screen RIGHT. Keep the muzzle hollow and free of darts, smoke or spark. Preserve exact mouth contact, both gripping hands, pipe design/length/thickness, planted feet, wings, green/gold leaf crown/skirt, ivory bark face/body, amber eyes, acorn pouches, original painted texture and right-facing camera. Do not restyle, enlarge pipe or move limbs. One complete isolated original game sprite, genuine transparent RGBA, no painted checkerboard, matte, floor, shadow, scene, text or effect. Generous margins; no cropped wing tips or toes.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/firing-reference-light.png",
+            "sha256": "545e1c7e5f4d75845895d085547d2e8159efb151b05879985b2e394e224972ff"
+          }
+        ],
+        "selected_source_indices": [
+          0
+        ]
+      },
+      {
+        "source": "guard-breath.png",
+        "sha256": "0dc3e5249528af0c61939cf00a26d4811e4afefcc7c57549dd913f6c37d18a72",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-314c9302-a30a-4fa4-9cd3-45906a32a538.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Image1 is original Bramblekite Needler defensive crouch, fixed identity and camera. Create ONE adjacent breathing frame of the SAME defense: lift shoulders slightly with inhalation, raise head just a few degrees looking RIGHT, both leaf wings flex inward slightly to shelter body, elbows flex subtly but both hands keep gripping the SAME wooden blowpipe across chest. Preserve exact crouched knee angles and two planted root feet, ivory bark/green-gold leaves, two attached branched-frame wings, acorn belt pouches, tube length/thickness and hand ownership, original small pointed leafy crown and painterly texture. Do not stand up, fire, swap hands or drop the tube. Same body/camera scale, no restyling. One complete sprite with generous margins including every leaf tip/toe. Genuinely transparent RGBA, no checker pattern, matte, floor, shadow, effects or text.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/guard-reference-light.png",
+            "sha256": "9b5c1ec76e282184d7a2d406626c6a0d55d2215263018ce46946e38a23306216"
+          }
+        ],
+        "selected_source_indices": [
+          0
+        ]
+      }
+    ],
+    "preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "packed_frames": 18,
+    "reused_pose_count": 14,
+    "new_selected_pose_count": 4,
+    "runtime_candidate": "art/animation/runtime/poses/unit_thornwake_bramblekite_needlers.png",
+    "runtime_sha256": "05e7f9d3c99482938001d982ba354754ed7ca59b63e5c929c0e1422848650881",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/bramblekite-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted",
+    "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/bramblekite-continuity-20260915/art-desk-registered.html",
+    "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/bramblekite-continuity-20260915/art-desk-registered.png",
+    "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/bramblekite-continuity-20260915/packed-guard-final/poses-candidate-atlas-green.png",
+    "retained_source_selections": [
+      {
+        "source": "poses.png",
+        "source_indices": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      {
+        "source": "reload-pouch-draft.png",
+        "source_indices": [
+          0
+        ]
+      }
+    ]
+  }
+}

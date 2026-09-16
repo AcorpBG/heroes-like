@@ -1,0 +1,83 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_thornwake_pollenhook_whistlers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_thornwake_pollenhook_whistlers.png",
+  "reference_sha256": "aee551c6e0435b80c3bd877f29503ce868d69196a7c881fc0bd23121d036faf4",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "source_sha256": "6652e925b46488127c0ee5b2e26cdbc73298ed5240df4747b6a9f88269b2055c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-afb923c6-47bf-4b6f-8a12-602611c28d28.png",
+      "prompt": "Use case: stylized-concept. Original battle animation sprite sheet matching attached Pollenhook Whistler reference. Exactly 16 full-body cutouts 4 columns 4 rows, fixed three-quarter camera facing RIGHT, same scale, generous gutters. Real transparent RGBA background no checkerboard drawing no ground no labels. Slim pale bark-skinned humanoid amber eyes leafy green/gold crown small twig antlers, green leaf mantle and skirt, rope belt pollen seed pouches, vine-wrapped leggings and bare rootlike toes. ONE long crooked branch blow-horn with wide flared bell, smaller hooked upper branch and leaf ties; anatomical RIGHT hand mouthpiece LEFT supports near bell. Keep horn proportions hands and equipment count throughout. Row1 relaxed idle horn lowered; breathing idle shoulders/leaf mantle rise; walking LEFT foot forward RIGHT back; walking RIGHT foot forward LEFT back clearly alternate anatomy do not mirror whole body. Row2 passing step knee raised; melee windup BOTH hands bring horn horizontally close chest; melee contact BOTH hands thrust horn body right into adjacent enemy keeping mouth away mouthpiece no firing; defense crouch horn held across torso. Row3 hit recoil backward both hands retain horn; ranged aim mouth at horn planted feet; ranged release small gold pollen puff from bell right cheeks exhale; recovery mouth leaves mouthpiece right hand lowers horn left supports bell. Row4 death knees buckle horn lowers; falling sideways horn slipping hands; prone dead horn on ground alongside body eyes closed pollen extinguished; same persistent dead pose settled leaves and closed eyes no floating pollen. Real articulated elbow shoulder hip knee pose changes not shifted duplicates. Preserve forked horn attachment, belt pods and leafy crown. Painterly original tactical game art matching reference crisp small-scale forms, fully contain horn and pollen in their cell, no clipped feet or overlapping poses."
+    }
+  ],
+  "review_notes": [
+    "18 candidate frames: thirteen original real-alpha paintings (sheet indices0,1,5,6,7,8,9,10,11,12,13,14,15) plus five new paintings for four gait phases and braced guard.",
+    "Original source's misleading raw red/yellow fringe disappears under actual alpha; original RGBA is reused without rekeying. Horn shove, aim/blow/lower, hit and connected kneel/fall/side/corpse remain. The release's local pollen cloud is included by an explicit extended crop; event/projectile timing remains pending.",
+    "Diagram-first far contact/passing and near passing are combined with a near contact unfolded from the lifted foreground knee. No local pose drawing, mirroring or warping. Limb ownership and support through translated gait remain motion-review work, not proven by labels.",
+    "New RGB paintings use owner-approved connected neutral175/tolerance16/edge2; dark-checker walk2 uses minimum100. Inspected horn-loop/arm gaps cleared; pale bark material retained. Original cell crops exclude neighboring paintings and invisible fringe-only bottom margins.",
+    "Uniform anatomical scales/anchors pack512x256 cells, four columns. Candidate and registered offline art-desk screenshots and final actual-alpha atlas visually inspected; static evidence is not timed or gameplay acceptance. Horn proportions/hand grip, pollen/mantle palette, guard scale and subtle loop continuity remain full-roster refinement.",
+    "Final roster acceptance remains0/160. No automated tests/imports/exports, paid API, runtime/tool-code, gameplay/save/footprint changes or unvalidated commit/push."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses include horn shove, pollen cast, kneeling/falling and prone corpse.",
+    "Walking contacts repeat same lead; opposite anatomical contact and continuous passing needed. Idle subtle.",
+    "Horn changes length and becomes double-tube-looking in several poses; preserve exact crooked branch and hooked upper brace. Hand support and melee contact distinction need refinement.",
+    "Pollen cloud exceeds nominal cell and requires event-synchronized crop/size work; belt pod/crown/leaf counts vary.",
+    "Fall retains horn floating across lap before grounded corpse; smoother release needed. Final eyes appear closed but require small-scale review.",
+    "Preview shows prominent red/yellow fringes around art; alpha/compositing unaccepted. Source-only not packed/enabled; no tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "candidate_frames": 18,
+    "retained_paintings": 13,
+    "new_paintings": 5,
+    "new_outputs": 5,
+    "source_preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_thornwake_pollenhook_whistlers.png",
+    "runtime_atlas_sha256": "8552995781a553a3d2a2395181e8b60bab19b05050a64fca752496d76660f16b",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png": "6652e925b46488127c0ee5b2e26cdbc73298ed5240df4747b6a9f88269b2055c",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/near-contact-unfolded.png": "8933d5ccd0737281836cc62886487341a82aa034bf87bda2b6632c946b808f15",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-1.png": "3ebb654f2f3915eb90bc5b2f9dd4a3384bf83d623e5ec99ab17b01f5c2bc3b0e",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-2.png": "92e1fdd7a5a5b0da89adc747581742439ca44fe4402160738341a475b503b21f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-3.png": "541607920fdba251612a4d5cb5b58cdd72415971bc39ce291cd7c47a97967edf",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/guard-braced.png": "89f0687ba44240d5eb8f17e3b0f4f53a46cea99b7ed53f3f2c605e941b42ffea"
+    },
+    "reference_crop": {
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rect": [
+        0,
+        0,
+        312,
+        332
+      ],
+      "reference": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/identity-reference.png",
+      "purpose": "Inspection composite and fixed identity input only, not a runtime pose."
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/pollen-continuity-20260916",
+    "status": "candidate_registered_not_final_accepted",
+    "cleanup": {
+      "status": "byte_identical_preview_cleanup_completed",
+      "pairs": [
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/pollen-continuity-20260916/identity/poses-poses-rect-0-0-312-332-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/identity-reference.png",
+          "sha256": "0fa456377b5d98f840f280f1347a719d430d03f28836009dd99fe7a28d54f6be",
+          "bytes": 138331
+        }
+      ],
+      "preserved": "Original/new/rejected masters, exact prompts/reference hashes, all unique before/final evidence, cutout recipes/proofs, source/runtime atlases, caches and unrelated files.",
+      "removed_bytes": 138331
+    }
+  }
+}

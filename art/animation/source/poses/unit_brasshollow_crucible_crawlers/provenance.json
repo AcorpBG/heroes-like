@@ -1,0 +1,88 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_crucible_crawlers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_pending_refinement_and_packing",
+  "reference": "art/units/source/curated/unit_brasshollow_crucible_crawlers.png",
+  "reference_sha256": "4bd38c1d4a6240c77ebcc62cfea8713c583e825c4cb435859808b4d2de8a68b4",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/poses.png",
+      "source_sha256": "dc8d5eff7e5459b544f145cb7be8a42e89838f89208b7d07dc27e077ca868ab3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7e02addc-c188-4528-8a8e-81bf35677d7e.png",
+      "prompt": "Use case: stylized-concept. Asset type: original painted fantasy tactical battle animation sprite sheet. Reference image defines the Crucible Crawler: black iron/brass walking smelter, circular open orange molten crucible at center, rear coal hopper, gauges, glowing side reservoir, pipes and rivets. Exactly FOUR jointed spiked walking legs with hooked pointed feet, and THREE separate articulated upper pouring-tool arms: one long high arm and two shorter arms, each ending in a heated nozzle. Keep this identity and original painterly style. Create exactly TWELVE genuinely articulated full-body poses, arranged FOUR columns THREE rows with generous clear space and complete figures inside each cell. Transparent RGBA background, no painted checkerboard, labels, grid, scenery or floor. Fixed elevated three-quarter view facing screen-right, same machine size throughout. Row1: idle with upright tool arms; idle arms adjusting and crucible gentle glow pulse; crawl diagonal pair front-right/rear-left forward opposite pair back; opposite crawl front-left/rear-right forward other pair back. Row2: passing gait feet lift beneath body; attack wind-up long upper arm retracts elbow and all feet plant; attack long upper arm extends its nozzle screen-right pouring a SHORT stream of molten metal, two smaller nozzles remain folded by body; defense four legs splay low, upper tools fold protecting crucible. Row3: hit recoil body canted and arms jerking back; death first step legs buckle and molten furnace dims; death collapse machine tipping with upper arms folding down and coal spilling close by; dead inert collapsed machine with FOUR folded legs and THREE intact folded tool arms, black cooled crucible and dark nozzles, no flames no steam no active glow. Preserve counts and mechanical attachments, visible leg differentiation, no duplicate limbs, no new guns or crew. No copyrighted franchise art. Actual joint animation, not whole-figure rotation or translation.",
+      "alpha_source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png",
+      "alpha_sha256": "6421b6f36c383407f6d966a445218f945d1d00e2817542746b860e1cde65d39e",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-92c72125-332f-421a-b088-468e345968fc.png",
+      "alpha_prompt": "Use case: background-extraction. Input is an edit target: twelve painted Crucible Crawler machine poses. Remove only the checkerboard and return genuine transparent RGBA around/between figures. Preserve the complete original twelve figures, canvas, cell placement, scale, colors, mechanical parts, molten droplets and last dark wreck exactly. No repainting, no new background, no baked checker pattern, no colored edge matte."
+    }
+  ],
+  "review_notes": "15-frame candidate reuses9 original RGBA paintings and6 corrected new paintings. First supplement omitted fourth walking leg and is excluded. Built-in correction restores a joint-connected partially occluded fourth leg in all six selected cells; three upper tools remain. Separate closed-nozzle physical melee and molten ranged attack, alternating foot-lift creep and braced guard added; cold original wreck retained. Limb occlusion/support sequencing, nozzle/tool-length and vat/body continuity, low guard height and ranged effect timing remain refinement. Explicit bands exclude neighboring feet, nozzle, pour stream and above-row fragments; original molten debris and coal retained.",
+  "prior_review_notes": [
+    "Twelve source poses include pouring attack, folded defensive stance, tipping collapse and dark cooled wreck.",
+    "Four-leg gait and diagonal alternation are not clear; hidden rear leg needs close review. Idle and wind-up differentiation remain subtle.",
+    "Three tool-arm attachments/nozzle count and constant size require refinement through brace/death; spill must remain compact for battle footprint.",
+    "Extraction displays colored fringes and changes molten streams; actual alpha/compositing and edge margins pending.",
+    "Source only, not packed or enabled. 29 runtime candidates, final acceptance 0/160. No tests/exports run."
+  ],
+  "status": "candidate_pending_playback_acceptance",
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "new_selected_paintings": 6,
+    "generated_outputs": 2,
+    "generation": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_crucible_crawlers.png",
+    "runtime_sha256": "2ad5ca2a46112241c28e67c5f3a9b7ba7afbd837190cf21e8fb0535bf44c36f6",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png": "6421b6f36c383407f6d966a445218f945d1d00e2817542746b860e1cde65d39e",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-alpha/creep-melee-four-legs.png": "c780ee448a7a9a0b7be0c6797c97d0a83ac830cc8027cdb0da2992c85fc0ef63"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/crucible-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Static source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "date": "2026-09-16",
+      "policy": "Only task-owned byte-identical preview duplicates; exact SHA-256 rechecked and fuser found no open handles. All original/rejected paintings, unique evidence, processing proofs and caches retained.",
+      "removed_files": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/crucible-continuity-20260916/identity/unit_brasshollow_crucible_crawlers-poses-rect-10-16-359-379-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_crucible_crawlers/identity-reference.png",
+          "sha256": "f86832ea3d686f71cc06c7793d9acbbea8119d7e95a338425cdd83053bd532c4",
+          "bytes": 1010878
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/crucible-continuity-20260916/first/creep-melee-and-guard-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/crucible-continuity-20260916/final/creep-melee-and-guard-light.png",
+          "sha256": "6b47f732ead5a5fa75b3a24b32f623d1c8785a18e6e4f22ee39a9fa4ef8cd17c",
+          "bytes": 1475326
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/crucible-continuity-20260916/second/creep-melee-and-guard-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/crucible-continuity-20260916/final/creep-melee-and-guard-light.png",
+          "sha256": "6b47f732ead5a5fa75b3a24b32f623d1c8785a18e6e4f22ee39a9fa4ef8cd17c",
+          "bytes": 1475326
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/crucible-continuity-20260916/first/creep-melee-and-guard-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/crucible-continuity-20260916/final/creep-melee-and-guard-green.png",
+          "sha256": "aaf30b9682715fd83ea8cd0b1f57651d4a5bc5ba65818c09da974eb136ad44a8",
+          "bytes": 1455607
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/crucible-continuity-20260916/second/creep-melee-and-guard-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/crucible-continuity-20260916/final/creep-melee-and-guard-green.png",
+          "sha256": "aaf30b9682715fd83ea8cd0b1f57651d4a5bc5ba65818c09da974eb136ad44a8",
+          "bytes": 1455607
+        }
+      ],
+      "removed_bytes": 6872744
+    }
+  }
+}

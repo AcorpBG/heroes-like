@@ -1,0 +1,48 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_milestone_bucklers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_milestone_bucklers.png",
+  "reference_sha256": "bb66cd02103eaad2bef2b89d2e3cae55e44f43e8fe60223455ae6e1ec34edfe2",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "fca45352f97b344dd3aa9cacec187b2ce278d61956e0e0777953cf98e0d81951",
+      "source_output": "exec-424c49cb-b6d5-47dd-8c83-0241059e26cf.png",
+      "prompt": "Use case: stylized-concept. Original Milestone Buckler battle animation sheet using reference identity. Brown-haired short-bearded man cream scarf rust-red quilted tunic navy/cream split tabard navy trousers steel shoulder plates brown gloves boots belts. LEFT arm tall rectangular navy wood shield brass rim central vertical brass strip round boss. RIGHT hand short wooden spear steel leaf point. Twelve articulated full-body poses FOUR columns THREE rows consistent scale elevated three-quarter camera facing RIGHT generous gutters. Row1 idle spear low shield forward; breathing alert shoulder/scarf shift; walk contact near leg forward far back; passing legs under hips shield steady. Row2 opposite contact far leg forward near back no torso mirroring; spear thrust anticipation right fist by shoulder elbow back spear POINT toward RIGHT above shield; completed right spear thrust RIGHT left shield protects torso; defense crouch behind raised shield spear low. Row3 hit recoil head back shield tilts; knees buckle spear lowers; side fall torso raised own spear grounded shield beside left arm; final relaxed horizontal side corpse eyes closed full spear and shield resting beside body. Constant full spear length point and grip, shield same shape all frames; real joints not repeated cutouts or rotated standing corpse. Painterly raster pale gray background no shadow grid text effects blood scenery.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "cfa8e91eb6558e1ca47a7c6a83bbb6945fcd35b7da3642e3b111f4a1c7f4d560",
+      "alpha_output": "exec-95e60b33-a588-4842-b16c-df79f007af3d.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all twelve Milestone Buckler poses onto genuine transparent RGBA preserving exact layout scale body equipment complete spear shafts rectangular shields hair scarf and gaps. Remove gray backdrop and all floor shadows. One deliberate correction: BOTTOM RIGHT final corpse eyes fully CLOSED with relaxed expression; preserve body pose. No other redraw, no checkerboard/cloudy matte/halos/text/reframing."
+    }
+  ],
+  "review_notes": [
+    "Twelve poses/extraction visually inspected. Spear windup/thrust, shield defense and equipped horizontal corpse present; extraction closes corpse eyes. Walking contacts repeat with no clear passing. Spear length/rear shaft and grip continuity vary; shield scale/corpse transition and alpha-edge/full-motion review pending. Source only not packed/enabled; no tests/exports.",
+    "12 frames retain eight original paintings and add four new candidates: short-spear windup/thrust/recovery and a bent-knee passing step. Original shield guard, hit and head-right grounded spear/shield corpse remain. Longer earlier attack paintings and repeated extra contacts are unselected.",
+    "Original alpha is reused; approved magenta preparation and uniform original/new scales 0.60/0.36 retain painted equipment. Source bands exclude neighboring thrust tip from shield guard and a neighboring boot from hit without trimming the owned spear or shield.",
+    "All-state candidate only. Full alternating gait, spear length/perspective and obscured rear butt during thrust, old/new body and shield proportions, grounded-weapon continuity, palette/edge consistency and connected motion remain refinement. New actions are not final visual acceptance. No tests/imports/gameplay/platform validation."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 8,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_milestone_bucklers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_milestone_bucklers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_milestone_bucklers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_milestone_bucklers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_milestone_bucklers.png",
+    "runtime_sha256": "109ae5a9edd765a21e3172e6d7b6b899638b0c46e7ca901a480fc97f7a997a88",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_milestone_bucklers/alpha/poses.png": "cfa8e91eb6558e1ca47a7c6a83bbb6945fcd35b7da3642e3b111f4a1c7f4d560",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_milestone_bucklers/continuity-alpha/short-spear-actions-and-passing-step.png": "d2d2fe3a6e7143a2bef53ec384e06f6e256bde249cf429dc6f0fdad1e95ca952"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/milestone-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

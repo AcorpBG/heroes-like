@@ -1,0 +1,161 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_brasshollow_whitegauge_datum_lancers.png",
+  "reference_sha256": "4dce0e57e04ecb05c4019340c9c07a86da39f6ff2f73ad23f416885a2ce12704",
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-771493a5-8f28-4122-bc1d-9eb3a6726d2c.png",
+      "prompt": "Use case: precise-object-edit. Edit this single character's LOWER BODY into the opposite walking contact. Keep everything above belt including lance shield head arms unchanged. Open both coat tails sideways/back so BOTH thighs are visible from their hip sockets. Near leg begins at viewer-left hip below belt pouch and slopes diagonally RIGHT across front of other thigh to a forward knee and heel contact at viewer-right. Far leg begins at viewer-right hip below shield and slopes diagonally LEFT behind near thigh to rear knee and toe contact at viewer-left. The thighs overlap at center in perspective, anatomically normal walking not twisted knees. Near right leg must visibly occlude far left thigh. This reverses which anatomical leg leads compared to reference. Same ivory greaves gold knees black boots, two legs only, natural stride. No change to proportions or camera. Transparent alpha background, no painted checkerboard, full sprite no crop.",
+      "reason": "Coat opened but same shield-side leg leads. Ineffective opposite-contact correction; not selected."
+    },
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1e7002df-c309-45e7-a219-7aafd41ce516.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY legs below belt and necessary coat opening. SWAP which anatomical leg is forward. Leg emerging from LEFT SIDE OF IMAGE hip (under the lance hand) must swing diagonally across toward RIGHT and forward with heel planted toes lifted. Leg emerging from RIGHT SIDE OF IMAGE hip (under shield) extends diagonally BACK toward LEFT with heel lifted toes planted. This is a natural opposite stride; show connected thighs/knees clearly through parted coat, not a mirrored torso. Keep upper body arms head shield lance and all equipment unchanged. Exactly two legs no duplicates. Preserve character proportions camera style, true transparent background no painted checkerboard.",
+      "reason": "Leg swap ineffective: coat obscures hips and same leading leg remains. Not copied/selected."
+    }
+  ],
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/fall-side-draft.png",
+      "source_sha256": "3a8de10bc42d2658056c98d1fe5e3bf51b325be7f79baf58ce5ab60ea2df0046",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4dafa897-0ed0-4e6e-ac84-787d149c5f95.png",
+      "prompt": "Use case: stylized-concept. Reference image is identity and death-sequence reference only. Generate ONE isolated original Datum Lancer full-body sprite, intermediate sideways collapse between bottom-row third seated frame and bottom-row fourth prone corpse. Head toward image RIGHT, boots toward LEFT, torso tilted down nearly horizontal but right shoulder still raised slightly above ground. Right arm reaching down to break fall, left forearm still strapped to round ivory/brass shield lowering beside chest. Both knees bent naturally, black red-lined coat settling, helmet slit dark. Full segmented ivory black brass lance already lying horizontally along foreground, white tip and round gauge toward LEFT, plain butt RIGHT, ONE lance only. Match reference helmet/gauges/backpack red hoses/armor and fixed elevated three-quarter battle camera. No upright sitting pose, no second soldier, no extra arms or weapons, no gore/effects. Whole body and long lance within generous margins. Real transparent RGBA background, no painted checkerboard or ground plane. Painterly game cutout same original visual identity.",
+      "review": "Head-right sideways fall now bridges toward head-right prone corpse; right hand supports lowered torso, shield and one lance retained. Not accepted: torso still relatively high, helmet/backpack/shield detailing and scale differ, spear butt pointed and alpha unresolved. Source-only, not packed or enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/walk-next-contact-draft.png",
+      "source_sha256": "46d8375d575338d34fc3d1d6b636947b89fd992038e660bedcec5fd886164a27",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-abc21674-5d07-4346-8c35-26b2d88b1338.png",
+      "prompt": "Use case: precise-object-edit. Edit target: attached single soldier passing pose. Advance ONLY the legs to the NEXT walking contact: the currently lifted rear boot swings FORWARD across the front of the body to image RIGHT, its thigh crosses in front of the other thigh; the currently planted leg pushes BACK to image LEFT behind it. Open coat enough to expose both thigh connections. Front leg must originate under belt pouch at image-left hip and visibly overlap the far thigh. Heel of advancing boot down, trailing heel up. Keep exact upper body, camera, armor, lance, shield and proportions unchanged. Do not mirror body or swap gear. Full isolated sprite, actual transparent alpha background, no drawn checkerboard or ground shadow. Two legs only, physically natural gait.",
+      "review": "Opened coat shows advancing thigh crossing in front, improving opposite-contact readability. Trailing foot placement, hip anatomy, camera/scale continuity and alpha remain unaccepted. Source-only, not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/walk-passing-draft.png",
+      "source_sha256": "485ab18d24bd4d9dfa0e67a9edb50fde8334896d94ef720f89f3f665df7fd88f",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-43828bec-9a64-4506-91d3-6d6358d078d3.png",
+      "prompt": "Use case: precise-object-edit. Change this single soldier to a walking PASSING pose, NOT a wide stride. Both knees directly beneath pelvis close together. Anatomical LEFT leg (shield-side) planted almost vertical straight down beneath body supporting weight. Anatomical RIGHT leg (lance-side) bent at knee roughly 90 degrees, boot lifted behind toward image LEFT, heel raised, sole angled backward. No foot extended forward. Narrow balanced upright passing silhouette, boots clearly separated vertically. Change coat tails naturally exposing bent leg but preserve torso head arms upright full lance round shield armor gauges colors and camera. One complete isolated sprite on real transparent background no checkerboard drawing no ground. No extra legs no change to gear.",
+      "review": "Raised rear boot and narrower passing silhouette obtained. Source draft only: camera/scale continuity and transparency unresolved; opposite contact still missing. Not packed or enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/walk-contact-draft.png",
+      "source_sha256": "254f2db19bd753ee29d6bc2fa066785a0b0867d0e99053cdc02c12059bb3da5f",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5a796aba-6fc7-4a3b-be45-18977932d340.png",
+      "prompt": "Use case: stylized-concept. ONE isolated full-body original battle sprite of the exact Datum Lancer in reference, not a sheet. Walking to RIGHT, three-quarter view showing front and the soldier's anatomical RIGHT side. RIGHT anatomical leg (same side as lance-holding arm, nearer camera) reaches FORWARD toward image right with heel planted and toes raised. LEFT anatomical leg (shield side, farther camera) extends BACK toward image left with heel lifted toe pushing off. Both knees and complete boots visible below parted coat; this is a precise opposite-contact walking animation pose, no crossed legs. Torso remains upright same armor as reference: ivory brass closed gauge helmet black slit, black coat red lining, ivory knee/shin plates, red calibration marks, backpack cylinder red hose. RIGHT hand holds full tall lance upright on image-left side of torso, LEFT forearm round ivory brass shield on image-right side; never swap weapons. Match reference proportions exact long lance white tip round gauge and segmented shaft. Natural slight shoulder counterrotation, no exaggerated lean, no extra legs. Painterly crisp game cutout. Genuinely transparent RGBA background with clean alpha no colored fringe or painted checkerboard. Full spear and boots inside image generous empty margin, no ground shadow text or glow.",
+      "review": "Unaccepted for opposite contact: still appears to lead with shield-side leg. Retained as high-resolution contact source, not runtime."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/poses-windup-corrected.png",
+      "source_sha256": "d52978aa5659e1b450be6d57afdac8450ab0eb38c2687702802505214047fb91",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e1ff1fe0-2452-4811-bd72-df2aef5e58f3.png",
+      "prompt": "Use case: precise-object-edit. Correct ONLY row TWO column TWO (sixth sprite) on this 4x3 sheet. Replace its backwards-pointing short lance with full-length lance pointing RIGHT ready to thrust. Right elbow bent pulled behind torso, right hand grips horizontal shaft near shoulder, white triangular point and round gauge on RIGHT of hand pointing right beyond shield, long black brass ivory rear shaft with plain gold butt extends LEFT behind elbow. Match lance design/length in neighboring seventh corrected thrust frame. LEFT forearm keeps round shield before chest. Keep exact soldier body identity and planted preparation stance. No spear point at left end, no second spear, no extra limbs. All other eleven poses and canvas size unchanged. Actual transparent background no drawn checkerboard."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/poses-thrust-shaft-corrected.png",
+      "source_sha256": "2c816271b1782202dd7d1779e43237bc37eea087f66a54e510dcad04a0e3a660",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b0d5452d-3268-4299-8ee5-d1643b24e563.png",
+      "prompt": "Use case: precise-object-edit. Modify ONLY seventh sprite row TWO column THREE on this 4x3 sprite sheet. Its horizontal lance wrongly ends at the outstretched gripping hand. Restore the long REAR SHAFT extending LEFTWARD from that hand, straight collinear with the existing rightward lance, passing behind the shoulder/body then visible behind the backpack. Rear shaft is dark brass segmented with ivory sleeve/red calibration marks and narrow gold butt cap like bottom half of upright lances elsewhere. Total lance length must match upright versions. Keep rightward white spear tip and round gauge unchanged; no second tip at rear. Keep hand, shield, body, pose and all other eleven sprites unchanged. Transparent RGBA background no painted checkerboard; same sheet dimensions."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/poses-hit-hand-corrected.png",
+      "source_sha256": "762b34eee0b2d0b6af84d6fdb34aeaa35690e394676b1536b8558b66e2545cb9",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b90b7fed-8868-4142-b332-0ac7a533e08c.png",
+      "prompt": "Use case: precise-object-edit. Repair ONLY bottom-left sprite (row THREE column ONE, ninth sprite) of this 4x3 sheet. Delete the extra open black hand sticking out to the LEFT of the hand gripping the lance. Keep ONE right arm with ONE right hand gripping lance shaft, and ONE left arm supporting round shield. Exactly two arms two hands. Keep lance, shield, recoil posture helmet legs armor and all eleven other sprites unchanged. Same image dimensions and locations; transparent RGBA background no painted checkerboard."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/poses.png",
+      "source_sha256": "e8bdfd61ee25b00a3ccd777a21e5e9b2a0205eb40d2d64df53b30c6224e6a39f",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e15b54d2-78d7-418a-982e-88abda2fecb1.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle animation sheet matching attached Whitegauge Datum Lancer reference. Twelve isolated full body poses FOUR columns THREE rows same scale fixed three-quarter view facing RIGHT spacious gutters. Actual transparent RGBA background no painted checkerboard ground or labels. Human soldier closed ivory brass gauge helmet narrow black slit black scarf long black split coat dark red lining ivory/brass shoulder knee/shin plates red calibration marks. Small backpack pressure cylinder red hose. RIGHT hand ONE long brass black ivory segmented lance with white narrow triangular tip and round gauge beneath tip. LEFT forearm ONE round ivory brass shield with central brass boss red calibration marks. Preserve arm sides full lance length and exactly one shield/weapon. Row1 idle lance upright shield beside chest; breathing idle shoulders shield slightly lift coat settles; walking LEFT foot forward right back; walking RIGHT foot forward left back clearly opposite legs without mirroring torso. Row2 passing raised bent knee; melee windup RIGHT elbow draws full lance back horizontally LEFT shield guarding chest; melee contact RIGHT arm thrusts lance far right tip forward rear shaft visible behind hand LEFT shield retained; defense deep brace LEFT shield raised lance angled outward beside shoulder. Row3 hit recoil torso back equipment retained; death knees buckle lance tilts shield supported; collapse sideways gear lowering; persistent prone dead helmet slit dark lance and shield on ground body relaxed red hose connected no steam. Real articulated elbows hips knees shoulders no translated duplicates no extra limbs. Maintain armor gauges red marks hose connections and shaft proportions. Painterly original game cutouts matching reference readable small-scale forms. Entire long lance inside own roomy cell no cropping or overlap."
+    }
+  ],
+  "review_notes": [
+    "14-frame candidate: ten selected existing paintings/corrections and four new supplement poses. Forward windup and shaft-restored thrust preserve complete lance; hit uses corrected single hand.",
+    "Original contact/far passing plus new planted bridge/near passing are not an accepted alternating gait; bridge repeats lead. New diagonal-lance guard pair retains shield.",
+    "Head-right side-fall matches cold corpse orientation; original reverse-direction seated fall is unselected. Full fall/weapon/hand trajectory still requires motion review.",
+    "Inspected hose/arm apertures prepared with source-specific neutral key and one bounded blue-white windup gap. Banded crops exclude adjacent leg, boot and lance tip.",
+    "Full-roster armor/weapon scale, limb support/travel, guard/death continuity and event timing remain; no final acceptance."
+  ],
+  "prior_review_notes": [
+    "poses-windup-corrected.png sixth frame restores forward-pointing full lance for anticipation. Use sixth frame only: edit regressed seventh-frame rear shaft, so retain seventh from poses-thrust-shaft-corrected.png. Grip travel, camera transition, length normalization and alpha still need work.",
+    "Twelve source poses include thrust, brace and equipped prone corpse.",
+    "Gait repeats lead and torso orientation changes; need opposite contact and continuous passing.",
+    "Wind-up reverses lance point and shortens shaft. poses-thrust-shaft-corrected.png restores rear shaft behind backpack in seventh frame; use that frame only. Exact length/occlusion and matching wind-up still need refinement. Whole-sheet edit changes background/details and is not an accepted alpha asset.",
+    "Original hit pose had extra open hand beside lance grip. poses-hit-hand-corrected.png removes that hand while retaining lance and shield. Use corrected ninth frame only; other frames may have incidental whole-sheet changes. Lance/gait/alpha refinement still pending.",
+    "Gauge placement, shield size/marks, backpack/hose and armor calibration details vary. Seated collapse needs intermediate fall.",
+    "Final helmet dark but gear/body continuity needs small-scale review. Checker background visible; transparency/compositing unresolved. Source-only not packed/enabled; no tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "edited_retained_paintings": 0,
+    "new_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_whitegauge_datum_lancers.png",
+    "runtime_sha256": "f6382dd8433fd39436dc6367eab360cf1b333167f1f07f597d594205b178930c",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses.png": "7e3b2cdd97a3b3d030c4bfd01d5bfcd7dbe477b7425624d918828125e88f9e18",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/walk-contact-draft.png": "65fb041523d2edbb02c428dd413b7695a40b5ee9ababfc38b45bd96654c4e79f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/walk-passing-draft.png": "4303a891854beb5a4ddf7b40447b633327df3e74a71bba52a7923a8a4a5ded01",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/guided-opposite-step-and-guard.png": "62925c80253fa3b0b7a95fb89548d6d1a30739a15b24fffd5cf9adc33d9acd5d",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-windup-corrected.png": "0439892d5a7a4d933c1a736438ae1024315e501f512162b7333ab1753d3b8eba",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-thrust-shaft-corrected.png": "45a234d6767b72de1c892a48fce5f12f5bdbddf2b1a58bed8ce343fa91fa7d14",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-hit-hand-corrected.png": "4c8b1d31b3f62758cfdb1f0c094307d3a538c06a4cbab88a189ff2ab3e580655",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/fall-side-draft.png": "44a50189df87e9bbb84e14898022f1f4f1143ca86ccaaff8c1bd34f51ba203f3"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/datum-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Static source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "policy": "Removed only exact byte-identical task preview copies after SHA-256 and no-live-handle checks. Identical retained copies permit restoration. All original/rejected source images, unique evidence, processing proofs, caches and unrelated artifacts remain.",
+      "duplicates_removed": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/datum-continuity-20260916/first/fall-side-draft-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/datum-continuity-20260916/gaps-cleaned/fall-side-draft-green.png",
+          "sha256": "0858880cd553b50d7f96d0c2b817a50a261221fd9229db5bc5b73c64e1874409",
+          "bytes": 906618
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/datum-continuity-20260916/first/walk-next-contact-draft-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/datum-continuity-20260916/gaps-cleaned/walk-next-contact-draft-green.png",
+          "sha256": "37dfe897e956f0b0f0cc94a1fb909efad7108628a0f577466fc0320c39d8af3f",
+          "bytes": 649186
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/datum-continuity-20260916/first/fall-side-draft-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/datum-continuity-20260916/gaps-cleaned/fall-side-draft-light.png",
+          "sha256": "d7eb5d7a08432a3b227de31f8b6bdcfdad42fbff262440f3e270d5c70bcaeafe",
+          "bytes": 914959
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/datum-continuity-20260916/first/walk-next-contact-draft-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/datum-continuity-20260916/gaps-cleaned/walk-next-contact-draft-light.png",
+          "sha256": "ac5caf6a64e09947c5a5814537cca1368a588d716f463ac87e6df05c9901b6a0",
+          "bytes": 655811
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/datum-continuity-20260916/identity/unit_brasshollow_whitegauge_datum_lancers-poses-rect-89-0-323-370-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/identity-reference.png",
+          "sha256": "721f03410a44bdb06e344e95263f3aa06a6dd29857b7d3072a090011d8b4d6ac",
+          "bytes": 525980
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/datum-continuity-20260916/identity-clean/unit_brasshollow_whitegauge_datum_lancers-poses-rect-89-0-323-370-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/identity-reference-v2.png",
+          "sha256": "3256a8a3b15e94323b54a013373ee218d1ce8ee513933d9c89ea7b1583c0a5c4",
+          "bytes": 517663
+        }
+      ],
+      "removed_bytes": 4170217
+    }
+  }
+}

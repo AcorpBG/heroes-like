@@ -183,7 +183,7 @@ def main():
     sys.argv = [str(Path(layers.__file__))] + forwarded
     code = layers.main()
     label = forwarded[forwarded.index('--label')+1]
-    report_path = layers.OUTPUT/label/'report.json'
+    report_path = Path(os.environ.get('HEROES_BATTLE_READABILITY_ARTIFACT_DIR',str(layers.OUTPUT)))/label/'report.json'
     report = json.loads(report_path.read_text())
     details['export_unchanged'] = hashes == {str(p): sha(p) for p in export.iterdir()}
     details['all_probe_assertions_retained'] = True

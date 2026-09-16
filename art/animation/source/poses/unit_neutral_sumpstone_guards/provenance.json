@@ -1,0 +1,55 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_sumpstone_guards",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_sumpstone_guards.png",
+  "reference_sha256": "668b9d300873b6f029c868a113dfe128d138ead2cd752224ab9ee21e89bc2882",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "46196e05f2f269dcaefbc8b7f9af2491cf9c503fee2f848b0caddd5f70eb259f",
+      "source_output": "exec-6710c8b2-e59e-402d-9047-50614d11b567.png",
+      "prompt": "Use case: stylized-concept. Original Sumpstone Guard battle sprite animation sheet based on reference identity: stout broad dwarf long copper braided beard, blackened iron mining armor with blue/violet crystals on shoulder and knee, dark blue scarf/tabard, mining helmet with round cyan lens lamp, large faceted oval cyan/violet stone shield brass rim LEFT arm, long-handled double-point mining pick RIGHT hand. Twelve full-body poses FOUR columns THREE rows same elevated three-quarter camera facing RIGHT, same scale generous gutters to fit shield/pick. Row1 relaxed idle pick low shield raised; breathing shoulders lift beard shifts; heavy walk near leg extended forward heel contact far leg back; passing near foot planted far knee bent passing beneath hip. Row2 opposite walk near thigh sweeps behind far thigh extends FORWARD with heel contact, same torso not mirrored; attack windup RIGHT hand pick above right shoulder shield guards ribs; forceful RIGHT pick downward strike toward screen RIGHT bend leading knee shield protects chest; defense deep squat behind tilted raised shield pick close. Row3 hit recoil; dying knees buckle equipment droops; tipping sideways torso low shield tips onto ground; final dead relaxed horizontal SIDE body eyes closed beard on ground, shield flat beside LEFT arm and pick beside RIGHT hand, crystals retained subdued. Keep both equipment pieces all frames, no swords, same distinct armor/crystals/helmet, articulate joints not duplicated standing cutouts, no rotated upright corpse. Painterly original raster, plain pale gray background no shadows/grid/text/effects/blood/scenery.",
+      "alpha_source": "alpha/poses-unaccepted.png",
+      "alpha_sha256": "99f098db5065f21c44f2600a257550044d0d4253073714384961b5c61f80a632",
+      "alpha_output": "exec-05c8b563-94df-4693-a336-4523571027fe.png",
+      "alpha_prompt": "Use case: background-extraction. Precise cutout of these twelve Sumpstone Guard poses. Output true transparent PNG: all empty space between figures must have alpha ZERO, no translucent cloudy gradient, no glow haze, no gray matte or checkerboard. Keep figure pixels solid and preserve exactly the original poses, positions, scale, all shield/pick/crystal/helmet/beard details and corpse. Only soften antialiasing at silhouette edges. Remove background and shadows, do not add lights, effects or new scenery."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "exec-3017def2-259d-45b2-aae1-b32f2a55291e.png",
+      "prompt": "Use case: background-extraction. Remove pale gray background from this twelve-pose Sumpstone Guard sheet onto genuine transparent RGBA. Preserve exactly all twelve poses, composition and scale, crystals and their cyan/violet colors, full shield and pick, helmet lens, beard, boots, limb gaps and corpse. Remove ground shadows only with background; no checkerboard, colored matte, redraw, reframing, text or added effects.",
+      "reason": "Cloudy colored raw preview, RGBA alpha range 0..254; not accepted. Retry also shows cloudy preview and remains unaccepted pending compositing review or re-extraction."
+    }
+  ],
+  "review_notes": [
+    "Twelve original poses visually inspected: distinct pick windup/strike, shield crouch, collapse and equipped corpse. Walking contacts repeat; opposite contact/passing and pick size/grip continuity require refinement. Neither extraction accepted for runtime. Source only, not packed/enabled; no tests or exports run.",
+    "13 frames retain nine original paintings and select four new pick recovery, shield-ready and grounded travel paintings. Original equipped kneel, low fall and head-right resting corpse remain.",
+    "Actual original RGBA composites are clean, despite the historical cloudy raw-preview rejection. Reuse alpha/poses-unaccepted.png unchanged; the filename records its historical state, not a new extraction. New green source uses approved bounded preparation. Uniform old/new scales 0.62/0.38 preserve short dwarf anatomy. Banded crops exclude adjacent boots/pick fragments; anatomical ground anchors retain complete weapon tips.",
+    "Travel contact/passing still does not establish a complete alternating-support gait. Pick length/grip, shield/crystal pattern, body/palette/edge consistency and connected timing remain refinement. No final motion/gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_sumpstone_guards/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_sumpstone_guards/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_sumpstone_guards/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_sumpstone_guards/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_sumpstone_guards.png",
+    "runtime_sha256": "70bb92ebd0f474a9f5639e6b53c5c1954c38f283807f2474058ca3dee6cd8e41",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sumpstone_guards/alpha/poses-unaccepted.png": "99f098db5065f21c44f2600a257550044d0d4253073714384961b5c61f80a632",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sumpstone_guards/continuity-alpha/pick-recovery-guard-and-grounded-travel.png": "dfb870897ed133e6d77256edbcdb1cb3dd167b8cdb462dd5474d1398fcf8a554"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/sumpstone-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

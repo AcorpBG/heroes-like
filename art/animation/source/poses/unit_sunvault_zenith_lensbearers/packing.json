@@ -1,0 +1,348 @@
+{
+  "unit_id": "unit_sunvault_zenith_lensbearers",
+  "status": "runtime_candidate_pending_consolidated_validation",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          314,
+          313
+        ],
+        [
+          88,
+          313,
+          125,
+          325
+        ],
+        [
+          203,
+          313,
+          241,
+          323
+        ]
+      ],
+      "anchor": [
+        157,
+        320
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "idle_1",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          333,
+          0,
+          634,
+          313
+        ],
+        [
+          398,
+          313,
+          434,
+          325
+        ],
+        [
+          500,
+          313,
+          550,
+          323
+        ]
+      ],
+      "anchor": [
+        463,
+        320
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "continuity-alpha/walk-contact-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1237,
+          1272
+        ]
+      ],
+      "anchor": [
+        630,
+        1198
+      ],
+      "scale": 0.19
+    },
+    {
+      "name": "walk_passing_a",
+      "source": "continuity-alpha/walk-passing-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1064,
+          1479
+        ]
+      ],
+      "anchor": [
+        537,
+        1350
+      ],
+      "scale": 0.174
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "continuity-alpha/walk-contact-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1237,
+          1272
+        ]
+      ],
+      "anchor": [
+        641,
+        1198
+      ],
+      "scale": 0.195
+    },
+    {
+      "name": "walk_passing_b",
+      "source": "continuity-alpha/walk-passing-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1237,
+          1272
+        ]
+      ],
+      "anchor": [
+        640,
+        1198
+      ],
+      "scale": 0.195
+    },
+    {
+      "name": "melee_windup",
+      "source": "continuity-alpha/melee-pair.png",
+      "rects": [
+        [
+          0,
+          0,
+          807,
+          887
+        ]
+      ],
+      "anchor": [
+        346,
+        822
+      ],
+      "scale": 0.288
+    },
+    {
+      "name": "melee_contact",
+      "source": "continuity-alpha/melee-pair.png",
+      "rects": [
+        [
+          808,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1176,
+        818
+      ],
+      "scale": 0.288
+    },
+    {
+      "name": "defend_0",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          967,
+          327,
+          1254,
+          639
+        ]
+      ],
+      "anchor": [
+        1110,
+        630
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "defend_1",
+      "source": "continuity-alpha/defense-breath.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        642,
+        1148
+      ],
+      "scale": 0.19
+    },
+    {
+      "name": "ranged_aim",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          0,
+          638,
+          320,
+          949
+        ]
+      ],
+      "anchor": [
+        147,
+        938
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "ranged_recoil",
+      "source": "continuity-alpha/ranged-recoil.png",
+      "rects": [
+        [
+          0,
+          0,
+          1236,
+          1272
+        ]
+      ],
+      "anchor": [
+        615,
+        1165
+      ],
+      "scale": 0.19
+    },
+    {
+      "name": "ranged_recover",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          690,
+          638,
+          944,
+          958
+        ]
+      ],
+      "anchor": [
+        792,
+        946
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "hit",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          974,
+          637,
+          1254,
+          950
+        ]
+      ],
+      "anchor": [
+        1112,
+        940
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "death_buckle",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          0,
+          959,
+          312,
+          1254
+        ]
+      ],
+      "anchor": [
+        157,
+        1227
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "death_kneel",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          330,
+          959,
+          606,
+          1254
+        ]
+      ],
+      "anchor": [
+        468,
+        1225
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "death_sidefall",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          607,
+          1035,
+          931,
+          1254
+        ]
+      ],
+      "anchor": [
+        767,
+        1223
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "dead",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          932,
+          1040,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        1084,
+        1224
+      ],
+      "scale": 0.72
+    }
+  ],
+  "notes": [
+    "Original authored poses retained through owner-approved non-generative cutout preparation; original RGB paintings unchanged.",
+    "Four guided gait phases replace repeated lead. Two-handed projector guard-jab replaces failed handedness punch art without changing melee rules. No baked beam in selected ranged firing pose.",
+    "All frame selection, fixed-view body scaling and ground anchors are explicit; no rotation, silhouette warping or pose synthesis.",
+    "Candidate only; connected battle timing, final equipment/edge continuity, reduced motion and Linux/Windows acceptance deferred until all-roster production is finished."
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_embercourt_fordhook_cadets",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_embercourt_fordhook_cadets.png",
+  "reference_sha256": "e9eddd43ef9b1b1a44a40fd609676bb31c8db90cd612a17bb3e87aef0fce6ff4",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "4af5d80761878177b476b7938553788d7616a16caa36d6a7ffeafe384b64c867",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-287f145f-222a-456f-b061-a5263f16099a.png",
+      "prompt": "Use case: stylized-concept. Image1 identity reference. Original Fordhook Cadet battle animation sheet TWELVE poses FOUR columns THREE rows generous gutters fixed elevated three-quarter camera facing RIGHT same scale. Young clean-shaven brown-haired man red brass-ribbed brim helmet chinstrap, red gold-trim coat steel shoulder plates brown belts/trousers boots, LEFT arm round wooden brass-rim shield, RIGHT hand long dark wooden hooked steel spear. Maintain same hands gear complete shaft/head/butt all poses. Row1 idle spear diagonally up right shield relaxed; breathing head turns slightly alert chest rises; walking near leg forward far leg back; passing legs beneath hips rear foot lifted. Row2 opposite stride far leg forward near leg back NO mirrored torso; attack windup right hand draws spear back shaft horizontal steel point RIGHT shield forward; attack contact right elbow straight spear thrust RIGHT shield covers left torso; defense shield raised cover chest spear point up right. Row3 hit recoil torso back spear retained; death knees buckle spear tips down shield lowers; side fall torso raised left forearm on ground right hand releases complete spear beside him; dead horizontal on side eyes CLOSED both legs relaxed helmet on shield and complete spear resting beside body. Articulate limbs genuinely no rotated standing corpse. Painterly fantasy original raster pale gray background no shadows scenery blood text grid effects. Avoid weapon clipping or changing hand, preserve shoulder armor.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "b2deef742345c3df333f15ee5595e05faeefcaff1fe5763e300a1494e5f3b007",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bbe2c563-c400-431f-9fb2-4ef3bdbf9f33.png",
+      "alpha_prompt": "Use case: background-extraction. Image1 edit target. Extract all twelve soldier poses onto genuine transparent RGBA background, preserve exact canvas positions scale full spear shafts/blades shields helmet gear and every pose. Change ONLY final bottom-right corpse face so both eyes completely CLOSED relaxed eyelids. Remove gray background between limbs, weapon, shield. No gray/color halos no shadow no painted checker scenery or text; preserve all fine weapon edges."
+    }
+  ],
+  "review_notes": [
+    "Thirteen packed original frames: retained real-alpha idle pair, shield defense, hit, kneel, side fall and equipped closed-eye corpse; four new guided walking poses and two new continuous-shaft attack poses.",
+    "Seven built-in masters retained with exact prompts/hashes. Six selected: four walking poses, braced thrust and rear-length-corrected release. Overlong release draft is excluded, not discarded. Old source attack with missing rear shaft is excluded.",
+    "Approved local color-distance preparation removes only inspected vivid-green backing and narrow edge contamination; original real-alpha sheet not rekeyed. Exact recipe and source/tool/output hashes retained.",
+    "Inspected final atlas after isolating kneeling crop from neighbouring fallen figure; full spear and guard retained. Candidate registration is not final movement/contact/weapon-grip or edge acceptance.",
+    "No tests, Godot imports or exports run in this production increment. Full-roster production and consolidated gameplay/Linux/Windows acceptance remain open; no rules, saves or footprints changed."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses with thrust, shield defense, kneel, side fall and equipped corpse. Extraction closes corpse eyes.",
+    "Walking contacts repeat lead; opposite contact and passing continuity need refinement. Idle differentiation subtle.",
+    "Spear shaft length/rear section at contact, hand ownership transitions, shield scale and fall support need motion review.",
+    "Extraction fringe colors visible; in-context alpha review pending. No runtime enablement or packing yet.",
+    "No tests/exports; consolidated validation deferred until generation and integration finish."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "sources": [
+      {
+        "file": "walk-contact-a-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-29d4eda4-1d6b-40ed-b91d-ea6232aa0f99.png",
+        "prompt": "Use case: sketch-to-render. Paint ONE original Fordhook Cadet walking contact-A tactical sprite. Image1 is authoritative leg pose: BLUE near foreground leg extends FORWARD RIGHT, heel planted; ORANGE far leg extends back LEFT, rear toe on ground. Keep near thigh visibly overlapping far thigh. Image2 supplies exact identity and original painted style: young clean-shaven man with short dark hair, red domed brass-banded helmet with tiny gold finial, red gold-edged coat, brass shoulder armor and knee bands, brown trousers/gloves/boots, round dark wooden shield with gold rim/boss on LEFT arm, ONE brown polearm with hooked steel spearhead in RIGHT hand. Body and face three-quarter RIGHT, never mirror. Shield remains on near LEFT arm at screen left, right weapon hand in front at screen right, pole angled lower left to upper right, complete long rear shaft. Moderate natural walking stride and stable torso, same adult proportions, two independent legs, no pose guide colors/lines. Entire spearhead, shield and toes inside generous margins. Flat vivid chroma GREEN #00ff00 backing only, neutral light absolutely no green spill/reflections/glow on armor. No ground/shadow/text/grid/scenery/extra gear.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-0.png",
+          "art/units/source/curated/unit_embercourt_fordhook_cadets.png"
+        ],
+        "selection": "Guided original walking candidate; final connected-motion acceptance deferred.",
+        "sha256": "864fc6cb6836a79e107e3a65c83a3b78ba01b8760d7b9bdc74b0338167ac0c19"
+      },
+      {
+        "file": "walk-passing-a-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-79584ec1-a4bc-427d-8f32-1159f689679d.png",
+        "prompt": "Use case: sketch-to-render. Paint ONE Fordhook Cadet passing-A walking sprite. Image1 is the authoritative skeleton: BLUE near foreground leg supports the body almost vertically, planted boot under near hip; ORANGE far knee folds behind that near thigh and far boot lifts behind planted shin. TWO distinct legs with correct ownership, no crossed wrong-way knees. Image2 is exact original character and painted game style: young clean-shaven man, short dark hair, red brass-banded domed helmet with finial, red gold-edged coat, brass shoulder armor/knee bands, brown trousers/boots/gloves. LEFT arm carries same round wooden gold-rimmed/boss shield on screen left; RIGHT hand carries same long brown hooked-steel polearm diagonally from lower left butt to upper right point. Same right-facing three-quarter torso/camera, never mirror equipment or swap hands. Natural mild weight rise, steady spear grip, entire spearhead/rear shaft/boots inside roomy margins. No guide colors/lines/text, no floor/shadow/scenery. Flat vivid GREEN #00ff00 backing only, neutral studio light with no green spill/reflections/highlights on armor. Original detailed tactical-game raster sprite.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+          "art/units/source/curated/unit_embercourt_fordhook_cadets.png"
+        ],
+        "selection": "Guided original walking candidate; final connected-motion acceptance deferred.",
+        "sha256": "84c61d71096c019c8f16e1c6ccfa7ea3bd6b67ede9fa489d2b92af061136579e"
+      },
+      {
+        "file": "walk-contact-b-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-aec5827b-0989-4251-bdf9-4f1b372af6db.png",
+        "prompt": "Use case: sketch-to-render. Paint ONE original Fordhook Cadet contact-B walking sprite. FIRST image determines leg joints and overlap: BLUE NEAR foreground leg slopes BACK LEFT from near hip, boot planted at screen left; ORANGE FAR leg reaches FORWARD RIGHT with heel planted. Near thigh crosses IN FRONT of far thigh at pelvis, do not turn it into near-leg-forward. SECOND image gives exact original character/costume: young clean-shaven man with short dark hair, red brass-banded domed helmet and finial, red gold-edged coat, brass shoulders/knee bands, brown gloves/trousers/boots. One gold-rimmed wooden round shield on LEFT arm at screen left and one hooked-steel brown polearm in RIGHT hand, angled lower left butt to upper right spearhead. Stable three-quarter RIGHT-facing torso/face, unchanged camera/equipment sides, no mirror. Moderate natural contact stride, two independently attached legs, exact costume and original detailed painted game style. Full body and complete spear including long rear shaft, plenty of margin. Flat vivid GREEN #00ff00 backing only, neutral light no green spill/highlights/reflections on man. No guide colors/lines/text/grid/ground/shadows/effects.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+          "art/units/source/curated/unit_embercourt_fordhook_cadets.png"
+        ],
+        "selection": "Guided original walking candidate; final connected-motion acceptance deferred.",
+        "sha256": "66d39195b9837ec4d9fc426b54c1078061b0401522731309c5261f6a79caa38a"
+      },
+      {
+        "file": "walk-passing-b-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9b6f09ec-f9ba-4736-b035-53b1184647ae.png",
+        "prompt": "Use case: sketch-to-render. Paint ONE original Fordhook Cadet passing-B walking sprite. FIRST image's leg pose is authoritative: ORANGE FAR leg supports body vertically with boot planted under far hip; BLUE NEAR foreground thigh swings FORWARD RIGHT from near hip and bends knee upward, near boot lifted clearly in front of far shin. Do not make a rear heel kick: front knee and toe are raised forward in this phase. SECOND image provides exact original costume/proportions/rendering: young clean-shaven dark-haired man, red brass-banded dome helmet tiny finial, red gold-edged coat, brass shoulders/knee bands, brown gloves/trousers/boots. Round gold-rimmed wooden shield on LEFT arm at screen left; long brown hooked-steel spear in RIGHT hand at screen right, diagonal from lower left butt to upper right tip. Same fixed three-quarter RIGHT-facing camera/body, no equipment swap/mirror, two legs only. Stable torso/grip, mild cloth motion, entire spear/boots in generous margins. Detailed original painted tactical-game sprite. Flat vivid GREEN #00ff00 backing only; neutral light no green spill/reflections/glow on man. No guide lines/colors/text, floor/shadows/scenery.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+          "art/units/source/curated/unit_embercourt_fordhook_cadets.png"
+        ],
+        "selection": "Guided original walking candidate; final connected-motion acceptance deferred.",
+        "sha256": "57b2a5cc95ba32f46c482d46f69e25717ec8e631396290510a15b9f30a6836fd"
+      },
+      {
+        "file": "attack-brace-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bcbb4b6d-d2f1-41c8-b955-88f93f521c98.png",
+        "prompt": "Use case: identity-preserve. Create ONE original Fordhook Cadet full-body SPEAR THRUST CONTACT sprite using reference exact young clean-shaven character, red brass helmet/finial, red gold-edged coat, brass shoulders/knee bands, brown boots/gloves/trousers, round wooden gold-rimmed/boss shield and hooked steel brown polearm. Fixed three-quarter facing RIGHT. Strong physical lunge to right, front knee bent, rear leg drives back-left. RIGHT arm extends forward, right gloved hand holds the MIDDLE of ONE continuous straight horizontal spear at shoulder height. CRUCIAL: full long wooden REAR SHAFT extends visibly LEFT from that right fist, just BELOW his extended forearm, passes beside his elbow and projects behind his upper arm/shoulder; brass rear butt is visible behind him. Keep spear's original total length (approximately body height), and grip around middle so substantial pole remains on BOTH sides of fist. Do not turn it into a short dagger or remove rear half. Spear hook tip points right and is complete. LEFT hand/forearm holds original shield close in front of torso, shielding chest, NOT on right weapon arm. Exactly two arms, one shield, one spear, no duplicate shaft. Face focused, not shouting. Original painterly tactical-game sprite style, matching costume/proportions. Wide full-body framing with entire spear butt/point and both boots well inside ample margins. Flat vivid GREEN #00ff00 backing only; neutral light with no green spill/reflections. No opponent, effects, floor, shadows, labels or grid.",
+        "references": [
+          "art/units/source/curated/unit_embercourt_fordhook_cadets.png"
+        ],
+        "selection": "Select as braced anticipation, not a fully extended contact.",
+        "sha256": "08943a4922a5ec7633c914cae5f807002516d45a7efda9fc073902029e20f6bd"
+      },
+      {
+        "file": "attack-release-long-shaft-draft.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-20d7e219-13d9-44ae-9bdd-2f3e77f7d374.png",
+        "prompt": "Use case: precise-object-edit. This original Fordhook Cadet is a good braced anticipation pose. Make the NEXT animation frame, a fully released thrust. Preserve EXACT same costume, face, shield LEFT arm, legs, camera, body and spear dimensions. Change RIGHT weapon arm: STRAIGHTEN ELBOW and REACH fist far FORWARD to screen RIGHT, well beyond the shield's right edge, rather than leaving fist beside chin. The right shoulder stays at its original body socket; draw connected upper arm, straight elbow and forearm across in front of the shield. Right fist and entire spear translate together forward along the weapon direction, SAME grip location on spear. Preserve substantial rear shaft extending behind fist and behind elbow, spear remains ONE continuous brown shaft with same hooked head and brass butt. Left shield stays held by left arm at chest, not weapon arm. Torso rotates slightly into thrust at waist, front knee bends a bit more and rear leg drives. WIDEN canvas framing as needed so complete long spear butt and hook point and all boots remain fully inside margins; do not shrink or shorten spear to fit. One full-body isolated original painted tactical game sprite. Flat vivid GREEN #00ff00 backing only, no green spill/reflections, no scene, floor, shadow, text, speed lines, opponent or effects.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_fordhook_cadets/attack-brace-green.png"
+        ],
+        "selection": "Reject overlong rear shaft relative to body; retained source only.",
+        "sha256": "f67c11cd07a096b613670c438e422eda80d8de63cbdeb3c4d7087f43709e83ca"
+      },
+      {
+        "file": "attack-release-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8574e9c0-7af1-4c87-8960-60fb957559fd.png",
+        "prompt": "Use case: precise-object-edit. Preserve this exact 1536x1024 original sprite, all body/pose/camera/face/armor/shield, extended right arm/fist, forward shaft and hooked spearhead, green backing, no rescale. One precise correction ONLY: the rear shaft became too long during arm extension. Move the brass REAR BUTT from x about90 to x about370 at y330, removing the excess wooden section to its LEFT and replacing only that vacated background with identical flat green. Keep the spear shaft from new brass butt at x370 continuously to fist x850 and forward tip x1510, unbroken/aligned. New rear butt should protrude just behind shoulder, leaving roughly480 pixels shaft behind fist and660 ahead, restoring original weapon length relative to body. Do NOT move fist, spear tip, shield, body or boots, do NOT alter pose or forward spear. No second butt, no debris, no glow/reflections/shadow/text. Original painted asset edit only.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_fordhook_cadets/attack-release-long-shaft-draft.png"
+        ],
+        "selection": "Select targeted rear-length-corrected extended thrust; same full weapon identity retained.",
+        "sha256": "368ba4946b92c24ad55371c1ec8674bb24d24a02518470e098b30baff45e7ed3"
+      }
+    ],
+    "generation": "continuity-generation.json",
+    "reused_source": {
+      "source": "alpha/poses.png",
+      "sha256": "b2deef742345c3df333f15ee5595e05faeefcaff1fe5763e300a1494e5f3b007",
+      "selection": "Original idle pair, shield guard, hit, kneel, side fall and dead; original gait and both attack cells excluded."
+    },
+    "preparation": "continuity-cutouts.json; explicit color_distance [0,255,0] radius75, all_keyed_is_background true, edge_radius2; hashes in processing proofs.",
+    "packing": "packing.json",
+    "packed_frames": 13,
+    "runtime_candidate": "art/animation/runtime/poses/unit_embercourt_fordhook_cadets.png",
+    "runtime_sha256": "b87b8285304176d9be696302c392121b531569b5a5e1d876f646658cc576d70c",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/fordhook-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted"
+  }
+}

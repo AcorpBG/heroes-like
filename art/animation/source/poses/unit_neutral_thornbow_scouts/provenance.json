@@ -1,0 +1,54 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_thornbow_scouts",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_thornbow_scouts.png",
+  "reference_sha256": "b4575ad8ef81cde7495fe3d48b66b55ba7d819ee559f40592e6936aabc174177",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "9389645df7d1b065c0b259ead6de15faf0766dcb473fc160bae3ac1d42749a5e",
+      "source_output": "exec-a2a0c662-9f82-43da-819e-3a7ce6e01ccc.png",
+      "prompt": "Use case: stylized-concept. Original Thornbow Scout battle animation sheet, exact reference identity: young pointed-ear woman brown braid and leaf sprig, forest green cowl and split leaf tabard, brown leather vest/bracers/trousers wrapped boots, small green upper arm tattoo, side quiver, short gnarled wooden thorn bow. LEFT hand holds bow RIGHT draws string. Sixteen full-body articulated poses FOUR columns FOUR rows, same elevated three-quarter view facing RIGHT, identical body scale generous gutters complete bow/boots. Row1 idle bow lowered; alert shoulder breathing; running extended stride; running gathered knees bent feet tucked under hips. Row2 opposite running stride near thigh backward crossing far thigh forward, same torso not mirrored; melee anticipation both hands grasp thorn-free bow grip/stave horizontally; two-handed horizontal bow shove extending elbows leaning forward; defense crouch bow held close. Row3 right hand nocks arrow on low bow without drawing string; full draw RIGHT hand at cheek left bow arm extended right; release right hand back beside cheek, bow string relaxed arrow gone; recovery bow lowered right hand reaches side quiver. Row4 hit recoil; dying knees buckle; side fall torso low bow slips gently down; dead relaxed horizontal SIDE body eyes shut bow lying alongside left hand quiver retained. True articulated knees elbows torso, preserve one complete bow not straight staff or T-shape. No shields, blood, effects, projectile, trails, text, grid, scenery or shadows. Plain pale gray background, original painterly raster matching reference."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "0193759f6cce7d9a2041e90155b1d1ea750e3b3823e36c13d1718ecc2d7c80a4",
+      "source_output": "exec-2f2638d0-46d0-482f-bb1a-78d911305412.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY row2 column2 melee anticipation in this 4x4 Thornbow Scout sheet. Keep bow VERTICAL, same orientation as following row2 column3 shove. Both hands grip wooden central stave close together just below chest, elbows drawn BACK and bent, preparing to push forward. Preserve complete thorn bow and string, no arrow. Keep stance, identity, all other fifteen frames and pale gray layout unchanged. No extra limbs/effects/text.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "32712aa8d2a5ce4533634001189d1dd3a33ceea0b7b61ff03c6f68e0d14877a5",
+      "alpha_output": "exec-f6f16961-1c97-41f2-891d-574fa0846958.png",
+      "alpha_prompt": "Use case: background-extraction. Remove gray background from corrected sixteen-pose Thornbow Scout sheet onto genuinely transparent RGBA. Preserve exact grid layout and body size, bow strings/thorns, fingers, braid, leaf clothing edges, limb gaps and corpse. No checkerboard, matte, shadow, text, effects, redraw or reframing."
+    }
+  ],
+  "review_notes": [
+    "Sixteen original poses, correction and extraction visually inspected. Nock/draw/release are distinct, melee anticipation now keeps vertical bow orientation matching two-hand shove. Extended/gathered running, crouched defense and own side corpse present. Opposite leg alternation, bow/string/hand continuity and full-motion/alpha compositing remain pending. Source-only, not packed/enabled; no tests/exports or disposable test intermediates created.",
+    "17 packed frames retain thirteen original paintings and select four new vertical-bow recovery/ready-guard/grounded-travel paintings. Recovery keeps both hands on the wooden bow grip; distinct nock/draw/release/reload remains separate from melee. Original crouch/recoil/kneel/side fall and head-right horizontal corpse retain complete bow and quiver.",
+    "Existing original alpha composites are clean and reused. New blue-backed source uses approved bounded preparation preserving green costume. Source scales 0.64/0.345 and anatomical ground anchors; banded crops remove neighboring boot/head/other-corpse fragments while retaining draw string and both fallen bow tips.",
+    "Original airborne/duplicate travel paintings are unselected; new contact/passing attempts still repeat leading-leg geometry, not an accepted full alternating gait. Bow scale/string/grip, braid/tattoo/body/palette/edge consistency and connected transitions remain refinement. Static production review is not motion/gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 13,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_thornbow_scouts/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_thornbow_scouts/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_thornbow_scouts/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_thornbow_scouts/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_thornbow_scouts.png",
+    "runtime_sha256": "a01659900e2856d892c0f53b4677589edeaaf9fdbef2c27eee04c313eceb0b95",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png": "32712aa8d2a5ce4533634001189d1dd3a33ceea0b7b61ff03c6f68e0d14877a5",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_thornbow_scouts/continuity-alpha/bow-recovery-and-grounded-travel.png": "700b8688cd627cda57f03412a1efe6ea761ed676166aa84dca87e5177b6631e3"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/thornbow-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

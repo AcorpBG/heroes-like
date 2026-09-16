@@ -1,0 +1,329 @@
+{
+  "unit_id": "unit_neutral_cairnshield_porters",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          304,
+          430
+        ]
+      ],
+      "anchor": [
+        157,
+        413
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          310,
+          0,
+          618,
+          430
+        ]
+      ],
+      "anchor": [
+        467,
+        414
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          630,
+          0,
+          940,
+          430
+        ]
+      ],
+      "anchor": [
+        790,
+        414
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "walk_passing_attempt",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          942,
+          0,
+          1254,
+          430
+        ]
+      ],
+      "anchor": [
+        1099,
+        404
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "shield_bash_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          300,
+          435,
+          603,
+          816
+        ]
+      ],
+      "anchor": [
+        459,
+        806
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "shield_bash_contact",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          600,
+          438,
+          944,
+          812
+        ]
+      ],
+      "anchor": [
+        771,
+        801
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "shield_bash_recovery",
+      "source": "continuity-alpha/shield-recovery-brace-and-fall.png",
+      "rects": [
+        [
+          315,
+          0,
+          734,
+          504
+        ]
+      ],
+      "anchor": [
+        517,
+        488
+      ],
+      "scale": 0.38
+    },
+    {
+      "name": "guard_ready",
+      "source": "continuity-alpha/shield-recovery-brace-and-fall.png",
+      "rects": [
+        [
+          315,
+          504,
+          734,
+          1010
+        ]
+      ],
+      "anchor": [
+        525,
+        999
+      ],
+      "scale": 0.38
+    },
+    {
+      "name": "guard_crouch",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          953,
+          463,
+          1245,
+          809
+        ]
+      ],
+      "anchor": [
+        1106,
+        791
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          833,
+          301,
+          1178
+        ]
+      ],
+      "anchor": [
+        153,
+        1165
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          301,
+          850,
+          607,
+          951
+        ],
+        [
+          301,
+          951,
+          580,
+          1136
+        ],
+        [
+          301,
+          1136,
+          607,
+          1177
+        ]
+      ],
+      "anchor": [
+        455,
+        1165
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "death_low_fall",
+      "source": "continuity-alpha/shield-recovery-brace-and-fall.png",
+      "rects": [
+        [
+          100,
+          1010,
+          936,
+          1460
+        ]
+      ],
+      "anchor": [
+        511,
+        1434
+      ],
+      "scale": 0.27
+    },
+    {
+      "name": "dead_head_left",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          874,
+          935,
+          1249,
+          1080
+        ],
+        [
+          880,
+          1080,
+          1249,
+          1165
+        ]
+      ],
+      "anchor": [
+        1068,
+        1146
+      ],
+      "scale": 0.5
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 480,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 205,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 230,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 300,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

@@ -1,0 +1,360 @@
+{
+  "unit_id": "unit_sunvault_splitprism_parallax_fencers",
+  "status": "runtime_candidate_pending_consolidated_validation",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "continuity-alpha/idle-pair.png",
+      "rects": [
+        [
+          0,
+          0,
+          887,
+          887
+        ]
+      ],
+      "anchor": [
+        440,
+        834
+      ],
+      "scale": 0.28
+    },
+    {
+      "name": "idle_1",
+      "source": "continuity-alpha/idle-pair.png",
+      "rects": [
+        [
+          887,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1290,
+        834
+      ],
+      "scale": 0.28
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "continuity-alpha/walk-contact-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1205,
+          1305
+        ]
+      ],
+      "anchor": [
+        550,
+        1194
+      ],
+      "scale": 0.19
+    },
+    {
+      "name": "walk_passing_a",
+      "source": "continuity-alpha/walk-passing-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1272,
+          1237
+        ]
+      ],
+      "anchor": [
+        590,
+        1103
+      ],
+      "scale": 0.205
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "continuity-alpha/walk-contact-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        600,
+        1123
+      ],
+      "scale": 0.21
+    },
+    {
+      "name": "walk_passing_b",
+      "source": "continuity-alpha/walk-passing-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1272,
+          1237
+        ]
+      ],
+      "anchor": [
+        590,
+        1167
+      ],
+      "scale": 0.195
+    },
+    {
+      "name": "melee_windup",
+      "source": "continuity-alpha/attack-pair.png",
+      "rects": [
+        [
+          0,
+          0,
+          825,
+          640
+        ],
+        [
+          0,
+          640,
+          690,
+          875
+        ]
+      ],
+      "anchor": [
+        410,
+        807
+      ],
+      "scale": 0.28
+    },
+    {
+      "name": "melee_thrust",
+      "source": "continuity-alpha/attack-pair.png",
+      "rects": [
+        [
+          830,
+          0,
+          1798,
+          640
+        ],
+        [
+          690,
+          640,
+          1798,
+          875
+        ]
+      ],
+      "anchor": [
+        1220,
+        796
+      ],
+      "scale": 0.28
+    },
+    {
+      "name": "defend_0",
+      "source": "continuity-alpha/defense-hit.png",
+      "rects": [
+        [
+          0,
+          0,
+          730,
+          350
+        ],
+        [
+          0,
+          350,
+          635,
+          772
+        ]
+      ],
+      "anchor": [
+        325,
+        720
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "defend_1",
+      "source": "continuity-alpha/defense-hit.png",
+      "rects": [
+        [
+          735,
+          0,
+          1392,
+          370
+        ],
+        [
+          640,
+          370,
+          1300,
+          772
+        ]
+      ],
+      "anchor": [
+        975,
+        720
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "hit_recoil",
+      "source": "continuity-alpha/defense-hit.png",
+      "rects": [
+        [
+          1395,
+          0,
+          2036,
+          370
+        ],
+        [
+          1300,
+          370,
+          2036,
+          772
+        ]
+      ],
+      "anchor": [
+        1650,
+        720
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "death_buckle",
+      "source": "continuity-alpha/death-sequence.png",
+      "rects": [
+        [
+          0,
+          0,
+          663,
+          724
+        ]
+      ],
+      "anchor": [
+        325,
+        632
+      ],
+      "scale": 0.34
+    },
+    {
+      "name": "death_fall",
+      "source": "continuity-alpha/death-sequence.png",
+      "rects": [
+        [
+          663,
+          0,
+          1415,
+          724
+        ]
+      ],
+      "anchor": [
+        1040,
+        632
+      ],
+      "scale": 0.34
+    },
+    {
+      "name": "dead",
+      "source": "continuity-alpha/death-sequence.png",
+      "rects": [
+        [
+          1415,
+          0,
+          2172,
+          724
+        ]
+      ],
+      "anchor": [
+        1795,
+        632
+      ],
+      "scale": 0.34
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        10,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

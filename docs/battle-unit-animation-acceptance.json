@@ -1,0 +1,1563 @@
+{
+  "schema": "battle_unit_pose_acceptance_v1",
+  "status": "accepted_playback_20260916",
+  "reviewed_at": "2026-09-16",
+  "reviewed_unit_count": 160,
+  "scope": "Original articulated clips and persistent dead poses, visually inspected in actual 1920x1080 action captures and 1280x720 idle/corpse captures. Not whole-game release readiness or Windows GPU certification.",
+  "required_states": [
+    "idle",
+    "move",
+    "attack",
+    "defend",
+    "death",
+    "dead"
+  ],
+  "report_root": "/tmp/heroes-battle-roster-validation-20260916-RbzwGc",
+  "contact_root": ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916",
+  "reports": {
+    "source-fast-reduced-controlled-r3": {
+      "sha256": "be1bc690003c5c605bf5ff2410dcc27e2d12ba7804ace232c2523fc97de41cc9",
+      "ok": true,
+      "checks": 32507,
+      "failures": []
+    },
+    "packaged-poses-fast-reduced-controlled-r3": {
+      "sha256": "e3e0360cdfda9af86bc8f0767ade9f3c157718c5386332591c8c17ea2c9632ba",
+      "ok": true,
+      "checks": 32507,
+      "failures": []
+    },
+    "source-resting-roster-small-r2": {
+      "sha256": "739eef25916324b8b7df23307155c0dbd7b4596f17727dd6c4d4daf41f6c4af5",
+      "ok": true,
+      "checks": 2153,
+      "failures": []
+    },
+    "packaged-poses-wide-r3": {
+      "sha256": "5bd1522b5e10cb13ffe58a218edb706045446712d93ef839a46423eee950346d",
+      "ok": false,
+      "checks": 27107,
+      "failures": [
+        "pose expired before live capture: move_path_step"
+      ]
+    },
+    "packaged-capture-followup-unit_neutral_milestone_bucklers": {
+      "sha256": "399efb566ac6bcc100fb8315cc11730732ce779492ddedf41e5ed7f7c1665d0f",
+      "ok": true,
+      "checks": 311,
+      "failures": []
+    },
+    "packaged-bodies-small-final": {
+      "sha256": "433bf301ea0998492d5007aec133f909d891ed1a56958021e272d9e168895c18",
+      "ok": true,
+      "checks": 1033,
+      "failures": []
+    },
+    "packaged-shell-input-small-r2": {
+      "sha256": "8ea254823c8d7504afd1fdaa6d46fc28ddb824ff5e1fd77009edb0bec95af91a",
+      "ok": true,
+      "checks": 64,
+      "failures": []
+    }
+  },
+  "observations": [
+    "All 160 idle pairs and unobscured dead poses visually inspected; 480 small-screen captures.",
+    "Five chronological movement samples, melee, guard, dying, settled casualty context and ranged actions where applicable inspected for all 160 identities.",
+    "A living survivor may partly cover a corpse on a freed cell; isolated corpse captures confirm the correct dead artwork.",
+    "Original rendered run completed all160 and 27107 checks with one late movement screenshot:767ms after a700ms event. It remains failed. An unchanged focused Milestone Bucklers replay passed311 checks and replacement captures were inspected."
+  ],
+  "units": [
+    {
+      "unit_id": "unit_river_guard",
+      "atlas_sha256": "c881efa307190963035e8345c4aeac8711f7b772da320ae98ce8b6a489e3f4af",
+      "pose_metadata_sha256": "9255273ee11fb4797cc42631a2c75ef06499932795549f7641d0b1dd977afdc7",
+      "action_contact": "roster-final-review-0.png",
+      "action_contact_sha256": "3219696f60315924f751a9613f0e2df8e6985de447503ecdcb635570d79497b1",
+      "resting_contact": "resting-r2-review-0.png",
+      "resting_contact_sha256": "7f83f822d5cf34f3958ada3138048def5f093a7035cfc1f25eb88f185192b46b"
+    },
+    {
+      "unit_id": "unit_ember_archer",
+      "atlas_sha256": "b17b0d46885819d7a92fe48d7ae6d139770f1675211399a2bc5fa69400dc327b",
+      "pose_metadata_sha256": "dd9367e8cd13c484b763c44db6d7770ee553e902bc23f354a8c40e6afe2d36a8",
+      "action_contact": "roster-final-review-0.png",
+      "action_contact_sha256": "3219696f60315924f751a9613f0e2df8e6985de447503ecdcb635570d79497b1",
+      "resting_contact": "resting-r2-review-0.png",
+      "resting_contact_sha256": "7f83f822d5cf34f3958ada3138048def5f093a7035cfc1f25eb88f185192b46b"
+    },
+    {
+      "unit_id": "unit_citadel_pikeward",
+      "atlas_sha256": "32948b8d40c2922d436e1462acf876a47ceac95da0b5aa205393bdb8cd5aa2de",
+      "pose_metadata_sha256": "6587ff04f5097fad2b47cba2e5f2d1c70115c7fcea82cde7b5ab6dabff8a8ebd",
+      "action_contact": "roster-final-review-2.png",
+      "action_contact_sha256": "fe6732b3a493292adf6950f03aefcf7d248d0ef6562c0734f0bb55575d207f34",
+      "resting_contact": "resting-r2-review-0.png",
+      "resting_contact_sha256": "7f83f822d5cf34f3958ada3138048def5f093a7035cfc1f25eb88f185192b46b"
+    },
+    {
+      "unit_id": "unit_blackbranch_cutthroat",
+      "atlas_sha256": "b2dd6952a393e87e75970d4ce56f76426b9aa43426c0219df29db79c96db9d62",
+      "pose_metadata_sha256": "8a2f6440f30b0e2e4a9c25dd31d0eb65ddea6ddcc3ae470c43e2c0e028c8f5bb",
+      "action_contact": "roster-final-review-2.png",
+      "action_contact_sha256": "fe6732b3a493292adf6950f03aefcf7d248d0ef6562c0734f0bb55575d207f34",
+      "resting_contact": "resting-r2-review-0.png",
+      "resting_contact_sha256": "7f83f822d5cf34f3958ada3138048def5f093a7035cfc1f25eb88f185192b46b"
+    },
+    {
+      "unit_id": "unit_mire_slinger",
+      "atlas_sha256": "94e64dabdfebfe766dd195da029f4901cec8ee9acbe4536b045cd5a8f31c8c91",
+      "pose_metadata_sha256": "ad7bb7ead8133c1a7cae3ff9a45a22e673ae95e8c56f212d3b8f0497bf8b93fc",
+      "action_contact": "roster-final-review-4.png",
+      "action_contact_sha256": "c5f02694f69c2e7bdf3475d83e096f60b1610e633de0c4e9e6b44ed6958febca",
+      "resting_contact": "resting-r2-review-0.png",
+      "resting_contact_sha256": "7f83f822d5cf34f3958ada3138048def5f093a7035cfc1f25eb88f185192b46b"
+    },
+    {
+      "unit_id": "unit_bog_brute",
+      "atlas_sha256": "e9fb4471662e66c45191f9331d4f1c5153fe9e634fc54f37bf77cb5119fe8fbe",
+      "pose_metadata_sha256": "1430c272ae3805c46bd05e63789e821ecc396a71046e5d574f16e0b75a33a009",
+      "action_contact": "roster-final-review-4.png",
+      "action_contact_sha256": "c5f02694f69c2e7bdf3475d83e096f60b1610e633de0c4e9e6b44ed6958febca",
+      "resting_contact": "resting-r2-review-0.png",
+      "resting_contact_sha256": "7f83f822d5cf34f3958ada3138048def5f093a7035cfc1f25eb88f185192b46b"
+    },
+    {
+      "unit_id": "unit_gorefen_ripper",
+      "atlas_sha256": "ad92e043b5a9a276a715bbaf25dd6a4cd630a3ab8eacb2f2f52dab4c63a79e10",
+      "pose_metadata_sha256": "20f69376b0b63e10e0d70c9dc9e87b5cb85c3763cdef347c1eb3388aed11dca7",
+      "action_contact": "roster-final-review-6.png",
+      "action_contact_sha256": "052145526dae0d465715306e784c0a8442fae2c0d0b7001375a9d643e8058f79",
+      "resting_contact": "resting-r2-review-6.png",
+      "resting_contact_sha256": "6e0108b5c366aac12fa99258e918d53ccdcb18a8dcfa4599eab21f8eb694f5e6"
+    },
+    {
+      "unit_id": "unit_shard_guard",
+      "atlas_sha256": "2bb20e19791178920f4a26c4465038ee7e298dd992e4d707ce8e0ca06dfee985",
+      "pose_metadata_sha256": "02274f178ede2bc488d24d7198a71c6956d89c302a8cc9adf456a7b05b3d174f",
+      "action_contact": "roster-final-review-6.png",
+      "action_contact_sha256": "052145526dae0d465715306e784c0a8442fae2c0d0b7001375a9d643e8058f79",
+      "resting_contact": "resting-r2-review-6.png",
+      "resting_contact_sha256": "6e0108b5c366aac12fa99258e918d53ccdcb18a8dcfa4599eab21f8eb694f5e6"
+    },
+    {
+      "unit_id": "unit_prism_adept",
+      "atlas_sha256": "b1bc5a0551eb27f1e2332a1b0abf4594873dcf0b92614820673c2e634b3bc5f3",
+      "pose_metadata_sha256": "e023d41cc2bd23a2a068383c386de0b6b51ba7a4c89d90aa4f8063f1ea93bf4a",
+      "action_contact": "roster-review-8-fit.png",
+      "action_contact_sha256": "2ba442c5032f5c4017aeda65f1db01eaadc63a58d7e6aa801ce32e1ea87f6feb",
+      "resting_contact": "resting-r2-review-6.png",
+      "resting_contact_sha256": "6e0108b5c366aac12fa99258e918d53ccdcb18a8dcfa4599eab21f8eb694f5e6"
+    },
+    {
+      "unit_id": "unit_mirror_duelist",
+      "atlas_sha256": "923300952fea86ece00a6ff98462cf52f89fa4e0a6061bb298ce42541171dae8",
+      "pose_metadata_sha256": "deaba23aa2eafde2eb8f7a99d2d5c0d7c8338c6bfb67095d53fa8e1fef46e7ec",
+      "action_contact": "roster-review-8-fit.png",
+      "action_contact_sha256": "2ba442c5032f5c4017aeda65f1db01eaadc63a58d7e6aa801ce32e1ea87f6feb",
+      "resting_contact": "resting-r2-review-6.png",
+      "resting_contact_sha256": "6e0108b5c366aac12fa99258e918d53ccdcb18a8dcfa4599eab21f8eb694f5e6"
+    },
+    {
+      "unit_id": "unit_aurora_ballista",
+      "atlas_sha256": "e9727eb58ef21d2dc23fe95d7b17a50d5e29e7e2fc4ff2bf5fff2de86e72dadf",
+      "pose_metadata_sha256": "7954b11f1d3dc8ed0e349295c5a16068d914e62adbdc250ccddd8a6d92f16e74",
+      "action_contact": "roster-review-10-fit.png",
+      "action_contact_sha256": "5ead0ff2859171064c6e85099acf51a40f6c1c79892051d1a56aab1731945513",
+      "resting_contact": "resting-r2-review-6.png",
+      "resting_contact_sha256": "6e0108b5c366aac12fa99258e918d53ccdcb18a8dcfa4599eab21f8eb694f5e6"
+    },
+    {
+      "unit_id": "unit_embercourt_fordhook_cadets",
+      "atlas_sha256": "b87b8285304176d9be696302c392121b531569b5a5e1d876f646658cc576d70c",
+      "pose_metadata_sha256": "2dea3e428829b6a1053b3514a877cf3377b511ca8a9b32f53ee55fa0ca1db62e",
+      "action_contact": "roster-review-10-fit.png",
+      "action_contact_sha256": "5ead0ff2859171064c6e85099acf51a40f6c1c79892051d1a56aab1731945513",
+      "resting_contact": "resting-r2-review-6.png",
+      "resting_contact_sha256": "6e0108b5c366aac12fa99258e918d53ccdcb18a8dcfa4599eab21f8eb694f5e6"
+    },
+    {
+      "unit_id": "unit_embercourt_lantern_sappers",
+      "atlas_sha256": "760273effa29b00f3645df0deec2660d3dc37de98f565ba4881319aefa302554",
+      "pose_metadata_sha256": "7ac199b195c990ebf024a7c24d10d70d14256628d06a922aa04a2630ace07488",
+      "action_contact": "roster-review-12-fit.png",
+      "action_contact_sha256": "d82e97f90ac20254dee9efce2ec060e2c49fcb8e93105000c9d6fab2084f8f89",
+      "resting_contact": "resting-r2-review-12.png",
+      "resting_contact_sha256": "4705f1c611252cf8a8b7148eac45ae4194aae75b3ce9dfe4335da879a9c320f8"
+    },
+    {
+      "unit_id": "unit_embercourt_bargebow_crews",
+      "atlas_sha256": "91a410e3fd96ec07cd68b5e6c5683f6677b0a6ca4a7f9e3be723a677d9524006",
+      "pose_metadata_sha256": "47646e8f6b56675fd54cb48fafd1cfa7e6fc1232a84ed0a1f51e0f20c329d0de",
+      "action_contact": "roster-review-12-fit.png",
+      "action_contact_sha256": "d82e97f90ac20254dee9efce2ec060e2c49fcb8e93105000c9d6fab2084f8f89",
+      "resting_contact": "resting-r2-review-12.png",
+      "resting_contact_sha256": "4705f1c611252cf8a8b7148eac45ae4194aae75b3ce9dfe4335da879a9c320f8"
+    },
+    {
+      "unit_id": "unit_embercourt_ash_oath_bailiffs",
+      "atlas_sha256": "84bf3914159097c4712bce70301689978bfe292fd788a2e0618eeeb1061a7e67",
+      "pose_metadata_sha256": "356fc3ddcd0bf59c1755e10176eee4bafcfd3b3cced2813c739078fd5ee3635f",
+      "action_contact": "roster-review-14-fit.png",
+      "action_contact_sha256": "4f0b7f15a4ad376579644a213b598be30e023e51cb491ad947710d3b85f55074",
+      "resting_contact": "resting-r2-review-12.png",
+      "resting_contact_sha256": "4705f1c611252cf8a8b7148eac45ae4194aae75b3ce9dfe4335da879a9c320f8"
+    },
+    {
+      "unit_id": "unit_embercourt_beacon_lectors",
+      "atlas_sha256": "782351fbb3228b0954407e5030c490d2559c34e033ccbb5b1f9382fbfc2ee517",
+      "pose_metadata_sha256": "f14d9815093deb48b8bb7e96888e178abdda487f19bd86a03cbbdc1714c6ba20",
+      "action_contact": "roster-review-14-fit.png",
+      "action_contact_sha256": "4f0b7f15a4ad376579644a213b598be30e023e51cb491ad947710d3b85f55074",
+      "resting_contact": "resting-r2-review-12.png",
+      "resting_contact_sha256": "4705f1c611252cf8a8b7148eac45ae4194aae75b3ce9dfe4335da879a9c320f8"
+    },
+    {
+      "unit_id": "unit_embercourt_sluicefire_lindworms",
+      "atlas_sha256": "7255bd942347348191528a30ae5cac2c128d68568d4e89307dc94b0cbb2e5d79",
+      "pose_metadata_sha256": "ffd0cb91d671b96738187124fd38c01a42bae37b195280e2d216cde1ac55c6c4",
+      "action_contact": "roster-review-16-fit.png",
+      "action_contact_sha256": "ee7aa23a39857a4035cbc389c7c916a27247df34a4289bba9d53d4e0d5abe603",
+      "resting_contact": "resting-r2-review-12.png",
+      "resting_contact_sha256": "4705f1c611252cf8a8b7148eac45ae4194aae75b3ce9dfe4335da879a9c320f8"
+    },
+    {
+      "unit_id": "unit_embercourt_charter_colossus",
+      "atlas_sha256": "2c0abc5d787d984f7c164a731427a80f435fe679225e8879e216d98b32dd6c87",
+      "pose_metadata_sha256": "a47d23dbed07864bffc8ee59075f76c5dd6284faa7a6e3b7e62c279b28a19adf",
+      "action_contact": "roster-review-16-fit.png",
+      "action_contact_sha256": "ee7aa23a39857a4035cbc389c7c916a27247df34a4289bba9d53d4e0d5abe603",
+      "resting_contact": "resting-r2-review-12.png",
+      "resting_contact_sha256": "4705f1c611252cf8a8b7148eac45ae4194aae75b3ce9dfe4335da879a9c320f8"
+    },
+    {
+      "unit_id": "unit_mireclaw_reedsnare_kin",
+      "atlas_sha256": "b3d681946bb399f291707f6d0fdb71d8151298052f2bd9941892ee421ed98ecd",
+      "pose_metadata_sha256": "23bacb60bbc3435f8bfab740e6c9265699b45265f72aceef60cc5232347c2260",
+      "action_contact": "roster-review-18-fit.png",
+      "action_contact_sha256": "8e8a30bf9bdc1a58bbe3eae22a1a13b24fddbd237316ae4a25c28d6dde20f921",
+      "resting_contact": "resting-r2-review-18.png",
+      "resting_contact_sha256": "10aff2c6dc25266241139379e5a379be8a93b0a662fcf2b28877478893586166"
+    },
+    {
+      "unit_id": "unit_mireclaw_mudglass_slingers",
+      "atlas_sha256": "9b8f42efdaee4b73435935ed72cac274119807c12056178adb17541ace72689e",
+      "pose_metadata_sha256": "37a8a959d083fdfd5735d2a7590b94615ff98b3213074f8deeafdf806ce65830",
+      "action_contact": "roster-review-18-fit.png",
+      "action_contact_sha256": "8e8a30bf9bdc1a58bbe3eae22a1a13b24fddbd237316ae4a25c28d6dde20f921",
+      "resting_contact": "resting-r2-review-18.png",
+      "resting_contact_sha256": "10aff2c6dc25266241139379e5a379be8a93b0a662fcf2b28877478893586166"
+    },
+    {
+      "unit_id": "unit_mireclaw_bogplate_maulers",
+      "atlas_sha256": "dac5ea148afecad0f00a0f8dbc1dbc4757342c9111111a5dc60f281d1d5caf96",
+      "pose_metadata_sha256": "88ee9ce9979a5a4e49c2e547ceefcb5956220076b4a7cd64c66e4ccc765874ca",
+      "action_contact": "roster-review-20-fit.png",
+      "action_contact_sha256": "ddd88a1c3c00818038d3666e7a7deddd7836b46cbdacf396a1595255a451cb7d",
+      "resting_contact": "resting-r2-review-18.png",
+      "resting_contact_sha256": "10aff2c6dc25266241139379e5a379be8a93b0a662fcf2b28877478893586166"
+    },
+    {
+      "unit_id": "unit_mireclaw_ferrychain_lashers",
+      "atlas_sha256": "feced67252ca1e3ef42c25e7dea493d73f503ae60b758bc9af751f161bae61fc",
+      "pose_metadata_sha256": "63f609a7e0965b9f7c46025c183df3e8b67c0e28fee8d14dc2c0f6472b7615f8",
+      "action_contact": "roster-review-20-fit.png",
+      "action_contact_sha256": "ddd88a1c3c00818038d3666e7a7deddd7836b46cbdacf396a1595255a451cb7d",
+      "resting_contact": "resting-r2-review-18.png",
+      "resting_contact_sha256": "10aff2c6dc25266241139379e5a379be8a93b0a662fcf2b28877478893586166"
+    },
+    {
+      "unit_id": "unit_mireclaw_sporewake_chanters",
+      "atlas_sha256": "5940b69d61cbfb8c133b0b8449dbdedb024c58933c69d3e2784e05ac1cab1b1e",
+      "pose_metadata_sha256": "f9ed823b1e1ee0bdc185774bfb0a489151b406db0bdba445e8f19daf25b7c807",
+      "action_contact": "roster-review-22-fit.png",
+      "action_contact_sha256": "0a66279c1d58f567e29d845b4dec9ae22f04508f4ee5d9b0cd1e268aff844fac",
+      "resting_contact": "resting-r2-review-18.png",
+      "resting_contact_sha256": "10aff2c6dc25266241139379e5a379be8a93b0a662fcf2b28877478893586166"
+    },
+    {
+      "unit_id": "unit_mireclaw_gorefen_rippers",
+      "atlas_sha256": "6a542e7de5cb2382c00bccf2643045fcc3a4bb8b45635b20b4403dbec704bf93",
+      "pose_metadata_sha256": "dde856a1b26fe0e9865d2a17f4ef3f090c83d65a8761dc578af5572fb8329ff2",
+      "action_contact": "roster-review-22-fit.png",
+      "action_contact_sha256": "0a66279c1d58f567e29d845b4dec9ae22f04508f4ee5d9b0cd1e268aff844fac",
+      "resting_contact": "resting-r2-review-18.png",
+      "resting_contact_sha256": "10aff2c6dc25266241139379e5a379be8a93b0a662fcf2b28877478893586166"
+    },
+    {
+      "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+      "atlas_sha256": "387f17793d2e84314edf5c99746c22b9fcffd20f3e10d7529a8802d0b3e1e1b7",
+      "pose_metadata_sha256": "e89d905e32ddf2aaaf1c96daf104e4fc8857fbad356d925ab1761733fdd8afd4",
+      "action_contact": "roster-review-24-fit.png",
+      "action_contact_sha256": "6fd72add3583f9739ac2128e174a185820b95edd6453d90ea7e4ca9ad67b1c99",
+      "resting_contact": "resting-r2-review-24.png",
+      "resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10"
+    },
+    {
+      "unit_id": "unit_sunvault_shard_wardens",
+      "atlas_sha256": "717d91a4b79d18b12179cea9b5c71d2a6781580286b65f59ed7ffcf59bd21972",
+      "pose_metadata_sha256": "e1a0de84563730ed18a8d0a1c8f5cf3a176318b083443eb13bee8add5a551a49",
+      "action_contact": "roster-review-24-fit.png",
+      "action_contact_sha256": "6fd72add3583f9739ac2128e174a185820b95edd6453d90ea7e4ca9ad67b1c99",
+      "resting_contact": "resting-r2-review-24.png",
+      "resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10"
+    },
+    {
+      "unit_id": "unit_sunvault_prism_adepts",
+      "atlas_sha256": "4f9db27531f5a923146c72c6eb1d1abd247f0b59f7ee7fe2fbcb66198eabbbde",
+      "pose_metadata_sha256": "c540cccfe45e6e4dce167a0995f3852c34e764b20d7089d45658adb6c80a36a9",
+      "action_contact": "roster-review-26-fit.png",
+      "action_contact_sha256": "63061758a19a6f61764c115900372bd106faa7f3e419a9e1c50ad4a638810333",
+      "resting_contact": "resting-r2-review-24.png",
+      "resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10"
+    },
+    {
+      "unit_id": "unit_sunvault_mirror_duelists",
+      "atlas_sha256": "82b08fdd47fbb52b08acd93d4cabd78bf9dc11e9a3ebccd6b156072baac46ddd",
+      "pose_metadata_sha256": "0599c3bef677fb3eaaad582c4deee8bf0368f42d8f862cbcf62a1cd1eff0fb1c",
+      "action_contact": "roster-review-26-fit.png",
+      "action_contact_sha256": "63061758a19a6f61764c115900372bd106faa7f3e419a9e1c50ad4a638810333",
+      "resting_contact": "resting-r2-review-24.png",
+      "resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10"
+    },
+    {
+      "unit_id": "unit_sunvault_resonant_choristers",
+      "atlas_sha256": "7a755377af8da83e52f0bdd26580d1444e6aa2430872e1c2e22df5eae55f9f09",
+      "pose_metadata_sha256": "90862ddc10aff91a4cccabdf4d5edbebaeb1c272dd3a7115d8ddf061801768d7",
+      "action_contact": "roster-review-28-fit.png",
+      "action_contact_sha256": "f61b512580c3f22e8779032b46853a9ffa4a2a88fcafeeeb8258ad047655de8b",
+      "resting_contact": "resting-r2-review-24.png",
+      "resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10"
+    },
+    {
+      "unit_id": "unit_sunvault_solar_array_striders",
+      "atlas_sha256": "92e55ff2206cec80b877eb0e68cdc07948aa34c8ee214d076c7073c842cf2a76",
+      "pose_metadata_sha256": "29a5e59e2f64115f66b00e76f257f3ad4ba5ba7fda4063b36d5b62a9bead6666",
+      "action_contact": "roster-review-28-fit.png",
+      "action_contact_sha256": "f61b512580c3f22e8779032b46853a9ffa4a2a88fcafeeeb8258ad047655de8b",
+      "resting_contact": "resting-r2-review-24.png",
+      "resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10"
+    },
+    {
+      "unit_id": "unit_sunvault_aurora_ballistae",
+      "atlas_sha256": "9960dff59c66be326a1bd2c76dac4f77699d5d0ef5ce7cfb694764e0453a2b88",
+      "pose_metadata_sha256": "953995a19e42688334766a5a2d8e569458fcdb7d709f7dc7b39b9747ce70600b",
+      "action_contact": "roster-review-30-fit.png",
+      "action_contact_sha256": "c81bae0fb8eab7bb5bfe5b45132e77926100cbdf6478442a6084ccca8929b657",
+      "resting_contact": "resting-r2-review-30.png",
+      "resting_contact_sha256": "e07218b1d8c864b0304c785558e69afa7100a90e1aed89db9589789733e6a07f"
+    },
+    {
+      "unit_id": "unit_sunvault_daybreak_colossus",
+      "atlas_sha256": "0ed7f68fcf606e77c9c8ff69977321cc925c0a667852f08ef3032a5acbed67d5",
+      "pose_metadata_sha256": "91a4b555b401abc65de7147e725b82d6a4052c4f3e1b4c2a685c72f099666ca4",
+      "action_contact": "roster-review-30-fit.png",
+      "action_contact_sha256": "c81bae0fb8eab7bb5bfe5b45132e77926100cbdf6478442a6084ccca8929b657",
+      "resting_contact": "resting-r2-review-30.png",
+      "resting_contact_sha256": "e07218b1d8c864b0304c785558e69afa7100a90e1aed89db9589789733e6a07f"
+    },
+    {
+      "unit_id": "unit_thornwake_seedcutters",
+      "atlas_sha256": "d1f32349eff3d80e56e5ef63820a6e0b335974cc321bc15172c944a43729656e",
+      "pose_metadata_sha256": "11349bea51e06d256ecf50ca763ca58ee73a0a936b2ff29cb636832f2a1f0798",
+      "action_contact": "roster-review-32-fit.png",
+      "action_contact_sha256": "70fb723219efe2247ad76e596e183623bba714630ce05c2284c53895f973d0c6",
+      "resting_contact": "resting-r2-review-30.png",
+      "resting_contact_sha256": "e07218b1d8c864b0304c785558e69afa7100a90e1aed89db9589789733e6a07f"
+    },
+    {
+      "unit_id": "unit_thornwake_thornwhip_carriers",
+      "atlas_sha256": "8ff007de90b6ada3584ce5a68e37642572320f33f891380f4dbb82826acbe928",
+      "pose_metadata_sha256": "c76dbb87ebfe2712d7d6317e0f23a6af294d4995528a44cca12651e0e4f9863e",
+      "action_contact": "roster-review-32-fit.png",
+      "action_contact_sha256": "70fb723219efe2247ad76e596e183623bba714630ce05c2284c53895f973d0c6",
+      "resting_contact": "resting-r2-review-30.png",
+      "resting_contact_sha256": "e07218b1d8c864b0304c785558e69afa7100a90e1aed89db9589789733e6a07f"
+    },
+    {
+      "unit_id": "unit_thornwake_sporeglass_menders",
+      "atlas_sha256": "ee99b0c0b33cc9a0a82aa5e71bc5b39d11e63297432d43ecf2adba07a702b8b9",
+      "pose_metadata_sha256": "fd11b48a74a0154cb083a95e4c7d31774f07e0956dc7905a46a2144256ac14a4",
+      "action_contact": "roster-review-34-fit.png",
+      "action_contact_sha256": "9a87fd2d6a57cf0581249f626597e52a549a233710b125ad4274093c6726a73f",
+      "resting_contact": "resting-r2-review-30.png",
+      "resting_contact_sha256": "e07218b1d8c864b0304c785558e69afa7100a90e1aed89db9589789733e6a07f"
+    },
+    {
+      "unit_id": "unit_thornwake_barkmantle_rams",
+      "atlas_sha256": "1cb173e61905e031d3f7e0c4006372a524394c698c6ed6d3e3276f1fe11a60df",
+      "pose_metadata_sha256": "1f48099a9f63c7ec81e15d5e2acd17aecf48f80721b914a0efe8b1dc71b5225a",
+      "action_contact": "roster-review-34-fit.png",
+      "action_contact_sha256": "9a87fd2d6a57cf0581249f626597e52a549a233710b125ad4274093c6726a73f",
+      "resting_contact": "resting-r2-review-30.png",
+      "resting_contact_sha256": "e07218b1d8c864b0304c785558e69afa7100a90e1aed89db9589789733e6a07f"
+    },
+    {
+      "unit_id": "unit_thornwake_stagknot_runners",
+      "atlas_sha256": "21edfdfacd91b6fbabff97d2a9982acd60ed0407c0c0e7b0198e6fd55317dae4",
+      "pose_metadata_sha256": "77cee9225a329d2dd21c2ca83e6a103c40adc1628d4ef0e5243b51da252eee4c",
+      "action_contact": "roster-review-36-fit.png",
+      "action_contact_sha256": "13dfd6580659d8b908cff87d2bfa4f6cceb40acce570545437ad3c22ac6c436e",
+      "resting_contact": "resting-r2-review-36.png",
+      "resting_contact_sha256": "254beb8585ae10f93fcf901ba0d2de63fd35b1d9bcbf1a2fa0746b23a361f93f"
+    },
+    {
+      "unit_id": "unit_thornwake_graft_matriarchs",
+      "atlas_sha256": "690e10078410766700e66c45c9eeff839a80d10da650badc4c230758dc5d9c73",
+      "pose_metadata_sha256": "d6bcec866ffba9791ab9021ef31adfd3b1f28ae4df53098c8b401871c02dc3e2",
+      "action_contact": "roster-review-36-fit.png",
+      "action_contact_sha256": "13dfd6580659d8b908cff87d2bfa4f6cceb40acce570545437ad3c22ac6c436e",
+      "resting_contact": "resting-r2-review-36.png",
+      "resting_contact_sha256": "254beb8585ae10f93fcf901ba0d2de63fd35b1d9bcbf1a2fa0746b23a361f93f"
+    },
+    {
+      "unit_id": "unit_thornwake_worldroot_bastion",
+      "atlas_sha256": "b035a3aee198b75e7e32b574f2068086ff79d8d833979a98bf5974fdf51e5952",
+      "pose_metadata_sha256": "4c30a4d5d2d77f431be9aae2ec6eed277075e9a84e38431141faad25ba927141",
+      "action_contact": "roster-review-38-fit.png",
+      "action_contact_sha256": "ac20267c2605e521030aab8e7ed9790fb3282b651137db196d273448e1e34ea9",
+      "resting_contact": "resting-r2-review-36.png",
+      "resting_contact_sha256": "254beb8585ae10f93fcf901ba0d2de63fd35b1d9bcbf1a2fa0746b23a361f93f"
+    },
+    {
+      "unit_id": "unit_brasshollow_scrip_haulers",
+      "atlas_sha256": "f55317aa6d02b9a65b4c46a78ff6841275669ca9667f1d34b3377e1ee12b6207",
+      "pose_metadata_sha256": "670dcff98cd645b893f5b71a68852a6abe83dac71a05218e77853c96a00725b8",
+      "action_contact": "roster-review-38-fit.png",
+      "action_contact_sha256": "ac20267c2605e521030aab8e7ed9790fb3282b651137db196d273448e1e34ea9",
+      "resting_contact": "resting-r2-review-36.png",
+      "resting_contact_sha256": "254beb8585ae10f93fcf901ba0d2de63fd35b1d9bcbf1a2fa0746b23a361f93f"
+    },
+    {
+      "unit_id": "unit_brasshollow_rivet_hounds",
+      "atlas_sha256": "6a7034f9b10acd9e2e8a2391b2905a3b581f8fb9bade0c964bca56d0d7180ade",
+      "pose_metadata_sha256": "b6afa95501ca3d62e79335e831b583fac1bd1a86f47f91b3990abcdb73ac668c",
+      "action_contact": "roster-review-40-fit.png",
+      "action_contact_sha256": "05ea5e790742dbda8326f2b074793e766decf215145eae2d99093c8a3cba760c",
+      "resting_contact": "resting-r2-review-36.png",
+      "resting_contact_sha256": "254beb8585ae10f93fcf901ba0d2de63fd35b1d9bcbf1a2fa0746b23a361f93f"
+    },
+    {
+      "unit_id": "unit_brasshollow_furnace_pavis_teams",
+      "atlas_sha256": "592b7b09259d451f5cbee5625203e76e40bd07f7e6dc90b78e4f74545ba810cc",
+      "pose_metadata_sha256": "e788ae720a14437b8035acf90ed91d1f755f6ee9fa220a337c3188dbddc28029",
+      "action_contact": "roster-review-40-fit.png",
+      "action_contact_sha256": "05ea5e790742dbda8326f2b074793e766decf215145eae2d99093c8a3cba760c",
+      "resting_contact": "resting-r2-review-36.png",
+      "resting_contact_sha256": "254beb8585ae10f93fcf901ba0d2de63fd35b1d9bcbf1a2fa0746b23a361f93f"
+    },
+    {
+      "unit_id": "unit_brasshollow_boiler_rivetcasters",
+      "atlas_sha256": "639f2d7c46ea927f935dc79bdb3f93be8e77efada54b6925b4f109aa7c699b30",
+      "pose_metadata_sha256": "d6479e51529fd7d6eb9fa2b0f1fac1ffcc207742c6920508f10f126d4aa70dfa",
+      "action_contact": "roster-review-42-fit.png",
+      "action_contact_sha256": "a23788e230022550f9e8b63e6570c4f5cbfa48cf7174119ba1821a594affab48",
+      "resting_contact": "resting-r2-review-42.png",
+      "resting_contact_sha256": "0182ef523a32a2ed612a68c515c6c0a48457a90f8a3c423099d0666e47c4e9eb"
+    },
+    {
+      "unit_id": "unit_brasshollow_debt_engine_exactors",
+      "atlas_sha256": "b3c167d024367d33985028435848d3819e3ba7136fab206dc28e2ddb65776550",
+      "pose_metadata_sha256": "31616ea2d128bb932d3d4e4ca638b9f4949304d7e2cf4f5a1c1c798a0c0d498a",
+      "action_contact": "roster-review-42-fit.png",
+      "action_contact_sha256": "a23788e230022550f9e8b63e6570c4f5cbfa48cf7174119ba1821a594affab48",
+      "resting_contact": "resting-r2-review-42.png",
+      "resting_contact_sha256": "0182ef523a32a2ed612a68c515c6c0a48457a90f8a3c423099d0666e47c4e9eb"
+    },
+    {
+      "unit_id": "unit_brasshollow_crucible_crawlers",
+      "atlas_sha256": "2ad5ca2a46112241c28e67c5f3a9b7ba7afbd837190cf21e8fb0535bf44c36f6",
+      "pose_metadata_sha256": "38be186f1e9c25945cfc8a369a8ed5527346acf6e66477ff6d04dc2b461f81a9",
+      "action_contact": "roster-review-44-fit.png",
+      "action_contact_sha256": "b47effa33d636bcacc07c9ef735dc46bfd47077eeddee3f22965cfff11971836",
+      "resting_contact": "resting-r2-review-42.png",
+      "resting_contact_sha256": "0182ef523a32a2ed612a68c515c6c0a48457a90f8a3c423099d0666e47c4e9eb"
+    },
+    {
+      "unit_id": "unit_brasshollow_foundry_saint",
+      "atlas_sha256": "49d06754d57d2c609c364648d255a337f95d0dcf886fd49c6cd14e58b082ca39",
+      "pose_metadata_sha256": "6593a6829e7b16f4c191e1706b5796c02ca26b9286670d0f37138e46bc7328ab",
+      "action_contact": "roster-review-44-fit.png",
+      "action_contact_sha256": "b47effa33d636bcacc07c9ef735dc46bfd47077eeddee3f22965cfff11971836",
+      "resting_contact": "resting-r2-review-42.png",
+      "resting_contact_sha256": "0182ef523a32a2ed612a68c515c6c0a48457a90f8a3c423099d0666e47c4e9eb"
+    },
+    {
+      "unit_id": "unit_veilmourn_bellwake_oars",
+      "atlas_sha256": "7572d7d310d3a6a9bce1ef7b1d77b23234fbdc3630ac8e9e7873e636f82c30e7",
+      "pose_metadata_sha256": "ab94611b7cd18c2d40581ea6f9fe76495df8b4ab93e9eda39244098da41101bf",
+      "action_contact": "roster-review-46-fit.png",
+      "action_contact_sha256": "17cffe0220448b0e7414ef549b255969c1b0188494b940007ae44d373e16d86a",
+      "resting_contact": "resting-r2-review-42.png",
+      "resting_contact_sha256": "0182ef523a32a2ed612a68c515c6c0a48457a90f8a3c423099d0666e47c4e9eb"
+    },
+    {
+      "unit_id": "unit_veilmourn_mourning_lanterns",
+      "atlas_sha256": "6c7d96bda20fa59c1373da427fa7ae1214fae2ffb6f89467f8c4043758c21ef9",
+      "pose_metadata_sha256": "072d87d697fb883b32480eb73c9c9ca5c2088622989552099d3a8afa9d6fb41f",
+      "action_contact": "roster-review-46-fit.png",
+      "action_contact_sha256": "17cffe0220448b0e7414ef549b255969c1b0188494b940007ae44d373e16d86a",
+      "resting_contact": "resting-r2-review-42.png",
+      "resting_contact_sha256": "0182ef523a32a2ed612a68c515c6c0a48457a90f8a3c423099d0666e47c4e9eb"
+    },
+    {
+      "unit_id": "unit_veilmourn_maskglass_corsairs",
+      "atlas_sha256": "d18b0c8bb1ca53aaacc7f172ea85bf6ef6295162880bfc4d2cada3408751b7ca",
+      "pose_metadata_sha256": "5c17c7840fe040116e6c398cb034187d7a6d5536d0a39ef6ba59d0df94abce2f",
+      "action_contact": "roster-review-48-fit.png",
+      "action_contact_sha256": "ce29ae53bf2675c3f8ff7530021c6935c26340427648472522da15ced445016c",
+      "resting_contact": "resting-r2-review-48.png",
+      "resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f"
+    },
+    {
+      "unit_id": "unit_veilmourn_undertow_harpooners",
+      "atlas_sha256": "f7560cc0fb3aa9543745bb6aa56864309989acabadc92df65410ceb26eae371f",
+      "pose_metadata_sha256": "8402d08d037771e33b35a177ef80228111b7bfb8e206ff30c6225080b2b907cc",
+      "action_contact": "roster-review-48-fit.png",
+      "action_contact_sha256": "ce29ae53bf2675c3f8ff7530021c6935c26340427648472522da15ced445016c",
+      "resting_contact": "resting-r2-review-48.png",
+      "resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f"
+    },
+    {
+      "unit_id": "unit_veilmourn_obituary_scribes",
+      "atlas_sha256": "779155edcfbc165be97ebc445e32a212cea9d67c267b5c5819559b03fd05489d",
+      "pose_metadata_sha256": "193219c5753b1ea53ccdc551ab3657a76c22d2b0d107aed23965343b1d58091e",
+      "action_contact": "roster-review-50-fit.png",
+      "action_contact_sha256": "ad8816eca2ad4d2b966999560aee81a8133d989b7b1d63b682214e7b2ff72951",
+      "resting_contact": "resting-r2-review-48.png",
+      "resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f"
+    },
+    {
+      "unit_id": "unit_veilmourn_mirrorkeel_reavers",
+      "atlas_sha256": "4c0e58b8ad724181ae72f16cce6cdf3f63d8f4558adfec3c6ad07c338720f0f6",
+      "pose_metadata_sha256": "f937c555db73d9c73191bea0556c2bfa87a2fbc626c85d8d6898694f08bd2c0e",
+      "action_contact": "roster-review-50-fit.png",
+      "action_contact_sha256": "ad8816eca2ad4d2b966999560aee81a8133d989b7b1d63b682214e7b2ff72951",
+      "resting_contact": "resting-r2-review-48.png",
+      "resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f"
+    },
+    {
+      "unit_id": "unit_veilmourn_fogbound_leviathan",
+      "atlas_sha256": "3aaef7f81b347e2d1df8c0ee3993e1a57dc795adae467d69fd773d592dc38088",
+      "pose_metadata_sha256": "d7817448d7b3ebece013b5ca0e9bd9c24b982a83f5c598245d116a6cd19674d0",
+      "action_contact": "roster-review-52-fit.png",
+      "action_contact_sha256": "13a5cf2a985758fdb220b65be54154ac686a1f7ee2ee882378d485d0c9788fa7",
+      "resting_contact": "resting-r2-review-48.png",
+      "resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f"
+    },
+    {
+      "unit_id": "unit_embercourt_cinderseal_bombardiers",
+      "atlas_sha256": "52fe22b22e045bd443c8d76595027d3d2be3c99a7face4048502e8778d69f44b",
+      "pose_metadata_sha256": "08b410c94d91bd825fd230d285e126b80fa5ddeedfb3a3f9a27badc6e1373983",
+      "action_contact": "roster-review-52-fit.png",
+      "action_contact_sha256": "13a5cf2a985758fdb220b65be54154ac686a1f7ee2ee882378d485d0c9788fa7",
+      "resting_contact": "resting-r2-review-48.png",
+      "resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f"
+    },
+    {
+      "unit_id": "unit_mireclaw_mireglass_reedcasters",
+      "atlas_sha256": "22742f99367a5f1c5eb11529f5365aa054d28949167f94746e7be549003c90e6",
+      "pose_metadata_sha256": "0c61a2be477caced4ab112481b987ec1f06d59b2fad6585f3951dcfd64e3e828",
+      "action_contact": "roster-review-54-fit.png",
+      "action_contact_sha256": "dd867b9fd34d477abe58cfc6f3425cd88bce36a1ecbd143483c948beb643f48d",
+      "resting_contact": "resting-r2-review-54.png",
+      "resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f"
+    },
+    {
+      "unit_id": "unit_sunvault_noonfacet_sentinels",
+      "atlas_sha256": "fc98ef49290b26813263925e2d100a6ba58e8919688f2d15fb83fe46cbc63519",
+      "pose_metadata_sha256": "25fe87aa74e557d9229a59b817072fdc8d756fa0d7fe442c75e41803bcfc097d",
+      "action_contact": "roster-review-54-fit.png",
+      "action_contact_sha256": "dd867b9fd34d477abe58cfc6f3425cd88bce36a1ecbd143483c948beb643f48d",
+      "resting_contact": "resting-r2-review-54.png",
+      "resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f"
+    },
+    {
+      "unit_id": "unit_thornwake_dawnseed_bolters",
+      "atlas_sha256": "15436880dacc9c17c7e41209b486e4e096a1228929b76c147cd1788988b317b6",
+      "pose_metadata_sha256": "3047f3e4546dec2b6c8dece1c7a8579762f7d518ea96bd43f027d28dee159de8",
+      "action_contact": "roster-review-56-fit.png",
+      "action_contact_sha256": "d188213c76ffb9f0e8c1cbd04755d0883d665a83d4825d5f19386328ba5ed875",
+      "resting_contact": "resting-r2-review-54.png",
+      "resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f"
+    },
+    {
+      "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+      "atlas_sha256": "24d92bfefeb3cf7b054c5120e747209f559aa83fddb5e5e5e1fa41a172b6d68b",
+      "pose_metadata_sha256": "3b831dfc991cd2b494295290c9636aff536023949955d1bc471c59cc09cd8d3d",
+      "action_contact": "roster-review-56-fit.png",
+      "action_contact_sha256": "d188213c76ffb9f0e8c1cbd04755d0883d665a83d4825d5f19386328ba5ed875",
+      "resting_contact": "resting-r2-review-54.png",
+      "resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f"
+    },
+    {
+      "unit_id": "unit_veilmourn_tidehook_deckhands",
+      "atlas_sha256": "7d378286d4f0d424061b84a534878f3f431b2a8a79169e16b5437036f3e3577b",
+      "pose_metadata_sha256": "3cd9ba9bd93a3c1c75fddaadead8082fa33e3eb1919a5bf3aaf687f5730c1f00",
+      "action_contact": "roster-review-58-fit.png",
+      "action_contact_sha256": "695d84f6151cc19cbdbf9215c33f8eb0bd2c04de6c2e29770c7d121f658b0a67",
+      "resting_contact": "resting-r2-review-54.png",
+      "resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f"
+    },
+    {
+      "unit_id": "unit_neutral_roadwardens",
+      "atlas_sha256": "81cfd9af1108a0a56366409b8eb0519acc598ad13858cd9326952c9bc6270221",
+      "pose_metadata_sha256": "5914f3fc3aff96d8829e35fbed2d80200be24fad30833bea6f4ba17a81945d4a",
+      "action_contact": "roster-review-58-fit.png",
+      "action_contact_sha256": "695d84f6151cc19cbdbf9215c33f8eb0bd2c04de6c2e29770c7d121f658b0a67",
+      "resting_contact": "resting-r2-review-54.png",
+      "resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f"
+    },
+    {
+      "unit_id": "unit_neutral_hearthbow_carriers",
+      "atlas_sha256": "a305a2eebed73e09b425689166ed316fda55fa62cf2c8de267b422c34d31ac13",
+      "pose_metadata_sha256": "8112f212288a2b9ee3be971e8cf20042a254ad70bd2ca019a1d76a7b6a034487",
+      "action_contact": "roster-review-60-fit.png",
+      "action_contact_sha256": "ef3cfb7cecee10e6a87eceafabc1922b19a421e393464c4ceb9535c675bb3e39",
+      "resting_contact": "resting-r2-review-60.png",
+      "resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c"
+    },
+    {
+      "unit_id": "unit_neutral_fenhound_runners",
+      "atlas_sha256": "4290011bb099a1fdbec0ad886dacc91682ac873fdf14e824abbd429cb962f708",
+      "pose_metadata_sha256": "02c0bc4ece38a43abdb301cfbb3b2bfea9cdd3d0a45a1a1a65b4ba8a90954418",
+      "action_contact": "roster-review-60-fit.png",
+      "action_contact_sha256": "ef3cfb7cecee10e6a87eceafabc1922b19a421e393464c4ceb9535c675bb3e39",
+      "resting_contact": "resting-r2-review-60.png",
+      "resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c"
+    },
+    {
+      "unit_id": "unit_neutral_mossglass_sentinels",
+      "atlas_sha256": "a82c18ebd7f99d2b5142aa7dd05f3cdfe121a53d19f1fe18c4879ce6adff5e3f",
+      "pose_metadata_sha256": "b35c7410a2419f496bd4bca184a1fdcf42d8ff87cd0fded31c00460d79af1586",
+      "action_contact": "roster-review-62-fit.png",
+      "action_contact_sha256": "051613e80e4c9d002d1917459338d31a72cf496b26ed45878add343caf03f5cc",
+      "resting_contact": "resting-r2-review-60.png",
+      "resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c"
+    },
+    {
+      "unit_id": "unit_neutral_cliffhawk_wardens",
+      "atlas_sha256": "77787b04b7ac5c300d56b290dd2e60c8c56bfddb4a18b340a469ab58bbbc4606",
+      "pose_metadata_sha256": "3b96b7f9779d0509761887e93fcffba6e58647f7a43177fec8685b847418dc72",
+      "action_contact": "roster-review-62-fit.png",
+      "action_contact_sha256": "051613e80e4c9d002d1917459338d31a72cf496b26ed45878add343caf03f5cc",
+      "resting_contact": "resting-r2-review-60.png",
+      "resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c"
+    },
+    {
+      "unit_id": "unit_neutral_windglass_slingers",
+      "atlas_sha256": "953707d56f80219bf76e50b2f50dcd9fb75ed372aa82e04dd2daf1ab637a8077",
+      "pose_metadata_sha256": "267a51fa2ab0cebc3b0c4ed8216de3bf8f69c90bcfb1d8b2645b83cb140bd764",
+      "action_contact": "roster-review-64-fit.png",
+      "action_contact_sha256": "c97b7f0b6c527a211963e7bbc621580da3d6e2e17bfbf14807cf578db89c757d",
+      "resting_contact": "resting-r2-review-60.png",
+      "resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c"
+    },
+    {
+      "unit_id": "unit_neutral_reedbarge_poles",
+      "atlas_sha256": "76fbfd75ec61df63c9f8000888ff80150a513b36a9d163cdb2d6add1ad0a6ca8",
+      "pose_metadata_sha256": "6e1049c9f2d010edec888af3e17c2b19693fe6f8d2f0a864735b8a261678a3d0",
+      "action_contact": "roster-review-64-fit.png",
+      "action_contact_sha256": "c97b7f0b6c527a211963e7bbc621580da3d6e2e17bfbf14807cf578db89c757d",
+      "resting_contact": "resting-r2-review-60.png",
+      "resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c"
+    },
+    {
+      "unit_id": "unit_neutral_lanternet_throwers",
+      "atlas_sha256": "ab3cb1e8eceb9bd58b88bad6fccc6aa10c8778e0d0267767c65f8d7fce443b02",
+      "pose_metadata_sha256": "2daf50c01233b8c9c8e390d2ffd0a73c2db69bb64686e71a403696b91482c1ec",
+      "action_contact": "roster-review-66-fit.png",
+      "action_contact_sha256": "07afff647c059d9042d1e3945eb444a0e29fe516bb8104f3444fb5683f62a021",
+      "resting_contact": "resting-r2-review-66.png",
+      "resting_contact_sha256": "b4d04dd23e6adc3b0f33ecbece25013f0c5b94d788569d30f6a29dd12ecd4e38"
+    },
+    {
+      "unit_id": "unit_neutral_glowcap_bulwarks",
+      "atlas_sha256": "19c1cef2640e69b13522d19f69ff8acd2f19f6b3163a86726be8cdbb5c24e327",
+      "pose_metadata_sha256": "d1d71174cf3adf14d998b324681404405cba3776e862e7d369c70665bee94897",
+      "action_contact": "roster-review-66-fit.png",
+      "action_contact_sha256": "07afff647c059d9042d1e3945eb444a0e29fe516bb8104f3444fb5683f62a021",
+      "resting_contact": "resting-r2-review-66.png",
+      "resting_contact_sha256": "b4d04dd23e6adc3b0f33ecbece25013f0c5b94d788569d30f6a29dd12ecd4e38"
+    },
+    {
+      "unit_id": "unit_neutral_sporelamp_tossers",
+      "atlas_sha256": "44b7d2a8f625bd30d2e6e960ee58267df48bfe635d1d91ac909df7c8d84bfdfb",
+      "pose_metadata_sha256": "6d7b218506a5f7685343d27931793e43ccb01cf4df62aba697017b79440f88d7",
+      "action_contact": "roster-review-68-fit.png",
+      "action_contact_sha256": "405fb4270bfa9af9f65bcd6f1153140a0f4721ad01c8e8bb18d19dcd32d994b5",
+      "resting_contact": "resting-r2-review-66.png",
+      "resting_contact_sha256": "b4d04dd23e6adc3b0f33ecbece25013f0c5b94d788569d30f6a29dd12ecd4e38"
+    },
+    {
+      "unit_id": "unit_neutral_dustjack_blades",
+      "atlas_sha256": "6669616a90a9286243856f3a34deda0839259549c7478237dea41bff21db38b5",
+      "pose_metadata_sha256": "e20c7af0775edae972373c78b462a4e7cea5275063b3171dbe44c552fe88a9dc",
+      "action_contact": "roster-review-68-fit.png",
+      "action_contact_sha256": "405fb4270bfa9af9f65bcd6f1153140a0f4721ad01c8e8bb18d19dcd32d994b5",
+      "resting_contact": "resting-r2-review-66.png",
+      "resting_contact_sha256": "b4d04dd23e6adc3b0f33ecbece25013f0c5b94d788569d30f6a29dd12ecd4e38"
+    },
+    {
+      "unit_id": "unit_neutral_scrapbow_teams",
+      "atlas_sha256": "f57e0c6024d15c67c42154bc703e6dd79730f626a07e00c174f2b55892ec20ca",
+      "pose_metadata_sha256": "58356b510c4f4ab8c1aae45f385e200fd2d99b1cc44ddfb544a897df18ff7473",
+      "action_contact": "roster-review-70-fit.png",
+      "action_contact_sha256": "5eb407cf679ab65999dab9e6992858286229fe40de107d2b6e7dc4a7f05939e3",
+      "resting_contact": "resting-r2-review-66.png",
+      "resting_contact_sha256": "b4d04dd23e6adc3b0f33ecbece25013f0c5b94d788569d30f6a29dd12ecd4e38"
+    },
+    {
+      "unit_id": "unit_neutral_kilnward_mallets",
+      "atlas_sha256": "e9d4fe0a429b23a14dca1f39fab30dd0bd7fb0ab237da671a9296f25111863e8",
+      "pose_metadata_sha256": "30f0cfb23234566ee64cacdc0081ac260a0949bf35f79cbc8277ef27a7d17009",
+      "action_contact": "roster-review-70-fit.png",
+      "action_contact_sha256": "5eb407cf679ab65999dab9e6992858286229fe40de107d2b6e7dc4a7f05939e3",
+      "resting_contact": "resting-r2-review-66.png",
+      "resting_contact_sha256": "b4d04dd23e6adc3b0f33ecbece25013f0c5b94d788569d30f6a29dd12ecd4e38"
+    },
+    {
+      "unit_id": "unit_neutral_cinderpot_hurlers",
+      "atlas_sha256": "b3b2205b453cc1fc147fdbfe036d333bbc884aaf78388bdbeae3a3d726d0b083",
+      "pose_metadata_sha256": "b12ea7aa2727aae149495c73e28be0aa59fd3b6f71187627d75b5cf297c72ee2",
+      "action_contact": "roster-review-72-fit.png",
+      "action_contact_sha256": "e83871a81d9b3db2eda899f6fe2eb55e3452915453e85f271bcd5675a8b2cacc",
+      "resting_contact": "resting-r2-review-72.png",
+      "resting_contact_sha256": "22affa8ce7ecaf9b9efa21fa2ec0fe2ec16265b94bdd44e4e64e12b70e23e376"
+    },
+    {
+      "unit_id": "unit_neutral_frostbeacon_pikes",
+      "atlas_sha256": "b388922b109477f9c147606d0dc43016ffe1394300780490dc9d4a4d7a2da344",
+      "pose_metadata_sha256": "3bd07973f83ad21cad8fefb04fe7a13a9655b8cce25a6062a581f1030882a397",
+      "action_contact": "roster-review-72-fit.png",
+      "action_contact_sha256": "e83871a81d9b3db2eda899f6fe2eb55e3452915453e85f271bcd5675a8b2cacc",
+      "resting_contact": "resting-r2-review-72.png",
+      "resting_contact_sha256": "22affa8ce7ecaf9b9efa21fa2ec0fe2ec16265b94bdd44e4e64e12b70e23e376"
+    },
+    {
+      "unit_id": "unit_neutral_snowglass_markers",
+      "atlas_sha256": "12acb241f801511c7705212693099ec28c664ba95aebfdc838329f08e35e90d5",
+      "pose_metadata_sha256": "bd44bcd5f42c36db35a07f9dc8f965347db7ce1cb93ce4914acfce86a81968d4",
+      "action_contact": "roster-review-74-fit.png",
+      "action_contact_sha256": "b312ecffb79dd1e74c31a599525a09e2f59270feaed7b65e50abac5e6e1638d4",
+      "resting_contact": "resting-r2-review-72.png",
+      "resting_contact_sha256": "22affa8ce7ecaf9b9efa21fa2ec0fe2ec16265b94bdd44e4e64e12b70e23e376"
+    },
+    {
+      "unit_id": "unit_neutral_orchard_halberds",
+      "atlas_sha256": "ec25b6987e84539432a78ffdbcae8685fbf6d0d0959e51c93abaa160bfc43513",
+      "pose_metadata_sha256": "718570bc88882d7a84c54b90af8418eaa7704be5045cf32224651cc2ba263c2a",
+      "action_contact": "roster-review-74-fit.png",
+      "action_contact_sha256": "b312ecffb79dd1e74c31a599525a09e2f59270feaed7b65e50abac5e6e1638d4",
+      "resting_contact": "resting-r2-review-72.png",
+      "resting_contact_sha256": "22affa8ce7ecaf9b9efa21fa2ec0fe2ec16265b94bdd44e4e64e12b70e23e376"
+    },
+    {
+      "unit_id": "unit_neutral_millstone_slingers",
+      "atlas_sha256": "9492d6904405852ac262d0aec74af330e1ea1eef648b94fb4a9be8de88bc0a8a",
+      "pose_metadata_sha256": "e89ce12d417c65756f92c50affa9af1642459280717c94ecfbc4f5cecd48ead1",
+      "action_contact": "roster-review-76-fit.png",
+      "action_contact_sha256": "2de2dffbb71f6f764814c64a2e6ca4776a53bd294b00f4f14f68b2c269fea734",
+      "resting_contact": "resting-r2-review-72.png",
+      "resting_contact_sha256": "22affa8ce7ecaf9b9efa21fa2ec0fe2ec16265b94bdd44e4e64e12b70e23e376"
+    },
+    {
+      "unit_id": "unit_neutral_hedgehook_watch",
+      "atlas_sha256": "c9635ed31c434f110e610e98922aa3361674738df924cdf8728aaaa3467d90ca",
+      "pose_metadata_sha256": "5a720003d0b87b217b2b1fffba8c8acc7654aa8da606a6f56bce91cdc4ea3df7",
+      "action_contact": "roster-review-76-fit.png",
+      "action_contact_sha256": "2de2dffbb71f6f764814c64a2e6ca4776a53bd294b00f4f14f68b2c269fea734",
+      "resting_contact": "resting-r2-review-72.png",
+      "resting_contact_sha256": "22affa8ce7ecaf9b9efa21fa2ec0fe2ec16265b94bdd44e4e64e12b70e23e376"
+    },
+    {
+      "unit_id": "unit_neutral_thornbow_scouts",
+      "atlas_sha256": "a01659900e2856d892c0f53b4677589edeaaf9fdbef2c27eee04c313eceb0b95",
+      "pose_metadata_sha256": "937b9855a1d58937e2d4fd1d2d78df628b1ce858abceb9d5a1bf87f0018bfbf2",
+      "action_contact": "roster-review-78-fit.png",
+      "action_contact_sha256": "3fd60302680dedd34b98a0c008025d63649a341e328aa5a88cc013bb09af1861",
+      "resting_contact": "resting-r2-review-78.png",
+      "resting_contact_sha256": "f5680183095bbd5f8fb5d62b9b946fcd135a9dc962d38071cd331aba6cbcb81c"
+    },
+    {
+      "unit_id": "unit_neutral_tidepool_cutters",
+      "atlas_sha256": "0633641dc8fe75c92adc58b07f0ffa9cf6cf41ec5ee02dd262681c073dba78e8",
+      "pose_metadata_sha256": "ea5b441ad880671b6a60b09354b22db8da68de0e76caf5f70c6f64602151ffbd",
+      "action_contact": "roster-review-78-fit.png",
+      "action_contact_sha256": "3fd60302680dedd34b98a0c008025d63649a341e328aa5a88cc013bb09af1861",
+      "resting_contact": "resting-r2-review-78.png",
+      "resting_contact_sha256": "f5680183095bbd5f8fb5d62b9b946fcd135a9dc962d38071cd331aba6cbcb81c"
+    },
+    {
+      "unit_id": "unit_neutral_reefbolt_crews",
+      "atlas_sha256": "eb20f14a549c314cba538c9c977f098606530d69e31cccd533263ff57c65b682",
+      "pose_metadata_sha256": "ad55fe8e025305f03cc55b310c3779bd296231910bc5cc5570254bcd01a14c4d",
+      "action_contact": "roster-review-80-fit.png",
+      "action_contact_sha256": "084281571f1f23fd2550dbedfd698888c821a05b89d7290300c325382de20701",
+      "resting_contact": "resting-r2-review-78.png",
+      "resting_contact_sha256": "f5680183095bbd5f8fb5d62b9b946fcd135a9dc962d38071cd331aba6cbcb81c"
+    },
+    {
+      "unit_id": "unit_neutral_switchback_pikes",
+      "atlas_sha256": "2034d5737bc0ae9e451916ac3302e0a2c8810c2d947f710a2e5c59495161ea17",
+      "pose_metadata_sha256": "d5c09d2da7d467baa1afaa40bca27b0cb0c9f409a752159a43a1ebc0cc85bfc4",
+      "action_contact": "roster-review-80-fit.png",
+      "action_contact_sha256": "084281571f1f23fd2550dbedfd698888c821a05b89d7290300c325382de20701",
+      "resting_contact": "resting-r2-review-78.png",
+      "resting_contact_sha256": "f5680183095bbd5f8fb5d62b9b946fcd135a9dc962d38071cd331aba6cbcb81c"
+    },
+    {
+      "unit_id": "unit_neutral_cairnshield_porters",
+      "atlas_sha256": "94e81be960c350278a43b8ee429be45e86d53355d441c990a8e6f67a03952921",
+      "pose_metadata_sha256": "c200e49488c579d66be6d2de5a76698a66e58a96df4fa83cdd93d35097ac1ef4",
+      "action_contact": "roster-review-82-fit.png",
+      "action_contact_sha256": "fdda07c496aa9419454680f7e53ddb6d6fe01357fea259d769bacfefad46d0cf",
+      "resting_contact": "resting-r2-review-78.png",
+      "resting_contact_sha256": "f5680183095bbd5f8fb5d62b9b946fcd135a9dc962d38071cd331aba6cbcb81c"
+    },
+    {
+      "unit_id": "unit_neutral_saltpan_bucklers",
+      "atlas_sha256": "76922fc9993f6b676068159a0d2e43a627e6d0367b418647bde540395fc55204",
+      "pose_metadata_sha256": "30ce278250de39130d73ad43dec93a80b9fc756b85f21b834ae0f953755cd80b",
+      "action_contact": "roster-review-82-fit.png",
+      "action_contact_sha256": "fdda07c496aa9419454680f7e53ddb6d6fe01357fea259d769bacfefad46d0cf",
+      "resting_contact": "resting-r2-review-78.png",
+      "resting_contact_sha256": "f5680183095bbd5f8fb5d62b9b946fcd135a9dc962d38071cd331aba6cbcb81c"
+    },
+    {
+      "unit_id": "unit_neutral_suncrack_throwers",
+      "atlas_sha256": "a0769e90ac4b835d4417a474d6ebe8338ea1e19b34fa078cbfc388e4a28cec03",
+      "pose_metadata_sha256": "9bbda5739f00a0e7fe577ae983a942bf70dd5f2356e66eeb5c908ad2ee2fc628",
+      "action_contact": "roster-review-84-fit.png",
+      "action_contact_sha256": "c351bb075e9b64c5b48b7a4502d8667e5596103d0101528e80a4d0618c2f5d30",
+      "resting_contact": "resting-r2-review-84.png",
+      "resting_contact_sha256": "8ce41d668ed2f4988ad4b1da7aa4f967284f43b0dfa9d1ba8826b83e337da1a2"
+    },
+    {
+      "unit_id": "unit_neutral_sumpstone_guards",
+      "atlas_sha256": "70bb92ebd0f474a9f5639e6b53c5c1954c38f283807f2474058ca3dee6cd8e41",
+      "pose_metadata_sha256": "e99815df745860bdbb6a06533c8efeb74b7014d4747b6975c8854188fa96c76d",
+      "action_contact": "roster-review-84-fit.png",
+      "action_contact_sha256": "c351bb075e9b64c5b48b7a4502d8667e5596103d0101528e80a4d0618c2f5d30",
+      "resting_contact": "resting-r2-review-84.png",
+      "resting_contact_sha256": "8ce41d668ed2f4988ad4b1da7aa4f967284f43b0dfa9d1ba8826b83e337da1a2"
+    },
+    {
+      "unit_id": "unit_neutral_echodart_casts",
+      "atlas_sha256": "3e3fa4d024e3f620aacc22805201f851982c4c8b76fcebf4f9145cdc5fd3fc67",
+      "pose_metadata_sha256": "f331158f1ff1d66b9536e48a0658d9a82593ac278fd650c26299a88d05362f53",
+      "action_contact": "roster-review-86-fit.png",
+      "action_contact_sha256": "30fb58897b36d578b7376a6d5d71aa57d5eda5d7cb08494b0874c72e0b397fb5",
+      "resting_contact": "resting-r2-review-84.png",
+      "resting_contact_sha256": "8ce41d668ed2f4988ad4b1da7aa4f967284f43b0dfa9d1ba8826b83e337da1a2"
+    },
+    {
+      "unit_id": "unit_neutral_icehook_trappers",
+      "atlas_sha256": "fc72e32fa9931e509bf8e6bc77731124aa53a55454aa6d89f4aabdeb3d692c09",
+      "pose_metadata_sha256": "711be17e2718b17e33c86280b9d7a3b9ebb24cf5aaef4333210809145f223fe8",
+      "action_contact": "roster-review-86-fit.png",
+      "action_contact_sha256": "30fb58897b36d578b7376a6d5d71aa57d5eda5d7cb08494b0874c72e0b397fb5",
+      "resting_contact": "resting-r2-review-84.png",
+      "resting_contact_sha256": "8ce41d668ed2f4988ad4b1da7aa4f967284f43b0dfa9d1ba8826b83e337da1a2"
+    },
+    {
+      "unit_id": "unit_neutral_whitepike_keepers",
+      "atlas_sha256": "03aee1d3f6056bcd1fc30e96035a828ee9bdf943380c05411885af6ad03577de",
+      "pose_metadata_sha256": "c4178c0d696076d5376f8f96ca7672663c6f362731ad5c4e823c7780fce16ea2",
+      "action_contact": "roster-review-88-fit.png",
+      "action_contact_sha256": "7ce4a931878a461e38a71af50632e5ec785a7231326df4d8fea2c9c549c6b321",
+      "resting_contact": "resting-r2-review-84.png",
+      "resting_contact_sha256": "8ce41d668ed2f4988ad4b1da7aa4f967284f43b0dfa9d1ba8826b83e337da1a2"
+    },
+    {
+      "unit_id": "unit_neutral_scarshield_veterans",
+      "atlas_sha256": "5bb7a55ac3d33c36ccbf8afb115b8ec51f303ec40791bc5e7871f8cedd5d943c",
+      "pose_metadata_sha256": "a61242557ab41229e039a0cf8163ec4db99c2aa7c432855003845f6c9df212b4",
+      "action_contact": "roster-review-88-fit.png",
+      "action_contact_sha256": "7ce4a931878a461e38a71af50632e5ec785a7231326df4d8fea2c9c549c6b321",
+      "resting_contact": "resting-r2-review-84.png",
+      "resting_contact_sha256": "8ce41d668ed2f4988ad4b1da7aa4f967284f43b0dfa9d1ba8826b83e337da1a2"
+    },
+    {
+      "unit_id": "unit_neutral_ashdart_stalkers",
+      "atlas_sha256": "659cc7c3ea809692840e95e769f6974e924e721711946d76f8f51819a9865b3c",
+      "pose_metadata_sha256": "1414888e52cbacb7513bac07b903d4ae1e185d13d3eb44abdb0ba2da890fd704",
+      "action_contact": "roster-review-90-fit.png",
+      "action_contact_sha256": "d9b5b90a14d69237d3a8d89ea66456ffb8b1dee061532b609f68ce1e22c2c5bf",
+      "resting_contact": "resting-r2-review-90.png",
+      "resting_contact_sha256": "1d0f8f2d226c81860911a70084d63026610d7bd86d07ac5134584d9f574430c2"
+    },
+    {
+      "unit_id": "unit_neutral_greenbranch_cudgels",
+      "atlas_sha256": "fec6bd6a7683096beed1a81ba543dcbc254be6c4d7b4fb41afa3e6216ead9d60",
+      "pose_metadata_sha256": "24816ba1ae80830a2a6e721f42a016fca61c150721f0f772ba8a5da166238f7c",
+      "action_contact": "roster-review-90-fit.png",
+      "action_contact_sha256": "d9b5b90a14d69237d3a8d89ea66456ffb8b1dee061532b609f68ce1e22c2c5bf",
+      "resting_contact": "resting-r2-review-90.png",
+      "resting_contact_sha256": "1d0f8f2d226c81860911a70084d63026610d7bd86d07ac5134584d9f574430c2"
+    },
+    {
+      "unit_id": "unit_neutral_sapwhistle_callers",
+      "atlas_sha256": "6fb819b17bddb3a73e4be5e05efbbcb18716cd9f9fc0a20a72a47693b9d6612b",
+      "pose_metadata_sha256": "fb5a268654c7f3ee29ba6f95d05d45e15bda86aa7c1e169975863cf7ba5bf4fa",
+      "action_contact": "roster-review-92-fit.png",
+      "action_contact_sha256": "3718759d17bf608afcfce1b1c8b60fb89ef6614b9b4fb35150d8a9b5267160bb",
+      "resting_contact": "resting-r2-review-90.png",
+      "resting_contact_sha256": "1d0f8f2d226c81860911a70084d63026610d7bd86d07ac5134584d9f574430c2"
+    },
+    {
+      "unit_id": "unit_neutral_harbor_polearms",
+      "atlas_sha256": "0040e35128c99a3cf3558aecda3950e4964ccc3bce046cd6b709c1ce5daf1086",
+      "pose_metadata_sha256": "8b784393501b0a21ebfebfe1c0f7631e9d947d424a91cf7ce4b57f14414223a2",
+      "action_contact": "roster-review-92-fit.png",
+      "action_contact_sha256": "3718759d17bf608afcfce1b1c8b60fb89ef6614b9b4fb35150d8a9b5267160bb",
+      "resting_contact": "resting-r2-review-90.png",
+      "resting_contact_sha256": "1d0f8f2d226c81860911a70084d63026610d7bd86d07ac5134584d9f574430c2"
+    },
+    {
+      "unit_id": "unit_neutral_flaremast_crews",
+      "atlas_sha256": "6b5183ed707cfa77eb016b1ceacea1af702c16a42b253c5d3fc5f7a7774f5899",
+      "pose_metadata_sha256": "6b4076927a1bae6f9cc0e5ad9e8b331e7e495ae9d3ad3bda1e4056066c55a3a4",
+      "action_contact": "roster-review-94-fit.png",
+      "action_contact_sha256": "1561b10b597ead1885d02e5fe4be4714307f53fc3ba6096486983f0d51f1fff5",
+      "resting_contact": "resting-r2-review-90.png",
+      "resting_contact_sha256": "1d0f8f2d226c81860911a70084d63026610d7bd86d07ac5134584d9f574430c2"
+    },
+    {
+      "unit_id": "unit_neutral_kitehook_runners",
+      "atlas_sha256": "417fe08cf958b2612da0e03a33cdd65c9c9d8bc4b032943eaac449bebca4482e",
+      "pose_metadata_sha256": "f7d6e8b0bd01252734777efcac17e24e24f1d112e4698ad18e9c8ba67c2d53b8",
+      "action_contact": "roster-review-94-fit.png",
+      "action_contact_sha256": "1561b10b597ead1885d02e5fe4be4714307f53fc3ba6096486983f0d51f1fff5",
+      "resting_contact": "resting-r2-review-90.png",
+      "resting_contact_sha256": "1d0f8f2d226c81860911a70084d63026610d7bd86d07ac5134584d9f574430c2"
+    },
+    {
+      "unit_id": "unit_neutral_ridgeflare_shots",
+      "atlas_sha256": "614562adb9f4e7c95085151b902611172263b50775697659f546aab59ea28642",
+      "pose_metadata_sha256": "7630ef5e61755b6a27f07cb4f6a658bb6bfd6b61855766fd2780e246fe698357",
+      "action_contact": "roster-review-96-fit.png",
+      "action_contact_sha256": "af3068b8828da2b95a3b6de50e0501c71b20a48beabc26fee2bb576f650fd425",
+      "resting_contact": "resting-r2-review-96.png",
+      "resting_contact_sha256": "3f13c895e0bac6c5a554c86fe8c97b833ce56dabe16ceedc942fdc09ec6cc2e1"
+    },
+    {
+      "unit_id": "unit_neutral_tunnel_lanterns",
+      "atlas_sha256": "475aff15b85ee8e98ceddf7bf5d69c8ed9cecf6c76b31a1796fb862707f7d601",
+      "pose_metadata_sha256": "dd713976f7c66f66092a5188c14fe62fe21cc62c6a4d9ec741ebd200ee47ada8",
+      "action_contact": "roster-review-96-fit.png",
+      "action_contact_sha256": "af3068b8828da2b95a3b6de50e0501c71b20a48beabc26fee2bb576f650fd425",
+      "resting_contact": "resting-r2-review-96.png",
+      "resting_contact_sha256": "3f13c895e0bac6c5a554c86fe8c97b833ce56dabe16ceedc942fdc09ec6cc2e1"
+    },
+    {
+      "unit_id": "unit_neutral_glimmercap_needlers",
+      "atlas_sha256": "c18e4af19731fcd74f90601091c4e992bea623f702e25905e0c669dd99fc07d8",
+      "pose_metadata_sha256": "7f2dd8825764cd3cf38f53290e2c1d5d976da87d7e3193419511cf8648f72c7e",
+      "action_contact": "roster-review-98-fit.png",
+      "action_contact_sha256": "284d6a034ba7a880c45408d23c33426e8f6849e67ee567339003db119c007357",
+      "resting_contact": "resting-r2-review-96.png",
+      "resting_contact_sha256": "3f13c895e0bac6c5a554c86fe8c97b833ce56dabe16ceedc942fdc09ec6cc2e1"
+    },
+    {
+      "unit_id": "unit_neutral_bogbell_mauls",
+      "atlas_sha256": "245980107f05d2b0e5ba48dec8e7607558a2b7a5f92f1266b377f2e0224abb5c",
+      "pose_metadata_sha256": "ba125974238701e701f77234619c4374c595c428d2da595e91191ec7305834ec",
+      "action_contact": "roster-review-98-fit.png",
+      "action_contact_sha256": "284d6a034ba7a880c45408d23c33426e8f6849e67ee567339003db119c007357",
+      "resting_contact": "resting-r2-review-96.png",
+      "resting_contact_sha256": "3f13c895e0bac6c5a554c86fe8c97b833ce56dabe16ceedc942fdc09ec6cc2e1"
+    },
+    {
+      "unit_id": "unit_neutral_peatflare_jarriers",
+      "atlas_sha256": "1d4ef77f6503cac1d897e7e74f442043ca19645772db1c5ffa36530550d3fab3",
+      "pose_metadata_sha256": "83dfef2d62aed905a08905fef39a52d70c318c8f68f12add35a7c46b9dbff620",
+      "action_contact": "followup-pair-review.png",
+      "action_contact_sha256": "a6fbfd9529bca0aab6025e93ef7897e522ce9cb2bb2a9c476ccf3cbc337ba16d",
+      "resting_contact": "resting-r2-review-96.png",
+      "resting_contact_sha256": "3f13c895e0bac6c5a554c86fe8c97b833ce56dabe16ceedc942fdc09ec6cc2e1"
+    },
+    {
+      "unit_id": "unit_neutral_milestone_bucklers",
+      "atlas_sha256": "109ae5a9edd765a21e3172e6d7b6b899638b0c46e7ca901a480fc97f7a997a88",
+      "pose_metadata_sha256": "6cddd7b168542dfd10501c0b5f21415a2e9837c0b8e77ed3bf638e67c76ef225",
+      "action_contact": "followup-pair-review.png",
+      "action_contact_sha256": "a6fbfd9529bca0aab6025e93ef7897e522ce9cb2bb2a9c476ccf3cbc337ba16d",
+      "resting_contact": "resting-r2-review-96.png",
+      "resting_contact_sha256": "3f13c895e0bac6c5a554c86fe8c97b833ce56dabe16ceedc942fdc09ec6cc2e1"
+    },
+    {
+      "unit_id": "unit_neutral_cartbow_tenders",
+      "atlas_sha256": "2318e301c244b419ddd998c83b1c04c44e4258c9f283dfffa8ea0ced640c3c1e",
+      "pose_metadata_sha256": "b7215641ff8c6b8a448d417992cb991f86715bc3283afd4de4ebe64170b7526b",
+      "action_contact": "roster-review-102-fit.png",
+      "action_contact_sha256": "5f6735fbfea6b88f46a1228297700b2bb95ac0952988d92c7b091a8daa5818c6",
+      "resting_contact": "resting-r2-review-102.png",
+      "resting_contact_sha256": "caa7b6276f37873e0f3da3214fc6821acbc31c2984cced1bd45a3f2229679a5d"
+    },
+    {
+      "unit_id": "unit_neutral_frostwharf_cutters",
+      "atlas_sha256": "dff9d2997509729ce410e03f0c5effde13bc8f7715103526fe6553590c03bdae",
+      "pose_metadata_sha256": "233f19e48055124c2582b9fad73e27ab6a7058aa07bcbf160420ffc9e550f0ae",
+      "action_contact": "roster-review-102-fit.png",
+      "action_contact_sha256": "5f6735fbfea6b88f46a1228297700b2bb95ac0952988d92c7b091a8daa5818c6",
+      "resting_contact": "resting-r2-review-102.png",
+      "resting_contact_sha256": "caa7b6276f37873e0f3da3214fc6821acbc31c2984cced1bd45a3f2229679a5d"
+    },
+    {
+      "unit_id": "unit_neutral_lanternskate_throwers",
+      "atlas_sha256": "5fef9bcaefea3ed4b55854d99d0231d5cf941cd024c6fd2c2f49b2139cd6c47f",
+      "pose_metadata_sha256": "dba23b12aa8be844d38e5823d0c2b9e0d86a12a10b468fc8de9998f3a1a00632",
+      "action_contact": "roster-review-104-fit.png",
+      "action_contact_sha256": "626f4301d32c635ab6749fa413ab781eab233e85d631ebdef7bddf04aea12479",
+      "resting_contact": "resting-r2-review-102.png",
+      "resting_contact_sha256": "caa7b6276f37873e0f3da3214fc6821acbc31c2984cced1bd45a3f2229679a5d"
+    },
+    {
+      "unit_id": "unit_neutral_charcoal_mauls",
+      "atlas_sha256": "19c70a63b54031f6429d51f546a504edc5f083169e8a1f4cf8ac0145566e77f3",
+      "pose_metadata_sha256": "f4b18a8613a0493970df1597c5d98b5fc7ca8122c0b2142ec3e04c92b97528d8",
+      "action_contact": "roster-review-104-fit.png",
+      "action_contact_sha256": "626f4301d32c635ab6749fa413ab781eab233e85d631ebdef7bddf04aea12479",
+      "resting_contact": "resting-r2-review-102.png",
+      "resting_contact_sha256": "caa7b6276f37873e0f3da3214fc6821acbc31c2984cced1bd45a3f2229679a5d"
+    },
+    {
+      "unit_id": "unit_neutral_emberpack_lobbers",
+      "atlas_sha256": "f3930e1575335983f70687c8efdc2c3f83b12c9f73f16126c50eccaa18e57336",
+      "pose_metadata_sha256": "97bd1c40ecd26ab5be5a45e6fdcd51f8555e180869ff9ea71b122572e960ace4",
+      "action_contact": "roster-review-106-fit.png",
+      "action_contact_sha256": "04d370a284176dc6792af7a13ac3f390ac7c99b4a7dd74cd203619dd08a66f36",
+      "resting_contact": "resting-r2-review-102.png",
+      "resting_contact_sha256": "caa7b6276f37873e0f3da3214fc6821acbc31c2984cced1bd45a3f2229679a5d"
+    },
+    {
+      "unit_id": "unit_neutral_basalt_wardens",
+      "atlas_sha256": "7814dcd75e6ca2555673b5ff141177077b22c6671d385210b91ac247720c1421",
+      "pose_metadata_sha256": "62944275e206b42473a489de7c872f77d3b32e9f7029d03e5931a3df58d99e39",
+      "action_contact": "roster-review-106-fit.png",
+      "action_contact_sha256": "04d370a284176dc6792af7a13ac3f390ac7c99b4a7dd74cd203619dd08a66f36",
+      "resting_contact": "resting-r2-review-102.png",
+      "resting_contact_sha256": "caa7b6276f37873e0f3da3214fc6821acbc31c2984cced1bd45a3f2229679a5d"
+    },
+    {
+      "unit_id": "unit_neutral_tunnelmark_bolters",
+      "atlas_sha256": "50d52c33b78d2121fa8fd62b336a20b7da619cac322cf28f8b7d1ccbb007d1b2",
+      "pose_metadata_sha256": "58e8954c8c468a5ad421f7d118e2e42728af554962620d9ca5843026fb3098d0",
+      "action_contact": "roster-review-108-fit.png",
+      "action_contact_sha256": "341eeb7ce36eaf080c1ebb507801905e07a36bc8e78e165ee25c442519f20542",
+      "resting_contact": "resting-r2-review-108.png",
+      "resting_contact_sha256": "efb356f359fc22c5dd2e55e9f6812d0f2fb48544493b3fd6c555ad2cab15310c"
+    },
+    {
+      "unit_id": "unit_thornwake_canopy_rammers",
+      "atlas_sha256": "69722f2ae7207b9dca93552935a143909635b358890989072fb5b3af3c648821",
+      "pose_metadata_sha256": "565c18b6fba31fd5df20d5450c0bf6427429195c221f21a6cfaf7684beca4542",
+      "action_contact": "roster-review-108-fit.png",
+      "action_contact_sha256": "341eeb7ce36eaf080c1ebb507801905e07a36bc8e78e165ee25c442519f20542",
+      "resting_contact": "resting-r2-review-108.png",
+      "resting_contact_sha256": "efb356f359fc22c5dd2e55e9f6812d0f2fb48544493b3fd6c555ad2cab15310c"
+    },
+    {
+      "unit_id": "unit_brasshollow_pressure_lancers",
+      "atlas_sha256": "6fd069f6e09e469bc4c58a2756dae49fbbee6db223ea0c2042592bc9f5029a9a",
+      "pose_metadata_sha256": "6391329198015faeb9a1ba29385b0cb4fdc97b30cc9d08edbed051eb7dad7869",
+      "action_contact": "roster-review-110-fit.png",
+      "action_contact_sha256": "1a9568f69f15581b52f2dcd49ce7384ae534ab5d4a93173b65c6160a42f4366f",
+      "resting_contact": "resting-r2-review-108.png",
+      "resting_contact_sha256": "efb356f359fc22c5dd2e55e9f6812d0f2fb48544493b3fd6c555ad2cab15310c"
+    },
+    {
+      "unit_id": "unit_veilmourn_wakeglass_navigators",
+      "atlas_sha256": "678bfc4afa44da26cfc2f3dcf2cf846e1e7e88ab8aa48d8731e167937335a9bd",
+      "pose_metadata_sha256": "dc3a2f45abd05355cb4587b62c3574d0cb38ba7b3608e9ca4503401e20df132c",
+      "action_contact": "roster-review-110-fit.png",
+      "action_contact_sha256": "1a9568f69f15581b52f2dcd49ce7384ae534ab5d4a93173b65c6160a42f4366f",
+      "resting_contact": "resting-r2-review-108.png",
+      "resting_contact_sha256": "efb356f359fc22c5dd2e55e9f6812d0f2fb48544493b3fd6c555ad2cab15310c"
+    },
+    {
+      "unit_id": "unit_embercourt_beaconline_writguard",
+      "atlas_sha256": "382c4d48c4af90e17283c25b6898c3683bfc12bbce1ce5b08247263d9787d8ae",
+      "pose_metadata_sha256": "9eaf236b43f7d4aa1d430f4ffb3ce27de60971e7eb224d1a9fa133ca466ba390",
+      "action_contact": "roster-review-112-fit.png",
+      "action_contact_sha256": "6b455a99bff3882433da65af126780f4f45f8f7f8b5120db9931659f3be6a92a",
+      "resting_contact": "resting-r2-review-108.png",
+      "resting_contact_sha256": "efb356f359fc22c5dd2e55e9f6812d0f2fb48544493b3fd6c555ad2cab15310c"
+    },
+    {
+      "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+      "atlas_sha256": "4da8f7f46c4e1a784e0a6d7e623a1e6448fd83d89ece939cf91e4a9c21caf453",
+      "pose_metadata_sha256": "3453f5d046dd25948c5f9676a8d1e28ccd630330162da34fa41ee36170322808",
+      "action_contact": "roster-review-112-fit.png",
+      "action_contact_sha256": "6b455a99bff3882433da65af126780f4f45f8f7f8b5120db9931659f3be6a92a",
+      "resting_contact": "resting-r2-review-108.png",
+      "resting_contact_sha256": "efb356f359fc22c5dd2e55e9f6812d0f2fb48544493b3fd6c555ad2cab15310c"
+    },
+    {
+      "unit_id": "unit_sunvault_zenith_lensbearers",
+      "atlas_sha256": "7c702eee044ab2882aed1e8c9ee87f2ca83e97c28bc8b16b26fb92773074a871",
+      "pose_metadata_sha256": "f48c5bd3d32c5a76640fb53f02cb61e6cd60b0a5f8cae9e10c504170b2407766",
+      "action_contact": "roster-review-114-fit.png",
+      "action_contact_sha256": "13ee0a4eae721c04cc01e501b68a63ca134a22507788131f208c8f970795359a",
+      "resting_contact": "resting-r2-review-114.png",
+      "resting_contact_sha256": "7064b64202536eff0b8a4eaf2d7dc63a858d4d0b86d06bf7e6af4578dae4cbbf"
+    },
+    {
+      "unit_id": "unit_neutral_cinderwake_aurochs",
+      "atlas_sha256": "2d682419e72576b67f9888ca66ce5891901c703578ce40dec037a758c168fc05",
+      "pose_metadata_sha256": "76d832f6b2c16d4b27a4eb60bf6f5acb18215e5d6c6e74ff0eec5da4058af0e2",
+      "action_contact": "roster-review-114-fit.png",
+      "action_contact_sha256": "13ee0a4eae721c04cc01e501b68a63ca134a22507788131f208c8f970795359a",
+      "resting_contact": "resting-r2-review-114.png",
+      "resting_contact_sha256": "7064b64202536eff0b8a4eaf2d7dc63a858d4d0b86d06bf7e6af4578dae4cbbf"
+    },
+    {
+      "unit_id": "unit_neutral_tideglass_skyrays",
+      "atlas_sha256": "29ad66951967f497f227f566bd6667faf1daccb607969b22e782dcef259ad4c9",
+      "pose_metadata_sha256": "ddae6cd51db62d2ca68661671fc051b70b302b1338c074c51064fb8edf7066da",
+      "action_contact": "roster-review-116-fit.png",
+      "action_contact_sha256": "b62e40d419c25c6a3a5de02d8f7dc691a3329b56d5398b34e1dc749120d53db0",
+      "resting_contact": "resting-r2-review-114.png",
+      "resting_contact_sha256": "7064b64202536eff0b8a4eaf2d7dc63a858d4d0b86d06bf7e6af4578dae4cbbf"
+    },
+    {
+      "unit_id": "unit_neutral_brambleback_knucklebears",
+      "atlas_sha256": "3636915b69061620bb03787c5db70dd39d29e6baf0343763c60d138e71790d7b",
+      "pose_metadata_sha256": "d30bd76e4da619e43c4157de1b970b8c72e875cf138866a96f2d1158aef892f2",
+      "action_contact": "roster-review-116-fit.png",
+      "action_contact_sha256": "b62e40d419c25c6a3a5de02d8f7dc691a3329b56d5398b34e1dc749120d53db0",
+      "resting_contact": "resting-r2-review-114.png",
+      "resting_contact_sha256": "7064b64202536eff0b8a4eaf2d7dc63a858d4d0b86d06bf7e6af4578dae4cbbf"
+    },
+    {
+      "unit_id": "unit_neutral_mireglass_belltoads",
+      "atlas_sha256": "9a2dc1d386b928a026a0d3842f779e40e7203c1bf1a11fdadeb93e9817f4f0bc",
+      "pose_metadata_sha256": "73867081ce90d05aa047bdb68cdb1e41228df21b79386b8bb9b14e5cf6916b6d",
+      "action_contact": "roster-review-118-fit.png",
+      "action_contact_sha256": "17c618dd78f2348a60faef65cf3ca4ce191102d94ad3a5adec69491c620a058d",
+      "resting_contact": "resting-r2-review-114.png",
+      "resting_contact_sha256": "7064b64202536eff0b8a4eaf2d7dc63a858d4d0b86d06bf7e6af4578dae4cbbf"
+    },
+    {
+      "unit_id": "unit_neutral_galehorn_striders",
+      "atlas_sha256": "b60aa665873d485499b89d78af8088ef4d3f5f5b37ec800a6b8ec2fdc84f013d",
+      "pose_metadata_sha256": "d3e33a570e507aeb0505a7b256b6eae486450ffc0c5e6e7e524e7352e8b172a6",
+      "action_contact": "roster-review-118-fit.png",
+      "action_contact_sha256": "17c618dd78f2348a60faef65cf3ca4ce191102d94ad3a5adec69491c620a058d",
+      "resting_contact": "resting-r2-review-114.png",
+      "resting_contact_sha256": "7064b64202536eff0b8a4eaf2d7dc63a858d4d0b86d06bf7e6af4578dae4cbbf"
+    },
+    {
+      "unit_id": "unit_neutral_sunscale_lanternmoths",
+      "atlas_sha256": "f4fd63f7ef7c78a20f30d86c1635364c3d6e423b201dee6fa945ff18f90e894b",
+      "pose_metadata_sha256": "fb5810c10af78f22a179c4759e0986858ba9534d060b97afc38cc4930a953e7f",
+      "action_contact": "roster-review-120-fit.png",
+      "action_contact_sha256": "7a4cc264ddcaa5bd042af2a3812468865ab4c48090b2fb511bd61ae54a17a596",
+      "resting_contact": "resting-r2-review-120.png",
+      "resting_contact_sha256": "0116ca7bfd2f506cb94f6f627a0ddd5f1d44820d7c6f1a4dbf1ec052158fb77e"
+    },
+    {
+      "unit_id": "unit_neutral_rimebell_skyrakers",
+      "atlas_sha256": "d69db630b66e82c7e6838d7d1885ed63953aa034e8c4aee78c295b5a71f73abc",
+      "pose_metadata_sha256": "85e1820bfc1e280e4b899342ed11e6fdafb157aff92496ac7b322a247f3da56e",
+      "action_contact": "roster-review-120-fit.png",
+      "action_contact_sha256": "7a4cc264ddcaa5bd042af2a3812468865ab4c48090b2fb511bd61ae54a17a596",
+      "resting_contact": "resting-r2-review-120.png",
+      "resting_contact_sha256": "0116ca7bfd2f506cb94f6f627a0ddd5f1d44820d7c6f1a4dbf1ec052158fb77e"
+    },
+    {
+      "unit_id": "unit_neutral_deepforge_vaultwyrms",
+      "atlas_sha256": "6ba29009c9b5a3bb372c8880ebaf376b162db30847d07adf5007e1b3486adfff",
+      "pose_metadata_sha256": "733a8e9d76e4ae3cb0b7448d8d5ebe8ca02692e1e4a369724d37b80da9e4bb64",
+      "action_contact": "roster-review-122-fit.png",
+      "action_contact_sha256": "03a07a5953a98bf7118f31992283d33d13bfa2f3af123d5d78e636390a517ed9",
+      "resting_contact": "resting-r2-review-120.png",
+      "resting_contact_sha256": "0116ca7bfd2f506cb94f6f627a0ddd5f1d44820d7c6f1a4dbf1ec052158fb77e"
+    },
+    {
+      "unit_id": "unit_thornwake_seedglass_cantors",
+      "atlas_sha256": "26b8d1b2bcc3b5432c6d765c5475aaae49432438732c6926108c609fd7d60b30",
+      "pose_metadata_sha256": "935005b8e354c5cceeac7067331c47c1f876be381b2c4aeae5c40fbabc40ba73",
+      "action_contact": "roster-review-122-fit.png",
+      "action_contact_sha256": "03a07a5953a98bf7118f31992283d33d13bfa2f3af123d5d78e636390a517ed9",
+      "resting_contact": "resting-r2-review-120.png",
+      "resting_contact_sha256": "0116ca7bfd2f506cb94f6f627a0ddd5f1d44820d7c6f1a4dbf1ec052158fb77e"
+    },
+    {
+      "unit_id": "unit_brasshollow_quenchbell_mortars",
+      "atlas_sha256": "0e7819721682d2003d0da3d41cd9256119fc68231ab298f7f9b00f53559c8d3c",
+      "pose_metadata_sha256": "9f06a2e16f8f4875903ce57fe0470640b9f77176de38467f03dfb2dc86a3389b",
+      "action_contact": "roster-review-124-fit.png",
+      "action_contact_sha256": "9f9e52756bbf675e209b1805536b8b58e9bc3eeb8f7c674601543da967df41d7",
+      "resting_contact": "resting-r2-review-120.png",
+      "resting_contact_sha256": "0116ca7bfd2f506cb94f6f627a0ddd5f1d44820d7c6f1a4dbf1ec052158fb77e"
+    },
+    {
+      "unit_id": "unit_veilmourn_saltwake_eulogists",
+      "atlas_sha256": "70532b3eb55bf5af1dd1cf427d01324069a17a98bde34aaa716fa8ce5317ebf9",
+      "pose_metadata_sha256": "ca4f6da3e26fb135b867d8a79b67acd66ef0469779b3f2fb849268fc0adc179d",
+      "action_contact": "roster-review-124-fit.png",
+      "action_contact_sha256": "9f9e52756bbf675e209b1805536b8b58e9bc3eeb8f7c674601543da967df41d7",
+      "resting_contact": "resting-r2-review-120.png",
+      "resting_contact_sha256": "0116ca7bfd2f506cb94f6f627a0ddd5f1d44820d7c6f1a4dbf1ec052158fb77e"
+    },
+    {
+      "unit_id": "unit_thornwake_seedshield_wardens",
+      "atlas_sha256": "605e4510fba5585d9b76e75449532150348eef524317a38d54ed3340be43e882",
+      "pose_metadata_sha256": "7f7fde589786b9b692f88b073c123e5ca4d2c122fee585fb4c7d4b0e942f502e",
+      "action_contact": "roster-review-126-fit.png",
+      "action_contact_sha256": "4fb0d70a78f3aec991f17c68d7f05de35c24be19ba817452086c59446c5a44cc",
+      "resting_contact": "resting-r2-review-126.png",
+      "resting_contact_sha256": "bbc21ba46bde430969d80184150a30aada04b4cf7dbc32742730383f8a63df79"
+    },
+    {
+      "unit_id": "unit_brasshollow_gaugefire_arbalists",
+      "atlas_sha256": "db001c8b63b1240c98e75789eb20233d5bcb01ba0477b48e9b33fd73b0714e33",
+      "pose_metadata_sha256": "a6580fe340f94604a070f4a30c4decb8716bd1e2de58cac5d9edaf139d5bed18",
+      "action_contact": "roster-review-126-fit.png",
+      "action_contact_sha256": "4fb0d70a78f3aec991f17c68d7f05de35c24be19ba817452086c59446c5a44cc",
+      "resting_contact": "resting-r2-review-126.png",
+      "resting_contact_sha256": "bbc21ba46bde430969d80184150a30aada04b4cf7dbc32742730383f8a63df79"
+    },
+    {
+      "unit_id": "unit_veilmourn_wakechain_boarders",
+      "atlas_sha256": "035ef1e95175410f037e90be0357051e5c05b1ef895d1a4e0678feaa6feb35a3",
+      "pose_metadata_sha256": "983c610de60e5f80611bb42abcfcc359b46b72e5871ec55051067cfeb68012ab",
+      "action_contact": "roster-review-128-fit.png",
+      "action_contact_sha256": "1a415dd5349ab180200ea79c062c1fd76ab6a4478cca0c2a9f86e598cfe3546c",
+      "resting_contact": "resting-r2-review-126.png",
+      "resting_contact_sha256": "bbc21ba46bde430969d80184150a30aada04b4cf7dbc32742730383f8a63df79"
+    },
+    {
+      "unit_id": "unit_thornwake_bramblekite_needlers",
+      "atlas_sha256": "05e7f9d3c99482938001d982ba354754ed7ca59b63e5c929c0e1422848650881",
+      "pose_metadata_sha256": "93557f9582e274dbe60d22b4d928126eae512cd4fcc31322eaf123fe0380392a",
+      "action_contact": "roster-review-128-fit.png",
+      "action_contact_sha256": "1a415dd5349ab180200ea79c062c1fd76ab6a4478cca0c2a9f86e598cfe3546c",
+      "resting_contact": "resting-r2-review-126.png",
+      "resting_contact_sha256": "bbc21ba46bde430969d80184150a30aada04b4cf7dbc32742730383f8a63df79"
+    },
+    {
+      "unit_id": "unit_brasshollow_quenchspool_slingers",
+      "atlas_sha256": "99a800351f0a68ae348275c7e59524887d44f636ebcbcd53ac396e42e6d1f700",
+      "pose_metadata_sha256": "43dcad7ed2f134e05534c18e424dc29e1033d472939b87466c1e936056a9bb21",
+      "action_contact": "roster-review-130-fit.png",
+      "action_contact_sha256": "5b800f476e1c801bd2b6be6a9a6ff8e83282f66853261f3797e6dca08a3e3bc9",
+      "resting_contact": "resting-r2-review-126.png",
+      "resting_contact_sha256": "bbc21ba46bde430969d80184150a30aada04b4cf7dbc32742730383f8a63df79"
+    },
+    {
+      "unit_id": "unit_veilmourn_saltbell_casters",
+      "atlas_sha256": "aee9230163597069d391ac86adc9ce5394a53e05d71b619fd9592963f6add549",
+      "pose_metadata_sha256": "1a9733b42f4098aa669a8829415ce3b4063980b0d2686710686ee755b8e4d0c8",
+      "action_contact": "roster-review-130-fit.png",
+      "action_contact_sha256": "5b800f476e1c801bd2b6be6a9a6ff8e83282f66853261f3797e6dca08a3e3bc9",
+      "resting_contact": "resting-r2-review-126.png",
+      "resting_contact_sha256": "bbc21ba46bde430969d80184150a30aada04b4cf7dbc32742730383f8a63df79"
+    },
+    {
+      "unit_id": "unit_embercourt_lockglass_writcasters",
+      "atlas_sha256": "d88c6796d3053ebf5109c7b95a8367cbc4c273197ce477e3591385343dce1009",
+      "pose_metadata_sha256": "8e7578309147a2fbdb0e5f4c53c3a3cc970630c6ac31fdd66901242d2ba02212",
+      "action_contact": "roster-review-132-fit.png",
+      "action_contact_sha256": "477f840728048aebd34373a5d2d1571e4d6a9f2704a94107ab98284b775e8be7",
+      "resting_contact": "resting-r2-review-132.png",
+      "resting_contact_sha256": "6201c9eff4e606c10d26b6fe7d7d373fb67436fb7ac1ddcd79a2079d12e5ec79"
+    },
+    {
+      "unit_id": "unit_thornwake_pollenhook_whistlers",
+      "atlas_sha256": "8552995781a553a3d2a2395181e8b60bab19b05050a64fca752496d76660f16b",
+      "pose_metadata_sha256": "ec65b924b1a27486cf0caf7eacac9b24e5883c39010358a6dc14da920d810e4b",
+      "action_contact": "roster-review-132-fit.png",
+      "action_contact_sha256": "477f840728048aebd34373a5d2d1571e4d6a9f2704a94107ab98284b775e8be7",
+      "resting_contact": "resting-r2-review-132.png",
+      "resting_contact_sha256": "6201c9eff4e606c10d26b6fe7d7d373fb67436fb7ac1ddcd79a2079d12e5ec79"
+    },
+    {
+      "unit_id": "unit_brasshollow_tallyspring_throwers",
+      "atlas_sha256": "fb3f5a13a140037221c44c6a40e2f0bdebfffa0b9a501ec61b4f001145833bd7",
+      "pose_metadata_sha256": "a95d5c58d453e7d6c79a900f7ef8a53c05293ac3422350190d46d3da15913d81",
+      "action_contact": "roster-review-134-fit.png",
+      "action_contact_sha256": "839aa44f7d281d74f01a2331ab3ea43c52a510784c367aecf62f283f785fefe7",
+      "resting_contact": "resting-r2-review-132.png",
+      "resting_contact_sha256": "6201c9eff4e606c10d26b6fe7d7d373fb67436fb7ac1ddcd79a2079d12e5ec79"
+    },
+    {
+      "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+      "atlas_sha256": "204a60f78417d0dbabe302410e0100997eff42b6fed90a33e39bb4887891c084",
+      "pose_metadata_sha256": "c6fdd878552260e6898df0248dedc0db6c4d6df4aeccf8c08d2dcea4f4fc8317",
+      "action_contact": "roster-review-134-fit.png",
+      "action_contact_sha256": "839aa44f7d281d74f01a2331ab3ea43c52a510784c367aecf62f283f785fefe7",
+      "resting_contact": "resting-r2-review-132.png",
+      "resting_contact_sha256": "6201c9eff4e606c10d26b6fe7d7d373fb67436fb7ac1ddcd79a2079d12e5ec79"
+    },
+    {
+      "unit_id": "unit_neutral_ashcrown_kilnelk",
+      "atlas_sha256": "b055309d7871547060eebe448e5af4c11f288aa5bc1d8080194f23c6bfb4513f",
+      "pose_metadata_sha256": "b53463f4631d9cc36bc39f5a16aa918f9a2b3dbb52727296f724f9ea1c894611",
+      "action_contact": "roster-review-136-fit.png",
+      "action_contact_sha256": "585e1deaf9d3268057eeed6f46c9a71d833393c7aedf4f112bec66bd9657bdfc",
+      "resting_contact": "resting-r2-review-132.png",
+      "resting_contact_sha256": "6201c9eff4e606c10d26b6fe7d7d373fb67436fb7ac1ddcd79a2079d12e5ec79"
+    },
+    {
+      "unit_id": "unit_neutral_miremoon_crownmaws",
+      "atlas_sha256": "a1aa74dbec5cdda95e62d2c277c89c76c92fad0fdda6db9bf1638f0615698703",
+      "pose_metadata_sha256": "818b0517404b59eee055c2fd853bbc25ce42a68498fbf5a9762c753603881a01",
+      "action_contact": "roster-review-136-fit.png",
+      "action_contact_sha256": "585e1deaf9d3268057eeed6f46c9a71d833393c7aedf4f112bec66bd9657bdfc",
+      "resting_contact": "resting-r2-review-132.png",
+      "resting_contact_sha256": "6201c9eff4e606c10d26b6fe7d7d373fb67436fb7ac1ddcd79a2079d12e5ec79"
+    },
+    {
+      "unit_id": "unit_neutral_noonshard_prism_kites",
+      "atlas_sha256": "26caf395d48e9042e76382b6b68f05408b01817581145820f923a54a4707f4f2",
+      "pose_metadata_sha256": "ec8a1e3150a56391236fde785499916e9961352cd6da67226c3b59680f2bc67f",
+      "action_contact": "roster-review-138-fit.png",
+      "action_contact_sha256": "9ff12e1605c3b58b7fd9bf5d2e08845ea78169bbe8cc5d7218e5e671728ce54c",
+      "resting_contact": "resting-r2-review-138.png",
+      "resting_contact_sha256": "623a2c809fa8e013f69dd8cdd477ebb4a309fb2fafb23752fda349582031fd34"
+    },
+    {
+      "unit_id": "unit_neutral_rootvault_barkhulks",
+      "atlas_sha256": "06a376e6909d0e4c6d0bb7e9d612bdb9fa4e515c3114884f926c3e166e3da36a",
+      "pose_metadata_sha256": "74c6141004db25c6133eac17acb06cfeba16bc8b7046cde09157b9167a77e30f",
+      "action_contact": "roster-review-138-fit.png",
+      "action_contact_sha256": "9ff12e1605c3b58b7fd9bf5d2e08845ea78169bbe8cc5d7218e5e671728ce54c",
+      "resting_contact": "resting-r2-review-138.png",
+      "resting_contact_sha256": "623a2c809fa8e013f69dd8cdd477ebb4a309fb2fafb23752fda349582031fd34"
+    },
+    {
+      "unit_id": "unit_neutral_quenchbell_ironbacks",
+      "atlas_sha256": "84e2585c17eaccb2b0e178145dc6283fe37644cb2f1005fc68011899978abb63",
+      "pose_metadata_sha256": "36cf70c63e35ad13101603aa1491468c48619bc8633191b69ebecb46dccd801a",
+      "action_contact": "roster-review-140-fit.png",
+      "action_contact_sha256": "5e379e9dccd0d02b2931fe5aac5b037a8e3d84b2e97dbf13175e9d36b497ef65",
+      "resting_contact": "resting-r2-review-138.png",
+      "resting_contact_sha256": "623a2c809fa8e013f69dd8cdd477ebb4a309fb2fafb23752fda349582031fd34"
+    },
+    {
+      "unit_id": "unit_neutral_saltwake_bellwhales",
+      "atlas_sha256": "d13e606fe8abceeb6dd9946c96facd40c1d4b8182a5183a53f0707b86ab4527e",
+      "pose_metadata_sha256": "10eda8950853234ea7f0aad19e3fe7f57ff98f95cc104e31691bec1382dd83f5",
+      "action_contact": "roster-review-140-fit.png",
+      "action_contact_sha256": "5e379e9dccd0d02b2931fe5aac5b037a8e3d84b2e97dbf13175e9d36b497ef65",
+      "resting_contact": "resting-r2-review-138.png",
+      "resting_contact_sha256": "623a2c809fa8e013f69dd8cdd477ebb4a309fb2fafb23752fda349582031fd34"
+    },
+    {
+      "unit_id": "unit_embercourt_amberweir_lockpike_wardens",
+      "atlas_sha256": "32449f9089fd7cdb83fe5a0113aca4300e8761878e481b9f2b26b5c69b132285",
+      "pose_metadata_sha256": "10ff838f4ba5ea8e93c4af9151b7cda17f8f5f5cd79a0da6bf293975f2e4275a",
+      "action_contact": "roster-review-142-fit.png",
+      "action_contact_sha256": "d04b7e67199fc4fda330ce07d728b238777a01284d72e46f62367bd0fd1f4c4e",
+      "resting_contact": "resting-r2-review-138.png",
+      "resting_contact_sha256": "623a2c809fa8e013f69dd8cdd477ebb4a309fb2fafb23752fda349582031fd34"
+    },
+    {
+      "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+      "atlas_sha256": "070af05685bc9bdd0bed0a5cb53e1699ba9c029c308400d6993a2acad36b2aca",
+      "pose_metadata_sha256": "bc2d35174e77475e6bb1dd7b7bd35785833a2dd52c650d406bf534b230d74f8d",
+      "action_contact": "roster-review-142-fit.png",
+      "action_contact_sha256": "d04b7e67199fc4fda330ce07d728b238777a01284d72e46f62367bd0fd1f4c4e",
+      "resting_contact": "resting-r2-review-138.png",
+      "resting_contact_sha256": "623a2c809fa8e013f69dd8cdd477ebb4a309fb2fafb23752fda349582031fd34"
+    },
+    {
+      "unit_id": "unit_sunvault_splitprism_parallax_fencers",
+      "atlas_sha256": "6cbebcc5e96777324f503a50ef0c91842f83d3f4ad50df6748584e5b5ad8b91c",
+      "pose_metadata_sha256": "ad7973839dfac076b510d95ea561c599b767c4a499b7a797e307909dfbeb9354",
+      "action_contact": "roster-review-144-fit.png",
+      "action_contact_sha256": "70de9815f10a14f99ad0ccbd6cd8fc393c9dddf1a6dc8f775988a9ed624b1c79",
+      "resting_contact": "resting-r2-review-144.png",
+      "resting_contact_sha256": "000b93f26c433ee13735ccae8aea00085476b568562ff47cc07d590865d0d4cb"
+    },
+    {
+      "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+      "atlas_sha256": "b67c73d272c310b04ce1ff619b5297a33004ae54feab7ca84bd43ef0284aae58",
+      "pose_metadata_sha256": "7b03867ac522d3951073abb46a32e01ef27bddee6e9519c2ba477c54a6469235",
+      "action_contact": "roster-review-144-fit.png",
+      "action_contact_sha256": "70de9815f10a14f99ad0ccbd6cd8fc393c9dddf1a6dc8f775988a9ed624b1c79",
+      "resting_contact": "resting-r2-review-144.png",
+      "resting_contact_sha256": "000b93f26c433ee13735ccae8aea00085476b568562ff47cc07d590865d0d4cb"
+    },
+    {
+      "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+      "atlas_sha256": "f6382dd8433fd39436dc6367eab360cf1b333167f1f07f597d594205b178930c",
+      "pose_metadata_sha256": "b6a96bbc131aec6ee1d886cb87265759466aa0244a372ab7f7d1e84b30e47086",
+      "action_contact": "roster-review-146-fit.png",
+      "action_contact_sha256": "e58a6fbd6da611f46642d1d15c8d3d75d25211d9cf18063b79fb47ced91af5f0",
+      "resting_contact": "resting-r2-review-144.png",
+      "resting_contact_sha256": "000b93f26c433ee13735ccae8aea00085476b568562ff47cc07d590865d0d4cb"
+    },
+    {
+      "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+      "atlas_sha256": "6057f1b240b0a5d570847493ab7c3833dcce664f5c29030df189860aa63f2d18",
+      "pose_metadata_sha256": "9e937d4a817c759919ee70838f79757bc4b1af0c1ccaffb1dc76dce6cc782f3e",
+      "action_contact": "roster-review-146-fit.png",
+      "action_contact_sha256": "e58a6fbd6da611f46642d1d15c8d3d75d25211d9cf18063b79fb47ced91af5f0",
+      "resting_contact": "resting-r2-review-144.png",
+      "resting_contact_sha256": "000b93f26c433ee13735ccae8aea00085476b568562ff47cc07d590865d0d4cb"
+    },
+    {
+      "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+      "atlas_sha256": "516a47246a45b80e65bad25f3d7c273137ff8a7ea390a5a19924e00386e5eacd",
+      "pose_metadata_sha256": "704d90463683c13ed2c820dfd61769a403a6eb3462d7bb9a0de0ddd6b223d367",
+      "action_contact": "roster-review-148-fit.png",
+      "action_contact_sha256": "b1511553c024316eb87fd585a5cc95a35bdb947cfa4070b16782a7d1151e4540",
+      "resting_contact": "resting-r2-review-144.png",
+      "resting_contact_sha256": "000b93f26c433ee13735ccae8aea00085476b568562ff47cc07d590865d0d4cb"
+    },
+    {
+      "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+      "atlas_sha256": "36186bf3dda5c5398825572151bad04e03984daab98b9fadba3445b9de950132",
+      "pose_metadata_sha256": "c0357198de5746fea3f55456a434024d65fe8c3dc20c7ae4359aedb1b5b0fece",
+      "action_contact": "roster-review-148-fit.png",
+      "action_contact_sha256": "b1511553c024316eb87fd585a5cc95a35bdb947cfa4070b16782a7d1151e4540",
+      "resting_contact": "resting-r2-review-144.png",
+      "resting_contact_sha256": "000b93f26c433ee13735ccae8aea00085476b568562ff47cc07d590865d0d4cb"
+    },
+    {
+      "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+      "atlas_sha256": "18a5bbe6daddeeebc6017328c773d655207cfb30b4fa0de5876627a91772783b",
+      "pose_metadata_sha256": "1901c8e2d9a4abe5af7308b0e12de3f752de1b374ce9340197f413cc7f6b0518",
+      "action_contact": "roster-review-150-fit.png",
+      "action_contact_sha256": "914190a8d279d3ad795295e3a900890985fa7fa5cedf3de65d0988e494bdbf4c",
+      "resting_contact": "resting-r2-review-150.png",
+      "resting_contact_sha256": "48aa47038a551d23de71d44ccd5d939a6979d78e3c89b8abfa9d1868f7eb13e6"
+    },
+    {
+      "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+      "atlas_sha256": "df4d9c3e75c295ebc2633f6a3337a075bc0ea84d3feb77b8d8febb8625bfada8",
+      "pose_metadata_sha256": "610cc8e4f137da4b7136ca443b2fc6293e15b2dcba856c526375423a68c49103",
+      "action_contact": "roster-review-150-fit.png",
+      "action_contact_sha256": "914190a8d279d3ad795295e3a900890985fa7fa5cedf3de65d0988e494bdbf4c",
+      "resting_contact": "resting-r2-review-150.png",
+      "resting_contact_sha256": "48aa47038a551d23de71d44ccd5d939a6979d78e3c89b8abfa9d1868f7eb13e6"
+    },
+    {
+      "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+      "atlas_sha256": "fa8094207f0d8bc8e058be2e637c18a11e07d8999e4b74d4344a3f71f135485c",
+      "pose_metadata_sha256": "7cf2e28f659d2415e903604d4d1d7ce900301794f1f75c04ebebb6da38f71613",
+      "action_contact": "roster-review-152-fit.png",
+      "action_contact_sha256": "a69d2d777ff58472cf1ca365b3953e61a90c1ca70ea3ec8f1e0761c73282d709",
+      "resting_contact": "resting-r2-review-150.png",
+      "resting_contact_sha256": "48aa47038a551d23de71d44ccd5d939a6979d78e3c89b8abfa9d1868f7eb13e6"
+    },
+    {
+      "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+      "atlas_sha256": "893c6507a2c0dbfb52d6b9632b56233e12e91b25c89a32ca16b65199a5c8f387",
+      "pose_metadata_sha256": "db6ba19f986e2e526460c19837e2d6e12edefaf3129eb49e006d0cc9653f3594",
+      "action_contact": "roster-review-152-fit.png",
+      "action_contact_sha256": "a69d2d777ff58472cf1ca365b3953e61a90c1ca70ea3ec8f1e0761c73282d709",
+      "resting_contact": "resting-r2-review-150.png",
+      "resting_contact_sha256": "48aa47038a551d23de71d44ccd5d939a6979d78e3c89b8abfa9d1868f7eb13e6"
+    },
+    {
+      "unit_id": "unit_neutral_cindervane_censerwings",
+      "atlas_sha256": "1d12722a5df5f849ee02ed9ebb1f6eeecb2436c5b0fcd71ad8e1c4469c6a4b28",
+      "pose_metadata_sha256": "de038a5b71f662c36e325b4fa6e39cb6a13094007f134a48e064bb6fe306acc4",
+      "action_contact": "roster-review-154-fit.png",
+      "action_contact_sha256": "37cec7c65bad962f82317cbddd4ecf2a2a5091e8939883a565eb3107e891fd3d",
+      "resting_contact": "resting-r2-review-150.png",
+      "resting_contact_sha256": "48aa47038a551d23de71d44ccd5d939a6979d78e3c89b8abfa9d1868f7eb13e6"
+    },
+    {
+      "unit_id": "unit_neutral_fenmirror_gallowshells",
+      "atlas_sha256": "ac49a5c892db86da70b4a3f5b8929b33538c9be113557a1351d7d3d3df518d75",
+      "pose_metadata_sha256": "5f3db08b39f262d6cbbe441b5b6a055e245a002af2f319eca09d361a26fc285c",
+      "action_contact": "roster-review-154-fit.png",
+      "action_contact_sha256": "37cec7c65bad962f82317cbddd4ecf2a2a5091e8939883a565eb3107e891fd3d",
+      "resting_contact": "resting-r2-review-150.png",
+      "resting_contact_sha256": "48aa47038a551d23de71d44ccd5d939a6979d78e3c89b8abfa9d1868f7eb13e6"
+    },
+    {
+      "unit_id": "unit_neutral_prismwake_raylings",
+      "atlas_sha256": "fc925d311561ec4f42eb3b2742ea6c251a395904af08114988fc190db2ff4f71",
+      "pose_metadata_sha256": "af282bea8163927ad4744600557f732723461bf832aa9c01667af2d029d86672",
+      "action_contact": "roster-review-156-fit.png",
+      "action_contact_sha256": "4478ff4abac274bbcb82e66d72ca6feda444f61f1f567f2316a000ca5845e544",
+      "resting_contact": "resting-r2-review-156.png",
+      "resting_contact_sha256": "9b6932ac9ec77f10f7b1407a2b285fe0a679ab3b72c613856fc59022ac269248"
+    },
+    {
+      "unit_id": "unit_neutral_rootcrown_knotstags",
+      "atlas_sha256": "a3fee96a035786f243cedb3443af26d9c036e927bc3c595f2253630d10b4deab",
+      "pose_metadata_sha256": "4d1469960dcfd8e89147a8df10f72b02962f08198a39713ed005c5d5197e7be1",
+      "action_contact": "roster-review-156-fit.png",
+      "action_contact_sha256": "4478ff4abac274bbcb82e66d72ca6feda444f61f1f567f2316a000ca5845e544",
+      "resting_contact": "resting-r2-review-156.png",
+      "resting_contact_sha256": "9b6932ac9ec77f10f7b1407a2b285fe0a679ab3b72c613856fc59022ac269248"
+    },
+    {
+      "unit_id": "unit_neutral_gaugecoil_orewyrms",
+      "atlas_sha256": "abb71f83d336b6e6d6e553049b07320fe2d9df47787ac290c87d56e570ee51ab",
+      "pose_metadata_sha256": "4df8541aa2f2bf4e3e8d40c51618e5ccd08d17f9337576196f7927b1e2852460",
+      "action_contact": "roster-review-158-fit.png",
+      "action_contact_sha256": "cfa035917281f72e0f14da75a6372fc2b5fa94671835df84b090c773285101e4",
+      "resting_contact": "resting-r2-review-156.png",
+      "resting_contact_sha256": "9b6932ac9ec77f10f7b1407a2b285fe0a679ab3b72c613856fc59022ac269248"
+    },
+    {
+      "unit_id": "unit_neutral_gloambell_wake_mantas",
+      "atlas_sha256": "6cb515d0526db6b4e88e5588bab7dacdf594ff91070a000404ac77b485ff6f01",
+      "pose_metadata_sha256": "dfabbed550a2dfeba5ebd75ac219cd4f67c3debe4c00e5fc6a91e415dc57f8cf",
+      "action_contact": "roster-review-158-fit.png",
+      "action_contact_sha256": "cfa035917281f72e0f14da75a6372fc2b5fa94671835df84b090c773285101e4",
+      "resting_contact": "resting-r2-review-156.png",
+      "resting_contact_sha256": "9b6932ac9ec77f10f7b1407a2b285fe0a679ab3b72c613856fc59022ac269248"
+    }
+  ],
+  "final_packages": {
+    "parity": {
+      "ok": true,
+      "linux": {
+        "bytes": 638705108,
+        "sha256": "b5bcede8be9db16223f57bf5ebf016b94515daa745deea4e0bc2b17363e65978",
+        "members": 8846,
+        "town_variants": 19,
+        "failures": []
+      },
+      "windows": {
+        "bytes": 638705108,
+        "sha256": "c2c646537c561939afb6dff419977a10a60594a941c8aa0e303dad563c5b6f28",
+        "members": 8846,
+        "town_variants": 19,
+        "failures": []
+      },
+      "inventory_difference": [],
+      "different_members": [
+        "project.binary"
+      ],
+      "unexpected_payload_difference": []
+    },
+    "validation_payload_equivalence": {
+      "ok": true,
+      "platforms": {
+        "linux": {
+          "changed_members": [
+            "content/unit_animation_manifest.json"
+          ],
+          "all_art_compiled_owners_and_other_payloads_identical": true,
+          "all_pose_data_except_review_metadata_identical": true
+        },
+        "windows": {
+          "changed_members": [
+            "content/unit_animation_manifest.json"
+          ],
+          "all_art_compiled_owners_and_other_payloads_identical": true,
+          "all_pose_data_except_review_metadata_identical": true
+        }
+      }
+    },
+    "paths": {
+      "linux": "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-linux/export",
+      "windows": "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-windows/export"
+    },
+    "body_checks": {
+      "linux": 1033,
+      "windows": 1030
+    },
+    "accepted_units_read_by_each_package": 160
+  }
+}

@@ -1,0 +1,382 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          100,
+          340,
+          420
+        ]
+      ],
+      "anchor": [
+        175,
+        408
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "idle_breath",
+      "source": "continuity-alpha/idle-breath.png",
+      "rects": [
+        [
+          0,
+          0,
+          1293,
+          1216
+        ]
+      ],
+      "anchor": [
+        665,
+        1170
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "step_rear_left",
+      "source": "continuity-alpha/step-rear-left.png",
+      "rects": [
+        [
+          0,
+          0,
+          1293,
+          1216
+        ]
+      ],
+      "anchor": [
+        670,
+        1183
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "step_fore_left",
+      "source": "continuity-alpha/step-fore-left.png",
+      "rects": [
+        [
+          0,
+          0,
+          1293,
+          1216
+        ]
+      ],
+      "anchor": [
+        670,
+        1183
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "step_rear_middle",
+      "source": "continuity-alpha/step-rear-middle.png",
+      "rects": [
+        [
+          0,
+          0,
+          1293,
+          1216
+        ]
+      ],
+      "anchor": [
+        670,
+        1183
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "step_fore_right",
+      "source": "continuity-alpha/step-fore-right.png",
+      "rects": [
+        [
+          0,
+          0,
+          1293,
+          1216
+        ]
+      ],
+      "anchor": [
+        663,
+        1183
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "ram_windup",
+      "source": "continuity-alpha/ram-windup.png",
+      "rects": [
+        [
+          0,
+          0,
+          1293,
+          1216
+        ]
+      ],
+      "anchor": [
+        674,
+        1170
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "ram_contact",
+      "source": "continuity-alpha/ram-contact-complete.png",
+      "rects": [
+        [
+          0,
+          0,
+          1513,
+          1040
+        ]
+      ],
+      "anchor": [
+        770,
+        965
+      ],
+      "scale": 0.233
+    },
+    {
+      "name": "guard",
+      "source": "continuity-alpha/guard-brace.png",
+      "rects": [
+        [
+          0,
+          0,
+          1293,
+          1216
+        ]
+      ],
+      "anchor": [
+        665,
+        1138
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "guard_breath",
+      "source": "continuity-alpha/guard-breath.png",
+      "rects": [
+        [
+          0,
+          0,
+          1294,
+          1216
+        ]
+      ],
+      "anchor": [
+        665,
+        1138
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "hit",
+      "source": "continuity-alpha/hit-recoil.png",
+      "rects": [
+        [
+          0,
+          0,
+          1293,
+          1216
+        ]
+      ],
+      "anchor": [
+        665,
+        1145
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "death_buckle",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          360,
+          870,
+          624,
+          1000
+        ],
+        [
+          313,
+          1000,
+          624,
+          1095
+        ],
+        [
+          313,
+          1095,
+          612,
+          1105
+        ],
+        [
+          313,
+          1105,
+          607,
+          1110
+        ],
+        [
+          313,
+          1110,
+          590,
+          1140
+        ]
+      ],
+      "anchor": [
+        487,
+        1134
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "death_side",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          625,
+          895,
+          927,
+          1095
+        ],
+        [
+          613,
+          1095,
+          927,
+          1110
+        ],
+        [
+          606,
+          1110,
+          922,
+          1140
+        ],
+        [
+          674,
+          1140,
+          862,
+          1145
+        ],
+        [
+          675,
+          1145,
+          854,
+          1153
+        ]
+      ],
+      "anchor": [
+        787,
+        1144
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "dead",
+      "source": "continuity-alpha/dead-inert.png",
+      "rects": [
+        [
+          0,
+          0,
+          1511,
+          1041
+        ]
+      ],
+      "anchor": [
+        790,
+        904
+      ],
+      "scale": 0.163
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 8,
+      "indices": [
+        2,
+        0,
+        5,
+        0,
+        4,
+        0,
+        3,
+        0
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

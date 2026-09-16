@@ -169,10 +169,25 @@ func run() -> void:
 '''
 
 def run_probe(command, env, log, timeout_seconds=300):
-    return subprocess.run(command, env=env, stdout=log, stderr=subprocess.STDOUT, timeout=timeout_seconds).returncode
+    # Shared bounded process-group cleanup also owns xvfb/Godot children.
+    from packaged_town_scene_layer_regression import run
+    return run(command, env, log, ROOT, timeout_seconds)
 
 def probe_environment(env):
     return env
+
+def parse_probe_report(text, returncode, timed_out=False):
+    rows=[line.partition('BATTLE_READABILITY_REPORT ')[2] for line in text.splitlines() if line.startswith('BATTLE_READABILITY_REPORT ')]
+    report=json.loads(rows[-1]) if rows else {'ok':False,'failures':['no final report']}
+    checkpoints=[json.loads(line.partition('BATTLE_POSE_UNIT_REPORT ')[2]) for line in text.splitlines() if line.startswith('BATTLE_POSE_UNIT_REPORT ')]
+    if checkpoints:
+        report['completed_unit_checkpoints']=checkpoints
+    report['process_returncode']=returncode
+    report['timed_out']=timed_out
+    if timed_out:
+        report.setdefault('failures',[]).append('probe exceeded its wall-clock budget; partial results are not a pass')
+    report['ok']=bool(report.get('ok')) and returncode==0 and not timed_out and 'ERROR:' not in text and all(row.get('ok',False) for row in checkpoints)
+    return report
 
 def main():
     parser=argparse.ArgumentParser()
@@ -181,8 +196,13 @@ def main():
     parser.add_argument('--resolution',default='1280x720')
     parser.add_argument('--speed',choices=['normal','fast'],default='normal')
     parser.add_argument('--reduced-motion',action='store_true')
+    parser.add_argument('--timeout-seconds',type=int,help='Wall-clock budget for an expanded roster; replaces the legacy 1800-frame cutoff')
     args=parser.parse_args()
-    out=OUTPUT/args.label
+    if args.timeout_seconds is not None and args.timeout_seconds <= 0:
+        parser.error('--timeout-seconds must be positive')
+    # Keep temporary res:// probe scripts in the project, but allow bulky
+    # roster captures on a task-owned evidence volume without moving caches.
+    out=Path(os.environ.get('HEROES_BATTLE_READABILITY_ARTIFACT_DIR',str(OUTPUT)))/args.label
     out.mkdir(parents=True,exist_ok=False)
     with tempfile.TemporaryDirectory(prefix='probe-',dir=OUTPUT) as work, tempfile.TemporaryDirectory(prefix='battle-readability-user-') as user:
         work=Path(work)
@@ -190,15 +210,23 @@ def main():
         scene=work/'probe.tscn'
         scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="probe.gd" id="1"]\n[node name="Probe" type="Node"]\nscript=ExtResource("1")\n')
         env=probe_environment(dict(os.environ,XDG_DATA_HOME=user,XDG_CONFIG_HOME=user,XDG_CACHE_HOME=user,BATTLE_READABILITY_OUT=str(out),BATTLE_READABILITY_SPEED=args.speed,BATTLE_READABILITY_REDUCED='1' if args.reduced_motion else '0',TOWN_OVERLAY_RESOLUTION=args.resolution))
-        command=['godot','--path',str(ROOT),'--audio-driver','Dummy','--accessibility','disabled','--quit-after','1800','--resolution',args.resolution]
-        if args.render: command=['xvfb-run','-a']+command+['--rendering-method','gl_compatibility']
+        command=['godot','--path',str(ROOT),'--audio-driver','Dummy','--accessibility','disabled','--resolution',args.resolution]
+        if args.timeout_seconds is None: command+=['--quit-after','1800']
+        if args.render: command=['xvfb-run','-a','-s','-screen 0 2200x1200x24']+command+['--rendering-method','gl_compatibility']
         else: command+=['--headless']
         command+=['res://'+str(scene.relative_to(ROOT))]
-        with (out/'runtime.log').open('w') as log: code=run_probe(command,env,log)
+        timed_out=False
+        with (out/'runtime.log').open('w') as log:
+            limits={} if args.timeout_seconds is None else {'timeout_seconds':args.timeout_seconds}
+            try:
+                code=run_probe(command,env,log,**limits)
+            except subprocess.TimeoutExpired:
+                # run_probe owns child cleanup. Preserve the evidence left by
+                # a completed unit instead of losing the report to a traceback.
+                code=124
+                timed_out=True
         text=(out/'runtime.log').read_text()
-        rows=[line.partition('BATTLE_READABILITY_REPORT ')[2] for line in text.splitlines() if line.startswith('BATTLE_READABILITY_REPORT ')]
-        report=json.loads(rows[-1]) if rows else {'ok':False,'failures':['no report']}
-        report['ok']=report['ok'] and code==0 and 'ERROR:' not in text
+        report=parse_probe_report(text,code,timed_out)
         (out/'report.json').write_text(json.dumps(report,indent=2)+'\n')
         print(json.dumps(report))
         return 0 if report['ok'] else 1

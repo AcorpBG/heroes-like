@@ -1,0 +1,347 @@
+{
+  "unit_id": "unit_neutral_whitepike_keepers",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          0,
+          0,
+          322,
+          340
+        ],
+        [
+          94,
+          340,
+          322,
+          371
+        ]
+      ],
+      "anchor": [
+        191,
+        354
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          365,
+          0,
+          639,
+          367
+        ]
+      ],
+      "anchor": [
+        511,
+        353
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          749,
+          0,
+          1010,
+          376
+        ]
+      ],
+      "anchor": [
+        870,
+        353
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "walk_passing_attempt",
+      "source": "continuity-alpha/full-pike-thrust-recovery-brace-and-step.png",
+      "rects": [
+        [
+          610,
+          589,
+          1227,
+          1282
+        ]
+      ],
+      "anchor": [
+        891,
+        1188
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "pike_windup",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          325,
+          390,
+          739,
+          499
+        ],
+        [
+          325,
+          499,
+          651,
+          678
+        ]
+      ],
+      "anchor": [
+        477,
+        658
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "pike_full_thrust",
+      "source": "continuity-alpha/full-pike-thrust-recovery-brace-and-step.png",
+      "rects": [
+        [
+          0,
+          0,
+          727,
+          287
+        ],
+        [
+          0,
+          287,
+          612,
+          570
+        ]
+      ],
+      "anchor": [
+        296,
+        523
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "pike_recovery",
+      "source": "continuity-alpha/full-pike-thrust-recovery-brace-and-step.png",
+      "rects": [
+        [
+          727,
+          0,
+          1227,
+          286
+        ],
+        [
+          610,
+          286,
+          1227,
+          585
+        ]
+      ],
+      "anchor": [
+        878,
+        535
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "guard_ready",
+      "source": "continuity-alpha/full-pike-thrust-recovery-brace-and-step.png",
+      "rects": [
+        [
+          0,
+          590,
+          609,
+          1282
+        ]
+      ],
+      "anchor": [
+        299,
+        1180
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "guard_crouch",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          1230,
+          436,
+          1536,
+          492
+        ],
+        [
+          1170,
+          492,
+          1536,
+          682
+        ]
+      ],
+      "anchor": [
+        1310,
+        658
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          14,
+          695,
+          325,
+          985
+        ]
+      ],
+      "anchor": [
+        173,
+        952
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          322,
+          742,
+          651,
+          990
+        ]
+      ],
+      "anchor": [
+        494,
+        961
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "death_low_fall",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          668,
+          799,
+          1080,
+          938
+        ],
+        [
+          668,
+          938,
+          1112,
+          988
+        ]
+      ],
+      "anchor": [
+        874,
+        951
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "dead_head_right",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          1085,
+          832,
+          1536,
+          947
+        ]
+      ],
+      "anchor": [
+        1297,
+        938
+      ],
+      "scale": 0.59
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 195,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

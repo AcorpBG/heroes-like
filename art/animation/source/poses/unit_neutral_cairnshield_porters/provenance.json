@@ -1,0 +1,48 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_cairnshield_porters",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_cairnshield_porters.png",
+  "reference_sha256": "b454764c0a44c6ecc624e2232865890439fdf105409658dfe86faf049bb67efa",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "f61e3bcd532341f88f8965c095192f5be16b6193e5688e265dac7d4f05be4f90",
+      "source_output": "exec-93374b91-9995-48b7-aaa9-01c90df2c655.png",
+      "prompt": "Use case: stylized-concept. Original Cairnshield Porter battle animation sheet matching reference: powerful stocky woman black hair bun, stern face, ochre padded tabard blue geometric edging and blue scarf, gray wool/fur shoulders/trousers, iron/leather bracers boots. Tall rectangular wood-and-gray-stone slab shield iron bands lashed ropes carried on RIGHT side (viewer LEFT when front facing); enormous wooden-frame expedition backpack with bedroll, rope, sacks, pots remains attached. NO separate weapon: attacks by shield bash. Twelve full-body articulated poses FOUR columns THREE rows same elevated three-quarter camera facing RIGHT, consistent scale generous gutters shield and pack complete. Row1 idle planted shield upright; breath shoulders shrug under pack; heavy walking contact near leg forward; passing knee lifts foot beneath torso. Row2 opposite walking contact near thigh back across far forward thigh same torso; attack windup lean back pulling shield close BOTH hands brace rear shield grips; forward SHIELD BASH lean/lunge RIGHT elbows extend shield ahead; defense deep low crouch BOTH hands brace shield upright covering head/torso. Row3 hit recoil pack shifts but attached; dying knees buckle shield tilts; side fall body low shield/pack attached or beside; final dead relaxed horizontal SIDE body eyes closed, intact pack resting behind torso and whole slab shield flat alongside hands. Preserve heavy load grounded believable weight, no swords/maces, no extra limbs, no duplicated standing cutouts or rotated upright corpse. Original painterly raster like reference, plain pale gray background no shadows/grid/text/effects/blood/scenery.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "dbf31d55e3ac13fba27531def46b612131b8a4d8e35ecd512407709cece0628f",
+      "alpha_output": "exec-767b37cd-43e9-4e9c-84e7-19758d170c5d.png",
+      "alpha_prompt": "Use case: background-extraction. Remove gray from twelve-pose Cairnshield Porter sheet onto true transparent RGBA. Preserve exact layout/body scale, full stone/wood shield, expedition pack/rope/bedroll/pots, hands/boots/limb gaps and corpse. No checkerboard, matte, shadow, text, effects, redraw or reframing."
+    }
+  ],
+  "review_notes": [
+    "Twelve original poses and extraction visually inspected: shield-only bash, deep shield defense, heavy pack retained and own side corpse. Walking contact/passing alternation, grip/load continuity and a more distinct fall intermediate remain refinement work; current last two poses too similar. Source-only not packed/enabled; full-motion/compositing unaccepted. No tests/exports or disposable test intermediates created.",
+    "13 frames retain ten original paintings and select three new shield-bash recovery, ready brace and low side-fall paintings. Shield-only melee and heavy expedition pack remain; new fall supplies a distinct intermediate before the head-left resting corpse.",
+    "Original alpha composites are clean and reused. New green-backed art uses approved bounded preparation. Old source uses 0.50 uniform scale; new standing poses 0.38 and enlarged source fall 0.27 based on body/head comparison, not silhouette-box normalization or distortion. Banded crops exclude neighboring corpse/shield fragments while retaining own pack and boots.",
+    "Walking contact/passing repeats leg ownership and does not establish full alternating gait. Shield hand/orientation, pack/body proportion, edges/palette and connected collapse/action timing need whole-roster refinement. Static production review is not motion/gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_cairnshield_porters/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_cairnshield_porters/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_cairnshield_porters/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_cairnshield_porters/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_cairnshield_porters.png",
+    "runtime_sha256": "94e81be960c350278a43b8ee429be45e86d53355d441c990a8e6f67a03952921",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cairnshield_porters/alpha/poses.png": "dbf31d55e3ac13fba27531def46b612131b8a4d8e35ecd512407709cece0628f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cairnshield_porters/continuity-alpha/shield-recovery-brace-and-fall.png": "fe42eb129f233b87510a15eaccccede98af86b232fd1ec4bf08f27da7ac54b8c"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/cairnshield-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

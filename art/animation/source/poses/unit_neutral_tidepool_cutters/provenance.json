@@ -1,0 +1,60 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_tidepool_cutters.png",
+  "reference_sha256": "58b773cffd1684670dbc4fda36a1e01eff991a850d8038f88c266cd5184510f0",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "2bc5378d7fc9b1dfc3e4409aef623c21c7f219ab9827a63fd63b75e7fde85190",
+      "source_output": "exec-17a30ef7-935b-4ef3-b428-ef1aae7188cd.png",
+      "prompt": "Use case: stylized-concept. Original Tidepool Cutter battle animation sheet matching reference: woman dark braided hair shell beads, teal headscarf trailing strips, teal worn coat over cream blouse, bronze coin pendant, rope belt net pouch shell charms, dark trousers and tall rope-wrapped boots. TWO short curved steel cutting blades bronze hilts, one in EACH hand in every pose. Twelve full-body articulated poses FOUR columns THREE rows, same elevated three-quarter camera facing RIGHT, identical body scale wide gutters. Row1 idle blades low separated; alert breathing shoulders/scarf; running long extended stride; running gathered both knees bent feet tucked below hips. Row2 opposite extension near thigh back across far forward thigh, same torso; attack anticipation RIGHT blade raised behind shoulder LEFT blade guards chest; right blade slashes across torso toward RIGHT left blade drawn back guarding ribs; crouched defense TWO blades crossed in front of face. Row3 hit recoil two blades retained; dying knees buckle blades lowered; side fall torso low two hands/blades visible; dead relaxed horizontal SIDE eyes closed BOTH blades resting beside their hands, scarf/net pouch retained. Two blades only never disappear, original proportions real articulated elbows/hips/knees, no duplicated motion cutouts or rotated upright corpse. Original painterly fantasy raster. Pale gray background no shadows, grid, text, blood, water splashes, glow or motion effects."
+    },
+    {
+      "source": "poses-equipment-draft.png",
+      "source_sha256": "d61c872262b479b6bb32c4625cbb486735506c3813900d7c992b52410eccdae4",
+      "source_output": "exec-06212f67-f52c-4209-9da2-5df90eb4c055.png",
+      "prompt": "Use case: precise-object-edit. Correct only equipment in TWO frames of Tidepool Cutter 4x3 sheet. Row2 column2 windup: exactly TWO blades total. Keep raised right-hand blade; left hand holds ONE curved blade extending RIGHT from its bronze hilt. REMOVE extra blade projecting leftward across chest from same left hand. Row3 column4 corpse: restore SECOND curved steel blade bronze hilt resting flat beside far left hand near upper torso, clearly separate from existing foreground right-hand blade. Preserve corpse pose, all other frames, body size, gray background and original identity. No new arms, no effects/text."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "17abc4903ac27e38115066d6b7a1064e22950e6b145fc0bfc16a5314b8fe76ee",
+      "source_output": "exec-c0f101d9-d30d-4400-b55b-5cf8deb61671.png",
+      "prompt": "Use case: precise-object-edit. Correct ONLY last row columns3 and4 of this Tidepool Cutter sheet. Column3 side-fall: foreground hand at bottom left currently holds empty hilt; restore its curved steel blade extending down/right, match other blade. Column4 final corpse: second blade at lower left should simply lie loose on ground near body; REMOVE the detached fingers/extra hand gripping that blade. Keep actual foreground arm/hand and its blade intact. Two blades per figure, no extra limbs. Preserve all other frames and gray background/layout/body scale.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "64ff14e014fdca2fccb7073c164a9faecae8989524a8c73b2d77bbdae3bb61d3",
+      "alpha_output": "exec-73754437-1d9e-47b8-91ef-502277f59a2f.png",
+      "alpha_prompt": "Use case: background-extraction. Extract corrected twelve-pose Tidepool Cutter sheet onto genuine transparent RGBA. Remove gray only; preserve exact layout/body size, two blades in every pose including loose second corpse blade, hair/shell charms, clothing, limb gaps. No checkerboard/matte/shadow/text/effects/redraw/reframing."
+    }
+  ],
+  "review_notes": [
+    "Twelve poses, two equipment corrections and extraction visually inspected. Final source removes extra windup blade, restores side-fall blade and places a loose second corpse blade without detached hand. Extended/gathered run, cross-body slash, crossed-blade guard and own side corpse are distinct. Missing opposite running stride (frame4 remains standing), blade-size/hand continuity and full-motion/alpha compositing need refinement/review. Source-only not packed/enabled; no tests/exports or disposable test intermediates created.",
+    "13 packed frames retain nine original paintings and select four new blade recovery, crossed-blade guard, grounded passing attempt and head-left resting corpse paintings. Both original blades remain throughout attack and death; the new corpse follows the original head-left fall rather than reversing the body.",
+    "Clean original RGBA is reused; new green-backed art uses approved bounded matte/edge preparation. Source scales 0.52/0.30 preserve body proportions. Inspected banded crop boundaries exclude neighboring knives, scarf and corpse fragments without painting or warping.",
+    "Original stride is airborne and the new passing step does not establish a full alternating grounded gait. Blade/grip, body/palette/edge consistency and connected action/death timing remain refinement. Static production review is not motion/gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_tidepool_cutters/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_tidepool_cutters/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_tidepool_cutters.png",
+    "runtime_sha256": "0633641dc8fe75c92adc58b07f0ffa9cf6cf41ec5ee02dd262681c073dba78e8",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tidepool_cutters/alpha/poses.png": "64ff14e014fdca2fccb7073c164a9faecae8989524a8c73b2d77bbdae3bb61d3",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-alpha/twin-blade-recovery-and-directional-corpse.png": "24d3948a8e03b7f237303c469c843a3458b324e5f7f6c59c923044818b1a7fa9"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/tidepool-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

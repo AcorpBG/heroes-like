@@ -1,0 +1,147 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_sunvault_zenith_lensbearers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "runtime_candidate_pending_consolidated_validation",
+  "reference": "art/units/source/curated/unit_sunvault_zenith_lensbearers.png",
+  "reference_sha256": "42c57b8a2ec5449e24d370934bd4f79c01e122bd12de9c678d0e4c93100e81ac",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/poses.png",
+      "source_sha256": "d0a94bf7bb10095d78613b07818a21dd47cd10e641ac64285680cceef7255247",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-162a17c5-8917-44a1-bbee-c40c884aa7f0.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle sprite sheet. Reference defines ONE Zenith Lensbearer, adult woman with short swept platinum hair, blue prism eyepiece, ivory/gold armor over navy clothes, long split navy/ivory coat tails, gold armored boots, backpack gold framework with triangular mirrors and small circular blue lens. Holds ONE long brass/ivory prism projector with glowing blue crystal cylinder, front triangular prism and angular frame; RIGHT trigger hand LEFT fore-end support. Preserve identity and optical equipment. Exactly SIXTEEN articulated full-body poses FOUR columns FOUR rows, fixed elevated three-quarter camera facing screen-right, constant body/projector scale and generous margins. Genuine transparent RGBA background no painted checkerboard/scenery/floor/grid/text. Row1 idle projector lowered; idle breath shoulders shift coat tails settle; walk right foot forward left behind; opposite walk LEFT foot forward RIGHT behind genuinely alternate lead. Row2 passing rear foot lifted beneath hips; melee wind-up RIGHT hand releases trigger draws fist back LEFT supports projector against torso; melee RIGHT fist punches screen-right LEFT holds projector low, correct hand ownership; defend crouch projector diagonally guards chest both hands holding. Row3 aim projector level screen-right; fire short narrow blue light pulse from front prism, recoil shoulder slightly; recovery projector lowered trigger hand adjusts side dial; hit recoil torso back knees flex. Row4 death one knee buckles eyes closing blue lenses fade; kneeling head bows projector lowers; side fall bent hips/knees backpack retained projector landing beside; dead side-lying eyes CLOSED all projector/backpack lenses unlit dull glass, equipment complete and cloth limp. Exactly two hands two legs one projector, no duplicated guns or extra limbs. Actual articulation not rotated standing cutouts. Original art only no copyrighted franchise assets."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a2ef28a6-ba24-43c3-8c35-0a12491255d7.png",
+      "prompt": "Use case: precise-object-edit. Correct ONLY row2 column3 punch in this sixteen-pose Zenith Lensbearer sheet. Her anatomical RIGHT arm starts at shoulder on viewer LEFT and must cross in front of chest to punch screen-right. Her LEFT arm starts at shoulder on viewer RIGHT and bends DOWN to support projector at belly. Exactly two arms, right fist forward left hand grips gun; remove existing wrong left-arm punch. Keep head, armor, backpack, projector, pose size, canvas and all fifteen other poses unchanged.",
+      "reason": "Punch still left-arm despite requested right-arm correction; not selected."
+    }
+  ],
+  "review_notes": [
+    "Four new guided gait phases alternate contact and passing support legs, fixed facing and projector hand ownership.",
+    "Two-handed projector guard jab replaces inconsistent-handed original punch without changing melee rules; original punch and failed guided correction remain unselected.",
+    "Selected ranged recoil has no baked beam/checker artifacts. Original aim, recovery, hit, death and corpse retained, with a new defensive breathing variation.",
+    "Explicit body scales, ground anchors and disjoint idle crops avoid adjoining pose fragments. Candidate only, final connected-motion/equipment/edge and platform acceptance pending."
+  ],
+  "prior_review_notes": [
+    "Sixteen poses include aim/fire, recovery and persistent corpse.",
+    "Right-hand wind-up followed by left-arm punch; must correct arm ownership and projector support.",
+    "Walking contacts repeat lead and idle subtle; passing needs proper alternating cycle.",
+    "Projector barrel length/prism geometry, backpack lens/mirror count and hand grip vary. Recovery dial contact unclear.",
+    "Corpse eyes appear closed but blue lenses remain colored; verify fully inactive equipment and preserve eyepiece through death.",
+    "Transparency/compositing unresolved. Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "sources": [
+      {
+        "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/melee-punch-rejected.png",
+        "source_sha256": "045436335f937f1e4309b5ab5efbb953b320d78d3f5bcc9267d1a4be8318c9a9",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3e7b2eb1-5a91-470f-95d5-4c9a2fc358b9.png",
+        "prompt": "Use case: sketch-to-render. ONE Zenith Lensbearer full-body melee punch contact sprite. IMAGE 1 is the authoritative ARM OWNERSHIP and body pose diagram; replace it with painted character without changing the arm connections. BLUE is anatomical RIGHT near arm: starts at shoulder on SCREEN-LEFT, crosses IN FRONT of her chest, elbow midline, closed fist extended toward screen-right at shoulder height. ORANGE is anatomical LEFT far arm: starts at shoulder on SCREEN-RIGHT, bends DOWN so LEFT palm supports the heavy projector under its fore-end at belly height. The punching arm MUST cross her chest; do not make the far arm punch or both hands hold the weapon. Exactly two hands, one closed punching fist and one supporting palm. IMAGE 2 is identity/equipment ONLY, not arm pose: adult woman short swept platinum hair and blue prism eyepiece, ivory gold armor over navy clothes, long split navy/ivory gold-trimmed coat tails, gold armored boots. Backpack gold framework has THREE triangular mirror panels and ONE small circular blue lens at its top, remains attached behind shoulders. ONE long brass/ivory prism projector lies across belly supported by LEFT palm, blue crystal cylinder, gold angular front frame and triangular blue muzzle prism. Keep original head/body/weapon proportions and all equipment. Wide braced feet, slight forward punch lean; fixed elevated three-quarter facing screen-right. Crisp original painterly raster game art. Plain uniform neutral gray #808080 for local cutout, generous full-body/equipment margins. No guide colors/lines, checkerboard, effects, shadows, floor, captions or other figures.",
+        "selection": "rejected_wrong_arm_ownership"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/melee-pair.png",
+        "source_sha256": "c1c0913921dc5bfcf5b58c3af2972454bd5c857020ed77900560dfee744c2434",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ebd89393-6fd8-4738-b1c8-fc44f99fb267.png",
+        "prompt": "Use case: stylized-concept. Original tactical battle sprite mini-sheet, TWO separated full-body Zenith Lensbearer MELEE weapon-strike poses side-by-side. Reference defines identity and equipment ONLY. This is a two-handed thrust with the projector's metal front guard, NOT a fist punch and NOT firing. Keep RIGHT near hand on rear trigger grip and LEFT far hand cupping fore-end throughout. LEFT pose windup: feet wide braced, hips/shoulders twist slightly back, elbows bend to pull ONE brass/ivory prism projector close to belly, muzzle horizontal toward screen-right. RIGHT pose contact: whole body lunges screen-right, both arms push projector forward at lower chest height so protective gold front frame is leading, metal-front-guard jab; right trigger hand and left supporting palm remain in their correct places, fingers visibly gripping, NO extended fist. Same gun length and same body/face/armor scale in both poses, no hand swapping. Adult woman swept short platinum hair, blue prism eyepiece, ivory/gold armor over navy clothes, split navy/ivory gold-trimmed coat tails, gold boots; gold backpack carries THREE triangular mirror panels and ONE small circular blue lens above them. Projector has long blue crystal cylinder in brass/ivory frame, angular gold front guard and triangular blue muzzle prism. Preserve identical full equipment and original character identity, fixed elevated three-quarter view facing screen-right. Crisp painterly original raster art. Plain uniform neutral gray #808080 for later local cutout; broad gutter and generous margins around both full bodies, all mirrors and muzzle. No checkerboard, beam, projectile, flash, motion trail, shadow, ground, labels or extra people. Exactly TWO poses.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/walk-contact-a.png",
+        "source_sha256": "dac517882dc45bf1d5c9b6fce2c0ae881533b95d1b50f7ab36127710082be643",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4e433ff7-30dd-4052-b4e4-f97c185ea242.png",
+        "prompt": "Use case: sketch-to-render. ONE full-body Zenith Lensbearer walking contact A battle sprite. Image1 is authoritative near/far LEG geometry; replace guide with painted character keeping the leg arrangement. Image2 supplies exact identity/equipment only, NOT standing pose. BLUE = near RIGHT leg moving FORWARD screen-right and crossing in front of far leg, heel landing. ORANGE = far LEFT leg extended BEHIND to screen-left, toe pushing off. Torso/head fixed elevated three-quarter facing right, do not mirror body. Adult woman swept short platinum hair, blue prism eyepiece, ivory gold armor over navy clothes, long split navy/ivory gold-edged coat tails, gold armored boots. Backpack attached behind shoulders, gold framework with triangular mirror panels and one circular blue lens at top matching reference. ONE long brass/ivory prism projector with blue crystal cylinder and angular gold front guard holding triangular blue muzzle prism, carried lowered diagonally toward screen-right. RIGHT near hand rear trigger grip, LEFT far palm supports fore-end; same grip and equipment proportions. Coat splits enough to show the crossing near leg and both knees/boots; exactly two legs. Crisp original painterly raster style matching reference. Plain uniform neutral gray #808080 for local cutout, no painted checkerboard, shadow, floor, text, guide marks or effects. Generous clear margin around all mirrors, gun and boots, ONE figure.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/walk-passing-a.png",
+        "source_sha256": "d153b07375dea5af43b8dfc7c2c79c6b0d28620c4648eda5340328c6e9e52a93",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0baec5ac-499b-4559-ae7c-747179885426.png",
+        "prompt": "Use case: sketch-to-render. ONE full-body Zenith Lensbearer walking passing A. IMAGE 1 is authoritative near/far leg guide; paint character preserving its leg geometry. IMAGE 2 supplies identity/equipment ONLY, not leg pose. BLUE guide leg = near RIGHT leg straight planted support under hip. ORANGE = far LEFT knee bent forward toward screen-right, boot lifted behind planted near calf, sole clearly off ground. Feet nearly together, no wide stride, exactly one raised far foot. Body/head fixed elevated three-quarter facing right, no mirrored torso. Adult woman swept short platinum hair, blue prism eyepiece; ivory/gold armor over navy clothes; split navy/ivory gold-trimmed coat, gold armored boots. Original backpack framework with triangular mirrors and ONE circular blue lens above shoulders. ONE long brass/ivory prism projector with blue cylinder, gold angular front frame and triangular blue muzzle, carried lowered toward screen-right. RIGHT near hand holds rear trigger, LEFT far palm supports fore-end. Match original weapon size, body proportions, mirror arrangement and costume; cloth reveals knee/ankle ownership. Crisp original painterly raster style. Plain uniform neutral gray #808080 for local cutout. Generous margins around entire mirrors, gun and boots. No guide marks/colors, checkerboard, floor/shadow, effects, labels or other figures.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/walk-contact-b.png",
+        "source_sha256": "2be19f2b320a57236bd875a2f55283040e27671897cd2e0ea83f77b297455722",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ac6abedf-41ad-4dcd-a55d-0a1ebeb60518.png",
+        "prompt": "Use case: sketch-to-render. ONE full-body Zenith Lensbearer walking CONTACT B, opposite-leg stride. IMAGE 1 is authoritative near/far leg guide, replace drawing with painted character. IMAGE 2 supplies identity ONLY, not leg pose. BLUE = anatomical RIGHT NEAR leg extends BEHIND toward screen-LEFT, knee to LEFT of belt center, toe pushing at far LEFT. ORANGE = anatomical LEFT FAR leg extends FORWARD toward screen-RIGHT, knee to RIGHT of belt, heel at far RIGHT. Open uncrossed A-shaped stride, knees on opposite sides of belt, NOT near-right-leg-forward. Keep torso/head fixed elevated three-quarter facing screen-right, do not mirror. Adult woman swept short platinum hair, blue prism eyepiece; ivory/gold armor navy clothes and split navy/ivory gold-edged coat, gold armored boots. Original backpack gold framework with triangular mirror panels and ONE circular blue lens above shoulders. ONE brass/ivory prism projector original length and blue crystal cylinder with gold angular front frame triangular blue muzzle, carried lowered screen-right. RIGHT near hand rear trigger, LEFT far palm fore-end support. Same hand ownership, equipment and body proportions. Split coat reveals knee/boot ownership and open stride. Crisp original painterly raster game art. Uniform neutral gray #808080 backdrop for local cutout, generous margins around entire mirrors, gun, feet. No guide colors/lines, extra limbs, checkerboard, floor, shadow, text, effects or other figures.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/walk-passing-b.png",
+        "source_sha256": "1abed97f1c3819e5338ed4b3d7a481ac15f30c267d582b3420245124e98059d9",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d56abe44-cc2d-49b7-ba1c-91d72771a95c.png",
+        "prompt": "Use case: sketch-to-render. ONE full-body Zenith Lensbearer WALK PASSING B. IMAGE 1 is authoritative skeleton pose: ORANGE anatomical LEFT FAR leg straight bearing weight directly beneath pelvis, foot planted; BLUE anatomical RIGHT NEAR leg bent visibly in front of far thigh, knee raised toward screen-RIGHT, boot tucked below knee and distinctly OFF THE GROUND. Narrow mid-stride silhouette, not a spread stance. Image 2 supplies identity, NOT pose. Fixed elevated three-quarter view facing screen-right. Adult woman swept short platinum hair, blue prism eyepiece; ivory/gold armor navy clothes split navy/ivory gold-edged coat, gold armored boots. Gold backpack framework with triangular mirror panels and ONE circular blue lens above shoulder. Original brass/ivory prism projector with blue cylinder and angular gold front guard triangular blue muzzle, held lowered screen-right; RIGHT NEAR hand always rear trigger, LEFT FAR palm supports fore-end. Keep head/torso/camera/equipment same as reference, alter ONLY articulated leg gait and natural cloth response. Separate coat panels reveal knees. Crisp painterly original raster game sprite on uniform neutral gray #808080 background, margins around every mirror, weapon and boot. No guide colors, guide lines, checkerboard, floor, shadow, text, duplicate anatomy or effects.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/defense-breath.png",
+        "source_sha256": "cb77fba262265df3ff41743d700a67341cc86686637955e51085bbb4d26ddcb4",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4402385a-7da9-44a1-8575-c31d2174c858.png",
+        "prompt": "Use case: identity-preserve. Original painted game animation sprite, ONE Zenith Lensbearer defensive breathing variation. Image1 exact defensive pose reference; image2 full identity. Preserve deep crouch, screen-left near shin angled outward, far knee bent high at screen-right; identical fixed elevated three-quarter camera facing right. Change only small body articulation: sink chest slightly, tuck chin and elbows, tighten two-handed grip with weapon angled slightly higher to guard face. Projector stays diagonal chest guard, RIGHT near hand rear trigger and LEFT far hand underneath forward barrel. Same woman platinum short hair blue prism eyepiece ivory/gold plate navy coat and gold boots. Same backpack TWO prominent triangular mirrors and occluded framework with ONE circular lens on top; no new ornaments or shields. Same long brass/ivory blue crystal cylinder projector and triangular prism front gold angular guard; keep full length, do not shorten to pistol. One full-body pose, ample margin, uniform neutral gray #808080 background for cutout. No effects, beam, glow halo, extra figures, duplicate hands, floor, shadow, text or checkerboard. Repaint accurately in same original crisp painterly style; no literal reference fringe or tiny cut-off neighbor fragment.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/ranged-recoil.png",
+        "source_sha256": "718d67397f3b63dbbeac26999b17355e57124f071d1f3e9f6163de79c890e629",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-960f9e7a-f6a0-485f-a80a-5859dc4c8dd3.png",
+        "prompt": "Use case: identity-preserve. ONE full-body original Zenith Lensbearer tactical battle sprite, FIRING RECOIL without any baked effects. Image1 exact aim pose reference, image2 identity and equipment. Fixed elevated three-quarter camera facing screen-right, feet stay in wide planted aiming stance. Projector points horizontally screen-right at shoulder height, NOT diagonally down. Change from aim to mechanical recoil: upper torso rocks backward slightly, rear elbow pulls back, elbows flex, front barrel tips upward only 5 degrees, cloth/hair recoil gently. Anatomical RIGHT NEAR hand holds rear trigger; LEFT FAR palm supports fore-end. Preserve woman short platinum hair blue prism eyepiece ivory/gold plate navy split coat gold boots, backpack gold framework TWO prominent triangular mirrors and one blue circular top lens, long brass/ivory blue crystal-cylinder projector gold angular muzzle frame and triangular prism. Gun same length/proportions as reference, whole gun and both boots inside generous margins. Clean crisp painterly original game art on uniform neutral gray #808080 for extraction. ABSOLUTELY NO laser, beam, muzzle flash, sparks, trails, glow aura, checkerboard, ground, shadow, text, extra hands or duplicate figures. Blue glass inside existing lenses permitted, no light outside lens surface. Ignore extraction fringing from reference.",
+        "selection": "packed_candidate"
+      }
+    ],
+    "reference_crops": [
+      {
+        "source": "continuity-alpha/poses.png",
+        "rect": [
+          0,
+          0,
+          314,
+          323
+        ],
+        "output": "identity-reference.png"
+      },
+      {
+        "source": "continuity-alpha/poses.png",
+        "rect": [
+          947,
+          331,
+          1253,
+          638
+        ],
+        "output": "defense-reference.png"
+      },
+      {
+        "source": "continuity-alpha/poses.png",
+        "rect": [
+          0,
+          638,
+          320,
+          949
+        ],
+        "output": "aim-reference.png"
+      }
+    ],
+    "reference_roles": {
+      "walking": "Single near/far biped phase guide first, original identity crop second; no previous generated stride used as identity anchor.",
+      "melee": "Original identity plus near-arm punch diagram failed again; rejected. Replaced complete art pair with two-handed projector strike keeping both grips, no rules change.",
+      "defense": "Original defensive crouch and idle identity.",
+      "ranged": "Original aim and idle identity, recoil articulation only without baked VFX."
+    },
+    "preparation": "Owner-approved non-generative matte via continuity-cutouts.json; all opaque sources and prompts retained. Inspected seed in walk-contact-a bracket and narrowly scoped colored-background region behind ranged-recoil top lens; white armor and surrounding equipment retained. Each derived output pins source/tool/recipe/output hashes.",
+    "packing": "packing.json",
+    "runtime_sheet": "art/animation/runtime/poses/unit_sunvault_zenith_lensbearers.png",
+    "runtime_sha256": "7c702eee044ab2882aed1e8c9ee87f2ca83e97c28bc8b16b26fb92773074a871",
+    "frames": 18,
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/zenith-continuity-20260915/",
+    "validation": "Production assembly and actual alpha-composite review only; final connected battle timing, equipment continuity and platform acceptance deferred. No tests/imports/exports."
+  }
+}

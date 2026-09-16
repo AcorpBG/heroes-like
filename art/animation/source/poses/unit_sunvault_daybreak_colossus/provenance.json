@@ -1,0 +1,165 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_sunvault_daybreak_colossus",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_sunvault_daybreak_colossus.png",
+  "reference_sha256": "41a17f5ace0bb3ec28c3936b68fe5353b85cf901e52e2dc61ea3075e5fb62810",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_sunvault_daybreak_colossus/poses-draft.png",
+      "source_sha256": "63a52aca103fdf2d114a37ebe28854f6a4d252ecc53c148b982988f0ed4c6af7",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cb0df3e5-19a8-4d9d-abbb-1bf415e29ba4.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle animation sprite sheet. Reference Daybreak Colossus is a giant ivory/gold mechanical walker with FOUR articulated plated legs and clawed gold feet, purple crystal core in oval chest, huge central forward cylindrical purple crystal cannon held in gold rings, upper circular golden sun collector surrounded by petal-shaped silver mirror panels. No humanoid face, arms, rider or crew. Preserve reference anatomy and equipment. Twelve complete poses in FOUR columns THREE rows, generous gutters, consistent body/core/cannon scale, three-quarter facing screen right, transparent RGBA. Reading order: 1 idle planted legs barrel level; 2 idle core rises on suspension collector tilts slightly; 3 walking near foreleg forward near hind back; 4 passing stride legs flex under body; 5 opposite contact far foreleg forward near foreleg back; 6 firing windup crouch brace collector tips toward barrel; 7 firing recoil cannon retracts along same axis torso recoils with planted feet; 8 defense low crouch collector petals tilt protective; 9 hit recoil torso leaning back cannon retained; 10 death front knees buckle collector light fades; 11 collapse onto side legs fold attached collector and cannon tip with body; 12 persistent wreck side-lying all FOUR legs cannon and collector retained, core and lenses dark purple no emitted light. Same number and arrangement of mirror petals and one cannon throughout. No beams, projectiles, effect clouds, shadows, background, text, extra limbs or gore. Distinct mechanical articulation not translated duplicates. Original detailed painted strategy-game art matching reference. Opaque machine and genuinely transparent empty space."
+    },
+    {
+      "source": "art/animation/source/poses/unit_sunvault_daybreak_colossus/poses.png",
+      "source_sha256": "4a5e0ad55d9b5b46c6101eacf129d9ff02586d9bfbc41056eec9513f0be54fe0",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-02e158ce-556b-4790-a27b-d2b1361cf713.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY bottom-right final wreck pose (row three column four) in supplied twelve-pose Daybreak Colossus sheet. Extinguish its bright golden cannon muzzle to dark violet glass, matching its already dark upper collector. Extinguish remaining bright violet core/barrel emission to dark purple reflective crystal. Preserve all physical gold rings, cannon, chassis, legs and mirror petals, their shapes and positions. No other pose or background changes. Final wreck inert with no emitted light.",
+      "alpha_source": "art/animation/source/poses/unit_sunvault_daybreak_colossus/alpha/poses.png",
+      "alpha_sha256": "790c5a7eb2e01e54f7e45b176061178243b598ca953ffe04164c2bbc13893815",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-fd2a3e56-07bb-4da9-8266-6e786cd922f4.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only checkerboard background from twelve-pose Daybreak Colossus sheet into true transparent RGBA alpha. Preserve every machine, gold rings, ivory armor, purple cores, mirror petals, exact positions and scale, and corrected dark final wreck muzzle. Clear gaps between legs and rings. Opaque machine interiors. No replacement background, matte, shadows, effects, painted checkerboard or redraw."
+    }
+  ],
+  "review_notes": [
+    "Sixteen original frames selected from five built-in green-backed masters: idle pair, four single-foot mechanical creep lifts, separate ranged and physical ram pairs, defense pair, hit, lowering collapse and powered-off persistent wreck.",
+    "Previous six opposite-stride attempts remain recorded and unselected; four were rejected. Fixed original neutral identity plus one-foot-at-a-time creep produced four separate leg chains without deleting a support.",
+    "New opt-in color-distance matte preserves gray/ivory armor and removes vivid green backing through mirror/cannon/leg apertures. Only inspected matching color and narrow source-color edge band change; original master pixels and coordinates retained. No per-pose armor protection polygons needed for this cohort.",
+    "Persistent wreck uses only bottom-right of targeted powered-off master. Original hit/buckle/fall retained from death-hit-green. Final leg occlusion, crown hinges, body scale, event-duration traversal and alpha edges remain consolidated playback acceptance work.",
+    "Packed with explicit source rectangles, fixed body-relative scales and anatomical ground anchors. Packer first caught one-pixel falling-frame clipping; anchor corrected and all frames given additional floor clearance before successful final packing.",
+    "Offline all-state art desk visually inspected at registered candidate scale. No Godot imports, automated tests, repository validation, exports, paid API, gameplay/save/footprint changes or final acceptance."
+  ],
+  "continuity_attempts_20260915": {
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "sources": [
+      {
+        "source": "art/animation/source/poses/unit_sunvault_daybreak_colossus/walk-contact-a.png",
+        "source_sha256": "92171b541fc2daed67991e9357b94f01df76268d04049ed0c5fb4edd20489298",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-efbeedac-fcaa-48cd-a22e-36c00a91bb8e.png",
+        "prompt": "Use case: sketch-to-render. Single original painted Daybreak Colossus battle WALK CONTACT A pose. Image1 guides ONLY FOUR mechanical leg joint positions, image2 authoritative machine identity. Fore pair at screen-right, hind pair at screen-left. NEAR FORE blue leg reaches forward right; NEAR HIND blue leg trails back left; FAR FORE orange planted beneath chest and FAR HIND orange planted forward beneath belly. Exactly FOUR independently attached articulated legs with four clawed gold feet, no branches from knees. Do not copy horse torso/head, only leg pose. Preserve reference ivory/gold giant compact walker, purple chest crystal and hanging purple teardrop, ONE cylindrical forward violet crystal cannon with same gold rings/cage, upper circular gold sun collector and original asymmetric five petal-shaped silver-violet mirror panels around it. Fixed right-facing three-quarter camera, same proportions and ornate painted style, no humanoid/head/arms/crew. Whole machine with 8 percent margin on plain flat neutral gray #989898, opaque white armor. No beams, muzzle flash, scenery, ground, shadows, labels or extra legs/cannons.",
+        "selection": "source_candidate_only",
+        "review": "Four visible feet; guide does not prove exact near/far phase. First prompt incorrectly specified five mirrors; output/reference retain six."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_daybreak_colossus/walk-passing-a.png",
+        "source_sha256": "0c77e84fb048634c5dfee58a9ea5e0113ee5b7d7a3073f255c08c9e6311329bd",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-de6280c9-b934-49fe-a93b-640f56cca038.png",
+        "prompt": "Use case: sketch-to-render. ONE original Daybreak Colossus battle walking PASSING A frame. Image1 leg-pose guide only, image2 strict mechanical identity. Exactly FOUR independently attached mechanical legs: near FORE blue right supports vertical under chest, far HIND orange left planted under rear; near HIND blue left bends FORWARD with foot lifted toward belly, far FORE orange right bends with foot raised below barrel. FOUR clawed feet total, two planted two in air. Each leg owns its hip and knee, no knee branching. Preserve image2 compact ivory/gold four-legged walker, central vertical oval purple chest core, hanging purple pendant, ONE horizontal cylindrical violet cannon in gold rings, upper circular golden sun collector with same SIX silver-violet petal mirrors in asymmetric original positions (four along left arc and two at right). No head/arms/humanoid, horse body or guide marks. Fixed right-facing three-quarter view and same body/weapon proportions. One complete machine centered with margins on flat neutral gray #989898, detailed original painted game style with opaque white armor. No floor, shadows, beams, projectiles, labels, extra cannon, legs or mirror petals.",
+        "selection": "source_candidate_only",
+        "review": "Four-foot passing candidate, not a complete alternating cycle."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_daybreak_colossus/walk-contact-b-repeated.png",
+        "source_sha256": "3860ed447d857ea052cf39eb7ebc62ae9ed7a647d2fe64efa162ca8b02ea5d51",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c2d30901-784c-431c-a1c2-6262d6ac19f3.png",
+        "prompt": "Use case: sketch-to-render. ONE Daybreak Colossus original painted battle walking CONTACT B. Image1 FOUR-leg pose guide authoritative for joint positions; image2 authoritative machine identity. Both NEAR BLUE legs converge under belly: near FORE bends BACK toward screen LEFT with foot planted under core; near HIND bends FORWARD screen RIGHT with foot planted beside it. Both FAR ORANGE legs spread outward: far FORE foot far RIGHT under barrel, far HIND far LEFT behind chassis. Exactly FOUR separate hip-knee-foot chains, four gold clawed feet, no knee branching. Do not repeat broad near-leg stance, do not mirror body. Keep image2 compact ivory/gold walker facing right, one gold-ringed cylindrical violet cannon, central oval purple chest crystal and pendant, upper round sun collector with SAME SIX silver-violet petal mirrors (four left arc, two right). Same right-facing three-quarter camera/body/cannon size. No humanoid, head, arms, guide ink or horse anatomy. Single complete machine with margin on plain neutral gray #989898. Original crisp painted game style, opaque white armor. No ground/shadow/beam/effects/text, added feet, cannon or panels.",
+        "selection": "rejected_for_gait",
+        "review": "Near-front leg remains spread forward, not opposite contact."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_daybreak_colossus/walk-contact-b-three-legs-rejected.png",
+        "source_sha256": "59be5f98233c37666409b5dec7553945ec7f82fbd71488d9f6323cd2b506fcfd",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5c9438aa-8c60-4a52-a25b-19a7e1f807ad.png",
+        "prompt": "Use case: precise-object-edit. Edit ONLY the TWO FRONT LEGS below the cannon in this Daybreak Colossus image. The current image incorrectly repeats a broad near-front-leg stance. Keep all upper machinery, both rear legs on screen LEFT, camera and canvas unchanged. The BIG NEAR FRONT LEG with broad purple shin, currently hip at x815 y725, knee x950 y907, foot x1060 y1040 MUST swing BACK LEFT: same hip x815 y725, new knee x733 y876, new foot x637 y1050, its limb crosses IN FRONT of the small far front leg. The SMALL FAR FRONT LEG currently tucked behind core and foot x727 y1035 must instead reach OUT to screen RIGHT: hip remains behind near hip, knee x971 y855, foot x1100 y1000, rendered BEHIND the crossing near leg. Remove the old front-leg pixels/feet where vacated, background becomes original gray. Exactly FOUR independent legs and FOUR feet total after correction. Rear two legs remain exactly as input. Do not create a fifth leg, branch from knee, move hips, change cannon, armor, core, six mirror petals or crop. Near-front broad purple plate and gold clawed foot remain same size/material, just articulated back-left at real joints. Everything above hips pixel-for-pixel appearance unchanged, gray background, no effects or text.",
+        "selection": "rejected_for_gait",
+        "review": "Targeted edit removed a leg: three feet/chains instead of four."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_daybreak_colossus/walk-passing-b-ambiguous-feet-rejected.png",
+        "source_sha256": "49ee546d8fb3e29eeca1cc5e6052fa0be14871237724bcd24796e4f13bd413e8",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5a4f4598-6d92-4a15-878f-5ceaf5160ede.png",
+        "prompt": "Use case: sketch-to-render. ONE original Daybreak Colossus battle walking PASSING B pose. Image1 defines four-leg suspension stance, image2 original mechanical identity. BLUE NEAR FORELEG under cannon is LIFTED: its broad violet plate tilts diagonally forward-right from hip, knee raised at chest underside height, gold clawed foot curls back-left beneath knee clearly ABOVE ground. ORANGE FAR FORELEG stays straight planted behind it. BLUE NEAR HINDLEG on left is planted vertical. ORANGE FAR HINDLEG behind it has raised knee and foot. Exactly FOUR full connected mechanical legs, FOUR gold clawed feet, two grounded and two raised. Independent hip-to-knee-to-foot chains, no branched knees. Keep original compact ivory/gold chassis, ONE cylindrical violet cannon with gold rings, purple oval chest core and pendant, round sun collector with same SIX silver-violet petals in original asymmetric positions. Same right-facing three-quarter camera, no human/horse anatomy or colored guide ink. Complete machine centered with clear margins on flat neutral gray #989898. Same original rich painted game art and opaque white plates. No shadows, floor, beams, effects, text, extra/missing legs, cannon or panels.",
+        "selection": "rejected_for_gait",
+        "review": "Extra-foot/limb attachment ambiguity and incorrect support pairing; cannot count as four-legged passing B."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_daybreak_colossus/walk-contact-b-mechanical-reference-rejected.png",
+        "source_sha256": "e86f44e318bd7a58f2a855a9c57da07e7648ce52faeea0a46da528bbc7747fdf",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-37eb87b4-783b-4c4d-bcdd-a542fb861e86.png",
+        "prompt": "Create ONE original painted tactical battle animation sprite on a flat medium neutral gray #929292 background, full body with generous margins. Image 1 is ONLY a four-legged mechanical limb-pose reference. Image 2 is the authoritative identity and camera of the unit to paint: the DAYBREAK COLOSSUS. Transfer the FOUR independently articulated leg chains and opposite-stride contact pose from Image 1 to the much shorter upright chassis of Image 2. Do not transfer Image 1's banners, blue gems, triangular fins, long insect chassis or three-lens antenna. Keep Image 2's compact upright ivory and gold armored torso, violet oval chest core and hanging purple teardrop, ONE cylindrical violet cannon with gold rings pointing right, round golden sun collector, and SIX silver-violet petal mirrors in the same arrangement. Preserve its three-quarter right-facing camera.\nAction: opposite contact walking keyframe. Four legs total, each with exactly one hip, knee and triangular three-toe foot. Near front leg sweeps BACK under torso, far front leg reaches FORWARD right; near rear leg reaches FORWARD under torso, far rear leg extends BACK left. Separate the silhouettes and show all four feet clearly: no merged knees, no extra legs, no missing legs. Torso/cannon remain level. This is an articulated walking pose, not an idle stance or simply rotated sprite. No attacks, sparks, muzzle blast, ground/shadow, scenery, text, labels or checkerboard. Match Image 2's polished hand-painted gold/ivory/violet design without redesign.",
+        "selection": "rejected_for_gait",
+        "review": "Painted Solar Array mechanical pose reference retains four leg chains but still spreads near-front leg forward rather than opposite support. New reference mechanism did not solve requested phase; not prepared, packed or registered."
+      }
+    ],
+    "reference_crop": {
+      "source": "alpha/poses.png",
+      "source_sha256": "790c5a7eb2e01e54f7e45b176061178243b598ca953ffe04164c2bbc13893815",
+      "rect": [
+        0,
+        0,
+        370,
+        378
+      ],
+      "output": "reference-crops/identity.png"
+    },
+    "result": "Not packed or registered. Exact missing state: unambiguous four-leg opposite support/contact and passing gait retaining independent hip-knee-foot ownership. Diagram, targeted front-leg edit and painted mechanical pose-reference transfer all failed to establish the opposite support pattern. Six attempts retained; four rejected. No tests/imports/exports or paid API. Existing originals unchanged."
+  },
+  "prior_review_notes": [
+    "Twelve source poses inspected; final wreck muzzle/core extinguished. Not packed or enabled.",
+    "Four-leg attachment/occlusion and alternating contact/passing gait require refinement. Initial collapse remains largely standing.",
+    "Mirror petals change count/arrangement through collapse; collector and cannon scale/joint continuity pending.",
+    "Extraction also darkened earlier death muzzles. Edge fringes visible; full-motion and in-context compositing acceptance pending.",
+    "No tests/exports or disposable test intermediates created; 29 runtime candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "creep-generation.json",
+    "sources": [
+      {
+        "file": "creep-four-green.png",
+        "prompt": "Edit this exact original Daybreak Colossus design into a 2 by 2 production animation pose sheet, four fully isolated full-body paintings, fixed three-quarter camera facing right, identical machine and scale in every cell. Flat pure vivid chroma green #00ff00 background, no grid, no text, no ground or cast shadows. Green is BACKING ONLY: neutral studio light, absolutely no green reflections/spill/glow on white gold or purple armor. Generous empty margins around every sprite. Identity must match reference: four separate articulated armored legs with four claw feet (near rear at lower left, near front at lower right, far rear at left middle, far front below body middle); ivory gold segmented carapace, violet oval chest core and hanging purple teardrop, ONE violet cylindrical cannon caged in gold aimed right, large round golden sun collector above torso with exactly SIX silver-violet mirror petals (four left arc, two right). No humanoid head, hands, additional barrels or wheels. This is a slow four-legged machine walking with a cautious CREEP GAIT, not a running horse or a diagonal-stride swap. Keep THREE feet planted and lift exactly ONE foot in each cell, every leg still visibly attached to its own hip. TOP LEFT: near-front lower-right foot lifted clearly off ground, ankle folded up and knee bent under chest, other three feet planted. TOP RIGHT: near-rear lower-left foot lifted clearly, knee bent forward toward chest, three others planted. BOTTOM LEFT: far-front central foot lifted clearly behind the near-front leg, near legs remain planted and spread so all four feet visible. BOTTOM RIGHT: far-rear left-middle foot lifted outward left, all other three planted. Keep gun, sun crown, six petals, chest and chassis rigidly consistent; only leg joints articulate and slight weight shift. Paint real new joint/foot poses; no whole-body rotation/translation pretending to be walking. Isolated original fantasy tactical-game raster sprites, precise clean silhouette and shaded ivory armor.",
+        "original": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cc549cd0-ffc5-4e19-b5c8-d70fe33f7b25.png",
+        "reference": "art/animation/source/poses/unit_sunvault_daybreak_colossus/reference-crops/identity.png",
+        "selection": "All four one-foot-lift creep phases; original four legs and six mirror petals retained on source inspection.",
+        "sha256": "7c442770c8301e4e2465a33962bdc6a6f409a9b69b247f5e26cd1ce27faa7e90"
+      },
+      {
+        "file": "ready-defense-green.png",
+        "prompt": "Create a 2x2 original tactical-game animation sheet by editing the reference Daybreak Colossus. Exact same ivory/gold four-legged mechanical colossus, exactly four articulated legs/four claw feet, one violet cannon aimed right, purple chest core/teardrop, golden round sun collector and SIX silver-purple mirror petals (four left arc, two right). Same locked right-facing three-quarter camera, proportions, scale, paint style in all cells. ALL FOUR FEET planted and individually visible. TOP LEFT neutral ready idle, tall relaxed legs and steady cannon. TOP RIGHT second subtle idle: tiny suspension compression and minor mirror-petal hinge tilt, no silhouette redesign. BOTTOM LEFT defensive brace: four legs flex, torso lowers, cannon tucked slightly closer, mirrors close protectively without detaching or losing any petal. BOTTOM RIGHT second braced pose: deeper knee flexion, all feet stay planted, torso absorbs pressure from the right, preserve all original parts, no wounds/damage. No human head hands crew weapons added. True articulated joints, not whole-body scaling. Crisp attractive painted raster sprites, each FULL BODY isolated with 35px or more margin and generous gutters. Flat pure vivid chroma GREEN #00ff00 backing, no text/grid/shadows/ground; neutral studio illumination absolutely no green reflections, rimlight, glow, spill or tint on ivory/gold/purple surfaces. Chroma is background ONLY. Keep crown/muzzle/toes wholly inside each cell.",
+        "original": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ef86e193-650c-46da-9f0e-7848f52b27a6.png",
+        "reference": "art/animation/source/poses/unit_sunvault_daybreak_colossus/reference-crops/identity.png",
+        "selection": "All four planted idle and suspension-brace states; final motion acceptance pending.",
+        "sha256": "ba2b03fb32d262896496e9f1abed7b0105251d8e1758120dae8dfe5d3ca10c20"
+      },
+      {
+        "file": "actions-four-green.png",
+        "prompt": "Edit reference into a 2x2 original Daybreak Colossus combat animation pose sheet. Preserve this SAME four-legged ivory/gold mechanical body with FOUR attached articulated legs/claw feet, one long violet cannon in gold cage on front aimed right, oval violet chest core and hanging purple teardrop, round golden sun collector surrounded by exactly SIX silver-violet petals four left two right. Fixed right-facing three-quarter camera and identical scale. NO arms/hands/head/crew/extra weapons. TOP LEFT ranged anticipation: all four feet brace widely, cannon raised toward right at chest height, violet energy builds INSIDE its barrel, recoil joints compressed. TOP RIGHT ranged recoil: same cannon moves backward into its sliding collar and torso rocks backward with flexed rear legs, a SMALL contained warm white-violet muzzle flash directly at mouth; retain all four legs and all six petals. BOTTOM LEFT melee anticipation: four legs crouch back, torso draws rearward preparing a short physical body/gun-cage ram; cannon not firing. BOTTOM RIGHT clear physical melee contact: four legs thrust chest and GOLDEN OUTER CANNON RIM decisively forward right to bash an adjacent foe; near-front knee bent forward, rear legs drive from ground, barrel still whole; no projectile or opponent, no explosion. Full isolated entire machine in each cell with very generous margins/gutters, neither muzzle nor toes touching edges, no overlapping cells. Flat pure vivid GREEN #00ff00 background without shadow/floor/grid/text. Neutral studio illumination; no green spill, green highlights, green reflections or green on machine. Original painted game sprite with clean contours, consistent structural identity and genuinely articulated action.",
+        "original": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5e8893ab-1af6-4a72-a888-9936d09e88d0.png",
+        "reference": "art/animation/source/poses/unit_sunvault_daybreak_colossus/reference-crops/identity.png",
+        "selection": "Ranged charge/recoil and physical melee anticipation/contact candidates; far-side leg occlusion on thrust requires consolidated motion review.",
+        "sha256": "3c668b01ce8584a4a87d28c1768c3c612d20bc142364050345ff9a5a2e338a1e"
+      },
+      {
+        "file": "death-hit-green.png",
+        "prompt": "Edit the reference original four-legged Daybreak Colossus into 2x2 hit/death animation sheet. Same camera right-facing three-quarter, same size and rendering, preserve ivory/gold mechanical body, FOUR articulated armored legs with claw feet, ONE violet cylindrical cannon in gold cage, violet chest core and hanging crystal, round golden sun collector and SIX silver-violet petals four left two right. TOP LEFT nonfatal hit recoil: four feet on ground, body shudders backward, legs flex, collector tilts slightly, machine structurally intact. TOP RIGHT death start: FRONT TWO knees give way onto ground, rear knees flex, chassis visibly pitches down toward right, no explosion. BOTTOM LEFT falling: body tips further onto its right flank, cannon tilted down touching ground, FOUR legs folding with recognisable distinct segments, sun collector tips sideways, original petals stay identifiable some bent at hinges, power fading. BOTTOM RIGHT final inert dead wreck: ENTIRE body lies flat on its side, cannon lies horizontally pointing right close to ground, FOUR folded leg assemblies splayed around low chassis, tilted sun collector with six bent petals still attached; ALL core/barrel/collector illumination OFF dark purple inert crystal, no floating debris, no standing active machine. Clearly staged collapse with lowering body, never standing dead. Keep all pieces whole inside each separate cell with very generous margins and gutters, no other unit, no ground/shadows/grid/text. Flat pure chroma GREEN #00ff00 backing; neutral lighting, no green rim light/reflections/spill on armor. Painted original fantasy tactical-game full-body sprite assets, readable silhouette.",
+        "original": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2e813c20-2460-4565-ae86-cb69179b70d4.png",
+        "reference": "art/animation/source/poses/unit_sunvault_daybreak_colossus/reference-crops/identity.png",
+        "selection": "Hit and lowering collapse poses; dead-frame chest power still lit, requiring targeted original-art correction before selection.",
+        "sha256": "7d451dccec1e5dcd59cc15684cb4a02b530b9f0a6ca116453abcbb2b4389ee6f"
+      },
+      {
+        "file": "death-hit-powered-off.png",
+        "prompt": "Make a precise local edit to this exact existing 2x2 sprite sheet. Preserve the entire sheet dimensions, all four poses, all armor, leg shapes, cannon shape, mirror arrangement, camera, scale, green backing and every position. CHANGE ONLY BOTTOM RIGHT final dead wreck: its oval violet chest crystal must be COMPLETELY POWERED OFF, dark dull purple with normal soft reflected highlights but NO white star, no cyan streak, no glow. Turn off any remaining internal light in its cannon and small hanging core too, so this flat inert wreck clearly reads dead. Its sun collector is already off; keep it off. Do NOT erase or recolor gold cage/ivory armor, do not delete crystals. Keep all six original mirror petals attached including partially occluded lower ones. Do NOT alter the other three panels at all. No new effects, no shadows, no green reflections. Original raster painting edit, not a redesign.",
+        "original": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-17499f54-2dec-4e09-8368-7ec3e21ac12d.png",
+        "reference": "art/animation/source/poses/unit_sunvault_daybreak_colossus/death-hit-green.png",
+        "selection": "Select bottom-right powered-off persistent wreck only; original hit/buckle/fall remain selected from previous master.",
+        "sha256": "2bfd8a7ac87e4ea35e0ab4d453a5f483068b23865cfad036cd28129319cb2963"
+      }
+    ],
+    "preparation": "continuity-cutouts.json; explicit color_distance [0,255,0] radius75, all_keyed_is_background true after palette/aperture inspection, edge_radius2; source/tool/recipe/output SHA proofs retained.",
+    "packing": "packing.json",
+    "packed_frames": 16,
+    "runtime_candidate": "art/animation/runtime/poses/unit_sunvault_daybreak_colossus.png",
+    "runtime_sha256": "0ed7f68fcf606e77c9c8ff69977321cc925c0a667852f08ef3032a5acbed67d5",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/daybreak-creep-20260915/",
+    "status": "candidate_registered_not_final_accepted",
+    "acceptance": "Full-roster consolidated gameplay/repository/Linux/Windows acceptance deferred until production/refinement/integration finish."
+  }
+}

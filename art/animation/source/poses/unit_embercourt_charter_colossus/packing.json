@@ -1,0 +1,324 @@
+{
+  "unit_id": "unit_embercourt_charter_colossus",
+  "status": "runtime_candidate_pending_consolidated_validation",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 22,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          15,
+          14,
+          310,
+          416
+        ]
+      ],
+      "anchor": [
+        161,
+        401
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "idle_1",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          320,
+          15,
+          595,
+          416
+        ]
+      ],
+      "anchor": [
+        452,
+        401
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "walk_staff_side_contact",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          619,
+          18,
+          919,
+          417
+        ]
+      ],
+      "anchor": [
+        777,
+        401
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "walk_shield_side_lift",
+      "source": "continuity-alpha/walk-passing-b-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        620,
+        1200
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "walk_shield_side_landing",
+      "source": "continuity-alpha/walk-near-landing-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        620,
+        1200
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "walk_staff_side_lift",
+      "source": "continuity-alpha/walk-opposite-passing-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        620,
+        1200
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "attack_windup",
+      "source": "continuity-alpha/attack-windup-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        590,
+        1194
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "attack_contact",
+      "source": "continuity-alpha/attack-contact-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        565,
+        1135
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "defend",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          975,
+          432,
+          1250,
+          811
+        ]
+      ],
+      "anchor": [
+        1107,
+        799
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "hit",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          7,
+          825,
+          310,
+          1200
+        ]
+      ],
+      "anchor": [
+        150,
+        1181
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          321,
+          855,
+          625,
+          1094
+        ],
+        [
+          321,
+          1094,
+          602,
+          1193
+        ]
+      ],
+      "anchor": [
+        457,
+        1181
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "death_fall",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          644,
+          901,
+          933,
+          1085
+        ],
+        [
+          600,
+          1085,
+          933,
+          1196
+        ]
+      ],
+      "anchor": [
+        753,
+        1181
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "dead",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          934,
+          983,
+          1245,
+          1180
+        ]
+      ],
+      "anchor": [
+        1091,
+        1181
+      ],
+      "scale": 0.5
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        8
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

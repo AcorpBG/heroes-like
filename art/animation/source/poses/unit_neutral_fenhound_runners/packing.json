@@ -1,0 +1,407 @@
+{
+  "unit_id": "unit_neutral_fenhound_runners",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          391,
+          355
+        ]
+      ],
+      "anchor": [
+        219,
+        338
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          393,
+          0,
+          742,
+          355
+        ]
+      ],
+      "anchor": [
+        587,
+        338
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "run_extended",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          743,
+          0,
+          1177,
+          276
+        ],
+        [
+          743,
+          276,
+          1208,
+          355
+        ]
+      ],
+      "anchor": [
+        960,
+        369
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "run_gathered",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1178,
+          0,
+          1536,
+          276
+        ],
+        [
+          1210,
+          276,
+          1536,
+          355
+        ]
+      ],
+      "anchor": [
+        1360,
+        365
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "run_hind_push",
+      "source": "continuity-alpha/supported-run-bite-and-fold.png",
+      "rects": [
+        [
+          0,
+          0,
+          513,
+          509
+        ]
+      ],
+      "anchor": [
+        276,
+        445
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "run_fore_landing",
+      "source": "continuity-alpha/supported-run-bite-and-fold.png",
+      "rects": [
+        [
+          514,
+          0,
+          1022,
+          509
+        ]
+      ],
+      "anchor": [
+        791,
+        449
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "landing_original",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          355,
+          375,
+          678
+        ]
+      ],
+      "anchor": [
+        205,
+        648
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "bite_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          376,
+          355,
+          752,
+          677
+        ]
+      ],
+      "anchor": [
+        575,
+        650
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "bite_open_lunge",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          752,
+          355,
+          1167,
+          677
+        ]
+      ],
+      "anchor": [
+        964,
+        650
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "bite_closed_contact",
+      "source": "continuity-alpha/supported-run-bite-and-fold.png",
+      "rects": [
+        [
+          0,
+          515,
+          535,
+          970
+        ]
+      ],
+      "anchor": [
+        275,
+        886
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "bite_recovery",
+      "source": "continuity-alpha/supported-run-bite-and-fold.png",
+      "rects": [
+        [
+          1023,
+          0,
+          1536,
+          509
+        ]
+      ],
+      "anchor": [
+        1295,
+        449
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "guard_planted",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1178,
+          355,
+          1536,
+          677
+        ]
+      ],
+      "anchor": [
+        1352,
+        650
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "guard_low",
+      "source": "continuity-alpha/supported-run-bite-and-fold.png",
+      "rects": [
+        [
+          536,
+          515,
+          980,
+          810
+        ],
+        [
+          536,
+          810,
+          1007,
+          970
+        ]
+      ],
+      "anchor": [
+        785,
+        881
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          678,
+          344,
+          1010
+        ]
+      ],
+      "anchor": [
+        176,
+        955
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_buckle",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          345,
+          678,
+          729,
+          1010
+        ]
+      ],
+      "anchor": [
+        534,
+        949
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_side_lower",
+      "source": "continuity-alpha/supported-run-bite-and-fold.png",
+      "rects": [
+        [
+          996,
+          515,
+          1536,
+          810
+        ],
+        [
+          1008,
+          810,
+          1536,
+          970
+        ]
+      ],
+      "anchor": [
+        1292,
+        880
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "dead_cold",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1106,
+          744,
+          1536,
+          970
+        ]
+      ],
+      "anchor": [
+        1305,
+        946
+      ],
+      "scale": 0.64
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 430,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 5,
+      "indices": [
+        4,
+        2,
+        5,
+        3,
+        6
+      ],
+      "loop": true,
+      "frame_msec": 115,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        7,
+        8,
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        13,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 245,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

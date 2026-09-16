@@ -1,0 +1,215 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_thornwake_dawnseed_bolters",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_thornwake_dawnseed_bolters.png",
+  "reference_sha256": "3f7819e1b7080056d1f9959b6685513b7bf92a8c8c17b992a611ddaaa10bf633",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/poses-draft.png",
+      "source_sha256": "52971d3f3569a5d7ee67ead6431f1418276e9e112861439cf33c9877f99aad7c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e2d95acb-0dd1-46ba-bac3-4c118ee0696b.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle sprite sheet. Reference defines ONE Dawnseed Bolter, bark-bodied humanoid with two wooden arms and legs, root claw feet, green leaf hood and mantle, dark face with two green eyes, white flowers and orange buds on shoulder, branching back twigs, orange seed pods at belt. Holds ONE broad branchwood crossbow with vine string, leaf wraps, hanging orange pods and a pointed red/gold seed bolt. RIGHT hand on trigger stock LEFT hand supporting fore-end. Preserve natural wood anatomy and gear. Exactly SIXTEEN full-body articulated poses in FOUR columns FOUR rows, fixed elevated three-quarter camera facing screen-right, constant figure/crossbow size, generous blank margins containing all branches and weapon. Genuine transparent RGBA background no painted checkerboard, floor/scenery/grid/labels. Row1: idle bow lowered; idle breathe shoulders tilt leaves sway; walk right foot forward left behind; opposite contact LEFT foot forward RIGHT behind, truly swap leading leg. Row2: passing foot lifted beneath pelvis; melee wind-up RIGHT hand releases trigger and draws fist back LEFT supports bow against chest; melee RIGHT fist punches screen-right LEFT retains bow; defense bows head behind crossbow braced with both hands. Row3: aim loaded crossbow screen-right; fire vine string snaps forward seed bolt leaves muzzle short distance, no second loaded bolt; reload right hand seats new seed bolt on empty guide LEFT supports crossbow; hit recoil torso back both hands retain weapon. Row4: dying one knee buckles eyes dim bow lowers; kneeling head bows bow rests across knees; fall sideways hips knees bent branches/cloth and crossbow land beside; dead side-lying bark body with DARK CLOSED eyes, limp leaves and intact crossbow/seed pods beside, no active glow. Exactly two arms two legs one crossbow, consistent vine string and limb ownership. Actual joint articulation not rotated standing cutouts. Original art only no copyrighted franchise assets."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/poses.png",
+      "source_sha256": "13de0fe8ba34ccd636fb400da87d3b15272df56be73fd8db949925ca37586b7c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d1d04d51-d372-44e5-8112-2be6f00b898b.png",
+      "prompt": "Use case: precise-object-edit. Correct ONLY row2 column3 punch and row3 column3 reload in this sixteen-pose Dawnseed Bolter sheet. Punch: RIGHT arm from shoulder on viewer LEFT crosses in front of chest to extend fist screen-right. LEFT hand from shoulder on viewer RIGHT holds crossbow close to belly, not a second punch. Exactly two hands with correct ownership. Reload: remove the already seated red/gold bolt at crossbow muzzle, keep just ONE seed bolt being inserted by right hand over empty guide. Preserve all other fourteen poses, equipment, scale, canvas, layout and colors."
+    }
+  ],
+  "review_notes": [
+    "17 candidate frames: ten retained original paintings at indices0,1,5,7,8,9,10,11,12,13 plus seven selected new paintings among eight built-in outputs. Original sources, rejected contact and unselected left-facing corpse remain.",
+    "Initial diagram-first contact0 repeated the other contact leg lead. The replacement unfolds the explicitly lifted foreground leg from the reviewed passing3 painting, preserving the torso/weapon; passing/contact ownership and translated movement still require timed whole-roster acceptance. No local pose warping or mirroring.",
+    "Guide-first melee contact extends the near RIGHT arm across the chest while the FAR LEFT hand alone supports the complete crossbow. Original right-arm windup, aim, projectile-free release crop, reload, hit and kneeling collapse retained. Reload seating and bow/string topology remain refinement targets.",
+    "Built-in corpse edit extinguishes the green eyes. Only its right-side head-right pose is selected to avoid a head-left/head-right flip between consecutive death frames. Whole connected body and one ground crossbow retained.",
+    "All source/new masters are RGB, not alpha. Owner-approved connected neutral minimum175/tolerance16/edge2 with inspected bow/string/arm apertures; new corpse minimum150 removes darker checker backing. White flowers and weapon highlights are preserved. Unselected sheet cells are not claimed fully cleaned.",
+    "Explicit uniform per-source scale/ground anchors assemble512x256 cells, four columns. Actual-alpha atlas and candidate offline art-desk screenshot visually inspected. Static evidence does not prove smooth gait, attack/death timing, palette/branch/pod/flower consistency or final acceptance.",
+    "Final acceptance remains pending with the full160 roster. No tests/imports/exports, paid API, runtime/tool-code, gameplay, save or footprint changes."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses; reload edit removes already loaded bolt, retaining inserted bolt.",
+    "Punch still uses left arm despite requested right-arm correction; restore right punch and left bow support matching wind-up.",
+    "Walking contacts repeat leading leg and idle subtle. Crossbow string tension/hand grips/size and branch/flower counts need refinement.",
+    "Reload insertion alignment needs review. Final corpse still has green eye; extinguish eyes and ensure inert pose.",
+    "Displayed checker and actual alpha unresolved; source-only not packed/enabled. 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "references": [
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+        "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/standing-reference-light.png",
+        "sha256": "27eaeb37b87eadc089cc036ec763c05f7497a3e4c6ef474fd6bffb0a94219db5"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+        "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+        "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+        "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-near-arm-punch.png",
+        "sha256": "4caaf54d3a8c423b70b462eafe8c12c91970ab5ff66d2883b5fae171182190a3"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guard-reference-light.png",
+        "sha256": "b32bc7ef456b0736aec7712699d7bcddb3e0299201a8db40e7cf5783e32fa2bb"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/death-reference-light.png",
+        "sha256": "3ec539eac9a7b085a6bb2a2288854a82f7f55a376d8bcbea7c4b4d6f736ac7ac"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-walk-3.png",
+        "sha256": "69480d6e0914896730e095d23644191dca2900402782aaf39f6b0eb4ea1098a9"
+      }
+    ],
+    "reference_crops": [
+      [
+        "standing",
+        [
+          25,
+          0,
+          318,
+          304
+        ]
+      ],
+      [
+        "guard",
+        [
+          1000,
+          304,
+          1326,
+          595
+        ]
+      ],
+      [
+        "death",
+        [
+          641,
+          958,
+          1326,
+          1186
+        ]
+      ]
+    ],
+    "guide_source": "tools/battle_pose_guide.py; authoring-only diagrams, never runtime pixels",
+    "retained_source": "poses.png",
+    "retained_source_sha256": "13de0fe8ba34ccd636fb400da87d3b15272df56be73fd8db949925ca37586b7c",
+    "retained_original_indices": [
+      0,
+      1,
+      5,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "retained_original_paintings": 10,
+    "new_selected_paintings": 7,
+    "builtin_outputs": 8,
+    "total_candidate_frames": 17,
+    "preparation_recipe": "continuity-cutouts.json",
+    "preparation_proofs": [
+      "continuity-alpha/original.processing.json",
+      "continuity-alpha/walk-0.processing.json",
+      "continuity-alpha/walk-1.processing.json",
+      "continuity-alpha/walk-2.processing.json",
+      "continuity-alpha/walk-3.processing.json",
+      "continuity-alpha/punch-contact.processing.json",
+      "continuity-alpha/guard-braced.processing.json",
+      "continuity-alpha/death-inert-pair.processing.json",
+      "continuity-alpha/near-contact-unfolded.processing.json"
+    ],
+    "packing_recipe": "packing.json",
+    "packing_result": "packing-result.json",
+    "candidate_atlas": "candidate-atlas.png",
+    "runtime_atlas": "art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
+    "runtime_sha256": "15436880dacc9c17c7e41209b486e4e096a1228929b76c147cd1788988b317b6",
+    "evidence_root": ".artifacts/battle-unit-animation-size-20260913/dawnseed-continuity-20260915",
+    "evidence": [
+      "packed-initial/poses-candidate-atlas-green.png",
+      "art-desk-candidate.html",
+      "art-desk-candidate.png",
+      "art-desk-registered.html",
+      "art-desk-registered.png"
+    ],
+    "status": "candidate_registered_not_final_accepted",
+    "cleanup": {
+      "date": "2026-09-16",
+      "removed_duplicate_preview_files": 7,
+      "removed_bytes": 6495839,
+      "policy": "Only hash-verified byte-identical task preview copies removed after no-live-art-process and no-open-handle checks. Sources, exact prompts, rejected variants, unique previews, proofs, caches and unrelated files retained.",
+      "pairs": [
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/dawnseed-continuity-20260915/death-reference-clean/unit_thornwake_dawnseed_bolters-original-rect-641-958-1326-1186-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/death-reference-light.png",
+          "sha256": "3ec539eac9a7b085a6bb2a2288854a82f7f55a376d8bcbea7c4b4d6f736ac7ac",
+          "identical": true,
+          "bytes": 585528
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/dawnseed-continuity-20260915/guard-reference-clean/unit_thornwake_dawnseed_bolters-original-rect-1000-304-1326-595-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guard-reference-light.png",
+          "sha256": "b32bc7ef456b0736aec7712699d7bcddb3e0299201a8db40e7cf5783e32fa2bb",
+          "identical": true,
+          "bytes": 136485
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/dawnseed-continuity-20260915/new-prepared-initial/dawn-original-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/dawnseed-continuity-20260915/new-prepared-gaps/dawn-original-green.png",
+          "sha256": "33641b12d584f2d7f30d391fc7111ef667090d876fdf6b7a87a0df5b0a30ff88",
+          "identical": true,
+          "bytes": 1381728
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/dawnseed-continuity-20260915/prepared-gaps/dawn-original-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/dawnseed-continuity-20260915/new-prepared-gaps/dawn-original-green.png",
+          "sha256": "33641b12d584f2d7f30d391fc7111ef667090d876fdf6b7a87a0df5b0a30ff88",
+          "identical": true,
+          "bytes": 1381728
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/dawnseed-continuity-20260915/new-prepared-initial/dawn-original-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/dawnseed-continuity-20260915/new-prepared-gaps/dawn-original-light.png",
+          "sha256": "18a1ea4cf26407ae7c156706d4f27457389d86de3f4f40b091989b9027f113bb",
+          "identical": true,
+          "bytes": 1435036
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/dawnseed-continuity-20260915/prepared-gaps/dawn-original-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/dawnseed-continuity-20260915/new-prepared-gaps/dawn-original-light.png",
+          "sha256": "18a1ea4cf26407ae7c156706d4f27457389d86de3f4f40b091989b9027f113bb",
+          "identical": true,
+          "bytes": 1435036
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/dawnseed-continuity-20260915/standing-reference-clean/unit_thornwake_dawnseed_bolters-original-rect-25-0-318-304-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/standing-reference-light.png",
+          "sha256": "27eaeb37b87eadc089cc036ec763c05f7497a3e4c6ef474fd6bffb0a94219db5",
+          "identical": true,
+          "bytes": 140298
+        }
+      ]
+    }
+  }
+}

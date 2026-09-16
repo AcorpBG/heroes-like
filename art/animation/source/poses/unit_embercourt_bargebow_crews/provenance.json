@@ -1,0 +1,194 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_embercourt_bargebow_crews",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_embercourt_bargebow_crews.png",
+  "reference_sha256": "cd6ac693e3adadef8729201fbcba35e1164fa03fa0bd5ded01dc8744b04ef6a1",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "d085db3b09b819e60ec0ae06d7c6213d49732afefb2307315b8f60c1b9ff6353",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4b54e186-57ea-4aef-8505-e4c61c831cfa.png",
+      "prompt": "Use case: stylized-concept. Image1 identity reference. Original Bargebow Crew is ONE operator and ONE tripod mounted heavy crossbow. Young dark haired woman steel brim helmet gold crest steel shoulders red/cream long coat teal scarf sash dark trousers wrapped boots; wood brass crossbow winch spool with THREE leg wood tripod and side bolt quiver. SIXTEEN full unit poses FOUR columns FOUR rows same body/weapon scale generous gutters fixed elevated three-quarter view facing RIGHT. Row1 idle both hands rear winch; breathing head lifts shoulders; move hoist entire tripod crossbow both arms near leg forward far back; passing both knees under hips carried complete mount. Row2 opposite carry far leg forward near back; melee windup rear right fist drawn back left hand supports stock planted tripod; right punch forward LEFT hand still stock entire bow retained; defense operator crouches behind planted mounted bow. Row3 hit recoil both hands weapon; load place bolt onto rail left hand while right holds stock; aim eye behind loaded rail hands controls; release recoil empty rail bowstring forward no flying projectile. Row4 recovery hands crank winch; knees buckle still full mount; side collapse operator torso raised behind complete tripod bow; dead woman relaxed lying beside standing complete mount eyes CLOSED helmet retained quiver full. Always one operator full weapon tripod quiver, no missing equipment or extra crew; articulate joints no rotated standing corpse. Painterly original raster pale gray background no ground shadows grid text effects blood scenery.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "7da53a218e05307ba8ec493a48778c8f6e3277aceee6b19655b04b9cd781f30d",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-38a4fc1b-d70b-4a4b-8ce8-276a8e711d7e.png",
+      "alpha_prompt": "Use case: background-extraction. Image1 edit target. Extract all sixteen painted operator plus mounted-crossbow poses onto genuine transparent RGBA background. Preserve exact canvas layout scale each complete tripod bow quiver crank all limbs and costume. Remove only pale gray backdrop and ground shadows including spaces between tripod legs and bow strings. Bottom-right corpse eyes must be CLOSED relaxed. No painted checker, colored background, halos or restyling; no lost bowstrings or gear."
+    }
+  ],
+  "review_notes": [
+    "Seventeen candidate frames: eleven original real-alpha poses and six new selected paintings. One operator and full three-leg tripod crossbow remain through movement, attacks, defense, collapse and closed-eye persistent corpse.",
+    "Original melee anticipation punched with right arm, whereas contact used left. New framed left-fist windup keeps right hand on winch, matching original left-punch contact. Border-touching first windup is retained unselected.",
+    "Original load duplicated a held bolt with one already loaded; selected loading correction holds one bolt above an empty rail. Original release still loaded; selected release has empty rail and single forward string, with side-quiver spare bolts retained. Cocked-string intermediate is retained unselected.",
+    "Three new walking poses retain full raised mount and different human leg positions. Guide named near/far requests were not literally followed; actual hip ownership, carry support/weapon bob and connected gait remain unaccepted.",
+    "Existing real alpha reused unchanged after actual composites. Six selected green masters use explicit owner-approved deterministic color-distance preparation with source/tool/recipe/output hashes. Original crop bands avoid neighbouring tripod/helmet fragments without repainting.",
+    "Atlas inspected as production evidence. Fine face/style, body/equipment scale, strings/edge residues, recoil/readiness timing and real-event duration still require full-roster refinement and consolidated acceptance. No tests/imports/exports or gameplay/save/footprint changes."
+  ],
+  "prior_review_notes": [
+    "Sixteen poses retain one operator and complete mounted bow through carry, collapse and corpse.",
+    "Melee windup/contact change punch arms; release retains loaded bolt. These are not accepted clips.",
+    "Gait lacks passing/opposite contacts; carry support, mount/quiver scale and bowstring/crank states need refinement.",
+    "Corpse eye closure and extraction fringes require close in-context review; final motion not accepted.",
+    "Source only, not packed/enabled. No tests/exports; consolidated validation deferred until generation and integration finish."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "reference_composites": {
+      "source": "alpha/poses.png",
+      "source_sha256": "7da53a218e05307ba8ec493a48778c8f6e3277aceee6b19655b04b9cd781f30d",
+      "method": "prepare_battle_pose_cutouts.py --inspect-source --inspect-rect; read-only light composite, nearest enlargement; original paint not modified",
+      "outputs": [
+        {
+          "file": "carry-reference-light.png",
+          "rect": [
+            625,
+            0,
+            925,
+            320
+          ],
+          "sha256": "9be864c659d0c312b7a7f35a9a506e4732a4d90dcdafa77a7a598d8f84053c8c"
+        },
+        {
+          "file": "punch-reference-light.png",
+          "rect": [
+            624,
+            319,
+            921,
+            629
+          ],
+          "sha256": "612458bf7ceff09d1f23ae18e0021e48727ec15cdf26b543ce63bb3294220df4"
+        },
+        {
+          "file": "release-reference-light.png",
+          "rect": [
+            970,
+            625,
+            1254,
+            925
+          ],
+          "sha256": "b3672147d3bc16dc7c11c8e9bf4550059fc3fd19d2c1075cedfb5902ab01dd76"
+        },
+        {
+          "file": "load-reference-light.png",
+          "rect": [
+            312,
+            601,
+            620,
+            960
+          ],
+          "sha256": "7ad668258d906d33c501010462ee3fd95460ab7316d1553f9890bd9a19c7950e"
+        }
+      ]
+    },
+    "sources": [
+      {
+        "file": "walk-passing-a-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b22e674c-432a-47ee-bbe2-e8f6c30c7daf.png",
+        "prompt": "Use case: sketch-to-render. ONE original Bargebow operator WALKING passing-A frame. FIRST image is leg articulation guide only: BLUE NEAR leg planted below hips; ORANGE FAR knee bends with far boot lifted behind supporting shin. SECOND image supplies exact identity, camera, hoisted equipment and its dimensions. One woman steel brim helmet gold crest, dark hair, cream/red coat teal scarf sash and leg wraps, brown boots. She carries ONE complete heavy wood/brass crossbow with winch spool, loaded bolt, teal side quiver and THREE attached wooden tripod legs. Both arms support the rear crossbow/handles against torso; near right hand holds side handle below spool, far left arm supports far stock, not dangling. Entire tripod is lifted with its feet just above her boot-ground level; retain exact weapon proportions and all three attached legs. Preserve fixed elevated three-quarter RIGHT-facing camera and upright stable torso. Change the actual human leg joints for specified passing step, robe panels separate naturally, exactly two human legs and three wooden tripod legs, no additional crew. Original painterly game raster matching second reference not diagram colors/lines, no mirror. All body and full mounted bow inside wide margins. Flat vivid GREEN #00ff00 background only, neutral light no green reflections/spill; no floor/shadow/text/effects/scenery.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+          "art/animation/source/poses/unit_embercourt_bargebow_crews/carry-reference-light.png"
+        ],
+        "selected": true,
+        "selection": "Select visible raised rear foot; generator did not follow guide's named near/far ownership literally. Actual anatomy and connected gait remain review items.",
+        "sha256": "b411e4b5a5435a65211c6c9e46c81341576e36adb2c16da3f172d639f10e6048"
+      },
+      {
+        "file": "walk-passing-b-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-41a4840b-e453-4e61-b97f-654f5f4aeced.png",
+        "prompt": "Use case: sketch-to-render. ONE original Bargebow operator WALKING passing-B frame. FIRST image defines human-leg articulation: FAR leg holds weight planted under pelvis; NEAR foreground thigh swings FORWARD toward RIGHT, knee bent and boot visibly lifted in front of supporting shin. SECOND image exact operator identity and complete hoisted equipment proportions. Third-quarter tactical RIGHT-facing woman steel brim helmet/gold crest dark hair cream/red split coat teal scarf/sash leg wraps brown boots. Near foreground thigh must originate below quiver and cross naturally in front of far leg; near knee forward, not another rear heel kick. Both arms firmly carry rear handles of ONE heavy wood/brass crossbow, winch spool, loaded bolt, teal quiver; ALL THREE wooden tripod legs attached below center column, lifted just above boot ground. Keep weapon level at torso, same body and mount dimensions and full bowstring. Raised knee can pass just behind center column but raised BOOT must be visibly separate from wooden tripod feet. Exactly two human legs, three wooden legs, one operator. Same adult figure, camera, original painterly raster; no guide colors/lines, no mirrored torso. Entire figure/weapon inside broad empty margins. Flat vivid GREEN #00ff00 background, neutral light no green spill/reflections, no floor/shadow/text/scenery/effects.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+          "art/animation/source/poses/unit_embercourt_bargebow_crews/carry-reference-light.png"
+        ],
+        "selected": true,
+        "selection": "Select different supporting leg with rear lifted foot; requested raised foreground knee not followed literally. Sequence assembled from visible poses, not prompt labels.",
+        "sha256": "cdd68f6b318535f77a8d12cb5b148ff9d671f734b399a8d75954ac65ba83b699"
+      },
+      {
+        "file": "walk-near-landing-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bf978a64-61ae-492d-aed7-b1ea3b60f731.png",
+        "prompt": "Use case: precise-edit. Next walking NEAR-FOOT LANDING frame of this exact original Bargebow operator. Preserve exact head torso BOTH carrying hands crossbow winch bowstring bolt quiver complete THREE-LEG tripod camera and dimensions. Change only human legs and nearby split coat: foreground thigh originating directly beneath quiver swings FORWARD RIGHT, knee x600 y890, shin slopes down-right, foreground boot heel lands at x790 y1210 with toes pointing RIGHT. The farther leg trails back-left, boot toe grounded x330 y1205, heel raised. Near leg crosses IN FRONT of far thigh, not a swapped or mirrored pair. Show TWO correctly connected human legs distinct from three wooden tripod legs; keep every wooden foot unchanged and lifted. Moderate natural stride, not a kick or floating unsupported weapon; both arms still carry rear mount securely. Same original painterly raster and outfit, flat vivid GREEN #00ff00 backdrop, neutral light no green spill, no floor/shadow/text/scenery/effects. Whole unit inside generous margins.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_bargebow_crews/walk-passing-b-green.png"
+        ],
+        "selected": true,
+        "selection": "Select foreground leg extended into forward landing, far leg trailing; all three wooden tripod legs retained.",
+        "sha256": "0cc336256ee8dadd08082bcbea236f1334b80be6e565444fe4151553f49215f0"
+      },
+      {
+        "file": "attack-windup-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e56fa280-1dbc-4b23-9c48-fe5770fd2fa4.png",
+        "prompt": "Use case: precise-edit. Paint the IMMEDIATELY PRECEDING left-punch windup frame of this exact original Bargebow operator. Preserve exact standing feet/torso/head helmet expression costume quiver and FULL planted three-leg mounted crossbow winch spool loaded bolt string dimensions camera. The currently extended LEFT arm (far shoulder at screen RIGHT) bends at the elbow and retracts the SAME closed left fist near her right-side chest/shoulder ready to punch forward. Left elbow drawn back, fist close to cheek but not covering face. Her anatomical RIGHT hand (foreground screen LEFT) MUST remain firmly on the winch-side handle exactly as in reference; do not raise that hand or swap punching arms. Exactly two arms, clearly connected; equipment remains stationary on all three planted wooden feet. Complete figure and all feet/bow extremities in generous margins (reference front wooden foot must be complete, not cut by border). Original painterly tactical sprite, fixed elevated three-quarter RIGHT-facing view. Flat vivid GREEN #00ff00 background only, neutral light no green spill/reflections on paint; no floor/shadow/text/particles/scenery.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_bargebow_crews/punch-reference-light.png"
+        ],
+        "selected": false,
+        "selection": "Retain unselected: correct left-hand windup, but front tripod sole touches image bottom.",
+        "sha256": "b4531759d1dfbf8555eef3bf16e010d74705305f88bf0a49cf61f10f9a0e86d4"
+      },
+      {
+        "file": "ranged-release-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-59b6f4e3-dbef-43c1-865b-fba73283e53c.png",
+        "prompt": "Use case: precise-edit. Correct ONLY the firing state of this original Bargebow operator sprite. Preserve exact woman recoil pose, both hands on controls, face helmet costume, all equipment dimensions and fixed elevated three-quarter RIGHT-facing camera. Her mounted crossbow has JUST FIRED: completely REMOVE the loaded center bolt, including its steel pointed arrowhead at front-right and shaft along center rail. Leave an unmistakably EMPTY wooden center groove extending from rear winch to front muzzle. Retain all spare bolts in side quiver. Bowstring is now released forward: ONE continuous string spans the two front bow tips, not pulled back to winch; rear cocking rope can remain around spool but is separate from string. No flying bolt or effects. Keep full crossbow wood/brass limbs, winch, center column and all THREE planted tripod feet; do not remove any structural metal muzzle hardware. Same adult operator/body scale, original painterly raster. Reframe with 6 percent empty space around ALL extremities so no boots/tripod tips/helmet clipped. Flat vivid GREEN #00ff00 backdrop only, neutral lighting no green spill/reflections, no floor/shadows/text/scenery.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_bargebow_crews/release-reference-light.png"
+        ],
+        "selected": false,
+        "selection": "Retain unselected intermediate: loaded bolt removed, but string still in cocked position.",
+        "sha256": "4f3741c9822beab1c668da656be8c33b59ee45df934038286a66ddea0952de5e"
+      },
+      {
+        "file": "attack-windup-framed-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-aa0fac62-fcce-4b1c-8fbf-4bd2d74377bf.png",
+        "prompt": "Use case: outpainting. Preserve this exact original Bargebow left-punch windup character and mounted crossbow; add generous flat green canvas around ALL four sides so helmet, boots and tripod are safely separated from image edges. The front wooden tripod foot currently touches bottom border: restore its complete squared brass sole edge and small dark outline where cut, then ensure at least 70 pixels empty green below it. Do not change pose, hands, face, costume, weapon or leg count; left fist raised at screen RIGHT, right hand fixed on winch handle at screen LEFT. Keep image scale/proportions, not a new close-up. Full original painterly raster unit on flat vivid GREEN #00ff00, neutral lighting no green spill; no ground/shadows/scenery/text/effects.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_bargebow_crews/attack-windup-green.png"
+        ],
+        "selected": true,
+        "selection": "Select reframed left-punch windup with complete front tripod sole and margins; right hand remains winch handle.",
+        "sha256": "b1066421182265c8276a3402d9391d27e50f2a5db0e935c304b515943f3d5920"
+      },
+      {
+        "file": "ranged-release-string-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3999d5e9-f13e-46fe-a2bf-cb38a26ac542.png",
+        "prompt": "Use case: precise-edit. Fix ONLY the crossbow STRING in this exact original just-fired Bargebow sprite. All figure, pose, feet, empty bolt rail, winch, wood/brass weapon and framing remain identical. Remove the TWO taut diagonal gray rope segments that currently run from the rear winch region toward the two bow tips: those depict the cocked state. Instead show ONE released bowstring as a single straight gray cable directly connecting the FAR front bow tip at x1020,y414 to the NEAR front bow tip at x813,y587, crossing the EMPTY rail near its front. No string goes backward to the spool. Keep coils wrapped around winch but no outward drawn V from spool. Empty wooden rail stays entirely empty: no center arrow, no arrowhead, no projectile. Preserve spare bolts in teal side quiver. Do not alter any anatomy or equipment size/legs. Original painterly raster, flat vivid GREEN #00ff00, neutral light no green spill; full unit and existing margins; no shadows/text/effects/scenery.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_bargebow_crews/ranged-release-green.png"
+        ],
+        "selected": true,
+        "selection": "Select empty rail and single released forward string between bow tips; side quiver retained.",
+        "sha256": "5932ee2d7f4a6dde213a2ff94e7e6d22301b68d684be3dd7c8dbb9c9f35c40e7"
+      },
+      {
+        "file": "ranged-load-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-07e08b3f-09ef-4de4-b9a3-37bf85fdecfd.png",
+        "prompt": "Use case: precise-edit. Isolate and correct ONLY the central complete Bargebow operator loading pose from this crop. Ignore/remove unrelated neighboring boots and helmet fragments at the top/bottom. Preserve her exact helmet, face, cream/red coat teal scarf, stance, hands and complete planted three-leg wood/brass mounted crossbow/side quiver. She holds ONE bolt horizontally in both hands ABOVE the rail, about to lower it into place. That held bolt must remain complete, with its steel head to RIGHT. Remove the second bolt already lying in the crossbow: remove its front steel arrowhead projecting beyond muzzle at lower RIGHT and its shaft along center groove. The rail UNDER her held bolt must be clearly EMPTY, no duplicate projectile. Retain full wooden bow arms, brass muzzle hardware, winch and drawn bowstring, all side quiver spare bolts. Exactly one woman, two human legs and three wooden tripod legs. Fixed elevated three-quarter RIGHT-facing view, original painterly raster, same body/equipment proportions. Generous flat GREEN #00ff00 margins around full helmet boots and tripod feet, neutral light without green spill/reflections; no other pose fragments, ground, shadow, text, effects or scenery.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_bargebow_crews/load-reference-light.png"
+        ],
+        "selected": true,
+        "selection": "Select held single bolt above empty rail; replaces original load with duplicate already-loaded bolt.",
+        "sha256": "cd1f7624e2067a95a555497b0ef5060e38afc81582b082da842355342b7aa017"
+      }
+    ],
+    "generation": "continuity-generation.json",
+    "reused_source": {
+      "source": "alpha/poses.png",
+      "sha256": "7da53a218e05307ba8ec493a48778c8f6e3277aceee6b19655b04b9cd781f30d",
+      "selection": "Idle pair, row1 third carry contact, row2 punch/guard, row3 hit/aim, row4 all recovery/death poses. Exclude two repeated movement cells, wrong-arm windup, duplicate-bolt load and loaded release."
+    },
+    "preparation": "continuity-cutouts.json; explicit green color_distance radius75, all_keyed_is_background true, edge_radius2; exact processing proofs retained.",
+    "packing": "packing.json",
+    "packed_frames": 17,
+    "runtime_candidate": "art/animation/runtime/poses/unit_embercourt_bargebow_crews.png",
+    "runtime_sha256": "91a410e3fd96ec07cd68b5e6c5683f6677b0a6ca4a7f9e3be723a677d9524006",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/bargebow-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted"
+  }
+}

@@ -1,0 +1,329 @@
+{
+  "unit_id": "unit_neutral_frostbeacon_pikes",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          310,
+          425
+        ]
+      ],
+      "anchor": [
+        142,
+        404
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          311,
+          0,
+          625,
+          425
+        ]
+      ],
+      "anchor": [
+        444,
+        404
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "walk_contact",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          626,
+          0,
+          927,
+          425
+        ]
+      ],
+      "anchor": [
+        750,
+        405
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "walk_passing",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          425,
+          311,
+          815
+        ]
+      ],
+      "anchor": [
+        141,
+        792
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "pike_windup",
+      "source": "continuity-alpha/connected-full-pike-thrust.png",
+      "rects": [
+        [
+          0,
+          0,
+          698,
+          480
+        ]
+      ],
+      "anchor": [
+        236,
+        459
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "pike_thrust",
+      "source": "continuity-alpha/connected-full-pike-thrust.png",
+      "rects": [
+        [
+          698,
+          0,
+          1448,
+          453
+        ],
+        [
+          698,
+          453,
+          1270,
+          479
+        ]
+      ],
+      "anchor": [
+        954,
+        457
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "pike_recovery",
+      "source": "continuity-alpha/connected-full-pike-thrust.png",
+      "rects": [
+        [
+          0,
+          480,
+          748,
+          1086
+        ]
+      ],
+      "anchor": [
+        307,
+        1023
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "guard_ready",
+      "source": "continuity-alpha/connected-full-pike-thrust.png",
+      "rects": [
+        [
+          1270,
+          453,
+          1448,
+          510
+        ],
+        [
+          749,
+          510,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        1036,
+        1033
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "guard_brace",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          953,
+          480,
+          1254,
+          611
+        ],
+        [
+          990,
+          611,
+          1254,
+          815
+        ]
+      ],
+      "anchor": [
+        1094,
+        786
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          820,
+          313,
+          1170
+        ]
+      ],
+      "anchor": [
+        154,
+        1150
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          313,
+          820,
+          563,
+          1170
+        ]
+      ],
+      "anchor": [
+        425,
+        1148
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "death_side_fall",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          565,
+          960,
+          889,
+          1150
+        ]
+      ],
+      "anchor": [
+        717,
+        1128
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "dead_head_right",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          900,
+          990,
+          1254,
+          1145
+        ]
+      ],
+      "anchor": [
+        1065,
+        1122
+      ],
+      "scale": 0.62
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 440,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 280,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import os
 import shutil
 
 import battle_readability_regression as battle
@@ -36,7 +37,7 @@ def main():
             code=packages.main()
         if not receipt['ok']: code=1
     else: code=packages.main()
-    report=battle.OUTPUT/args.label/'packaged-battle-owners.json'
+    report=packages.Path(os.environ.get('HEROES_BATTLE_READABILITY_ARTIFACT_DIR',str(battle.OUTPUT)))/args.label/'packaged-battle-owners.json'
     report.write_text(json.dumps({'ok':code==0,'compiled_battle_owner_sha256':owners},indent=2)+'\n')
     return code
 

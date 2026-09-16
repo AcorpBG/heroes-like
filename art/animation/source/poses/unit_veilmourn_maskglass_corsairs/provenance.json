@@ -1,0 +1,69 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_maskglass_corsairs",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_maskglass_corsairs.png",
+  "reference_sha256": "4c715c8d0e20d69592d7dbc124de33cadb89b2b1e10ad0a0cd5efcb89950ea27",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/poses.png",
+      "source_sha256": "1154b827a6e06c084ff07d855e1e9139c7950e7ccefdd8f8883b77cf8bfb33a5",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-abc15d42-d4f5-4411-864f-e0ce40639cff.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle animation sheet. Reference defines ONE Maskglass Corsair woman: brown high ponytail, silver faceted half-mask over right eye/cheek, gray-green scarf and ragged split cloth, ivory sleeves, black leather vest and trousers, rope belt with small brass bell, wrapped tall boots. Anatomical RIGHT hand holds curved steel cutlass with brass guard; LEFT arm carries black round shield with brass radial ribs and boss. Preserve face, mask side, weapon size and equipment ownership. Exactly TWELVE distinct fully articulated full-body poses in four columns and three rows, same elevated three-quarter camera facing screen right and same body scale. Generous margins so whole cutlass and shield stay inside cells. Genuine transparent RGBA background; no painted checkerboard, scene, floor, captions or grid. Row1 left to right: idle ready; idle breath shield settles and ponytail sways; walk anatomical right leg forward left behind; walk LEFT leg forward RIGHT behind, genuinely reverse leading leg. Row2: passing step raised foot beneath pelvis; attack wind-up RIGHT sword arm drawn behind shoulder LEFT shield guards; attack sweeping RIGHT cutlass across front toward enemy screen right, shield held close in LEFT arm; defend shield raised before face sword lowered beside hip. Row3: hit recoil shoulders back knees flex; death one knee buckled head bowed weapons lowering; falling sideways bent hips and knees sword and shield landing nearby; dead side-lying eyes closed mask still worn with cutlass and shield beside body, relaxed fingers and limp ponytail. Exactly two arms/two legs. Keep sword length and shield diameter consistent. Actual joint changes, no translated standing cutouts. Original art only, no copyrighted franchise assets.",
+      "alpha_source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png",
+      "alpha_sha256": "e4333fdcdb5aebf48d55ae3e2a4aaf97a8fe19fd375708cbd62bf984bac29896",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-51863856-dc03-4a6a-a11c-9e9f9a7ebc1e.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only checkerboard from supplied twelve-pose Maskglass Corsair sheet. Return actual transparent RGBA around all figures and equipment. Preserve all twelve poses exactly, faces, masks, sword, shield, body scale, colors, cloth, placement and canvas. No repainting, no replacement background or gradient, no painted checkerboard, no colored edge matte."
+    }
+  ],
+  "review_notes": [
+    "14-frame candidate reuses ten original true-alpha paintings and four new travel/guard poses. All original/rejected sources remain.",
+    "Cutlass stays in right hand, shield on left arm; original kneel, head-left fall and equipped corpse are retained. Banded source rectangles remove neighboring sword/feet/shield fragments without changing pose pixels.",
+    "Guide-first opposite contact repeats the leading leg; distinct rear passing does not make a complete alternating gait. Contact is an unaccepted bridge.",
+    "New shield diameter, blade curvature, mask/face and cloth brightness differ from original frames. Full-roster anatomical/gear scale, grips, support/travel, attack/death transitions and timing remain refinement.",
+    "Actual-alpha composites and offline art desk reviewed; static captures are not motion/gameplay acceptance. Genuine original alpha was reused without rekeying."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses include right cutlass swing, left shield defense, articulated side fall and persistent corpse with equipment.",
+    "Walking contacts repeat leading leg; raised passing pose needs continuity with genuinely opposite contact. Idle mostly hair/cloth differences.",
+    "Cutlass length/curvature and shield size change through wind-up/guard/death; mask, grips and face continuity need close review.",
+    "Wide attack/fall require explicit crops; final corpse nearly touches right canvas edge.",
+    "Extraction displays colored fringes and changes facial/mask detail; actual transparency and in-context compositing unaccepted. Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "edited_retained_paintings": 0,
+    "new_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_maskglass_corsairs.png",
+    "runtime_sha256": "d18b0c8bb1ca53aaacc7f172ea85bf6ef6295162880bfc4d2cada3408751b7ca",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png": "e4333fdcdb5aebf48d55ae3e2a4aaf97a8fe19fd375708cbd62bf984bac29896",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_maskglass_corsairs/continuity-alpha/guided-opposite-contact-and-guards.png": "08f3f1f4fcc1282a2b64065b93a7bc1ade637c27aa3e6773bcd12c592d14a780"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/corsair-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "policy": "Removed only exact byte-identical task preview copies after SHA-256 and no-live-handle checks. Identical retained copies permit restoration. Used generation references, original/rejected masters, unique evidence, processing proofs, caches and unrelated artifacts remain.",
+      "duplicates_removed": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/corsair-continuity-20260916/identity/unit_veilmourn_maskglass_corsairs-poses-rect-0-0-306-461-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_maskglass_corsairs/identity-reference.png",
+          "sha256": "c9549cec74a53d378feffb4d748a23208c9093eab7c17b239cad21b98e0152b8",
+          "bytes": 669957
+        }
+      ],
+      "removed_bytes": 669957
+    }
+  }
+}

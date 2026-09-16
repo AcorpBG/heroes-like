@@ -1,23 +1,262 @@
 {
   "unit_id": "unit_river_guard",
   "status": "candidate_requires_playback_review",
-  "frame_size": [512, 256],
+  "frame_size": [
+    512,
+    256
+  ],
   "columns": 4,
   "ground_margin": 8,
   "frames": [
-    {"name":"idle_0","source":"alpha/idle.png","rects":[[0,0,640,1254]],"anchor":[340,1215],"scale":0.18},
-    {"name":"idle_1","source":"alpha/idle.png","rects":[[640,0,1254,1254]],"anchor":[960,1215],"scale":0.18},
-    {"name":"move_0","source":"alpha/move.png","rects":[[0,0,627,608]],"anchor":[370,603],"scale":0.37},
-    {"name":"move_1","source":"alpha/move.png","rects":[[627,0,1254,608]],"anchor":[938,603],"scale":0.37},
-    {"name":"move_2","source":"alpha/move.png","rects":[[0,608,627,1254]],"anchor":[370,1205],"scale":0.37},
-    {"name":"move_3","source":"alpha/move.png","rects":[[627,608,1254,1254]],"anchor":[938,1205],"scale":0.37},
-    {"name":"attack_0","source":"alpha/attack.png","rects":[[0,0,610,744]],"anchor":[345,697],"scale":0.34},
-    {"name":"attack_1","source":"alpha/attack.png","rects":[[610,0,1675,350],[610,350,1500,744]],"anchor":[1040,697],"scale":0.34},
-    {"name":"attack_2","source":"alpha/attack.png","rects":[[1675,0,2114,350],[1500,350,2114,744]],"anchor":[1900,697],"scale":0.34},
-    {"name":"defend_0","source":"alpha/defend.png","rects":[[0,0,950,887]],"anchor":[510,837],"scale":0.27},
-    {"name":"defend_1","source":"alpha/defend.png","rects":[[950,0,1774,887]],"anchor":[1380,837],"scale":0.27},
-    {"name":"death_0","source":"alpha/death_dead.png","rects":[[0,0,704,724]],"anchor":[410,680],"scale":0.32},
-    {"name":"death_1","source":"alpha/death_dead.png","rects":[[704,0,1420,724]],"anchor":[1050,680],"scale":0.32},
-    {"name":"dead","source":"alpha/death_dead.png","rects":[[1420,0,2172,724]],"anchor":[1840,680],"scale":0.32}
+    {
+      "name": "idle_0",
+      "source": "alpha/idle.png",
+      "rects": [
+        [
+          0,
+          0,
+          640,
+          1254
+        ]
+      ],
+      "anchor": [
+        340,
+        1215
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "idle_1",
+      "source": "alpha/idle.png",
+      "rects": [
+        [
+          640,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        960,
+        1215
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "move_0",
+      "source": "workflow-v2/contact-a.png",
+      "rects": [
+        [
+          310,
+          10,
+          905,
+          1285
+        ]
+      ],
+      "anchor": [
+        605,
+        1270
+      ],
+      "scale": 0.175
+    },
+    {
+      "name": "move_1",
+      "source": "workflow-v2/passing-a.png",
+      "rects": [
+        [
+          295,
+          10,
+          860,
+          1245
+        ]
+      ],
+      "anchor": [
+        580,
+        1235
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "move_2",
+      "source": "workflow-v2/contact-b.png",
+      "rects": [
+        [
+          230,
+          10,
+          1010,
+          1245
+        ]
+      ],
+      "anchor": [
+        610,
+        1235
+      ],
+      "scale": 0.183
+    },
+    {
+      "name": "move_3",
+      "source": "workflow-v2/passing-b.png",
+      "rects": [
+        [
+          355,
+          0,
+          845,
+          1305
+        ]
+      ],
+      "anchor": [
+        625,
+        1296
+      ],
+      "scale": 0.175
+    },
+    {
+      "name": "attack_0",
+      "source": "alpha/attack.png",
+      "rects": [
+        [
+          0,
+          0,
+          610,
+          744
+        ]
+      ],
+      "anchor": [
+        345,
+        697
+      ],
+      "scale": 0.34
+    },
+    {
+      "name": "attack_1",
+      "source": "alpha/attack.png",
+      "rects": [
+        [
+          610,
+          0,
+          1675,
+          350
+        ],
+        [
+          610,
+          350,
+          1500,
+          744
+        ]
+      ],
+      "anchor": [
+        1040,
+        697
+      ],
+      "scale": 0.34
+    },
+    {
+      "name": "attack_2",
+      "source": "alpha/attack.png",
+      "rects": [
+        [
+          1675,
+          0,
+          2114,
+          350
+        ],
+        [
+          1500,
+          350,
+          2114,
+          744
+        ]
+      ],
+      "anchor": [
+        1900,
+        697
+      ],
+      "scale": 0.34
+    },
+    {
+      "name": "defend_0",
+      "source": "alpha/defend.png",
+      "rects": [
+        [
+          0,
+          0,
+          950,
+          887
+        ]
+      ],
+      "anchor": [
+        510,
+        837
+      ],
+      "scale": 0.27
+    },
+    {
+      "name": "defend_1",
+      "source": "alpha/defend.png",
+      "rects": [
+        [
+          950,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1380,
+        837
+      ],
+      "scale": 0.27
+    },
+    {
+      "name": "death_0",
+      "source": "alpha/death_dead.png",
+      "rects": [
+        [
+          0,
+          0,
+          704,
+          724
+        ]
+      ],
+      "anchor": [
+        410,
+        680
+      ],
+      "scale": 0.32
+    },
+    {
+      "name": "death_1",
+      "source": "alpha/death_dead.png",
+      "rects": [
+        [
+          704,
+          0,
+          1420,
+          724
+        ]
+      ],
+      "anchor": [
+        1050,
+        680
+      ],
+      "scale": 0.32
+    },
+    {
+      "name": "dead",
+      "source": "alpha/death_dead.png",
+      "rects": [
+        [
+          1420,
+          0,
+          2172,
+          724
+        ]
+      ],
+      "anchor": [
+        1840,
+        680
+      ],
+      "scale": 0.32
+    }
   ]
 }

@@ -1,0 +1,314 @@
+{
+  "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          0,
+          17,
+          451,
+          231
+        ],
+        [
+          0,
+          231,
+          433,
+          338
+        ]
+      ],
+      "anchor": [
+        273,
+        329
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "idle_1",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          455,
+          0,
+          790,
+          231
+        ],
+        [
+          435,
+          231,
+          790,
+          336
+        ]
+      ],
+      "anchor": [
+        651,
+        329
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "step_diagonal_a",
+      "source": "continuity-alpha/step-diagonal-a-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1491,
+          1055
+        ]
+      ],
+      "anchor": [
+        928,
+        1026
+      ],
+      "scale": 0.205
+    },
+    {
+      "name": "step_diagonal_b",
+      "source": "continuity-alpha/step-diagonal-b-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1491,
+          1055
+        ]
+      ],
+      "anchor": [
+        928,
+        1026
+      ],
+      "scale": 0.205
+    },
+    {
+      "name": "charge_windup",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          409,
+          364,
+          758,
+          657
+        ]
+      ],
+      "anchor": [
+        594,
+        642
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "charge_contact",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          758,
+          391,
+          1188,
+          657
+        ]
+      ],
+      "anchor": [
+        1001,
+        642
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "guard",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          1187,
+          402,
+          1536,
+          657
+        ]
+      ],
+      "anchor": [
+        1377,
+        642
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "hit",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          0,
+          670,
+          370,
+          988
+        ]
+      ],
+      "anchor": [
+        220,
+        972
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "kneel",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          377,
+          719,
+          760,
+          987
+        ]
+      ],
+      "anchor": [
+        590,
+        972
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "side_fall",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          763,
+          760,
+          1150,
+          925
+        ],
+        [
+          763,
+          925,
+          1100,
+          987
+        ]
+      ],
+      "anchor": [
+        979,
+        972
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "dead",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          1157,
+          796,
+          1536,
+          913
+        ],
+        [
+          1141,
+          913,
+          1536,
+          925
+        ],
+        [
+          1125,
+          925,
+          1536,
+          935
+        ],
+        [
+          1100,
+          935,
+          1536,
+          992
+        ]
+      ],
+      "anchor": [
+        1347,
+        975
+      ],
+      "scale": 0.67
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        0,
+        2,
+        0,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        4,
+        5,
+        4,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        6
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        7,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        8,
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        10
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

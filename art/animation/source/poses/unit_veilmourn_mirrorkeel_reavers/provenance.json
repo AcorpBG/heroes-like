@@ -1,0 +1,75 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_mirrorkeel_reavers.png",
+  "reference_sha256": "b67a8149e9b36add5c87c20297e1e8cd441af264b78ce2656c66dab81e22df94",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/poses.png",
+      "source_sha256": "fa1bbe4d56eac5fa686bbc918c3ecf557b198bb6508ee427942c94e8e4b823b7",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e58af01b-446d-4bd1-8764-df448ca723c3.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle animation sprite sheet. Reference defines ONE Mirrorkeel Reaver: tall armored humanoid in silver-black faceted plate, very tall split black helmet fins with ivory angular full faceplate, ragged teal finlike cape, clawed armored feet, small hanging mirror charms and THREE small violet lanterns around high collar/helmet. Anatomical RIGHT hand holds long curved mirror-steel saber with hooked dark hilt (viewer left); anatomical LEFT hand holds short inward-curving silver sickle (viewer right). Preserve two distinct blades, armor, head silhouette, cape, charms. Exactly TWELVE full-body articulated poses, FOUR columns THREE rows, fixed elevated three-quarter camera facing screen right, constant figure size, generous gutters containing ALL blade tips and cape fins. Genuine transparent RGBA background, no painted checkerboard, labels, floor, grid or scenery. Row1: idle settled guard; idle torso breath blades shift cape settles; walk right leg forward left back; opposite contact LEFT leg forward RIGHT back, truly swap lead. Row2: passing lifted foot under pelvis; wind-up RIGHT long saber lifted behind shoulder LEFT short sickle guarding; attack RIGHT saber sweeps forward across chest toward screen-right LEFT sickle retained low; defense crossed saber and sickle before torso. Row3: hit recoil arched torso bent knees blades pulled apart; dying one knee down head bowed arms lowered; side fall bent hips/knees blades landing beside; dead side-lying inert armored body with BOTH saber and sickle beside, helmet and cape retained, lanterns dark and cloth limp. Exactly two arms two legs and TWO weapons each different length, never duplicate saber. Actual joint articulation not rotated standing cutouts. Original art only, no copyrighted franchise assets.",
+      "alpha_source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png",
+      "alpha_sha256": "dd9c71a7fea7048fa7c71db5af0090e9c1bb933d7ebb5089a0c7b36a0b3b902e",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-42fabe6d-7f28-4bb9-bc05-726c53f537ee.png",
+      "alpha_prompt": "Use case: background-extraction. Remove ONLY checkerboard from this twelve-pose Mirrorkeel Reaver sheet to actual transparent RGBA. Preserve every figure, both weapons, thin charms, cape, helmet and lanterns exactly, including positions sizes canvas and colors. No repainting, no background replacement, no baked checkerboard, no colored edge matte."
+    }
+  ],
+  "review_notes": [
+    "14 packed frames retain nine original RGBA paintings and select five new paintings. Added rear-foot lift, crossed-near-knee passing, recovery stance and two braced guards; original saber/sickle attack and equipped death/corpse retained.",
+    "Guide-led opposite-contact output repeats the lead and shows only two collar lanterns; it is excluded. Original contacts are not a complete alternating gait. New passing retains three upper lanterns but chest ornament and cape/body detail differ.",
+    "Original genuine alpha composites cleanly; old raw-preview fringe concern was not confirmed in actual composites. Gray-keyed passing left checker fragments and is unselected; green-backed built-in derivative uses bounded chroma/edge cleanup. Other new sheet uses explicit inspected cape/arm aperture seeds.",
+    "Banded source crops exclude neighboring capes and kneeling/hit fragments while retaining full blade tips. Body/gear and lamp consistency, support/travel, palette, ground settling and connected attack/guard/death timing remain full-roster refinement. Static previews are not motion/gameplay acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve poses retain saber and sickle through attack/defense/fall and corpse.",
+    "Walking contacts repeat leading leg; idle change subtle. Passing needs transition to opposite contact.",
+    "Saber length/curvature and sickle diameter vary, with grip and helmet/cape continuity requiring refinement.",
+    "Three lanterns become fewer visible in kneeling/collapse; verify attachment accounting and clearly inactive final state.",
+    "Rightmost walking saber reaches canvas edge; explicit margins/crops needed. Extraction changes armor detail and shows colored fringes; alpha/compositing unaccepted.",
+    "Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "new_or_corrected_selected_paintings": 5,
+    "generated_outputs": 4,
+    "generation": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_mirrorkeel_reavers.png",
+    "runtime_sha256": "4c0e58b8ad724181ae72f16cce6cdf3f63d8f4558adfec3c6ad07c338720f0f6",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png": "dd9c71a7fea7048fa7c71db5af0090e9c1bb933d7ebb5089a0c7b36a0b3b902e",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/recovery-and-braced-guard.png": "04750267926b5e79604552104edb3a5750bcf606c737604d0c8a68f06c615d92",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/opposite-passing-green.png": "5afb1f16124fb7e2aab4c5ed59eb4388928d7da2cbe3cacd01865ea83fc3dd48"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/reaver-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes; offline static visual evidence is not final playback acceptance.",
+    "cleanup": {
+      "policy": "Removed only SHA-256-identical task preview copies after no-live-handle checks. Retained identical recovery copies, unique evidence, originals/rejected masters, all used references, processing proofs, caches and unrelated files.",
+      "duplicates_removed": [
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/reaver-continuity-20260916/prepared/opposite-passing-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/reaver-continuity-20260916/prepared-v2/opposite-passing-light.png",
+          "sha256": "1084c93485ab38e072f9ec689b557eb76fbdbb574061a9a6dd201a27fdd73204",
+          "bytes": 1485978
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/reaver-continuity-20260916/prepared/opposite-passing-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/reaver-continuity-20260916/prepared-v2/opposite-passing-green.png",
+          "sha256": "688b37147c0b6c325985dd402675899feec00c45de59f35d7dac9628cceec2e0",
+          "bytes": 1463088
+        }
+      ],
+      "removed_bytes": 2949066
+    }
+  }
+}

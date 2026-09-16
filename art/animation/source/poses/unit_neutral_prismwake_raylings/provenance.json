@@ -1,0 +1,93 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "runtime_candidate_pending_consolidated_validation",
+  "reference": "art/units/source/curated/unit_neutral_prismwake_raylings.png",
+  "reference_sha256": "1daf91a952fcd2dc40deccee6594ecedf2a9ad776202fa61ddebbfc910723901",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "ec71db8b861c03c7d2200e1fb08054592d7e674c593edd367fc219048f01d62b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-277fd007-bab3-4b6d-b9ef-0b74610853aa.png",
+      "prompt": "Use case: stylized-concept. Image1 character identity reference. Original Prismwake Rayling battle animation sheet: small hovering ray creature ivory/gold filigree body central SINGLE blue violet eye, long tapered beak facing RIGHT, TWO broad translucent rainbow membrane side fins, small dorsal crest fins, THREE thin trailing leaf-ended tendrils. No legs or humanoid arms. Painted fantasy raster consistent fixed elevated three-quarter camera facing right same body scale in TWELVE independent full-body poses FOUR columns THREE rows generous transparent gutters. Row1 idle side fins mildly raised; breathing fins subtly lower eye attentive; flight upstroke both broad fins curled high; flight downstroke both fins swept below body. Row2 flight halfway neutral fins extended tail S curve; attack anticipation beak retracted body coils fins swept back; forward beak jab body extends eye focused tail trails left; defend fins fold protectively around core eye. Row3 hit recoil beak lifted body crumples fins bend; dying sinks fins droop eye dim; collapsing on side beak touches ground three tendrils slack; dead grounded flattened relaxed folded fins dark inactive eye all gold frame and leaf tendrils retained. Articulate fins and body organically, never merely rotate entire idle image. Complete uncut silhouettes no detached shards, effects, shadows, text, grid, scenery or gore. Plain pale gray background."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "1fb58dc614d47486e3ff47c402f0ff903c2eb45c8c958d8cfa844f49917ea303",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-efc0d057-de93-4ef0-b50d-1232f5663435.png",
+      "prompt": "Use case: precise-object-edit. Image1 edit target. Change ONLY row TWO column TWO attack windup: restore its long ivory-gold tapered beak with pink tip attached at front of head beneath eye, angled down RIGHT, full same length as first idle. Retraction means coiling neck/body, not losing beak. Keep the curled trailing leaf tendrils, swept fins, body scale, all other eleven figures, exact layout pale gray background unchanged.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "32b4ed1a47c0ccb0c0168fd388eae3312f943a7755fce87a2a12368359866b3a",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-93bf0c79-007b-4a17-b0ff-960d7ec37eea.png",
+      "alpha_prompt": "Use case: background-extraction. Image1 edit target. Extract all twelve ray creature poses onto genuine transparent RGBA background. Preserve exact canvas layout positions dimensions every gold filigree edge, full beaks, three trailing leaf tendrils, rainbow membranes and dark corpse eye. Remove gray backdrop only including holes between tendrils and inside body/fin gaps; keep colored wing membranes intact with translucent material, not holes. No ground shadows, checker pixels, halos, restyling, extra effects or text."
+    },
+    {
+      "source": "defend-breath.png",
+      "source_sha256": "d946f5097373aa774d884885bd8eae4bfe693332e57616e61ea37b66b7d74253",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d416493f-d49a-4e2e-a89a-9060483d7e5d.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is a cropped original battle sprite and exact identity/pose reference. Paint a second frame of this same defensive pose: keep the eye/core, long down-right pointed beak, ivory filigree frame, TWO broad rainbow wing membranes folded around the body and THREE leaf-ended trailing tendrils. Subtle protective breathing: spread the folded wing tips slightly apart (about 8 percent), bend their edges outward gently, and let the three attached tendrils settle into a slightly different curve. Keep the overall curled silhouette, same camera facing screen RIGHT, no attack or large stance change. Preserve one blue eye, whole beak, all three leaf-ended tendrils and rainbow membrane coloring. Same detailed original painted art, no new gear, flames, glow effects, shadow, ground, text or borders. One complete figure with generous margins on a perfectly uniform light gray RGB 210,210,210 background. Do not create a sheet or copy background texture. This is an articulated fin-breath frame, not a rotated or scaled copy.",
+      "reference_crop": {
+        "source": "poses-corrected.png",
+        "rect": [
+          1182,
+          396,
+          1448,
+          710
+        ],
+        "path": "defend-reference.png"
+      },
+      "tool_mode": "built_in_image_gen"
+    }
+  ],
+  "review_notes": [
+    "Thirteen original-art poses assembled: two idle, three fin-stroke sources in a four-phase flight cycle, windup/jab/recovery, two defensive fin-breath poses, hit, droop/fall and persistent dark-eye corpse.",
+    "Local neutral-matte preparation preserves the original paintings and adds genuine alpha without a second generative redraw; proofs are in local-alpha/*.processing.json.",
+    "Uniform source-sheet scale with explicit eye/ground anchors; disjoint crop regions remove neighboring pose fragments while retaining long beaks, tendrils and prone width.",
+    "Atlas and light/green source composites inspected; nominal-timing offline art desk prepared. In-game connected action/scale/accessibility and Linux/Windows acceptance remain deferred with the full-roster pass. Not final acceptance.",
+    "2026-09-16: Dedicated ranged sequence added from original built-in paintings; prior missing-ranged note superseded, final acceptance remains pending."
+  ],
+  "local_processing": {
+    "owner_approval": "2026-09-15 explicit raster background and edge cleanup approval",
+    "recipe": "art/animation/source/cutout-recovery-20260915/recipes.json",
+    "proofs": [
+      "local-alpha/poses-corrected.processing.json",
+      "local-alpha/defend-breath.processing.json"
+    ],
+    "packing": "packing.json",
+    "note": "Exact original pose pixels retained outside explicit matte/edge band; no generated alpha redraw."
+  },
+  "prior_review_notes": [
+    "Twelve distinct source states; missing anticipation beak restored. Upstroke/downstroke, protective curl, hit and grounded dark-eye corpse present.",
+    "Core/beak scale, tendril count/occlusion, fin transitions and translucent membrane compositing require refinement and motion review.",
+    "Extraction preview has strong colored/gray edge regions; no in-context alpha acceptance yet.",
+    "Source only, not packed or enabled. No tests or exports; consolidated validation deferred until generation and integration finish."
+  ],
+  "runtime_candidate": {
+    "path": "art/animation/runtime/poses/unit_neutral_prismwake_raylings.png",
+    "sha256": "5cfeb7e3567272f26b67d7f987cf373baed9a0222f82804c41d3f39d4ba5386b",
+    "packing": "packing.json",
+    "frames": 13,
+    "approval": "Candidate integration only, not final whole-unit acceptance."
+  },
+  "packing": {
+    "recipe": "art/animation/source/poses/unit_neutral_prismwake_raylings/packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_prismwake_raylings.png",
+    "runtime_sha256": "fc925d311561ec4f42eb3b2742ea6c251a395904af08114988fc190db2ff4f71"
+  },
+  "ranged_correction": {
+    "date": "2026-09-16",
+    "generation": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/generation.json",
+    "preparation": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/cutouts.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/packing-result.json",
+    "selected_frames": [
+      13,
+      14,
+      15
+    ],
+    "runtime_sha256": "fc925d311561ec4f42eb3b2742ea6c251a395904af08114988fc190db2ff4f71",
+    "review": "Original generated preparation/release/recovery replace melee alias. Source/composites/packed atlas inspected; final gameplay/continuous-motion acceptance pending. Existing frames untouched."
+  }
+}

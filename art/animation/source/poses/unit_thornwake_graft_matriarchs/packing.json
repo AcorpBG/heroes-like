@@ -1,0 +1,376 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "continuity-alpha/idle-planted.png",
+      "rects": [
+        [
+          0,
+          0,
+          1202,
+          1309
+        ]
+      ],
+      "anchor": [
+        565,
+        1287
+      ],
+      "scale": 0.165
+    },
+    {
+      "name": "idle_breath",
+      "source": "continuity-alpha/idle-breath.png",
+      "rects": [
+        [
+          0,
+          0,
+          1202,
+          1309
+        ]
+      ],
+      "anchor": [
+        565,
+        1287
+      ],
+      "scale": 0.165
+    },
+    {
+      "name": "root_near_lift",
+      "source": "continuity-alpha/root-near-lift.png",
+      "rects": [
+        [
+          0,
+          0,
+          1202,
+          1308
+        ]
+      ],
+      "anchor": [
+        546,
+        1233
+      ],
+      "scale": 0.172
+    },
+    {
+      "name": "root_far_lift",
+      "source": "continuity-alpha/root-far-lift.png",
+      "rects": [
+        [
+          0,
+          0,
+          1202,
+          1308
+        ]
+      ],
+      "anchor": [
+        565,
+        1284
+      ],
+      "scale": 0.165
+    },
+    {
+      "name": "melee_brace",
+      "source": "continuity-alpha/melee-brace.png",
+      "rects": [
+        [
+          0,
+          0,
+          1203,
+          1308
+        ]
+      ],
+      "anchor": [
+        598,
+        1280
+      ],
+      "scale": 0.165
+    },
+    {
+      "name": "melee_shove",
+      "source": "continuity-alpha/melee-shove.png",
+      "rects": [
+        [
+          0,
+          0,
+          1203,
+          1308
+        ]
+      ],
+      "anchor": [
+        500,
+        1285
+      ],
+      "scale": 0.175
+    },
+    {
+      "name": "ranged_draw",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          1190,
+          263,
+          1536,
+          510
+        ]
+      ],
+      "anchor": [
+        1320,
+        505
+      ],
+      "scale": 0.86
+    },
+    {
+      "name": "ranged_release",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          32,
+          513,
+          361,
+          769
+        ]
+      ],
+      "anchor": [
+        170,
+        760
+      ],
+      "scale": 0.86
+    },
+    {
+      "name": "ranged_lower",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          459,
+          522,
+          724,
+          768
+        ]
+      ],
+      "anchor": [
+        560,
+        760
+      ],
+      "scale": 0.86
+    },
+    {
+      "name": "guard",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          780,
+          516,
+          1135,
+          769
+        ]
+      ],
+      "anchor": [
+        945,
+        762
+      ],
+      "scale": 0.86
+    },
+    {
+      "name": "guard_breath",
+      "source": "continuity-alpha/guard-breath.png",
+      "rects": [
+        [
+          0,
+          0,
+          1485,
+          1059
+        ]
+      ],
+      "anchor": [
+        687,
+        1020
+      ],
+      "scale": 0.207
+    },
+    {
+      "name": "hit",
+      "source": "continuity-alpha/original.png",
+      "rects": [
+        [
+          1200,
+          514,
+          1506,
+          770
+        ]
+      ],
+      "anchor": [
+        1340,
+        762
+      ],
+      "scale": 0.86
+    },
+    {
+      "name": "death_buckle",
+      "source": "continuity-alpha/poses-anatomy-death-draft.png",
+      "rects": [
+        [
+          16,
+          772,
+          365,
+          1013
+        ]
+      ],
+      "anchor": [
+        167,
+        999
+      ],
+      "scale": 0.86
+    },
+    {
+      "name": "death_fall",
+      "source": "continuity-alpha/poses-anatomy-death-draft.png",
+      "rects": [
+        [
+          394,
+          777,
+          735,
+          1013
+        ]
+      ],
+      "anchor": [
+        550,
+        993
+      ],
+      "scale": 0.86
+    },
+    {
+      "name": "death_prone",
+      "source": "continuity-alpha/poses-anatomy-death-draft.png",
+      "rects": [
+        [
+          768,
+          846,
+          1137,
+          995
+        ]
+      ],
+      "anchor": [
+        945,
+        977
+      ],
+      "scale": 0.86
+    },
+    {
+      "name": "dead_settled",
+      "source": "continuity-alpha/poses-anatomy-death-draft.png",
+      "rects": [
+        [
+          1154,
+          851,
+          1536,
+          995
+        ]
+      ],
+      "anchor": [
+        1325,
+        976
+      ],
+      "scale": 0.86
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        0,
+        3,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        4,
+        5,
+        4,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        9,
+        10
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        11,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        15
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  }
+}

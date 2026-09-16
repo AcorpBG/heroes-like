@@ -1,0 +1,338 @@
+{
+  "unit_id": "unit_brasshollow_furnace_pavis_teams",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          60,
+          0,
+          339,
+          342
+        ]
+      ],
+      "anchor": [
+        188,
+        336
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "idle_breath",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          453,
+          0,
+          722,
+          342
+        ]
+      ],
+      "anchor": [
+        575,
+        336
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "contact_a_requires_limb_review",
+      "source": "continuity-alpha/near-contact-guide-first.png",
+      "rects": [
+        [
+          150,
+          10,
+          1037,
+          1290
+        ]
+      ],
+      "anchor": [
+        590,
+        1258
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "far_passing",
+      "source": "continuity-alpha/walk-1.png",
+      "rects": [
+        [
+          75,
+          0,
+          1070,
+          1380
+        ]
+      ],
+      "anchor": [
+        549,
+        1356
+      ],
+      "scale": 0.155
+    },
+    {
+      "name": "contact_b_requires_limb_review",
+      "source": "continuity-alpha/walk-2.png",
+      "rects": [
+        [
+          65,
+          0,
+          1080,
+          1383
+        ]
+      ],
+      "anchor": [
+        549,
+        1350
+      ],
+      "scale": 0.155
+    },
+    {
+      "name": "near_passing",
+      "source": "continuity-alpha/walk-3.png",
+      "rects": [
+        [
+          70,
+          10,
+          1080,
+          1389
+        ]
+      ],
+      "anchor": [
+        542,
+        1360
+      ],
+      "scale": 0.155
+    },
+    {
+      "name": "full_pole_windup",
+      "source": "continuity-alpha/full-pole-attack-pair.png",
+      "rects": [
+        [
+          0,
+          0,
+          790,
+          887
+        ]
+      ],
+      "anchor": [
+        468,
+        862
+      ],
+      "scale": 0.272
+    },
+    {
+      "name": "full_pole_contact",
+      "source": "continuity-alpha/full-pole-attack-pair.png",
+      "rects": [
+        [
+          800,
+          210,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1210,
+        864
+      ],
+      "scale": 0.272
+    },
+    {
+      "name": "guard",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          1250,
+          349,
+          1494,
+          691
+        ]
+      ],
+      "anchor": [
+        1379,
+        681
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "guard_braced",
+      "source": "continuity-alpha/guard-braced.png",
+      "rects": [
+        [
+          96,
+          0,
+          1100,
+          1404
+        ]
+      ],
+      "anchor": [
+        583,
+        1375
+      ],
+      "scale": 0.147
+    },
+    {
+      "name": "hit_recoil",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          60,
+          681,
+          402,
+          1005
+        ]
+      ],
+      "anchor": [
+        238,
+        987
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "knees_buckle",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          401,
+          681,
+          489,
+          684
+        ],
+        [
+          401,
+          684,
+          735,
+          1005
+        ]
+      ],
+      "anchor": [
+        572,
+        983
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "side_collapse",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          739,
+          787,
+          1143,
+          1004
+        ]
+      ],
+      "anchor": [
+        953,
+        981
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "dead",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          1141,
+          846,
+          1536,
+          1005
+        ]
+      ],
+      "anchor": [
+        1344,
+        982
+      ],
+      "scale": 0.62
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 230,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

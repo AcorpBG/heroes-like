@@ -2377,8 +2377,14 @@ func _animation_frame_region_for_stack(stack: Dictionary) -> Rect2:
 		var preferences := AnimationCueCatalogScript.normalize_animation_preferences(_animation_preferences())
 		var reduced := bool(preferences.get("reduced_motion", false))
 		var battle_id := String(stack.get("battle_id", ""))
-		var elapsed := BattleUnitPose.elapsed_msec(_animation_playback_record_for_stack(battle_id), Time.get_ticks_msec())
-		return BattleUnitPose.region(animation, state_name, _stack_presentation_progress(battle_id), elapsed, reduced)
+		var now := Time.get_ticks_msec()
+		var record := _animation_playback_record_for_stack(battle_id)
+		var waiting := BattleUnitPose.waiting_for_start(record, now)
+		# Keep idle breathing, or the settled defensive pose, during a queued
+		# reaction. Freezing frame zero of the death/hit clip starts it too early.
+		var elapsed := BattleUnitPose.elapsed_msec({} if waiting else record, now)
+		var progress := 1.0 if waiting else _stack_presentation_progress(battle_id)
+		return BattleUnitPose.region(animation, state_name, progress, elapsed, reduced)
 	var row := _animation_state_row_for_unit(String(stack.get("unit_id", "")), state_name)
 	var frame := _animation_frame_index_for_stack(stack)
 	return Rect2(Vector2(64.0 * float(frame), 64.0 * float(row)), Vector2(64.0, 64.0))
@@ -2386,14 +2392,14 @@ func _animation_frame_region_for_stack(stack: Dictionary) -> Rect2:
 func _animation_frame_index_for_stack(stack: Dictionary) -> int:
 	var battle_id := String(stack.get("battle_id", ""))
 	var playback_record := _animation_playback_record_for_stack(battle_id)
-	if playback_record.is_empty():
+	if playback_record.is_empty() or BattleUnitPose.waiting_for_start(playback_record, Time.get_ticks_msec()):
 		return int(Time.get_ticks_msec() / 180) % 4
 	var progress := _stack_presentation_progress(battle_id)
 	return clampi(int(floor(progress * 4.0)), 0, 3)
 
 func _animation_state_for_stack(stack: Dictionary) -> String:
 	var playback_record := _animation_playback_record_for_stack(String(stack.get("battle_id", "")))
-	if not playback_record.is_empty():
+	if not playback_record.is_empty() and not BattleUnitPose.waiting_for_start(playback_record, Time.get_ticks_msec()):
 		return String(playback_record.get("state", ""))
 	return _fallback_animation_state_for_stack(stack)
 
@@ -2884,8 +2890,9 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		if art_source == "event_animation_sheet":
 			var frame_size := _stack_standee_size(radius, stack).y
 			var frame_region := _animation_frame_region_for_stack(stack)
-			var frame_rect := BattleUnitPose.grounded_rect(ground_center, frame_size, frame_region)
-			_draw_stack_art_region(animation_sheet, frame_rect, frame_region, side == "enemy", Color(1.0, 1.0, 1.0, 0.96))
+			var animation := ContentService.get_unit_animation(String(stack.get("unit_id", "")))
+			var frame_rect := BattleUnitPose.grounded_rect(ground_center, frame_size, frame_region, animation)
+			_draw_stack_art_region(animation_sheet, frame_rect, frame_region, BattleUnitPose.facing_flip(animation, side), Color(1.0, 1.0, 1.0, 0.96))
 		elif art_source == "resting_battle_standee":
 			_draw_stack_art(battle_standee, _stack_standee_rect(center, radius, stack), side == "enemy", Color(1.0, 1.0, 1.0, 0.99))
 		elif art_source == "resting_battle_icon":
@@ -2946,8 +2953,8 @@ func _battle_corpse_entries(hex_layout: Dictionary) -> Array:
 		var extent := _stack_standee_size(radius, stack).y
 		var center := _hex_center(cell, hex_layout) + _body_center_offset(stack, cell, hex_layout)
 		var ground_y := center.y + radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
-		var rect := BattleUnitPose.grounded_rect(Vector2(center.x, ground_y), extent, region)
-		entries.append({"battle_id":String(stack.get("battle_id", "")), "texture":texture, "rect":rect, "region":region, "flip":String(stack.get("side", "")) == "enemy"})
+		var rect := BattleUnitPose.grounded_rect(Vector2(center.x, ground_y), extent, region, animation)
+		entries.append({"battle_id":String(stack.get("battle_id", "")), "texture":texture, "rect":rect, "region":region, "flip":BattleUnitPose.facing_flip(animation, String(stack.get("side", "")))})
 	return entries
 
 func _active_mapped_status_effects(stack: Dictionary) -> Array:
@@ -3180,6 +3187,12 @@ func _stack_presentation_motion(stack: Dictionary, cell: Vector2i, hex_layout: D
 	if record.is_empty():
 		return {}
 	var event_id := String(record.get("event_id", ""))
+	if BattleUnitPose.waiting_for_start(record, Time.get_ticks_msec()):
+		# Reactions must not knock a body aside before contact. A delayed move
+		# still waits at its source cell, never at the committed destination.
+		if event_id == "battle_unit_move":
+			return _movement_presentation_motion(record, cell, hex_layout, 0.0)
+		return {}
 	var progress := _stack_presentation_progress(battle_id)
 	match event_id:
 		"battle_unit_move":
@@ -3501,6 +3514,8 @@ func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array
 	for battle_id_value in _stack_animation_cue_playback_records.keys():
 		var battle_id := String(battle_id_value)
 		var record: Dictionary = _stack_animation_cue_playback_records.get(battle_id, {}) if _stack_animation_cue_playback_records.get(battle_id, {}) is Dictionary else {}
+		if BattleUnitPose.waiting_for_start(record, Time.get_ticks_msec()):
+			continue
 		var cue_ids: Array = record.get("selected_vfx_cue_ids", []) if record.get("selected_vfx_cue_ids", []) is Array else []
 		if cue_ids.is_empty() or not stack_cells.has(battle_id):
 			continue

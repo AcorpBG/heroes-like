@@ -1,0 +1,100 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_furnace_pavis_teams",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_brasshollow_furnace_pavis_teams.png",
+  "reference_sha256": "d02f57e6c89d5bf24265ab27df052e333e3ea2c9833c3d71915745253dbbb0e4",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/poses.png",
+      "source_sha256": "996f31e0d62979fb54c1122bb40c03be05e3739110226c8c3b03acd959184247",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d89884ae-fa2b-4f54-a3f7-6cf286e4d1e4.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle sprite animation sheet. Reference Furnace Pavis Team visually represents ONE armored soldier, no extra crew: dark blue face-wrap/scarf and quilted sleeves, black iron/brass helmet, iron breastplate brass shoulders/knees, leather apron and heavy boots. LEFT arm enormous rectangular iron furnace pavise with brass riveted edges, upper glowing orange horizontal slit, bottom vertical vents and top black pipe handle. RIGHT hand long black pole with brass ferrules and heavy hooked crescent iron head. Twelve full-body poses in FOUR columns THREE rows, fixed three-quarter facing right, constant shield/pole/body scale, ample gutters and full pole inside every cell. True transparent RGBA. Reading order: 1 idle pole upright shield forward; 2 breathing idle shoulders rise shield tilts; 3 walk right foot forward left back; 4 passing right planted left knee advances feet close; 5 opposite contact left foot forward right back torso unchanged; 6 attack windup RIGHT pole raised back LEFT shield remains forward; 7 attack contact RIGHT arm drives hooked pole forward diagonally LEFT shield protects torso; 8 defensive crouch behind planted pavise pole close; 9 hit recoil shield tips back soldier bends; 10 dying knees buckle pole lowers; 11 collapse on side shield tilts attached left arm; 12 dead side-lying eyes closed helmet/scarf retained, pavise and pole resting beside correct hands, furnace slit dark unlit orange-brown. Preserve one soldier, one same-sized shield and one full pole all poses. Same hooked head and pole length, no disappearing legs or swapped equipment. No scenery, ground shadows, effects, labels or gore. Detailed original painted strategy game art matching reference, genuine articulated movement not translated copies.",
+      "alpha_source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/alpha/poses.png",
+      "alpha_sha256": "50e410df1ad58902784a5e6e7eba19b4b96ff48725ba3f81733edf23700b92b4",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-069cbe6d-d351-46ff-9cb2-6e4ce2627ade.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only checkerboard background from twelve-pose Furnace Pavis soldier sheet into genuine transparent RGBA alpha. Preserve all painted armor, shields, polearms, opaque interiors and exact positions/scale. Clear gaps between limbs and poles. Keep final shield furnace dark. No replacement backdrop, matte, shadows, colored fringe, painted checkerboard or redraw."
+    }
+  ],
+  "review_notes": [
+    "14 candidate frames: seven original paintings (sheet indices0,1,7,8,9,10,11) plus seven new paintings from six selected outputs for contact/passing, full-pole attack pair and braced guard.",
+    "New attack pair restores the visible rear shaft behind the right-hand grip; both original shortened attack paintings are excluded. Pole length/angle and shield/torso scale still vary and need connected-motion refinement.",
+    "Unfolded-contact duplicate-knee draft excluded. Guide-first contact removes duplicate knee armor but does not prove opposite lead. Passing poses expose both boots around shield; hip/leg ownership and support remain refinement.",
+    "Original hit, knees-buckle, side-collapse and dark-furnace equipped corpse retained. Guard depth/body proportions, eye state under helmet/scarf, idle differentiation and action/death timing remain review.",
+    "Approved neutral175/tolerance16/edge2, dark checker contact minimum100, inspected arm/handle gaps. Steel breastplate and shield painting retained. Banded dying crop excludes previous-row boot fragment; no local pose synthesis.",
+    "512x256 four-column candidate atlas, explicit idle/move/attack/defend/hit/death/dead and action aliases. Actual-alpha packed art visually inspected; registered offline art-desk screenshot visually inspected. Browser VAAPI warning did not prevent capture; exit0. Static art evidence is not timed/gameplay acceptance.",
+    "Final roster acceptance0/160. No tests/imports/exports, paid API, runtime/tool-code, gameplay/save/footprint changes, staging, commit or push. Full roster production/refinement precedes consolidated validation."
+  ],
+  "prior_review_notes": [
+    "Twelve poses inspected; one soldier matching reference, furnace shield and pole retained through fallen poses, final furnace dark.",
+    "Attack pole shortens markedly, rear shaft missing/hidden; restore constant full pole and grips.",
+    "Shield occludes gait and second leg; alternating contact/passing and idle differentiation need refinement.",
+    "Shield scale and corpse eye closure under helmet need close review. Extraction/surface changes and actual transparency await in-context acceptance.",
+    "Source-only not enabled; no tests/exports or disposable test intermediates created. 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "candidate_frames": 14,
+    "retained_paintings": 7,
+    "new_paintings": 7,
+    "new_outputs": 7,
+    "source_preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams.png",
+    "runtime_atlas_sha256": "592b7b09259d451f5cbee5625203e76e40bd07f7e6dc90b78e4f74545ba810cc",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/poses.png": "6baf1b7383336ff0ec3020afd61db66e1f971fdf92989ca3ac161cfb8ee64314",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/near-contact-guide-first.png": "6212c1a7d21df1cf4da4998a55f850eba18ba66adbedc1f692137aa977272521",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/walk-1.png": "5a0b1d51f5391cf59131e41246af47849b379c82ee446ef2d1178a3b4de56758",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/walk-2.png": "2fde454b915f0b0f7eb8fe1974f9edd864871793c67521ac2d2865558d529ad5",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/walk-3.png": "d007339a58894988b794dca4bf47ddfdf5f451c55abf4dd7234366f29794e340",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/full-pole-attack-pair.png": "c886178cca1d78719a773d232f31b99358a243d3fb6b968b016f1f38d554418b",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/guard-braced.png": "a1ad932227b04be899f856321b6f05a99cafcb0e52220c98bd0e69bacdb8f51d"
+    },
+    "reference_crop": {
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/poses.png",
+      "rect": [
+        60,
+        0,
+        333,
+        342
+      ],
+      "reference": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/identity-reference.png",
+      "purpose": "Inspection composite and fixed identity reference only; never a runtime pose. Generated before final enclosed-gap seeds; that earlier reference backing remains preserved."
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/pavis-continuity-20260916",
+    "status": "candidate_registered_not_final_accepted",
+    "cleanup": {
+      "status": "byte_identical_preview_cleanup_completed",
+      "pairs": [
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/pavis-continuity-20260916/identity/unit_brasshollow_furnace_pavis_teams-poses-rect-60-0-333-342-green.png",
+          "retain": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/identity-reference.png",
+          "sha256": "d7da94bb31cc209e40b063cb99a74b95a59e9cc259c75c4304c87ffbd03c7595",
+          "bytes": 205235
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/pavis-continuity-20260916/source-alpha/poses-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/pavis-continuity-20260916/alpha-first/poses-green.png",
+          "sha256": "af1d0cbfdc78d8aed6923d950c492320205dc26a009cb1189e30bd07a2aab986",
+          "bytes": 1382807
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/pavis-continuity-20260916/source-alpha/poses-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/pavis-continuity-20260916/alpha-first/poses-light.png",
+          "sha256": "0c552ee03ca547161421d8285ead0ddb32218e3d763da96f8ec2ee8e2888db72",
+          "bytes": 1399167
+        }
+      ],
+      "removed_bytes": 2987209,
+      "preserved": "Original/new/rejected masters, exact prompts/input hashes, source/runtime atlases, recipes/proofs, unique before/final evidence, caches and unrelated files."
+    }
+  }
+}

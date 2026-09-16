@@ -1,0 +1,401 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          327,
+          278
+        ],
+        [
+          0,
+          278,
+          305,
+          420
+        ]
+      ],
+      "anchor": [
+        163,
+        408
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          327,
+          0,
+          619,
+          271
+        ],
+        [
+          311,
+          271,
+          619,
+          410
+        ],
+        [
+          335,
+          410,
+          398,
+          418
+        ],
+        [
+          503,
+          410,
+          553,
+          418
+        ]
+      ],
+      "anchor": [
+        460,
+        408
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          618,
+          0,
+          932,
+          438
+        ]
+      ],
+      "anchor": [
+        774,
+        418
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "walk_passing",
+      "source": "continuity-alpha/barrel-maul-recovery-ready-and-passing-step.png",
+      "rects": [
+        [
+          1297,
+          0,
+          1916,
+          821
+        ]
+      ],
+      "anchor": [
+        1598,
+        761
+      ],
+      "scale": 0.29
+    },
+    {
+      "name": "maul_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          350,
+          416,
+          612,
+          520
+        ],
+        [
+          310,
+          520,
+          612,
+          835
+        ]
+      ],
+      "anchor": [
+        470,
+        807
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "maul_downward_strike",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          610,
+          492,
+          938,
+          700
+        ],
+        [
+          610,
+          700,
+          950,
+          715
+        ],
+        [
+          610,
+          715,
+          959,
+          835
+        ]
+      ],
+      "anchor": [
+        755,
+        807
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "maul_recovery",
+      "source": "continuity-alpha/barrel-maul-recovery-ready-and-passing-step.png",
+      "rects": [
+        [
+          0,
+          0,
+          666,
+          821
+        ]
+      ],
+      "anchor": [
+        272,
+        751
+      ],
+      "scale": 0.29
+    },
+    {
+      "name": "maul_ready_brace",
+      "source": "continuity-alpha/barrel-maul-recovery-ready-and-passing-step.png",
+      "rects": [
+        [
+          667,
+          0,
+          1296,
+          821
+        ]
+      ],
+      "anchor": [
+        947,
+        751
+      ],
+      "scale": 0.29
+    },
+    {
+      "name": "maul_crouched_guard",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          939,
+          492,
+          1254,
+          715
+        ],
+        [
+          965,
+          715,
+          1254,
+          831
+        ]
+      ],
+      "anchor": [
+        1091,
+        789
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          835,
+          317,
+          1193
+        ]
+      ],
+      "anchor": [
+        153,
+        1160
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          316,
+          848,
+          537,
+          1078
+        ],
+        [
+          316,
+          1078,
+          561,
+          1093
+        ],
+        [
+          316,
+          1093,
+          570,
+          1103
+        ],
+        [
+          316,
+          1103,
+          576,
+          1120
+        ],
+        [
+          316,
+          1120,
+          581,
+          1207
+        ]
+      ],
+      "anchor": [
+        443,
+        1164
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "death_side_head_left",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          548,
+          929,
+          886,
+          1074
+        ],
+        [
+          571,
+          1074,
+          886,
+          1097
+        ],
+        [
+          579,
+          1097,
+          886,
+          1114
+        ],
+        [
+          594,
+          1114,
+          887,
+          1215
+        ]
+      ],
+      "anchor": [
+        722,
+        1183
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "dead_head_left",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          886,
+          965,
+          1254,
+          1219
+        ]
+      ],
+      "anchor": [
+        1082,
+        1183
+      ],
+      "scale": 0.55
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 210,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 270,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

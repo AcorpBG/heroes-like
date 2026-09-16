@@ -1,0 +1,95 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_gloamkeel_bulwarks.png",
+  "reference_sha256": "28200cc4bc83bbaec5230cd8554fa5f94129f7d4f3cb1b07ce574ce6f1f8a6ea",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/poses.png",
+      "source_sha256": "aa13e1ee7e21fe272a2549ee45c2b546180410a16ac57cd1b95b80b920884651",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-497d148f-02fc-497f-80c0-6efa641cd0d1.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle sprite animation sheet matching supplied Gloamkeel Bulwark reference. Exactly 12 full body isolated poses FOUR columns THREE rows, same scale fixed three-quarter camera facing RIGHT. True transparent RGBA background no painted checkerboard no ground no labels. Broad bearded human man navy hood/scarf battered black scale armor ivory/navy torn tabard wrapped legs iron boots, rope belt silver charms. Anatomical RIGHT hand holds short dark iron crescent boarding hook with tiny hanging chain loop. Anatomical LEFT forearm carries tall curved wooden ship-plank shield iron rim white abstract painted stripe ONE small brass bell with blue tassel at upper edge. Keep exact arm ownership shield dimensions and single weapon throughout. Row1 relaxed idle shield beside body hook lowered; inhale idle shoulders and shield lift cloth settles; walk LEFT foot forward RIGHT back; walk RIGHT foot forward LEFT back clearly opposite anatomy without mirroring body or swapping shield. Row2 passing step lifted bent knee; attack wind-up RIGHT elbow pulls hook back above shoulder LEFT shield protects chest; attack contact RIGHT arm swings hook forward to right hook point toward opponent LEFT shield stays attached; defense crouch shield raised rightward covering chest hook tucked behind shield but visible beside hip. Row3 hit recoil shield jolts torso backwards hook held; death knees buckle shield and hook supported; collapse sideways shield sliding to ground hook releases; persistent corpse lying side eyes closed shield and hook on ground beside body bell tassel limp. Clearly articulated elbow hip knee shoulders, no extra arms no disappearing shield or hook. Painterly original game art matching reference crisp readable small-scale details. Preserve beard/hood plank/bell/tassel counts and geometry, ample cell margins no clipping or overlap."
+    }
+  ],
+  "review_notes": [
+    "15 packed frames retain ten original paintings and add five new poses: planted contact, two support/lift poses, hook recovery and shield brace. Existing strike, hit, kneel, sidefall and equipped corpse retained.",
+    "Guide contact is a broad planted stride, not proven distinct opposite contact versus original leading leg; alternating translation/support remains refinement. The tiny hook chain loop appears tassel-like in several original/new frames; shield markings and bell scale vary.",
+    "Approved neutral extraction preserves original paintings. Initial key left checker fragments; source-specific revised key and inspected arm-gap seeds remove backing. Ivory/blue cloth and fine edges still need whole-roster display review.",
+    "Explicit fall crop removes the neighboring corpse fragment without erasing hook/shield. Body/gear scale, support, grips and action/death timing remain unaccepted. Offline static captures are not in-game animation acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses include hook strike, shield brace and prone equipped corpse.",
+    "Walking contacts repeat leading leg; need opposite contact and continuous passing. Idle subtle.",
+    "Shield shape/plank marks and bell/tassel scale change; hook shaft/chain loop becomes tassel-like. Preserve reference materials/counts and left forearm shield attachment.",
+    "Attack extends hook in thrust rather than swing; wind-up/contact arc and grip need refinement. Defense hook grip is partly obscured.",
+    "Seated fall props torso before prone; intermediate collapse needed. Final eyes hidden by hood need review.",
+    "Checker backdrop visible; transparency/compositing unresolved. Source-only not packed or enabled; no tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "new_or_corrected_selected_paintings": 5,
+    "generated_outputs": 2,
+    "generation": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_gloamkeel_bulwarks.png",
+    "runtime_sha256": "204a60f78417d0dbabe302410e0100997eff42b6fed90a33e39bb4887891c084",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/poses.png": "ac0c263796b35ca33e4c033d9b27b5ee2a5abb630526ffe74495352132d10f28",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/passing-and-recovery.png": "6295a6c6411722dec0907e33311823bc9faf4d985890d30ce34b7e066c0e8746",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/contact-guide.png": "f45d0f9c614e5551951616d1996a6989a64a4876051364a005b2cbf3eca6a2e3"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes; offline static visual evidence is not final playback acceptance.",
+    "cleanup": {
+      "policy": "Removed only SHA-256-identical task preview copies after no-live-handle checks. Retained identical recovery copies, unique evidence, originals/rejected masters, all used references, processing proofs, caches and unrelated files.",
+      "duplicates_removed": [
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916/prepared-v2/original-poses-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916/prepared-original-v2/original-poses-light.png",
+          "sha256": "c93b6ca448868c5cf65bb18cd543d307de62353bb81733104cdb3c1fa643b44f",
+          "bytes": 1562019
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916/prepared/original-poses-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916/prepared-original-v2/original-poses-light.png",
+          "sha256": "c93b6ca448868c5cf65bb18cd543d307de62353bb81733104cdb3c1fa643b44f",
+          "bytes": 1562019
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916/prepared-v2/original-poses-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916/prepared-original-v2/original-poses-green.png",
+          "sha256": "75c1cdddf18442a3b64bb0ce65395bd77e605961db156bea1e1f9f295a3634da",
+          "bytes": 1524435
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916/prepared/original-poses-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916/prepared-original-v2/original-poses-green.png",
+          "sha256": "75c1cdddf18442a3b64bb0ce65395bd77e605961db156bea1e1f9f295a3634da",
+          "bytes": 1524435
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916/prepared/contact-guide-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916/prepared-v2/contact-guide-light.png",
+          "sha256": "031242655b4675727c817e0bd9afa5954bfe2af2969ff88c76820f9953c30738",
+          "bytes": 1477364
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916/prepared/contact-guide-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/bulwark-continuity-20260916/prepared-v2/contact-guide-green.png",
+          "sha256": "6990cd7b293b63a61bdc9caa03d226d4a1739d8809f21bb3891e7fd1f14ae89f",
+          "bytes": 1456931
+        }
+      ],
+      "removed_bytes": 9107203
+    }
+  }
+}

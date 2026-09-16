@@ -1,0 +1,74 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_sporelamp_tossers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_sporelamp_tossers.png",
+  "reference_sha256": "097a62a7ac168e9664192e4038d39eb4ffed36ce480c41552e07c202c7932e95",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "9ea5847ab91d618a598dcdf06347ae87ae5a880220ef8f64028f8c4ff2ecb236",
+      "source_output": "exec-9af45098-523e-42b1-9f04-91725d2c0984.png",
+      "prompt": "Use case: stylized-concept. Original Sporelamp Tosser battle sprite sheet matching attached reference: small wiry blue-green skinned pointed-ear goblin-like adult, pale green eyes, tan spotted mushroom hood and ragged mantle, olive face wrap, layered brown leather straps and muted olive trousers, wrapped boots, shoulder satchel containing corked ROUND glass spore lamps with teal/amber interiors. Right hand throws glass lamp; left holds short strap-handled amber lamp. Exactly sixteen independently articulated full-body poses FOUR columns FOUR rows, consistent body size/identity/elevated three-quarter camera facing RIGHT, generous gutters and complete hands/boots/lamps. Row1 idle lamp low; alert breathing hood/shoulders shift; walking near leg forward; opposite walking near thigh BACK left overlapping far forward thigh, no mirrored equipment. Row2 passing step knee lifted beneath hip; melee windup left strap lamp drawn back low while right protects satchel; close left-hand lamp swing forward RIGHT below shoulder height, not ranged throw; defense crouch forearms shelter hood and satchel held close. Row3 right hand takes corked teal lamp from satchel; windup right elbow raised behind head gripping teal lamp; ranged release right arm extends RIGHT palm empty lamp has left frame, no floating projectile; recovery right hand lowers toward satchel left lamp still held. Row4 hit recoil hood/head back; dying knees buckle lamps dim; falling onto SIDE torso low bags and lamps settle; dead figure lying on SIDE horizontal torso/head eyes shut lamps dark corked and resting alongside, no blood. Actual joint articulation, no rotated standing corpse. Original gritty painterly raster, no spore cloud/effects/trails, no text/borders/checkerboard/shadows/scenery. Plain pale gray background."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "37552e41f63ab879fb0bfd16298bf6ce999135cf245960b6c144609860460e0e",
+      "source_output": "exec-7756f947-bea8-4103-9672-30204d635c04.png",
+      "prompt": "Use case: precise-object-edit. Correct this sixteen-pose Sporelamp Tosser sheet. Row3 column3 throwing release: RIGHT arm (originating from viewer-left shoulder, same arm that holds teal bottle in prior windup) sweeps across body to extend RIGHT with empty palm; LEFT arm (viewer-right shoulder) stays low holding amber strap lamp. Keep two arms only, no bottle in released hand. Row2 column2 melee windup: hold amber strap lamp in LEFT hand drawn behind LEFT hip, right hand protects bag; avoid weapon-hand swap. Row4 column4 corpse: close BOTH eyes entirely and extinguish all lamp interiors to dull dark glass, including amber floor lamp. Preserve all other poses, identity, layout/body scale and gray backdrop. No new elements, text or effects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "b723c1a3c78002a1b8dc4803ffcf7228dfe5ce14ad0e9a9f687a730b7880e6c8",
+      "alpha_output": "exec-3ca91a2a-1868-4612-aed1-20e181243048.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all sixteen original Sporelamp Tosser poses from gray background onto genuine transparent RGBA. Preserve exact layout/body size/poses, corrected right-arm release and left-hand lamp, hood details, corked glass bottles, closed corpse eyes and dark corpse lamps. Transparent gaps between straps and limbs. No checkerboard, matte, shadow, blur, effects, new objects or anatomy changes."
+    },
+    {
+      "source": "poses-melee-draft.png",
+      "source_sha256": "c396b09035916e4594386925c1f4fd3ac1d4e7c3d168110d35e53dc9f90cf695",
+      "source_output": "exec-38f81781-2425-4466-b7e6-25c17043ca9f.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY row2 column2 of this sixteen-pose Sporelamp Tosser sheet. This is melee anticipation with the amber strap lamp in character LEFT hand on VIEWER RIGHT, consistent with neighboring idle and melee strike. Put that left hand at right hip holding amber lamp low outside the right edge of torso; left elbow bends back slightly. RIGHT hand on VIEWER LEFT is EMPTY and raised near chest protecting satchel. Remove lamp entirely from viewer-left hand. Do not mirror body or satchel. Same crouched feet, hood, face, body proportions, identity and exact grid. All other fifteen poses completely unchanged, including corrected right-arm throwing release and dark corpse. Plain gray background, no text or effects."
+    },
+    {
+      "source": "melee-windup.png",
+      "source_sha256": "f76c9a033242333ec66757618d168462349ab418a39a8571b6aea4256ecca3ad",
+      "source_output": "exec-2b5b70c6-fda4-4635-997d-569b9a997332.png",
+      "prompt": "Use case: stylized-concept. Draw ONE full-body original Sporelamp Tosser melee anticipation sprite using attached sheet as identity reference only. Same small blue-green goblin, spotted tan mushroom hood, olive face wrap, brown satchel with teal/amber bottles on VIEWER LEFT hip, layered olive clothes, curled wrapped boots. Facing RIGHT in elevated three-quarter view. Crouch with knees bent. On VIEWER RIGHT side of body, the LEFT arm bends with elbow pointed right and hand beside right-side waist holding a short strapped amber lamp dangling at VIEWER RIGHT. On VIEWER LEFT side, the RIGHT arm bends upward, EMPTY fist near chin. Lamp must be to RIGHT of body, opposite side from satchel. One lamp, two arms, no hand swap. Body leaning back slightly to anticipate left-arm forward lamp strike. Complete sprite centered square frame with ample margin. Preserve original gritty painterly identity. Plain pale gray background, no text, shadows, scenery or effects.",
+      "alpha_source": "alpha/melee-windup.png",
+      "alpha_sha256": "fa8ea36079ad7cc8799af7701739e317f6b82074a54a5a8145a6a36be2057dea",
+      "alpha_output": "exec-9ced374e-e07f-4da9-9377-1ea024574d3c.png",
+      "alpha_prompt": "Use case: background-extraction. Remove gray background from this single original Sporelamp Tosser pose onto genuine transparent RGBA. Preserve exact anatomy, left hand holding amber lamp on viewer right, empty right fist on viewer left, satchel, hood, scale and pose. Clean gaps between lamp straps, fingers and limbs. No matte/checkerboard/shadow/effects/blur/text or new elements."
+    }
+  ],
+  "review_notes": [
+    "18 packed frames retain 13 prior paintings (including the separately corrected left-lamp melee windup) and select five new supported travel/recovery/head-left corpse paintings. The old repeated contact, swapped-hand melee anticipation, direction-reversing corpse and lamp-less hit recoil are excluded.",
+    "Hit uses the equipped hood guard then lamp recovery rather than the old recoil that loses the amber lamp. Distinct melee and ranged clips preserve the left hand-held lamp, right throwing arm and satchel; death ends with closed eyes and dark lamps on the same head-left side as the preceding fall.",
+    "Original alpha is reused. New sheet ignored requested blue backing; a separate built-in background derivative protects olive cloth during approved blue-key preparation. Repeated gait ownership, body/hood/equipment scale, supported travel and connected event/death settling remain unaccepted. Corpse uses anatomical scale alignment, not silhouette-to-box fitting."
+  ],
+  "prior_review_notes": [
+    "Sixteen poses and extraction visually inspected. Corrected throwing release to right arm across body with left lamp retained; corpse eyes closed and lamps dark. Melee anticipation still swaps lamp hand and needs correction. Opposite walking contact and continuous motion/compositing also remain unaccepted. Source only, not packed or enabled. No automated tests/exports launched per generation-first instruction.",
+    "Follow-up: whole-sheet melee edit still swapped hands and is unselected. Single-pose redraw/extraction visually inspected and fixes lamp in left hand (viewer right), empty right fist, satchel unchanged. Use alpha/melee-windup.png for replacement during packing; extraction reframed subject, requiring explicit uniform scale/anchor normalization. Original sheet frame remains incorrect; not enabled, motion/gait acceptance still outstanding."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 13,
+    "new_or_corrected_selected_paintings": 5,
+    "generated_outputs": 2,
+    "generation": "art/animation/source/poses/unit_neutral_sporelamp_tossers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_sporelamp_tossers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_sporelamp_tossers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_sporelamp_tossers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_sporelamp_tossers.png",
+    "runtime_sha256": "44b7d2a8f625bd30d2e6e960ee58267df48bfe635d1d91ac909df7c8d84bfdfb",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sporelamp_tossers/alpha/poses.png": "b723c1a3c78002a1b8dc4803ffcf7228dfe5ce14ad0e9a9f687a730b7880e6c8",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sporelamp_tossers/continuity-alpha/four-phase-step-left-lamp-and-left-corpse-blue.png": "3aa74c16fdb96fcb46c4705051085255eefcdd86366c9d1237f5de67ebaf421b",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sporelamp_tossers/alpha/melee-windup.png": "fa8ea36079ad7cc8799af7701739e317f6b82074a54a5a8145a6a36be2057dea"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/sporelamp-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

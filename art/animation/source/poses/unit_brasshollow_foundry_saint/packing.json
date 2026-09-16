@@ -1,0 +1,315 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          385,
+          370
+        ]
+      ],
+      "anchor": [
+        210,
+        365
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "idle_b",
+      "source": "continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          420,
+          0,
+          755,
+          370
+        ]
+      ],
+      "anchor": [
+        600,
+        365
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "creep_planted",
+      "source": "continuity-alpha/creep-guard-and-collapse.png",
+      "rects": [
+        [
+          0,
+          0,
+          435,
+          603
+        ]
+      ],
+      "anchor": [
+        252,
+        600
+      ],
+      "scale": 0.365
+    },
+    {
+      "name": "creep_near_foot_lift",
+      "source": "continuity-alpha/guided-near-leg-lift.png",
+      "rects": [
+        [
+          0,
+          0,
+          1229,
+          1280
+        ]
+      ],
+      "anchor": [
+        730,
+        1257
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "creep_far_foot_lift",
+      "source": "continuity-alpha/creep-guard-and-collapse.png",
+      "rects": [
+        [
+          435,
+          0,
+          861,
+          623
+        ]
+      ],
+      "anchor": [
+        675,
+        618
+      ],
+      "scale": 0.365
+    },
+    {
+      "name": "hammer_windup",
+      "source": "continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          420,
+          372,
+          758,
+          701
+        ]
+      ],
+      "anchor": [
+        601,
+        699
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "hammer_strike",
+      "source": "continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          780,
+          375,
+          1204,
+          701
+        ]
+      ],
+      "anchor": [
+        978,
+        698
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "guard_a",
+      "source": "continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          1206,
+          375,
+          1536,
+          701
+        ]
+      ],
+      "anchor": [
+        1368,
+        698
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "guard_b",
+      "source": "continuity-alpha/creep-guard-and-collapse.png",
+      "rects": [
+        [
+          0,
+          603,
+          435,
+          1199
+        ]
+      ],
+      "anchor": [
+        250,
+        1171
+      ],
+      "scale": 0.365
+    },
+    {
+      "name": "hit",
+      "source": "continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          0,
+          701,
+          385,
+          1024
+        ]
+      ],
+      "anchor": [
+        204,
+        993
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "death_kneel",
+      "source": "continuity-alpha/creep-guard-and-collapse.png",
+      "rects": [
+        [
+          440,
+          630,
+          901,
+          1199
+        ]
+      ],
+      "anchor": [
+        683,
+        1165
+      ],
+      "scale": 0.365
+    },
+    {
+      "name": "death_side_collapse",
+      "source": "continuity-alpha/collapse-toward-matched-corpse.png",
+      "rects": [
+        [
+          0,
+          0,
+          1819,
+          865
+        ]
+      ],
+      "anchor": [
+        920,
+        816
+      ],
+      "scale": 0.122
+    },
+    {
+      "name": "dead_cold",
+      "source": "continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          1170,
+          840,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1357,
+        1006
+      ],
+      "scale": 0.62
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        2,
+        4
+      ],
+      "loop": true,
+      "frame_msec": 210,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        5,
+        6,
+        7,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        9,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

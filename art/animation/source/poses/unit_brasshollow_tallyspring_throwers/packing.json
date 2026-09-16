@@ -1,0 +1,442 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "continuity-alpha/poses-projectile-separated.png",
+      "rects": [
+        [
+          0,
+          0,
+          334,
+          313
+        ]
+      ],
+      "anchor": [
+        180,
+        308
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "idle_b",
+      "source": "continuity-alpha/poses-projectile-separated.png",
+      "rects": [
+        [
+          337,
+          0,
+          668,
+          313
+        ]
+      ],
+      "anchor": [
+        503,
+        307
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "walk_contact",
+      "source": "continuity-alpha/guided-walk-and-guard.png",
+      "rects": [
+        [
+          0,
+          0,
+          509,
+          516
+        ]
+      ],
+      "anchor": [
+        275,
+        505
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "continuity-alpha/guided-far-passing.png",
+      "rects": [
+        [
+          0,
+          0,
+          1150,
+          1368
+        ]
+      ],
+      "anchor": [
+        621,
+        1298
+      ],
+      "scale": 0.166
+    },
+    {
+      "name": "walk_planted_bridge",
+      "source": "continuity-alpha/guided-walk-and-guard.png",
+      "rects": [
+        [
+          1062,
+          0,
+          1536,
+          516
+        ]
+      ],
+      "anchor": [
+        1330,
+        501
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "continuity-alpha/guided-walk-and-guard.png",
+      "rects": [
+        [
+          597,
+          0,
+          982,
+          516
+        ]
+      ],
+      "anchor": [
+        759,
+        507
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "melee_pullback",
+      "source": "continuity-alpha/shove-recoil-forward-collapse.png",
+      "rects": [
+        [
+          0,
+          0,
+          549,
+          689
+        ]
+      ],
+      "anchor": [
+        284,
+        682
+      ],
+      "scale": 0.315
+    },
+    {
+      "name": "melee_two_hand_shove",
+      "source": "continuity-alpha/shove-recoil-forward-collapse.png",
+      "rects": [
+        [
+          559,
+          0,
+          1150,
+          693
+        ]
+      ],
+      "anchor": [
+        850,
+        683
+      ],
+      "scale": 0.315
+    },
+    {
+      "name": "guard_a",
+      "source": "continuity-alpha/guided-walk-and-guard.png",
+      "rects": [
+        [
+          568,
+          518,
+          1020,
+          1024
+        ]
+      ],
+      "anchor": [
+        789,
+        982
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "guard_b",
+      "source": "continuity-alpha/guided-walk-and-guard.png",
+      "rects": [
+        [
+          1104,
+          523,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1312,
+        984
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "hit",
+      "source": "continuity-alpha/poses-projectile-separated.png",
+      "rects": [
+        [
+          0,
+          622,
+          324,
+          905
+        ],
+        [
+          245,
+          905,
+          324,
+          910
+        ]
+      ],
+      "anchor": [
+        171,
+        903
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "ranged_aim",
+      "source": "continuity-alpha/poses-projectile-separated.png",
+      "rects": [
+        [
+          365,
+          622,
+          664,
+          910
+        ]
+      ],
+      "anchor": [
+        516,
+        904
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "ranged_recoil",
+      "source": "continuity-alpha/shove-recoil-forward-collapse.png",
+      "rects": [
+        [
+          0,
+          692,
+          508,
+          1368
+        ],
+        [
+          508,
+          1284,
+          570,
+          1368
+        ]
+      ],
+      "anchor": [
+        309,
+        1338
+      ],
+      "scale": 0.315
+    },
+    {
+      "name": "reload_cocking",
+      "source": "continuity-alpha/poses-projectile-separated.png",
+      "rects": [
+        [
+          1045,
+          620,
+          1348,
+          920
+        ],
+        [
+          1140,
+          612,
+          1270,
+          620
+        ]
+      ],
+      "anchor": [
+        1200,
+        908
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "death_kneel",
+      "source": "continuity-alpha/poses-projectile-separated.png",
+      "rects": [
+        [
+          0,
+          909,
+          314,
+          1167
+        ]
+      ],
+      "anchor": [
+        160,
+        1140
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "death_forward_collapse",
+      "source": "continuity-alpha/shove-recoil-forward-collapse.png",
+      "rects": [
+        [
+          570,
+          906,
+          1150,
+          1368
+        ],
+        [
+          510,
+          1135,
+          570,
+          1255
+        ]
+      ],
+      "anchor": [
+        824,
+        1337
+      ],
+      "scale": 0.315
+    },
+    {
+      "name": "death_settle",
+      "source": "continuity-alpha/poses-projectile-separated.png",
+      "rects": [
+        [
+          684,
+          1006,
+          1013,
+          1153
+        ],
+        [
+          669,
+          1006,
+          684,
+          1105
+        ]
+      ],
+      "anchor": [
+        844,
+        1138
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "dead",
+      "source": "continuity-alpha/poses-projectile-separated.png",
+      "rects": [
+        [
+          1016,
+          1007,
+          1348,
+          1152
+        ]
+      ],
+      "anchor": [
+        1180,
+        1138
+      ],
+      "scale": 0.68
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        11,
+        12,
+        13,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 5,
+      "indices": [
+        10,
+        14,
+        15,
+        16,
+        17
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        17
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  }
+}

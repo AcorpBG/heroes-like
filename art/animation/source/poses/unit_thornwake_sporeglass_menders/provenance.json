@@ -1,0 +1,117 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_thornwake_sporeglass_menders",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_thornwake_sporeglass_menders.png",
+  "reference_sha256": "bb2986e88f2b9974a9e134226385d0ed4edf03dcd49c365423dd4a81fe8b5ec8",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/poses-draft.png",
+      "source_sha256": "c4d76836458e7606a3b848b37529dc6680da10238ad541ef0e804ee69231c83c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c949bf64-abd9-405b-b422-7f1b64a0efd4.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle animation sprite sheet. Reference Sporeglass Mender: young brown-haired woman red ribbon in tied hair, dark green scarf and robes, long stained ivory split apron, leather satchel of medical tools/vials, mossy brown wrapped boots red ties. ONE organic brass/wood sprayer with amber glass chamber and flared circular muzzle held RIGHT rear trigger hand LEFT forward support hand, connected by flexible yellow hose to ONE amber glass backpack reservoir in wicker frame. Sixteen complete articulated poses in FOUR columns FOUR rows, constant size and fixed three-quarter side view facing right, ample gutters, true transparent RGBA background. Reading order: 1 relaxed idle sprayer low both hands; 2 breathing idle shoulders rise; 3 walking right foot forward left back; 4 passing right planted left knee advancing feet close; 5 opposite contact left forward right back torso not mirrored; 6 melee windup RIGHT fist draws back LEFT arm carries sprayer; 7 melee RIGHT near arm punches forward across chest LEFT far hand retains sprayer; 8 aimed spray sprayer at shoulder RIGHT trigger LEFT support; 9 recoil elbows flex sprayer rises; 10 recovery sprayer lowers; 11 defense crouch holds sprayer close; 12 hit torso recoils; 13 dying knees buckle; 14 side collapse with reservoir and hose attached; 15 side-lying dead eyes closed sprayer beside hands backpack attached; 16 settled prone corpse eyes closed same equipment. Keep one continuous hose joining reservoir to weapon throughout including death. No disappearing backpack, swapped hands, new equipment, added people or detached hose. Same sprayer muzzle/chamber shape and reservoir size throughout. No spray effects, clouds, ground shadows, scenery, labels or gore. Original detailed painted game art matching reference; actual joint articulation not translated static duplicates."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/poses.png",
+      "source_sha256": "1fff3ded4edd77736a1313ffd79c37d7798b607c6773b22531be02c848fe533c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e201c27d-b528-4a03-8544-1ea52d6e4ab0.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY row two column three punching Sporeglass Mender. Extend her anatomical RIGHT NEAR arm (the shoulder on screen-left side of torso) across her chest toward screen right with right fist leading, matching raised right fist windup directly left. Her far LEFT hand carries sprayer at waist; preserve continuous hose to backpack. Do not punch with far arm. Keep every other pose and all equipment/colors/layout unchanged.",
+      "alpha_source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "alpha_sha256": "e10b5a94bb164f68588b83f2d9ef9616ae3bccf355ee72c79c152d29497ed9ad",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e15fb97a-64f8-42af-8aa1-1aad8d81d724.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only checkerboard background from sixteen-pose Sporeglass Mender sheet into real transparent RGBA alpha. Preserve all painted people, corrected right-arm punch, reservoir/hose/sprayer, ivory apron interiors and exact positions and scale. Clear all empty gaps. No replacement backdrop, matte, shadows, colored fringe, painted checkerboard or redraw. Opaque character interiors, genuinely transparent empty space."
+    }
+  ],
+  "review_notes": [
+    "17 packed candidate frames:15 retained real-alpha paintings plus two selected new walking paintings from two built-in masters. Keep original idles, far contact/passing, corrected near-right-arm punch, spray aim/recoil/recovery, guard/hit and four-stage equipped death ending in closed-eye prone corpse.",
+    "Existing alpha/poses.png is genuine RGBA0..255 and composites clean on light/green. Earlier broad-fringe note is not a reason to reject this source; reuse without rekeying or generative extraction. New magenta masters alone use approved distance75/edge2.",
+    "Targeted lower-body edits preserve the backpack, continuous yellow hose and right-trigger/left-support sprayer grip. New near-knee lift opposes original far-knee lift; crossing near-contact differs from retained far-contact. Contact depth, upper-body width/camera and exact hose endpoints remain pending translated-motion review.",
+    "Uniform source scales and fixed anatomical ground anchors pack all action states without neighboring frame fragments. Persistent reservoir/weapon remain visible; amber material highlights are not separate cast effects. No spray cloud is baked into these body sprites.",
+    "Apron/tool/reservoir/muzzle scale, hose/hand attachment through punching and spray recoil, walking support/travel, finer edges and actual event/death timing remain for full160 refinement and consolidated acceptance. Static previews are not final motion or platform proof. No tests/imports/exports, paid API or gameplay/save/footprint changes."
+  ],
+  "prior_review_notes": [
+    "Sixteen original poses inspected; punch corrected to near right arm matching windup. Reservoir/sprayer retained through fallen poses.",
+    "Walking contacts repeat lead, raised-knee passing and idle differentiation need refinement.",
+    "Support-hand attachment in punch, continuous hose endpoints/length, sprayer muzzle/chamber and reservoir scale need review.",
+    "Extracted broad edge fringes visible; in-context compositing and full-motion acceptance pending. Not packed or enabled.",
+    "No tests/exports or disposable test intermediates created; 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "reference_crops": [
+      {
+        "path": "art/animation/source/poses/unit_thornwake_sporeglass_menders/standing-reference-light.png",
+        "sha256": "5eb034807f8bdde0797b320cd644c3e6a1ee3075d50c69187e75c0ba41210d2b",
+        "source": "alpha/poses.png",
+        "source_sha256": "e10b5a94bb164f68588b83f2d9ef9616ae3bccf355ee72c79c152d29497ed9ad",
+        "rect": [
+          67,
+          0,
+          281,
+          320
+        ],
+        "method": "Actual alpha composited on light and nearest4x for fixed identity reference; no repaint, distortion or synthesized pose."
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_sporeglass_menders/passing-reference-light.png",
+        "sha256": "f55887db48923bfc4da2d421d3fe00353591f9a433078574e2c6281782b6d578",
+        "source": "alpha/poses.png",
+        "source_sha256": "e10b5a94bb164f68588b83f2d9ef9616ae3bccf355ee72c79c152d29497ed9ad",
+        "rect": [
+          990,
+          0,
+          1236,
+          322
+        ],
+        "method": "Actual alpha composited on light and nearest4x for fixed identity reference; no repaint, distortion or synthesized pose."
+      }
+    ],
+    "sources": [
+      {
+        "source": "walk-opposite-passing-magenta.png",
+        "sha256": "8a13167109d59353c51e9af7951b597ac1ed933ceea5da64571f83fbcb899f91",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4f6d408f-556a-4e2b-b61c-ddc4becfdc72.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Input is the exact edit target. Change ONLY legs/apron below the waist to the OPPOSITE walking knee lift. In the supplied image the boot on picture-LEFT is planted and the boot on picture-RIGHT is raised. Reverse that: picture-RIGHT leg becomes the straight supporting leg, boot firmly planted on the ground; the leg originating on picture-LEFT hip bends up, its knee and red-tied boot clearly lifted IN FRONT of the supporting leg, partly crossing the center apron. Exactly two complete legs. Keep distinct raised knee, bent shin and visible off-floor boot. Do not keep the current support leg. No jumping. Original Sporeglass Mender woman with brown tied hair and red ribbon, dark olive green scarf/robe, stained ivory split apron, brown medical tool satchel/vials, red-tied wrapped brown boots. One amber backpack reservoir strapped in wicker/brass frame, ONE continuous yellow hose from reservoir to sprayer inlet. RIGHT hand remains rear trigger grip and LEFT hand forward support of the one amber/brass sprayer with flared round muzzle. Preserve whole upper-body painting, scale, costume and soft original painted finish, not glossy/redesigned. Same 3/4 camera/head facing RIGHT, no mirroring, no changed gear or extra limbs, full body and weapon uncropped with generous margins. Flat vivid magenta RGB255,0,255 backing, no floor, shadows, labels or FX.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_sporeglass_menders/passing-reference-light.png",
+            "sha256": "f55887db48923bfc4da2d421d3fe00353591f9a433078574e2c6281782b6d578"
+          }
+        ]
+      },
+      {
+        "source": "walk-near-contact-magenta.png",
+        "sha256": "05d5b7f161499378fe73f139a488caee2faa773f61e6cfb3e95ece789d394800",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-05805882-9374-4434-852f-00738b94dc41.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Input is the neutral identity painting and edit target. Change ONLY legs/apron below the waist into a near-leg forward walking contact. The leg originating at picture-LEFT hip sweeps diagonally RIGHT across IN FRONT of the other thigh and hanging apron: its near kneepad clearly overlaps the far thigh, calf descends to a forward boot planted far picture-RIGHT. The leg from picture-RIGHT hip trails diagonally LEFT BEHIND that crossing thigh to a back boot whose heel is raised. Two intact legs in an overlapping X-like stride, not a standing spread or another far-leg-forward pose. Both boots contact ground; torso does not jump or turn. Original Sporeglass Mender woman with brown tied hair and red ribbon, dark olive green scarf/robe, stained ivory split apron, brown medical tool satchel/vials, red-tied wrapped brown boots. One amber backpack reservoir strapped in wicker/brass frame, ONE continuous yellow hose from reservoir to sprayer inlet. RIGHT hand remains rear trigger grip and LEFT hand forward support of the one amber/brass sprayer with flared round muzzle. Preserve whole upper-body painting, scale, costume and soft original painted finish, not glossy/redesigned. Same 3/4 camera/head facing RIGHT, no mirroring, no changed gear or extra limbs, full body and weapon uncropped with generous margins. Flat vivid magenta RGB255,0,255 backing, no floor, shadows, labels or FX.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_sporeglass_menders/standing-reference-light.png",
+            "sha256": "5eb034807f8bdde0797b320cd644c3e6a1ee3075d50c69187e75c0ba41210d2b"
+          }
+        ]
+      }
+    ],
+    "preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "packed_frames": 17,
+    "reused_pose_count": 15,
+    "new_selected_pose_count": 2,
+    "runtime_candidate": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+    "runtime_sha256": "ee99b0c0b33cc9a0a82aa5e71bc5b39d11e63297432d43ecf2adba07a702b8b9",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/sporemender-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted",
+    "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/sporemender-continuity-20260915/art-desk-registered.html",
+    "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/sporemender-continuity-20260915/art-desk-registered.png",
+    "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/sporemender-continuity-20260915/packed-initial/poses-candidate-atlas-green.png"
+  }
+}

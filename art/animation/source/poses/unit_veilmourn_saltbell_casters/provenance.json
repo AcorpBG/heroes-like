@@ -1,0 +1,219 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_saltbell_casters.png",
+  "reference_sha256": "0e433b71732ac76abdd51c14262095bccd75f8ee303b6aad1d033ebb911f0c27",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/poses.png",
+      "source_sha256": "b2b54e1b68fd78d9f1ee4f4feab5eacc50f2b8a4be5ce93ea8e3eb13e13cdd66",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ffa0c262-c18a-41c2-8fde-9bc8bad857a2.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle animation sprite sheet matching attached Saltbell Caster reference. Exactly sixteen isolated full body poses in 4x4 grid. Fixed 3/4 camera facing right, same scale generous gutters. Actual transparent RGBA background no drawn checkerboard no environment ground labels. Human pale woman ivory hood long tattered ivory coat navy scarf tunic loose navy trousers wrapped shins brown boots gloves small knee plate belt THREE small brass bells. Anatomical RIGHT hand controls ONE long pale rope ending in ONE large brass handbell with navy tassel tied at attachment; spare coil gathered same right hand. LEFT hand is free. Preserve identity proportions rope continuity bell and tassel count. Row1 idle rope bell hanging safely left hand relaxed; inhale idle shoulders rise left hand slightly lifted bell sways; walking LEFT foot forward RIGHT back; walking RIGHT foot forward LEFT back no whole character mirror. Row2 passing step raised bent knee; melee windup RIGHT hand keeps bell rope close LEFT forearm draws back across chest; melee LEFT palm shove forward rightward while RIGHT retains gathered bell rope; defense low crouch LEFT forearm shields face RIGHT bell held close. Row3 hit recoil backward rope bell retained; ranged anticipation RIGHT arm swings rope bell overhead LEFT arm points toward right; ranged release RIGHT arm extends right bell at full rope reach emitting small salt motes but STILL tethered; recovery RIGHT hand gathers rope bell swings back left palm lowers. Row4 wounded knees buckle rope drops; collapse sideways bell rope falls naturally to ground; prone dead rope bell and all belt bells grounded nearby eyes closed; same persistent dead pose relaxed cloth no active motes no glowing eyes. Clearly articulated shoulders elbows knees with opposite walking contacts; coherent rope attachments no extra limbs or bells. Painterly original fantasy game art matching reference, readable small-scale forms and clean alpha edges; extended rope and bell fully within each cell no clipping overlap or big fog effects."
+    }
+  ],
+  "review_notes": [
+    "16-frame candidate selects fifteen new paintings and one built-in corrected kneel from five outputs, including one fully rejected magenta matte output.",
+    "Original sheet's disconnected rope/hand transfer is replaced with a continuous outgoing rope attached to the right-hand coil; left hand is empty during casting and guides the rope during retrieval. Separate empty-left-palm melee shove.",
+    "Targeted full-sheet kneel edit restores right near-side hand ownership of the coil, left empty hand at chest. Only corrected kneel is selected; other cells retain earlier new paintings. Head-right fall and corpse retain grounded rope and bell.",
+    "Original neutral preparation damaged ivory hood; attempted magenta extraction retained pink spill and remains unselected. New paintings use bounded neutral cleanup with inspected coil-gap seeds, a local loop region and protected ivory hood pixels. No interior repainting or local pose synthesis.",
+    "Both movement contacts repeat leading leg and both passing poses repeat knee lift. Belt bell count varies and rope length/loops change between poses. These, body/gear scale, support/travel and transitions/timing remain unaccepted full-roster refinement.",
+    "All original/rejected masters, exact prompts/reference hashes, preparation recipes/proofs and packing results remain. Static actual-alpha/offline preview inspection is not motion or gameplay acceptance."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses with palm shove, bell cast, supported collapse and prone corpse.",
+    "Walking contacts repeat lead. Need opposite anatomical contact and continuous passing pose.",
+    "Melee wind-up holds coil with wrong arm relative to palm shove; cast release appears to transfer taut rope to left hand while right retains disconnected-looking coil. Correct hand ownership and uninterrupted rope path.",
+    "Rope length/coil and belt bell counts vary. Recovery wide loop crosses behind head; must connect to outgoing cast trajectory.",
+    "Cast effect resembles tiny glyph fragments; remove illegible textlike marks and preserve subtle salt particles. Extended bell and corpse crowd right cell edge.",
+    "Final eyes appear closed; hood/hair/boot and grounded bell continuity need review. Checker background visible, transparency/compositing unresolved. Source-only, no packing/enabling or tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 0,
+    "edited_retained_paintings": 1,
+    "new_selected_paintings": 15,
+    "generated_outputs": 5,
+    "generation": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_saltbell_casters/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_saltbell_casters/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_saltbell_casters.png",
+    "runtime_sha256": "aee9230163597069d391ac86adc9ce5394a53e05d71b619fd9592963f6add549",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/idle-and-equipped-collapse.png": "88f972b36afae35b8a0d5429a2d88578538052ad4fe9cf0e8ae7748564ac8eae",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/guided-walk-and-guards.png": "b621b9dde6b3ee1e6ac75f0c7cb45563097d599c77f9fe23c13c37811304ff1a",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/continuous-rope-melee-and-cast.png": "1f4164d131ef1873b2697daaed4fbbe5f961d98f0b86777fdb7d575b4e702aee",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/idle-collapse-correct-hand.png": "7840bfe7642b666375e19b50b28ff29b6e4b774271865ba0d14cb1743720367e"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "policy": "Removed only exact byte-identical task preview copies after SHA-256 and no-live-handle checks. Identical retained copies permit restoration. Used generation references, original/rejected masters, unique evidence, processing proofs, caches and unrelated artifacts remain.",
+      "duplicates_removed": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/gap-cleaned/guided-walk-and-guards-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/final-cutouts/guided-walk-and-guards-green.png",
+          "sha256": "cd40b6877666764e6b434cdc131c1d3dc32aee7cf4b71a73aa0724276f48d023",
+          "bytes": 1354072
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/final-cutouts/poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-green.png",
+          "sha256": "c9b98d6134a5e07de1aba6ab1c422f53d180711f8fdce6d553e1a59bc1372d8b",
+          "bytes": 1314354
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/gap-cleaned/poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-green.png",
+          "sha256": "c9b98d6134a5e07de1aba6ab1c422f53d180711f8fdce6d553e1a59bc1372d8b",
+          "bytes": 1314354
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/prepared/poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-green.png",
+          "sha256": "c9b98d6134a5e07de1aba6ab1c422f53d180711f8fdce6d553e1a59bc1372d8b",
+          "bytes": 1314354
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/final-cutouts/poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-light.png",
+          "sha256": "dfc032c2f160264753e68d4fa24b6c68c7c93ce4ba6f0622d68912b9519ec794",
+          "bytes": 1331086
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/gap-cleaned/poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-light.png",
+          "sha256": "dfc032c2f160264753e68d4fa24b6c68c7c93ce4ba6f0622d68912b9519ec794",
+          "bytes": 1331086
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/prepared/poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-light.png",
+          "sha256": "dfc032c2f160264753e68d4fa24b6c68c7c93ce4ba6f0622d68912b9519ec794",
+          "bytes": 1331086
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/gap-cleaned/guided-walk-and-guards-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/final-cutouts/guided-walk-and-guards-light.png",
+          "sha256": "11ae6ffd3e017a31a57dcb3c5113899cc3992b290d624f45f65e7a9397793e61",
+          "bytes": 1370943
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/final-cutouts/poses-preserved-ivory-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-preserved-ivory-light.png",
+          "sha256": "d982a6087c35d7c1602c2d62e13723c2fd2f769942fcec3f02800f52742b7cdc",
+          "bytes": 1461979
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/gap-cleaned/poses-preserved-ivory-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-preserved-ivory-light.png",
+          "sha256": "d982a6087c35d7c1602c2d62e13723c2fd2f769942fcec3f02800f52742b7cdc",
+          "bytes": 1461979
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/narrow-neutral/poses-preserved-ivory-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-preserved-ivory-light.png",
+          "sha256": "d982a6087c35d7c1602c2d62e13723c2fd2f769942fcec3f02800f52742b7cdc",
+          "bytes": 1461979
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/final-cutouts/poses-magenta-matte-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-magenta-matte-light.png",
+          "sha256": "5953b29db8802e815f3f332c47e67c3caef73834823048d02f56b9afac38fd92",
+          "bytes": 1204244
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/gap-cleaned/poses-magenta-matte-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-magenta-matte-light.png",
+          "sha256": "5953b29db8802e815f3f332c47e67c3caef73834823048d02f56b9afac38fd92",
+          "bytes": 1204244
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/narrow-edge-prepared/poses-magenta-matte-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-magenta-matte-light.png",
+          "sha256": "5953b29db8802e815f3f332c47e67c3caef73834823048d02f56b9afac38fd92",
+          "bytes": 1204244
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/final-cutouts/poses-magenta-matte-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-magenta-matte-green.png",
+          "sha256": "5ea7f80aa667a42ec72d4cd0e099fb1cf97b21f89dec76c16a647d4822c68341",
+          "bytes": 1191908
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/gap-cleaned/poses-magenta-matte-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-magenta-matte-green.png",
+          "sha256": "5ea7f80aa667a42ec72d4cd0e099fb1cf97b21f89dec76c16a647d4822c68341",
+          "bytes": 1191908
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/narrow-edge-prepared/poses-magenta-matte-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-magenta-matte-green.png",
+          "sha256": "5ea7f80aa667a42ec72d4cd0e099fb1cf97b21f89dec76c16a647d4822c68341",
+          "bytes": 1191908
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/final-cutouts/poses-preserved-ivory-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-preserved-ivory-green.png",
+          "sha256": "8647f77f265fe3dbe57c3be51f7f8d8ba9d7f0243fa1aa577ba9e8faae6d8960",
+          "bytes": 1460911
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/gap-cleaned/poses-preserved-ivory-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-preserved-ivory-green.png",
+          "sha256": "8647f77f265fe3dbe57c3be51f7f8d8ba9d7f0243fa1aa577ba9e8faae6d8960",
+          "bytes": 1460911
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/narrow-neutral/poses-preserved-ivory-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/poses-preserved-ivory-green.png",
+          "sha256": "8647f77f265fe3dbe57c3be51f7f8d8ba9d7f0243fa1aa577ba9e8faae6d8960",
+          "bytes": 1460911
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/final-cutouts/idle-collapse-correct-hand-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/idle-collapse-correct-hand-light.png",
+          "sha256": "f5e350baebf5ac0bbd5679943d511eda2a481b7d939490ceff9a5f131acaa7a3",
+          "bytes": 1240126
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/final-cutouts/idle-collapse-correct-hand-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/precise-loops/idle-collapse-correct-hand-green.png",
+          "sha256": "6ca98d181d3dba5b412636ef4bd0a580756c452c058cf67ee30cae8849f4af70",
+          "bytes": 1228764
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/identity-v3/unit_veilmourn_saltbell_casters-poses-magenta-matte-rect-465-0-700-300-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltbell_casters/identity-reference-v3.png",
+          "sha256": "16e9a6cb424987d4311d3e465dd0858f1b1ce37125f9dcad756a4ff2845c6881",
+          "bytes": 131528
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/identity-v2/unit_veilmourn_saltbell_casters-poses-magenta-matte-rect-465-0-700-300-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltbell_casters/identity-reference-v2.png",
+          "sha256": "c9e0cea92e9bb25739ca1da746e8bd35ba09551ae207a8cdd323c8d3264012e7",
+          "bytes": 138568
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/identity/unit_veilmourn_saltbell_casters-poses-rect-465-0-700-300-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltbell_casters/identity-reference.png",
+          "sha256": "27f07b796343faaf297df111cc2b19dd8fdc9a53f4f4629675cb02c890895f35",
+          "bytes": 143530
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/rope-detail/poses-idle-and-equipped-collapse-rect-120-230-195-350-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltbell-continuity-20260916/rope-detail/poses-idle-and-equipped-collapse-rect-120-230-195-350-light.png",
+          "sha256": "c030bb90070d04ce527dc5bd5c7b206a6b55d45cbb3c29728e0375bcb3a32c4a",
+          "bytes": 30062
+        }
+      ],
+      "removed_bytes": 29531039
+    }
+  }
+}

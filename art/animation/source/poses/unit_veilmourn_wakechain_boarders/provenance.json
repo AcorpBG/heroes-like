@@ -1,0 +1,76 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_wakechain_boarders",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_wakechain_boarders.png",
+  "reference_sha256": "a816f24a217b3d9eb35f7230b8f2bac76f674d4c0db4d3b08c609914688b9d06",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses-draft.png",
+      "source_sha256": "895508917c1ea41651fb9a79c3272546a75c28d71a4e61af6e188516bc6cab8d",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-da526267-031f-417c-9c2e-7272ebad06ac.png",
+      "prompt": "Use case: stylized-concept. Create original tactical battle sprite animation sheet matching attached Wakechain Boarder character. Exactly TWELVE full body isolated poses FOUR columns THREE rows. Fixed 3/4 camera facing right same scale all frames, generous gutters. Genuinely transparent RGBA background no checkerboard drawing no ground no labels. One human woman ivory hood navy scarf battered silver pauldrons/gauntlets fitted leather armor, long torn ivory/navy coat panels, armored boots, ONE amber belt lantern. Anatomical LEFT hand holds short crescent boarding sickle, anatomical RIGHT hand controls ONE linked dark chain with ONE hooked crescent at free end, trailing blue cloth tied near hook. Chain is one continuous flexible length with spare loop gathered right hand. Preserve both weapons and their ownership/count in every frame. Row1 idle chain gathered sickle lowered; breathing idle shoulders lift cloth moves chain settles; walk left foot forward right back; walk right foot forward left back without mirroring character or swapping weapons. Row2 passing lifted bent knee; attack anticipation RIGHT elbow raised pulling chain hook back overhead LEFT sickle protects chest; attack contact RIGHT arm lashes hook forward toward right chain unfurls visibly while LEFT sickle stays near chest; defense crouch LEFT sickle raised RIGHT chain gathered safely. Row3 hit recoil leaning back both weapons retained; death knees buckle chain dropping sickle held; falling sideways chain and hook settle on ground sickle slips beside hand; persistent prone dead eyes closed lantern dark both weapons and entire chain on ground beside body no floating cloth or magic. Clear articulated shoulders elbows knees, coherent chain attachment never disconnected or extra hooks. Painterly original game art matching reference, readable small-scale silhouette, entire extended hook/chain contained within its own roomy cell no clipping or overlaps."
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png",
+      "source_sha256": "2600066c7437ddb9a11bf5f4683a115d1d8a2090c5c46b69b53af6f09d90c19f",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6b1b8846-6a22-4099-ab3b-951ccc5fa6f7.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY belt lantern in LAST sprite bottom-right of this 4x3 sheet: extinguish it completely, dark smoked amber glass in brass frame, no orange/yellow light or glow. Preserve exact prone corpse, closed eyes, face, chain, both hooks, clothing, every other sprite and canvas geometry unchanged. Transparent background requested; do not paint checker pattern."
+    }
+  ],
+  "review_notes": [
+    "15 packed frames retain nine original genuine-RGBA paintings and select six new paintings: gathered-chain contact/passing, recovery, guard, head-right lowering and equipped cold final body.",
+    "Original source alpha composites cleanly despite a smoky raw tool preview. Original head-left sidefall is excluded; new lowering/final poses remain head-right with both weapons and a continuous chain. The first lowering lamp remains lit and final glass is cold.",
+    "Guide-led contact repeats the prior lead, and raised-knee travel is not final opposite-contact acceptance. Chain/hook/sickle lengths, body proportions and grip handoff between sources need refinement.",
+    "Neutral extraction left enclosed chain backdrops and nibbled pale edges; selected green-backed derivative plus bounded chroma/edge cleanup preserves cloth and opens links. Banded source crops keep the entire lash hook/cloth while excluding that neighboring hook from defense.",
+    "Body/gear scale and palette, support/travel, ground settling, chain retrieval and connected action/death timing remain full-roster refinement. Offline static previews are not gameplay or final animation acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses include extended chain lash and prone corpse. Targeted edit darkens final lantern but repaints background to smoky brown, so transparency is unaccepted.",
+    "Walking contacts repeat same lead; opposite contact/passing still required. Idle subtle.",
+    "Chain length changes from gathered to extended, spare-tail termination/grip and hook/cloth attachment need continuity refinement. Sickle and hook proportions shift.",
+    "Extended lash spills beyond nominal equal cell; explicit crop and margin required. Falling and corpse orientation flip; smooth intermediate needed.",
+    "Final lantern now dark, but silhouette/face and equipment details need packing-scale review. Source-only not enabled, no tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "new_or_corrected_selected_paintings": 6,
+    "generated_outputs": 2,
+    "generation": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_wakechain_boarders.png",
+    "runtime_sha256": "035ef1e95175410f037e90be0357051e5c05b1ef895d1a4e0678feaa6feb35a3",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png": "2600066c7437ddb9a11bf5f4683a115d1d8a2090c5c46b69b53af6f09d90c19f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-alpha/travel-recovery-and-head-right-fall-green.png": "87906905fd12312a03726d1c8e975c1215dac1a6295706ab984612d5d2f8f8c4"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/boarder-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes; offline static visual evidence is not final playback acceptance.",
+    "cleanup": {
+      "policy": "Removed only SHA-256-identical task preview copies after no-live-handle checks. Retained identical recovery copies, unique evidence, originals/rejected masters, all used references, processing proofs, caches and unrelated files.",
+      "duplicates_removed": [
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/boarder-continuity-20260916/prepared/travel-recovery-and-head-right-fall-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/boarder-continuity-20260916/prepared-v2/travel-recovery-and-head-right-fall-light.png",
+          "sha256": "673187a312779f1875163d2ea95d3e5c2eb1acb1cbe68b79e8eb4a760bdc3213",
+          "bytes": 1186398
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/boarder-continuity-20260916/prepared/travel-recovery-and-head-right-fall-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/boarder-continuity-20260916/prepared-v2/travel-recovery-and-head-right-fall-green.png",
+          "sha256": "e03bc11af6787027c8399e9d796dffa572e7a13981a3c7ed5d0aee13ebaeb8be",
+          "bytes": 1163627
+        }
+      ],
+      "removed_bytes": 2350025
+    }
+  }
+}

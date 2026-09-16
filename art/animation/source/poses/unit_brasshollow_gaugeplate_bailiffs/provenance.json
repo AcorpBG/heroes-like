@@ -1,0 +1,184 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_pending_refinement_and_packing",
+  "reference": "art/units/source/curated/unit_brasshollow_gaugeplate_bailiffs.png",
+  "reference_sha256": "62f316cdeb069354e60df4e2380aa7711ce5f5ea9cfbd995489a3dc7788d67d1",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/poses-draft.png",
+      "source_sha256": "bb25f3d91c3dfde7184df3d406661b1138d928383d12bcb73816c028911e0365",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0ad4a187-cb40-445a-9509-477681fe351b.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle sprite sheet. Reference defines ONE Gaugeplate Bailiff: stocky humanoid in heavy brass/black riveted armor, brass respirator mask with two round blue goggles and segmented beard-like faceguard, blue scarf and blue/ivory striped tabard, heavy boots, backpack boiler with smokestack and pressure gauge. Anatomical RIGHT hand holds square-headed black/brass hammer with small pressure gauge on head; LEFT arm holds round black/brass shield with huge ivory pressure dial red needle. Preserve exact equipment and proportions. Exactly TWELVE full-body articulated poses FOUR columns THREE rows, fixed elevated three-quarter camera facing screen-right, same stocky body size, generous margins for equipment and steam. Genuine transparent RGBA background, no painted checkerboard, floor/scenery/grid/labels. Row1: idle settled; idle boiler pressure breath shoulders rise shield tilts; walk right foot forward left back; opposite walk LEFT foot forward RIGHT back visibly opposite leg contact. Row2: passing rear foot lifted under hips; wind-up RIGHT hammer raised behind shoulder LEFT gauge shield held forward; attack RIGHT hammer strikes down-forward screen-right LEFT shield close to ribs; defend gauge shield raised before mask hammer lowered to right side. Row3: hit recoil torso back knees flex; dying kneels head bows boiler steam fades; side fall hips and knees bend hammer/shield lowering beside body; dead side-lying inert bailiff with hammer shield and backpack retained, no steam, goggles dark and gauge needles at zero. Two arms two legs one hammer one shield. Constant hammer handle length/shield diameter, actual joint articulation no rotated standing cutouts. Original art only no copyrighted franchise assets."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/poses.png",
+      "source_sha256": "175655a572b6d256b1ac7106f7d7d5693c720918d871cd76e3c14161e0e27142",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-80cb24e6-f94c-4f65-8b34-dadd2020aa3a.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY row1 column2 idle in this twelve-pose Gaugeplate Bailiff sheet. Restore the missing black/brass square gauge-headed hammer held firmly in its empty anatomical RIGHT hand on viewer LEFT. Same hammer design, handle length and size as row1 column1. Keep that pose's shield, armor, body, head and steam unchanged. Preserve all other eleven poses exactly, same canvas, layout and colors. No additional weapons."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-67a6fafc-df17-4cda-8933-ec2e468112a2.png",
+      "prompt": "Use case: background-extraction. Remove ONLY checkerboard from this twelve-pose Gaugeplate Bailiff sheet to genuine transparent RGBA. Preserve every figure, hammer, shield gauge, steam, armor, cloth, positions, scale and canvas exactly. No repainting, no replacement background, no painted checkerboard, no colored matte.",
+      "reason": "Brown background instead of transparency; adds steam to dying frames and repaints detail. Not selected."
+    }
+  ],
+  "review_notes": "15-frame candidate: nine quiet-vent derivatives of original paintings plus six selected new gait/guard paintings, from three built-in outputs. Original pale steam was hollowed by neutral extraction and is not selected; built-in quiet vent sheet retains boiler pipes. New contacts alternate leg lead; single-pose far-leg guide fixes duplicated near-leg passing. Right gauge hammer, left dial shield, blue goggles/tabard and equipped corpse retained. Narrow explicit crop bands exclude idle boot above hammer windup. Full-roster translated gait/support, body/hammer/shield/gauge continuity, guard/death transitions and timing remain unaccepted.",
+  "prior_review_notes": [
+    "Twelve source poses; missing second-idle hammer restored.",
+    "Walking contacts change body orientation and hammer position excessively; maintain consistent facing and articulated alternating gait.",
+    "Hammer handle length/head scale, shield diameter and gauge face/needle continuity require refinement.",
+    "Boiler and goggle details change through death; confirm inactive final goggles, no steam and appropriate gauge rest state.",
+    "Side fall remains propped up; more articulated collapse transition needed. Transparency/compositing unresolved.",
+    "Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "status": "candidate_pending_playback_acceptance",
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 0,
+    "quiet_vent_derivative_paintings": 9,
+    "new_selected_paintings": 6,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/packing.json",
+    "packing_result": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_gaugeplate_bailiffs.png",
+    "runtime_sha256": "24d92bfefeb3cf7b054c5120e747209f559aa83fddb5e5e5e1fa41a172b6d68b",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/poses-quiet-vents.png": "d6eb6c14132e056bdf7640f6fd33cde62ce3d75d4c6d0656783c08aad139e7e7",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-gait-and-guard.png": "b476bef9f1fe004d1988384daa235d94d8824200fd41054aa814743b4a9f57a9",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-far-leg-lift.png": "c37be685923ea369ee54ff6f9f756435786bb6801f96a3d603691627dffaba22"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Static source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "date": "2026-09-16",
+      "policy": "Only task-owned byte-identical preview duplicates; exact SHA-256 rechecked and fuser found no open handles. All original/rejected paintings, unique evidence, processing proofs and caches retained.",
+      "removed_files": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/first/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fifth/original-poses-green.png",
+          "sha256": "a51f8c7ce86bc78972fcd7ae9f9028c3642dbb8dca53a6cb6bf856dc6434a0f3",
+          "bytes": 1504231
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fourth/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fifth/original-poses-green.png",
+          "sha256": "a51f8c7ce86bc78972fcd7ae9f9028c3642dbb8dca53a6cb6bf856dc6434a0f3",
+          "bytes": 1504231
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/second/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fifth/original-poses-green.png",
+          "sha256": "a51f8c7ce86bc78972fcd7ae9f9028c3642dbb8dca53a6cb6bf856dc6434a0f3",
+          "bytes": 1504231
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/third/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fifth/original-poses-green.png",
+          "sha256": "a51f8c7ce86bc78972fcd7ae9f9028c3642dbb8dca53a6cb6bf856dc6434a0f3",
+          "bytes": 1504231
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/second/poses-quiet-vents-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fourth/poses-quiet-vents-light.png",
+          "sha256": "c8dc9ff97352888f63549692bc3e1c0f2126aea720363db2e4db21470e4d1f0c",
+          "bytes": 1450884
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/third/poses-quiet-vents-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fourth/poses-quiet-vents-light.png",
+          "sha256": "c8dc9ff97352888f63549692bc3e1c0f2126aea720363db2e4db21470e4d1f0c",
+          "bytes": 1450884
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/second/poses-quiet-vents-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fourth/poses-quiet-vents-green.png",
+          "sha256": "29a8b39ddf97c68778f295390c58bca37350f9acd4101b8b2c856069d5af7246",
+          "bytes": 1419121
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/third/poses-quiet-vents-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fourth/poses-quiet-vents-green.png",
+          "sha256": "29a8b39ddf97c68778f295390c58bca37350f9acd4101b8b2c856069d5af7246",
+          "bytes": 1419121
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/first/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fifth/original-poses-light.png",
+          "sha256": "a236c6b875135f12e904e4d17771821188c2851a093b955a41a758dcb698e939",
+          "bytes": 1534182
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fourth/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fifth/original-poses-light.png",
+          "sha256": "a236c6b875135f12e904e4d17771821188c2851a093b955a41a758dcb698e939",
+          "bytes": 1534182
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/second/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fifth/original-poses-light.png",
+          "sha256": "a236c6b875135f12e904e4d17771821188c2851a093b955a41a758dcb698e939",
+          "bytes": 1534182
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/third/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fifth/original-poses-light.png",
+          "sha256": "a236c6b875135f12e904e4d17771821188c2851a093b955a41a758dcb698e939",
+          "bytes": 1534182
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/identity-v2/unit_brasshollow_gaugeplate_bailiffs-poses-quiet-vents-rect-20-0-368-360-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/identity-reference-v2.png",
+          "sha256": "998b38cb8174e20182dd0c25e52d43ebd78ee8a3cedca92ef183cd834b02e348",
+          "bytes": 829452
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/identity/unit_brasshollow_gaugeplate_bailiffs-original-poses-rect-20-0-368-360-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/identity-reference.png",
+          "sha256": "d5b31ef071b004bd1b6ad6be283ae9626164d6942d634bf895c25ebcaa57b737",
+          "bytes": 925056
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/original/poses-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/original/poses-poses-green.png",
+          "sha256": "8ae9d06e4bfc6c49bdd0da4f95df7488cf9226f1707749c1ddb7a6337ebffe98",
+          "bytes": 2862067
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fourth/guided-far-leg-lift-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fifth/guided-far-leg-lift-light.png",
+          "sha256": "38c831fa3fef235b7e6e778391d11fcbbc08d2c2f74d8f63919f3642736004bc",
+          "bytes": 1212145
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/third/guided-gait-and-guard-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fourth/guided-gait-and-guard-green.png",
+          "sha256": "c6ef46a917306b49d7352d4e419abd6cdea7a98eb52258422b59efd9584e394d",
+          "bytes": 1478246
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fourth/guided-far-leg-lift-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fifth/guided-far-leg-lift-green.png",
+          "sha256": "6a260acae221e288b5e2c107187364f9c6fe55bd47e698a09b9f1aadafb9c3b8",
+          "bytes": 1199776
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/third/guided-gait-and-guard-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260916/fourth/guided-gait-and-guard-light.png",
+          "sha256": "4440340f1cfdcf4dd8665a1deb4605541c94af00051f824507e66bf474a719f6",
+          "bytes": 1498564
+        }
+      ],
+      "removed_bytes": 27898968
+    }
+  }
+}

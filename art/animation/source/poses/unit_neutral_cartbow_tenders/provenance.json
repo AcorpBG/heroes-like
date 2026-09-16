@@ -1,0 +1,50 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_cartbow_tenders",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_cartbow_tenders.png",
+  "reference_sha256": "bfeba892cf64a2edff1225f81cc73b723fe6f916017e8b956fa5a409ca59abd8",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "85f10926f697d0640a2bd8274f2ccdbceacd479e9771008a219d8f0e16e7d340",
+      "source_output": "exec-318cd0f7-5243-421f-936c-b95d1ea1d831.png",
+      "prompt": "Use case: stylized-concept. Original Cartbow Tender game battle animation sheet. Reference identity ONE male operator brown flat cap red headband/scarf mustard yellow coat cream rolled sleeves leather apron gloves gray trousers round knee pads brown boots. Small TWO-wheel wooden cart with mounted heavy wood crossbow metal reinforced rail rear winding crank string and attached bolt basket. SIXTEEN full-body operator AND complete cart poses FOUR columns FOUR rows generous gutters same scale elevated three-quarter camera facing RIGHT. Row1 idle hands cart; alert breathing head shoulders shift cart unchanged; pushing cart near leg forward far back wheels rotate; passing legs under body cart same scale. Row2 opposite contact FAR leg forward NEAR back torso unchanged; melee anticipation leans back both hands on cart handles; forceful forward shove cart nose toward RIGHT legs lunge; crouches protected behind cart guard. Row3 hit recoil still at cart; reload turn rear crank and seat bolt; aim brace behind loaded cartbow; release brace recoils string forward empty rail no projectile. Row4 recovery hands settle; knees buckle alongside cart; torso falling side palm ground cart stationary; relaxed fully horizontal dead operator eyes closed beside intact own cart cap retained. Every cell exactly ONE man ONE complete identical two-wheel cart including basket; no duplicated crew, no disappearing cart or changing mount, real joint movements not rotated standing corpse. Original painterly raster pale gray backdrop no shadows grid text effects blood scenery.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "095b159f33f5b1717fb5330b0c75e6e3cc54c4d6282f82722daac1c47ad998e1",
+      "alpha_output": "exec-e62a62cb-7f53-4a1d-bf35-e5105bfae074.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all sixteen Cartbow Tender operator-plus-cart poses onto genuine transparent RGBA preserving exact layout scale every complete two-wheel cart bolt basket thin bowstring spokes handles operator cap scarf hands and corpse. Remove gray background and ground shadows only including all gaps between spokes cart supports limbs and bowstring. No checkerboard cloudy matte redraw missing parts reframing text or effects."
+    }
+  ],
+  "review_notes": [
+    "Sixteen poses/extraction visually inspected. One operator and full two-wheel cart/bolt basket retained including equipped corpse. Gait contacts repeat and wheel rotation needs refinement. Distinct idle motion, crank/bolt/string release state, cart/body scale and hand contact require refinement. Edge compositing and full-motion review pending; source only not packed/enabled. No tests/exports.",
+    "17 frames retain thirteen original paintings and select four new paintings from two of three built-in outputs: loaded passing/shove recovery and mechanically corrected fired release/recovery. Exactly one operator and one equipped two-wheel cart remain through all death stages and persistent head-left corpse.",
+    "The first empty-rail output retained the drawn-back string and is preserved unselected. A constrained edit explicitly removes rearward cords and connects the two front bow-tip nocks directly, preserving the empty rail and spare-bolt basket. Loaded melee/travel and unloaded shot recovery have separate clips.",
+    "Original alpha is reused. Approved magenta preparation and uniform original/new scales 0.70/0.285 preserve full carts. Inspected source bands remove neighboring cart fragments while restoring the formerly clipped shove bow-tip, kneeling boot and corpse head.",
+    "All-state candidate only. Full alternating gait and wheel rotation, operator/cart relative size, hand/handle contact, reload mechanics, bow/gear/body proportions, head direction during near-identical old idles, palette/edges and connected timing remain refinement. No automated tests/imports/gameplay/platform acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 13,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_cartbow_tenders/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_cartbow_tenders/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_cartbow_tenders.png",
+    "runtime_sha256": "2318e301c244b419ddd998c83b1c04c44e4258c9f283dfffa8ea0ced640c3c1e",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png": "095b159f33f5b1717fb5330b0c75e6e3cc54c4d6282f82722daac1c47ad998e1",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-alpha/loaded-passing-and-shove-recovery.png": "3b0d2ff06c53fecaad64962ff62952f98841c98074d23a7c8996c4af4b41041e",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-alpha/fired-string-release-and-recovery.png": "7aafc1ec4b398e77907675cc8e7d9aabc5a4957db58c50ca57a55ded778d1e10"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/cartbow-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_embercourt_amberweir_sluicebrand_mangonels",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_embercourt_amberweir_sluicebrand_mangonels.png",
+  "reference_sha256": "5aaae55c0b4aba98e5f56b162b31eac8c82353760aff75591ab46676ca8689e1",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/reload-seated-draft.png",
+      "source_sha256": "33fa0d7fa7f56a80dceb7871dcdf562c0bee2301d36dadb395a7bc260539c79a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-aa59c7f8-57ed-4c53-b8aa-17143224b1f0.png",
+      "prompt": "Use case: precise-object-edit. Change only the stone and RIGHT crew hands/forearms in this single mangonel sprite. Place the ONE dark stone with faint orange fissures DOWN inside the metal claw cup, naturally resting securely in the bowl supported by its curved rim. Right crew has just released it, both open gloved hands withdrawn slightly upward toward his own chest with clear air gap from stone. Same stone size, no second stone, no floating ball. Keep exact lowered arm angle, cup geometry, counterweight size, all wheels, rope, left pumping crew, both faces/helmets/tunics, entire machine camera scale and locations unchanged. Real transparent RGBA background not drawn checkerboard, no ground or shadows. This is the next reload animation frame, not a new composition.",
+      "review": "Single stone now seated in cup; loader hands withdraw with visible gap. Provides second loading pose. Earlier cup/counterweight scale and rope/crew travel mismatches versus reset remain; hand anatomy, compositing and full cycle not accepted. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/reload-stone-draft.png",
+      "source_sha256": "f1b929ddef4edd36ec0ad44cb347515c03c54ec3ea0de49fd69e4d1c0f364e2a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1c74330d-dbe1-450f-aa5a-d240703d76ec.png",
+      "prompt": "Use case: precise-object-edit. Edit this original mangonel group into the next RELOADING pose. Rotate the single throwing arm downward about its existing central pivot until claw cup on RIGHT sits at rear crew chest height. Bronze spherical counterweight rotates upward correspondingly, same short lever length. RIGHT crew now holds ONE dark stone sphere with faint orange fissures using both gloved hands and is lowering it into the cup, fingers visibly supporting the sides. LEFT crew stays braced at pump with both hands on handle. Exactly TWO crew, four original wheels, one arm/cup/counterweight, no added people or duplicated projectiles. Rope from arm to winch remains attached and taut, winch locked while loading. Keep original machine dimensions, camera, colors, red panel, blue cylinders/gauges, helmets/tunics, full group inside margins. Original painterly raster, true transparent RGBA background no drawn checkerboard/ground/shadow. No explosive glow or flame, no anatomy clipping through machinery.",
+      "review": "Loading source shows rear crew holding single stone above lowered cup, front crew remains at pump. Not complete reload: cup/counterweight grow relative to reset, rope path and rear operator repositioning need continuity; stone not yet seated. Alpha unresolved. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/reset-empty-cup-draft.png",
+      "source_sha256": "f41ab5c80c63d2401fa8644b49212b54dbc52052b2fc61ed381e1b347ed85ba2",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-62e764de-7f02-4649-95b8-7468be72b2d4.png",
+      "prompt": "Use case: stylized-concept. ONE isolated original Amberweir Sluicebrand Mangonel group sprite based on reference, same fixed elevated three-quarter camera facing RIGHT. Post-shot RESET animation pose: throwing arm being winched back downward at shallow upward angle, claw cup at right EMPTY (no stone/fireball/projectile), bronze spherical counterweight left. Exactly TWO complete crew red tunics brass helmets red plumes brown boots; left crew at blue pressure pumps both hands on pump handle, right crew leaning back pulling rope winch with bent elbows. Four iron-banded wood wheels on same original axles, red heraldic side panel, blue cylinders/gauges intact. Preserve machine size construction, one arm one counterweight no duplicate projectile. Distinct purposeful winding pose not attack release or death. Entire machine and crew within generous margins, transparent RGBA background no ground shadow/checkerboard drawing/text/effects. Original painterly battle cutout matching reference.",
+      "review": "Empty cup with arm lowered, both crew working pump/winch. Reset source draft, not accepted reload sequence: rope attachment/winch hand path, fourth-wheel occlusion, scale/camera matching, edge fringes and actual reloading still unfinished. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/poses-collapse-crew-corrected.png",
+      "source_sha256": "a0365266e3e732cd5c0d54ffd27e9f929cdc164f9af65ab0dd017667c54b3b84",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0225a8e9-6a49-4aac-a6b2-a0f3e4284ebd.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY row THREE column THREE (eleventh collapse pose) in this 4x3 original mangonel sheet. Restore the missing second red-clad crew member on the RIGHT foreground of this one wreck, transitioning from the airborne rear-right crew in previous frame toward the right-side prone crew in final frame. Complete adult human in red tunic brass helmet red plume dark trousers brown boots, falling onto forearms and bent knees beside right wheel, head toward RIGHT. Existing left foreground fallen crew unchanged. Exactly TWO complete crew visible, neither fused into machinery. Retain original four-wheel wreck, broken arm, glowing stone in cup, pump cylinders and first crew; keep all other eleven sprites unchanged. No gore, extra people, weapons or detached body parts. Same canvas and frame positions, genuine transparent background no checkerboard drawing. Fit complete added person inside cell without overlap into final frame.",
+      "review": "Eleventh collapse now has two complete crew; added right-side crew lands on forearms/knees before final prone pose. Select eleventh frame only. Head/cup overlap, crew proportions/trajectory, wheel/pivot continuity and alpha still require refinement. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/poses-draft.png",
+      "source_sha256": "d1ff7c4d162b9990ca71640b9b017f6393478f0d0150aa9986c3d4804bf1dca2",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e074264a-7ad8-4ad8-8e6f-b23d9cb2512b.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle animation sheet matching supplied Amberweir Sluicebrand Mangonel reference. Exactly TWELVE separated complete unit poses FOUR columns THREE rows, same scale fixed 3/4 camera facing RIGHT, generous gutters. True transparent RGBA background no checkerboard drawing ground labels. ONE wooden brass iron mangonel on FOUR large iron-banded wheels, central pivot ONE long throwing arm with bronze spherical counterweight at short end and claw cup at long end holding ONE orange fireball, red heraldic side panel, blue front pressure cylinders with gauges, rear rope winch. EXACTLY TWO human crew in red tunics and brass helmets with red plumes: front-left crew works pump, rear-right crew cranks winch. Keep crew attached to same station each frame no disappearing people. Row1 idle arm angled up right loaded crew at stations; idle front crew leans pumping rear adjusts grip; movement first rolling stride BOTH crew push frame leaning forward stepping left legs; opposite movement BOTH crew step right legs wheels rotate visibly same axle positions. Row2 movement passing crew knees bent wheels next turn; attack anticipation throwing arm winched down near horizontal cup loaded rear crew pulls winch front braces; attack release arm snaps up right ONE fireball leaves cup cup empty both crew recoil; defense crew duck behind frame arm lowered load retained. Row3 hit frame jolts crew recoil both visible all wheels attached; death axle buckles frame tips both crew fall away; collapse broken arm/frame FOUR wheels accounted for both crew collapsing; persistent wreck frame settled wheels and broken arm grounded BOTH crew prone still eyes closed no fireball flames steam blue cylinders inactive. Real articulated pivots spokes elbows legs and visible cycle changes not shifted duplicates. Do not add crew weapons or wheels. Painterly original game art matching reference crisp readable small-scale complete group silhouette. Entire crew/catapult/fireball in each cell no clipping or overlap."
+    },
+    {
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/poses.png",
+      "source_sha256": "46ab7e6db8f9fad4763c42293557413d4170449b56841e0f05f9fe49be491680",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d157c0f5-bd5d-401f-a683-e33f8666d041.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY bottom-right final wreck sprite in this 4x3 sheet. Add the missing SECOND fallen crew member in matching red tunic/brass helmet, lying visibly prone on LEFT side of wreck with closed eyes; keep existing first fallen crew member in foreground. Exactly TWO complete visibly distinct fallen people, no severed body parts. Replace glowing orange fireball in fallen cup at right with cold dark charcoal-black stone; extinguish blue cylinder glow to dark blue glass. Preserve wreck geometry wheels broken wood and every other eleven sprite exactly. Same sheet size, true transparent RGBA background no drawn checkerboard."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-01af85cb-f457-4be6-85c1-37abe40cd619.png",
+      "prompt": "Use case: precise-object-edit. Modify ONLY bottom row THIRD sprite, specifically its RIGHT foreground fallen crew member. Lower his head and upper torso toward ground, elbows bent, head just above hands and farther DOWN below cup, so a clear gap separates brass helmet/red plume from the glowing orange stone and metal cup behind him. Keep knees/body in same general location and head pointing right. Exactly two complete crew remain, preserve first left crew and entire wreck/cup/wheels. Natural falling transition toward final prone pose, no extra limbs or severed parts. Do not move or change cup or stone. Other eleven poses unchanged. Same canvas, camera and cell positions; true transparent alpha background, no checkerboard drawing.",
+      "reason": "Lowers operator onto elbows but helmet/cup separation still unclear; background/details changed. Unselected, not copied."
+    }
+  ],
+  "review_notes": [
+    "Seventeen packed candidate frames retain thirteen prior original poses and add four new built-in paintings: opposite crew-foot lifts and connected crew-fist melee anticipation/contact.",
+    "Retain idle pair, planted pushing contact, guard, hit, lower-arm aim, cropped empty-cup release, reset, held/seated stone loading, buckle, corrected two-crew collapse and cold-stone two-crew persistent wreck. Repeated original walking poses and uncorrected one-crew collapse are excluded.",
+    "Ranged release crop excludes the detached painted fireball/trail entirely; live combat effects remain separate. Close melee uses the right-side crew's same raised/extended fist and supporting rope hand, not the firing clip.",
+    "Owner-approved connected neutral extraction with inspected enclosed-gap seeds removes opaque checkerboard while preserving gauge faces and ivory sleeves. Retain genuine alpha on existing reset painting. Four new green-backed paintings use explicit bounded color-distance preparation; no generated/warped poses from raster tools.",
+    "Reload-held backing had isolated gray flecks. Three inspected exterior regions plus166 explicit tiny original-pixel rectangles remove disconnected neutral fragments outside a3px paint margin. Fine near-edge residues remain for refinement; no global widening into pale metal. Full original/recipes/hashes retained.",
+    "Final composited atlas and offline art desk inspected as production evidence only. Crew support/occluded legs, face/equipment/cup scale, wheel hubs/spoke order, rope travel, loading-to-ready continuity, collapse head/cup separation and actual battle durations remain for full-roster motion/refinement acceptance.",
+    "No tests/imports/exports, paid API or gameplay/save/footprint edits. Full160 production and consolidated Linux/Windows acceptance remain open."
+  ],
+  "prior_review_notes": [
+    "Twelve poses plus final wreck correction: restored second prone crew and cold stone, dimmed cylinders.",
+    "Intermediate collapse still shows only one crew; restore second falling crew before final. Crew identities/stations and frame/axle/wheel counts need continuity.",
+    "Walking strides repeat with subtle wheel motion; need opposite crew contacts and spoke rotation at fixed axles.",
+    "Loaded lower arm and empty launch cup present but reset/reload sequence incomplete. Close melee behavior lacks distinct corresponding pose.",
+    "Counterweight/pivot/rope mechanics and pump/gauges drift. Fireball crosses nominal cell and needs event synchronization/crop.",
+    "Final crew poses both present but overlaps require small-scale review. Checker background visible transparency unaccepted. Source-only no packing/enabling/tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "reference_crops": [
+      {
+        "file": "standing-reference-light.png",
+        "sha256": "649f3d914cb765280afa6049911052b229c4a399db3ee99b68907464de2399ac",
+        "source": "poses.png",
+        "source_sha256": "46ab7e6db8f9fad4763c42293557413d4170449b56841e0f05f9fe49be491680",
+        "rect": [
+          0,
+          35,
+          355,
+          347
+        ],
+        "method": "Prepared source crop and nearest4x light composite before final enclosed-gap seeds; exact reference PNG retained."
+      },
+      {
+        "file": "pushing-reference-light.png",
+        "sha256": "3c7c44f9bde83fb7f2833318a1f78e9f8b502defa4e1cf9ad30ccc0d0c617a2c",
+        "source": "poses.png",
+        "source_sha256": "46ab7e6db8f9fad4763c42293557413d4170449b56841e0f05f9fe49be491680",
+        "rect": [
+          720,
+          35,
+          1096,
+          347
+        ],
+        "method": "Prepared source crop and nearest4x light composite before final enclosed-gap seeds. Final packing uses wider x716 crop to preserve left boot."
+      }
+    ],
+    "sources": [
+      {
+        "file": "walk-outer-lift-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-dfe2ce75-abd6-4091-9387-6589d1395abe.png",
+        "prompt": "Use case: precise-object-edit. Input image 1 is the edit target and exact original machine/crew identity. Produce ONE next walking animation pose, same elevated three-quarter camera facing right. Change only crew lower-body stepping and wheel spoke angles: BOTH crew's visible OUTER boots (leftmost boot of left worker, rightmost boot of right worker) lift clearly above ground, knees bent and boots tucked inward; each worker's other leg remains planted behind its wheel. Their heads, torsos, two hands and existing grips stay in the exact positions. Rotate spoke patterns about the SAME fixed wheel hubs by about 25 degrees clockwise without changing wheel count or diameter. Entire wooden/brass four-wheel mangonel, central pivot, raised arm, bronze counterweight, loaded claw cup, two blue pumps, gauges and red heraldic panel stay exactly the same size and construction. Exactly two complete red-clad brass-helmeted crew, no extra hands or feet. Frame the entire group with generous margins and same body proportions. Original painterly raster, no label, ground shadow or added effects. Background uniformly pure green RGB 0,255,0 including every empty aperture between arm/ropes/crew/wheels; no green on the people or equipment and no green reflected spill. This is a short pushing step, not a different composition.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/pushing-reference-light.png"
+        ],
+        "sha256": "12db7db1d496bf2519176b3a9bd30f148dac19258ee971433f38aa57cc565dff",
+        "selected": true,
+        "selection": "Both visible outer boots lifted with changed wheel spokes; inner support is partly occluded. Interleave original planted contact; not final translated gait acceptance."
+      },
+      {
+        "file": "walk-inner-lift-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d263946a-6368-49b6-8769-065adc2e5351.png",
+        "prompt": "Use case: precise-object-edit. Input image 1 is the fixed original identity and camera reference. ONE complementary short-step walking sprite. BOTH workers now plant their OUTER boots flat on ground (leftmost boot for worker at left, rightmost boot for worker at right). Each worker lifts his OTHER inner knee/boot beside the adjacent wheel; visibly show the lifted boot through or just outside the side gap, without changing legs or adding limbs. Keep two legs per person, anatomically joined to their own hips. Heads/torsos/hands stay at their same pumping/pushing and rope/winch stations. Rotate wheel spokes roughly 50 degrees clockwise about unchanged original hubs; four wheels on original axles, no new wheels. Preserve entire machine geometry, sizes, loaded raised throwing arm, bronze counterweight, red heraldic plate, blue pressure pumps and gauges, both red tunics/brass helmets. Same fixed elevated three-quarter right-facing view, full group inside generous margins, same original painterly raster. Background pure flat green RGB 0,255,0 in all empty spaces including enclosed apertures, no green equipment/reflections, no ground/shadow/text or effects. Deliberate alternating supporting feet, not a new machine or two airborne workers.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/pushing-reference-light.png"
+        ],
+        "sha256": "6955850d0546b4a5bac5555e60804f174ad93c06597be9b45c15a91effda7a97",
+        "selected": true,
+        "selection": "Complementary lifted inner boots with outer feet planted; retains two crew and their machine stations. Wheel ordering and connected support remain final review items."
+      },
+      {
+        "file": "melee-windup-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-87bdab12-4687-43c9-9054-4475e9180cff.png",
+        "prompt": "Use case: precise-object-edit. Input image is edit target, preserve exact original mangonel and two crew. ONE close-range MELEE ANTICIPATION animation pose. Change only the RIGHT worker: he steps just to the right of the right wheel, turns his chest toward the offscreen enemy on RIGHT, bends knees into a braced stance. His LEFT hand keeps a firm supporting grip on the winch frame. His RIGHT arm is pulled back, right gloved fist beside his shoulder with elbow bent, preparing a short straight punch toward RIGHT. No weapon added. He remains the same red-tunicked brass-helmeted worker and same body size. The LEFT pump worker stays at his original station with both hands on pump handle. Keep every machine part completely unchanged: original four wheels/axles, raised loaded arm, cup/stone, spherical counterweight, frame proportions, red panel, blue pumps and gauges. Exactly two complete workers, no duplicated hands or legs. Same fixed elevated three-quarter view and painterly raster; full group/fist/boots framed with broad margins. Empty background and all enclosed gaps pure green RGB 0,255,0, no green on paint/reflected light. No text, ground, shadow, hit flash or projectile.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/standing-reference-light.png"
+        ],
+        "sha256": "60f94f46f20e68332a4fd6f861e614c92a2f1cce55aea144a67371463c52a594",
+        "selected": true,
+        "selection": "Right-side crew raises outer fist while other hand remains on rope; no new weapon. Name actual screen-side action rather than claiming anatomical hand from prompt."
+      },
+      {
+        "file": "melee-contact-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-86206d65-e1f9-4c2e-b205-15516eecea33.png",
+        "prompt": "Use case: precise-object-edit. Input image is the exact preceding melee windup. Make ONE contact frame by changing ONLY the right worker's already-raised fist arm: extend THAT same arm fully in a straight shoulder-height punch to screen RIGHT, slight forward shoulder twist. The other hand remains firmly on the SAME rope at the SAME position, never swapped. Same right worker face/helmet/tunic/body size and feet, same left worker pumping unchanged. Do not add a third arm or change grip anatomy. Preserve the entire original mangonel, its four wheels and hub positions, raised loaded throwing arm, counterweight, panels, gauges and pumps exactly. Widen green canvas at RIGHT as necessary so complete fist has at least 60 pixels of margin; do not shrink individual people or machine to fit. Same elevated three-quarter camera, crisp original painterly raster, no text, ground, shadow or impact effect. Uniform pure green RGB 0,255,0 background in every empty aperture, no reflected green or paint recoloring. This is a connected straight punch after the shown anticipation, not a different attack.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/melee-windup-green.png"
+        ],
+        "sha256": "ab0d578f8fb44b6ca3de8dc4251b58f2c1fd969fe3c0a4d8760a05988368e8df",
+        "selected": true,
+        "selection": "Same outer fist extends toward right, other hand retains rope; additional canvas keeps fist framed."
+      }
+    ],
+    "generation": "continuity-generation.json",
+    "reused_sources": [
+      {
+        "source": "poses.png",
+        "sha256": "46ab7e6db8f9fad4763c42293557413d4170449b56841e0f05f9fe49be491680",
+        "selection": "Nine poses: idle pair, planted pushing contact, guard, hit, aim, empty-cup release cropped before detached projectile, first buckle and cold-stone final wreck."
+      },
+      {
+        "source": "poses-collapse-crew-corrected.png",
+        "sha256": "a0365266e3e732cd5c0d54ffd27e9f929cdc164f9af65ab0dd017667c54b3b84",
+        "selection": "Only bottom-row third pose with both collapsing crew."
+      },
+      {
+        "source": "reload-seated-draft.png",
+        "sha256": "33fa0d7fa7f56a80dceb7871dcdf562c0bee2301d36dadb395a7bc260539c79a",
+        "selection": "Retain this original reset/reload painting; same-scale assembly and connected action review still pending."
+      },
+      {
+        "source": "reload-stone-draft.png",
+        "sha256": "f1b929ddef4edd36ec0ad44cb347515c03c54ec3ea0de49fd69e4d1c0f364e2a",
+        "selection": "Retain this original reset/reload painting; same-scale assembly and connected action review still pending."
+      },
+      {
+        "source": "reset-empty-cup-draft.png",
+        "sha256": "f41ab5c80c63d2401fa8644b49212b54dbc52052b2fc61ed381e1b347ed85ba2",
+        "selection": "Retain this original reset/reload painting; same-scale assembly and connected action review still pending."
+      }
+    ],
+    "preparation": "continuity-cutouts.json: original neutral extraction, explicit enclosed-gap and inspected isolated-background regions; original reset alpha reused unchanged; four green distance-key derivatives. Source/tool/recipe/output hashes in processing sidecars.",
+    "packing": "packing.json",
+    "packed_frames": 17,
+    "runtime_candidate": "art/animation/runtime/poses/unit_embercourt_amberweir_sluicebrand_mangonels.png",
+    "runtime_sha256": "516a47246a45b80e65bad25f3d7c273137ff8a7ea390a5a19924e00386e5eacd",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/sluicebrand-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted"
+  }
+}

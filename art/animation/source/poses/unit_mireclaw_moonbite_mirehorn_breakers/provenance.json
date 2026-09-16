@@ -1,0 +1,192 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_mireclaw_moonbite_mirehorn_breakers.png",
+  "reference_sha256": "59e6cec5cf412fa72a39e05f50c315d44b512ef222414ddd08af1e901f70a646",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/poses-idle-planted.png",
+      "source_sha256": "678c40703dca2702754c00ae920293f8561bb2d06c8d32f16df5a3dd8aaa5e00",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9aa07c2a-dc79-4a1f-9470-929dd9970c1e.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY second sprite, row ONE column TWO, in this 4-column 3-row original Mirehorn sheet. Replace exaggerated tall torso/head idle with gentle breathing idle closely matching FIRST sprite. All FOUR feet remain planted at same relative locations as first sprite; squat heavy torso, short neck, head at almost same height as first, chest expands slightly and reed tips sway subtly. Handler remains standing same position with same staff and rein hands, no step. Exactly two curved horns same proportions as first, skull faceplate mouth closed, same lantern count/attachments, four limbs. All other eleven sprites unchanged, fixed camera consistent scale. Keep every sprite separate full silhouette within cell. Genuine transparent background, no checkerboard text or scenery.",
+      "review": "Select second frame only. Exaggerated raised chest/neck replaced with compact planted stance and closed mouth, much closer to first idle. Scale slightly smaller and breathing difference subtle; alignment and alpha unresolved. Incidental changes to other frames not selected. Source-only not enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/walk-far-passing-draft.png",
+      "source_sha256": "8353d398dccbd167c10411f0e5e2607684f6551efe3c2c9aec87a4f4b6d92be9",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-14780f23-8174-4752-a3dd-0b72a73d7921.png",
+      "prompt": "Use case: precise-object-edit. Create complementary passing frame from this original Mirehorn sprite. Change ONLY articulated leg positions and handler step, preserve exact identity camera torso head two horns reeds lanterns chain/staff and rendering. Plant the huge foreground FRONT paw on ground directly below shoulder, and plant rearward HIND paw at left. Lift OTHER front paw (far front, rightmost in image) with bent elbow tucked back beside chest, clearly above ground. Lift OTHER hind paw (the center-bottom paw) beneath belly with knee bent. Exactly FOUR beast legs, two planted and two lifted, no missing limbs. Handler plants current raised boot at right and lifts trailing boot at left, knee bent passing beneath coat. Do not mirror image or rotate torso, no jump. Same generous canvas margins. One isolated full group on genuinely transparent background, no checkerboard/ground/text/effects.",
+      "review": "Complementary lifted front/hind paws now visible; handler trailing boot lifted while leading boot supports. Four beast legs present. Leg-depth anatomy and paw proportions still need matching; head/torso and lantern scales differ from original sheet. Both passing sources exist, not accepted continuous gait. Alpha and assembly pending, not enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/walk-near-passing-draft.png",
+      "source_sha256": "7027f4d97d3d4e05632dbe28da0457216fd7db3c9137ef1b3be533e8bae1beef",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-515b2ca5-baf4-4c20-a018-841f0080bad0.png",
+      "prompt": "Precise edit to original creature animation pose. Restore the missing FAR FRONT supporting leg: it descends from far shoulder BEHIND lifted foreground forearm, matching green skin and wicker cuff, with clawed paw firmly planted at bottom-right beneath jaw, clearly separated from floating foreground paw. Keep lifted foreground forepaw exactly as is. Exactly four beast legs total. Keep remaining hind legs, handler lifted boot, chain staff, horns face reeds lanterns and all other details unchanged. Do not lift both front legs. No new accessories. Genuine transparent background, no checker pattern. Complete sprite margins.",
+      "input_generation": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4a320315-a342-4fc5-9e34-76214971f696.png",
+        "prompt": "Use case: precise-object-edit. Edit this original Mirehorn walking contact into its next passing animation frame. Preserve exact head horns torso lantern harness scale camera and colors. Lift NEAR foreground front paw clear of ground, elbow bent and paw swinging forward beneath jaw; lift diagonally opposite FAR hind paw under belly. Other two legs, FAR front and NEAR hind, stay planted supporting the weight. Exactly four beast legs, each attached anatomically, visible gaps beneath lifted paws, do not rear or jump. Small handler behind-left brings trailing foot forward with knee bent and boot lifted, other boot planted, same staff hand and rein hand/attachment. Torso stays approximately same height; only slight natural weight transfer. Same two black ivory crescent horns and reed back, closed mouth. One complete isolated group sprite with generous margins. Genuine transparent PNG background, no painted checkerboard, no scenery, text or effects.",
+        "review": "Lifted foreground paw and handler boot; far front supporting leg missing, unselected."
+      },
+      "review": "Supporting front leg restored and four paws visible. Foreground front paw and rearward hind paw lifted; handler boot lifted. Hind-leg depth/diagonal anatomy, oversized lifted paw, body/gear scale and transparency need continuity matching. Source-only, not packed/enabled or accepted."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/walk-far-contact-draft.png",
+      "source_sha256": "8ae08d16dae00dba950d6ab7416b26cc879b51e377c074b992b0396ea7bf0bd3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e5a4605e-f870-4f3b-9268-ee2283c1e40a.png",
+      "prompt": "Edit only the beast's leg pose in the provided sprite. The huge foreground front leg currently reaches bottom-right: retract that NEAR front leg so elbow bends and its paw plants directly under chest at image center-right. The OTHER front leg, behind chest, must now reach to the far RIGHT under jaw with its separate paw visible to the right of the retracted foreground paw. Exactly four beast legs: two front, two hind. Move near hind paw forward under belly, far hind paw backward. This is an opposite-diagonal WALK CONTACT, not a leap. Preserve absolutely the same creature head horns reeds lanterns, torso height, handler stride and hands, rein staff, camera and painterly style. No mirroring. Full sprite with margins on genuinely transparent background, no painted checkerboard.",
+      "input_generation": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f00cf830-7cee-4bce-a0e1-d1db098b9846.png",
+        "prompt": "Use case: precise-object-edit. Input is original Mirehorn Breaker sprite sheet, identity reference. Produce ONE isolated walking pose matching row1 column3 but with the OPPOSITE diagonal contact. Same three-quarter view facing RIGHT, not mirrored: FAR front leg extended FORWARD to right and planted, NEAR front leg swept BACK beneath chest. NEAR hind leg reaches forward under belly, FAR hind leg extends behind to left. Four anatomically connected legs with wicker cuffs, distinct paws. Same stocky beast, two black ivory crescent horns, skull faceplate, closed mouth, amber eyes, reed-covered back, lantern harness. Small handler remains behind-left, holding same staff and attached rein; handler's near leg steps forward to right and far leg trails left, real walking stride rather than braced stance. Preserve weapon hands, scale proportions, original painterly style. Entire creature/handler/staff/horns fit with wide margins. One pose only, genuine transparent background, no checkerboard, ground or text.",
+        "review": "Initial request repeated near foreleg lead; not selected."
+      },
+      "review": "Far forepaw now ahead of near forepaw, four paws visible; handler has walking stride. Hind diagonal still weak, body/head proportions and lantern positions drift from sheet. Passing pair, scale/gear continuity and alpha unfinished. Source-only, not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/ram-four-leg-contact.png",
+      "source_sha256": "226ef11df08833aed7bacf5c5ff7fd3049274484ec377a83fe37493aa7502b53",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cc2bc427-6166-4088-a09c-531dee53ae1a.png",
+      "prompt": "Use case: precise-object-edit. Edit target is this single original Mirehorn ram-impact sprite. Preserve its extended head and shoulders, closed mouth, TWO crescent horns, short neck, reed back, lantern harness, near front leg and both hind legs, one handler and attached rein/staff. Reveal its currently hidden FAR FRONT LEG: from far shoulder behind jaw, show a separate bent forearm with matching wicker cuff and clawed paw planted just beneath the jaw, slightly above and right of near paw in this three-quarter camera. Exactly FOUR beast legs total, not five. Do not move head backward or redesign horns. Zoom out uniformly so entire handler/staff, horns and every paw have generous blank margins on all sides, same camera and proportions. One complete isolated pose, no grid/text/effects/scenery. True transparent RGBA background, no painted checker pattern. Match exact original painterly rendering.",
+      "review": "Four beast legs now visible, horns retain forward reach and margins improve. Prefer over extended draft for contact assembly. Scale/lantern/rein continuity with sheet unresolved; not packed or accepted."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/alpha/ram-four-leg-contact.png",
+      "source_sha256": "d7b3a67ad5223d3f6bee5d717c63c7b49fb81ce2a2ac35e20757e0afcd95f736",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-457ae698-681a-4cb7-b949-6afc6373062b.png",
+      "prompt": "Use case: background-extraction. Image 1 is edit target, a completed original game character group pose. Remove ONLY the gray-white checkerboard background, including every gap between chain, legs, reeds, staff and horns. Return the exact painted creature and handler on genuine transparent alpha, NOT a painted checker pattern or colored backdrop. Preserve all subject pixels, exact framing, proportions, four legs, two horns, amber lantern glass and thin black rein, no restyling, no new objects, no glow outside silhouette, no shadows or background texture. PNG cutout with transparent empty pixels.",
+      "review": "Extraction preview removes checker pattern and preserves pose; red/yellow fringes around reeds and lanterns remain visible. Alpha/compositing not accepted or numerically tested. Retain for assembly review; not enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/ram-extended-contact-draft.png",
+      "source_sha256": "748928edc8cc2899d746991b982644d6d301b63118c31ea383bee9ef3625d6c2",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6dd5e18b-842d-45a7-9d97-110b797cb06f.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is edit target: original Mirehorn Breaker game sprite. Change its crouched anticipation into the next frame, a forceful forward head-and-shoulder RAM toward image RIGHT. Hind legs straighten pushing heavy torso forward; forelegs bent back under chest, head and two crescent horns extend distinctly BEYOND front toes to the right, neck short and muscular not snake-like. Raise skull slightly off floor so brow is the leading impact surface. Mouth stays closed. Keep the exact two inward curved black/ivory horns, skull faceplate, four legs, reed back wicker cuffs, lanterns and ONE small handler behind-left with crescent staff and connected taut rein. Handler leans against pull with both feet braced, no extra people or limbs. Preserve painterly style, material colors, fixed three-quarter camera. Whole group fully visible with 10 percent margins. No target, impact effects, ground, text or checkerboard: genuinely transparent RGBA background. Only one complete isolated impact pose, not a sheet.",
+      "review": "Head and horns now extend beyond near front toes, with closed mouth and braced handler. Far foreleg obscured; right horn and staff margins tight. Lantern placement/scale, four-leg continuity and transparency unresolved. Source refinement only, not packed/enabled or accepted."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/ram-contact-draft.png",
+      "source_sha256": "7cdc6edb3ddce9b62b2beed8c8465ce82deea31bd3c9e818027939dd16bc4c88",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b5a247fb-ad24-4806-9b4a-18ce25c72a14.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY row TWO column THREE (seventh attack contact) in this 4x3 Mirehorn Breaker sheet. Replace open-mouth bite with a forceful HORN RAM: mouth closed, heavy head thrust forward toward image RIGHT and slightly down, skull faceplate and TWO original curved horns leading beyond forepaws. Neck compresses naturally into shoulders, hindquarters drive forward, forelegs brace on impact. Keep same two horn shapes/lantern attachments, do not turn horns into new straight spikes. Preserve one small handler behind-left with staff and taut rein connected to beast, all four beast legs and back reeds/saddle. Same original identity scale fixed camera, no extra horn/handler/limbs, no impact flash or target. All other eleven poses unchanged. Complete horns fit in cell no overlap. True transparent RGBA background no painted checkerboard.",
+      "review": "Tool returned isolated group instead of sheet edit. Mouth closed, low braced beast with four legs and handler/rein retained. Horns/head do not yet reach beyond forepaws; pose still resembles anticipation, not accepted impact. Scale/lantern/rein continuity and alpha pending. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/poses.png",
+      "source_sha256": "e1c4b8f0fa843799dd3ddce9894b5dda9582a6ce759112c3c73f2f9b60dcca02",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bedb42f1-2d78-4377-a866-b20991687193.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle animation sprite sheet matching attached Moonbite Mirehorn Breaker reference. Exactly 12 complete isolated group poses FOUR columns THREE rows, fixed 3/4 view facing RIGHT same scale generous gutters. True transparent RGBA background no painted checkerboard ground text. Huge gray-green quadrupedal horned swamp beast FOUR heavy clawed legs, skull-like ivory faceplate amber eyes, TWO enormous inward-curling black ivory crescent horns, moss reeds foliage over back and wicker armor foreleg cuffs. Small warm lanterns hang harness/horns. ONE small masked reed-cloaked humanoid handler at beast rear-left holding attached rein chain and crescent-topped staff, must appear every frame. Preserve horn count/shape four legs chain attachment and handler identity. Row1 idle beast planted handler alert; breathing idle beast chest expands head lifts handler shifts grip; walk diagonal pair front-left rear-right advance other pair support handler steps; opposite walk front-right rear-left advance other pair support handler opposite step no whole-body mirror. Row2 passing four-leg gait bent lifted foreleg hind leg pushes handler keeps pace; attack windup beast lowers skull horn points right bends all legs handler braces rear; attack contact beast lunges forward head/horns thrust right forelegs spread rearlegs push handler leans back rein stays attached; defense beast hunkers horn shield handler ducks. Row3 hit recoil head jerks up legs brace handler recoils; death beast foreknees buckle handler stumbles; collapse beast tips side all legs accounted for handler falls beside rear; persistent dead beast on side four legs two horns grounded eyes dark lanterns unlit handler prone eyes closed beside rear staff chain grounded. Actual articulated limbs neck shoulders elbows no shifted copies no missing handler extra horns or legs. Painterly original game art matching reference crisp small-scale group silhouette. Keep full horns handler staff tail within roomy cells no clipping overlap or large effects."
+    }
+  ],
+  "review_notes": [
+    "11 packed candidate frames: eight retained paintings (including the previously corrected planted second idle) and three selected new paintings from four new built-in masters.",
+    "Initial assembly exposed that earlier isolated near/far passing and far-contact masters, and the earlier extracted ram contact, were much brighter and broader than the base sheet. They remain preserved unselected. Rebuilding from the fixed base identity produces closer body/palette continuity instead of attempting to recolor or warp them.",
+    "Two new movement frames alternate lifted diagonal paws and handler boot support. A planted frame separates them; this is a short-step candidate, not accepted translated gait. Exactly four paws are visible in each selected new movement painting.",
+    "The first new matched ram obscures its far foreleg and is unselected. Targeted built-in correction reveals a separate planted far forepaw beneath the jaw while preserving the other three paws, braced handler and connected chain/staff. The selected contact keeps the mouth closed.",
+    "Original RGB checker and corrected idle use connected neutral155/tolerance14/edge2 with explicit inspected seeds in chain/reed/arm/leg gaps. Previous extracted contact has real alpha that composites clean; no rekey applied to it. It is unselected for continuity rather than its raw transparent RGB.",
+    "Original handler remains in every selected frame. Retained kneel/side-fall/persistent corpse includes prone handler and dark final lanterns/eyes. Crop bands exclude neighboring horn/lantern/paw fragments and disconnected hit crescent without deleting owned equipment.",
+    "New selected green masters use distance75/edge2. Horn curvature, mask/harness/lantern scale and attachment, handler grip/rein length, paw support and translated movement, edges and actual battle timing remain for full-roster refinement. Production previews are not acceptance. No tests/imports/exports or gameplay/save/footprint changes."
+  ],
+  "prior_review_notes": [
+    "Twelve complete group poses retain handler and beast; final corpse shows prone handler and darkened beast lights.",
+    "Walk contacts repeat front leg and handler stance; need opposing diagonal support sequence and actual handler stride. Idle raises torso dramatically compared with baseline.",
+    "Horns rotate/change curvature, skull faceplate shape and rear-leg visibility vary. Four-leg anatomy and attack head/neck continuity need refinement.",
+    "Attack contact mouth opens instead of clear horn impact. Handler rein/staff grips and chain attachment length change.",
+    "Collapse resembles crouch before prone and hind-leg accounting needs review. Final handler eye/lantern state needs close review.",
+    "Group crowds sheet edges, explicit cell crops/margins required. Checker background visible; transparency/compositing unresolved. Source-only no packing/enabling/tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "reference_crops": [
+      {
+        "path": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/standing-reference-light.png",
+        "sha256": "dbacbe26d815ca22962a22b71ae05809c9bf56096707e03658a71d072a2e3712",
+        "source": "continuity-alpha/original.png",
+        "source_sha256": "5eab6685c5a7f22caf3c594f6ab58b08320e8adf51122d20f21d0fb0340232b6",
+        "original_source": "poses.png",
+        "original_source_sha256": "e1c4b8f0fa843799dd3ddce9894b5dda9582a6ce759112c3c73f2f9b60dcca02",
+        "rect": [
+          0,
+          65,
+          382,
+          366
+        ],
+        "method": "Approved prepared original alpha composited on light backing and nearest4x; source coordinates preserved."
+      }
+    ],
+    "sources": [
+      {
+        "source": "step-diagonal-a-green.png",
+        "sha256": "077f75372d63236f556e19993be0b6546a5f779fc81ef9ec5e5be118f6c44742",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c8616771-1d4d-42f8-8b4f-b09b64a43d77.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Input image 1 is the exact identity and rendering reference for ONE original tactical-game group sprite: the compact dark gray-olive Mirehorn beast and its small masked reed-cloaked handler at screen LEFT. Preserve the reference's restrained dark painterly texture, narrow skull faceplate, original body length and height, two crescent horns, four clawed paws, reed cargo, bone harness, orange lantern sizes and attachments, tiny handler proportions, staff in the same hand and connected black chain rein in the other. Do not upscale the anatomy, enlarge its head or paws, brighten colors, add gloss, redesign gear or mirror the view. Fixed three-quarter camera facing RIGHT. Retain original torso position and scale.\nEdit ONLY the articulated leg pose and handler stride for a restrained heavy walking passing frame. Lift the NEAR FOREPAW (large paw below the shoulder at center-right), bending its elbow and bringing it slightly forward, with a clear small gap beneath it. Lift the FAR HIND paw beneath the belly. Keep the OTHER TWO paws planted: far forepaw at screen-right and near hindpaw at screen-left. Exactly four complete anatomically connected legs, no missing supporting leg. Handler advances its screen-right boot with knee bent and foot lifted; screen-left boot planted. Torso and head stay steady, no leap or rear. One full isolated group only, not a sheet. Preserve all silhouette extremities within generous 10 percent blank margins. Flat pure chroma green #00ff00 background including all apertures, no gradient, checkerboard, floor, shadows, text, effects or extra objects.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/standing-reference-light.png",
+            "sha256": "dbacbe26d815ca22962a22b71ae05809c9bf56096707e03658a71d072a2e3712"
+          }
+        ]
+      },
+      {
+        "source": "step-diagonal-b-green.png",
+        "sha256": "a29d566ed32ddabfac041f311be36ea3678044cc394073549ac1ab88d78882e0",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f5f8d6be-82c1-4100-8f14-0d782d5a0331.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Input image 1 is the exact identity and rendering reference for ONE original tactical-game group sprite: the compact dark gray-olive Mirehorn beast and its small masked reed-cloaked handler at screen LEFT. Preserve the reference's restrained dark painterly texture, narrow skull faceplate, original body length and height, two crescent horns, four clawed paws, reed cargo, bone harness, orange lantern sizes and attachments, tiny handler proportions, staff in the same hand and connected black chain rein in the other. Do not upscale the anatomy, enlarge its head or paws, brighten colors, add gloss, redesign gear or mirror the view. Fixed three-quarter camera facing RIGHT. Retain original torso position and scale.\nEdit ONLY the articulated leg pose and handler stride for the opposite heavy walking passing frame. PLANT the NEAR FOREPAW (large paw below the shoulder at center-right), flat under its shoulder. Lift the FAR FOREPAW at screen-right, bending its elbow and tucking the paw just behind the planted near forepaw, with a visible gap below it. PLANT the FAR HIND paw beneath the belly, but lift the NEAR HIND paw at screen-left, hock bent forward. Exactly four anatomically connected legs with two supporting paws and two raised paws. Handler plants its screen-right boot and lifts the trailing screen-left boot beneath its cloak, opposite support from a leading-foot step. Torso and head stay steady, no leap or rear. One full isolated group only, not a sheet. Preserve all silhouette extremities within generous 10 percent blank margins. Flat pure chroma green #00ff00 background including all apertures, no gradient, checkerboard, floor, shadows, text, effects or extra objects.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/standing-reference-light.png",
+            "sha256": "dbacbe26d815ca22962a22b71ae05809c9bf56096707e03658a71d072a2e3712"
+          }
+        ]
+      },
+      {
+        "source": "ram-contact-matched-green.png",
+        "sha256": "f0fc3b3cc13c62554c22b49da2a746774d035a68ef985d5492dcd849513d4bc8",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a6f8fb00-02f2-4588-861a-7101b9bb842c.png",
+        "selected": false,
+        "prompt": "Use case: precise-object-edit. Input image 1 is the exact identity and rendering reference for ONE original tactical-game group sprite: the compact dark gray-olive Mirehorn beast and its small masked reed-cloaked handler at screen LEFT. Preserve the reference's restrained dark painterly texture, narrow skull faceplate, original body length and height, two crescent horns, four clawed paws, reed cargo, bone harness, orange lantern sizes and attachments, tiny handler proportions, staff in the same hand and connected black chain rein in the other. Do not upscale the anatomy, enlarge its head or paws, brighten colors, add gloss, redesign gear or mirror the view. Fixed three-quarter camera facing RIGHT. Retain original torso position and scale.\nChange the pose to the CONTACT phase of a forceful short head-and-shoulder ram toward screen RIGHT. The rear paws drive forward, forelegs bend bracing below the torso, head and crescent horns thrust forward and downward so the brow leads beyond the near forepaw, mouth CLOSED. Keep exactly four visible anatomically connected legs, short muscular neck, original narrow faceplate and both original inward curling horns; do not add straight spikes or turn this into a bite. Handler stays behind-left, two boots braced and leaning back against the attached taut rein, same staff and hands. Keep the original compact dark matte rendering, no increased saturation or larger paw/head proportions. One complete isolated group with 10 percent blank margins, no target, no impact flash. Flat pure chroma green #00ff00 background including apertures, no gradient, floor, checkerboard, shadow or text.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/standing-reference-light.png",
+            "sha256": "dbacbe26d815ca22962a22b71ae05809c9bf56096707e03658a71d072a2e3712"
+          }
+        ],
+        "reason": "Far foreleg obscured; four-paw repair selected instead."
+      },
+      {
+        "source": "ram-contact-four-paw-green.png",
+        "sha256": "8d4f4547a1405465c1a8a166b336d21bce81bab93e587ea3ad2d78c00514865a",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-90f4fac0-3cd3-4bab-bd7b-38568ca5f8d9.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Image 1 is the edit target: the original Mirehorn ram-contact group. Make ONLY this anatomical correction: reveal the missing FAR FRONT LEG, attached to the far shoulder behind the chest and jaw. Show a separate gray-olive forearm with the same woven reed cuff, elbow bent back, ending in a clawed paw planted on the ground just to the RIGHT of the existing large near forepaw, beneath the jaw. Four beast paws must be separately visible: the two existing rear paws at left and center, existing large near forepaw at bottom center-right, and this restored smaller far forepaw to its right. Do not add a fifth leg or change any existing leg. Keep exact body head two crescent horns skull mask closed mouth reeds lanterns, one handler with same two braced boots staff and chain, exact camera and dark painted texture. Keep head and horns leading forward beyond forepaw, no bite. Retain pure chroma green #00ff00 backdrop and all apertures; no text, ground, shadow or effects. Give the whole group slightly more empty right margin so every horn and paw fits without clipping. No other changes.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/ram-contact-matched-green.png",
+            "sha256": "f0fc3b3cc13c62554c22b49da2a746774d035a68ef985d5492dcd849513d4bc8"
+          }
+        ]
+      }
+    ],
+    "preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "packed_frames": 11,
+    "reused_pose_count": 8,
+    "new_selected_pose_count": 3,
+    "runtime_candidate": "art/animation/runtime/poses/unit_mireclaw_moonbite_mirehorn_breakers.png",
+    "runtime_sha256": "36186bf3dda5c5398825572151bad04e03984daab98b9fadba3445b9de950132",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/mirehorn-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted",
+    "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/mirehorn-continuity-20260915/art-desk-registered.html",
+    "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/mirehorn-continuity-20260915/art-desk-registered.png",
+    "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/mirehorn-continuity-20260915/packed-matched/poses-candidate-atlas-green.png"
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_embercourt_ash_oath_bailiffs.png",
+  "reference_sha256": "fe7e30b782f0034eff222a82c96d8c97be3a6d1a6bc49b1c5be54f1005dd43cb",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "d9416ec96ceae7096cee2077e28e93869a75c031356bb4a589a8f504becd91d9",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-85491c7c-fee8-42fc-a57c-035e887cb4d4.png",
+      "prompt": "Use case: stylized-concept. Image1 identity reference. Original Ash-Oath Bailiff battle sheet TWELVE full-body articulated poses FOUR columns THREE rows consistent scale fixed elevated three-quarter camera facing RIGHT generous gutters. Stern woman dark hair high bun red neckscarf layered ivory lamellar armor gray cloak red lining charcoal trousers steel greaves leather boots red oath tags. RIGHT hand long dark pole hooked steel spear, LEFT arm tall angular weathered white wooden shield steel braces round brass boss red chevron hanging chain/tag. Same hands throughout. Row1 idle spear up shield close; breathing head/shoulders shift; walk near leg forward far back; passing knees under hips heel lifted. Row2 opposite contact far leg forward near back no mirrored torso; windup spear drawn back point RIGHT shaft horizontal shield forward; thrust right arm across chest spear extends RIGHT left shield stays beside torso; defense crouch shield protects chest spear up. Row3 hit recoil shield lowered spear retained; knees buckle spear down; side fall torso raised own shield next to left forearm complete spear by right hand; dead horizontal side relaxed eyes CLOSED bun intact shield and entire spear rest beside her. Every figure keeps full spear head shaft butt all armor and shield, no extra arms, no rotated standing corpse. Original painterly raster pale gray background no text grid scenery effects shadows blood.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "7b286803d56a496633d092b8dbb380adea6c7aee8b1f56fd9c1a2fb6fc2fd131",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cce0453d-42f5-465c-8d72-cd0aaae24ab6.png",
+      "alpha_prompt": "Use case: background-extraction. Image1 edit target. Extract all twelve armored woman poses onto genuine transparent RGBA background. Preserve exact canvas size positions scale full long spear shafts heads butt ends shields cloth hair and all poses including closed-eye corpse. Remove only gray background and shadows, including gaps between legs shield and spear. No halos gray matte or painted checker, no restyling text scenery added objects."
+    }
+  ],
+  "review_notes": [
+    "Fourteen packed original frames: nine viable existing real-alpha idle/contact/windup/guard/hit/kneel/fall/dead poses plus three new walking poses and a generated brace/released-thrust pair.",
+    "Retain original far-contact and add raised foreground passing, targeted foreground landing and complementary rear-foot passing. Guide wording alone is not accepted gait; hip ownership beneath armor, body/gear/face continuity and actual event duration remain open.",
+    "Old contact omitted rear shaft and kept bent arm; excluded. New brace/release restores continuous shaft and straightened right arm. Initial generated pair made spear far longer than standing weapon; those original masters remain but are excluded. Two targeted length corrections preserve body, grip, head/tag and butt while restoring source-relative weapon size.",
+    "Approved explicit green color-distance preparation retains ivory and steel interior paint; real-alpha sheet reused without rekeying. Exact prompts/references, selections, source/tool/recipe/output hashes and packing retained; fine edge and spear-head/tag scale/grip acceptance still pending.",
+    "Initial crop included adjacent spear tips/boot. Explicit row bands isolate idle, windup and guard without repainting or weakening clipping checks. Corrected atlas visually inspected as production only.",
+    "No automated tests, imports, exports, paid API or gameplay/save/footprint edits. Full160 production, finalized-tool reproduction and consolidated connected-motion/edge/Linux/Windows acceptance remain open."
+  ],
+  "prior_review_notes": [
+    "Twelve poses retain tall shield and spear through kneel, side collapse and closed-eye corpse.",
+    "Walking repeats lead with no true passing/opposite contact; idle differentiation minimal.",
+    "Thrust right elbow remains bent rather than full extension; spear rear shaft/length, hanging tag continuity and shield/corpse scale need refinement.",
+    "Extraction fringes and motion continuity await in-context review. Source only, not packed/enabled.",
+    "No tests/exports; consolidated validation deferred until generation and integration finish."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "sources": [
+      {
+        "file": "walk-passing-a-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9dd4d924-719e-4fea-bb40-a82a7650841c.png",
+        "prompt": "Use case: sketch-to-render. ONE original Ash-Oath Bailiff walking passing-A sprite. FIRST image defines leg anatomy: NEAR blue leg planted under body, FAR orange knee bent with boot lifted behind planted shin. SECOND exact original woman identity: stern dark-haired high bun, red neck scarf, ivory lamellar coat/shoulders, gray cloak with red lining, black trousers, steel greaves over brown boots, small red oath tags. RIGHT hand at screen LEFT holds one long dark shaft hooked steel spear nearly vertical, head above and butt near ground. LEFT forearm at screen RIGHT holds tall angular weathered ivory wooden shield with steel braces, round brass boss, red chevron and hanging chain/tag. Preserve those exact hands, complete spear head/shaft/butt and shield shape. Same elevated three-quarter RIGHT-facing tactical view, upright stable torso, moderate walking step, two legs naturally part coat hem. Same realistic proportions and painterly original game style. No guide blue/orange markings, no mirror or gear swap, no extra equipment. Full body, tall spear and shield inside generous margins. Flat vivid GREEN #00ff00 backdrop only, neutral light no green spill/reflections on ivory armor; no shadows/floor/scenery/text/effects.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+          "art/units/source/curated/unit_embercourt_ash_oath_bailiffs.png"
+        ],
+        "selection": "Select raised rear-foot passing candidate.",
+        "sha256": "525c2fb08ddbd62bc8eaeb801f879daa0daa593ba10353b369fad0ae5f05fcdd"
+      },
+      {
+        "file": "walk-passing-b-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5e4622cb-d4a8-4fe8-9b2b-9b6b2b21fa43.png",
+        "prompt": "Use case: sketch-to-render. ONE original Ash-Oath Bailiff walking passing-B sprite. FIRST image authoritative leg pose: BLUE NEAR foreground thigh swings forward RIGHT across in front of FAR supporting thigh, near knee raised with shin bent and boot lifted; ORANGE FAR leg supports weight vertically with boot grounded. SECOND supplies exact original stern woman: high dark bun, red scarf, ivory lamellar armor, gray cloak red lining, dark trousers, steel greaves/brown boots and red oath tags. RIGHT hand at screen LEFT holds ONE long hooked-steel spear nearly vertical; LEFT arm at screen RIGHT carries tall angular ivory wooden shield, steel braces, round brass boss, hanging chain/red tag and red chevron. Keep full spear head/shaft/butt and shield, never swap or mirror equipment. Elevated three-quarter RIGHT-facing tactical view, stable torso, moderate normal walking not running/high kick. Split lamellar skirt to show raised near thigh crossing IN FRONT of planted far thigh; two attached legs and correct joints. Same adult anatomy and detailed original painterly game art, no guide colors/lines. Full body/equipment generously framed. Flat vivid GREEN #00ff00 backing only, neutral light no green spill/reflections; no floor/shadows/scenery/text/effects.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+          "art/units/source/curated/unit_embercourt_ash_oath_bailiffs.png"
+        ],
+        "selection": "Select raised foreground-knee passing candidate.",
+        "sha256": "9a0315a20b89803c1d7ae773d607ea5ecb8f45984ca01092e5bcd045824ad940"
+      },
+      {
+        "file": "walk-near-landing-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4785cad7-e16e-4477-9d22-04bd81787f37.png",
+        "prompt": "Use case: precise-object-edit. Create the NEXT grounded landing frame from this exact Ash-Oath Bailiff raised-knee sprite. Preserve head/face, torso, both hands, spear, tall shield, tags, colors, camera and body size. Change only legs and responding skirt. The raised FOREGROUND thigh must remain IN FRONT OF the far thigh and now lower diagonally forward RIGHT: knee moves slightly down to x640,y1030, shin extends down-right to boot with heel on ground x820,y1360, toes facing RIGHT. Far supporting leg angles BACK LEFT with its boot at x440,y1330. Two correctly connected legs, same steel greaves/boots, near thigh crosses visibly over far thigh below the split lamellar skirt. Natural moderate walking contact not a kick or mirrored standing pose. Spear/shield completely unchanged and full within canvas; ample green margin around boots. Same original detailed painterly raster. Flat vivid green backing, no green spill, shadows, floor, text or effects.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/walk-passing-b-green.png"
+        ],
+        "selection": "Select targeted foreground landing; full motion acceptance pending.",
+        "sha256": "11e02101e0ca0bb1b917853ae667e1f0dd8aaafc703220d3c0f6bb453df418ef"
+      },
+      {
+        "file": "attack-brace-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-93a0f53d-79c7-441a-b9bb-b3abbb20be9a.png",
+        "prompt": "Use case: precise-object-edit. Produce ONE full-body original Ash-Oath Bailiff THRUST CONTACT sprite, not a sheet. FIRST image is pose reference: middle row THIRD woman lunging with horizontal spear. SECOND image is exact costume/equipment identity. Correct contact so anatomical RIGHT weapon arm STRAIGHTENS elbow, fist reaches forward RIGHT beyond tall shield. Spear remains ONE continuous long dark brown shaft, gripped near its middle: substantial REAR SHAFT projects LEFT from fist, runs below forearm past elbow and ends in brass butt behind shoulder; full hooked steel point with red hanging tag at right. Spear total length stays about 1.2 standing body heights, no missing rear half, duplicate pole or dagger. LEFT arm retains tall ivory wooden shield beside torso at screen right, correct steel braces/brass boss/chain red tag. Right upper arm connects to original shoulder at screen left and crosses chest IN FRONT of shield during thrust. Front knee bends, rear leg drives back, same original high-bun woman ivory lamellar armor/red scarf/gray cloak red lining/dark trousers/steel greaves. Fixed three-quarter RIGHT-facing tactical camera. Detailed original painterly raster, same body/gear scale; one complete figure in wide roomy canvas with entire spear butt/head and boots in margins. Flat vivid GREEN #00ff00 backing only; no green spill/reflections, opponent, effects, ground, shadows, text or other poses.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+          "art/units/source/curated/unit_embercourt_ash_oath_bailiffs.png"
+        ],
+        "selection": "Reject overlong braced spear relative to standing weapon; retained original source only.",
+        "sha256": "268c89ff3786d4a15c7c8dbafdd5a809e76fb0d6df345a40c6625bd91580e905"
+      },
+      {
+        "file": "attack-release-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b2e42c67-43e7-4246-9e83-5a667f3317f7.png",
+        "prompt": "Use case: precise-object-edit. This original Ash-Oath Bailiff is a BRACED spear pose. Create the released THRUST frame. Keep exact body/legs/face/armor/shield/camera. Straighten her RIGHT elbow and extend the weapon fist about250 pixels toward RIGHT, beyond the shield's right edge, not beside her chin. Shoulder remains attached at original socket; upper arm, elbow, forearm form one nearly straight connected arm crossing before shield. LEFT arm keeps shield beside chest unchanged. Translate entire rigid spear forward together with fist by that SAME distance. Preserve spear total length, exact grip point, substantial rear shaft behind elbow, original hooked head/red tag/brass butt. Do not lengthen rear shaft or change proportion. WIDEN framing to about1850x1024 as needed so complete forward point remains inside margin; no clipped spear, no shrinking spear alone. Torso leans slightly into lunge, same legs and gear. Exactly two arms, one shield, one full spear. Original painterly raster matching input, same vivid GREEN background, no green spill/reflections, no opponent, motion lines, effects, floor, shadows or text.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/attack-brace-green.png"
+        ],
+        "selection": "Reject overlong released spear relative to standing weapon; retained original source only.",
+        "sha256": "260339f44d67f7a592ef369942af2a5167bfb5b775275fc8eec2d7cc79516dce"
+      },
+      {
+        "file": "attack-brace-length-corrected-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f19fe6fb-516d-42a7-a349-7d84cae31fdf.png",
+        "prompt": "Use case: precise-object-edit. Correct ONLY the spear LENGTH in this exact original Ash-Oath Bailiff braced sprite. Preserve entire woman, hands/fist x650, shield, body/legs, pose, camera, canvas and scale. The spear is too long. Move brass rear butt from x80 to x325 at y267, removing only surplus shaft left of new butt. Move the COMPLETE hooked steel head with its red tag as one rigid assembly LEFT about220 pixels so final sharp tip is at x1255,y270 and head socket at x980. Shorten only intervening plain wooden shaft, do not shrink spearhead/tag or move hand. Final continuous weapon spans x325 to1255, with325px rear shaft behind fist and605px forward shaft; restore body-relative original weapon length. Fill vacated areas with identical green backing. No extra butt, broken shaft, duplicate head, body changes, clipping, shadows, effects or text. Exact same painterly raster and green background, neutral light no spill.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/attack-brace-green.png"
+        ],
+        "selection": "Select weapon-length-corrected original pose; full shaft, head/tag, fixed grip and body retained. Final motion/scale acceptance pending.",
+        "sha256": "758444b28bdc21ff3f208da400d8884fcad80d3a89a3066092481a54882d6068"
+      },
+      {
+        "file": "attack-release-length-corrected-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ea8aaeff-1fcb-4fff-90be-6d2c0a2d8aad.png",
+        "prompt": "Use case: precise-object-edit. Correct ONLY spear LENGTH in this exact 1686x933 original Ash-Oath Bailiff released-thrust sprite. Preserve woman, extended arm/fist x795, shield, all body/legs/face/armor, camera, scale and canvas. Current weapon is overlong. Move brass rear butt from x365 to x470 on y235, removing only excess plain shaft behind it. Move COMPLETE hooked head with its hanging red tag LEFT about250px so final sharp tip is x1400,y235 and socket x1100. Keep head/tag original size and orientation, keep fist unmoved and shaft straight/continuous. Final weapon extends x470..1400, with325px rear section behind fist and605px ahead, matching braced weapon's length and grip. Preserve original extended elbow and lunge, do not bend arm again. Fill vacated shaft/head areas with identical flat green; no duplicate point/tag/butt. Same painted sprite, no green spill, text, shadow, effects, resizing or other edits.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/attack-release-green.png"
+        ],
+        "selection": "Select weapon-length-corrected original pose; full shaft, head/tag, fixed grip and body retained. Final motion/scale acceptance pending.",
+        "sha256": "dabb130921b35e8b6d5a28e7a65d1fb7887a8415993d75812f288cba2518d0a8"
+      }
+    ],
+    "generation": "continuity-generation.json",
+    "reused_source": {
+      "source": "alpha/poses.png",
+      "sha256": "7b286803d56a496633d092b8dbb380adea6c7aee8b1f56fd9c1a2fb6fc2fd131",
+      "selection": "Original idle pair, row1 third contact, middle windup/guard, bottom hit/kneel/fall/dead. Exclude two repeated source walking cells and shortened-shaft contact."
+    },
+    "preparation": "continuity-cutouts.json; five selected green color_distance sources, radius75, edge_radius2, all_keyed_is_background true; exact processing proofs.",
+    "packing": "packing.json",
+    "packed_frames": 14,
+    "runtime_candidate": "art/animation/runtime/poses/unit_embercourt_ash_oath_bailiffs.png",
+    "runtime_sha256": "84bf3914159097c4712bce70301689978bfe292fd788a2e0618eeeb1061a7e67",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted"
+  }
+}

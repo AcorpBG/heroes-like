@@ -1,0 +1,103 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_mireclaw_drowned_antler_sovereign.png",
+  "reference_sha256": "0e0fbb099326b16e32b3b79945e5af5f34a69819e7a1fe1c4156649e1ded97a2",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign/poses.png",
+      "source_sha256": "c3b0413ece8c112ccf0a7cb4e6cf8e5d7249e0db6b213279cea06b4988e3813c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d1b7d5c6-b621-4357-bb4d-a03af3d77ca8.png",
+      "prompt": "Use case: stylized-concept. Asset type: original fantasy battle animation pose sheet. Reference establishes Drowned Antler Sovereign: massive FOUR-legged marsh stag, bark-and-moss armored hide, huge branched paired antler crown with dangling bone charms and purple reed strands, long shaggy leaf tail, cloven hooves with thick rootlike forelegs, narrow stag muzzle and dark green mane. Paint exactly twelve whole-body articulated poses in FOUR columns THREE rows evenly spaced grid, generous gutters, transparent RGBA empty background. Constant size and fixed three-quarter side view facing screen right, complete huge antlers and tail inside every cell. Reading order: 1 standing relaxed idle; 2 inhaling chest raised head slightly lifts charms sway; 3 walk near foreleg forward far foreleg back; 4 passing walk near foreleg planted far foreleg flexed beneath chest; 5 opposite contact FAR foreleg forward NEAR foreleg back; 6 antler attack windup crouched hindquarters neck draws back; 7 antler charge lowered head crown thrust forward with extending hindlegs; 8 defense planted hooves lowered protective antler crown; 9 hit recoil neck pulled aside; 10 death foreknees buckle chest lowers nearly to ground; 11 collapse onto side rear legs fold antlers tilt; 12 dead fully side-lying head resting eyes closed antlers and tail still attached. Keep exact four legs, two branched antlers, original dangling ornaments and foliage armor throughout; no changing into humanoid or ordinary deer. Real anatomical animation not translated duplicates. No text, no scenery, no shadows, no additional creatures, no gore. Detailed original painted game art matching reference. Actual transparent background."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-15c8e7d5-265f-41d9-b458-e0ebca874f49.png",
+      "prompt": "Use case: background-extraction. Edit target is supplied twelve-pose Drowned Antler Sovereign sheet. Remove only checkerboard into genuinely transparent RGBA background including all gaps within antlers and dangling charms and between legs. Preserve twelve painted creatures exactly, same positions, scale, olive bark and moss, purple hanging reeds, closed-eye corpse and original opaque interiors. No background fill, checkerboard pixels, halos, shadows or redraw. Output full unchanged composition with true transparency.",
+      "reason": "Extraction introduced visible brown backdrop and changed surface rendering; not accepted or copied as runtime alpha."
+    }
+  ],
+  "review_notes": [
+    "11 packed candidate frames: nine retained original paintings and two new opposite-diagonal hoof lifts. Original repeated movement leads are excluded; the planted pose separates the two controlled lifts. Short-step candidate, not accepted translated gait.",
+    "Original RGB checkerboard uses owner-approved connected neutral190/tolerance16/edge2 with explicitly inspected background seeds in antler, chain, pendant and leg apertures. Ivory ornaments and olive hide are not globally neutral-keyed.",
+    "The original side corpse has a closed dark eye and remains selected with the original kneel and side-fall. No unnecessary new death art. Crop bands exclude neighboring horn, tail and pendant fragments without reshaping owned art.",
+    "New green masters use explicit distance75/edge2 preparation. The fixed standing reference contains a tiny neighboring tail fragment, explicitly excluded by the generation prompts; generated poses have no such fragment.",
+    "Antler shape and ornaments/runes, head/body/tail proportion, hoof depth/support, ground anchors, edge flecks and actual action/death timing remain for full-roster refinement. Actual-alpha atlas and registered art desk are production inspection, not final acceptance. No tests/imports/exports or gameplay/save/footprint changes."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses visually inspected. Lowered crown charge, defense, recoil, kneeling collapse and side-lying corpse present.",
+    "Contact frames repeat leading foreleg. Passing pose raises rear leg; alternating four-leg gait needs refinement.",
+    "Antler crown shape/size, ornament attachments and tail length need continuity review. Wide forms cross nominal cell boundaries: explicit crops required.",
+    "Clean alpha extraction and in-context full-motion acceptance remain pending. Not packed or enabled.",
+    "No automated tests or exports run. Runtime candidates 29; final acceptance 0/160 unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "reference_crops": [
+      {
+        "path": "art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign/standing-reference-light.png",
+        "sha256": "8c22bf3288fff7bfa67d15a7f2ead6a9780b4c9e23be014f6f31c605bc34ab66",
+        "source": "continuity-alpha/original.png",
+        "source_sha256": "6d473c24388ebf00e4cfdb3d29b1dc4e262873119c71654e394d7c6b27156053",
+        "original_source": "poses.png",
+        "original_source_sha256": "c3b0413ece8c112ccf0a7cb4e6cf8e5d7249e0db6b213279cea06b4988e3813c",
+        "rect": [
+          0,
+          17,
+          451,
+          336
+        ],
+        "method": "Approved prepared original alpha composited on light backing and nearest4x; source coordinates preserved."
+      }
+    ],
+    "sources": [
+      {
+        "source": "step-diagonal-a-green.png",
+        "sha256": "8760c198c6b70fd553ab12520652b0a4fbbb34f240bb44d8e6a56b18d30ba177",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8e313fec-68e2-4198-b73e-7649f0b2940d.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Edit only the leg articulation of ONE Drowned Antler Sovereign from the reference: four-legged moss/bark stag-beast, long narrow deer muzzle and mane, olive/charcoal scales and leaf hide, very long trailing leafy tail, immense wide palmate antlers with bronze/ivory edges and hanging black chains, ivory carved plaques and purple strands, rib/bone chest necklace. Fixed original elevated three-quarter facing screen RIGHT, same body/head/crown/tail proportions and original softly pixel-textured painted style. Preserve complete FOUR anatomical legs with cloven hooves. Preserve every antler branch, hanging ornament and attached moss silhouette; no redesign or new gear. Lift NEAR FOREHOOF (large hoof at bottom center-right in reference) by bending elbow and drawing it back under chest; simultaneously lift the FAR HINDHOOF (small hoof under belly immediately to its left) with knee bent forward. Keep NEAR HINDHOOF (far screen-left planted hoof) and FAR FOREHOOF (rightmost hoof) planted with their original limb connections. Two lifted, two planted, four complete hooves, torso height unchanged. Keep exact neutral head/crown orientation, do not rear or leap. Single whole figure, generous margins above entire crown and around complete tail/hooves. The tiny unrelated sliver at lower far-right edge of the reference belongs to a neighboring sprite: OMIT it. Flat pure green RGB0,255,0 removable backing throughout negative spaces, no green lighting/spill, floor, shadow, text, grid or scenery.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign/standing-reference-light.png",
+            "sha256": "8c22bf3288fff7bfa67d15a7f2ead6a9780b4c9e23be014f6f31c605bc34ab66"
+          }
+        ]
+      },
+      {
+        "source": "step-diagonal-b-green.png",
+        "sha256": "a9462a76bd03d516b7258c252fa6765d45631faaf4060f34b9b4cabcdd3624c9",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-175fe437-476f-4220-9224-fd2103dcf60e.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Edit only the leg articulation of ONE Drowned Antler Sovereign from the reference: four-legged moss/bark stag-beast, long narrow deer muzzle and mane, olive/charcoal scales and leaf hide, very long trailing leafy tail, immense wide palmate antlers with bronze/ivory edges and hanging black chains, ivory carved plaques and purple strands, rib/bone chest necklace. Fixed original elevated three-quarter facing screen RIGHT, same body/head/crown/tail proportions and original softly pixel-textured painted style. Preserve complete FOUR anatomical legs with cloven hooves. Preserve every antler branch, hanging ornament and attached moss silhouette; no redesign or new gear. Lift NEAR HINDHOOF (far screen-left planted hoof in reference) by bending its knee and tucking hoof forward under rump; simultaneously lift FAR FOREHOOF (rightmost hoof) by bending elbow back, hoof hanging just under chest. Keep LARGE NEAR FOREHOOF (bottom center-right) and SMALL FAR HINDHOOF (under belly just left of it) planted with original limb connections. Two lifted, two planted, four complete hooves, torso height unchanged. Keep exact neutral head/crown orientation, do not rear or leap. Single whole figure, generous margins above entire crown and around complete tail/hooves. The tiny unrelated sliver at lower far-right edge of the reference belongs to a neighboring sprite: OMIT it. Flat pure green RGB0,255,0 removable backing throughout negative spaces, no green lighting/spill, floor, shadow, text, grid or scenery.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign/standing-reference-light.png",
+            "sha256": "8c22bf3288fff7bfa67d15a7f2ead6a9780b4c9e23be014f6f31c605bc34ab66"
+          }
+        ]
+      }
+    ],
+    "preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "packed_frames": 11,
+    "reused_pose_count": 9,
+    "new_selected_pose_count": 2,
+    "runtime_candidate": "art/animation/runtime/poses/unit_mireclaw_drowned_antler_sovereign.png",
+    "runtime_sha256": "387f17793d2e84314edf5c99746c22b9fcffd20f3e10d7529a8802d0b3e1e1b7",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/antler-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted",
+    "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/antler-continuity-20260915/art-desk-registered.html",
+    "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/antler-continuity-20260915/art-desk-registered.png",
+    "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/antler-continuity-20260915/packed-final/poses-candidate-atlas-green.png"
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_saltwake_eulogists",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_saltwake_eulogists.png",
+  "reference_sha256": "0b9b571182de7753f09fd97c1ca0853fa32fd36eca3b3776b65143ceed2b20c6",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/poses.png",
+      "source_sha256": "4790e00a57e56237d33988e406bb80dfb92b9f64cdc05f4baca33927b6d9ec2a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e2ca08b5-a712-4f33-9caa-1aa20c4f87e9.png",
+      "prompt": "Use case: stylized-concept. Generate original game animation sprite sheet for Saltwake Eulogist, preserving identity in attached original reference. Exactly 16 full body cutouts in regular 4x4 grid, all same scale/fixed 3/4 camera facing RIGHT, generous gutters. Actual transparent RGBA alpha background, no drawn checkerboard/environment/text. Ivory full-face narrow eye mask, small branching crown, navy and ivory embroidered layered long robes, trailing torn cyan veil ribbons, belt scrolls and silver ornaments, TWO boots. Anatomical RIGHT hand always holds ONE tall staff with exactly THREE tall blue glass lantern panels at its head (center higher than sides). LEFT hand free casts pale cyan spirit scroll. Keep these sides and staff length constant every pose. Row1: idle staff planted left hand lowered; breathing idle shoulders lifted left palm lifts and veil changes; walking left foot forward right back beneath parted robe; walking right foot forward left back with visibly opposite footwork, do NOT mirror whole character or swap staff hand. Row2: passing step with one bent lifted boot; melee windup RIGHT hand draws staff back angled top behind; melee staff butt thrust RIGHT arm extends toward right, lantern head remains behind body LEFT hand steadies lower shaft; defense knees bend staff held diagonally LEFT forearm raised. Row3: hit recoil backward staff retained; cast anticipation LEFT hand draws cyan scroll close at chest; cast release LEFT hand extended right palm open spirit scroll curls outward; cast recovery LEFT wrist lowers wisps fade. Row4: death knees buckle staff still supported; collapse sideways staff slipping from RIGHT hand; prone dead on side staff beside body lanterns fading; persistent dead same pose settled ribbons unlit THREE lantern panels and no magical scroll/eye glow. True articulated shoulder/elbow/knee/cloth poses not shifted copies. Preserve count and shape of three panels, mask, crown, staff, belt scrolls; no extra limbs or floating unsupported equipment. Painterly original fantasy art matching reference, crisp alpha edges and readable small-scale silhouette."
+    }
+  ],
+  "review_notes": [
+    "18 frames cover two idles, four travel poses, full-staff head-leading attack/recovery, guards, left-palm casting, hit and equipped head-right collapse/corpse.",
+    "Original neutral extraction damaged pale cloth/hands, and generative extraction restyled/relit the corpse. New complete poses use green-backed derivatives and approved bounded color-distance edge cleanup. All rejected sources and derivatives retained.",
+    "Guide-based contact still repeats the leading leg; it is an unaccepted contact bridge, not a finished alternating gait. Staff crown at outer source edge and residual edge/lighting consistency require full-roster review.",
+    "Banded source crops remove adjacent pose fragments without erasing legitimate tips. Explicit neutral aperture seeds or source-specific chroma preparation preserve original interior paint.",
+    "Body/gear scale and palette, support/travel, grip continuity, death settling and connected event timing remain full-roster refinement. Offline static previews are not gameplay or final animation acceptance."
+  ],
+  "prior_review_notes": [
+    "Sixteen poses include casting, staff attack, collapse and unlit final corpse lanterns.",
+    "Staff contact strikes with lantern head rather than butt; grips/shaft orientation must connect continuously to wind-up. Long attack requires explicit safe crop.",
+    "Walking repeats forward-foot pattern and robe hides anatomical side; correct opposite contact/passing sequence needed.",
+    "Staff length/head scale and three-panel consistency, belt scrolls, mask/crown and trailing ribbons need refinement.",
+    "Death collapse still holds staff high before prone; add convincing intermediate release. Final corpse mask/eye state needs review.",
+    "Checker pattern visible; transparency/compositing unresolved. Source-only, not packed or enabled."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 0,
+    "new_or_corrected_selected_paintings": 18,
+    "generated_outputs": 7,
+    "generation": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_saltwake_eulogists.png",
+    "runtime_sha256": "70532b3eb55bf5af1dd1cf427d01324069a17a98bde34aaa716fa8ce5317ebf9",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png": "3c9e7344ae594760efbb2aa3d8fedcee93d6f4436c0dabd0323e693e18971ad5",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards-green.png": "95a663e67c2362a4613ad57eb32b2ab24dca58452887d4a499512b4a7e882fd9",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png": "e081a3aefd9181d4a2fb526a90d08fcb0c44b582f86d74d8d2c50986dbe3dfcf"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes; offline visual production evidence is not final playback acceptance.",
+    "cleanup": {
+      "policy": "Removed only SHA-256-identical task preview copies after no-live-handle checks. Retained identical recovery copies, unique evidence, originals/rejected masters, all used references, processing proofs, caches and unrelated files.",
+      "duplicates_removed": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/narrow/poses-narrow-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v3/poses-narrow-light.png",
+          "sha256": "bfecbf21c1b7f43ec954b63ce72f38ddf2b4cb835eb87a26f31055c649738ff7",
+          "bytes": 1771936
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/narrow/poses-narrow-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v3/poses-narrow-green.png",
+          "sha256": "c524b99e0c04a14f9a3587bc58711ecb86d547ba1f9f9aeda5aab867c9e46e27",
+          "bytes": 1774558
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v1/guided-walk-and-guards-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v3/guided-walk-and-guards-green.png",
+          "sha256": "462dc65acde0dca0b517fcd2c2fb84945481962baa486a6189aca3da223c2e7e",
+          "bytes": 1620113
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v1/idle-and-equipped-cold-collapse-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v3/idle-and-equipped-cold-collapse-light.png",
+          "sha256": "1d303d025c7c6ab06fddcce27cb9a9aa21aff8704fe10f38fb17f4569953380d",
+          "bytes": 1283892
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v1/equipped-attacks-and-casting-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v3/equipped-attacks-and-casting-green.png",
+          "sha256": "e40990c51390feff0552afb91e59b7e6ddb15c4378234f72040f9ec27bc727e6",
+          "bytes": 1463879
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v1/idle-and-equipped-cold-collapse-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v3/idle-and-equipped-cold-collapse-green.png",
+          "sha256": "417a4c374b895ced798753ec417649ddca0ea774e54630132864b04fc39ac8e9",
+          "bytes": 1275328
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v1/equipped-attacks-and-casting-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v3/equipped-attacks-and-casting-light.png",
+          "sha256": "8362c973146203b1a35a6e73aa9ac269592f9a20c32c6de016c2f1d8839e4f46",
+          "bytes": 1475228
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v1/guided-walk-and-guards-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v3/guided-walk-and-guards-light.png",
+          "sha256": "a8844ddf869dd00a81bcd53a69e66b9ca72ee28fe34606a5989badc7fd64b972",
+          "bytes": 1631005
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared/poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v3/poses-green.png",
+          "sha256": "2fd63347e3b8140584172284065ad084018d37133b40a80e54c398c474dc5430",
+          "bytes": 1610270
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared/poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/prepared-v3/poses-light.png",
+          "sha256": "c1fa99a5820b5eedd687fab9b8f6ee7f509a97de96a4f930ebc8b6e5758167aa",
+          "bytes": 1621621
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/original/poses-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/eulogist-continuity-20260916/original/poses-poses-light.png",
+          "sha256": "9f7d430db07ee828480e6b4c33eff768aa304d07c1da7445bfa3965bead32093",
+          "bytes": 3046577
+        }
+      ],
+      "removed_bytes": 18574407
+    }
+  }
+}

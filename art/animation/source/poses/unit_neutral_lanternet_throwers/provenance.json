@@ -1,0 +1,50 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_lanternet_throwers.png",
+  "reference_sha256": "63409f8f2bf17a119b09c6e2523ebb4f6866270d0917a12667b75690cd04d83f",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "f432cfd65714b775c694a7ef510d9903dfb9edc2eec78539270e71196f17a572",
+      "source_output": "exec-7bb344e5-181d-4fbd-96dc-d436754ba840.png",
+      "prompt": "Use case: stylized-concept. Original Lanternet Thrower battle animation sheet based on attached identity: athletic adult woman with dark brown hair braided under green headband, moss-green scarf and ragged green split tabard, worn brown leather cuirass/bracers/knee guards and wrapped boots, rope coils and small brass amber lanterns at belt. Weapon is folded rope fishing net with small brass lantern weights. Exactly sixteen full-body articulated poses FOUR columns FOUR rows, consistent face/body size and elevated three-quarter tactical view facing RIGHT. Generous gutters complete net/limbs inside own cell. Row1 idle holding folded net low both hands; alert breathing with small scarf/shoulder change; walk near leg forward; opposite walk near leg back crossing in front of far leg stepping forward, no torso mirroring. Row2 passing step knee lifted beneath hip; melee windup right fist wrapped with bundled net drawn back; close forward right punch with bundled net fist, left hand holds spare rope; defense low crouch forearms shelter head and bundled net across chest. Row3 ranged gather spread folded net between hands before waist; windup torso coils left net gathered behind right shoulder, both hands holding ropes; RELEASE both arms extend RIGHT palms open as net has left frame, no floating net/projectile in sprite; follow-through torso forward hands low reaching belt for next net. Row4 hit recoil head/shoulders back; dying knees buckle and net slips down; side fall body low net beside; final DEAD woman prone on SIDE eyes closed torso/head horizontal lanterns dark and folded net beside. No blood. No rotated standing corpse, real elbow/hip/knee articulation. Original gritty painterly raster, no magical effects, no scenery/shadows/checkerboard/text/borders. Plain pale gray backdrop.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "81195809a937dc10d08efc33ff17d9f522c2d624d489874623cd7733bcc60c42",
+      "alpha_output": "exec-8479a49b-45eb-42f5-9131-8e71c05b6c3e.png",
+      "alpha_prompt": "Use case: background-extraction. Remove gray backdrop and ground shadows from this sixteen-pose original Lanternet Thrower sheet onto genuine transparent RGBA. Preserve exact poses, body scale/layout, all rope loops and net holes, lantern weights, fingers, hair and corpse with dark lanterns. Transparent gaps between every cord and limb. No checkerboard, matte, glow, blur, effects, text, new elements or altered anatomy."
+    }
+  ],
+  "review_notes": [
+    "20 packed frames retain 14 original RGBA paintings and select six new paintings: supported travel, single-net melee windup/recovery and ranged belt-supply reach. Original repeated contact and duplicated-net windup are excluded; original head-left fall and cold-lantern corpse remain selected.",
+    "Approved bounded blue-key/edge preparation protects green cloth and clears rope apertures. Banded source crops preserve full boots/net lanterns while excluding neighboring cape/hair and faint alpha below the intact body. Separate melee and five-frame ranged clips are registered.",
+    "New ranged recovery starts gathering fresh belt supplies rather than keeping both hands empty. Net/lantern counts and hand continuity, repeated lead/support geometry, body scale, ground settling and connected timing remain unaccepted. Static previews are production evidence only."
+  ],
+  "prior_review_notes": [
+    "Sixteen poses and extraction visually inspected: net gathering, windup, empty-handed release/recovery separate from bundled-net melee/guard; own corpse has dark lanterns. Gait contact alternation, hand/net continuity and final in-context motion/compositing still need review/refinement. Source only, not packed or enabled. Automated tests/exports deferred until generation finishes per owner."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 14,
+    "new_or_corrected_selected_paintings": 6,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_lanternet_throwers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_lanternet_throwers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_lanternet_throwers.png",
+    "runtime_sha256": "ab3cb1e8eceb9bd58b88bad6fccc6aa10c8778e0d0267767c65f8d7fce443b02",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png": "81195809a937dc10d08efc33ff17d9f522c2d624d489874623cd7733bcc60c42",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-alpha/supported-travel-single-net-and-recovery.png": "cc648d996dcb895b6e6c0796237adb4457ba931265be388b28bdfa92fc368776"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/lanternet-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

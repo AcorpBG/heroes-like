@@ -1,0 +1,102 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_mireclaw_sporewake_chanters",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_mireclaw_sporewake_chanters.png",
+  "reference_sha256": "7ffe7aa6b4aee625433eecc930a7761f3346a1e657f006f4e1b073c8d268a55f",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/poses.png",
+      "source_sha256": "8621b20f1dbd8a0c3cd1f184fc05ac2203c4f7e4ff5dc2d2ee0ca844e95f2efe",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9ea9ad61-fdf7-4450-b148-9359d3997459.png",
+      "prompt": "Use case: stylized-concept. Asset type: original fantasy strategy battle animation pose sheet. Reference image establishes Sporewake Chanter identity: masked marsh ritualist, moss leaf shoulder mantle, purple embroidered tattered robes, reed charms, dark boots, RIGHT hand antler-topped wooden staff, LEFT hand suspended metal censer on three chains. Paint this exact character at consistent scale, three-quarter side view facing screen right, isolated on transparent RGBA background. Sixteen separate full-body poses in a strict evenly spaced four columns by four rows grid with generous gutters, no labels, no scenery or ground shadows. Reading order: 1 relaxed idle; 2 clearly inhaling idle shoulders raised censer sways; 3 walk right foot forward left behind; 4 passing step legs together right weight-bearing left knee raised; 5 opposite contact LEFT foot forward right behind, shoulders still facing right; 6 melee windup two-handed staff raised back with censer safely looped at left wrist; 7 same staff sweeping forward with both hands and bent knees; 8 casting windup LEFT arm draws censer back RIGHT keeps staff grounded; 9 casting release LEFT arm extends censer forward away from body; 10 recovery censer lowers; 11 defensive brace staff diagonal protecting torso; 12 struck recoil bent spine; 13 knees buckle dying; 14 fallen onto side mid collapse; 15 motionless dead body on side eyes shut staff and censer lying beside body; 16 prone final corpse eyes shut. Anatomically articulated poses not translated duplicates. Keep both physical hands attached, constant staff length/antler shape, three censer chains and all equipment throughout; distinct alternating gait, unchanged costume and body size, opaque character pixels and genuinely empty transparent background. No new characters, text, sparkles, glow clouds, border, gore or copyright references.",
+      "alpha_source": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/alpha/poses.png",
+      "alpha_sha256": "50f78f5c2fb44a599862f18ddeb774584faba33c94580df455e544160806bfac",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6da4c6b7-5f22-4278-9d09-2ed3cf86e0d2.png",
+      "alpha_prompt": "Use case: background-extraction. Edit target: the supplied sixteen-pose Sporewake Chanter sprite sheet. Remove only the checkerboard background to actual transparent RGBA alpha, including all gaps between chains, antlers, hands, staff and clothing. Preserve all sixteen painted poses exactly in their current positions and proportions, all equipment, colors and opaque character interiors. No checkerboard pixels, no matte, no shadows, no outlines or replacement scenery. Do not redraw, resize, merge or move characters. Output the same full sheet with genuine transparency."
+    }
+  ],
+  "review_notes": [
+    "14 packed candidate frames comprise 12 retained original paintings and 2 selected new paintings from 2 built-in masters.",
+    "Original poses.png and prior alpha/poses.png are both RGB checkerboard; prior extraction is unselected, not transparency. Approved connected neutral extraction plus51 explicit enclosed-gap seeds prepares original without redrawing pale-green skin, ivory antlers or gold charms.",
+    "Two independent fixed-reference foot lifts retain same staff/censer hands and create alternate planted support. Existing original melee/casting/guard/hit/death poses reused; repeated original contact/gait and spare prone corpse excluded.",
+    "Short-step movement candidate, not accepted translated gait. Full staff/antler scale, grips, chain attachment/count, pendants, robe/face continuity, edges and action/death timing remain for whole-roster refinement.",
+    "Original checkerboard receives connected neutral185/tolerance16/edge2 preparation with51 inspected enclosed-gap seeds, not global white erasure. New steps use green distance75/edge2. Banded casting/idle/dead crops exclude neighboring antler/boot fragments while preserving full owned staff/censer.",
+    "Final actual-alpha atlas and registered offline art-desk PNG visually inspected as production material. Static capture is not timed gameplay acceptance. All source/rejected masters, exact prompts/references and deterministic processing/packing proofs retained. No tests/imports/exports, paid API, gameplay/save/footprint changes. Full160 goal remains active; acceptance0/160."
+  ],
+  "prior_review_notes": [
+    "Sixteen poses visually inspected. Source-only; not packed or enabled. No tests or exports run.",
+    "Walk contacts repeat lead; raised-knee pose does not yet establish reliable alternating gait.",
+    "Staff sweep, casting release, brace and fallen bodies present. Staff length, hand grips, censer chain attachments/count and scale require refinement.",
+    "Extraction changes edges/colors slightly; transparency and in-context compositing acceptance remain pending consolidated review.",
+    "Twenty-nine runtime candidates and zero of 160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "reference_crops": [
+      {
+        "path": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/standing-reference-light.png",
+        "sha256": "8a0bda0d694cb19e357cd75c3f4d754375f4f098eff211b40654bb8e54401767",
+        "source": "continuity-alpha/poses-original.png",
+        "source_sha256": "98de58148e0e4671e626fb5d9b9d8ce571b468d825bcb98c2808220b0dbfc61b",
+        "rect": [
+          25,
+          0,
+          286,
+          325
+        ],
+        "method": "Unchanged original/approved-prepared source pixels composited on light and nearest4x; reference only."
+      }
+    ],
+    "sources": [
+      {
+        "source": "step-left-green.png",
+        "sha256": "68fe2f4f28ad0b71ad247953905fe0acdd13f2cff0dcb90c41e9abb2626bdbc7",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c043e3c8-c644-4d28-9ac1-b22f2954ffa9.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Image1 exact original character EDIT TARGET. Create ONE short advancing step with the SCREEN-LEFT boot lifted, retaining the other boot planted. Change only lower body joints, weight shift and slight robe follow-through. The leg originally ending in screen-LEFT boot is the lifted leg: bend that knee forward toward screen right, lift its whole boot a modest one boot-height above ground, with an anatomically connected thigh from SAME hip. SCREEN-RIGHT boot remains planted in original place; body weight shifts over it slightly. Do NOT swap hip ownership, mirror torso, exchange boots or raise both feet. This is a measured walking step carrying equipment, not a jump or running split. Keep the whole character, feet and full antler-topped staff and complete hanging censer inside broad margins. Preserve masked pale-green face, dark dreadlocks/topknot, moss leaf mantle, purple embroidered tattered robes, bone/reed charms and dark tied boots. RIGHT hand screen LEFT holds full antler staff vertically. LEFT hand screen RIGHT holds ring of three censer chains and hanging brass bowl with three pendants. Staff lifts subtly off ground alongside raised foot without shortening shaft; same full antler branching and charms. Censer held LOW as reference, not swung or raised. Both hands stay on original equipment. Same elevated three-quarter camera facing RIGHT, same painted style, lighting, colors, anatomy and body scale. No new costume details or weapon. Flat pure RGB0,255,0 green background including empty gaps, no spill on dark olive material. No floor, shadow, letters, effects, scenery or other figures.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/standing-reference-light.png",
+            "sha256": "8a0bda0d694cb19e357cd75c3f4d754375f4f098eff211b40654bb8e54401767"
+          }
+        ]
+      },
+      {
+        "source": "step-right-green.png",
+        "sha256": "47853ee927cd28a4ce43ff287e4bf8ce46af4414586a24132aea6a109eefc17e",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-458c8ccc-8cc6-4dd0-aec0-454eac8e35bb.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Image1 exact Sporewake Chanter EDIT TARGET. ONE measured advancing foot-lift pose. Keep staff, censer, upper body, pale-green masked face, dreadlock topknot, moss leaf mantle, purple embroidered tattered robes, all reed/bone charms, camera, original painterly style and proportions. ONLY the SCREEN-RIGHT leg/boot lifts for this pose: bend knee gently forward toward right, its boot rises ONE boot-height above ground, connected to its ORIGINAL screen-right hip under robe. SCREEN-LEFT boot remains planted under its original hip; supporting leg straightens and weight shifts slightly onto it. Do not exchange boots or mirror body. Right anatomical hand screen LEFT still holds full vertical antler staff; staff bottom stays near planted supporting boot at ground. Left anatomical hand screen RIGHT still holds top ring of THREE censer chains and hanging bowl with THREE pendants, held low as reference not swung or raised. Exactly two legs, one planted foot, one lifted foot; reveal enough boot to read off-ground support change. Keep full antlers, shaft, bowl, charms and both feet inside wide margins. Flat pure RGB0,255,0 backdrop no spill, no floor/shadow/text/effects/extra objects.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/standing-reference-light.png",
+            "sha256": "8a0bda0d694cb19e357cd75c3f4d754375f4f098eff211b40654bb8e54401767"
+          }
+        ]
+      }
+    ],
+    "reused_source": {
+      "source": "poses.png",
+      "sha256": "8621b20f1dbd8a0c3cd1f184fc05ac2203c4f7e4ff5dc2d2ee0ca844e95f2efe",
+      "prepared_source": "continuity-alpha/poses-original.png",
+      "selected_pose_count": 12
+    },
+    "preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packed_frames": 14,
+    "runtime_candidate": "art/animation/runtime/poses/unit_mireclaw_sporewake_chanters.png",
+    "runtime_sha256": "5940b69d61cbfb8c133b0b8449dbdedb024c58933c69d3e2784e05ac1cab1b1e",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/sporewake-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted",
+    "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/sporewake-continuity-20260915/art-desk-registered.html",
+    "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/sporewake-continuity-20260915/art-desk-registered.png",
+    "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/sporewake-continuity-20260915/packed-inspect-refined/poses-candidate-atlas-green.png"
+  }
+}

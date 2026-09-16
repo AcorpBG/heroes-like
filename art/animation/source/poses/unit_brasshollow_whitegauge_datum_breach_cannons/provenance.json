@@ -1,0 +1,86 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_brasshollow_whitegauge_datum_breach_cannons.png",
+  "reference_sha256": "7f8ecd42d2a28afbadae2a5483ce6d09ef0c51882578633813b566c71468741a",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/poses-wreck-dark-lenses.png",
+      "source_sha256": "6413d30bc71db9bb79a5e3cb5cc1372942fbb05e2f2435f380bed0ec51ad0ae0",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-aa992c95-fd75-4794-9421-78a2abb69729.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY the prone operator's goggles in the bottom-right twelfth wreck sprite. Both eye lenses must be opaque matte charcoal gray, absolutely no orange/yellow point of light and no luminous reflection. Preserve brass goggle rims, ivory helmet, exact prone head/body, dark muzzle and smokeless broken chimney. Everything else in all twelve sprites unchanged. Do not darken living operators. Same sheet dimensions and positions, real transparent background no painted checkerboard. This is a tiny localized dead-state lens correction, not a redraw.",
+      "review": "Final prone operator lenses now charcoal with orange point removed; smokeless chimney/dark muzzle retained. Select twelfth frame only. Whole sheet redraw shifts helmet/material details, requiring frame continuity review; six-leg structure and alpha unfinished. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/poses-wreck-no-smoke.png",
+      "source_sha256": "07a6557e44321980154246e697c9513531e6f7f3cdfe27d62895c3190aaf1ecf",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-35b76605-a826-4b16-9ead-2bd8136c91e0.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY bottom-right twelfth persistent wreck sprite in this 4x3 original cannon sheet. Remove the gray smoke plume above broken chimney entirely, leaving transparent empty space. Extinguish orange glowing eye/goggle lenses on prone operator to dull dark glass. Keep operator helmet closed, exact prone body, all six collapsed mechanical legs, barrel black cold interior, boiler gauges and red valves unchanged. No smoke sparks glow steam or floating debris in this final persistent state. Other eleven poses untouched including their active smoke and lights. Same canvas frame locations scale. Actual transparent RGBA background no painted checkerboard.",
+      "review": "Final wreck chimney smoke removed and goggles darkened, but small orange lens highlight remains; not fully accepted inactive face. Select twelfth frame only. Six-leg continuity, operator anatomy, other state transitions and alpha unfinished. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/poses.png",
+      "source_sha256": "97f0533f7a77de23893fce6cef82495d625ac9596bcd2afc53dd66119e993670",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5fc46f66-cae9-40e4-a971-ca416fc43ed8.png",
+      "prompt": "Use case: stylized-concept. Original battle animation sprite sheet matching attached Whitegauge Datum Breach Cannon reference. Exactly 12 complete group poses FOUR columns THREE rows same scale fixed three-quarter camera facing LEFT matching reference. True transparent RGBA background no drawn checkerboard ground labels. ONE huge black brass ivory pressure cannon long banded barrel aimed left mounted on SIX jointed mechanical legs with pointed gold feet ivory armor shin plates. Large rear black boiler red valves round white pressure gauges brass hoses small orange furnace vents. ONE human operator at rear-right ivory coat black brass armor closed respirator helmet goggles. Preserve six legs one operator one barrel boiler gauges count. Row1 idle braced operator at lever; breathing idle pressure piston shifts operator grip adjusts; walking first alternating tripod legs left-front/right-middle/left-rear lifted remaining support operator stepping; opposite tripod legs lift operator opposite stride no mirroring whole machine. Row2 passing gait bent leg joints operator keeps pace; attack anticipation six feet plant barrel pulls back slightly pressure builds operator braces lever; firing barrel recoils backward into sleeve compact orange muzzle flash left operator crouches; defense cannon lowers center legs bent operator ducks behind rear plating. Row3 hit recoil boiler/legs rock operator recoils; death knees/leg joints buckle barrel tips down operator stumbles; collapse machine tips side six legs all accounted operator falls beside rear; persistent wreck barrel/boiler inactive black muzzle vents dark operator prone eyes hidden helmet legs grounded no steam/fire. Real articulated joints and operator elbows/knees no moved duplicates extra barrels crew or legs. Painterly original tactical game art matching reference crisp readable complete group, keep entire muzzle operator feet inside roomy cells no cropping overlap giant smoke."
+    }
+  ],
+  "review_notes": [
+    "14-frame left-facing candidate: eight quiet-vent derivatives plus six new paintings from two built-in outputs; physical pipes, gauges and operator preserved.",
+    "Planted poses separate near front/middle/rear foot lifts. Six mechanical legs include occluded far chains; no acceptance of full support cycle/operator travel yet.",
+    "New physical shove and telescoped recoil differ. Original buckle, settle and cold wreck retain fallen operator; dead lenses and muzzle unlit.",
+    "Banded crops exclude adjacent feet/muzzle/hand fragments. Approved neutral preparation preserves ivory armor and far-leg paint; body/operator scale and muzzle glow transitions require whole-roster review.",
+    "Manifest source-facing metadata needed so shared runtime facing helper orients both live and dead poses correctly. No simulation/save/footprint changes."
+  ],
+  "prior_review_notes": [
+    "Twelve source group poses with operator retained and dark final muzzle.",
+    "Alternating tripod gait not clearly achieved: repeated leading leg, inconsistent support/hidden limb attachment. Resolve six leg accounting in every pose.",
+    "Operator movement and barrel recoil nearly static; need real stride/bracing and telescoping sleeve displacement.",
+    "Boiler gauges/red valves, hoses and barrel proportions shift. Distinct close melee pose/recovery sequence remains absent.",
+    "Collapse compresses frame rather than clear tip; final wreck still has smoke and operator bright goggles. Correct inactive state and grounded limb continuity.",
+    "Checker background visible; transparency/compositing unresolved. Source-only no packing/enabling/tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 0,
+    "edited_retained_paintings": 8,
+    "new_selected_paintings": 6,
+    "generated_outputs": 2,
+    "generation": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/packing.json",
+    "packing_result": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_whitegauge_datum_breach_cannons.png",
+    "runtime_sha256": "fa8094207f0d8bc8e058be2e637c18a11e07d8999e4b74d4344a3f71f135485c",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-quiet-vents.png": "5a197782b513e6d40742781f672b9d438b13aa31037a13ac6747deeb61c70628",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/supported-creep-melee-recoil.png": "2c30a36f88bd7327efa6d369714e2c07549c438935c691a4e1d57903eae24009"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/breach-continuity-20260916",
+    "pose_source_facing": "left",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Static source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "policy": "Removed only exact byte-identical task preview copies after SHA-256 and no-live-handle checks. Identical retained copies permit restoration. All original/rejected source images, unique evidence, processing proofs, caches and unrelated artifacts remain.",
+      "duplicates_removed": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/breach-continuity-20260916/identity/unit_brasshollow_whitegauge_datum_breach_cannons-poses-quiet-vents-rect-0-64-372-366-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/identity-reference.png",
+          "sha256": "298606baf27f1bf2caaaface821407f95c6705c639b6ac50ef117674f855854d",
+          "bytes": 210757
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/breach-continuity-20260916/identity-clean/unit_brasshollow_whitegauge_datum_breach_cannons-poses-quiet-vents-rect-0-64-372-366-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/identity-reference-v2.png",
+          "sha256": "502f5b59631ca2632f4a815098e499806706e822374db62c206e910d37dc7cc8",
+          "bytes": 210022
+        }
+      ],
+      "removed_bytes": 420779
+    }
+  }
+}

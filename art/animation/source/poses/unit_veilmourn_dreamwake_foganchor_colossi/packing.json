@@ -1,0 +1,342 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right",
+  "frames": [
+    {
+      "name": "idle_original",
+      "source": "continuity-alpha/poses-fall-helmet-green-background.png",
+      "rects": [
+        [
+          0,
+          0,
+          366,
+          385
+        ]
+      ],
+      "anchor": [
+        220,
+        363
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "idle_settled",
+      "source": "continuity-alpha/gathered-chain-travel-and-guard.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          513
+        ]
+      ],
+      "anchor": [
+        1320,
+        482
+      ],
+      "scale": 0.45
+    },
+    {
+      "name": "contact_original",
+      "source": "continuity-alpha/poses-fall-helmet-green-background.png",
+      "rects": [
+        [
+          766,
+          0,
+          1106,
+          385
+        ]
+      ],
+      "anchor": [
+        965,
+        363
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "passing_far_lift",
+      "source": "continuity-alpha/gathered-chain-travel-and-guard.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          513
+        ]
+      ],
+      "anchor": [
+        295,
+        482
+      ],
+      "scale": 0.45
+    },
+    {
+      "name": "passing_near_lift",
+      "source": "continuity-alpha/gathered-chain-travel-and-guard.png",
+      "rects": [
+        [
+          513,
+          0,
+          1023,
+          513
+        ]
+      ],
+      "anchor": [
+        805,
+        482
+      ],
+      "scale": 0.45
+    },
+    {
+      "name": "anchor_windup",
+      "source": "continuity-alpha/poses-fall-helmet-green-background.png",
+      "rects": [
+        [
+          367,
+          385,
+          724,
+          719
+        ]
+      ],
+      "anchor": [
+        574,
+        703
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "anchor_lash",
+      "source": "continuity-alpha/poses-fall-helmet-green-background.png",
+      "rects": [
+        [
+          725,
+          385,
+          1110,
+          719
+        ],
+        [
+          1110,
+          395,
+          1227,
+          556
+        ],
+        [
+          1110,
+          556,
+          1200,
+          585
+        ]
+      ],
+      "anchor": [
+        943,
+        703
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "chain_recovery",
+      "source": "continuity-alpha/gathered-chain-travel-and-guard.png",
+      "rects": [
+        [
+          0,
+          513,
+          513,
+          1024
+        ]
+      ],
+      "anchor": [
+        255,
+        982
+      ],
+      "scale": 0.45
+    },
+    {
+      "name": "anchor_brace_a",
+      "source": "continuity-alpha/gathered-chain-travel-and-guard.png",
+      "rects": [
+        [
+          514,
+          513,
+          1023,
+          1024
+        ]
+      ],
+      "anchor": [
+        770,
+        982
+      ],
+      "scale": 0.45
+    },
+    {
+      "name": "anchor_brace_b",
+      "source": "continuity-alpha/gathered-chain-travel-and-guard.png",
+      "rects": [
+        [
+          1024,
+          513,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1295,
+        982
+      ],
+      "scale": 0.45
+    },
+    {
+      "name": "hit_helmet",
+      "source": "continuity-alpha/poses-hit-helmet-green-background.png",
+      "rects": [
+        [
+          0,
+          710,
+          363,
+          1048
+        ]
+      ],
+      "anchor": [
+        204,
+        1018
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_kneel",
+      "source": "continuity-alpha/poses-fall-helmet-green-background.png",
+      "rects": [
+        [
+          365,
+          740,
+          708,
+          1048
+        ]
+      ],
+      "anchor": [
+        556,
+        1021
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_fall_helmet",
+      "source": "continuity-alpha/poses-fall-helmet-green-background.png",
+      "rects": [
+        [
+          709,
+          770,
+          1104,
+          1048
+        ]
+      ],
+      "anchor": [
+        904,
+        1021
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "dead_helmet_cold",
+      "source": "continuity-alpha/poses-fall-helmet-green-background.png",
+      "rects": [
+        [
+          1105,
+          855,
+          1478,
+          1048
+        ]
+      ],
+      "anchor": [
+        1298,
+        1021
+      ],
+      "scale": 0.64
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 490,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        1,
+        4
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        5,
+        6,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 195,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 350,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 270,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

@@ -1,0 +1,372 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "continuity-alpha/idle-and-equipped-collapse.png",
+      "rects": [
+        [
+          90,
+          0,
+          480,
+          536
+        ]
+      ],
+      "anchor": [
+        262,
+        529
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "idle_b",
+      "source": "continuity-alpha/idle-and-equipped-collapse.png",
+      "rects": [
+        [
+          565,
+          0,
+          966,
+          536
+        ]
+      ],
+      "anchor": [
+        744,
+        529
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "walk_contact",
+      "source": "continuity-alpha/guided-walk-and-guards.png",
+      "rects": [
+        [
+          20,
+          0,
+          507,
+          515
+        ]
+      ],
+      "anchor": [
+        284,
+        499
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "walk_near_passing_a",
+      "source": "continuity-alpha/guided-walk-and-guards.png",
+      "rects": [
+        [
+          543,
+          0,
+          1002,
+          515
+        ]
+      ],
+      "anchor": [
+        747,
+        495
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "walk_repeated_contact",
+      "source": "continuity-alpha/guided-walk-and-guards.png",
+      "rects": [
+        [
+          1078,
+          0,
+          1536,
+          515
+        ]
+      ],
+      "anchor": [
+        1284,
+        499
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "walk_near_passing_b",
+      "source": "continuity-alpha/guided-walk-and-guards.png",
+      "rects": [
+        [
+          60,
+          517,
+          505,
+          1024
+        ]
+      ],
+      "anchor": [
+        251,
+        1000
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "melee_anticipation",
+      "source": "continuity-alpha/continuous-rope-melee-and-cast.png",
+      "rects": [
+        [
+          87,
+          88,
+          615,
+          664
+        ]
+      ],
+      "anchor": [
+        336,
+        633
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "melee_left_palm_shove",
+      "source": "continuity-alpha/idle-and-equipped-collapse.png",
+      "rects": [
+        [
+          561,
+          536,
+          981,
+          1024
+        ]
+      ],
+      "anchor": [
+        776,
+        986
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "guard_a",
+      "source": "continuity-alpha/guided-walk-and-guards.png",
+      "rects": [
+        [
+          555,
+          525,
+          1018,
+          1024
+        ]
+      ],
+      "anchor": [
+        782,
+        996
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "guard_b",
+      "source": "continuity-alpha/guided-walk-and-guards.png",
+      "rects": [
+        [
+          1078,
+          542,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        996
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "cast_windup",
+      "source": "continuity-alpha/continuous-rope-melee-and-cast.png",
+      "rects": [
+        [
+          677,
+          32,
+          1254,
+          664
+        ]
+      ],
+      "anchor": [
+        949,
+        640
+      ],
+      "scale": 0.39
+    },
+    {
+      "name": "cast_continuous_rope_release",
+      "source": "continuity-alpha/continuous-rope-melee-and-cast.png",
+      "rects": [
+        [
+          0,
+          665,
+          581,
+          1254
+        ],
+        [
+          581,
+          732,
+          759,
+          832
+        ]
+      ],
+      "anchor": [
+        300,
+        1188
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "cast_retrieval",
+      "source": "continuity-alpha/continuous-rope-melee-and-cast.png",
+      "rects": [
+        [
+          764,
+          669,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        968,
+        1207
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "death_kneel_right_coil",
+      "source": "continuity-alpha/idle-collapse-correct-hand.png",
+      "rects": [
+        [
+          1004,
+          116,
+          1536,
+          537
+        ]
+      ],
+      "anchor": [
+        1273,
+        506
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "death_forearm_fall",
+      "source": "continuity-alpha/idle-and-equipped-collapse.png",
+      "rects": [
+        [
+          0,
+          717,
+          554,
+          1024
+        ]
+      ],
+      "anchor": [
+        296,
+        960
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "dead_equipped",
+      "source": "continuity-alpha/idle-and-equipped-collapse.png",
+      "rects": [
+        [
+          979,
+          786,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1250,
+        975
+      ],
+      "scale": 0.42
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        13,
+        14,
+        15
+      ],
+      "loop": false,
+      "frame_msec": 250,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        15
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "hit": "defend",
+    "cast": "ranged"
+  }
+}

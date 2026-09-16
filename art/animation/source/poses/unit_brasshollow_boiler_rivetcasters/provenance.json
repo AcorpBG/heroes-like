@@ -1,0 +1,64 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_pending_refinement_and_packing",
+  "reference": "art/units/source/curated/unit_brasshollow_boiler_rivetcasters.png",
+  "reference_sha256": "27df82ca15c6a231a065a421f5663590a74b5cd9ec0654d62b715f57881f3292",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/poses.png",
+      "source_sha256": "1ac5a5a70e3dab73350cea8072c416ceb4e4c9e6c9bd4c8261c76e7d3281044a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b94ddc11-b3f8-4c8b-adb2-fa2f2e4f8e48.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle sprite animation sheet. Reference Boiler Rivetcaster is ONE wheeled black-iron/brass furnace cannon with TWO small pointed-ear goblin operators: upper/rear gunner wearing brass cap orange goggles gray face scarf and leather coat, side loader same outfit holding feed mechanism. Cannon has huge front muzzle glowing orange, riveted pale iron mantlet plates, two big brass-rim wheels, front stabilizer foot, round pressure gauges, rear vertical boiler chimney with orange vents, thick black hoses, rack of orange-tipped rivets and red/cream cog banner. Sixteen full-unit poses in FOUR columns FOUR rows, constant crew/machine scale, fixed three-quarter facing screen LEFT as reference, generous gutters, transparent RGBA. Reading order: 1 idle gunner lever loader feed; 2 idle operators breathe banner shifts; 3 rolling move operators pushing near legs forward wheels rotate foot raised; 4 passing stride operators legs flex wheels advance; 5 opposite contact operators alternate legs wheels rotate; 6 melee windup loader draws RIGHT fist back gunner holds lever; 7 melee RIGHT fist punches toward left gunner stays at controls; 8 ranged aim gunner pulls lever loader braces foot planted; 9 recoil barrel slides back chassis rocks loader braces; 10 reload loader inserts rivet gunner resets lever; 11 defense both crouch behind mantlet; 12 hit both recoil chassis tilts; 13 death both knees buckle boiler dims; 14 side collapse both operators fall cannon tips; 15 wreck fallen cannon with BOTH goblins lying beside it eyes closed all equipment retained; 16 settled dead state TWO bodies and full cannon chassis wheels barrel banner boiler present all furnace lights dark. Count exactly two goblins in every pose, preserve gear ownership and machine parts throughout. No additional crew, new weapons, smoke, beams, projectiles, ground shadows, scenery, text or gore. Original detailed painted game art matching reference. Clear mechanical and limb articulation not translated copies; complete unit fits each cell.",
+      "alpha_source": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/alpha/poses.png",
+      "alpha_sha256": "22b7470fe6ffd024996bb2ba090028c519f7be3fde29da53c9cb71b6f9e74312",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8a671aed-c197-4372-901b-0f703acca04c.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only checkerboard from sixteen-pose Boiler Rivetcaster sheet into genuine transparent RGBA alpha. Preserve both goblin operators in each pose, complete cannon/boiler/wheels/banner, original colors, opaque interiors and exact layout/scale. Clear gaps between machine and crew. Keep final wreck dark. No replacement background, matte, shadows, colored fringe, painted checkerboard or redraw."
+    }
+  ],
+  "review_notes": "18-frame candidate reuses12 original RGBA paintings and6 new paintings. Raised-stabilizer travel, explicit rivet lift/insertion and second guard added; left-facing source is preserved and normalized only by runtime/preview render transform via pose_source_facing. Both crew persist into cold wreck. Third travel contact still repeats leg lead and wheel rotation is subtle; translated gait, visible reload slot/grip, punch reach, crew accounting during collapse, banner/body scale and event timing remain refinement, not acceptance. Inspected elbow/pipe/flag apertures keyed; narrow neighboring flag-tip fragments excluded with bands.",
+  "prior_review_notes": [
+    "Sixteen unit poses inspected; two goblin operators and cannon present in final wreck.",
+    "Stabilizer remains down on some rolling poses; wheel rotation and operator alternating gait need refinement.",
+    "Punch-arm ownership/contact unclear, reload lacks clear insertion action; hands/feed/lever continuity require refinement.",
+    "First death gunner partly hidden, collapse crew accounting requires close review. Boiler/gauges/banner/barrel scale and extraction fringes pending.",
+    "Source-only not enabled; no tests/exports or disposable test intermediates created. 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "status": "candidate_pending_playback_acceptance",
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 12,
+    "new_selected_paintings": 6,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/packing.json",
+    "packing_result": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+    "runtime_sha256": "639f2d7c46ea927f935dc79bdb3f93be8e77efada54b6925b4f109aa7c699b30",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/alpha/poses.png": "22b7470fe6ffd024996bb2ba090028c519f7be3fde29da53c9cb71b6f9e74312",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/continuity-alpha/travel-reload-and-guard.png": "d63287aef5357d8ca6de64eeb955a2760715085d13f3fe24bdd25478b75c1337"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/boiler-continuity-20260916",
+    "pose_source_facing": "left",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Static source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "date": "2026-09-16",
+      "policy": "Only task-owned byte-identical preview duplicates; exact SHA-256 rechecked and fuser found no open handles. All original/rejected paintings, unique evidence, processing proofs and caches retained.",
+      "removed_files": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/boiler-continuity-20260916/identity/unit_brasshollow_boiler_rivetcasters-poses-rect-15-0-350-285-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/identity-reference.png",
+          "sha256": "8827dd76d93ea3c82313e887035a15fe617cca5f0c68e34d1994296b1585555f",
+          "bytes": 202932
+        }
+      ],
+      "removed_bytes": 202932
+    }
+  }
+}

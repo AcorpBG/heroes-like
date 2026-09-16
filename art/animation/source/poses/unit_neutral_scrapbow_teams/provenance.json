@@ -1,0 +1,57 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_scrapbow_teams",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_scrapbow_teams.png",
+  "reference_sha256": "82867a95d79ec4be354acb488ba3e58321b8ec16abe6c4850f7ad64bb7b6c11d",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "a5084075b79bd14309cf913a94c0b4be6ce89862701ab5437c7cbe996e5d89bb",
+      "source_output": "exec-89d78227-cc42-451c-bea4-b36f45197b3a.png",
+      "prompt": "Use case: stylized-concept. Original Scrapbow Team battle sprite sheet based on attached reference identity. EACH pose contains TWO crew members: tall stocky operator in riveted brown leather face mask/helmet, tan leather armor, blue scarf/tabard and knee guards carrying enormous wood-and-scrap-iron CRANK CROSSBOW; short crouching loader in bronze goggles/mask and blue scarf behind operator on viewer LEFT with bolt quiver. Keep two people, same faces/equipment/proportions and large horizontal crossbow, elevated three-quarter tactical camera facing RIGHT. Exactly SIXTEEN complete TEAM poses FOUR columns FOUR rows with very wide generous gutters so both people and whole crossbow fit every cell. Row1 idle weapon at waist loader crouches; breathing alert operator shoulders lift loader looks up; walking contact operator front leg forward loader follows; opposite contact operator near leg back far leg forward loader opposite step, same equipment sides. Row2 passing stride both knees articulate; melee windup operator draws weapon butt backward loader ducks; melee butt shove forward RIGHT at chest height loader stays behind, not shooting; defense operator crouches behind crossbow loader shelters. Row3 reload operator holds weapon angled down loader inserts bolt into groove while operator works side crank; aim crossbow level RIGHT operator cheek near stock loader low; FIRE crossbow string forward bolt gone, operator shoulders recoil slightly loader covers ear, NO projectile or effects; recovery operator lowers weapon loader reaches quiver. Row4 hit recoil both crew react; dying operator knees buckle weapon droops loader collapses too; fall both people onto sides crossbow lowered; final DEAD both crew lying on SIDE eyes closed horizontal torsos with crossbow and quiver resting beside. No blood. Original gritty painterly raster, no standing cutout rotations, no missing person, extra arms, third person or tiny unrelated figures. Consistent team scale across all cells. Pale gray plain backdrop no shadow/text/borders/checkerboard/scenery/effects."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "d7907c1f3f126ec146a931e38c772e0e2d11cce96708f0a5fcf91dd82a5e2f9a",
+      "source_output": "exec-59286271-ded4-4cc6-bff2-d0f9424e9544.png",
+      "prompt": "Use case: precise-object-edit. Fix ONLY row2 columns2 and3 of this sixteen-pose Scrapbow Team sheet. The oversized wooden crank CROSSBOW must retain its complete wide transverse bow arms and taut string, matching every other frame; it must not turn into a rifle. Row2 col2 melee anticipation: operator holds complete crossbow CROSSWISE across chest with butt to right ready for short butt shove. Row2 col3 melee hit: pushes blunt wooden stock BUTT to right, full bow assembly stays on left side near body, barrel/front does not aim at enemy. Both hands hold weapon, loader ducks behind, preserve both crew. Keep all other fourteen poses, exact body scale/grid/camera/identity and plain gray backdrop. No text/effects/new people.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "c335a3722174624880afbd9d58d20e4cbb0a6bbb0798dbe30d506dede47820ec",
+      "alpha_output": "exec-b9736623-88e9-40d8-a10f-6372f721ba78.png",
+      "alpha_prompt": "Use case: background-extraction. Remove gray background from all sixteen original Scrapbow Team poses onto genuine transparent RGBA. Preserve both crew members in every pose, complete crossbow bow arms/string/stock including reversed melee butt-shove, exact layout/body scale/poses and both corpses. Transparent gaps between crew limbs and weapon parts. No checkerboard, matte, shadow, blur, effects, text, added people or altered anatomy."
+    }
+  ],
+  "review_notes": [
+    "17 packed frames select 11 original RGBA paintings and six new crew paintings. Both operator and loader travel; complete crossbow is retained for melee, firing and recovery. The new kneeling/lowering pose sits between original kneel and head-right paired corpse; redundant original already-horizontal fall and frozen-loader walking attempts are unselected.",
+    "Original alpha is reused. New green-backed source uses owner-approved bounded edge preparation. Uniform per-source scales 0.85/0.54 and anatomical anchors preserve whole crew/weapon; kneel crop excludes only surplus below the intended bodies.",
+    "Opposite support remains unproven: new travel poses repeat leading geometry. Loader/operator proportions, bowstring release mechanics, stock-first shove-to-recovery rotation, grip/body/palette/edge continuity and connected action/death timing remain refinement. Static art inspection is not final motion acceptance."
+  ],
+  "prior_review_notes": [
+    "Sixteen team poses and extraction visually inspected; both crew retained including corpse. Corrected missing bow assembly in melee frames to complete crossbow with stock-first shove. Extraction metadata RGBA 1536x1024 alpha 0..254; raw brown preview alone does not establish compositing failure.",
+    "Operator contact alternation and loader walking are too similar; distinct collapse intermediate and firing string state require refinement/review. Source only, not packed or enabled. No automated tests/exports launched; final continuous motion and compositing remain unaccepted."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 11,
+    "new_or_corrected_selected_paintings": 6,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_scrapbow_teams/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_scrapbow_teams/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_scrapbow_teams.png",
+    "runtime_sha256": "f57e0c6024d15c67c42154bc703e6dd79730f626a07e00c174f2b55892ec20ca",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png": "c335a3722174624880afbd9d58d20e4cbb0a6bbb0798dbe30d506dede47820ec",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png": "6c0f5486d9e2befe0a29735009563b1fbf8bf1f112046bf55891e64c2d97e117"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/scrapbow-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

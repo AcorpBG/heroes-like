@@ -1,0 +1,329 @@
+{
+  "unit_id": "unit_neutral_icehook_trappers",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          0,
+          0,
+          378,
+          356
+        ]
+      ],
+      "anchor": [
+        198,
+        341
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          397,
+          0,
+          725,
+          353
+        ]
+      ],
+      "anchor": [
+        577,
+        336
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "continuity-alpha/matched-icehook-strike-guard-and-travel.png",
+      "rects": [
+        [
+          0,
+          1010,
+          511,
+          1536
+        ]
+      ],
+      "anchor": [
+        266,
+        1490
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "walk_passing_attempt",
+      "source": "continuity-alpha/matched-icehook-strike-guard-and-travel.png",
+      "rects": [
+        [
+          512,
+          1010,
+          1024,
+          1536
+        ]
+      ],
+      "anchor": [
+        756,
+        1488
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "hook_windup",
+      "source": "continuity-alpha/matched-icehook-strike-guard-and-travel.png",
+      "rects": [
+        [
+          0,
+          0,
+          511,
+          508
+        ]
+      ],
+      "anchor": [
+        233,
+        479
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "hook_contact",
+      "source": "continuity-alpha/matched-icehook-strike-guard-and-travel.png",
+      "rects": [
+        [
+          512,
+          0,
+          1024,
+          508
+        ]
+      ],
+      "anchor": [
+        760,
+        473
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "hook_recovery",
+      "source": "continuity-alpha/matched-icehook-strike-guard-and-travel.png",
+      "rects": [
+        [
+          0,
+          509,
+          511,
+          1009
+        ]
+      ],
+      "anchor": [
+        245,
+        988
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "guard_ready",
+      "source": "continuity-alpha/matched-icehook-strike-guard-and-travel.png",
+      "rects": [
+        [
+          512,
+          509,
+          1024,
+          1009
+        ]
+      ],
+      "anchor": [
+        771,
+        987
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "guard_crouch",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          1195,
+          376,
+          1522,
+          671
+        ]
+      ],
+      "anchor": [
+        1358,
+        651
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          0,
+          667,
+          260,
+          699
+        ],
+        [
+          0,
+          699,
+          370,
+          1009
+        ]
+      ],
+      "anchor": [
+        206,
+        982
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          394,
+          698,
+          715,
+          991
+        ]
+      ],
+      "anchor": [
+        561,
+        960
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "death_low_fall",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          742,
+          723,
+          1077,
+          880
+        ],
+        [
+          742,
+          880,
+          1103,
+          995
+        ]
+      ],
+      "anchor": [
+        922,
+        959
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "dead_head_right",
+      "source": "alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          1073,
+          761,
+          1536,
+          884
+        ],
+        [
+          1105,
+          884,
+          1536,
+          950
+        ]
+      ],
+      "anchor": [
+        1301,
+        919
+      ],
+      "scale": 0.61
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 435,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

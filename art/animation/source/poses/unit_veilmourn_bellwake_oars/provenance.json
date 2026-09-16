@@ -1,0 +1,146 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_bellwake_oars",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_bellwake_oars.png",
+  "reference_sha256": "81b03a91ce36b024c7d244120055539bd4f790106291d1e669eb9fd013accafa",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/poses-draft.png",
+      "source_sha256": "d8ae08a73b10458c3a5536ea602e0e213400d895b2bd701fa2832a0fe8bb1c57",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-41f60622-1845-4501-b84b-9ab52d2d4509.png",
+      "prompt": "Use case: stylized-concept. Original painted fantasy tactical battle sprite sheet. Reference defines ONE Bellwake Oar fighter, young adult with brown tied-back hair, ivory scarf and streaming cloth, weathered gray-green shoulder mantle, dark layered leather armor, tall black boots, brass bells and small amber belt lantern. ONE long dark oar staff with broad metal-edged paddle at one end and small hanging brass bell at opposite end. Preserve face, costume and staff length. Generate exactly TWELVE full-body articulated poses, 4 columns x 3 rows with generous blank margins for full weapon length. Fixed elevated three-quarter battle view facing screen right, constant character size and light. Genuine transparent RGBA background, no painted checkerboard, no floor, labels or grid. Row1: idle staff diagonal in both hands; idle slight shoulder turn scarf sway grip unchanged; walking right foot forward left behind; opposite contact LEFT foot forward RIGHT behind, pelvis follows left leg rather than repeating first gait. Row2: passing step foot lifting beneath pelvis; attack wind-up both hands draw paddle behind shoulder; attack paddle sweeps forward at enemy screen-right waist height, strong torso twist and bent front knee, staff intact with bell opposite paddle; defense both hands brace shaft diagonally before chest. Row3: recoil from hit shoulders back; dying on one knee head bowed hands loosening; falling sideways bent hips knees staff landing beside; dead lying on side eyes CLOSED relaxed limbs scarf and entire oar beside body lantern extinguished. All alive poses hold same single staff in two anatomically connected hands, no extra weapons or limbs. Actual articulated movement, no translated or rotated standing cutouts. Match original painted style, not franchise art."
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/poses.png",
+      "source_sha256": "343406009c5be4de718b1a0d76c6d3c1ee1a9d4e45325abf61ed491d65b79445",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8df29a59-7902-4707-b8a6-7554c2bd7548.png",
+      "prompt": "Use case: precise-object-edit. Edit this twelve-pose Bellwake Oar sheet ONLY in two cells. Row2 column3 extended attack: restore the missing rear section of the SAME staff from behind both hands back toward screen LEFT alongside the torso, terminating in its brass hanging bell and ivory strip. Keep front paddle and attack pose unchanged; one continuous full-length staff with bell at one end and paddle at other. Row3 column2 kneeling death: the staff currently ends as a broken stub by the knee. Restore its long broad dark metal-edged paddle extending down-right along ground within that cell, same paddle design as all other frames. Keep the rear bell end, hands and kneeling body unchanged. Preserve all other ten poses exactly, fixed canvas, colors, faces, costume and corpse. Do not shorten weapons or add a second staff."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b750893c-1c99-4305-961d-95e441c2a634.png",
+      "prompt": "Use case: background-extraction. Remove only the checkerboard from this twelve-pose Bellwake Oar sprite sheet to genuinely transparent RGBA. Preserve each of the twelve figures exactly, all staff segments, faces, fabric and bells, placement, scale, canvas, colors and dark final corpse. No repaint, no replacement backdrop, no painted checkerboard, no colored matte.",
+      "reason": "Brown/gray background instead of transparency; not selected."
+    }
+  ],
+  "review_notes": [
+    "15-frame candidate: four retained original paintings, one corrected right-facing idle and ten new walk/guard/death paintings across three built-in outputs.",
+    "Selected death kneel retains one continuous complete oar; side fall and settle lead head-left to the cold equipped corpse. Original duplicate-shaft kneel, seated opposite-direction fall and glowing corpse are not selected. Prior claim that original corpse lantern was dark was contradicted by actual crop inspection.",
+    "New travel holds the oar diagonally clear of legs. Contact and planted bridge repeat the leading leg; distinct passing poses do not establish an accepted full gait.",
+    "Inspected arm/shaft/hair gaps use explicit neutral seeds. Banded crop removes neighboring kneeling paddle without shortening the selected side-fall oar.",
+    "Full-roster gait/support/travel, body/oar/bell scale, grip/attack/recovery and guard/death timing remain for motion refinement. Static alpha and offline previews are not final acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses. Edit restores attack rear bell and kneeling paddle, but kneeling now retains duplicate short shaft requiring removal.",
+    "Attack rear shaft has continuity/alignment concerns; constant staff length, hand grips and paddle scale require refinement.",
+    "Walking contacts repeat lead; torso rotation changes too far and first idle faces left. Normalize orientation and refine opposite gait.",
+    "Second death is seated; additional collapsing articulation needed. Final eyes appear closed and belt lantern dark.",
+    "Transparency/in-context compositing unaccepted. Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 4,
+    "edited_retained_paintings": 1,
+    "new_selected_paintings": 10,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_bellwake_oars/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_bellwake_oars/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars.png",
+    "runtime_sha256": "7572d7d310d3a6a9bce1ef7b1d77b23234fbdc3630ac8e9e7873e636f82c30e7",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/poses-shaft-and-gaze-corrected.png": "e8c14215119a1a13de9673e4d96f2ba5a06304fb2afacefa91e63bcf8f1dd9e6",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/poses.png": "5b148e052540660e5e380758ce509ae2c82d448d3608a1f2ca12765e6a5ffab7",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/guided-walk-and-guards.png": "5068da069b48649f9c3df6c74225adea321dc0193f9b776a3856ee3677113be5",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/connected-kneel-fall-corpse.png": "d6ce6d543a6b9517cdbf7df25b76b0c47a00f21b96b3bfdaf353c06dec6ffdd8"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "policy": "Removed only exact byte-identical task preview copies after SHA-256 and no-live-handle checks. Identical retained copies permit restoration. Used generation references, original/rejected masters, unique evidence, processing proofs, caches and unrelated artifacts remain.",
+      "duplicates_removed": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/atlas-first/poses-candidate-atlas-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/current-atlas/poses-candidate-atlas-light.png",
+          "sha256": "998204b8f9cdeb8d724b04f5db3cbea8a865dc215531c7a32321a95d9848ba5b",
+          "bytes": 483943
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/atlas-first/poses-candidate-atlas-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/current-atlas/poses-candidate-atlas-green.png",
+          "sha256": "6145a42e1b28c4959fc9fad283d945a9cad6ad82a525ee992e628fb6575024db",
+          "bytes": 455714
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/identity/unit_veilmourn_bellwake_oars-poses-shaft-and-gaze-corrected-rect-21-0-365-385-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/identity-reference.png",
+          "sha256": "b4b7a382e221d0ca65fbfeffccc6a939c2a907df26b556b6404ca18869f8ecf5",
+          "bytes": 557742
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/prepared/poses-shaft-and-gaze-corrected-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/cleaned/poses-shaft-and-gaze-corrected-light.png",
+          "sha256": "9e19e0c27f655fdae4f585c5422300ca507e4f7361d2ba6b89c6c8de79f1ee60",
+          "bytes": 1091716
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/first/poses-shaft-and-gaze-corrected-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/cleaned/poses-shaft-and-gaze-corrected-light.png",
+          "sha256": "9e19e0c27f655fdae4f585c5422300ca507e4f7361d2ba6b89c6c8de79f1ee60",
+          "bytes": 1091716
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/first/poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/prepared/poses-green.png",
+          "sha256": "80c117df0cdbbd3ff673f0ff154b92d0174ebf7f6bab3dea346add23d101420b",
+          "bytes": 1086390
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/first/poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/prepared/poses-light.png",
+          "sha256": "440b5cc9a8e83c9e5ec5c51fddaa8102f62cac16427ee15f33c76e450d3f79e6",
+          "bytes": 1132832
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/prepared/poses-shaft-and-gaze-corrected-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/cleaned/poses-shaft-and-gaze-corrected-green.png",
+          "sha256": "a4fc840ad615518f2dba1f82638710da801b0b50b27ba3868562e4cb3104eda9",
+          "bytes": 1047462
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/first/poses-shaft-and-gaze-corrected-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/cleaned/poses-shaft-and-gaze-corrected-green.png",
+          "sha256": "a4fc840ad615518f2dba1f82638710da801b0b50b27ba3868562e4cb3104eda9",
+          "bytes": 1047462
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/prepared/guided-walk-and-guards-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/cleaned/guided-walk-and-guards-green.png",
+          "sha256": "579eaaf5aad90de906b52048b67c492d29698abfd84fbcf9c13f6eb3b84887ed",
+          "bytes": 1147522
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/prepared/guided-walk-and-guards-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/cleaned/guided-walk-and-guards-light.png",
+          "sha256": "e7568f1d401553f3aaf16ff1566ccbab491148373545968e8417684eeab4ed50",
+          "bytes": 1167114
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/oars-continuity-20260916/corpse-reference/unit_veilmourn_bellwake_oars-poses-rect-1127-818-1536-1009-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/corpse-direction-reference.png",
+          "sha256": "5c0bf254a4aa9eea20cfc986dc73b19448486de354e281a4eb9f89f58f28dc80",
+          "bytes": 412919
+        }
+      ],
+      "removed_bytes": 10722532
+    }
+  }
+}

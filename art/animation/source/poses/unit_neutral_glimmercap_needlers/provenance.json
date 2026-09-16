@@ -1,0 +1,56 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_glimmercap_needlers.png",
+  "reference_sha256": "2f4e79c6002d1b2823c292ff4532da7f2ad956ce657dd5844c041d48579fe941",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "715065332b5299da33761d1b6017675a9f5c26cc6d9e8e632393217648d82c89",
+      "source_output": "exec-4602274d-d994-4a8b-b000-acef5c31b56c.png",
+      "prompt": "Use case: stylized-concept. Original Glimmercap Needler battle animation sheet, reference character identity. Lean pale young adult dark hair teal hood mushroom shelf accents, charcoal leather armor olive wraps teal tabard gold seams, brown boots and belts, cyan glass spore flasks and quiver crystalline needles. RIGHT hand brass/wood long straight blowpipe, LEFT hand spare cyan needles. Sixteen full-body articulated poses FOUR columns FOUR rows same scale elevated three-quarter camera facing RIGHT generous gutters. Row1 relaxed idle pipe low needles left; alert breath hood shoulders shift; running near leg extended forward far back; passing legs beneath body. Row2 opposite stride FAR leg forward NEAR leg back not torso mirrored; melee anticipation pipe held in both hands horizontally pulled to chest; strong two-hand forward pipe shove RIGHT; defensive crouch pipe diagonally braced. Row3 hit recoil; left hand inserts needle into pipe held right; both hands aim blowpipe from mouth right; release cheeks deflate pipe stays at mouth no projectile. Row4 recovery lower pipe; knees buckle; side fall torso low own pipe and spare needles beside hands; horizontal relaxed side corpse eyes closed hood retained pipe nearby flasks dim. Preserve full straight blowpipe all poses no gun trigger/crossbow, tuck spare needles in waist sheath during two-hand actions. True varied joints, not repeated standing cutouts or rotated upright corpse. Original painterly raster pale gray background no shadows grid text blood particles effects scenery."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "daf7635510628c481c731bc35fd61da03a2e0272ef115fe5ca90783205b3cbf3",
+      "source_output": "exec-9381ddaa-8ab6-4eb0-9556-a20561d65490.png",
+      "prompt": "Use case: precise-object-edit. Preserve entire 4x4 sheet except these precise state corrections. THIRD ROW FOURTH released-shot pose: remove cyan needle tip sticking out of blowpipe muzzle at far RIGHT; retain open brass tube mouth, all body/pipe geometry unchanged. BOTTOM ROW FOURTH final corpse: close eyes fully, relax facial expression, dim cyan waist flasks to dull blue-green glass without bright glow. No other changes. Keep gray background framing all sixteen poses gear and scale identical.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "e4d55650d8ffd1c4803ab64ff2d13525ef4ef58746e26db77c9854f23c8da1a7",
+      "alpha_output": "exec-07d3623f-1037-45cb-b6ac-f90d451d0c22.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all sixteen Glimmercap Needler figures onto genuine transparent RGBA. Keep exact layout scale anatomy poses complete blowpipes needles quivers mushroom hood edges straps and corpse. Remove pale gray backdrop and floor shadows only. No checkerboard cloudy matte colored halos redraw or reframing; preserve empty released muzzle and closed corpse eyes."
+    }
+  ],
+  "review_notes": [
+    "Sixteen poses/extraction visually inspected. Released muzzle needle removed, final corpse eyes closed and flasks dimmed. Gait contact repeats; opposite lead/passing refinement pending. Melee windup/shove reverse loaded tube orientation and hand spacing needs correction. Alpha edge compositing and scale/full-motion review pending. Source only, not packed/enabled; no tests/exports.",
+    "17 packed frames retain ten original paintings and select seven new paintings from three built-in outputs. Corrected loaded melee keeps the cyan tip right, two guard poses remain loaded and post-shot recovery retains an empty muzzle.",
+    "The first new sheet's crowded one-visible-grip thrust is preserved unselected. Editing the separated-grip anticipation reference produced a replacement with two distinct fists and bare shaft between them. A focused side-fall edit turns only the grounded pipe's point right to agree with the retained head-right corpse; the old reversed-pipe fall is unselected.",
+    "Approved magenta preparation preserves the original teal/cyan/ivory paint. Uniform body scales and explicit source bands exclude adjacent feet from aim/kneel. Full alternating gait, pipe length/stringless design and needle scale, spare-needle handling, body/grip/palette/edge continuity and connected transitions remain unaccepted. No automated tests/imports/gameplay/platform validation in this increment."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "new_or_corrected_selected_paintings": 7,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_glimmercap_needlers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_glimmercap_needlers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_glimmercap_needlers.png",
+    "runtime_sha256": "c18e4af19731fcd74f90601091c4e992bea623f702e25905e0c669dd99fc07d8",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png": "e4d55650d8ffd1c4803ab64ff2d13525ef4ef58746e26db77c9854f23c8da1a7",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/loaded-pipe-melee-defense-and-empty-recovery.png": "c8025a27d4f26fddad07408ce7e152fa94e0c425ae15a358c27ceef74dc1adca",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/two-spaced-grips-loaded-pipe-shove.png": "9b3976d8b00c746ab1ba50fb324d952c758a894d1ee620f3471824e552d22005",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/side-fall-pipe-point-right.png": "d801cec149282198a4a72f601c246caefbfee5f48330ebbe033cc864eb19ba56"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/glimmercap-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

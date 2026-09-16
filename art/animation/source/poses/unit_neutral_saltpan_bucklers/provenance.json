@@ -1,0 +1,61 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_saltpan_bucklers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_saltpan_bucklers.png",
+  "reference_sha256": "fdb75b512864fd6a1ca6c0d8ebea16ab66b6a14eebfd81702aa58a51a06cb193",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "43a20dab28293e6eebacc7a04e47525ba98f27094b2dc89fbfe4d4e8f6b3ce9a",
+      "source_output": "exec-fb830763-0ae1-4f55-96e2-4450ad9b1403.png",
+      "prompt": "Use case: stylized-concept. Original Saltpan Buckler battle animation sheet reference identity: bearded man cream headwrap red band and bronze forehead disc, cream scarf rust neck cloth, salt-stained cream leather/wool tunic, rust sash and split apron, brown belts pouches gauntlets boots cloth wrappings iron knee guard. LEFT arm round pale salt-cured hide buckler brown radial braces metal boss, RIGHT hand short heavy wooden truncheon. Twelve full-body articulated poses FOUR columns THREE rows, same elevated three-quarter camera facing RIGHT, same body size generous gutters. Row1 idle shield forward club down; alert breath shoulders/headwrap; walking contact near leg forward; passing step knee bent foot beneath hip. Row2 opposite walking contact near thigh back crossing far forward thigh without mirroring torso; attack windup RIGHT club above right shoulder shield in front; right arm crosses chest club swings down toward RIGHT front knee bends left shield protects ribs; deep crouched shield guard club held close. Row3 hit recoil; dying knees buckle equipment lowers; side fall torso low shield and club retained; final dead relaxed horizontal SIDE eyes fully closed, shield flat beside LEFT arm, club beside RIGHT hand. Keep one shield one wooden club in every pose, original proportions actual articulated hips/knees/elbows. No missing equipment, blades, duplicate standing cutouts, rotated upright corpse, blood/effects/text/grid/scenery/shadows. Plain pale gray background original painterly raster."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "7f6dd65ff4855b925f026aab651c489b2dd5e1ede6eb36958f8376882ad674c4",
+      "source_output": "exec-8aae80b8-7f9f-499f-9518-10711ce42cf1.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY final corpse row3 column4 in this Saltpan Buckler 4x3 sheet: close BOTH eyes completely with relaxed eyelids and relaxed mouth. Keep exact face identity, headwrap, body/club/shield position and every other frame unchanged. No other edits.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "c987e86b1ff377efef9f8a63b3b6027bbb021b6e520d49fb0fed02bd3bd2db5d",
+      "alpha_output": "exec-9a148b88-dfb6-4392-b340-1fa007567fb9.png",
+      "alpha_prompt": "Use case: background-extraction. Extract every pose of this twelve-pose Saltpan Buckler sheet onto genuine transparent RGBA. Remove all pale gray background and cast ground shadows, preserving painted armor and shield pale colors. Preserve exactly all twelve poses, arrangement, scale, complete club/shield/headwrap/boots, limb gaps and closed-eye corpse. No checkerboard, matte, reframing, redraw, text or effects."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "exec-881ea236-5acc-4c7d-94e2-fcf36828954e.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY row 2 column 1 of this twelve-pose Saltpan Buckler sheet to make the OPPOSITE walking contact. Anatomical requirement: the leg wearing the ROUND METAL KNEE GUARD must extend BACK toward screen LEFT with its heel raised; the OTHER leg must extend FORWARD toward screen RIGHT with heel contacting ground and toes raised. Keep torso, head, shield arm and club arm same three-quarter orientation facing screen RIGHT, do not mirror the entire person. Hips and both knees articulate naturally; preserve identical body scale, headwrap, armor, shield LEFT hand and club RIGHT hand. All other eleven frames including closed-eye corpse unchanged. Pale gray background unchanged.",
+      "reason": "Still leads with round-kneeguard leg; failed opposite contact. Not copied or selected."
+    }
+  ],
+  "review_notes": [
+    "Twelve poses visually inspected: distinct club strike, crouched shield defense, collapse and relaxed closed-eye corpse retaining equipment. Walking contact repeats; true opposite contact/passing still required. Extraction preview has colored edge fringe; final alpha compositing not accepted. Source only, not packed or enabled; no tests or exports run.",
+    "13 frames retain ten original paintings and select three new right-club recovery, upright guard and closed-eye head-left corpse paintings. Corpse now follows the side-fall direction instead of reversing to head-right; club and left-arm hide buckler remain.",
+    "Reuse inspected clean original alpha; new green-backed art uses approved bounded preparation. Original source scale 0.60, new standing scale 0.40 and enlarged source corpse 0.26 are explicit anatomical normalization without warping or per-frame silhouette-box fitting. Banded crops exclude a neighboring club tip/boot. Guard anchor retains head and soles in the frame.",
+    "Original opposite contact remains repeated; full alternating gait, shield/club/grip, body/palette/edge consistency and connected timing still need refinement. Static production review is not motion/gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_saltpan_bucklers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_saltpan_bucklers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_saltpan_bucklers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_saltpan_bucklers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_saltpan_bucklers.png",
+    "runtime_sha256": "76922fc9993f6b676068159a0d2e43a627e6d0367b418647bde540395fc55204",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_saltpan_bucklers/alpha/poses.png": "c987e86b1ff377efef9f8a63b3b6027bbb021b6e520d49fb0fed02bd3bd2db5d",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_saltpan_bucklers/continuity-alpha/club-recovery-guard-and-directional-rest.png": "e1999f9a02402cef2c7f5351d7c8cc4de28c893c039d612e2ffb2cc3294dec22"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/saltpan-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

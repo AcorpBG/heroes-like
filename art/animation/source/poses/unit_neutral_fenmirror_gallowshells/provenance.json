@@ -4,7 +4,7 @@
   "date": "2026-09-14",
   "tool_mode": "built_in_image_gen",
   "model": "not_exposed_by_tool",
-  "review_status": "source_only_pending_packing_and_playback",
+  "review_status": "candidate_pending_playback_acceptance",
   "reference": "art/units/source/curated/unit_neutral_fenmirror_gallowshells.png",
   "reference_sha256": "634ad7a6b9f09011a932b14dd8e558b7a738371c04a066e98c6fc785f55388ed",
   "outputs": [
@@ -57,6 +57,12 @@
     }
   ],
   "review_notes": [
-    "Visual source inspection confirms restored walking pincers and removal of extra recoil pincer. Corrected alpha is RGBA 0..254; gallow-fixed-source-alpha-20260914 passes seven checks and its 1280x720 light/dark Godot capture was inspected cleanly. Not enabled; gait contacts, full action/death motion and packing remain outstanding."
-  ]
+    "Corrected walking pincers and recoil anatomy preserved in twelve packed original poses. gallowshell-final-actions-20260914 and gallowshell-final-packed-alpha-20260914 pass 136/7 checks with inspected 1280x720 claw attack and light/dark captures. Enabled candidate; continuous gait/action/death acceptance remains pending."
+  ],
+  "packing": {
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_fenmirror_gallowshells.png",
+    "runtime_sha256": "ac49a5c892db86da70b4a3f5b8929b33538c9be113557a1351d7d3d3df518d75",
+    "method": "Uniform 0.70 downsampling and segmented original-raster pincer rectangles; no painted or warped replacement poses."
+  }
 }

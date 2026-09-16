@@ -1,0 +1,142 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_sunvault_solar_array_striders",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "runtime_candidate_pending_consolidated_validation",
+  "reference": "art/units/source/curated/unit_sunvault_solar_array_striders.png",
+  "reference_sha256": "38b54e8fc5921b71641d61385457e3281746b2f3bb585c7c39e82d0f8b52b5ec",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/poses-wreck-three-lenses.png",
+      "source_sha256": "5b8a7732fe741a83a67e42adcd4d753aeeedb684434f33e653fb61bf0b359bb3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2d53ee3c-8489-46e4-a0f0-a3e6038fe8dd.png",
+      "prompt": "Use case: precise-object-edit. On bottom-right machine ONLY, erase the TOPMOST small oval blue lens and the thin gold rod from large collector to that topmost oval. Leave the THREE lower circular blue lenses in place, connected to the existing lower articulated arm. Do not add any replacement lens. Final wreck must have three small lenses total, not four. Preserve all other machine parts, all other sprites, same canvas and background. No text.",
+      "review": "Select final wreck frame12 only. Three small lenses now visible with dark blue glass and subdued collector; initial correction overgenerated four. Short upper linkage differs from live poses; mirror fan/leg continuity, alpha and assembly unresolved. Other frames unintentionally dimmed/redrawn, unselected. Not packed/enabled.",
+      "unselected_inputs": [
+        {
+          "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-546833c6-4ce9-4f71-a7ec-53b68c0c26c5.png",
+          "prompt": "Use case: precise-object-edit. Edit ONLY bottom-right final wreck frame12 in original 4x3 Solar Array Strider battle sprite sheet. Restore missing THIRD small round gold-rimmed lens on forward articulated optical arm, above the two existing small lenses, matching three-lens linkage of adjacent frame11. All three small lenses and central large collector must be dull dark blue with soft ordinary reflections, no white/yellow star glow; wreck inactive. Preserve four folded legs, ivory armor, blue banner, mirror array, body position and size. Keep lens within canvas, do not duplicate arm. Other eleven sprites unchanged. Same grid camera scale background, no text effects.",
+          "reason": "Four lenses instead of three."
+        },
+        {
+          "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d568df0c-b343-431f-93cd-7c5e09a25300.png",
+          "prompt": "Use case: precise-object-edit. Edit ONLY bottom-right wreck in this Solar Array Strider sheet. Its forward arm now incorrectly has FOUR small round lenses stacked vertically. Remove the SECOND lens FROM TOP (small circle just below highest oval), along with its short redundant bracket. Reconnect highest oval by short gold joint to next remaining larger middle lens; retain lowest large lens. Exactly THREE small lenses remain: one upper oval, one middle circle, one lower circle, like neighboring collapse pose. Do not remove central large collector or any leg. Keep all dark blue glass, armor, wreck pose, array and rest of sheet unchanged. No text.",
+          "reason": "Attempt to remove second lens retained four; next edit removed uppermost instead."
+        }
+      ]
+    },
+    {
+      "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/poses-draft.png",
+      "source_sha256": "ac8f99b48c49858c5828f62d4660d8186e022a36d4ef527f92319cd1856fa08f",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-304c1cc6-0f14-4fc1-abaa-7a87990fd9f9.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle sprite sheet. Reference identity Solar Array Strider: FOUR-legged ivory and gold mechanical quadruped, pointed three-toed gold feet, articulated knee/hip bearings inset blue gems, blue sun-emblem hanging banner, large back-mounted array of blue triangular mirror fins and central round blue-gold collector dish, forward articulated gold optical arm with three round lenses. No rider or humanoid. Paint twelve complete articulated poses in FOUR columns THREE rows, constant body/array scale, three-quarter side view facing right. True transparent RGBA background, generous gutters. Remove reference beam/light streaks; all effects are separate, retain physical optics. Reading order: 1 idle legs planted array at rest; 2 idle array tilts slightly lens arm adjusts; 3 walking near foreleg forward near rear back; 4 passing legs flex beneath body; 5 opposite contact far foreleg forward near foreleg back; 6 attack anticipation legs brace collector draws back optical arm folds slightly; 7 attack release collector tilts forward lens arm extends toward right feet braced; 8 defense low body all knees flex mirrors angled protective; 9 hit recoil body tilts rearward lenses retract; 10 death front legs buckle body drops collector tilts down; 11 collapse on side legs fold mirror rig tips with body; 12 persistent wreck side-lying inert lenses dark blue all FOUR legs and main array attached, recognizable intact machine silhouette. Keep same mirror-fin count/shape, three lens arm, four legs and banner throughout. No new equipment, beams, particles, humans, ground shadows, labels or scenery. Detailed original painted game art matching reference. Real joint articulation not translated static duplicates, no extra legs."
+    },
+    {
+      "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/poses.png",
+      "source_sha256": "5fe396502fd7fdca92af8be4047c45c65a3f336ff93b5c0ba1e51d1c53ab2888",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1771d41a-bbbe-46ef-8f17-b309c125544d.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY attack-release pose at ROW TWO COLUMN THREE of supplied twelve-pose Solar Array Strider sheet. Restore its missing THIRD small round blue-and-gold lens at the top end of the forward optical arm, matching the three-lens arrangement of every neighboring pose. Keep the arm extended forward; preserve existing two lenses. No other changes to any machine, legs, array, body, scale, position or background. Entire sheet retained.",
+      "alpha_source": "art/animation/source/poses/unit_sunvault_solar_array_striders/alpha/poses.png",
+      "alpha_sha256": "c5b28aa4d3160b770aaa961432ecd3fbe9d0043e858925687a3a73e690246968",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2ac39fab-1de0-4e0e-bd15-c560abc889af.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only checkerboard from supplied twelve-pose Solar Array Strider sheet into actual transparent RGBA alpha. Keep every machine exactly positioned and scaled, all ivory armor opaque, gold structure, blue mirrors, corrected three-lens attack arm and wreck. Transparent gaps between legs, lenses and mirror fins. No replacement backdrop, matte, shadows, effects, redraw or painted checkerboard. Preserve full image composition."
+    }
+  ],
+  "review_notes": [
+    "Four new guided contact/passing poses replace the repeated original contact stance. All four feet are represented in the new gait; independent linkage ownership, far-side occlusion and transition continuity still require consolidated motion acceptance.",
+    "Content identity is melee, not ranged: new braced windup and physical chassis/nose thrust replace firing-looking original attack poses without changing rules.",
+    "New defensive suspension pair and three-stage dark-lens collapse retain the swept-back mirror assembly and three-lens linkage instead of the original radial-fan wreck. Persistent dark wreck is explicit.",
+    "Original alpha idle/hit retained without re-keying; disjoint hit crop excludes neighboring previous-row foot fragments. Approved bounded neutral matte and inspected enclosed-gap seeds prepare new masters. Fine white/gold edges and equipment scale continuity remain final acceptance work."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses inspected; attack third lens restored. Source-only, not enabled.",
+    "Contact steps repeat lead and fourth-leg attachment/occlusion is unclear in multiple poses. Four-leg alternating gait needs refinement.",
+    "Mirror fins change into fan arrangement on collapse; preserve array structure across states. Final wreck lens arm appears reduced to two visible lenses; review attachment and occlusion.",
+    "Idle differences subtle, attack optical-arm telescoping/joints and scale continuity pending. Extracted fringes require in-context compositing review.",
+    "No tests/exports or disposable test intermediates created; 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "sources": [
+      {
+        "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/walk-contact-a.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ee32617d-cbf8-4d3e-bad3-ba9842d60b14.png",
+        "prompt": "Use case: sketch-to-render. Original painted battle animation single pose. Image 1 is only a FOUR-leg joint pose guide; image 2 is the authoritative Solar Array Strider identity. Render image 2 in the exact walking contact phase from image 1: both NEAR legs correspond to blue, near foreleg reaches toward screen right, near hind leg trails left; both FAR legs correspond to orange, far foreleg planted beneath chest, far hind reaches forward under belly. Four connected legs and FOUR feet total, distinct attachment and occlusion. Do NOT copy horse head/neck or guide colors. Preserve compact ivory/gold mechanical quadruped chassis, blue joint gems, blue sun banners, swept-back triangular blue mirror fins with same arrangement, central large blue round collector, articulated gold arm ending in exactly THREE small round blue lenses in vertical sequence. Identical camera three-quarter facing right, no rider. One whole machine centered with generous margin, plain flat neutral gray #989898 background for approved cutout preparation. Original rich painted strategy-game detail. No shadows, ground, effects, beam, extra limbs, labels or diagram marks. Keep ivory plates bright and opaque, limbs mechanically articulated not translated duplicates.",
+        "source_sha256": "4217488ebd1b0438f8b5dc6a9d39e01f5f180bf05410b8e8d3e0a54eb77c27e4",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/walk-passing-a.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c5a4bc2d-5f76-4f30-bdaa-179c396c9392.png",
+        "prompt": "Use case: sketch-to-render. Original painted battle animation single passing pose. Image 1 is FOUR-leg joint guide ONLY; image 2 authoritative Solar Array Strider identity. Match image1 leg phase exactly: NEAR FORE leg (blue at right) straight beneath chest supports machine; FAR HIND leg (orange at left) beneath rear supports machine; NEAR HIND leg (blue left) folds forward with foot lifted well clear of ground; FAR FORE leg (orange right) bent and raised behind near foreleg, its foot visible in gap. Exactly FOUR attached mechanical legs, FOUR gold pointed feet, two planted and two raised. No horse anatomy or diagram ink. Preserve image2 compact ivory/gold chassis, blue gem bearings, sun banner pair, same swept-back blue triangular mirror array, central large blue collector and gold forward linkage with exactly THREE small blue round lenses. Same right-facing three-quarter camera, no rotation, constant machinery proportions. Single whole machine centered, 8 percent margin, neutral plain flat gray #989898 for cutout preparation. Opaque ivory armor, original richly painted style. No floor shadow, effects, beam, labels, extra limbs or equipment.",
+        "source_sha256": "a70ea1fbb413f812b8911839b180aa34684a0d76dc7566183b26efa6a75441bb",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/walk-contact-b.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d3c553c4-698b-4ed7-8fe7-51541e587f43.png",
+        "prompt": "Use case: sketch-to-render. Single original painted Solar Array Strider battle walk pose. Image1 is authoritative JOINT PLACEMENT only, image2 machine identity. Recreate exact phase2 guide stance: both BLUE near legs converge toward each other beneath belly, NEAR FORELEG angles strongly BACK toward screen LEFT, its planted foot immediately beneath center of belly; NEAR HINDLEG angles FORWARD screen right toward same center. Both ORANGE far legs spread OUTWARD: FAR FORE foot planted far RIGHT beyond nose, FAR HIND foot planted far LEFT. Exactly FOUR feet and independent hip-to-knee-to-foot linkages, no legs branch from knees. Do not repeat wide near-leg stance of identity. Keep original image2 compact ivory/gold chassis facing screen right, blue joint gems, hanging sun banners, same swept-back blue triangular mirror array, one large round collector, articulated gold optical arm bearing exactly THREE small round lenses. No horse head or colored-guide marks. Same three-quarter right-facing camera, machine proportions and identity, no body mirroring. One whole machine centered with full margin on flat neutral gray #989898. Opaque ivory armor and rich painted detail. No scene, shadows, effects, beam, new limbs, text or ground.",
+        "source_sha256": "99992ed5d4e959b3f0bf37c551bec53c2a0246f5893db2cf316be6683a30956d",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/walk-passing-b.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f3115dc4-7987-400f-9e21-e866885fae28.png",
+        "prompt": "Use case: sketch-to-render. Single original painted Solar Array Strider battle walk passing phase B. Image1 is authoritative FOUR-leg joint placement guide ONLY; image2 is machine identity. Match phase3 exactly: NEAR FORELEG blue right bends at knee FORWARD, foot lifted in front beneath chest well above ground; FAR FORELEG orange right extends vertically to planted foot; NEAR HINDLEG blue left vertical and planted; FAR HINDLEG orange left knee and foot fold forward raised beneath belly. Four independent mechanical legs attached to FOUR separate chassis hip joints, never branch from another leg's knee. Four gold clawed feet total, two raised two planted. Same right-facing three-quarter image2 camera and anatomy: compact ivory/gold chassis, blue joint gems, twin sun banners, swept-back blue triangular mirror fins with identical arrangement, central round blue collector and articulated gold forward arm bearing exactly THREE small blue lenses. No horse anatomy, no diagram colors. Entire machine centered with margin, plain flat neutral gray #989898 for local cutout. Original polished painted strategy game style. Opaque ivory. No floor, shadows, beams, effects, labels, extra equipment or extra limbs.",
+        "source_sha256": "a0707bd40c5db8d286d9e0572bda389aeeb0d3121a8ef27192eb02016251f146",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/attack-pair.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3b45a3eb-8b8e-4b6c-8418-3476fe24914c.png",
+        "prompt": "Use case: stylized-concept. Original painted battle melee animation TWO poses side by side of the exact referenced Solar Array Strider. This is a MELEE machine, not a ranged shooter. LEFT anticipation: four feet spread and planted, knees crouch, chassis drawn slightly back, forward gold optical assembly and nose draw back as one mechanism. RIGHT physical impact/lunge: rear legs extend to drive chassis forward screen right, front knees absorb low thrust, pointed armored nose and sturdy gold front arm thrust forward; same three small lenses attached, no beam. Shoulder/hip bearings articulate, no stretched parts. Preserve exactly FOUR independent legs with four clawed feet, compact ivory gold chassis, blue joint gems and TWO hanging sun banners, same fixed swept-back triangular blue mirror-fin arrangement and large collector; THREE small round blue lenses on the one gold forward arm. Both machines same size, same three-quarter right-facing camera. No humanoid, extra weapon, extra limb, detached lens, background, beam, particles or impact effects. Use two generous separate cells on a wide plain flat neutral gray #989898 background, whole machines including tips and feet uncropped. Original richly painted style, no text.",
+        "source_sha256": "4220fa3848be3bfe15e1daa1ef4664531b6f3da784d6834736483e07932b2abd",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/defense-pair.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bd18a3fb-275e-4191-8510-310ff7cbc8b6.png",
+        "prompt": "Use case: stylized-concept. Original painted Solar Array Strider defensive hold animation TWO subtly different poses side by side. Use attached machine as strict identity. Both machines crouch low on FOUR bent mechanical legs, FOUR clawed feet planted wide, chassis horizontal and close to knees. Large collector lowers with its back mount, the ENTIRE swept-back triangular blue mirror rig tilts as one fixed assembly, never rearranges into a fan or adds panels. Exactly THREE small blue round lenses stay on the folded gold optical arm in front. LEFT firm low brace with banners hanging between legs. RIGHT continuation of SAME low brace, suspension settles a little further, knees flex several degrees and banner ends sway slightly, no body scale change. Both same camera three-quarter facing right, same chassis, gold bearings with blue gems, opaque ivory plates, original blue/gold sun banners. Detailed original painted style, two well-separated complete machine sprites with generous margin on plain flat neutral gray #989898. No ground, shadows, text, effects, beam, additional limbs or detached parts. Keep precisely same part sizes and counts throughout.",
+        "source_sha256": "fd7e2e1011a87921936e3ed2c590a5dcdfdbb2fa8c273be9f2997e05ee3832cb",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/death-sequence.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0d8d1437-4abc-467d-9671-d2885dae235e.png",
+        "prompt": "Use case: stylized-concept. Original painted mechanical battle death animation THREE whole poses in one horizontal row, generous gutters, reference Solar Array Strider identity strictly preserved. LEFT: front knees buckle onto ground, rear legs still support elevated rear chassis, collector and THREE small lenses becoming dull blue. MIDDLE: chassis falls onto near side, FOUR legs folding at their original hip and knee joints, rear still just above ground, optical arm folded close; all glass dark blue reflective no light. RIGHT: final persistent inactive wreck flat on its side, exactly FOUR connected folded legs, ivory gold chassis and two fallen blue banners visible, three dark blue small lenses retained on one folded gold linkage, large dark blue collector and same swept-back blue triangular mirror-fin frame attached. Critical: mirror assembly is a rigid shape of the SAME swept-back fins from reference, merely tips with chassis; NEVER becomes a radial fan, never adds fins. All poses preserve same mechanical component sizes, no shrinking as unit falls, same three-quarter side view facing right. Retain structure, no broken/scattered parts, no rider/humanoid, no glow, beams, clouds, sparks, shadows, floor or labels. Three separate complete machines on plain neutral flat gray #989898, no contact between sprites, opaque painted armor and glass. Detailed original painted strategy-game art.",
+        "source_sha256": "94667b9ab3148215758d777d14216885cfb07896c8e8005d45e20403a2002659",
+        "selection": "packed_candidate"
+      }
+    ],
+    "reference_crops": [
+      {
+        "source": "alpha/poses.png",
+        "source_sha256": "c5b28aa4d3160b770aaa961432ecd3fbe9d0043e858925687a3a73e690246968",
+        "rect": [
+          0,
+          0,
+          378,
+          378
+        ],
+        "output": "reference-crops/identity.png"
+      }
+    ],
+    "reference_roles": {
+      "walking": "Quadruped joint-guide phase0/1/2/3 first, original idle identity second. Guide is authoring-only; no diagram pixels shipped.",
+      "attack": "Original idle machine identity; melee role read from content/units.json.",
+      "defense": "Original idle machine, two suspension-brace poses.",
+      "death": "Original idle machine, linked three-stage collapse preserving swept-back array and dark optics."
+    },
+    "preparation": "Owner-approved local non-generative neutral key minimum100 maximum185 tolerance12 edge_radius2; exact sampled gray enclosed-gap seeds in continuity-cutouts.json. Originals and generated masters retained unchanged. Per-output source/tool/recipe/output hashes in continuity-alpha/*.processing.json. Existing alpha is not reprocessed.",
+    "packing": "packing.json",
+    "runtime_sheet": "art/animation/runtime/poses/unit_sunvault_solar_array_striders.png",
+    "runtime_sha256": "92e55ff2206cec80b877eb0e68cdc07948aa34c8ee214d076c7073c842cf2a76",
+    "frames": 14,
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/solar-continuity-20260915/",
+    "validation": "Source and packed alpha-composite/art-desk production inspection only; not connected in-game or motion acceptance. No tests/imports/exports; consolidated roster/repository/Linux/Windows pass remains deferred until production is finished."
+  }
+}

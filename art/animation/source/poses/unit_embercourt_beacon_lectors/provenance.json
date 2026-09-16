@@ -1,0 +1,89 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_embercourt_beacon_lectors",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_embercourt_beacon_lectors.png",
+  "reference_sha256": "eac36ce8dd45c0ba99bb363a16c5fdae1aa561e572ad2e431ec906b92df8cd27",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "a135f492e05de382592bc45007b6696dbbf0d986ac2bd3a97f7e5ad19db2c457",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f36c4868-01b6-431c-9693-8c9fe103ebb7.png",
+      "prompt": "Use case: stylized-concept. Image1 identity reference. Original Beacon Lector battle sprite sheet SIXTEEN full-body poses FOUR columns FOUR rows consistent scale fixed elevated three-quarter view facing RIGHT generous gutters. Woman brown hair pinned bun loose strands cream mantle with red stripe and long split robes gray armor kneepads brown boots belts chain keys scroll tube. RIGHT hand tall wood iron staff topped steel bell and one hanging amber lantern red/cream streamers. LEFT hand free for casting. Row1 idle staff upright left hand relaxed; breathing head lifts left fingers open; walk near leg forward far back; passing legs under hips. Row2 opposite contact far leg forward near back no mirrored torso; melee windup right staff drawn slightly back left hand joins lower shaft; staff shove both hands drive full pole diagonally RIGHT bell forward; defense two hands brace staff across chest. Row3 hit recoil staff retained right hand; cast anticipation LEFT palm drawn to chest right staff upright; cast release LEFT arm extends toward RIGHT palm open right still holds complete staff; casting recovery left elbow eases down. Row4 idle recover mantle settles; knees buckle staff lowers; side fall torso raised full staff beside right hand; dead horizontal side eyes CLOSED relaxed legs full staff beside body lantern extinguished bell/streamers intact. Keep hands staff head complete in every pose, no extra limbs no missing gear, no rotated standing corpse. Original painterly raster pale gray background no effects text grid shadows scenery blood.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "e5c36624ad6eee12df7049cc96b61bc5dba601d3712160cdfa3903508fa1b7b4",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0561437b-61da-4e27-bbb6-c25dab3b5f95.png",
+      "alpha_prompt": "Use case: background-extraction. Image1 edit target. Extract all sixteen woman lector poses to genuine transparent RGBA background. Preserve exact original layout canvas positions scale full staff bell lantern streamers robe fringes hands face and closed-eye corpse extinguished lamp. Remove only gray background and shadows including gaps between staff and body or limbs. No matte halos painted checker scenery text or added effects, no altered poses."
+    }
+  ],
+  "review_notes": [
+    "Sixteen candidate frames: thirteen original real-alpha poses and three new articulated walking phases. Repeated walking cells and redundant standing recovery excluded.",
+    "Right-hand staff with one bell and one lantern retained; left-hand ranged/cast anticipation, release and recovery stay distinct from two-hand melee staff attack and guard.",
+    "Local preparation applies only to new chroma masters. Original alpha reused unchanged after actual light/green compositing; explicit crop bands preserve staff crown and remove neighboring pose fragments.",
+    "Raised near knee, near landing and raised far-foot passing replace repetitive source movement. Fine leg ownership beneath robes, equipment scale, edge residues and complete timed movement remain pending final refinement/playback acceptance.",
+    "Kneel, side fall and closed-eye corpse retain staff; lantern is extinguished on persistent corpse.",
+    "Candidate atlas and offline composition inspected. No tests/imports/exports or gameplay/save/footprint changes; consolidated full-roster acceptance remains open."
+  ],
+  "prior_review_notes": [
+    "Sixteen poses include left-hand cast anticipation/release/recovery, two-hand staff strike and equipped closed-eye corpse with extinguished lantern.",
+    "Gait repeats lead without passing/opposite contacts.",
+    "Staff length/bell scale, two-hand grip transitions, streamers and cloak continuity need refinement.",
+    "Extraction preview has broad red fringes; in-context alpha correction/review pending. Source only, not packed/enabled.",
+    "No tests/exports; consolidated validation deferred until generation and integration finish."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "sources": [
+      {
+        "file": "walk-passing-a-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e410cf9a-fd76-40f6-a44c-27a17126cdba.png",
+        "prompt": "Use case: sketch-to-render. ONE original Beacon Lector passing-A walking sprite. FIRST image supplies anatomy: BLUE NEAR leg planted under pelvis, ORANGE FAR leg bends knee with boot lifted behind supporting shin. SECOND image supplies exact woman identity: brown hair pinned bun/loose strands, cream mantle with red stripes and long split robes, dark leather belts/chain keys/scroll tube, gray armor kneepads, brown boots. RIGHT hand at screen LEFT holds full tall dark wood/iron staff topped one steel bell and ONE hanging amber lantern with red/cream streamers. LEFT hand at screen RIGHT hangs relaxed beside hip, not casting. Preserve one bell, one lantern, full staff head and butt; same hand ownership. Same elevated three-quarter RIGHT-facing tactical camera, upright stable torso, moderate natural step, split robes part around two correct legs. Match original adult proportions and detailed painterly game raster, no guide colors or diagram marks, no mirroring. Full staff and body inside broad empty margins. Flat vivid GREEN #00ff00 background only, neutral lighting no green spill/reflections on cream robe; no floor/shadow/text/scenery/effects.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+          "art/units/source/curated/unit_embercourt_beacon_lectors.png"
+        ],
+        "selection": "Select rear lifted-foot passing, staff stays in right hand.",
+        "sha256": "258bea01364d4c5196d74a758516c42c0c6b6e763bc289d27e6ce4d23f8df534"
+      },
+      {
+        "file": "walk-passing-b-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-672b61e8-55ed-4f6b-bc55-64124ff8ec7e.png",
+        "prompt": "Use case: sketch-to-render. ONE original Beacon Lector passing-B WALKING sprite. FIRST image supplies anatomy: ORANGE FAR leg planted beneath pelvis, BLUE NEAR thigh raises forward toward RIGHT, knee bent with boot visibly lifted in foreground. SECOND image supplies exact woman identity: brown hair pinned bun/loose strands, cream mantle with red stripes and long split robes, dark leather belts/chain keys/scroll tube, gray armor kneepads, brown boots. RIGHT hand at screen LEFT holds full tall dark wood/iron staff topped one steel bell and ONE hanging amber lantern with red/cream streamers. LEFT hand at screen RIGHT hangs relaxed beside hip, not casting. Keep one bell one lantern full staff head and butt and same hand ownership. Same elevated three-quarter RIGHT-facing tactical camera, upright stable torso, moderate natural walking step not a high kick; split robes part to show near bent foreground knee lifted forward and far supporting straight leg. Exact adult proportions and detailed painterly game raster, no guide colors or diagram marks, no mirroring. Full staff and body inside broad empty margins. Flat vivid GREEN #00ff00 background only, neutral lighting no green spill/reflections on cream robe; no floor/shadow/text/scenery/effects.",
+        "references": [
+          "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+          "art/units/source/curated/unit_embercourt_beacon_lectors.png"
+        ],
+        "selection": "Select raised foreground knee with opposite supporting foot; connected gait acceptance pending.",
+        "sha256": "3bad65318c923585fef9fdb89771c82041522681de7ff36801884ead3b68d873"
+      },
+      {
+        "file": "walk-near-landing-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3567f0df-ca1e-44bb-827e-24bd9958031d.png",
+        "prompt": "Use case: precise-edit. Edit this exact Beacon Lector walking image into the NEXT near-foot landing phase. Preserve exact face hair costume belt mantle scale torso head hands staff full bell ONE amber lantern and screen positions of upper body; same camera orientation. Only articulate the legs and nearby split robe fabric: the foreground bent knee now extends forward toward RIGHT and its raised boot lowers to the ground ahead of her, heel contacting ground. The other FAR leg trails backward, its heel lifts with toe still behind the pelvis. Show a moderate forward walking contact, not a kick or two parallel planted feet. Do not mirror or swap anatomical legs. Keep right hand at screen LEFT holding upright full staff; left hand at screen RIGHT relaxed. Preserve equipment dimensions and ivory cloth without green tint. Same full-body original painterly raster with complete staff inside generous margins. Flat vivid GREEN #00ff00 background, no floor/shadow/text/effects.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_beacon_lectors/walk-passing-b-green.png"
+        ],
+        "selection": "Select foreground landing derived from lifted-knee image, preserving upper-body equipment.",
+        "sha256": "ed5984ab7b19d18338655ccba4ab15e8a63188e591f21ffddcc8e4b5f1b97ee6"
+      }
+    ],
+    "generation": "continuity-generation.json",
+    "reused_source": {
+      "source": "alpha/poses.png",
+      "sha256": "e5c36624ad6eee12df7049cc96b61bc5dba601d3712160cdfa3903508fa1b7b4",
+      "selection": "Idle pair, row1 third contact, row2 final three melee/guard poses, all four row3 hit/cast poses, row4 final three death poses."
+    },
+    "preparation": "continuity-cutouts.json; explicit green color_distance radius75, all_keyed_is_background true, edge_radius2; exact processing proofs retained.",
+    "packing": "packing.json",
+    "packed_frames": 16,
+    "runtime_candidate": "art/animation/runtime/poses/unit_embercourt_beacon_lectors.png",
+    "runtime_sha256": "782351fbb3228b0954407e5030c490d2559c34e033ccbb5b1f9382fbfc2ee517",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/lector-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted"
+  }
+}

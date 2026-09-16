@@ -1,0 +1,104 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_thornwake_barkmantle_rams",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_thornwake_barkmantle_rams.png",
+  "reference_sha256": "e0f123ac134cc74a2e7d46428092f4d85fffaa31cda37b1fff11b5dc40350639",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/poses-draft.png",
+      "source_sha256": "b12035d2fa5e4f85ebd0e517a198bb6fa2712103d27761be51f06ebeedb80540",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e8dcce59-9a42-490e-bcf0-82693a353bcc.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle sprite animation sheet. Reference Barkmantle Ram is a massive squat FOUR-legged living-wood rhinoceros-like beast, layered pale birch bark plates over mossy dark root body, red vine bindings, amber resin nodules, short stump tail and enormous curved pale wood horns on blunt wedge head. Broad root-toed feet, red/cream geometric cloth strips along flank. No rider, no sheep wool, no metal. Paint twelve complete articulated poses in FOUR columns THREE rows, fixed three-quarter facing right, constant body/head/horn scale, generous gutters. Transparent RGBA background. Reading order: 1 idle planted feet head level; 2 breathing shoulders lift head tilts slightly; 3 walk near foreleg forward near hind back; 4 passing knees flex legs under body; 5 opposite contact far foreleg forward near foreleg back; 6 attack windup hindquarters crouch head pulls back; 7 horn ram lunge head low pushed forward hindlegs extend; 8 defense low planted stance horns protecting front; 9 hit head pulled aside shoulders recoil; 10 death front knees buckle chest nearly grounded; 11 side collapse legs fold head lowers; 12 dead side-lying inert root beast all FOUR legs and horns attached, resin dull amber and eyes closed. Preserve layered bark, horn count and shape, bindings and cloth markers through all states. Distinct anatomical poses not translated copies. No detached horns, new limbs, scenery, shadow, effects, text or gore. Detailed original painted strategy art matching reference. Full feet/horns in each frame, true transparent empty space."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/poses.png",
+      "source_sha256": "a133b8b66d58e384e25a4735e8f48a1d6519d9735032dea222a56ae45ddabb78",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5cf5d1dc-1d5a-4c28-ad39-892f5242152a.png",
+      "prompt": "Use case: precise-object-edit. Edit only ROW THREE COLUMN ONE recoil pose of Barkmantle Ram. Restore the missing curved pale wooden horn cluster on its head, matching the same large horn shapes in all other poses but rotated consistently with its recoiling head. Keep head connected to neck, red bindings, all four legs and original pose unchanged. Every other sprite and full sheet layout unchanged. No new background or other edits.",
+      "alpha_source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/alpha/poses.png",
+      "alpha_sha256": "a31148c9c83d48ce849968da8d82354f6e7677fd6e31ba8cd51cf92cadc2d5b9",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-44d36aff-d604-44b6-9832-62373c41288c.png",
+      "alpha_prompt": "Use case: background-extraction. Remove entire brown backdrop from supplied twelve-pose Barkmantle Ram sheet to real transparent RGBA alpha, including spaces around horns and between legs. Preserve all painted beasts exactly with restored recoil horns, pale bark plates, moss, red bindings and amber nodules. Same poses, positions, scale and opaque interiors. No replacement backdrop, matte, shadows, checkerboard pixels, colored fringes or redraw."
+    }
+  ],
+  "review_notes": [
+    "11 packed candidate frames: nine retained paintings from the earlier checker-backed derivative plus two selected new diagonal-step paintings from two built-in masters. Original brown-backed master and corrected recoil source remain preserved; use the inspected earlier derivative consistently for retained states.",
+    "The file named alpha/poses.png is actually opaque RGB checker, not transparent alpha. Its earlier generative extraction changed detail/contrast. Approved connected neutral185/tolerance16/edge2 with six inspected leg-gap seeds prepares that selected painting without erasing pale birch highlights; do not claim unchanged reuse of the brown-backed pixels.",
+    "Fixed clean planted identity guides opposite diagonal root-foot lifts. Each new painting shows four connected legs: two planted and two raised. Horn cluster, red bindings, cloth marks and amber resin remain. Repeated original gait is unselected; short-step registration is not accepted translated gait.",
+    "Read-only connected-component extents help choose explicit banded crop boundaries for adjacent windup/contact/guard. Neighbor horns and paws present in the initial atlas are excluded in the final atlas without cutting owned horns/toes or changing the packer's clipping guard.",
+    "Retain restored-horn recoil and original kneel/side-collapse/inert equipped corpse. Recoil head turn is large; horn/root-foot/cloth/resin continuity, body scale, ground support and travel, attack amplitude, finer pale edges and actual action/death timing still require full160 refinement and consolidated acceptance. No tests/imports/exports, paid API or gameplay/save/footprint changes."
+  ],
+  "prior_review_notes": [
+    "Twelve poses visually inspected; missing recoil horn cluster restored. Collapse and inert body retain bark and bindings.",
+    "Four-leg gait contacts/passing insufficiently distinct. Horn/head proportions, root-foot anatomy and attachment continuity need refinement.",
+    "Recoil head rotates substantially backward; transition readability pending. Attack windup/contact differences need full-motion review.",
+    "Extraction changed surface detail/contrast; alpha and in-context compositing acceptance pending. Source-only, not packed or enabled.",
+    "No tests/exports or disposable test intermediates created; 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "reference_crops": [
+      {
+        "path": "art/animation/source/poses/unit_thornwake_barkmantle_rams/standing-reference-light.png",
+        "sha256": "7cb75a6f7ea343a4669d3614c1eb4d807b1f528ca97b129170d1039026af0190",
+        "source": "continuity-alpha/original.png",
+        "source_sha256": "080fb428a56f86fba082912da5a07abf1205068713154553347c8201d014aaff",
+        "rect": [
+          0,
+          81,
+          393,
+          355
+        ],
+        "method": "Actual alpha composited on light and nearest4x for fixed identity reference; no repaint, distortion or synthesized pose."
+      }
+    ],
+    "sources": [
+      {
+        "source": "walk-near-diagonal-magenta.png",
+        "sha256": "0075f2ee724b94bc11153ab94a670cc738856dd5790aaea8561cbc6ef08c4707",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b5dcb60f-628e-4eed-97a9-9a1aeffd533e.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Image1 is the fixed neutral original Barkmantle Ram painting and sole identity reference. This is a squat FOUR-legged living birch/root rhinoceros with exactly the existing pale curved horn cluster on the picture-right head, layered pale bark with moss seams, red bindings, amber resin beads and two red/ivory hanging cloth marks. Match original head, neck, broad torso, stump tail, horn lengths and pale/dark paint exactly. No rider, no sheep, no facial redesign, no new ornaments. Fixed three-quarter camera facing RIGHT. Paint one small deliberate WALK step by lifting an OPPOSITE DIAGONAL leg pair, keeping torso/head at original height and angle. All four legs individually accounted for, each connected to its original hip/shoulder; two visible grounded feet and two visible lifted feet, not a jump or a whole-body rotation. Maintain broad root-toed feet and uniform body proportions. Keep full horns/tail/toes uncropped with generous margins. Flat vivid MAGENTA255,0,255 backdrop inside all gaps too, no ground/shadows/checker/effects/text. Lift the NEAR front leg (large foreground root foot beneath shoulder, picture center-right) and FAR hind leg (smaller rear foot visible under the belly, center-left). Bend these two knees visibly, root toes off the floor. The NEAR hind foot at far picture-left and FAR front foot under the horn-side shoulder stay planted. Retain all four separate feet.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_barkmantle_rams/standing-reference-light.png",
+            "sha256": "7cb75a6f7ea343a4669d3614c1eb4d807b1f528ca97b129170d1039026af0190"
+          }
+        ]
+      },
+      {
+        "source": "walk-far-diagonal-magenta.png",
+        "sha256": "522e5d661281bc804f8e9a889eb53912c64da366144c53d5cee8545f1ae8ca2e",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e85f49be-b5ce-44d9-818b-3705bf65cfb1.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Image1 is the fixed neutral original Barkmantle Ram painting and sole identity reference. This is a squat FOUR-legged living birch/root rhinoceros with exactly the existing pale curved horn cluster on the picture-right head, layered pale bark with moss seams, red bindings, amber resin beads and two red/ivory hanging cloth marks. Match original head, neck, broad torso, stump tail, horn lengths and pale/dark paint exactly. No rider, no sheep, no facial redesign, no new ornaments. Fixed three-quarter camera facing RIGHT. Paint one small deliberate WALK step by lifting an OPPOSITE DIAGONAL leg pair, keeping torso/head at original height and angle. All four legs individually accounted for, each connected to its original hip/shoulder; two visible grounded feet and two visible lifted feet, not a jump or a whole-body rotation. Maintain broad root-toed feet and uniform body proportions. Keep full horns/tail/toes uncropped with generous margins. Flat vivid MAGENTA255,0,255 backdrop inside all gaps too, no ground/shadows/checker/effects/text. Lift the FAR front leg (smaller horn-side front foot on picture-right, behind the large foreground front leg) and NEAR hind leg (the hind foot at far picture-left). Bend these two knees visibly with root toes off the floor. The large foreground NEAR front foot remains PLANTED, and the smaller FAR hind foot under the belly remains PLANTED. Retain all four separate feet.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_barkmantle_rams/standing-reference-light.png",
+            "sha256": "7cb75a6f7ea343a4669d3614c1eb4d807b1f528ca97b129170d1039026af0190"
+          }
+        ]
+      }
+    ],
+    "preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "packed_frames": 11,
+    "reused_pose_count": 9,
+    "new_selected_pose_count": 2,
+    "runtime_candidate": "art/animation/runtime/poses/unit_thornwake_barkmantle_rams.png",
+    "runtime_sha256": "1cb173e61905e031d3f7e0c4006372a524394c698c6ed6d3e3276f1fe11a60df",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/barkram-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted",
+    "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/barkram-continuity-20260915/art-desk-registered.html",
+    "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/barkram-continuity-20260915/art-desk-registered.png",
+    "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/barkram-continuity-20260915/packed-final/poses-candidate-atlas-green.png"
+  }
+}

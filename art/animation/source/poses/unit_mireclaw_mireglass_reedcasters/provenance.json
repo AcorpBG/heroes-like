@@ -1,0 +1,206 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_mireclaw_mireglass_reedcasters",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_mireclaw_mireglass_reedcasters.png",
+  "reference_sha256": "15ae4a8a0d45752a075ad449bafa265ec2cf7bcb86aa7dd9dd8dc8afed0801dc",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/walk-passing-draft.png",
+      "source_sha256": "43b788d2184a63575b8885a3d9c76f6a585184c4493dfa711178661336acccfb",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-83248249-59d2-40c8-a169-35740ec18b33.png",
+      "prompt": "Use case: precise-object-edit. Edit this single original Reedcaster sprite. Remove the EXTRA lowest hanging boot at image-left (the downward-pointing boot below the lifted horizontal rear boot). Reconstruct only background in its place. Keep the upper image-left boot connected via bent shin to knee, raised behind body, and keep the large image-right planted boot. Exactly TWO feet total, one planted one lifted, TWO complete legs. This is a walking passing pose. Preserve all head cloak arms hands staff and THREE globes, do not redesign. Add a small margin on right so globe is not edge-clipped. Transparent background, no checker pattern painted into image, no text.",
+      "review": "Two boots after extra-foot correction, rear knee bent and foot lifted, planted near leg. Passing draft only, NOT opposite contact. Larger/cleaner rendering needs source scale/style matching; rightmost globe remains edge-tight and alpha unresolved. Not packed/enabled.",
+      "unselected_inputs": [
+        {
+          "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-69dbdbf4-a8c2-41cf-8929-9578382ce9e3.png",
+          "prompt": "Use case: precise-object-edit. Input image is edit target, original Mireglass Reedcaster 4x4 battle pose sheet. Change ONLY top row column4 walking pose: swap which anatomical leg leads. The leg currently extending screen-right must now extend backward toward screen-left, heel raised and toes touching ground. The other leg currently at screen-left must cross forward from its hip, heel contacting screen-right, showing the opposite contact of a natural walk. Keep TWO complete legs, same proportions, torso, hood, leaf cloak, staff held in TWO hands and THREE suspended glass globes. Do not mirror the character, camera or equipment. Other fifteen poses unchanged, identical grid, scale and background. No labels.",
+          "reason": "Stance changes but same near-leg lead remains."
+        },
+        {
+          "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-28095ac4-0c01-4e17-bfa0-24a76bbdd5b7.png",
+          "prompt": "Use case: stylized-concept. Input is identity/style reference for ONE Mireglass Reedcaster. Produce ONE full-body battle sprite, not a sheet, same elevated three-quarter view facing screen-right. Hooded marsh humanoid layered olive leaves, bark/gold armor, claw boots, green eyes, small belt vial. Both hands grip same diagonal curved wooden staff with exactly THREE caged turquoise green glass globes. Walking OPPOSITE CONTACT: near leg (root at image-right hip) extends BACK across screen-left with raised heel; far leg (root at image-left hip) crosses visibly BEHIND near thigh and extends FORWARD screen-right with heel down. Show a clear X of thighs below skirt and two complete knees/boots; do not repeat image's side-by-side forward near leg. Torso same orientation as reference, staff globe end still screen-right. Keep reference body proportions and painted finish. Transparent background, no checkerboard, ground or text, generous margin around all extremities.",
+          "reason": "Extra rear boot; used only as input to targeted correction, not selected."
+        }
+      ]
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/poses-hit-grip.png",
+      "source_sha256": "768bff94d9832cd456484a0a6fe6094fd3edf09e93894e00994596b0f136ee4d",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5b4f76a9-01e3-40ae-a0b0-aa941bf0c30b.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY hit-recoil sprite row3 column4 (frame12) in this original 4x4 Mireglass Reedcaster sheet. Lower the detached raised hand from above hood so it firmly grips staff shaft near curved globe end, while existing lower hand keeps rear grip. Preserve recoil torso leaned back, bent knees and hood tilt, TWO arms/hands total, same staff position and THREE hanging glass globes on cords. Forearm bends naturally to new grip; do not add hand or duplicate staff. Other fifteen sprites unchanged, same layout camera scale and background. No text or effects.",
+      "review": "Select frame12 only: upper hand now grips shaft below curved head; lower hand retains rear grip, three globes and backward recoil retained. Leaf/hood and globe position continuity plus alpha still pending. Other frames not selected; source-only, not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/poses-fall-globes-dim.png",
+      "source_sha256": "eccdcd74dca299a8ef99cfaebe1d4fba628a62d3308be2915e5b4c91bf57d2ef",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1ee2f378-de21-4262-bb63-6e1f60f4b338.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY row4 column3 (15th side-falling pose) in this original 4x4 Mireglass Reedcaster sheet. Dim its THREE grounded glass globes to dull dark turquoise liquid with ordinary soft reflection, no luminous lime green filling; match glass colors of final corpse beside it. Dim small belt vial same way. Eye fades to dark olive under hood rather than bright green dot. Keep exact falling posture arms legs staff THREE gold cages cords hood and leaf cloak; no new face design. Other fifteen frames unchanged, especially final dark corpse. Same layout camera scale and background, no effects/text.",
+      "review": "Select frame15 only: three grounded globes now dark teal instead of luminous lime; eye subdued. Falling body/staff retained. Small globe-position/cord and hood continuity still need assembly matching; alpha unresolved. Other frames not selected. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/poses-dead-eyes-dark.png",
+      "source_sha256": "a17a176ea8d885a583970d0c18fe968fb68b49be0a2e7973bb4277d29375e0fa",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ee2b54f0-c00f-446c-bc06-88c7cd700b9b.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY bottom-right sprite (row4 column4) in this original 4x4 Mireglass Reedcaster sheet. Inside its hood, replace the entire bright green eye/face opening with opaque very dark brown shadow and closed eyelid, NO green or yellow luminous dots. It is dead, all eye light extinguished. Any belt vial on this corpse dark dull teal, not glowing. Preserve exact side-lying body, hood outline, leaf cloak, grounded staff and THREE dark glass globes. All other fifteen sprites unchanged, exact layout scale camera and background. Do not add corpse, change pose or remove hood. No text/effects.",
+      "review": "Select frame16 only: bright green eye replaced by dark face with closed eyelid; three globes dull and belt vial subdued. Face/hood shape changed slightly, transition and alpha pending. Other frames not selected. Source-only not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/poses.png",
+      "source_sha256": "e89407d9f1a69636249ca3fdf23319ea7868edcb3f4d4ef1da8a5fb751d2e653",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b87a9b2b-5870-427b-97a9-ba42c1fe03f5.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle sprite sheet. Reference defines ONE Mireglass Reedcaster: hooded masked marsh humanoid in layered olive leaf cloak, gold/bark armor, dark green cloth skirt, claw-toed wrapped boots, green eyes. Holds ONE long twisted reedwood staff in BOTH hands, forked curved end suspending exactly THREE large round turquoise/green liquid glass globes in gold cages on cords of different lengths. Small turquoise belt vial. Preserve reference identity, staff shape, globe count and robe. Create exactly SIXTEEN fully articulated full-body poses in four columns x four rows, fixed elevated three-quarter camera facing screen-right, constant body/weapon/globe scale and generous margins containing staff and globes. Genuine transparent RGBA background no painted checkerboard, labels, grid, scenery or floor. Row1: idle settled staff diagonal; idle shoulders breathe globes swing subtly; walk right foot forward left behind; opposite walk LEFT foot forward RIGHT behind, visibly opposite leg contact. Row2: passing lifted rear foot beneath pelvis; melee wind-up staff drawn back both hands spread; melee staff butt thrust screen-right while three globe fork held behind to left, all attached; defend staff diagonally before torso globes hanging safely aside. Row3: cast anticipation staff lifted globes glow; release staff points forward three globes pulse small green motes; recovery staff lowered globes settling; hit recoil torso back knees flex globes swing. Row4: death one knee buckles staff lowers lights dim; kneeling head bowed staff lands beside with all globes intact; side fall hips knees bent cloak slumps staff beside; dead side-lying inert figure with dark eyes, dull unlit globes and belt vial, same staff with exactly three cages resting nearby. Two hands two legs no duplicate staff. Real joint articulation, not rotated standing cutouts. Original art only no copyrighted franchise assets."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a653b95c-d16e-48b6-adf1-11243f189b59.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY the bottom-right final corpse in this sixteen-pose Mireglass Reedcaster sheet: extinguish its visible bright green eye, leaving a dark closed eyelid/shadow under hood. Preserve the entire remaining corpse, dull three globes, staff and all fifteen other poses exactly. Same canvas, layout, colors and figure scale.",
+      "reason": "Final eye remains visibly green; no clear correction, not selected."
+    }
+  ],
+  "review_notes": [
+    "14 packed candidate frames: ten retained original/corrected poses plus four selected new paintings from six built-in masters.",
+    "Original and prior targeted sheets are opaque RGB checkerboard. Approved connected neutral110/tolerance12/edge2 preparation plus explicit inspected enclosed-gap seeds preserves the olive/gold costume and glass highlights. No global neutral key.",
+    "First text-only opposite-step repeats screen-right foot lift and remains unselected. Guide-first generation gives the screen-left/far foot lift while the near foot supports. Paired foot-lift short steps, not accepted translated gait.",
+    "Original cast anticipation/release/recovery contain checkerboard trapped in green effect clouds. All three are excluded. New raised-staff anticipation and two-hand release keep light inside three glass globes; return passes back through the raised-staff pose. Existing runtime VFX is unchanged.",
+    "Initial new release duplicated a gold glove at the hip. Targeted built-in repair removes it while retaining the two real connected hands; three-hand draft remains unselected. Original corrected hit grip, dimmed side-fall globes and dark-eyed corpse are retained.",
+    "Banded staff-strike/kneeling crops exclude neighbouring staff/globe/leaf fragments. New magenta75/edge2 preparation avoids keying legitimate green costume/glass. Palette/face/hood/staff length, cage/cord/grip continuity, pale edge flecks, foot support and actual event/death timing remain for full-roster refinement. Final atlas and registered art desk are production inspection only; acceptance0/160. No tests/imports/exports or gameplay/save/footprint changes."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses retain three caged globes through casting and collapse.",
+    "Walking contacts repeat lead; idle subtle and passing needs continuity with opposite contact.",
+    "Staff grip/length, globe cord attachment and diameter, hood/leaf continuity require refinement.",
+    "Casting releases one supporting hand and hit grip uncertain; ensure intentional hand ownership and connected staff.",
+    "Final globes subdued but green eye still active; targeted edit failed. Corpse eye closure and inactive belt vial pending.",
+    "Displayed checker background and actual transparency unresolved; no packing/enabling. 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "reference_crops": [
+      {
+        "path": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/standing-reference-light.png",
+        "sha256": "4898d87dc4c66856322bdf081faa648da2fa06719c5088dd7d1bbdd766310801",
+        "source": "continuity-alpha/original.png",
+        "source_sha256": "63e6704ac3c0298786de91d81f7d59da3803cb8f1049e1e3222b19e832ba26a0",
+        "rect": [
+          0,
+          0,
+          311,
+          316
+        ],
+        "method": "Owner-approved prepared original, actual alpha on light, nearest4x. Reference crop was made after initial gap seeds; later recipe additions concern other poses."
+      }
+    ],
+    "sources": [
+      {
+        "source": "step-left-repeated-draft-magenta.png",
+        "sha256": "02185a6c7458c5d6c29da25c475b7eefa04de5c55c89b461023332aa1f5ca10b",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e75ea7f8-9b72-4a06-b16a-b35d8deb40c4.png",
+        "selected": false,
+        "reason": "Repeats the screen-right lift instead of requested left/far step.",
+        "prompt": "Use case: precise-object-edit. Edit only the leg pose of ONE Mireglass Reedcaster from the input neutral painting: hooded marsh humanoid, olive leaf cloak, gold/bark armor and leg bindings, two claw-toed boots, green eye under hood, small turquoise belt vial. Same three-quarter facing screen RIGHT, same original soft painted/pixel-textured finish. ONE curved reedwood staff held in BOTH hands, anatomical RIGHT hand lower/rear at screen-left, LEFT hand higher/front at screen-right; exactly THREE green/turquoise glass globes in gold cages on THREE attached cords of different lengths at screen-right. Preserve body, hood, robe and staff/globe sizes and grip ownership, never mirror. Lift the boot at screen LEFT by bending that knee and drawing the lower leg under the cloak, toe pointing down. Keep the screen RIGHT boot planted and that leg straight supporting the body. Exactly two connected legs and two complete boots, no extra foot behind the skirt. Keep staff, arms, torso and globes in the neutral carry position. Single full-body sprite, all staff ends and globes inside generous margins. Solid pure magenta RGB255,0,255 production background, not green (green is part of the unit), no magenta spill, floor, cast shadow, scenery, grid or text. Do not generate a sheet.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/standing-reference-light.png",
+            "sha256": "4898d87dc4c66856322bdf081faa648da2fa06719c5088dd7d1bbdd766310801"
+          }
+        ]
+      },
+      {
+        "source": "step-right-magenta.png",
+        "sha256": "fd07a9230d5ce5ec6483c97024f67a814067234c004017c489c6946d7759a0e0",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-60b03f6a-6fbf-4abc-aa80-bc180c035982.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Edit only the leg pose of ONE Mireglass Reedcaster from the input neutral painting: hooded marsh humanoid, olive leaf cloak, gold/bark armor and leg bindings, two claw-toed boots, green eye under hood, small turquoise belt vial. Same three-quarter facing screen RIGHT, same original soft painted/pixel-textured finish. ONE curved reedwood staff held in BOTH hands, anatomical RIGHT hand lower/rear at screen-left, LEFT hand higher/front at screen-right; exactly THREE green/turquoise glass globes in gold cages on THREE attached cords of different lengths at screen-right. Preserve body, hood, robe and staff/globe sizes and grip ownership, never mirror. Lift the boot at screen RIGHT by bending its knee forward and raising the clawed toe about half a boot-length clear of the ground. Keep the screen LEFT boot planted and that leg supporting the body. Exactly two connected legs and two complete boots, no extra foot behind the skirt. Keep staff, arms, torso and globes in the neutral carry position. Single full-body sprite, all staff ends and globes inside generous margins. Solid pure magenta RGB255,0,255 production background, not green (green is part of the unit), no magenta spill, floor, cast shadow, scenery, grid or text. Do not generate a sheet.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/standing-reference-light.png",
+            "sha256": "4898d87dc4c66856322bdf081faa648da2fa06719c5088dd7d1bbdd766310801"
+          }
+        ]
+      },
+      {
+        "source": "step-left-guided-magenta.png",
+        "sha256": "e7a5867c91bb23e0283b2d159b15994fcaa2775c810924d98d78db6675bf1c30",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c9bed139-f358-4688-a4c1-97ee6fbd1574.png",
+        "selected": true,
+        "prompt": "Use case: sketch-to-render. Asset type: ONE original Mireglass Reedcaster battle sprite. IMAGE1 IS THE AUTHORITATIVE LEG-POSE GUIDE; IMAGE2 supplies original creature identity, costume, staff, lighting and texture ONLY, not the leg pose. Draw blue NEAR leg straight/planted and orange FAR leg lifted behind it as in image1: the boot from SCREEN RIGHT of image2 is planted below the body; the boot from SCREEN LEFT of image2 is lifted with its knee bent and heel tucked back. EXACTLY TWO feet, planted near boot and clearly separate elevated far boot. Do not lift the near/screen-right knee again. ONE Mireglass Reedcaster from the input neutral painting: hooded marsh humanoid, olive leaf cloak, gold/bark armor and leg bindings, two claw-toed boots, green eye under hood, small turquoise belt vial. Same three-quarter facing screen RIGHT, same original soft painted/pixel-textured finish. ONE curved reedwood staff held in BOTH hands, anatomical RIGHT hand lower/rear at screen-left, LEFT hand higher/front at screen-right; exactly THREE green/turquoise glass globes in gold cages on THREE attached cords of different lengths at screen-right. Preserve body, hood, robe and staff/globe sizes and grip ownership, never mirror.  Keep neutral diagonal staff carry and two hand grips. Translate only the guide's leg anatomy into painted costume, not its mannequin body proportions, colors, labels or line art. Single full-body sprite, all staff ends and globes inside generous margins. Solid pure magenta RGB255,0,255 production background, not green (green is part of the unit), no magenta spill, floor, cast shadow, scenery, grid or text. Do not generate a sheet.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/guides/biped-walk-phase-1.png",
+            "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+          },
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/standing-reference-light.png",
+            "sha256": "4898d87dc4c66856322bdf081faa648da2fa06719c5088dd7d1bbdd766310801"
+          }
+        ]
+      },
+      {
+        "source": "cast-windup-magenta.png",
+        "sha256": "bb2ad6e819f8b8f3486460ada318a1b4fcb27c85bfd33bebeb192f949e4cc851",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ea824310-6089-47d1-ac48-3829869adf41.png",
+        "selected": true,
+        "prompt": "Use case: stylized-concept. Asset type: one original casting-anticipation battle sprite of ONE Mireglass Reedcaster from the input neutral painting: hooded marsh humanoid, olive leaf cloak, gold/bark armor and leg bindings, two claw-toed boots, green eye under hood, small turquoise belt vial. Same three-quarter facing screen RIGHT, same original soft painted/pixel-textured finish. ONE curved reedwood staff held in BOTH hands, anatomical RIGHT hand lower/rear at screen-left, LEFT hand higher/front at screen-right; exactly THREE green/turquoise glass globes in gold cages on THREE attached cords of different lengths at screen-right. Preserve body, hood, robe and staff/globe sizes and grip ownership, never mirror. POSE: brace both feet planted with knees softly bent, draw the staff back closer to chest and lift its globe-bearing fork above shoulder height at screen RIGHT, BOTH hands still gripping their original rear/front shaft positions. Tilt hood up toward globes. The three suspended globes hang naturally on their existing three cords with a modest yellow-green inner light, no exterior glow. Hood and cloak articulated subtly without redesigning. Do not reverse the staff, add hands or globes, or release either hand. Single full-body sprite, all staff ends and globes inside generous margins. Solid pure magenta RGB255,0,255 production background, not green (green is part of the unit), no magenta spill, floor, cast shadow, scenery, grid or text. Do not generate a sheet.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/standing-reference-light.png",
+            "sha256": "4898d87dc4c66856322bdf081faa648da2fa06719c5088dd7d1bbdd766310801"
+          }
+        ]
+      },
+      {
+        "source": "cast-release-extra-hand-draft-magenta.png",
+        "sha256": "5dece914ec2bcee6a0fc8372cafed1a14978cbe59028ea20bd6f4984986bc2a5",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-70173f09-ce66-4f3b-9ab0-b8abba3decdf.png",
+        "selected": false,
+        "reason": "Extra gold glove duplicates a third hand on lower staff.",
+        "prompt": "Use case: stylized-concept. Asset type: one original casting-release battle sprite of ONE Mireglass Reedcaster from the input neutral painting: hooded marsh humanoid, olive leaf cloak, gold/bark armor and leg bindings, two claw-toed boots, green eye under hood, small turquoise belt vial. Same three-quarter facing screen RIGHT, same original soft painted/pixel-textured finish. ONE curved reedwood staff held in BOTH hands, anatomical RIGHT hand lower/rear at screen-left, LEFT hand higher/front at screen-right; exactly THREE green/turquoise glass globes in gold cages on THREE attached cords of different lengths at screen-right. Preserve body, hood, robe and staff/globe sizes and grip ownership, never mirror. POSE: lean torso forward into spell release, front knee bent, back foot planted. Push the same staff diagonally forward screen RIGHT with BOTH hands gripping the rear and middle shaft, arms extending so the fork and its THREE cord-hung globes project in front of the body. Keep staff fork at screen RIGHT, not flipped. Three glass globes brightly lit WITHIN their glass only, liquid and cages intact; no surrounding bloom, motes, streaks or translucent effect cloud. Actual game VFX supplies external magic. Hood looks toward target, cloak reacts subtly. Same body/gear size, no added pieces. Single full-body sprite, all staff ends and globes inside generous margins. Solid pure magenta RGB255,0,255 production background, not green (green is part of the unit), no magenta spill, floor, cast shadow, scenery, grid or text. Do not generate a sheet.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/standing-reference-light.png",
+            "sha256": "4898d87dc4c66856322bdf081faa648da2fa06719c5088dd7d1bbdd766310801"
+          }
+        ]
+      },
+      {
+        "source": "cast-release-two-hands-magenta.png",
+        "sha256": "3ac5197895d9029d48f72b97acb4b9558f8602c0c7a888ebdd59e332b8e6d2ab",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f9e6aca8-e605-49b3-ba1a-42f81430db49.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Edit this ONE Mireglass Reedcaster spell-release sprite. It currently has THREE hands. Remove ONLY the superfluous GOLD glove wrapped around the staff at the lower-left near the waist/hip (about 26 percent of image width, 56 percent height). Replace that small glove with the continuous brown wooden shaft and the underlying olive leaves, matching existing staff paint. Preserve the two REAL gray hands: one at the image center (roughly 51 percent width,43 percent height) attached to the gold-armored forearm crossing chest, and the other at upper-right (72 percent width,33 percent height) attached to the extended forearm. Exactly TWO arms and TWO hands after repair. Keep whole staff, THREE hanging globes and cords, every other costume/body/leg detail, pose, scale, fixed camera and colors identical. No extra glove, strap resembling fingers, scenery, shadow, glow, text or changes to magenta RGB255,0,255 background. Single full figure all extents retained.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/cast-release-extra-hand-draft-magenta.png",
+            "sha256": "5dece914ec2bcee6a0fc8372cafed1a14978cbe59028ea20bd6f4984986bc2a5"
+          }
+        ]
+      }
+    ],
+    "preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "packed_frames": 14,
+    "reused_pose_count": 10,
+    "new_selected_pose_count": 4,
+    "runtime_candidate": "art/animation/runtime/poses/unit_mireclaw_mireglass_reedcasters.png",
+    "runtime_sha256": "22742f99367a5f1c5eb11529f5365aa054d28949167f94746e7be549003c90e6",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/mireglass-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted",
+    "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/mireglass-continuity-20260915/art-desk-registered.html",
+    "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/mireglass-continuity-20260915/art-desk-registered.png",
+    "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/mireglass-continuity-20260915/packed-final-crops/poses-candidate-atlas-green.png",
+    "guide": {
+      "path": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/guides/biped-walk-phase-1.png",
+      "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734",
+      "purpose": "Authoring-only leg-pose input, never shipped as game art."
+    }
+  }
+}

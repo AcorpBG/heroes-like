@@ -1,0 +1,74 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_brasshollow_tallyspring_throwers.png",
+  "reference_sha256": "4f7df2297cf1f5f0e38ecf50f77c5abf148789af2b035706d7b6288d6257adcd",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/poses.png",
+      "source_sha256": "290b21896b5f8f4aac9f58f78349befafbcca8ac4f4a4fd548190f54549a0bb3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5dc2ddf9-2e5b-4975-b848-114a374f78cd.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle animation sprite sheet matching attached Tallyspring Thrower. Exactly sixteen isolated full-body poses regular 4 columns 4 rows, same scale fixed 3/4 camera facing RIGHT, generous gutters. True transparent RGBA background no painted checkerboard no ground no labels. Stocky human woman auburn hair bun red headwrap, rust red shirt trousers, black leather apron, riveted steel shoulders forearm plates heavy brass-toed boots, belt brass tally tags and cylinder. ONE boxy brass/iron spring launcher with exposed side compression spring, top rectangular open hopper holding round gold discs. RIGHT hand rear trigger grip LEFT under front grip. Keep mechanism size hands and equipment count continuous. Row1 idle launcher lowered; breathing idle shoulders lift apron settles; walking LEFT foot forward RIGHT back; walking RIGHT foot forward LEFT back clearly opposite anatomical legs without mirroring body. Row2 passing raised bent knee; melee wind-up both hands pull launcher back chest; melee close shove BOTH hands push launcher body towards adjacent enemy right no firing; defense crouch launcher held across torso. Row3 hit recoil torso back launcher retained; ranged aim shoulder braced launcher horizontal; firing one gold disc exits right small compact orange spark spring extends; reload RIGHT hand pulls rear cocking handle while LEFT supports launcher hopper still has spare discs. Row4 wounded knees buckle; sideways fall releasing launcher; prone dead launcher on ground alongside apron eyes closed; same persistent dead eyes closed inert launcher no spark or smoke. Articulated elbow shoulder hip knee motions, no moved duplicates, keep hopper/spring/handles visible and connected. Painterly original game art matching reference readable small-scale shapes, contain full body gun disc in own cell with no clipping or overlap no extra limbs."
+    }
+  ],
+  "review_notes": [
+    "18-frame candidate: eight muzzle-corrected retained poses plus ten new selected paintings from four built-in outputs. No spoon-like muzzle attachment or baked projectile.",
+    "Two-hand pullback/shove preserves forward gun direction. New recoil retains launcher; forward head-right collapse grounds launcher before settling into original equipped cold corpse.",
+    "Contact and planted bridge still repeat leading leg. Single-guide far passing differs from near passing; complete gait/support/travel remains unaccepted.",
+    "Explicit crop bands remove neighboring hair, boots and fingers without painting or warping. Source-specific neutral matte preserves steel, skin and original outfit.",
+    "Full-roster body/gear scale, spring/hopper compression and reload continuity, gait and guard/death transitions/event timing remain; no final acceptance."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses with disc shot, cocking gesture, fall and persistent prone corpse.",
+    "Walking contacts repeat lead; need opposite anatomical contact/passing. Idle subtle.",
+    "Gold disc becomes spoonlike muzzle attachment in nonfiring poses, unlike reference projectile. Correct muzzle/projectile separation and spring/hopper geometry.",
+    "Melee wind-up turns weapon backward above shoulder then contact points forward like aim; grip ownership and strike transition need refinement.",
+    "Reload shows elongated cocking rod, but mechanism connection and spring compression need continuity. Belt tags/cylinder and armor plates vary.",
+    "Falling launcher floats near head; smooth release to grounded corpse required. Final eyes appear closed. Checker backdrop visible; alpha/compositing unresolved. Source-only no packing/enabling/tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 0,
+    "edited_retained_paintings": 8,
+    "new_selected_paintings": 10,
+    "generated_outputs": 4,
+    "generation": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers.png",
+    "runtime_sha256": "fb3f5a13a140037221c44c6a40e2f0bdebfffa0b9a501ec61b4f001145833bd7",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/poses-projectile-separated.png": "d80d361446ad7657a8a4e39de6c7ae3b340f052c802bba9f9b49ff1b87f19e19",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/guided-walk-and-guard.png": "132b1f89a7bca34eeb0f3ae20b27abc7c5be286c0c1dbbb3991f37405addc354",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/guided-far-passing.png": "9ce466c0c367724d4ab693e785abc17d3f11e81fac22f0c82ff22e95e9a63fe5",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/shove-recoil-forward-collapse.png": "effeb2cb735336c83859d580ac3fa32c7c8dd4601b56cc9aba25728a86772fee"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/thrower-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Static source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "policy": "Removed only exact byte-identical task preview copies after SHA-256 and no-live-handle checks. Identical retained copies permit restoration. All original/rejected source images, unique evidence, processing proofs, caches and unrelated artifacts remain.",
+      "duplicates_removed": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/thrower-continuity-20260916/identity/unit_brasshollow_tallyspring_throwers-poses-projectile-separated-rect-38-0-302-314-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/identity-reference.png",
+          "sha256": "bfa9bfb018c75619b22c55a36857cf8b1832fb46a584ecde340f1d258897c589",
+          "bytes": 135985
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/thrower-continuity-20260916/corpse-reference/unit_brasshollow_tallyspring_throwers-poses-projectile-separated-rect-1014-996-1348-1153-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/corpse-direction-reference.png",
+          "sha256": "2b1e91554ddc24a7d563d716035e7dbfc1823a309d8a1c2888cb5dbb4d7193ec",
+          "bytes": 90070
+        }
+      ],
+      "removed_bytes": 226055
+    }
+  }
+}

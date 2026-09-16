@@ -1,0 +1,147 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_dreamwake_foganchor_colossi.png",
+  "reference_sha256": "1f76cc5f8c540485ae285b9d6534b7f16bafd0bd2e5f97a2b3211abe86dde905",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-fall-helmet-corrected.png",
+      "source_sha256": "417104c830f2e0511c6249516d107168d5ce17836a86fb59c8a72ff4841ea032",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c9e69871-6cf0-4acb-bda7-7927655912a8.png",
+      "prompt": "Use case: precise-object-edit. Correct ONLY bottom row THIRD sprite (eleventh falling pose). Restore complete tall pointed black/gold helmet attached to the neck above white scarf at LEFT end of torso, oriented toward upper LEFT as body falls backward. Match helmet design/size from standing sprite and its transition toward the corrected helmet of final corpse immediately to right. Face slit dim cyan, less bright than living frames but not extinguished yet. Keep current falling body, raised left hand, right hand near chain, both legs right and anchor foreground unchanged. No extra head, detached parts, horns or added gear. Other eleven sprites unchanged, particularly final dark corpse. Same canvas framing scale and locations; actual transparent alpha background no checkerboard drawing.",
+      "review": "Eleventh fall now retains pointed helmet and scarf connection toward corrected corpse. Select eleventh frame only. Face remains relatively bright despite dim request; helmet proportions/rotation, opacity and full death timing need refinement. Original corrected idle/hit/dead sources remain separate. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-dead-helmet-corrected.png",
+      "source_sha256": "18406445c1e5f508bf20c0cdef57fd494e8fb0981409df66685e3cb9355f318a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-768a6dd2-dac5-4547-863e-1ddd47478788.png",
+      "prompt": "Use case: precise-object-edit. Correct ONLY bottom-right twelfth persistent corpse sprite in this 4x3 sheet. Restore complete pointed black/gold helmet attached naturally to the neck at LEFT end of horizontal body, white scarf visible connecting head and torso. Helmet lies on its side tipped toward image LEFT with recognizable long crown points; face slit completely DARK, no cyan light. Do not raise body or make a living pose. Keep exact prone limbs, collapsed cloth, one anchor/chain grounded in foreground, feet right, all gear nonemissive. No second head, detached head, gore or additional parts. All other eleven poses unchanged, same positions scale and canvas, real transparent background no painted checkerboard.",
+      "review": "Twelfth corpse now retains pointed helmet with dark face connected by white scarf, prone body and grounded anchor. Select twelfth frame only. Helmet proportion/perspective and matching intermediate fall still need refinement; alpha unresolved. Separate corrected idle/hit frames retained, not replaced. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-hit-helmet-corrected.png",
+      "source_sha256": "7ef74b5afbaddbbfc5dc65ba462c9504e2a7b0ec6f2f43ffb85bcab3d6ac8a5d",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e048af1e-51d4-4efe-b3e4-f1c09693e485.png",
+      "prompt": "Use case: precise-object-edit. Repair ONLY bottom LEFT ninth sprite in this 4x3 Foganchor Colossus sheet. Restore its recognizable tall pointed black/gold helmet with cyan spectral face slit, attached naturally to neck above white scarf. Head tilts BACK with recoiling torso but must remain clearly visible as complete pointed helmet, not a flattened stump or missing head. Match helmet design and size in first standing sprite, rotated naturally for recoil. Preserve exact recoil torso, arms/hands, legs, chain and one anchor, cloak and all other eleven sprites. Do not add second head, horns, effects or equipment. Same canvas and frame locations, full helmet inside its cell with clear gutter. Actual transparent RGBA background no painted checkerboard.",
+      "review": "Ninth recoil restores complete pointed helmet tilted back with cyan face and white scarf connection. Select ninth frame only; whole-sheet redraw changes other details and second idle still original stepping version. Use separate planted-idle source for second frame. Helmet scale/neck continuity and alpha require later assembly review; not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-idle-planted.png",
+      "source_sha256": "ac6493f435ddf966282e9b8e38bccf33f9f8c716dfab67e115757f3accef4455",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cdb457e3-337c-4ea9-8a6a-cfbbffb6fda2.png",
+      "prompt": "Use case: precise-object-edit. Correct ONLY top row SECOND sprite in this 4x3 Foganchor Colossus sheet. It should be SECOND IDLE, not a step. Replace its walking lower-body stance with same feet/legs placement as FIRST top-left sprite: both armored boots flat planted, knees almost straight, same weight-bearing stance and torso upright. Mild breathing shoulder lift and softly shifted torn cloak ribbons distinguish second idle; right hand chain and single crescent anchor rest at same ground height as first idle, left hand free beside body. Preserve exact blue spectral armored colossus identity, tall pointed helmet, white scarf, black/gold armor and one anchor. No raised boot or stepping, no mirror swap, no extra limbs or gear. All other eleven sprites unchanged. Same canvas scale locations, actual transparent background no drawn checkerboard.",
+      "review": "Second idle now plants both boots and rests anchor at matching height rather than stepping. Select second frame only. Breathing motion subtle; requires aligned playback review later. Other gait/chain/helmet/death continuity and alpha remain unfinished. Source-only, not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses.png",
+      "source_sha256": "8b9a366c51a3ad10bad6859c2a9a5ac5dffdbacea367e2ae924509c42e739dbb",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-86fcb04d-8444-4d65-af0e-f6755e6929fa.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle animation sheet matching attached Dreamwake Foganchor Colossus reference. Exactly TWELVE full body isolated poses FOUR columns THREE rows, fixed three-quarter camera facing RIGHT same scale spacious gutters. Actual transparent RGBA background no painted checkerboard no ground no labels. Huge spectral humanoid TWO arms TWO legs in battered dark steel/silver ornate armor tall narrow pointed crown helm with cyan glowing face slit, heavy shoulder plates, torn navy ivory flowing cloth spectral cyan edges, booted feet. ONE enormous dark double-fluked anchor with silver circular boss attached ONE heavy linked chain held anatomical RIGHT hand; LEFT clawed gauntlet free reaches. Chain loops across waist but attached continuously to anchor, not second anchor. Preserve anchor flukes shape chain path and armor count. Row1 idle anchor rests beside right foot RIGHT holds chain LEFT relaxed; breathing idle shoulders rise helm tilts cloth gently billows; walk LEFT leg forward RIGHT back anchor lifted low on chain; walk RIGHT leg forward LEFT back clearly alternate anatomy no mirroring body. Row2 passing raised bent knee anchor suspended; attack windup RIGHT arm draws chain/anchor back behind shoulder LEFT braces; attack contact RIGHT arm lashes anchor forward toward right chain taut anchor in front of body LEFT reaches for balance; defense crouch anchor held upright via short chain before torso left hand steadies anchor edge. Row3 hit recoil torso back chain retained anchor grounded; death knees buckle cyan fades; falling sideways anchor/chain settle on ground; persistent prone armored corpse both legs arms accounted helmet dark no cyan edge glow cloth still one anchor chain grounded beside it. Real articulated shoulder elbow hip knee and chain links, no shifted duplicates extra limbs anchors or detached chains. Painterly original game cutouts matching reference crisp small-scale silhouette. Entire huge anchor chain helm and cloth within roomy cells no clipping overlap giant mist."
+    }
+  ],
+  "review_notes": [
+    "14 packed frames retain eight original/corrected poses through background derivatives and add six supported travel/settled, chain recovery and anchor-braced paintings. Corrected pointed helmet persists in hit, side fall and dark corpse.",
+    "New travel gathers the single anchor chain at the near hand outside leg sweep; two guards steady the same anchor. Full anchor and chain retained; banded lash crops exclude neighboring cloak without truncating the flukes.",
+    "Original neutral extraction left enclosed chain/anchor checker and damaged pale cloth edges. Built-in green-background derivatives plus approved bounded chroma/edge cleanup preserve the ivory scarf and spectral cloth. Only corrected hit is selected from the hit source.",
+    "Body/crown/anchor scale and palette differ between original/new paintings; chain attachment, grips, boot support/travel, death ground settling and event timing need whole-roster refinement. Existing one-cell tall size profile is unchanged; name alone does not alter footprint. Static previews are not final acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses include chain lash and dark persistent corpse.",
+    "Second idle is stepping rather than breathing; walking repeats lead and orientation shifts. Need separate idle pair and opposite gait contact/passing.",
+    "Anchor shape/size and boss change; chain loops attach inconsistently to waist/right hand. Correct continuous single chain and fluke geometry.",
+    "Defense grips chain with both hands rather than steadying anchor; preserve anatomical support. Hit head/helmet obscured and may omit crown.",
+    "Falling torso/leg positioning and final armor/head need continuity. Final cyan mostly extinguished but edges require compositing review.",
+    "Checker background visible; transparency unaccepted. Source-only no packing/enabling/tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 8,
+    "new_or_corrected_selected_paintings": 6,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_dreamwake_foganchor_colossi.png",
+    "runtime_sha256": "893c6507a2c0dbfb52d6b9632b56233e12e91b25c89a32ca16b65199a5c8f387",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses-fall-helmet-green-background.png": "61834d6dc46de3afb3436012398cb2d8694ca27f68a5b95156211a325bbab8af",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/gathered-chain-travel-and-guard.png": "1998384d53135422580b87d31c272cb132e61f5bdc839ba4044a7436fc93f6b3",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses-hit-helmet-green-background.png": "3fc04077366a55a5c0a4f7da2018d167f4e7187f59dfda71d7f6d2b4f03e1119"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes; offline static visual evidence is not final playback acceptance.",
+    "cleanup": {
+      "policy": "Removed only SHA-256-identical task preview copies after no-live-handle checks. Retained identical recovery copies, unique evidence, originals/rejected masters, all used references, processing proofs, caches and unrelated files.",
+      "duplicates_removed": [
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-original/poses-dead-helmet-corrected-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-green/poses-dead-helmet-corrected-light.png",
+          "sha256": "cd2c4c309df04c5f037417b34769dc9db4c21e3749a692d9314e64128616ef3c",
+          "bytes": 1598078
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-original/poses-idle-planted-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-green/poses-idle-planted-green.png",
+          "sha256": "942111ffde5efe7c0848dd9644a479ebf37aac8b8057d7008e4ad23d440be2e1",
+          "bytes": 1585873
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-original/poses-hit-helmet-corrected-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-green/poses-hit-helmet-corrected-green.png",
+          "sha256": "c337e0728d7774d4313f329c1673c5b18c4f23e602e5b740ccc5ae107ae6ab76",
+          "bytes": 1538234
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-original/poses-dead-helmet-corrected-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-green/poses-dead-helmet-corrected-green.png",
+          "sha256": "9b5a02ac7c8c1dfa4dc922f9fd162f0e0dc3f606362b9e470571e0036ebdda83",
+          "bytes": 1590700
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-original/poses-hit-helmet-corrected-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-green/poses-hit-helmet-corrected-light.png",
+          "sha256": "08c69e2dcbca4f9ffccc07a0363c983fcd300177497910b76d3d25d3a359ecf5",
+          "bytes": 1549053
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-original/poses-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-green/poses-light.png",
+          "sha256": "36ab439b4b395b77218755367e26702594232bc7a3ed6eeea4e40c91a9953b80",
+          "bytes": 1646516
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-original/poses-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-green/poses-green.png",
+          "sha256": "b0de6ca4911ea7daab1ccc5017dbea2cc2fc49f2f9e7f9506382de2096ca47ce",
+          "bytes": 1638892
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-original/poses-fall-helmet-corrected-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-green/poses-fall-helmet-corrected-light.png",
+          "sha256": "14a4ebc02390959ebee421c9e86defba494d01002dd1576794dd735d32ca16cc",
+          "bytes": 1573895
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-original/poses-idle-planted-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-green/poses-idle-planted-light.png",
+          "sha256": "b1548c81c9694be8ad2efac300b0ea664fff2054dcfb4b6da27c9bcdb8030a96",
+          "bytes": 1594512
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-original/poses-fall-helmet-corrected-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/colossus-continuity-20260916/prepared-green/poses-fall-helmet-corrected-green.png",
+          "sha256": "af3ef6b788130877eda53655e0730603180fd15e30d5172ca49b1dcef6c30ca7",
+          "bytes": 1566788
+        }
+      ],
+      "removed_bytes": 15882541
+    }
+  }
+}

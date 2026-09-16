@@ -1,0 +1,56 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_frostbeacon_pikes",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_frostbeacon_pikes.png",
+  "reference_sha256": "c785b013c35e96e1c808a6704318aa5fa3cb3c5be930680d332fa3c05f1b5d8e",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "dca97927ecadb110e80cc56cf692c38b5d37ef9607e1d8bf3b30081da1f59d1d",
+      "source_output": "exec-eff59e4d-34f5-45dd-b4a3-10a56d38cace.png",
+      "prompt": "Use case: stylized-concept. Original Frostbeacon Pike battle animation sheet, reference image supplies exact identity: bearded human man fur-lined blue hood, steel pauldrons and breastplate with tiny amber beacon badge, long quilted blue coat fur hem and steel front strip, brown boots, long wooden pike broad pointed steel head and small steel butt spike. Both hands grip same rigid straight pike, no shields. Twelve distinct full-body articulated poses arranged FOUR columns THREE rows, generous empty gutters, consistent body size elevated three-quarter camera facing RIGHT. Row1 idle diagonal pike; alert shoulder breathing; walking contact NEAR leg forward FAR leg backward; opposite contact NEAR leg backward FAR leg forward (keep same torso direction, near knee overlaps far thigh, actually exchange legs). Row2 passing step knee bent under hip; attack anticipation draw pike back both hands separated; full low two-handed forward thrust toward RIGHT bending front knee; deep defensive crouch pike held across upper torso both hands spaced. Row3 hit recoil; dying knees buckle pike lowers; falling sideways torso low; dead lying on SIDE, horizontal relaxed body with closed eyes, intact pike resting flat alongside corpse. Match original face/equipment and painterly detail. Every shaft stays straight, blade size consistent, clear grip fingers. No duplicated standing poses, no merely rotated upright corpse. No blood, effects, projectile, motion lines, text or grid borders. Plain pale gray background without cast shadows. Fit complete pike tips and boots in every cell; no touching adjacent poses."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "2dc82335d382bbd554f87f61221e3d9047e2c3ccfa397e2b9071d697b2229ab9",
+      "source_output": "exec-a5cba542-726a-4b5a-aecf-9e53c53923dc.png",
+      "prompt": "Use case: precise-object-edit. Fix this original twelve-pose Frostbeacon Pike sheet. Keep 4 columns 3 rows, exact character/armor/blue fur coat identity. Scale ALL twelve complete figures uniformly smaller by about 20 percent within their own cells so ALL pike tips remain inside cells with clear gray gutters, especially row2 column3 thrust. Do not shorten weapons independently. Row1 column4 opposite walk: redraw legs so NEAR leg extends BACK to left, FAR leg extends FORWARD right, near thigh crosses in front of far thigh. Same torso facing right and same two-hand pike carry. Do not simply mirror whole character. Row3 column4 corpse eyes fully closed. Preserve other poses and pale gray background, no text/grid/shadows/effects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "fb02d33692a383cc1b29db3133bb20bf503c9de3b986924a9b425c91f1a386c6",
+      "alpha_output": "exec-9bc6258b-4591-43c4-a62e-cba12fa4729c.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only gray background from this original twelve-pose Frostbeacon Pike sheet, genuinely transparent RGBA. Preserve exact poses, canvas/layout, body size, pike tips, fur, two-hand grips and closed-eye corpse. Transparent gaps between limbs and weapons. No checkerboard, matte, glow, cast shadows, text or reframing."
+    }
+  ],
+  "review_notes": [
+    "13 packed frames retain nine original RGBA paintings and select four new full-pike paintings. Horizontal two-hand anticipation, thrust with intact rear shaft/butt spike, withdrawal and ready guard replace the disconnected overhead windup and truncated-shaft thrust. Original brace, recoil, kneel, side fall and head-right corpse remain.",
+    "Original alpha reused; new green-backed sheet prepared with owner-approved bounded matte/edge cleanup. Uniform per-source scales 0.62/0.36 and anatomical anchors; banded cuts retain full new guard tip without neighboring thrust boots and exclude original neighboring spear tip from brace.",
+    "Only original contact/passing are retained for travel; a full alternating gait remains missing. Pike orientation between idle/travel/guard, projection/length through fall, body/hand proportions, edges/palette and connected event timing remain refinement. Packed and inspected, not final motion acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve original poses, correction and extraction visually inspected. Two-hand thrust, crouched guard and side-collapse corpse are distinct. Correction improves weapon spacing and closes corpse eyes; opposite walking contact remains repeated. Pike length/orientation continuity and explicit per-frame crop/anchor remain refinement work (thrust exceeds equal-width cell but is visually separated). Not packed/enabled; continuous motion and compositing unaccepted. No tests or exports launched."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_frostbeacon_pikes.png",
+    "runtime_sha256": "b388922b109477f9c147606d0dc43016ffe1394300780490dc9d4a4d7a2da344",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_frostbeacon_pikes/alpha/poses.png": "fb02d33692a383cc1b29db3133bb20bf503c9de3b986924a9b425c91f1a386c6",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_frostbeacon_pikes/continuity-alpha/connected-full-pike-thrust.png": "c4de29f7df042f15a2697b01dfe50bdd74debffc0a350978c2cec61fd46c7ee4"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/frostbeacon-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}
