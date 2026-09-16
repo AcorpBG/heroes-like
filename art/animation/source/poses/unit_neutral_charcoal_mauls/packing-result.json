@@ -1,0 +1,146 @@
+{
+  "unit_id": "unit_neutral_charcoal_mauls",
+  "output": "art/animation/source/poses/unit_neutral_charcoal_mauls/candidate-atlas.png",
+  "sha256": "19c70a63b54031f6429d51f546a504edc5f083169e8a1f4cf8ac0145566e77f3",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        175,
+        23,
+        359,
+        239
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        173,
+        22,
+        352,
+        241
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        179,
+        42,
+        357,
+        239
+      ]
+    },
+    {
+      "name": "guided_passing",
+      "index": 3,
+      "alpha_bounds": [
+        187,
+        19,
+        360,
+        239
+      ]
+    },
+    {
+      "name": "maul_overhead_windup",
+      "index": 4,
+      "alpha_bounds": [
+        161,
+        27,
+        331,
+        239
+      ]
+    },
+    {
+      "name": "maul_downward_strike",
+      "index": 5,
+      "alpha_bounds": [
+        154,
+        69,
+        363,
+        241
+      ]
+    },
+    {
+      "name": "maul_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        172,
+        26,
+        350,
+        239
+      ]
+    },
+    {
+      "name": "maul_ready_guard",
+      "index": 7,
+      "alpha_bounds": [
+        178,
+        18,
+        367,
+        239
+      ]
+    },
+    {
+      "name": "maul_deep_guard",
+      "index": 8,
+      "alpha_bounds": [
+        147,
+        74,
+        352,
+        239
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        175,
+        62,
+        364,
+        243
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        160,
+        84,
+        347,
+        242
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 11,
+      "alpha_bounds": [
+        161,
+        92,
+        354,
+        239
+      ]
+    },
+    {
+      "name": "dead_head_left_dark_maul",
+      "index": 12,
+      "alpha_bounds": [
+        150,
+        121,
+        370,
+        241
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_charcoal_mauls/alpha/poses.png": "2405ed14950563ebc07a14baf83e30f239ef306d2f023ede3a7de7ff68a77114",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-alpha/guided-planted-passing-step.png": "6da4a730018aef9efc7c428e819c4c4014d308f402d4ff45b19dc7b93617ef9f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-alpha/maul-recovery-ready-and-passing.png": "95e9aa892af997cb3d5b9d19eee02265e99f93253bb9a9a3f1cfb5ee87f67e9b"
+  }
+}

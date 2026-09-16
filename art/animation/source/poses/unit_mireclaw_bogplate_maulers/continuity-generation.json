@@ -1,0 +1,112 @@
+{
+  "schema_id": "original_battle_pose_continuity_generation_v1",
+  "unit_id": "unit_mireclaw_bogplate_maulers",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_pending_whole_roster_refinement_and_acceptance",
+  "identity_reference": {
+    "path": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/standing-reference-light.png",
+    "sha256": "554c5bc600ce633ea5b3e535b1e493a6a9467334765942e428d45f0d93650d76",
+    "derived_from": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/alpha/poses.png",
+    "rect": [
+      0,
+      0,
+      363,
+      383
+    ],
+    "operation": "Unchanged source pixels composited on light backing; nearest-neighbor 4x reference only."
+  },
+  "outputs": [
+    {
+      "source": "walk-phase-0-green.png",
+      "sha256": "666ae94799ca8a7570c38d2f7137f23cdf5912f8d3010a2d77c797f95958091b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-336e868a-1f21-4cbd-9b2f-3a80c83e9764.png",
+      "selected": false,
+      "prompt": "Use case: stylized-concept. Original painted battle sprite, one full figure only. Image 1 is PRIMARY leg-pose guide, Image 2 SECONDARY costume/face/equipment identity reference. Render the character from Image2 in Image1 leg arrangement; do not reproduce diagram or lettering. CONTACT A: NEAR leg (blue guide) extends down-forward to screen RIGHT with heel landing; FAR leg (orange) stretches back to screen LEFT with toe on ground. Near thigh passes IN FRONT of far thigh at crossing. Broad muscular bearded man dark long hair steel nasal helmet with three yellow reeds tied near visible temple, overlapping mossy dark iron pauldrons/chest/skirt plates, exposed upper arms, bone-tooth charms, round chest medallion, yellow rope belts and wrist/leg bindings, iron knee plates and broad armored boots. BOTH gloved hands carry ONE complete long wooden iron-banded maul across waist diagonal up toward screen RIGHT: rear/right hand screen LEFT near butt, forward/left hand screen RIGHT below head. One massive rectangular iron head with moss and three bone tusks at RIGHT end, full shaft and left butt. Keep exact armor and weapon proportions. Fixed elevated three-quarter view facing RIGHT, torso remains three-quarter as identity. Natural weight-bearing joints, exactly two arms and legs. Match original painted strategy-game rendering and material colors. Canvas 1210x1300, generous clear margin around full boots hair and weapon. Figure upright head near y160 boots near y1230, torso centered x580, consistent body scale with subsequent phases. Flat pure RGB(0,255,0) green background without green spill; character greens stay dark olive. No floor, shadow, text, diagram, effects, scenery or extra figures.",
+      "references": [
+        {
+          "path": "art/animation/source/workflow_20260915/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+        },
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/standing-reference-light.png",
+          "sha256": "554c5bc600ce633ea5b3e535b1e493a6a9467334765942e428d45f0d93650d76"
+        }
+      ]
+    },
+    {
+      "source": "walk-phase-1-green.png",
+      "sha256": "ce1ae1a6ffa6a541828b9a4da1c1790207f820b48486d8b9bb2e41395da5728b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-28440449-045f-4e33-9b49-f3c81ef72ba0.png",
+      "selected": true,
+      "prompt": "Use case: stylized-concept. Original painted battle sprite, one full figure only. Image 1 is PRIMARY leg-pose guide, Image 2 SECONDARY costume/face/equipment identity reference. Render character from Image2 in Image1 leg arrangement; no diagram or lettering. PASSING A: NEAR leg (blue guide) supports body vertically, boot planted beneath pelvis. FAR leg (orange) knee bends forward, heel lifted behind, ankle passes BEHIND planted near shin, boot OFF ground. Narrow silhouette, NOT a wide running stride. Broad muscular bearded man dark long hair steel nasal helmet with three yellow reeds tied near visible temple, overlapping mossy dark iron pauldrons/chest/skirt plates, exposed upper arms, bone-tooth charms, round chest medallion, yellow rope belts and wrist/leg bindings, iron knee plates and broad armored boots. BOTH gloved hands carry ONE complete long wooden iron-banded maul across waist diagonal up toward screen RIGHT: rear/right hand screen LEFT near butt, forward/left hand screen RIGHT below head. One massive rectangular iron head with moss and three bone tusks at RIGHT end, full shaft and left butt. Keep exact armor and weapon proportions. Fixed elevated three-quarter view facing RIGHT, torso remains as identity. Exactly two arms and legs, believable weight on planted supporting foot. Match original painted strategy-game style and colors. Canvas 1210x1300, generous full-figure margins, head near y100 and boots near y1240, centered torso x580. Keep normal full human limb proportions, no compressed legs. Flat pure RGB(0,255,0) background no spill, character greens dark olive. No floor/shadow/text/effects/scenery/extra figures.",
+      "references": [
+        {
+          "path": "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/standing-reference-light.png",
+          "sha256": "554c5bc600ce633ea5b3e535b1e493a6a9467334765942e428d45f0d93650d76"
+        }
+      ]
+    },
+    {
+      "source": "walk-phase-2-green.png",
+      "sha256": "f5e20a0057b29cc08af30089306ddf5adc7b05536260be45cda9eca314322a4f",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0f8d6092-4bb3-4b46-8bb5-771594a759aa.png",
+      "selected": true,
+      "prompt": "Use case: stylized-concept. Original painted battle sprite, one full figure only. Image1 PRIMARY leg-pose guide; Image2 SECONDARY costume/face/equipment identity. Render Image2 character using Image1 leg placement, not the standing pose. CONTACT B: FAR leg (orange guide) extends down-forward to screen RIGHT with heel landing; NEAR leg (blue) stretches back to screen LEFT with toe on ground. Backward NEAR thigh visibly crosses IN FRONT of forward far thigh. Not the same leg lead as contact A; no torso mirroring. IMPORTANT at the pelvis, the leg rooted on screen LEFT is the NEAR leg and must travel BACK to screen LEFT; the leg rooted screen RIGHT is FAR and travels FORWARD to screen RIGHT behind the near thigh. Do not simply swap boots while leaving thighs unchanged. Broad muscular bearded man dark long hair steel nasal helmet with three yellow reeds tied near visible temple, overlapping mossy dark iron pauldrons/chest/skirt plates, exposed upper arms, bone-tooth charms, round chest medallion, yellow rope belts and wrist/leg bindings, iron knee plates and broad armored boots. BOTH gloved hands carry ONE complete long wooden iron-banded maul across waist diagonal up toward screen RIGHT: rear/right hand screen LEFT near butt, forward/left hand screen RIGHT below head. One massive rectangular iron head with moss and three bone tusks at RIGHT end, full shaft and left butt. Keep exact armor and weapon proportions. Fixed elevated three-quarter view RIGHT, torso/camera never mirrored. Original painterly strategy-game colors and style. Canvas 1210x1300, head near y80 boots near y1240, normal limb proportions full boots weapon hair with generous margins. Flat pure RGB(0,255,0) background no spill, character greens dark olive. No floor shadow text diagram effects scenery extra figures.",
+      "references": [
+        {
+          "path": "art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/standing-reference-light.png",
+          "sha256": "554c5bc600ce633ea5b3e535b1e493a6a9467334765942e428d45f0d93650d76"
+        }
+      ]
+    },
+    {
+      "source": "walk-phase-3-green.png",
+      "sha256": "90a0451c0bd6d0a6d7fa118e581d3ab78ed400145d346432edad8d53230942ef",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-738a59e0-19a0-416f-a4e6-62c0e2c2343f.png",
+      "selected": true,
+      "prompt": "Use case: stylized-concept. Original painted battle sprite, one full figure only. Image1 PRIMARY leg-pose guide; Image2 SECONDARY costume/face/equipment identity. Use Image1 actual leg arrangement, not standing Image2. PASSING B: FAR leg (orange guide) supports vertically beneath pelvis with boot planted. NEAR leg (blue) bent knee swings forward to screen RIGHT, ankle lifted toward far knee and passes IN FRONT of supporting shin. Near boot OFF ground; narrow silhouette, not wide stride. The lifted leg starts at NEAR hip on screen LEFT, crosses diagonally IN FRONT of the other thigh to a raised knee screen RIGHT; its lower shin folds backward to an airborne boot near center. The leg rooted on screen RIGHT/FAR hip supports body almost vertically to the planted boot beneath pelvis, partly occluded by crossing near shin. Broad muscular bearded man dark long hair steel nasal helmet with three yellow reeds tied near visible temple, overlapping mossy dark iron pauldrons/chest/skirt plates, exposed upper arms, bone-tooth charms, round chest medallion, yellow rope belts and wrist/leg bindings, iron knee plates and broad armored boots. BOTH gloved hands carry ONE complete long wooden iron-banded maul across waist diagonal up toward screen RIGHT: rear/right hand screen LEFT near butt, forward/left hand screen RIGHT below head. One massive rectangular iron head with moss and three bone tusks at RIGHT end, full shaft and left butt. Keep exact armor and weapon proportions. Fixed elevated three-quarter view RIGHT same torso/camera. Normal full human limb proportions. Match original painted strategy-game colors. Canvas 1210x1300 head near y80 boots near y1240, full figure weapon generous margins. Flat pure RGB(0,255,0) background no spill, dark olive character greens. No floor shadow lettering diagram effects scenery extra figures.",
+      "references": [
+        {
+          "path": "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/standing-reference-light.png",
+          "sha256": "554c5bc600ce633ea5b3e535b1e493a6a9467334765942e428d45f0d93650d76"
+        }
+      ]
+    },
+    {
+      "source": "walk-phase-0-crossing-corrected-green.png",
+      "sha256": "a6757ce55af23b047ff019809f7c87f3d8d339674d29944b2d0cf0babfc4cfa1",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-407401a9-7131-4f48-bfc7-a8f5849b5a6a.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 EDIT TARGET, correct ONLY walking leg arrangement below belt. Everything above belt, both arms, complete two-hand maul, identity, original canvas, scale, pure green background remain unchanged. Need opposite contact: NEAR leg rooted at the screen-LEFT hip must cross diagonally DOWN-RIGHT IN FRONT OF the other thigh; clearly show a continuous exposed armored thigh diagonal from screen-left hip across center to the screen-right knee, then near shin to forward screen-RIGHT boot. FAR leg rooted at screen-RIGHT hip extends diagonally DOWN-LEFT BEHIND near thigh to rear screen-LEFT boot. Move a little skirt cloth aside at crossing so near thigh occlusion is legible, without removing skirt. Exact two legs, no joint duplication. Both boots point right; front heel planted and rear toe planted, small balanced stride, no sideways split. Anatomical crossing is the ONLY request. Do NOT just alter boots or copy the existing uncrossed leg arrangement. Maintain same painted textures, proportions, light, head and equipment, no labels shadow or effects.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/walk-phase-0-green.png",
+          "sha256": "666ae94799ca8a7570c38d2f7137f23cdf5912f8d3010a2d77c797f95958091b"
+        }
+      ]
+    }
+  ],
+  "review_notes": [
+    "Original generated masters retained; first contact draft excluded in favor of targeted thigh-crossing repair. Guide first plus independent fixed identity preserves costume better than chaining all poses, but initial contacts still repeated lead.",
+    "Four authored contact/passing candidates are production material, not final acceptance of limb ownership, weight bearing or smooth translated gait.",
+    "No tests/imports/exports or paid API. Owner-approved deterministic matte processing only. Full roster production precedes consolidated acceptance."
+  ],
+  "runtime_candidate": "art/animation/runtime/poses/unit_mireclaw_bogplate_maulers.png",
+  "runtime_sha256": "dac5ea148afecad0f00a0f8dbc1dbc4757342c9111111a5dc60f281d1d5caf96",
+  "packing": "packing.json",
+  "preparation": "continuity-cutouts.json"
+}

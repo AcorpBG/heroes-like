@@ -1,0 +1,74 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved local non-generative raster background/edge preparation. Preserve immutable original sources; no pose synthesis.",
+  "jobs": [
+    {
+      "id": "walk-passing-a-green",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/walk-passing-a-green.png",
+      "source_sha256": "7e9e0a6d5f20c68be79ade27758167d8c0da1f597220577f131afa6593f19aae",
+      "output": "art/animation/source/poses/unit_embercourt_lantern_sappers/continuity-alpha/walk-passing-a-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "walk-passing-b-green",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/walk-passing-b-green.png",
+      "source_sha256": "4b833ae5d0d8c99e870a719312067850fbb96946204ff87485e637758e8e2fd1",
+      "output": "art/animation/source/poses/unit_embercourt_lantern_sappers/continuity-alpha/walk-passing-b-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "walk-near-landing-green",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/walk-near-landing-green.png",
+      "source_sha256": "df6eb81efcaf178ef72c6e01d0d74c4f67d3dfee850cb930e6340e78eff2b40d",
+      "output": "art/animation/source/poses/unit_embercourt_lantern_sappers/continuity-alpha/walk-near-landing-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "defend-green",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/defend-green.png",
+      "source_sha256": "96037c1f465a2075673ffd75b455b9f9e84cd33ed548236a9f08f9fb43fc271b",
+      "output": "art/animation/source/poses/unit_embercourt_lantern_sappers/continuity-alpha/defend-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

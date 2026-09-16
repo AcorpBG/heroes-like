@@ -1,0 +1,63 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic background removal and bounded edge cleanup; no repainting, warping or local pose synthesis.",
+  "id": "emberpack_step_planted",
+  "source": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/planted.png",
+  "source_sha256": "eeb46e770d11803c5c2643498344b4329d1083cb06cee39673971984c7c27c41",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/alpha/planted.png",
+  "output_sha256": "f5d9a627ed4bd30203bb189fa90ed2e3895bcb9e7fd079ca7b2d1e45b4983829",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/cutouts.json",
+  "recipe_sha256": "19c9ba672eb30f33668dd11e5348fb554a0648fdd9262963e5e705d8416295b3",
+  "parameters": {
+    "minimum": 145,
+    "maximum": 190,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "max_edge_residual": 40,
+    "background_seeds": [
+      [
+        362,
+        702
+      ],
+      [
+        342,
+        800
+      ],
+      [
+        354,
+        772
+      ],
+      [
+        426,
+        721
+      ],
+      [
+        379,
+        742
+      ],
+      [
+        337,
+        740
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1186033,
+    "edge_pixels": 10416,
+    "unchanged_paint_pixels": 376067,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

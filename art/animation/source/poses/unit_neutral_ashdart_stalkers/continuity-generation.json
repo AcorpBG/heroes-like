@@ -1,0 +1,32 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_ashdart_stalkers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "blowpipe-action-recovery-and-directional-collapse",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/blowpipe-action-recovery-and-directional-collapse.png",
+      "sha256": "2ad89eca0d6360a9525f8fefddd40653745afde0a043a29e5de32f860dc33ca1",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-10a9f8d9-e079-47de-8f11-733eecf31a4f.png",
+      "prompt": "Use case: stylized-concept. Asset type: SIX original battle-animation raster poses TWO columns THREE rows, generous empty gutters. Input image is sole identity/gear reference: Ashdart Stalker athletic woman dark high ponytail, bronze amber forehead goggles, burnt-orange hood-down scarf/cape, charcoal leather clothes, brown bracers/kneeguards/boots, rope belt bronze compass and back quiver of short darts. ONE long straight wooden/brass BLOWPIPE with TWO orange feathers tied near its MUZZLE, no stock, trigger or bow limbs. Same elevated three-quarter battle camera and original proportions. All living poses face RIGHT. Top-left: melee anticipation, both elbows bent pulling tube horizontally back across chest, RIGHT hand rear near mouthpiece, LEFT hand forward, feathered muzzle ALWAYS points RIGHT. Top-right: recovery after two-hand shove right, draw same tube halfway back toward chest, same hand ownership and muzzle still RIGHT. Middle-left: recovery after shooting by blowing, lower the tube from mouth to waist with both hands, cheeks relax; same muzzle feathers at RIGHT, no external projectile. Middle-right: upright defensive-ready, both feet planted, hold pipe across chest with elbows bent before crouch, face visible. Bottom-left: intermediate collapse from kneeling toward LEFT: hips and knees grounded at screen RIGHT, torso tips down LEFT, LEFT forearm braces near ground below face, right hand loosely holds tube beside body pointing its feathered muzzle to RIGHT. Bottom-right: final relaxed SIDE corpse, HEAD at screen LEFT, boots RIGHT, cheek resting on slack forearm eyes closed, entire body grounded, tube lying beside relaxed hands with feathered muzzle RIGHT. Same cape/quiver/goggles, body size throughout, no gear/hand swapping or mirror. Full tube/feathers/boots and hair inside each panel. Original painted raster on flat pure green #00FF00 background without spill/shadow. No text, grid, scenery, gore, particles or extra props.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/ashdart-continuity-20260916/idle-reference/unit_neutral_ashdart_stalkers-poses-rect-0-0-307-335-light.png",
+          "sha256": "91a377e324b991bedcf740a1903a480d39a7248e1c5fa8b9ac8f795d36e05e00"
+        }
+      ],
+      "selection_notes": "18 frames retain twelve original paintings and select six new direction-consistent tube-shove anticipation/recovery, distinct post-blow recovery, ready guard, head-left tipping and head-left corpse paintings. The old muzzle-reversed melee windup, opposite-direction tipping/corpse and duplicate running contact remain unselected. Retained head-left side-fall links new tipping to relaxed corpse without reversing body direction. Original clean alpha is reused. New green source uses approved bounded preparation; uniform old/new standing scales 0.63/0.40. New low fall 0.43 and corpse 0.40 normalize generated anatomy, replacing undersized initial selections without warping. Banded crops exclude neighboring boots, hair, blowpipe tips and corpse fragments while retaining own tube/feathers. Retained run extension/gather does not establish a grounded alternating gait. Blowpipe hand ownership, feather attachment, quiver/cape/body proportions, palette/edges and event timing remain refinement. New tipping uses a supporting hand different from the prompt; do not claim the requested hand ownership was achieved. Static production review is not motion/gameplay acceptance.",
+      "selected_frames": [
+        "tube_shove_windup",
+        "tube_shove_recovery",
+        "guard_ready",
+        "blowpipe_recovery",
+        "death_tipping_head_left",
+        "dead_head_left"
+      ]
+    }
+  ]
+}

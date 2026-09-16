@@ -1,0 +1,49 @@
+{
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "sources": [
+    {
+      "file": "walk-passing-a-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0c762b71-ea79-4dfb-b106-528faffe906c.png",
+      "prompt": "Use case: sketch-to-render. Paint ONE original Lantern Sapper passing walking pose using FIRST image's leg articulation and SECOND image's exact identity. BLUE NEAR foreground leg bears weight vertically beneath near hip with boot planted. ORANGE FAR leg bends knee and lifts boot behind planted shin, two clearly attached legs. Woman dark hair teal headwrap, cream quilted long coat with plated leather apron, teal sash/split skirt, gray trousers and wrapped brown boots. EXACT gear: wooden backpack carries TWO amber caged lanterns; anatomical LEFT hand (screen RIGHT) grips curved short hooked staff suspending THIRD amber caged lantern. Anatomical RIGHT hand (screen LEFT) holds looped dark iron chain with ONE heavy hook hanging down. Retain all three lamps, complete staff and chain/hook, unchanged hand ownership. Elevated three-quarter camera facing RIGHT, stable erect torso and same adult proportions, moderate natural walking step, no mirror. Painterly original tactical-game raster matching character, cloth opens naturally around knees, never blue/orange guide colors. Complete figure/gear inside generous margins. Flat vivid GREEN #00ff00 backing only, neutral illumination no green spill/reflections on cream/teal cloth or lamps; no ground, shadows, particles, scenery, text or grid.",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+        "art/units/source/curated/unit_embercourt_lantern_sappers.png"
+      ],
+      "selection": "Select raised rear-foot passing; connected gait pending.",
+      "sha256": "7e9e0a6d5f20c68be79ade27758167d8c0da1f597220577f131afa6593f19aae"
+    },
+    {
+      "file": "walk-passing-b-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d52977b5-468b-407f-ac5b-f92d2e02538d.png",
+      "prompt": "Use case: sketch-to-render. ONE original Lantern Sapper passing-B walking sprite. FIRST image defines BLUE NEAR thigh swinging forward RIGHT across IN FRONT OF the planted FAR thigh, raised knee bent and boot lifted clearly above ground in front of other shin. ORANGE FAR leg alone holds weight vertically with foot planted. Preserve actual leg crossover, don't make a rear heel kick. SECOND image exact identity/equipment: dark-haired young woman teal headwrap, cream quilted long coat, plated leather apron, teal split sash/skirt, gray trousers, brown wrapped boots. Wood backpack TWO glowing amber caged lanterns; LEFT hand on screen RIGHT holds short curved crook suspending THIRD glowing caged lantern. RIGHT hand screen LEFT holds looped iron chain with ONE heavy hook hanging low. All three lamps distinct, no gear/hand swap. Same three-quarter RIGHT-facing tactical camera/erect torso, normal moderate walking step, original proportions. Allow coat slit to reveal raised near knee and its connection to near hip. Full body, complete chain/staff/lamps inside wide margins. Original detailed painterly game raster, no guide lines/colors, no mirror. Flat vivid GREEN #00ff00 backing only, neutral light no green spill/reflections on figure; no floor/shadows/text/scenery/effects.",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+        "art/units/source/curated/unit_embercourt_lantern_sappers.png"
+      ],
+      "selection": "Select lifted foreground-knee phase; height/timing acceptance pending.",
+      "sha256": "4b833ae5d0d8c99e870a719312067850fbb96946204ff87485e637758e8e2fd1"
+    },
+    {
+      "file": "walk-near-landing-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-54e12d2f-e5f0-4e8c-bb63-12edae364b87.png",
+      "prompt": "Use case: precise-object-edit. Next walking FOOT-LANDING frame of this exact original Lantern Sapper. Keep head, torso, both hands, staff/THREE lanterns, entire chain/hook, backpack, camera, body scale and green backdrop unchanged. Lower ONLY the currently raised foreground leg into a forward grounded step. Preserve the same foreground thigh clearly crossing in front of the far thigh: raised knee at x630,y820 lowers to x690,y930; shin extends downward to foreground boot whose heel touches ground at x850,y1270, toes right. The far supporting leg now angles slightly BACK LEFT, its boot grounded x460,y1240. Near thigh originates beneath left foreground hip/teal sash and overlaps far thigh, do not exchange hip ownership. Natural moderate stride, no high kick, exactly two legs, matching original gray trousers and wrapped boots. Cloth slit parts naturally around near knee but costume not redesigned. Entire figure and boots inside existing generous margins. No mirror, equipment swap, extra limb, floor, shadows, text or effects. Same original detailed painterly art; neutral light no green spill.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lantern_sappers/walk-passing-b-green.png"
+      ],
+      "selection": "Select targeted foreground landing derived from lifted-knee source; retains three lamps and chain.",
+      "sha256": "df6eb81efcaf178ef72c6e01d0d74c4f67d3dfee850cb930e6340e78eff2b40d"
+    },
+    {
+      "file": "defend-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4b6594dc-4a61-42b0-ac20-b2ae53c2c792.png",
+      "prompt": "Use case: identity-preserve. ONE original Lantern Sapper DEFENSIVE BRACE pose, exact attached identity and equipment. Woman teal headwrap, cream quilted long coat, plated leather apron, teal sash/split skirt, gray trousers, wrapped brown boots, wooden backpack with TWO glowing amber caged lanterns. Anatomical LEFT hand on screen RIGHT holds her short crook staff with THIRD hanging amber lantern. Anatomical RIGHT hand on screen LEFT grips the looped iron chain, heavy hook safely gathered below that fist at left hip. NEVER swap hands or move chain into left hand. Balanced low crouch, knees bent, feet apart, head tucked and shoulders compact. LEFT staff hand draws toward right shoulder, staff slopes diagonally UP RIGHT before her left side as guard; RIGHT chain hand pulls close to left waist, elbow down. Both forearms visibly connect to their original shoulders, exactly two hands. Chain and one hook complete, three lamps intact, no shield/extra equipment. Fixed elevated three-quarter tactical camera facing RIGHT; same adult body/gear proportions, original painterly game raster. Whole figure and complete lamp staff/hook inside generous margins. Flat vivid GREEN #00ff00 backdrop only, neutral light without green spill/reflections; no ground/shadows/text/particles/scenery.",
+      "references": [
+        "art/units/source/curated/unit_embercourt_lantern_sappers.png"
+      ],
+      "selection": "Select stable hand ownership: right chain at screen left, left lamp staff at screen right; replaces crossed/swapped old guard.",
+      "sha256": "96037c1f465a2075673ffd75b455b9f9e84cd33ed548236a9f08f9fb43fc271b"
+    }
+  ]
+}

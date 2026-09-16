@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "reel-attached-cast-cycle",
+  "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/reel-attached-cast-cycle.png",
+  "source_sha256": "5121986232f3d218e70fcfb683d3bf879b8faecbf46a29b5b59e479fdaf35209",
+  "source_rect": [
+    0,
+    0,
+    1374,
+    1145
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/reel-attached-cast-cycle.png",
+  "output_sha256": "c85f69ec761606d377f319553f256b5ee1be38ea9b60de14f6f715760358940b",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-cutouts.json",
+  "recipe_sha256": "c78528d7051f91347dd2692195ba6e86ad7e9d397e1739295363e9fabfe9df0d",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 135,
+    "tolerance": 36,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        1010,
+        875
+      ],
+      [
+        1027,
+        763
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1181000,
+    "edge_pixels": 17172,
+    "unchanged_paint_pixels": 375058,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

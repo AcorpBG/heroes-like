@@ -1,0 +1,108 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source pixels/recipes, no invented or warped poses.",
+  "jobs": [
+    {
+      "id": "ferry-lash-connected-green",
+      "source": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/lash-connected-green.png",
+      "source_sha256": "00fdd0af9661bb0c82d1569e4d3e6f39d7a2a53391a1b474bd57cf24f4f7c6c0",
+      "output": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/continuity-alpha/lash-connected-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "ferry-travel-carry-green",
+      "source": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/travel-carry-green.png",
+      "source_sha256": "7b5c51a058f91a9d192e89662031a5a8a7ed701597aa95e3dc210d7abd98aa42",
+      "output": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/continuity-alpha/travel-carry-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "ferry-travel-step-left-green",
+      "source": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/travel-step-left-green.png",
+      "source_sha256": "cbba40e1318042c50ed124b9cd0cd8f4e5b5b65d841113ece30b472d7a46db3b",
+      "output": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/continuity-alpha/travel-step-left-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "ferry-travel-step-right-green",
+      "source": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/travel-step-right-green.png",
+      "source_sha256": "fa0efb5efdca944302f2e221ff31b87e397aa08f2309d424ee71ba8f087750ca",
+      "output": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/continuity-alpha/travel-step-right-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "ferry-guard-hook-hand-green",
+      "source": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/guard-hook-hand-green.png",
+      "source_sha256": "1efb5397deb0c0f998881c9c20c1bfab76414e36d7251db20a1f72a62d7fdb17",
+      "output": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/continuity-alpha/guard-hook-hand-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "ferry-hit-hook-hand-green",
+      "source": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/hit-hook-hand-green.png",
+      "source_sha256": "d5fbb0173016d6d593d71834dbc1136bffbadf14bb79b7870d597dffe5b25b72",
+      "output": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/continuity-alpha/hit-hook-hand-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

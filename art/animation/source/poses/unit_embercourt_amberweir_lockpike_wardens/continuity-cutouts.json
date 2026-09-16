@@ -1,0 +1,107 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source paintings and exact parameters, no synthesized poses.",
+  "jobs": [
+    {
+      "id": "lockpike-original",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/poses.png",
+      "source_sha256": "d3e667987c5615b5b2158f9fbe62b5c5060dc0484f0e724565bd909601dd0624",
+      "output": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 185,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            901,
+            1008
+          ],
+          [
+            131,
+            677
+          ],
+          [
+            120,
+            320
+          ],
+          [
+            1283,
+            609
+          ],
+          [
+            471,
+            310
+          ],
+          [
+            111,
+            212
+          ],
+          [
+            445,
+            989
+          ],
+          [
+            461,
+            219
+          ],
+          [
+            1045,
+            1046
+          ]
+        ]
+      }
+    },
+    {
+      "id": "lockpike-walk-pike-side-lift-green",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/walk-pike-side-lift-green.png",
+      "source_sha256": "926735c2ba00959004082f017f675b55058fb58885b8f58bcc209e29c1b20136",
+      "output": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/walk-pike-side-lift-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "lockpike-dead-closed-eyes-green",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/dead-closed-eyes-green.png",
+      "source_sha256": "8af66900f09b44933b47a563e35fe48ff3d2d5322b2f4dc499c4b15975575044",
+      "output": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/dead-closed-eyes-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "lockpike-walk-shield-side-lift-green",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/walk-shield-side-lift-green.png",
+      "source_sha256": "713c7ea4c30951d2578b7b56c79eb9df8b525ead3ee5e0d39ac860fa669ee6b5",
+      "output": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/walk-shield-side-lift-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

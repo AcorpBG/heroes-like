@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source paintings and exact parameters, no synthesized poses.",
+  "id": "reedsnare-walk-phase-1-tail-corrected-green",
+  "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/walk-phase-1-tail-corrected-green.png",
+  "source_sha256": "6a901d5f962273669a349296cfe633c6d7789df39c83089984fa4c4ecbecfc38",
+  "source_rect": [
+    0,
+    0,
+    1210,
+    1300
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/walk-phase-1-tail-corrected-green.png",
+  "output_sha256": "06a408c58a595297d6302c6bd843434f37289d5c6eccac6ca2a80cf7e5f3bee4",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-cutouts.json",
+  "recipe_sha256": "d23eaba7c21f5658264e2f8b1adde2de5f64fb1c23337dc1041b0b5bc70c2ea4",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1149435,
+    "edge_pixels": 9064,
+    "unchanged_paint_pixels": 414501,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

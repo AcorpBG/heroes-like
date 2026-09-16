@@ -1,0 +1,56 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_cliffhawk_wardens",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "travel-two-hand-recovery-and-left-collapse",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/travel-two-hand-recovery-and-left-collapse.png",
+      "sha256": "8d54f7a0b6e04754c3cda0f7b1f7cc92fefe2502c71c4454e3b9e68a96146a26",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-fd97e594-aa12-4b06-b826-e9c61c652bed.png",
+      "prompt": "Use case: stylized-concept. SIX original painted tactical battle sprites in THREE columns TWO rows with wide gutters for complete pike. Image1 primary leg-position constraint for top-left only; no guide graphics/text/colors in output. Image2 primary identity/style, image3 canonical costume. SAME adult Cliffhawk Warden woman, brown windblown braid, blue scarf, mustard sash, blue/ivory feather mantle, brown leather armor/boots/kneeguards, blue split tabard and belt rope coil. Exactly ONE long wooden hooked steel PIKE with small steel butt cap, both hands on shaft; one small brown hawk perched on anatomical right shoulder throughout live poses. Fixed elevated three-quarter camera facing RIGHT, constant body/proportions/colors. TOP LEFT: opposite walking contact from Image1, FAR leg extends forward RIGHT, NEAR thigh angles backwards LEFT in front of far thigh; both hands retain diagonal pike, bird perched. TOP MIDDLE: far boot planted straight under pelvis, near knee lifts forward with foot under knee off floor, diagonal pike held with both hands, bird perched. TOP RIGHT: attack windup, pike nearly horizontal across upper torso, sharp hooked HEAD at screen RIGHT, rear anatomical right hand near butt at viewer LEFT, forward left hand near middle, elbows bent pulling shaft back, both hands visible gripping one uninterrupted shaft, hawk remains gripping shoulder with wings half-open. BOTTOM LEFT: thrust recovery, pike drawn halfway back diagonal, both grips retained, knees soften, hawk folds wings still perched. BOTTOM MIDDLE: side-collapse after knees buckle, HEAD at LEFT and feet at RIGHT, near forearm supports on ground with chest low but head still raised; single pike lies across foreground with hooked head toward RIGHT, hawk already departed and absent, mantle/rope intact. BOTTOM RIGHT: final corpse SAME HEAD LEFT feet RIGHT, torso/head now fully resting on SIDE, eyes closed, both legs slack bent, hands limp, same pike beside body with hooked tip RIGHT, hawk absent. Never reverse corpse orientation. No blood or floating effects. All weapon tips, bird and feet fully inside cell margins. Uniform pure GREEN RGB(0,255,0) backing, no reflected green/spill, no floor, text, labels, grid or scenery. Original painted raster.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cliffhawk_wardens/alpha/poses.png",
+          "sha256": "2a48c34b08bea58c6a59dacc11580082e5f44e2a7075cd43981128208f522a1e"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/units/source/curated/unit_neutral_cliffhawk_wardens.png",
+          "sha256": "401027c1e06c9cb6aa7037ae07f6bf89c4c0b96f6a18f2456a8294d564e2ced1"
+        }
+      ],
+      "selection_notes": "Select first five paintings: contact attempt repeats leading geometry; supported lift, two-hand windup with perched hawk, recovery and head-left fall usable candidates. Final head-right corpse rejected.",
+      "selected_frames": [
+        "contact_attempt",
+        "passing_knee_lift",
+        "pike_two_hand_windup",
+        "pike_recovery",
+        "death_side_fall"
+      ]
+    },
+    {
+      "id": "dead-head-left-from-fall",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/dead-head-left-from-fall.png",
+      "sha256": "36a243b2c7b865bf4e557bf8aed0b62ab1573e9d305ffac2171d21a573bedc40",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cb57b29e-487c-439e-9fea-460f33acbf07.png",
+      "prompt": "Use case: precise-object-edit. This SINGLE supplied head-left side-fall painting is the edit target. Make it the next FINAL DEAD resting pose by lowering her HEAD and left shoulder directly downward onto her limp forearm/ground at the LEFT end of her body. Her HEAD MUST REMAIN AT SCREEN LEFT; her knees and BOOTS MUST REMAIN AT SCREEN RIGHT. Do NOT flip, rotate, reverse, or rearrange her body. Close both eyes, relax mouth, settle upper torso onto side, keep knees softly bent and hands limp, no weight-bearing arm. Preserve brown braided hair, blue/ivory feather mantle, blue scarf, mustard sash, brown leather armor/boots/kneepads, blue split tabard and rope coil. Keep the SAME single complete pike lying horizontally beside her in foreground, with small butt cap on LEFT and hooked steel head on RIGHT; do not omit or shorten it. Hawk remains absent. Same elevated three-quarter camera, body proportions, original painterly style. Keep entire head/hair, cloak, boots and pike inside generous blank margins. Uniform pure GREEN RGB(0,255,0), no green reflected light/spill, no scenery, text, floor/shadow, blood or effects. One original painted corpse only. Critical: head LEFT, feet RIGHT, lowering from this exact reference.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/cliffhawk-continuity-20260916/fall-reference/poses-travel-two-hand-recovery-and-left-collapse-rect-450-620-1008-1010-green.png",
+          "sha256": "37d3659100dbd04fcc82a5e791cbdefdafb71bfb0d7c614eb45fb95c92f0b368"
+        }
+      ],
+      "selection_notes": "Final head-left resting corpse from isolated fall reference, eyes closed and pike head still right; no hawk. Full original costume retained, ground/body scale and hand relaxation remain review.",
+      "selected_frames": [
+        "dead_head_left"
+      ]
+    }
+  ]
+}

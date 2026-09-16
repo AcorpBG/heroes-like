@@ -1,0 +1,91 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved local non-generative raster background/edge preparation; preserve immutable masters and original anatomy.",
+  "jobs": [
+    {
+      "id": "walk-passing-a-green",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/walk-passing-a-green.png",
+      "source_sha256": "525c2fb08ddbd62bc8eaeb801f879daa0daa593ba10353b369fad0ae5f05fcdd",
+      "output": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/walk-passing-a-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "walk-passing-b-green",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/walk-passing-b-green.png",
+      "source_sha256": "9a0315a20b89803c1d7ae773d607ea5ecb8f45984ca01092e5bcd045824ad940",
+      "output": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/walk-passing-b-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "walk-near-landing-green",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/walk-near-landing-green.png",
+      "source_sha256": "11e02101e0ca0bb1b917853ae667e1f0dd8aaafc703220d3c0f6bb453df418ef",
+      "output": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/walk-near-landing-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "attack-brace-length-corrected-green",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/attack-brace-length-corrected-green.png",
+      "source_sha256": "758444b28bdc21ff3f208da400d8884fcad80d3a89a3066092481a54882d6068",
+      "output": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/attack-brace-length-corrected-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "attack-release-length-corrected-green",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/attack-release-length-corrected-green.png",
+      "source_sha256": "dabb130921b35e8b6d5a28e7a65d1fb7887a8415993d75812f288cba2518d0a8",
+      "output": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/attack-release-length-corrected-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

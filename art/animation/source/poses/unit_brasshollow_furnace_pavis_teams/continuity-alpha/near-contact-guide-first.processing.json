@@ -1,0 +1,54 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative background and edge cleanup on 2026-09-15; original masters and interior paint must remain unchanged.",
+  "id": "near-contact-guide-first",
+  "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/near-contact-guide-first.png",
+  "source_sha256": "f8e7e7064091023d77eec866ef03d70fefa78837d73852af676850d0e0c4792f",
+  "source_rect": [
+    0,
+    0,
+    1158,
+    1358
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/near-contact-guide-first.png",
+  "output_sha256": "6212c1a7d21df1cf4da4998a55f850eba18ba66adbedc1f692137aa977272521",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-cutouts.json",
+  "recipe_sha256": "aee0bb5ed1c3f5fa1962b8e7ff6360062e3b89edac6e16e7dd5e6c43846ff60b",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 100,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        410,
+        631
+      ],
+      [
+        844,
+        287
+      ],
+      [
+        688,
+        622
+      ],
+      [
+        694,
+        726
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1035429,
+    "edge_pixels": 7243,
+    "unchanged_paint_pixels": 529892,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

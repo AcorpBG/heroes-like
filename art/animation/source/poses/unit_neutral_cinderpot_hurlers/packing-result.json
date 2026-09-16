@@ -1,0 +1,195 @@
+{
+  "unit_id": "unit_neutral_cinderpot_hurlers",
+  "output": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/candidate-atlas.png",
+  "sha256": "b3b2205b453cc1fc147fdbfe036d333bbc884aaf78388bdbeae3a3d726d0b083",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        154,
+        16,
+        320,
+        246
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        189,
+        16,
+        365,
+        246
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        142,
+        15,
+        369,
+        245
+      ]
+    },
+    {
+      "name": "walk_passing",
+      "index": 3,
+      "alpha_bounds": [
+        181,
+        29,
+        320,
+        246
+      ]
+    },
+    {
+      "name": "passing_back",
+      "index": 4,
+      "alpha_bounds": [
+        201,
+        20,
+        300,
+        241
+      ]
+    },
+    {
+      "name": "passing_forward",
+      "index": 5,
+      "alpha_bounds": [
+        199,
+        20,
+        305,
+        241
+      ]
+    },
+    {
+      "name": "fist_windup",
+      "index": 6,
+      "alpha_bounds": [
+        143,
+        32,
+        364,
+        249
+      ]
+    },
+    {
+      "name": "fist_strike",
+      "index": 7,
+      "alpha_bounds": [
+        143,
+        31,
+        375,
+        243
+      ]
+    },
+    {
+      "name": "fist_recovery",
+      "index": 8,
+      "alpha_bounds": [
+        177,
+        23,
+        332,
+        239
+      ]
+    },
+    {
+      "name": "hood_guard",
+      "index": 9,
+      "alpha_bounds": [
+        145,
+        31,
+        356,
+        247
+      ]
+    },
+    {
+      "name": "pot_gather",
+      "index": 10,
+      "alpha_bounds": [
+        175,
+        18,
+        353,
+        246
+      ]
+    },
+    {
+      "name": "pot_windup",
+      "index": 11,
+      "alpha_bounds": [
+        142,
+        14,
+        354,
+        242
+      ]
+    },
+    {
+      "name": "pot_release",
+      "index": 12,
+      "alpha_bounds": [
+        152,
+        28,
+        375,
+        249
+      ]
+    },
+    {
+      "name": "pot_recovery",
+      "index": 13,
+      "alpha_bounds": [
+        143,
+        18,
+        346,
+        244
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 14,
+      "alpha_bounds": [
+        163,
+        42,
+        351,
+        247
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 15,
+      "alpha_bounds": [
+        165,
+        82,
+        366,
+        245
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 16,
+      "alpha_bounds": [
+        158,
+        115,
+        366,
+        251
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 17,
+      "alpha_bounds": [
+        125,
+        146,
+        387,
+        240
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png": "866cabfd8cfe73fa4cd467dca52139973c5c538437119cebcb567dc188c498b2",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cinderpot_hurlers/continuity-alpha/passing-recovery-and-directional-corpse.png": "89e92537c8ae1cdf66f92d4f239c7b063f432649fab799dafa24e87a6f1ab0df"
+  }
+}

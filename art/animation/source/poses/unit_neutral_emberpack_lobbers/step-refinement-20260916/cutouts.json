@@ -1,0 +1,123 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic background removal and bounded edge cleanup; no repainting, warping or local pose synthesis.",
+  "jobs": [
+    {
+      "id": "emberpack_step_planted",
+      "source": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/planted.png",
+      "source_sha256": "eeb46e770d11803c5c2643498344b4329d1083cb06cee39673971984c7c27c41",
+      "output": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/alpha/planted.png",
+      "matte": {
+        "minimum": 145,
+        "maximum": 190,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "max_edge_residual": 40,
+        "background_seeds": [
+          [
+            362,
+            702
+          ],
+          [
+            342,
+            800
+          ],
+          [
+            354,
+            772
+          ],
+          [
+            426,
+            721
+          ],
+          [
+            379,
+            742
+          ],
+          [
+            337,
+            740
+          ]
+        ]
+      }
+    },
+    {
+      "id": "emberpack_step_near",
+      "source": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/near-lift.png",
+      "source_sha256": "0e116513f8614f61891f6b132015a8997e8c2ee2e262e794879923e78526d3ae",
+      "output": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/alpha/near-lift.png",
+      "matte": {
+        "minimum": 145,
+        "maximum": 190,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "max_edge_residual": 40,
+        "background_seeds": [
+          [
+            362,
+            702
+          ],
+          [
+            342,
+            800
+          ],
+          [
+            354,
+            772
+          ],
+          [
+            426,
+            721
+          ],
+          [
+            379,
+            742
+          ],
+          [
+            337,
+            740
+          ]
+        ]
+      }
+    },
+    {
+      "id": "emberpack_step_far",
+      "source": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/far-lift.png",
+      "source_sha256": "fc16d33fbf79ba58b0708ca47dad787a32de44990466985b718e4d1dad5662cd",
+      "output": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/alpha/far-lift.png",
+      "matte": {
+        "minimum": 145,
+        "maximum": 190,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "max_edge_residual": 40,
+        "background_seeds": [
+          [
+            362,
+            702
+          ],
+          [
+            342,
+            800
+          ],
+          [
+            354,
+            772
+          ],
+          [
+            426,
+            721
+          ],
+          [
+            379,
+            742
+          ],
+          [
+            337,
+            740
+          ]
+        ]
+      }
+    }
+  ]
+}

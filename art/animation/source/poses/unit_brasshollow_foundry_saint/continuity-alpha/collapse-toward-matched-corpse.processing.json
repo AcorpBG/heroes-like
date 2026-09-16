@@ -1,0 +1,74 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "collapse-toward-matched-corpse",
+  "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/collapse-toward-matched-corpse.png",
+  "source_sha256": "4d0f317e8ddb2a63b861ba635851e93c419717d394e0b693abbbdb649730171c",
+  "source_rect": [
+    0,
+    0,
+    1819,
+    865
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-alpha/collapse-toward-matched-corpse.png",
+  "output_sha256": "dcdb0be6e0a3ad8384470150f4349346056ad34eb54d5485332639c46ca0b577",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-cutouts.json",
+  "recipe_sha256": "136769e7deb364600e1bdca1ba34431f2430fa6c2e84c59c8a12eb1ce34be570",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 110,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        350,
+        232
+      ],
+      [
+        337,
+        357
+      ],
+      [
+        782,
+        225
+      ],
+      [
+        1189,
+        653
+      ],
+      [
+        338,
+        197
+      ],
+      [
+        353,
+        389
+      ],
+      [
+        962,
+        260
+      ],
+      [
+        758,
+        131
+      ],
+      [
+        661,
+        112
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 965737,
+    "edge_pixels": 6996,
+    "unchanged_paint_pixels": 600702,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

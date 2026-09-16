@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "fordhook-attack-release-green",
+  "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/attack-release-green.png",
+  "source_sha256": "368ba4946b92c24ad55371c1ec8674bb24d24a02518470e098b30baff45e7ed3",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/attack-release-green.png",
+  "output_sha256": "49ad356836f8ad4a233cb1a8e8614496e9af1db7de12051182610e8985e8dde6",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-cutouts.json",
+  "recipe_sha256": "20a96730e491c149501debfd7eeddf083fcf11241bd88b394b9c1e8e9965e48f",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true,
+    "inspection_note": "Vivid green appears only as backing; original red/brown/cream/brass character paint is retained."
+  },
+  "measurements": {
+    "removed_background_pixels": 1335865,
+    "edge_pixels": 1631,
+    "unchanged_paint_pixels": 235368,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

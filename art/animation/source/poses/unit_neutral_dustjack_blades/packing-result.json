@@ -1,0 +1,185 @@
+{
+  "unit_id": "unit_neutral_dustjack_blades",
+  "output": "art/animation/source/poses/unit_neutral_dustjack_blades/candidate-atlas.png",
+  "sha256": "6669616a90a9286243856f3a34deda0839259549c7478237dea41bff21db38b5",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        187,
+        25,
+        317,
+        242
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        181,
+        25,
+        323,
+        242
+      ]
+    },
+    {
+      "name": "run_extended",
+      "index": 2,
+      "alpha_bounds": [
+        164,
+        29,
+        339,
+        236
+      ]
+    },
+    {
+      "name": "run_gathered",
+      "index": 3,
+      "alpha_bounds": [
+        180,
+        33,
+        341,
+        227
+      ]
+    },
+    {
+      "name": "run_passing",
+      "index": 4,
+      "alpha_bounds": [
+        182,
+        37,
+        334,
+        245
+      ]
+    },
+    {
+      "name": "contact_attempt",
+      "index": 5,
+      "alpha_bounds": [
+        158,
+        29,
+        338,
+        246
+      ]
+    },
+    {
+      "name": "passing_a",
+      "index": 6,
+      "alpha_bounds": [
+        185,
+        27,
+        349,
+        245
+      ]
+    },
+    {
+      "name": "passing_b_attempt",
+      "index": 7,
+      "alpha_bounds": [
+        177,
+        23,
+        346,
+        245
+      ]
+    },
+    {
+      "name": "blade_windup",
+      "index": 8,
+      "alpha_bounds": [
+        189,
+        37,
+        330,
+        244
+      ]
+    },
+    {
+      "name": "blade_slash",
+      "index": 9,
+      "alpha_bounds": [
+        161,
+        50,
+        375,
+        244
+      ]
+    },
+    {
+      "name": "blade_recovery",
+      "index": 10,
+      "alpha_bounds": [
+        170,
+        28,
+        407,
+        244
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 11,
+      "alpha_bounds": [
+        177,
+        20,
+        334,
+        246
+      ]
+    },
+    {
+      "name": "guard_crossed",
+      "index": 12,
+      "alpha_bounds": [
+        191,
+        61,
+        317,
+        256
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 13,
+      "alpha_bounds": [
+        187,
+        47,
+        338,
+        239
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        198,
+        70,
+        318,
+        251
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 15,
+      "alpha_bounds": [
+        179,
+        112,
+        353,
+        237
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 16,
+      "alpha_bounds": [
+        140,
+        140,
+        362,
+        251
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_dustjack_blades/alpha/poses.png": "1b627fa7fa21ded26875bf79378a565368d08cc03396e6b24a2f0589ce469104",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_dustjack_blades/continuity-alpha/four-phase-step-and-two-blade-recovery.png": "7f018af68ec34937391d14b554e5b53a3f9325895ae07b53b6ac2a25eab34d0b"
+  }
+}

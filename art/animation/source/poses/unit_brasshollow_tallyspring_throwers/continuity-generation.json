@@ -1,0 +1,145 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/poses-projectile-separated.png",
+      "source_sha256": "9ae33a690b3116c666dd8ea056554bac4acd46d7ac76a7cabf0fdd784c7af9ac",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c085a4eb-67cd-409d-a434-376eaee72251.png",
+      "prompt": "Use case: precise-object-edit. Input1 edit target: keep exact 16-pose 4x4 layout and every woman's body pose, face, costume, equipment size, camera and position. Input2 clarifies that the golden disc is a flying projectile, NOT a spoon or permanent muzzle extension. Correct this single recurring weapon error across ALL sixteen poses: remove the golden spoon/disc and thin stem protruding beyond each square brass muzzle, leaving a short open rectangular black slot inside a brass collar. Keep identical box launcher, exposed metal coil spring side, top hopper with three brass discs and two grips. In row3 column3 firing pose, also remove detached projectile, orange trail and muzzle flash; leave discharged open muzzle, game will render projectile separately. Change no other pose content, hands, face, clothing, proportions or layout. Corpse retains complete launcher beside body but no spoon at muzzle. Full uncut figures/gear, clean genuine transparent background; remove painted checkerboard without repainting character or adding floor/shadows/text.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/poses.png",
+          "sha256": "290b21896b5f8f4aac9f58f78349befafbcca8ac4f4a4fd548190f54549a0bb3",
+          "role": "edit_target_or_motion_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/units/source/curated/unit_brasshollow_tallyspring_throwers.png",
+          "sha256": "4f7df2297cf1f5f0e38ecf50f77c5abf148789af2b035706d7b6288d6257adcd",
+          "role": "identity_or_supporting_reference"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        8,
+        9,
+        11,
+        12,
+        14,
+        15
+      ],
+      "excluded_cells": {
+        "2": "Repeated contact.",
+        "3": "Repeated contact.",
+        "4": "Replaced passing.",
+        "5": "Weapon reverses above head.",
+        "6": "Replaced two-hand shove.",
+        "7": "Replaced guard pair.",
+        "10": "Replaced painted recoil; no baked projectile.",
+        "13": "Floating launcher/wrong fall transition."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/guided-walk-and-guard.png",
+      "source_sha256": "f91148045587c77f770d6ed96f37485fc10d9678cbc8f3fbc541991f9746866c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b35575a6-1eef-47bf-a8af-4eb960948912.png",
+      "prompt": "Use case: sketch-to-render. Original painted tactical battle animation supplement, SIX complete Tallyspring Throwers in 3 columns x2 rows. FIRST FOUR figures MUST follow leg diagrams inputs1-4 in sequence, input5 is the fixed character/costume/launcher reference. Blue=near RIGHT leg, orange=far LEFT leg, but paint original red cloth/boots, not guide colors. 1 near-right heel forward contact, far-left toe back. 2 near-right supporting planted, far-left knee swings forward with boot lifted. 3 far-left heel FORWARD, near-right toe BACK; foreground near shin must trail to screen LEFT while far shin reaches right. 4 far-left supporting planted, near-right knee swings forward boot lifted. Exactly two legs with one knee each. Keep torso/head three-quarter RIGHT-facing in every figure, never mirror or swap costume. Adult red-haired woman with tied bun/red head wrap, stern face, rolled red sleeves, riveted steel shoulder/bracer, stained dark leather apron, red pants, heavy buckled boots, brass belt tally tags. Both hands hold original SMALL box launcher low steady: right rear grip, left underneath front. Exposed side coil spring, top hopper with brass discs, short rectangular OPEN BLACK SLOT muzzle; NO spoon, projectile or muzzle extension. Last two figures are low one-knee guards holding box across upper chest, then slightly tucked defensive compression. Complete body/launcher/boots in each cell, consistent scale and wide gutters. Genuine transparent background, no checkerboard, diagrams, text, ground/shadow, flash or added gear.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716",
+          "role": "edit_target_or_motion_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734",
+          "role": "identity_or_supporting_reference"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d",
+          "role": "identity_or_supporting_reference"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9",
+          "role": "identity_or_supporting_reference"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/identity-reference.png",
+          "sha256": "bfa9bfb018c75619b22c55a36857cf8b1832fb46a584ecde340f1d258897c589",
+          "role": "identity_or_supporting_reference"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        2,
+        4,
+        5
+      ],
+      "excluded_cells": {
+        "3": "Repeated near passing; replaced by single-guide far passing."
+      },
+      "limitation": "Cell2 is a planted bridge, not an accepted opposite contact; guide did not reverse leg ownership."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/shove-recoil-forward-collapse.png",
+      "source_sha256": "e2916a97761658cb1011b74ea5b769a1cdf8218d9bbff80c05425d3531237388",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2f9e6d08-4822-4849-8464-916c7c06a2a7.png",
+      "prompt": "Use case: identity-preserve. FOUR complete painted Tallyspring Thrower poses in 2x2 grid, clear gutters. Input1 fixes woman/costume/launcher identity, input2 fixes final collapse direction and grounded weapon. TOP LEFT melee anticipation: both hands pull small box launcher close beside upper chest, muzzle still points screen RIGHT, elbows bend, knees flex; do not reverse the weapon over shoulder. TOP RIGHT physical shove: both hands extend SAME launcher forward screen RIGHT, elbows almost straight, torso leans into short blunt push, feet braced. No firing, no muzzle flash, no projectile. BOTTOM LEFT ranged recoil: launcher at shoulder aiming right but shoulders lean back, elbows compressed and launcher recoils a little toward torso; left hand supports underneath, right on rear trigger grip, open rectangular black muzzle unchanged. BOTTOM RIGHT intermediate death collapse toward input2: BOTH knees on ground, body tipping forward to RIGHT, head low toward right forearm, boots trailing screen LEFT. LEFT hand releases launcher directly onto ground foreground beside chest, gun not floating or thrown, open black slot faces RIGHT. Original red-haired adult woman, bun/red head wrap, red sleeves/pants, stained dark leather apron, riveted steel shoulder/bracer, heavy boots, brass belt tally tags/cylinder. Same small brass box launcher with exposed side coil spring and top disc hopper, no spoon/rod/projectile beyond open slot. Exactly two hands/arms/legs; consistent body/weapon scale and fixed three-quarter RIGHT-facing camera. Full figures and gear, genuine transparent background, no checkerboard, floor/shadows, text, blood, effects or extra equipment.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/identity-reference.png",
+          "sha256": "bfa9bfb018c75619b22c55a36857cf8b1832fb46a584ecde340f1d258897c589",
+          "role": "edit_target_or_motion_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/corpse-direction-reference.png",
+          "sha256": "2b1e91554ddc24a7d563d716035e7dbfc1823a309d8a1c2888cb5dbb4d7193ec",
+          "role": "identity_or_supporting_reference"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/guided-far-passing.png",
+      "source_sha256": "efd5e5e9ae5bd7809adba54602452a8f4f42c7723a5a39493141c5a33b6e6e86",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7db651ec-dea2-484b-935d-1a3bdb5dff08.png",
+      "prompt": "Use case: sketch-to-render. Paint ONE complete Tallyspring Thrower precisely in input1's leg pose; input2 supplies face/costume/launcher only. Input1 BLUE near RIGHT leg is the straight supporting leg: near boot FLAT on ground directly beneath hip. Input1 ORANGE far LEFT leg bends at knee BEHIND that supporting leg, far boot lifted and partially occluded by the planted shin. Show one planted near boot at viewer-RIGHT/below body, and the lifted far boot BEHIND to viewer-LEFT, NOT a near knee raised in front of the apron. Exactly two attached legs, one knee each. Keep original three-quarter RIGHT-facing torso/head without mirroring. Red-haired adult woman, red head wrap/bun, rolled red sleeves, red pants, stained leather apron, steel shoulder/bracer, heavy brass-buckled boots, brass belt tags. Both hands keep the same small disc box launcher low at waist, open black rectangular muzzle, exposed side spring, top brass-disc hopper; no spoon/projectile extension. Fixed body/weapon scale, full figure and generous transparent margins. Original painterly style, genuine transparency, no diagram/guide colors, checkerboard, floor/shadow, text or extra gear.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734",
+          "role": "edit_target_or_motion_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/identity-reference.png",
+          "sha256": "bfa9bfb018c75619b22c55a36857cf8b1832fb46a584ecde340f1d258897c589",
+          "role": "identity_or_supporting_reference"
+        }
+      ],
+      "selected_cells": [
+        0
+      ]
+    }
+  ],
+  "preparation": "Owner-approved deterministic background/edge extraction and explicit frame packing only. Original/rejected paintings, exact prompts/reference hashes and processing proofs retained. No local pose drawing, warping or mirroring; runtime-facing transform is presentation only.",
+  "review_notes": [
+    "18-frame candidate: eight muzzle-corrected retained poses plus ten new selected paintings from four built-in outputs. No spoon-like muzzle attachment or baked projectile.",
+    "Two-hand pullback/shove preserves forward gun direction. New recoil retains launcher; forward head-right collapse grounds launcher before settling into original equipped cold corpse.",
+    "Contact and planted bridge still repeat leading leg. Single-guide far passing differs from near passing; complete gait/support/travel remains unaccepted.",
+    "Explicit crop bands remove neighboring hair, boots and fingers without painting or warping. Source-specific neutral matte preserves steel, skin and original outfit.",
+    "Full-roster body/gear scale, spring/hopper compression and reload continuity, gait and guard/death transitions/event timing remain; no final acceptance."
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved local non-generative background/edge cleanup; preserve originals, never generate or warp poses locally.",
+  "id": "bargebow-attack-windup-framed-green",
+  "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/attack-windup-framed-green.png",
+  "source_sha256": "b1066421182265c8276a3402d9391d27e50f2a5db0e935c304b515943f3d5920",
+  "source_rect": [
+    0,
+    0,
+    1227,
+    1281
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_bargebow_crews/continuity-alpha/attack-windup-framed-green.png",
+  "output_sha256": "3418ea49f7fc09fc55e74692f5577aed46ea3d11e747b0da3277e9ca70e160ca",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_bargebow_crews/continuity-cutouts.json",
+  "recipe_sha256": "80eb4b30866417b6c21c2825cbd5f07a1d5e08daa7b24b0f69b9ae59d606d8af",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1124427,
+    "edge_pixels": 5153,
+    "unchanged_paint_pixels": 442207,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

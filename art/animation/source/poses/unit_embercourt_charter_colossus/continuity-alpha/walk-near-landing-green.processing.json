@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved local non-generative background/edge cleanup. Preserve originals; no pose invention, limb warping or procedural runtime artwork.",
+  "id": "charter-walk-near-landing-green",
+  "source": "art/animation/source/poses/unit_embercourt_charter_colossus/walk-near-landing-green.png",
+  "source_sha256": "38b98d1563f7ed0484fa34cd134e3911c21b5fffdffbdbfbe75121f0285fe172",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_charter_colossus/continuity-alpha/walk-near-landing-green.png",
+  "output_sha256": "b06d9063fd29bcc78ec04842955e5f5794f439cc43e4016ea7f4ecd64c8a226d",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_charter_colossus/continuity-cutouts.json",
+  "recipe_sha256": "112702be081e99ea0310a7746b7d297bbc608f07bf2df64e8df7bf249576b6de",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1006669,
+    "edge_pixels": 10444,
+    "unchanged_paint_pixels": 555403,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

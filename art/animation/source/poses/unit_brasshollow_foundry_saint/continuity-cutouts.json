@@ -1,0 +1,250 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "original-poses",
+      "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/poses.png",
+      "source_sha256": "9caf718c30efad07ce545a8a5fab31d0f09a7566f04117fcc0da55f898cb5797",
+      "output": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-alpha/original-poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 150,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            185,
+            78
+          ],
+          [
+            206,
+            74
+          ],
+          [
+            105,
+            159
+          ],
+          [
+            132,
+            217
+          ],
+          [
+            671,
+            99
+          ],
+          [
+            528,
+            201
+          ],
+          [
+            662,
+            444
+          ],
+          [
+            555,
+            571
+          ],
+          [
+            890,
+            561
+          ],
+          [
+            657,
+            897
+          ],
+          [
+            1029,
+            951
+          ],
+          [
+            1427,
+            969
+          ],
+          [
+            1248,
+            905
+          ],
+          [
+            1262,
+            900
+          ],
+          [
+            1242,
+            919
+          ]
+        ]
+      }
+    },
+    {
+      "id": "creep-guard-and-collapse",
+      "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/creep-guard-and-collapse.png",
+      "source_sha256": "98d23421c5c060a94472d65726e85e91b50aabdf0676970ce8904a0523ffa77c",
+      "output": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-alpha/creep-guard-and-collapse.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            196,
+            137
+          ],
+          [
+            284,
+            132
+          ],
+          [
+            369,
+            194
+          ],
+          [
+            138,
+            267
+          ],
+          [
+            133,
+            414
+          ],
+          [
+            621,
+            130
+          ],
+          [
+            701,
+            130
+          ],
+          [
+            801,
+            208
+          ],
+          [
+            558,
+            423
+          ],
+          [
+            235,
+            724
+          ],
+          [
+            361,
+            817
+          ],
+          [
+            130,
+            1000
+          ],
+          [
+            651,
+            832
+          ],
+          [
+            155,
+            360
+          ],
+          [
+            361,
+            188
+          ],
+          [
+            790,
+            191
+          ],
+          [
+            158,
+            927
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guided-near-leg-lift",
+      "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/guided-near-leg-lift.png",
+      "source_sha256": "5b9d91407d3ed7fe3501d46ee5a916ab6bfc90a7e2f3e803a7061db177ac66b0",
+      "output": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-alpha/guided-near-leg-lift.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 120,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            643,
+            165
+          ],
+          [
+            713,
+            165
+          ],
+          [
+            868,
+            223
+          ],
+          [
+            954,
+            325
+          ],
+          [
+            464,
+            538
+          ],
+          [
+            374,
+            439
+          ]
+        ]
+      }
+    },
+    {
+      "id": "collapse-toward-matched-corpse",
+      "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/collapse-toward-matched-corpse.png",
+      "source_sha256": "4d0f317e8ddb2a63b861ba635851e93c419717d394e0b693abbbdb649730171c",
+      "output": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-alpha/collapse-toward-matched-corpse.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 110,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            350,
+            232
+          ],
+          [
+            337,
+            357
+          ],
+          [
+            782,
+            225
+          ],
+          [
+            1189,
+            653
+          ],
+          [
+            338,
+            197
+          ],
+          [
+            353,
+            389
+          ],
+          [
+            962,
+            260
+          ],
+          [
+            758,
+            131
+          ],
+          [
+            661,
+            112
+          ]
+        ]
+      }
+    }
+  ]
+}

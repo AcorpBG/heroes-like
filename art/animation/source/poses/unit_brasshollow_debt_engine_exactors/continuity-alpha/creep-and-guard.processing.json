@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "creep-and-guard",
+  "source": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/creep-and-guard.png",
+  "source_sha256": "78a2b180e8dfee50bcfaee3cc6eb7a031b4122d001f79af588f92e70353cfe69",
+  "source_rect": [
+    0,
+    0,
+    1312,
+    1199
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/continuity-alpha/creep-and-guard.png",
+  "output_sha256": "2194f608e2b1f8c0593dfcfcd5861895443cf03e068068affebd2202516e8b1b",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/continuity-cutouts.json",
+  "recipe_sha256": "9fe65a38d1a10a4449295e1e078c0eb31b73e30fd6d1b5f7fa7c037f48d7277c",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 822029,
+    "edge_pixels": 14526,
+    "unchanged_paint_pixels": 736533,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

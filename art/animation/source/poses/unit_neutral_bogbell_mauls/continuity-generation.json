@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "barrel-maul-recovery-ready-and-passing-step",
+      "file": "barrel-maul-recovery-ready-and-passing-step.png",
+      "sha256": "ecac9517e6fcf4471a50600acdccb6cb3b7eb84d38a68cb9c09ee4f624603a67",
+      "tool": "built_in_image_gen",
+      "model": "not_exposed_by_tool",
+      "prompt": "Use case: stylized-concept. THREE full-body original Bogbell Maul battle animation paintings, THREE columns ONE row with generous empty gutters. Image 1 sole exact identity/equipment reference: burly bearded man, pointed battered brown leather hood, mossy ragged leather layers with brass bell/keyhole chest medallion, rope bindings, wrapped heavy boots. BOTH hands hold ONE complete wooden maul, barrel-shaped wood cylinder head at screen RIGHT with three brass riveted hoops and small hanging bells, flared butt and small bell at screen LEFT. Keep reference shaft length and barrel size relative to torso, no giant new weapon. Same elevated three-quarter camera facing RIGHT, consistent full-body size. LEFT: recovery after downward strike, torso halfway straightening, hands pull complete maul upward to waist, barrel still low on RIGHT just above ground, wrists separated on handle. CENTER: upright ready defense, knees slightly bent, unchanged maul shaft diagonally across lower chest, barrel RIGHT, same grip ownership. RIGHT: walking passing phase, one boot PLANTED directly under hip, other knee bent swinging past with boot lifted behind and clear of ground; keep torso/hood/maul orientation, do not reproduce an extended contact stride. Preserve full barrel, all shaft, bells, moss, boots and original body proportions in margins. Original painterly raster, flat pure BLUE #0000FF, no spill, shadows, scenery, text/grid, effects, blood, extra characters or detached equipment.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/bogbell-continuity-20260916/idle-reference/unit_neutral_bogbell_mauls-poses-rect-0-0-325-418-light.png",
+          "sha256": "e4c15fc3859bec495e5b91590e1940fb1adba645248e7f5e38d4e4fd2f442b14"
+        }
+      ],
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f4c68cb5-da55-46b3-a2a4-2b337286d857.png",
+      "selection": "Selected; exact crops/scales/anchors in packing.json. Static composites inspected, not final connected-motion acceptance.",
+      "selected_frames": [
+        "walk_passing",
+        "maul_recovery",
+        "maul_ready_brace"
+      ]
+    }
+  ],
+  "review_notes": [
+    "13 packed frames retain ten original paintings and select three new paintings: barrel-maul recovery, ready brace and bent-knee passing step. One original extended contact is retained; repeated contact alternatives are unselected. Full maul barrel/shaft/bells remain through overhead attack and head-left collapse/corpse.",
+    "Original genuine alpha is unchanged. Approved blue preparation and old/new uniform scales 0.55/0.29 preserve paint. Inspected source bands separate the tightly adjacent kneeling maul rim from the low-fall forearm without retaining a neighboring fragment.",
+    "All-state candidate only. Distinct contact/passing do not prove a full alternating support cycle. Maul head/shaft and two-hand grip consistency, body size/palette/edge continuity, resting bells and connected timing remain refinement. No automated tests/imports/gameplay/platform validation in this increment."
+  ]
+}

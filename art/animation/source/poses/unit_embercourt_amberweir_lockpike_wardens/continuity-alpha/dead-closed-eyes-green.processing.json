@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source paintings and exact parameters, no synthesized poses.",
+  "id": "lockpike-dead-closed-eyes-green",
+  "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/dead-closed-eyes-green.png",
+  "source_sha256": "8af66900f09b44933b47a563e35fe48ff3d2d5322b2f4dc499c4b15975575044",
+  "source_rect": [
+    0,
+    0,
+    2038,
+    771
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/dead-closed-eyes-green.png",
+  "output_sha256": "b44913678075145a00838e0af73cac0b72cce8b70f73030fb8f851554223e9cd",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-cutouts.json",
+  "recipe_sha256": "6f6da17a62f229b9abf1e4c3cd03e56889c3a00f0e531baf21b79ad66cc1ded8",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 876521,
+    "edge_pixels": 9212,
+    "unchanged_paint_pixels": 685565,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

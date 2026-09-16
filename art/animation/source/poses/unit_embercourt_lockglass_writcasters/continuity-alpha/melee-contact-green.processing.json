@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved local non-generative matte and narrow-edge cleanup; preserve original paintings and exact recipes, no invented or warped poses.",
+  "id": "lockglass-melee-contact-green",
+  "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/melee-contact-green.png",
+  "source_sha256": "e8a0d268e96de69da29240d2074e8a8b047a94f5c75e7b4ecfd62f4595d31e0a",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/melee-contact-green.png",
+  "output_sha256": "2d4404ec16e63c9f626fe5c4fa1ca5ed0a044edc4f219995d9027d7253deee40",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-cutouts.json",
+  "recipe_sha256": "1dc24d5cce5de9eac060968ff4e0fd363addc3f06594500bf22945592e1e106f",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1149480,
+    "edge_pixels": 8424,
+    "unchanged_paint_pixels": 414960,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

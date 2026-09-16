@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "jobs": [
+    {
+      "id": "four-phase-step-and-two-blade-recovery",
+      "source": "art/animation/source/poses/unit_neutral_dustjack_blades/four-phase-step-and-two-blade-recovery.png",
+      "source_sha256": "e6a99372e8a351306ff6bb093f68decb8265b508e7cc46d40324b881e4aa735c",
+      "output": "art/animation/source/poses/unit_neutral_dustjack_blades/continuity-alpha/four-phase-step-and-two-blade-recovery.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

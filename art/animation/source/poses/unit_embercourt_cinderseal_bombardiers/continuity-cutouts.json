@@ -1,0 +1,40 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner explicitly approved local non-generative background/edge cleanup. Preserve originals; no invented poses or procedural runtime stand-ins.",
+  "jobs": [
+    {
+      "id": "cinderseal-walk-far-passing-green",
+      "source": "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/walk-far-passing-green.png",
+      "source_sha256": "52e29cb934c028b2af33edccf50a703184beb22389d3330852d3bae67b0ab77d",
+      "output": "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/continuity-alpha/walk-far-passing-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "cinderseal-ranged-breech-ignition-green",
+      "source": "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/ranged-breech-ignition-green.png",
+      "source_sha256": "c93a7cff361707bf01cdcc9fcebea462545d6298e6f2e743ca77ef32f2ebe6e7",
+      "output": "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/continuity-alpha/ranged-breech-ignition-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

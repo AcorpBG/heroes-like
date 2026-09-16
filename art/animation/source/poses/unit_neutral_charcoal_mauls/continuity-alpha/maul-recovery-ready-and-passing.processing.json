@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "maul-recovery-ready-and-passing",
+  "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/maul-recovery-ready-and-passing.png",
+  "source_sha256": "dded815720a1043dcf629e6f981386b3aa46c97f2496b24d1cbe8c6273ce95b7",
+  "source_rect": [
+    0,
+    0,
+    2002,
+    786
+  ],
+  "output": "art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-alpha/maul-recovery-ready-and-passing.png",
+  "output_sha256": "95e9aa892af997cb3d5b9d19eee02265e99f93253bb9a9a3f1cfb5ee87f67e9b",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-cutouts.json",
+  "recipe_sha256": "3f0b836a8bb8bcd180c51b82f9cf9501878c764cbbb9259c03617eb449a12675",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 4,
+    "max_edge_residual": 100,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1009806,
+    "edge_pixels": 25520,
+    "unchanged_paint_pixels": 538246,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "corpse-directed-collapse",
+  "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/corpse-directed-collapse.png",
+  "source_sha256": "a2480ace8e7c540882856bf13bf8fb2a62578c22c1c5ea036e28f4802263b4a9",
+  "source_rect": [
+    0,
+    0,
+    1619,
+    971
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/corpse-directed-collapse.png",
+  "output_sha256": "92b8661dab38a3e1495c266e2bda2b7c11337c907fc894c53d92bd2e7a929e4f",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-cutouts.json",
+  "recipe_sha256": "0b7f1272dd735837b7e447f290ea28d72c6265ff0ef6123559c2beb10176ab07",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 135,
+    "tolerance": 36,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        953,
+        704
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 951756,
+    "edge_pixels": 8336,
+    "unchanged_paint_pixels": 611957,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

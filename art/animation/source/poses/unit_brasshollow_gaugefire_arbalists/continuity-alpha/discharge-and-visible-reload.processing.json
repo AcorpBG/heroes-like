@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "discharge-and-visible-reload",
+  "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/discharge-and-visible-reload.png",
+  "source_sha256": "0eacef2394c743151fb61e6f9534cf1bc7d6b960b29fe4d23370de8a1e8c28c6",
+  "source_rect": [
+    0,
+    0,
+    1918,
+    820
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload.png",
+  "output_sha256": "633bbfb66b22c6d76ea101c1e9e8a6d4ae1fdbb4a22c19e31219a637eef84202",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-cutouts.json",
+  "recipe_sha256": "eb37c0c7fefc7fc28244ad6b93a0e1af674b82022a683b876585730db9c58b14",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 170,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 874458,
+    "edge_pixels": 9023,
+    "unchanged_paint_pixels": 689279,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

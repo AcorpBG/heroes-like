@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved local non-generative raster background/edge preparation. Preserve immutable original sources; no pose synthesis.",
+  "id": "walk-near-landing-green",
+  "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/walk-near-landing-green.png",
+  "source_sha256": "df6eb81efcaf178ef72c6e01d0d74c4f67d3dfee850cb930e6340e78eff2b40d",
+  "source_rect": [
+    0,
+    0,
+    1145,
+    1374
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_lantern_sappers/continuity-alpha/walk-near-landing-green.png",
+  "output_sha256": "7fcf487501ff0eb6a4297131c1b1e751a506cab44b5be8e927371bfb85f4c50e",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_lantern_sappers/continuity-cutouts.json",
+  "recipe_sha256": "f136ef288371ff11e9d4db59084de5f5a02d4abc97a6fdd8f34507e53239e006",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1122089,
+    "edge_pixels": 9539,
+    "unchanged_paint_pixels": 441602,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

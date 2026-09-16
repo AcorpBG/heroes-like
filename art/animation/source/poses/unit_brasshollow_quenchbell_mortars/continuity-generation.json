@@ -1,0 +1,32 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_quenchbell_mortars",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/resupply-creep-and-guard.png",
+      "source_sha256": "8856c4b99f639401bef9aaf563419ad4e77854ca3086f36dad10a027f59653ef",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a472785e-95ae-4aec-9987-ff043cabccdf.png",
+      "prompt": "Use case: identity-preserve. Original painted fantasy tactical animation supplement: SIX complete figures in 3 columns by 2 rows, ample clear margins and gutters. Input1 exact fixed identity/camera: biped brass/black mortar automaton, thick short flared barrel pointing upper-LEFT, front circular orange furnace grill, small white gauge on viewer-right, copper coils and two rear exhaust pipes, TWO jointed legs with broad hoof-like feet, ONE articulated loading arm on viewer-LEFT ending in three-finger brass claw and attached hanging hydraulic hose. Preserve all machinery, proportions and barrel LEFT-facing camera; NEVER mirror. Quiet vents with physical outlets retained, no airborne smoke. Top-left: after firing, loader reaches around left side toward small rear ammunition recess behind barrel, EMPTY open claw visible beside rear rim, barrel dark inside, both feet planted. Top-middle: same arm returns forward from behind barrel gripping ONE fresh spherical black iron shell with orange seam and brass collar, clearly away from muzzle; both feet planted, shell identical to reference. No second arm or shell. Top-right: loaded travel, viewer-LEFT near foot lifts at knee entirely clear of ground, viewer-RIGHT far foot planted; shell in loader held safe clear of leg. Bottom-left: opposite loaded travel, viewer-RIGHT far foot lifted and viewer-LEFT near foot planted. Exactly two attached leg chains, one knee each. Bottom-middle: loaded defensive brace, both feet spread, knees flex, barrel remains pointing upper-left, loader holds its shell snugly beside circular furnace. Bottom-right: second brace compresses both knees slightly farther, same shell grip, same barrel and loader attachment. Do not add a rider, big ammunition rack, extra limb, shield or weapon. Genuine transparent background, no checkerboard, floor, shadows, diagrams, text or projectiles.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/identity-reference.png",
+          "sha256": "67cc8729430373486c688cd9037bb64d8239c42f76f47e3826588ba0a995ecf0",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "preparation": "Owner-approved deterministic background and narrow-edge extraction only. No local pose painting, mirroring, warping or equipment synthesis. Guides/composites are authoring references, not runtime art."
+}

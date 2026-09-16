@@ -1,0 +1,92 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "original-poses",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/poses.png",
+      "source_sha256": "175655a572b6d256b1ac7106f7d7d5693c720918d871cd76e3c14161e0e27142",
+      "output": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/original-poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "poses-quiet-vents",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/poses-quiet-vents.png",
+      "source_sha256": "59506edf14a688e54df07cd4d7db3990c0b92fd23c458ae6154829303ba21509",
+      "output": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/poses-quiet-vents.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            139,
+            219
+          ],
+          [
+            121,
+            548
+          ],
+          [
+            490,
+            211
+          ],
+          [
+            1257,
+            208
+          ],
+          [
+            272,
+            838
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guided-gait-and-guard",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/guided-gait-and-guard.png",
+      "source_sha256": "40a849c7229313fa7085e2c75083b0ce95d9c903a545c81783f557247c3f0017",
+      "output": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-gait-and-guard.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            690,
+            278
+          ],
+          [
+            650,
+            800
+          ],
+          [
+            1178,
+            820
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guided-far-leg-lift",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/guided-far-leg-lift.png",
+      "source_sha256": "02c459ec828b3502d6d308cf2870d078f89d5cd6d73d8850ee20168516643e09",
+      "output": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-far-leg-lift.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    }
+  ]
+}

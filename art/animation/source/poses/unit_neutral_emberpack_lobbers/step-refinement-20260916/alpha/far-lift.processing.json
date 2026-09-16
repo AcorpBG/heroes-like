@@ -1,0 +1,63 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic background removal and bounded edge cleanup; no repainting, warping or local pose synthesis.",
+  "id": "emberpack_step_far",
+  "source": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/far-lift.png",
+  "source_sha256": "fc16d33fbf79ba58b0708ca47dad787a32de44990466985b718e4d1dad5662cd",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/alpha/far-lift.png",
+  "output_sha256": "d272019498c30bea44eb5376561e02791b570efe18abc38b2d02b8d282514d96",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/cutouts.json",
+  "recipe_sha256": "19c9ba672eb30f33668dd11e5348fb554a0648fdd9262963e5e705d8416295b3",
+  "parameters": {
+    "minimum": 145,
+    "maximum": 190,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "max_edge_residual": 40,
+    "background_seeds": [
+      [
+        362,
+        702
+      ],
+      [
+        342,
+        800
+      ],
+      [
+        354,
+        772
+      ],
+      [
+        426,
+        721
+      ],
+      [
+        379,
+        742
+      ],
+      [
+        337,
+        740
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1195892,
+    "edge_pixels": 10801,
+    "unchanged_paint_pixels": 365823,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

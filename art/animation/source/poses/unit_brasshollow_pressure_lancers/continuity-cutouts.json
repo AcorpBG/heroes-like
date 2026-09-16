@@ -1,0 +1,62 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "original-poses",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/poses.png",
+      "source_sha256": "4219b268057d2017016b64b7175338909f8fb0b23f2a9630be3a0c9e3d9c395b",
+      "output": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            1418,
+            932
+          ],
+          [
+            874,
+            936
+          ],
+          [
+            307,
+            914
+          ],
+          [
+            146,
+            248
+          ],
+          [
+            916,
+            235
+          ]
+        ]
+      }
+    },
+    {
+      "id": "tripod-creep-and-guard",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/tripod-creep-and-guard.png",
+      "source_sha256": "0d1b989b78daa12967d50f558cae38e2d8b1eac5e62fedf4ce5cd6690f0e441d",
+      "output": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            313,
+            363
+          ],
+          [
+            1341,
+            382
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved local non-generative matte and narrow-edge cleanup; preserve original paintings and exact recipes, no invented or warped poses.",
+  "id": "lockglass-ranged-recoil-green",
+  "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/ranged-recoil-green.png",
+  "source_sha256": "52688ae934dbbb3ea362f7160a0fafff545a67eac7cdb453e1b77d36173c7f4d",
+  "source_rect": [
+    0,
+    0,
+    1151,
+    1367
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/ranged-recoil-green.png",
+  "output_sha256": "9642f6ce490a75d43a8cf475910b935e560b6b97092ec790189bea6cad21d206",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-cutouts.json",
+  "recipe_sha256": "1dc24d5cce5de9eac060968ff4e0fd363addc3f06594500bf22945592e1e106f",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 894696,
+    "edge_pixels": 12430,
+    "unchanged_paint_pixels": 666291,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

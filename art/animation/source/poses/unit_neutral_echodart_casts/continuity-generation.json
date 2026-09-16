@@ -1,0 +1,33 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_echodart_casts",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "crossbow-recoveries-grounded-step-and-directional-rest",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/crossbow-recoveries-grounded-step-and-directional-rest.png",
+      "sha256": "768e4442b71d3ef21a6ee264fc2cba1553951126e5f644225c32af5701710811",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-06eb27fa-1061-4aa3-ae08-62f4fd1d4776.png",
+      "prompt": "Use case: stylized-concept. Asset type: FOUR original painted battle-animation poses in TWO columns TWO rows, broad empty gutters. Image 1 sole standing identity and costume reference; Image 2 establishes the exact side and direction of her existing fall. Same Echodart Cast woman, dark high ponytail, cyan ear crystal, charcoal leather/bronze segmented armor, long gray scarf/cape, belt darts, asymmetric knee plate, strapped brown boots. ONE compact wood/brass crossbow with cyan dart: RIGHT hand on rear stock/trigger, LEFT hand supporting fore-end. Same elevated three-quarter camera and body size. Top-left: recovery from two-handed crossbow shove to screen RIGHT; draw still-loaded weapon halfway back to chest, elbows bend, feet braced. Top-right: ranged recovery after shot; lower crossbow from aim toward waist, empty rail and relaxed string with NO dart, both hands retain their correct grips. Bottom-left: supported travel passing pose facing RIGHT; near/right boot flat under hips supports body, far/left knee swings forward with foot slightly lifted, crossbow carried securely low, cape behind. Bottom-right: fully relaxed closed-eye corpse continuing Image 2: HEAD at screen LEFT and feet at RIGHT, cheek and shoulder grounded, body slightly more extended than the fall, both forearms relaxed, crossbow rests beside right hand in front of chest. No supporting elbow, no raised head; retain entire ponytail, scarf/cape, boots and gear. No body flip or camera reversal. Original painterly raster on flat pure green #00FF00 background, no spill, shadows, particles, grid, text, gore or new gear.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/echodart-continuity-20260916/idle-reference/unit_neutral_echodart_casts-poses-rect-0-0-307-330-light.png",
+          "sha256": "d2e0df49840df1b0f2b63e3cad14f9a10161802443107f2a03aa1a6197f0d45b"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/echodart-continuity-20260916/fall-reference/unit_neutral_echodart_casts-poses-rect-568-1048-893-1220-light.png",
+          "sha256": "5de15b6397d492734272c50450692505645ea02f98ed9d4b90b7573fa43c60e0"
+        }
+      ],
+      "selection_notes": "17 frames retain fourteen original paintings and select three new loaded-crossbow shove recovery, empty-rail ranged recovery and head-left resting corpse paintings. Separate reload/aim/release/empty recovery remains distinct from melee. New corpse continues the original head-left fall; the old head-right corpse is unselected. The new bottom-left travel attempt remains unselected: it did not achieve a planted passing step and changes knee-plate ownership. Original extension/gather candidates are retained explicitly unaccepted, not described as a corrected walking cycle. Original duplicate contact near the source edge is also unselected. Clean original alpha is reused; new green backing uses approved bounded preparation. Uniform old/new standing scales 0.63/0.40, with enlarged new corpse normalized at 0.29 by head/body comparison rather than silhouette fitting. Inspected crop bands exclude neighboring dart tips, cape, hair and boots without repainting. Grounded alternating gait, consistent knee/arm/weapon ownership, cape/body/gear/palette/edge continuity and event timing remain refinement. Static production review is not motion/gameplay acceptance.",
+      "selected_frames": [
+        "crossbow_shove_recovery",
+        "crossbow_empty_recovery",
+        "dead_head_left"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve sources and exact parameters. No synthesized or warped poses.",
+  "id": "mud-reload-right-hand-green",
+  "source": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/reload-right-hand-green.png",
+  "source_sha256": "35362cd2ca52b19626446b31eaa3d703dd310470be2543e93bfd6f76c094e85c",
+  "source_rect": [
+    0,
+    0,
+    1209,
+    1301
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/continuity-alpha/reload-right-hand-green.png",
+  "output_sha256": "ac4e96e4a9b386c93131eab5d53e4a93b5a1d9c3e85bf0010c264527ed17c421",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/continuity-cutouts.json",
+  "recipe_sha256": "fbbd296f394ee02e08cad5a94637794b659685a36b13a5e29ae2955064c46f7e",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1163399,
+    "edge_pixels": 6678,
+    "unchanged_paint_pixels": 402832,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

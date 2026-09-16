@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "guided-far-leg-lift",
+  "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/guided-far-leg-lift.png",
+  "source_sha256": "02c459ec828b3502d6d308cf2870d078f89d5cd6d73d8850ee20168516643e09",
+  "source_rect": [
+    0,
+    0,
+    1233,
+    1276
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-far-leg-lift.png",
+  "output_sha256": "c37be685923ea369ee54ff6f9f756435786bb6801f96a3d603691627dffaba22",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-cutouts.json",
+  "recipe_sha256": "8fc3fbadfdcba015309f14de528bc406e25f72651434c17202fe6206f884b62d",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 842417,
+    "edge_pixels": 5944,
+    "unchanged_paint_pixels": 724947,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

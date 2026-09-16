@@ -1,0 +1,48 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/guided-opposite-step-and-guard.png",
+      "source_sha256": "7c567c7182403691caae98f6a5dbc20bd5294490acfa39de10415da2dd5e9eec",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-48c1ff5c-bccb-404a-b61e-5ef81e4cd02d.png",
+      "prompt": "Use case: sketch-to-render. FOUR original painted Datum Lancer battle poses in 2x2 grid, generous margins around full-length tall lance and all boots. Inputs1 and2 are mandatory leg geometry; input3 supplies fixed identity and equipment only. TOP LEFT follows guide1: far LEFT heel reaches forward to screen RIGHT, near RIGHT leg trails back to LEFT; near foreground ivory shin must be BEHIND the far forward shin. TOP RIGHT follows guide2: near RIGHT knee lifts FORWARD in front of body, near boot off ground, far LEFT foot planted. Blue denotes near RIGHT leg and orange far LEFT leg, paint original black/ivory armor, not guide colors. Same RIGHT-facing three-quarter torso/head/camera both, no mirroring. Lance held upright by RIGHT hand, shield on LEFT arm; do not swap grips. Bottom-left: planted defensive brace, both knees flex, LEFT shield raised in front of chest and RIGHT lance tilted diagonally up toward screen right, complete long rear butt shaft extends below hand toward lower left. Bottom-right second guard slightly more compressed knees/shoulders, same shield/lance orientation. Preserve exact black long coat/red lining, ivory calibrated armor plates/red marks, closed ivory T-visor/gauge helmet and red crest, black/brass boiler backpack with attached red hoses, round ivory/brass gauge shield, long black/ivory lance with gauge beneath triangular ivory tip and brass butt spike. Exactly two legs/two arms/one shield/one lance throughout, fixed body/gear scale, transparent air gaps inside hoses. Full paintings, genuine transparent background, no checkerboard, diagram, labels, floor/shadow, new gear or effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d",
+          "role": "edit_target_or_motion_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9",
+          "role": "identity_or_supporting_reference"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/identity-reference-v2.png",
+          "sha256": "3256a8a3b15e94323b54a013373ee218d1ce8ee513933d9c89ea7b1583c0a5c4",
+          "role": "identity_or_supporting_reference"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "limitation": "Cell0 retains repeated leading leg; selected as planted bridge, not accepted opposite contact."
+    }
+  ],
+  "preparation": "Owner-approved deterministic background/edge extraction and explicit frame packing only. Original/rejected paintings, exact prompts/reference hashes and processing proofs retained. No local pose drawing, warping or mirroring; runtime-facing transform is presentation only.",
+  "review_notes": [
+    "14-frame candidate: ten selected existing paintings/corrections and four new supplement poses. Forward windup and shaft-restored thrust preserve complete lance; hit uses corrected single hand.",
+    "Original contact/far passing plus new planted bridge/near passing are not an accepted alternating gait; bridge repeats lead. New diagonal-lance guard pair retains shield.",
+    "Head-right side-fall matches cold corpse orientation; original reverse-direction seated fall is unselected. Full fall/weapon/hand trajectory still requires motion review.",
+    "Inspected hose/arm apertures prepared with source-specific neutral key and one bounded blue-white windup gap. Banded crops exclude adjacent leg, boot and lance tip.",
+    "Full-roster armor/weapon scale, limb support/travel, guard/death continuity and event timing remain; no final acceptance."
+  ]
+}

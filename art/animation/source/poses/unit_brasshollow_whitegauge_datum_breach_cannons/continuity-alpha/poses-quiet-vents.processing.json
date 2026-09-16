@@ -1,0 +1,54 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "poses-quiet-vents",
+  "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/poses-quiet-vents.png",
+  "source_sha256": "9fa0b59d9ab68cf7800fab607c0102c359a4cad14307537b0261255f552158ae",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-quiet-vents.png",
+  "output_sha256": "5a197782b513e6d40742781f672b9d438b13aa31037a13ac6747deeb61c70628",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-cutouts.json",
+  "recipe_sha256": "e54dbb2bce9e795a61178170b3be9fc2e6352ddcc8d86e5da105cf9ff4103a52",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 150,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        160,
+        305
+      ],
+      [
+        306,
+        299
+      ],
+      [
+        286,
+        149
+      ],
+      [
+        297,
+        263
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 954167,
+    "edge_pixels": 18245,
+    "unchanged_paint_pixels": 600116,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,108 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner explicitly approved local non-generative background/edge cleanup; preserve originals, never generate or warp poses locally.",
+  "jobs": [
+    {
+      "id": "bargebow-walk-passing-a-green",
+      "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/walk-passing-a-green.png",
+      "source_sha256": "b411e4b5a5435a65211c6c9e46c81341576e36adb2c16da3f172d639f10e6048",
+      "output": "art/animation/source/poses/unit_embercourt_bargebow_crews/continuity-alpha/walk-passing-a-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "bargebow-walk-passing-b-green",
+      "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/walk-passing-b-green.png",
+      "source_sha256": "cdd68f6b318535f77a8d12cb5b148ff9d671f734b399a8d75954ac65ba83b699",
+      "output": "art/animation/source/poses/unit_embercourt_bargebow_crews/continuity-alpha/walk-passing-b-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "bargebow-walk-near-landing-green",
+      "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/walk-near-landing-green.png",
+      "source_sha256": "0cc336256ee8dadd08082bcbea236f1334b80be6e565444fe4151553f49215f0",
+      "output": "art/animation/source/poses/unit_embercourt_bargebow_crews/continuity-alpha/walk-near-landing-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "bargebow-attack-windup-framed-green",
+      "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/attack-windup-framed-green.png",
+      "source_sha256": "b1066421182265c8276a3402d9391d27e50f2a5db0e935c304b515943f3d5920",
+      "output": "art/animation/source/poses/unit_embercourt_bargebow_crews/continuity-alpha/attack-windup-framed-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "bargebow-ranged-release-string-green",
+      "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/ranged-release-string-green.png",
+      "source_sha256": "5932ee2d7f4a6dde213a2ff94e7e6d22301b68d684be3dd7c8dbb9c9f35c40e7",
+      "output": "art/animation/source/poses/unit_embercourt_bargebow_crews/continuity-alpha/ranged-release-string-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "bargebow-ranged-load-green",
+      "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/ranged-load-green.png",
+      "source_sha256": "cd1f7624e2067a95a555497b0ef5060e38afc81582b082da842355342b7aa017",
+      "output": "art/animation/source/poses/unit_embercourt_bargebow_crews/continuity-alpha/ranged-load-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

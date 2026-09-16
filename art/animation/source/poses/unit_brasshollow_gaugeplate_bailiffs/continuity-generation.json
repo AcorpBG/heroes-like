@@ -1,0 +1,100 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/poses-quiet-vents.png",
+      "source_sha256": "59506edf14a688e54df07cd4d7db3990c0b92fd23c458ae6154829303ba21509",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d532bdda-e4d6-4f8a-8ed2-257552e233ec.png",
+      "prompt": "Use case: precise-object-edit. Input image is the original twelve-pose Gaugeplate Bailiff battle sheet. Edit ONLY the airborne steam above the backpack boiler pipes: remove ALL steam/smoke plumes and any particles in all twelve cells, leaving empty background above intact warm exhaust outlets. This depicts a quiet vent interval. Do NOT remove physical pipes, knobs, the boiler or character paint. Preserve every one of the twelve poses exactly: positions, camera, size, armor, face, blue goggles, blue/ivory cloth, right-hand gauge hammer, left round gauge shield, full inactive corpse and equipment. Do not alter any leg or weapon positions or revive the corpse. Keep the same 4-column 3-row sheet and full canvas. Genuine transparent background preferred, no magenta, no scenery or shadows or text.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/poses.png",
+          "sha256": "175655a572b6d256b1ac7106f7d7d5693c720918d871cd76e3c14161e0e27142",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "note": "Original neutral key hollowed pale steam. Built-in quiet interval retains pipe hardware; draft and keyed original retained unselected."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/guided-gait-and-guard.png",
+      "source_sha256": "40a849c7229313fa7085e2c75083b0ce95d9c903a545c81783f557247c3f0017",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a0434a4b-0f9b-4f4f-b0bb-3883c6b4c438.png",
+      "prompt": "Use case: identity-preserve. Asset type: original painted fantasy tactical battle animation supplement. SIX complete articulated figures in 3 columns x 2 rows, clear generous gutters and margins around every weapon and foot. Same three-quarter camera facing screen RIGHT, identical body and equipment scale throughout. Genuine transparent background, no drawn checkerboard, no text, no numbers, no ground shadows, no scenery. No new equipment or added limbs. Preserve original paint style and identity.\nInputs1-4 are leg-pose diagrams ONLY in sequential order; input5 is exact painted identity/costume reference. First four cells follow diagrams1,2,3,4 respectively, keeping same three-quarter right-facing torso and head, stocky humanoid proportions. BLUE diagram leg means anatomical RIGHT foreground leg; ORANGE means anatomical LEFT background leg, but render both in the original gold/black armor, no blue/orange guide paint. First contact: near RIGHT leg forward, far LEFT behind. Passing: near RIGHT supports and far LEFT knee/boot raised. Opposite contact: far LEFT forward, near RIGHT behind. Opposite passing: far LEFT supports, near RIGHT knee/boot raised. Preserve visible knee ownership and exactly one knee per leg, no duplicated plates. Identity: Gaugeplate Bailiff, squat brass/black armor, brass respirator beard mask with BLUE goggles, blue scarf, blue/ivory tabard, backpack boiler and pipes. RIGHT hand viewer-left carries fixed-size square gauge hammer near shoulder; LEFT arm viewer-right carries fixed-size round gauge shield before ribs. Do not swap hands or turn torso around. Keep hammer/shield restrained and consistent during gait. Quiet vents, no steam, keep pipe hardware. Fifth cell (bottom-middle): strong defensive brace, shield raised before chest/face with goggles partly visible, hammer low at right side, both boots planted. Sixth (bottom-right): follow-through brace with knees slightly compressed and same shield position, hammer still in right hand. Do not generate a fifth walking phase or new weapon. No diagrams or captions in output.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716",
+          "role": "authoring_only_pose_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734",
+          "role": "authoring_only_pose_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d",
+          "role": "authoring_only_pose_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9",
+          "role": "authoring_only_pose_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/identity-reference-v2.png",
+          "sha256": "998b38cb8174e20182dd0c25e52d43ebd78ee8a3cedca92ef183cd834b02e348",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0,
+        2,
+        3,
+        4,
+        5
+      ],
+      "unselected_cells": {
+        "1": "Raised near leg again, not requested far passing; replaced by single-pose guide."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/guided-far-leg-lift.png",
+      "source_sha256": "02c459ec828b3502d6d308cf2870d078f89d5cd6d73d8850ee20168516643e09",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8904d975-e08d-4e3d-a12f-78910b98ad9f.png",
+      "prompt": "Use case: sketch-to-render. Input1 is the EXACT leg-pose target; input2 supplies only this stocky Gaugeplate Bailiff's identity/armor/equipment. Paint ONE full battle sprite, not a sheet. BLUE foreground near RIGHT leg is STRAIGHT and its foot PLANTED; ORANGE far LEFT knee bends, its foot LIFTED behind/under the hip and entirely clear of ground. Use original brass/black leg armor, no guide colors. In the same three-quarter right-facing view as input2, the planted near leg is below the RIGHT hammer hand at viewer-left; the raised far LEFT foot is beneath the LEFT shield side at viewer-right and must visibly emerge below the shield. Do not raise the near hammer-side leg again. Exactly two legs and one knee each. Preserve squat build, round blue goggles, brass respirator beard mask, blue/ivory striped cloth, fixed-size right-hand square gauge hammer and left round ivory dial shield, boiler and pipes. Keep torso and head camera unchanged, no mirroring. Quiet vents, no smoke or steam. Complete figure and hammer/shield with generous blank margin. Genuine transparent background, no ground or shadows or text or diagrams.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734",
+          "role": "authoring_only_pose_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/identity-reference-v2.png",
+          "sha256": "998b38cb8174e20182dd0c25e52d43ebd78ee8a3cedca92ef183cd834b02e348",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0
+      ]
+    }
+  ],
+  "preparation": "Owner-approved deterministic background and narrow-edge extraction only. No local pose painting, mirroring, warping or equipment synthesis. Guides/composites are authoring references, not runtime art."
+}

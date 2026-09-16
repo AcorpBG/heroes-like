@@ -1,0 +1,91 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner explicitly approved local non-generative background/edge cleanup. Preserve originals; no pose invention, limb warping or procedural runtime artwork.",
+  "jobs": [
+    {
+      "id": "charter-walk-passing-b-green",
+      "source": "art/animation/source/poses/unit_embercourt_charter_colossus/walk-passing-b-green.png",
+      "source_sha256": "896704836b82fe9d4b0eef5925b6ca42c2b5606dfdf0f0f6f89a8cc0286caed7",
+      "output": "art/animation/source/poses/unit_embercourt_charter_colossus/continuity-alpha/walk-passing-b-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "charter-walk-opposite-passing-green",
+      "source": "art/animation/source/poses/unit_embercourt_charter_colossus/walk-opposite-passing-green.png",
+      "source_sha256": "bf1919ee6377463aa2b894554a0c793733afb0f915950a0f0d1292e0bfeb8cb0",
+      "output": "art/animation/source/poses/unit_embercourt_charter_colossus/continuity-alpha/walk-opposite-passing-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "charter-walk-near-landing-green",
+      "source": "art/animation/source/poses/unit_embercourt_charter_colossus/walk-near-landing-green.png",
+      "source_sha256": "38b98d1563f7ed0484fa34cd134e3911c21b5fffdffbdbfbe75121f0285fe172",
+      "output": "art/animation/source/poses/unit_embercourt_charter_colossus/continuity-alpha/walk-near-landing-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "charter-attack-windup-green",
+      "source": "art/animation/source/poses/unit_embercourt_charter_colossus/attack-windup-green.png",
+      "source_sha256": "a7cc85645eb8fa1e924e758276e6d23da52fafde4c3252cb2a2dcd12134cf9d6",
+      "output": "art/animation/source/poses/unit_embercourt_charter_colossus/continuity-alpha/attack-windup-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "charter-attack-contact-green",
+      "source": "art/animation/source/poses/unit_embercourt_charter_colossus/attack-contact-green.png",
+      "source_sha256": "10dedc46432ef15de7b36bc7dc54c9251d7e4451ef3ea4491e1c0005a677c415",
+      "output": "art/animation/source/poses/unit_embercourt_charter_colossus/continuity-alpha/attack-contact-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

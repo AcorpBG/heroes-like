@@ -1,0 +1,58 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "poses-projectile-separated",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/poses-projectile-separated.png",
+      "source_sha256": "9ae33a690b3116c666dd8ea056554bac4acd46d7ac76a7cabf0fdd784c7af9ac",
+      "output": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/poses-projectile-separated.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 110,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "guided-walk-and-guard",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/guided-walk-and-guard.png",
+      "source_sha256": "f91148045587c77f770d6ed96f37485fc10d9678cbc8f3fbc541991f9746866c",
+      "output": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/guided-walk-and-guard.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 120,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "shove-recoil-forward-collapse",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/shove-recoil-forward-collapse.png",
+      "source_sha256": "e2916a97761658cb1011b74ea5b769a1cdf8218d9bbff80c05425d3531237388",
+      "output": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/shove-recoil-forward-collapse.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 150,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "guided-far-passing",
+      "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/guided-far-passing.png",
+      "source_sha256": "efd5e5e9ae5bd7809adba54602452a8f4f42c7723a5a39493141c5a33b6e6e86",
+      "output": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/guided-far-passing.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 130,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+{
+  "unit_id": "unit_neutral_basalt_wardens",
+  "output": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/candidate-atlas.png",
+  "sha256": "7814dcd75e6ca2555673b5ff141177077b22c6671d385210b91ac247720c1421",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        179,
+        24,
+        329,
+        240
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        175,
+        25,
+        330,
+        240
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        174,
+        21,
+        328,
+        239
+      ]
+    },
+    {
+      "name": "walk_passing",
+      "index": 3,
+      "alpha_bounds": [
+        204,
+        20,
+        328,
+        239
+      ]
+    },
+    {
+      "name": "walk_opposite_contact",
+      "index": 4,
+      "alpha_bounds": [
+        177,
+        17,
+        338,
+        240
+      ]
+    },
+    {
+      "name": "walk_opposite_passing",
+      "index": 5,
+      "alpha_bounds": [
+        179,
+        16,
+        334,
+        240
+      ]
+    },
+    {
+      "name": "mace_windup",
+      "index": 6,
+      "alpha_bounds": [
+        175,
+        17,
+        340,
+        241
+      ]
+    },
+    {
+      "name": "mace_down_strike",
+      "index": 7,
+      "alpha_bounds": [
+        168,
+        44,
+        344,
+        239
+      ]
+    },
+    {
+      "name": "mace_recovery",
+      "index": 8,
+      "alpha_bounds": [
+        193,
+        25,
+        329,
+        239
+      ]
+    },
+    {
+      "name": "mace_visible_ready",
+      "index": 9,
+      "alpha_bounds": [
+        202,
+        23,
+        325,
+        239
+      ]
+    },
+    {
+      "name": "crouched_guard_visible_mace_grip",
+      "index": 10,
+      "alpha_bounds": [
+        182,
+        34,
+        330,
+        239
+      ]
+    },
+    {
+      "name": "hit_mace_retained",
+      "index": 11,
+      "alpha_bounds": [
+        172,
+        45,
+        338,
+        240
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 12,
+      "alpha_bounds": [
+        182,
+        77,
+        333,
+        240
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 13,
+      "alpha_bounds": [
+        170,
+        107,
+        350,
+        240
+      ]
+    },
+    {
+      "name": "dead_head_left_shield_and_mace",
+      "index": 14,
+      "alpha_bounds": [
+        158,
+        133,
+        352,
+        238
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/alpha/poses.png": "f25f8abff4b70563e0b35dc9ea175029feeba3426eefc99709a0694c92886395",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/continuity-alpha/mace-recovery-ready-and-passing.png": "ef50730154dad7837e6876daf91b722ab17a02942af422740d1aac3eefb0052f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/alpha/contact-b-matte.png": "445876512cc2afa879debd7b3f2decf66185f52c3678ca40b3d31e26184a554e",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/alpha/passing-b-matte.png": "34d8fddaf4ab67f2fdf8c24cb1b5268c273b18fde8a5ab0332b3423e4a09e2f8",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/continuity-alpha/visible-grip-crouched-shield-guard-full.png": "9c4ffa10bbd27f2bf4390f0b7951d29fd6c1faf14b22f46dc2c664971cfcfa25"
+  }
+}

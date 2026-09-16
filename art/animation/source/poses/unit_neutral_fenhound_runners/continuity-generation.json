@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_fenhound_runners",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "supported-run-bite-and-fold",
+      "source": "art/animation/source/poses/unit_neutral_fenhound_runners/supported-run-bite-and-fold.png",
+      "sha256": "0525f778331c744c2b58ec62496984618bcd0e9f300709b9271855aee1ea2b55",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7b440ddd-805f-42d1-8ee6-a9d486964c94.png",
+      "prompt": "Use case: stylized-concept. SIX original painted tactical battle sprites, THREE columns TWO rows, large clear gutters. Image1 is primary identity/style reference; image2 canonical identity. SAME lean shaggy brown-gray Fenhound courier, long muzzle, upright ears, amber eyes, turquoise painted streaks on cheeks/back/flanks, mossy leather harness with small parcels and round bronze collar token, bushy tail. Fixed slightly elevated three-quarter view facing RIGHT, same anatomical proportions all six. Exactly four canine legs, one tail, same harness/markings. TOP LEFT: hind-foot push phase before gallop suspension, both hind toes supporting beneath/behind hips while forelegs lift folded in front, spine extends; do not rotate body. TOP MIDDLE: fore-foot landing after extended suspension, near forepaw bearing weight forward under shoulder, far forepaw just ahead touching, hind legs trail airborne behind LEFT; chest lowers. TOP RIGHT: recovery after bite, four paws grounded, foreknees soften, neck draws back and muzzle closed, tail low. BOTTOM LEFT: bite CONTACT, neck reaches forward RIGHT, jaws CLOSED firmly, four distinct braced legs and balanced torso; no target or blood. BOTTOM MIDDLE: low defensive brace deeper than reference, forelegs spread and bent, chest guarded behind forelegs, ears laid back, eyes open, muzzle closed. BOTTOM RIGHT: intermediate side collapse, HEAD toward RIGHT, forelegs buckle sideways and chest rests on ground, hips rolling down but not yet fully settled, four limp bent legs, eyes closing, harness/parcels and tail intact. Keep full paw/claw and tail outlines, no speed trails or floor shadows. Uniform pure GREEN RGB(0,255,0) background with no green spill/reflected light, no scenery, text, grid, or logos. Original painterly raster, not diagram.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_fenhound_runners/alpha/poses.png",
+          "sha256": "25af57c315e8eb6f40854393e0e33a1bafd48cf08503d90987d3533587ca727f"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/units/source/curated/unit_neutral_fenhound_runners.png",
+          "sha256": "4e8095c1f44ef4cfc7c6a9588c4f8bc9a43e51ac3ec0140091c5af29818db4ca"
+        }
+      ],
+      "selection_notes": "New hind push, fore landing, recovery, closed bite, low raised-paw guard and side-lowering paintings; far-hind separation and guard support remain review.",
+      "selected_frames": [
+        "run_hind_push",
+        "run_fore_landing",
+        "bite_closed_contact",
+        "bite_recovery",
+        "guard_low",
+        "death_side_lower"
+      ]
+    }
+  ]
+}

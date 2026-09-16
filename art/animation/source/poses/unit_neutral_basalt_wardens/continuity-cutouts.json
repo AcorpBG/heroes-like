@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "mace-recovery-ready-and-passing",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/mace-recovery-ready-and-passing.png",
+      "source_sha256": "9c46edeff5ca22022deae39f88909cde2b000c7f4bd3d3df15a21152defd1f7b",
+      "output": "art/animation/source/poses/unit_neutral_basalt_wardens/continuity-alpha/mace-recovery-ready-and-passing.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "visible-grip-crouched-shield-guard-full",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/visible-grip-crouched-shield-guard-full.png",
+      "source_sha256": "b2523d6b2b782ee707f9809a3af3b18ad1e8d610cdf5e869533c875b1c005ec4",
+      "output": "art/animation/source/poses/unit_neutral_basalt_wardens/continuity-alpha/visible-grip-crouched-shield-guard-full.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "reference_crops": [
+    {
+      "file": "standing-reference-light.png",
+      "sha256": "f1bbf31d35c1f3104e0e67324015b132bff4c0ff68d74a58f99a0e4b88b56c6b",
+      "source": "poses.png",
+      "source_sha256": "f6d73efc67e6e7b8e30125eb3f7eba35533baad1bd784c2ef8ffcc6911ba92b3",
+      "rect": [
+        70,
+        0,
+        338,
+        405
+      ],
+      "method": "Prepared original crop; nearest magnification and light alpha composite by prepare_battle_pose_cutouts.py --inspect-rect. Exact reference PNG preserved. Later enclosed-gap seed refinements are outside this standing cell. Prompt excludes tiny neighbouring finial fragment at bottom."
+    }
+  ],
+  "sources": [
+    {
+      "file": "walk-shield-side-lift-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7109acca-a9d8-4b12-a9df-0d280a6b5446.png",
+      "prompt": "Use case: precise-object-edit. ONE original Beaconline Writguard walking PASSING pose based on this exact standing identity. Keep bearded face/red-plumed helmet, blackened steel/brass armor, red scarf/tabard/cape, brown boots, tall standard in hand at screen LEFT with red banner and THREE lit brass lamps, kite shield STRAPPED to forearm at screen RIGHT with its lit inset lamp, same shield-arm HAND gripping the small poleaxe beneath shield, and belt lamp. Exactly two arms/hands, no gear swap. Change legs: STANDARD-SIDE leg at screen LEFT is the planted supporting leg below pelvis; SHIELD-SIDE leg at screen RIGHT raises its knee modestly forward, boot lifted visibly off ground. A restrained armored marching step, not a high kick. Upper torso stays same elevated three-quarter RIGHT-facing view; staff is carried slightly above ground, never shortened, and banner/cape flow backward. Full small poleaxe, complete standard finial and bottom tip, shield and both boots inside wide margins. Preserve original human body/weapon proportions, no mirror or duplicate weapon. Original detailed painterly tactical raster. Flat vivid GREEN #00ff00 background with green also through banner/arm/ring gaps, neutral illumination with no green spill. No ground, shadows, scenery, text or detached fragments; ignore tiny cut-off object at bottom of supplied reference.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_beaconline_writguard/standing-reference-light.png"
+      ],
+      "selected": true,
+      "selection": "Shield-side boot lifted, standard-side foot bears weight; all five lamps and attached standard/shield/axe retained.",
+      "sha256": "4021c611dc252c78664c5c4bd418594c290a944b27e4e9285204c520de61d023"
+    },
+    {
+      "file": "walk-standard-side-lift-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f0970946-49c6-4423-99fd-e34fb1c9ac2c.png",
+      "prompt": "Use case: precise-object-edit. Opposite supporting-foot passing pose of this exact original Beaconline Writguard. Change ONLY legs and their cloth overlap. Keep head torso both arms/hands full staff/banner/three lamps shield/its lamp poleaxe and belt lamp identical, same size/camera/framing. Lower the currently lifted SHIELD-SIDE boot at screen RIGHT: extend its knee and plant the sole beneath the right hip around x655,y1435. Lift the currently planted STANDARD-SIDE boot at screen LEFT: bend that knee, draw lower leg BACK behind the planted shin, with its heel raised and boot around x480,y1230 clearly above ground. Exactly two legs attached to same hips, one foot planted and opposite foot raised. No torso mirror, no equipment hand swap, not another shield-side lift. Restrained armored marching action, no exaggerated kick. Keep complete tall standard and short poleaxe identical length and shield strapped to same forearm. Original painterly raster, vivid GREEN #00ff00 in all empty gaps, no green spill, floor/shadow/text/scenery or detached objects.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_beaconline_writguard/walk-shield-side-lift-green.png"
+      ],
+      "selected": true,
+      "selection": "Targeted opposite supporting foot: shield-side sole planted, standard-side boot raised behind. Same torso/equipment screen sides.",
+      "sha256": "65cea77da39459e7830ff5a982c1d4ab0f80e515fa45a663f24d8cac549589ce"
+    }
+  ]
+}

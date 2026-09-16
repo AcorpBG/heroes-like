@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved local non-generative matte and narrow-edge cleanup; preserve original paintings and exact recipes, no invented or warped poses.",
+  "id": "lockglass-walk-far-lift-green",
+  "source": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/walk-far-lift-green.png",
+  "source_sha256": "2fbc3e6243f8639a7bdfed1c2fb3c050e0efabe7552c00fe91098c48cd533965",
+  "source_rect": [
+    0,
+    0,
+    1069,
+    1472
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-alpha/walk-far-lift-green.png",
+  "output_sha256": "81ff86953fdaa26a8eb9d6cc6d81dec3c35b1de51d78e3b74d83333b11bf68e8",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_lockglass_writcasters/continuity-cutouts.json",
+  "recipe_sha256": "1dc24d5cce5de9eac060968ff4e0fd363addc3f06594500bf22945592e1e106f",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1033198,
+    "edge_pixels": 10011,
+    "unchanged_paint_pixels": 530359,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,195 @@
+{
+  "unit_id": "unit_neutral_ashdart_stalkers",
+  "output": "art/animation/source/poses/unit_neutral_ashdart_stalkers/candidate-atlas.png",
+  "sha256": "659cc7c3ea809692840e95e769f6974e924e721711946d76f8f51819a9865b3c",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        199,
+        31,
+        355,
+        242
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        186,
+        32,
+        340,
+        244
+      ]
+    },
+    {
+      "name": "run_extension_unaccepted",
+      "index": 2,
+      "alpha_bounds": [
+        147,
+        43,
+        369,
+        244
+      ]
+    },
+    {
+      "name": "run_gather_unaccepted",
+      "index": 3,
+      "alpha_bounds": [
+        170,
+        41,
+        334,
+        245
+      ]
+    },
+    {
+      "name": "tube_shove_windup",
+      "index": 4,
+      "alpha_bounds": [
+        167,
+        57,
+        361,
+        242
+      ]
+    },
+    {
+      "name": "tube_shove_contact",
+      "index": 5,
+      "alpha_bounds": [
+        152,
+        50,
+        405,
+        246
+      ]
+    },
+    {
+      "name": "tube_shove_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        172,
+        55,
+        360,
+        243
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        179,
+        41,
+        344,
+        244
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        177,
+        80,
+        334,
+        248
+      ]
+    },
+    {
+      "name": "dart_reload",
+      "index": 9,
+      "alpha_bounds": [
+        158,
+        43,
+        351,
+        245
+      ]
+    },
+    {
+      "name": "blowpipe_aim",
+      "index": 10,
+      "alpha_bounds": [
+        170,
+        34,
+        344,
+        248
+      ]
+    },
+    {
+      "name": "blowpipe_fire",
+      "index": 11,
+      "alpha_bounds": [
+        161,
+        41,
+        359,
+        250
+      ]
+    },
+    {
+      "name": "blowpipe_recovery",
+      "index": 12,
+      "alpha_bounds": [
+        190,
+        42,
+        353,
+        243
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 13,
+      "alpha_bounds": [
+        167,
+        39,
+        329,
+        248
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        176,
+        74,
+        348,
+        238
+      ]
+    },
+    {
+      "name": "death_tipping_head_left",
+      "index": 15,
+      "alpha_bounds": [
+        141,
+        126,
+        375,
+        251
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 16,
+      "alpha_bounds": [
+        143,
+        142,
+        372,
+        247
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 17,
+      "alpha_bounds": [
+        127,
+        164,
+        380,
+        250
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png": "3188aa809c2cdf077b154d159ab64e3d989ab89fa1af8fa717cf460c195df3c7",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-alpha/blowpipe-action-recovery-and-directional-collapse.png": "0f93630aa1409b58d51550050d06b987417797f4440f6e66f03c2e7e4591aabe"
+  }
+}

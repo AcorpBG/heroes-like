@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte/edge cleanup; preserve source paint, original masters and exact recipes.",
+  "id": "gorefen-dead-eye-closed-green",
+  "source": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/dead-eye-closed-green.png",
+  "source_sha256": "50d1eadd9836ad800252934607861ae2e4afec05db3420afda8abbd569161d94",
+  "source_rect": [
+    0,
+    0,
+    1987,
+    791
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-alpha/dead-eye-closed-green.png",
+  "output_sha256": "5617d6ee6d55c3f425016fcf037522488e04335ffa4e6ec8f4a5692143ed4bca",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-cutouts.json",
+  "recipe_sha256": "b1d91a2d8d9346716d3822edadc30d78ea8f2bb76b002b52a8a205b68968a63f",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 920002,
+    "edge_pixels": 11280,
+    "unchanged_paint_pixels": 640435,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

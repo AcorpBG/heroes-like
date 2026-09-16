@@ -1,0 +1,194 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative background and edge cleanup on 2026-09-15; original masters and interior paint must remain unchanged.",
+  "jobs": [
+    {
+      "id": "poses",
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/poses.png",
+      "source_sha256": "fe1e8f9ae21367e545a8340ceb6a3b41f24c9666fad54c40d3bc7063633a1aeb",
+      "output": "art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            121,
+            178
+          ],
+          [
+            217,
+            169
+          ],
+          [
+            501,
+            187
+          ],
+          [
+            615,
+            185
+          ],
+          [
+            879,
+            166
+          ],
+          [
+            1292,
+            173
+          ],
+          [
+            1381,
+            179
+          ],
+          [
+            148,
+            534
+          ],
+          [
+            626,
+            534
+          ],
+          [
+            999,
+            522
+          ],
+          [
+            1284,
+            547
+          ],
+          [
+            234,
+            789
+          ],
+          [
+            835,
+            926
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-1",
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/walk-1.png",
+      "source_sha256": "a8a02130c6c51fd1274ee7beb3403bb0cf91d91697f7105b485f128cc6ff5ecd",
+      "output": "art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/walk-1.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            285,
+            763
+          ],
+          [
+            655,
+            576
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-2",
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/walk-2.png",
+      "source_sha256": "d54a03b97e5d57b9aa7a56988874595ef35744bd41ffedd50172e0dc0b96f28b",
+      "output": "art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/walk-2.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            294,
+            733
+          ],
+          [
+            696,
+            714
+          ],
+          [
+            660,
+            566
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-3",
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/walk-3.png",
+      "source_sha256": "69052b35e2546051b2ffdd52865afb757256f1a6913e6abfd35a67fa6fcb0b5d",
+      "output": "art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/walk-3.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            286,
+            684
+          ],
+          [
+            729,
+            691
+          ],
+          [
+            659,
+            550
+          ],
+          [
+            430,
+            903
+          ]
+        ]
+      }
+    },
+    {
+      "id": "near-contact-guide-first",
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/near-contact-guide-first.png",
+      "source_sha256": "97cabd3d84e1c2b15b91015196cda4909b3fa66aae94dc3fe1b92bede3a00bf8",
+      "output": "art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/near-contact-guide-first.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            710,
+            703
+          ],
+          [
+            343,
+            694
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guard-braced",
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/guard-braced.png",
+      "source_sha256": "12d2c0b0cc1cc2970031aa40a929400a635159eada30677d204b37ce90987b72",
+      "output": "art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/guard-braced.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            810,
+            645
+          ],
+          [
+            467,
+            585
+          ]
+        ]
+      }
+    }
+  ]
+}

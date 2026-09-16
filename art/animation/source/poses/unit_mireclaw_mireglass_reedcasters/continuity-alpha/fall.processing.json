@@ -1,0 +1,94 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte/edge cleanup; preserve source paint, original masters and exact recipes.",
+  "id": "mireglass-fall-checker",
+  "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/poses-fall-globes-dim.png",
+  "source_sha256": "eccdcd74dca299a8ef99cfaebe1d4fba628a62d3308be2915e5b4c91bf57d2ef",
+  "source_rect": [
+    0,
+    0,
+    1230,
+    1278
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/fall.png",
+  "output_sha256": "ec475023de41871332099b992e7b98af2377beb4f27c7e65bfdc9cbef2d13ca5",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-cutouts.json",
+  "recipe_sha256": "649a419fe320a9ab83f3d7e97f6723e9ea19738480017e75dce164a7f82e8162",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 110,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        783,
+        1139
+      ],
+      [
+        861,
+        1164
+      ],
+      [
+        819,
+        1163
+      ],
+      [
+        754,
+        1153
+      ],
+      [
+        819,
+        1170
+      ],
+      [
+        643,
+        1100
+      ],
+      [
+        628,
+        1099
+      ],
+      [
+        688,
+        1086
+      ],
+      [
+        730,
+        1052
+      ],
+      [
+        770,
+        1056
+      ],
+      [
+        633,
+        1102
+      ],
+      [
+        639,
+        1102
+      ],
+      [
+        788,
+        1143
+      ],
+      [
+        821,
+        1173
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 913145,
+    "edge_pixels": 71173,
+    "unchanged_paint_pixels": 587622,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

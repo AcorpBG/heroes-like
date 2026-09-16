@@ -1,0 +1,70 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "creep-and-guard",
+      "source": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/creep-and-guard.png",
+      "source_sha256": "78a2b180e8dfee50bcfaee3cc6eb7a031b4122d001f79af588f92e70353cfe69",
+      "output": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/continuity-alpha/creep-and-guard.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "creep-and-guard-chroma",
+      "source": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/creep-and-guard-chroma.png",
+      "source_sha256": "53b3e73782f7722fa5dbe9372317e4e80dd03bca9b5780c6d440865fde20e4bb",
+      "output": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/continuity-alpha/creep-and-guard-chroma.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 100,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "creep-and-guard-clear-vents",
+      "source": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/creep-and-guard-clear-vents.png",
+      "source_sha256": "8909feb20886e0c18c3ff1bc4fc17da4de34d7d663695db2fc6838c5eae02a2b",
+      "output": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/continuity-alpha/creep-and-guard-clear-vents.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            177,
+            285
+          ],
+          [
+            1021,
+            323
+          ],
+          [
+            157,
+            876
+          ],
+          [
+            307,
+            895
+          ],
+          [
+            643,
+            1081
+          ]
+        ]
+      }
+    }
+  ]
+}

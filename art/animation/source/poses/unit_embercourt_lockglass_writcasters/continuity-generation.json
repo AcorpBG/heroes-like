@@ -1,0 +1,101 @@
+{
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "reference_crops": [
+    {
+      "file": "standing-reference-light.png",
+      "sha256": "149d8217b57692267658520b5b9975e37cbc79fb76c60ab1975ff832b3546a0d",
+      "source": "poses.png",
+      "source_sha256": "5f10b4ba51e97a7896845a4b0d3d408e7436ff2bc3e4b33c4c1bccf48438e70c",
+      "rect": [
+        54,
+        4,
+        290,
+        329
+      ],
+      "method": "Prepared source crop, 4x nearest light composite; exact reference retained before final armpit-gap seed refinement."
+    },
+    {
+      "file": "aim-reference-light.png",
+      "sha256": "d9337e92c6dc000a66addfdff7d87e4d590256dca77b4525a76ceb5fb1bcc689",
+      "source": "poses.png",
+      "source_sha256": "5f10b4ba51e97a7896845a4b0d3d408e7436ff2bc3e4b33c4c1bccf48438e70c",
+      "rect": [
+        340,
+        644,
+        606,
+        960
+      ],
+      "method": "Prepared source crop, 4x nearest light composite; exact PNG retained."
+    }
+  ],
+  "sources": [
+    {
+      "file": "walk-far-lift-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-19c9164b-df9f-4e60-aa55-3f5e0734f320.png",
+      "prompt": "Use case: precise-object-edit. ONE original Lockglass Writcaster walking passing pose from the supplied standing reference. Preserve exact woman face/dark tied hair red ribbon, burgundy ivory gold split coat, black armor, knee plates, dark boots, belt keys and brass scroll tube. Same long black/brass lockglass projector, round orange glass muzzle, THREE small upper amber crystals and ONE hanging ivory red-wax seal tag. RIGHT hand at rear stock/trigger and LEFT hand under forward barrel stay attached, projector carried down-right across waist at same angle and length. Change legs: NEAR leg under screen-RIGHT hip is planted straight beneath pelvis; FAR leg under screen-LEFT hip bends knee and lifts heel/boot behind near shin, clear air under lifted foot. Low natural walking passing step, not a high kick. Same elevated three-quarter RIGHT-facing tactical camera, torso not mirrored, both arms unchanged, coat and ribbon shift subtly with walking. Full figure and whole long projector with seal tag within broad blank margins. Original detailed painterly raster, not a resized standing cutout. Flat vivid GREEN #00ff00 in all empty space and enclosed arm gaps, neutral light no green spill on ivory; no floor, shadow, scene, text, separate effects or extra objects.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters/standing-reference-light.png"
+      ],
+      "sha256": "2fbc3e6243f8639a7bdfed1c2fb3c050e0efabe7552c00fe91098c48cd533965",
+      "selected": true,
+      "selection": "Far-foot lift, near foot planted, both projector hands retained."
+    },
+    {
+      "file": "walk-contact-draft-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-fab81241-7727-4ed3-930a-a83d8af53dff.png",
+      "prompt": "Use case: precise-object-edit. Next foot-landing frame of this exact Lockglass Writcaster. Keep upper body, face, two arms and both hand grips, full projector/three crystals/seal tag, camera and size unchanged. Move ONLY legs and lower coat: currently raised FAR leg at screen LEFT swings forward from that same hip; extend knee and plant that boot in front of the other boot, sole near x740,y1405. Its shin passes BEHIND the near shin at the crossing. The NEAR leg, currently planted center-right, trails back toward x430,y1320 with heel lifted and toe contacting. Thus far foot now leads to screen RIGHT, near foot trails to screen LEFT, not the same right-hip-forward contact. Exactly two legs connected to original hips; no torso or weapon mirror, no swapped hands. Natural moderate walking stride. Keep whole figure and complete projector inside generous margins. Same painterly raster, green #00ff00 in all empty gaps, neutral light no green spill, no floor/shadow/text/effects.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters/walk-far-lift-green.png"
+      ],
+      "sha256": "4ccbeb501713c5d11dce553018b9c3e68caabb24bd17192da827a3df8966742f",
+      "selected": false,
+      "selection": "Intended opposite contact repeats near-leading stride; preserve unselected, not counted as a distinct gait state."
+    },
+    {
+      "file": "walk-near-lift-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-24ca108a-0757-4806-b1eb-f432321b1991.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY legs of this exact Lockglass Writcaster into the opposite supporting-foot passing pose. Upper body/face/hair/coat shoulders, BOTH arms/hands, entire projector with three crystals and one seal tag, framing and camera unchanged. The currently lifted FAR foot at screen LEFT now lowers under that left hip: sole flat near x410,y1400 and knee bearing weight. The currently planted NEAR foot at screen RIGHT now lifts: flex near knee and ankle, boot near x650,y1240 with clear green gap under sole, knee moderately forward. Exactly two connected legs, one left planted boot and one right raised boot. This is a short natural walking passing phase, not another right-foot-planted pose. No torso mirror or equipment hand swap. Same whole-figure painted raster and proportions. Flat vivid GREEN #00ff00 including all empty gaps, no floor, shadow, effects, text or green spill on ivory.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters/walk-far-lift-green.png"
+      ],
+      "sha256": "34290dba34c06fe798ebf4c22a1fcee59b3946a529b399c64ea9922c79cd9c35",
+      "selected": true,
+      "selection": "Near foot lifted with far sole planted; alternate supporting-foot state."
+    },
+    {
+      "file": "melee-windup-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-432c7181-27dd-44ba-87d3-d3fb20879882.png",
+      "prompt": "Use case: stylized-concept. ONE original Lockglass Writcaster close-combat WINDUP sprite. Input is exact identity/equipment reference: dark-haired woman with red hair ribbon, burgundy/ivory/gold split coat black armor knee plates dark boots, belt keys and brass scroll tube. ONE same long black/brass projector with orange glass muzzle, THREE upper amber crystals and ONE ivory seal tag with red wax near muzzle. Prepare a TWO-HANDED BUTT STRIKE: rotate whole weapon across the chest so its blunt rear stock points toward screen RIGHT at shoulder height while orange muzzle points to screen LEFT, both ends fully visible. RIGHT hand grips stock neck near right side of chest, LEFT hand grips front barrel at left side of chest; exactly two hands and elbows visible, no duplicate hands. Do not swap stock with muzzle or shorten weapon. Torso coils slightly back-left, knees flex, feet planted wide; eyes target right, weapon butt pulled back ready to drive into adjacent enemy. This is not shooting/aiming, finger off trigger. Same fixed elevated three-quarter RIGHT-facing tactical camera, original face and body proportions, no mirrored woman or changed gear. Whole body and complete crosswise weapon inside generous wide margins. Detailed original painterly raster. Flat vivid GREEN #00ff00 in all empty gaps, neutral light no green spill; no floor, shadows, smoke/projectile/fire/effects, text or extra objects.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters/standing-reference-light.png"
+      ],
+      "sha256": "9d42e6073ca1181a3a16c33074fc2819ea512a8dfeb1a4c410a9bb52cb056a30",
+      "selected": true,
+      "selection": "Two-handed reversed-projector butt-strike anticipation, full stock and barrel retained."
+    },
+    {
+      "file": "melee-contact-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-85e141b8-58fb-4d49-b180-0a2ed8cab192.png",
+      "prompt": "Use case: precise-object-edit. NEXT close-combat CONTACT pose of this exact Lockglass Writcaster's two-handed butt strike. Keep weapon orientation: orange muzzle LEFT, wooden/brass butt RIGHT; same full muzzle-to-butt length, THREE crystals and ONE hanging ivory wax-seal tag. Keep both hand grips at same points: screen-left hand on barrel, screen-right hand on stock neck. Drive the entire projector forward toward screen RIGHT at chest height by extending BOTH elbows and turning shoulders into the blow; stock butt is leading impact surface near far-right margin. Torso leans strongly but naturally right, front knee bends, rear boot pushes ground. Face still aims right, mouth focused; same hair/costume/belt keys/scroll tube and exactly two arms/hands/two legs. This must show a substantial forward butt thrust, not the same pulled-back anticipation. Whole original long weapon and body in ample margins; widen canvas if needed rather than shortening weapon. Fixed elevated three-quarter tactical camera, painterly art matching reference. Flat vivid GREEN #00ff00 including empty arm gaps, neutral light no green spill. No shooting, no projectile/flash/impact effects, floor/shadow, labels or extra objects.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters/melee-windup-green.png"
+      ],
+      "sha256": "e8a0d268e96de69da29240d2074e8a8b047a94f5c75e7b4ecfd62f4595d31e0a",
+      "selected": true,
+      "selection": "Clear two-handed forward butt thrust, same weapon orientation and grip points."
+    },
+    {
+      "file": "ranged-recoil-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b4a8fc58-57b8-452a-93cb-302b4d1f510a.png",
+      "prompt": "Use case: precise-object-edit. ONE original Lockglass Writcaster FIRING RECOIL sprite, next instant after the supplied shouldered aim. Preserve exact woman/camera/proportions/costume, same black-brass shoulder projector with THREE upper amber crystals, round orange glass muzzle and ONE ivory red-wax seal tag. Projector points screen RIGHT, butt braced into shoulder, RIGHT hand holds rear trigger/stock, LEFT hand supports front barrel, both grips and all equipment unchanged. Recoil: shoulders and head pulled slightly back-left, knees flex, elbows compress, muzzle rises modestly above aim angle, hair ribbon and seal tag swing forward. Both boots stay planted at same spacing, no leap or mirrored body. Make the recoil readable but not a violent hit; eyes focused toward target. NO painted projectile, flash, flame, smoke or surrounding glow: the game supplies those effects separately. Keep colored glass and crystals as painted parts only. Whole body and entire weapon/tag safely inside broad margins. Original painterly tactical raster, flat vivid GREEN #00ff00 through every empty gap, neutral light no green reflections on ivory; no floor/shadow/text/scenery or extra objects.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters/aim-reference-light.png"
+      ],
+      "sha256": "52688ae934dbbb3ea362f7160a0fafff545a67eac7cdb453e1b77d36173c7f4d",
+      "selected": true,
+      "selection": "Shouldered recoil with two hand grips and raised muzzle; no baked projectile or flash, existing game effects stay separate."
+    }
+  ]
+}

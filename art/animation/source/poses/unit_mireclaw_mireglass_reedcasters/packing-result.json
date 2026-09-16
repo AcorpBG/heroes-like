@@ -1,0 +1,161 @@
+{
+  "unit_id": "unit_mireclaw_mireglass_reedcasters",
+  "output": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/candidate-atlas.png",
+  "sha256": "22742f99367a5f1c5eb11529f5365aa054d28949167f94746e7be549003c90e6",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        152,
+        27,
+        369,
+        238
+      ]
+    },
+    {
+      "name": "idle_1",
+      "index": 1,
+      "alpha_bounds": [
+        159,
+        25,
+        363,
+        239
+      ]
+    },
+    {
+      "name": "step_left_guided",
+      "index": 2,
+      "alpha_bounds": [
+        153,
+        26,
+        367,
+        240
+      ]
+    },
+    {
+      "name": "step_right",
+      "index": 3,
+      "alpha_bounds": [
+        152,
+        25,
+        367,
+        236
+      ]
+    },
+    {
+      "name": "staff_windup",
+      "index": 4,
+      "alpha_bounds": [
+        152,
+        29,
+        363,
+        243
+      ]
+    },
+    {
+      "name": "staff_contact",
+      "index": 5,
+      "alpha_bounds": [
+        141,
+        67,
+        385,
+        236
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 6,
+      "alpha_bounds": [
+        170,
+        35,
+        351,
+        242
+      ]
+    },
+    {
+      "name": "cast_windup",
+      "index": 7,
+      "alpha_bounds": [
+        152,
+        25,
+        367,
+        237
+      ]
+    },
+    {
+      "name": "cast_release",
+      "index": 8,
+      "alpha_bounds": [
+        151,
+        43,
+        367,
+        239
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 9,
+      "alpha_bounds": [
+        156,
+        56,
+        363,
+        234
+      ]
+    },
+    {
+      "name": "kneel_start",
+      "index": 10,
+      "alpha_bounds": [
+        155,
+        57,
+        373,
+        242
+      ]
+    },
+    {
+      "name": "kneel_ground",
+      "index": 11,
+      "alpha_bounds": [
+        146,
+        82,
+        357,
+        254
+      ]
+    },
+    {
+      "name": "side_fall",
+      "index": 12,
+      "alpha_bounds": [
+        132,
+        104,
+        361,
+        243
+      ]
+    },
+    {
+      "name": "dead_closed_eye",
+      "index": 13,
+      "alpha_bounds": [
+        131,
+        122,
+        359,
+        243
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/original.png": "63e6704ac3c0298786de91d81f7d59da3803cb8f1049e1e3222b19e832ba26a0",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/step-left-guided-magenta.png": "2e938b130a4667ba70962f0ff01c09938cc2c3500638628ba3d039e1923f0e20",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/step-right-magenta.png": "664ec349a94ca7d105f039cc409acfd19c5f64540fe67c1fc07d441abbcac0ce",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/cast-windup-magenta.png": "9d11c80b45e346b5c16901021e941752fa9f41d022a66e7c4d3ef5a2b3728540",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/cast-release-two-hands-magenta.png": "e0a0e8118335abbbfb873bac642b30a0cb2e107401c0c2cb56a5e703e68ebdc7",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/hit.png": "277f8b6049042686c5e2f4949c9aa972a9739e8e486b1d8082e8182cab7284d5",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/fall.png": "ec475023de41871332099b992e7b98af2377beb4f27c7e65bfdc9cbef2d13ca5",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/dead.png": "65849ce8e2b0e626ab1114ed88c7e13354090f97a6d72b2b3b4e5abe3c1c0b04"
+  }
+}

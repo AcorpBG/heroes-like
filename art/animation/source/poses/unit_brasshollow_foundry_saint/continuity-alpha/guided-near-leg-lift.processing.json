@@ -1,0 +1,62 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "guided-near-leg-lift",
+  "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/guided-near-leg-lift.png",
+  "source_sha256": "5b9d91407d3ed7fe3501d46ee5a916ab6bfc90a7e2f3e803a7061db177ac66b0",
+  "source_rect": [
+    0,
+    0,
+    1229,
+    1280
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-alpha/guided-near-leg-lift.png",
+  "output_sha256": "ca11bbb307d952dfae2c14fa65685b508bda5ba6fa846fc67f0710af72fcf125",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-cutouts.json",
+  "recipe_sha256": "136769e7deb364600e1bdca1ba34431f2430fa6c2e84c59c8a12eb1ce34be570",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 120,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        643,
+        165
+      ],
+      [
+        713,
+        165
+      ],
+      [
+        868,
+        223
+      ],
+      [
+        954,
+        325
+      ],
+      [
+        464,
+        538
+      ],
+      [
+        374,
+        439
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 968306,
+    "edge_pixels": 13633,
+    "unchanged_paint_pixels": 591181,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

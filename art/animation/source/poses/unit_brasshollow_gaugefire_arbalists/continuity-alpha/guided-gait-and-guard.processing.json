@@ -1,0 +1,70 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "guided-gait-and-guard",
+  "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/guided-gait-and-guard.png",
+  "source_sha256": "3f9ece1264d4967eced6122ccb350f5a01f9dec6153382ed4460d6e5b31d5e0d",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-gait-and-guard.png",
+  "output_sha256": "58fc4bc3086c87dbe06bd009c9b1c05735bdbcb4608587daa5ea10ba16386a3b",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-cutouts.json",
+  "recipe_sha256": "eb37c0c7fefc7fc28244ad6b93a0e1af674b82022a683b876585730db9c58b14",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 170,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        382,
+        274
+      ],
+      [
+        363,
+        245
+      ],
+      [
+        794,
+        268
+      ],
+      [
+        768,
+        246
+      ],
+      [
+        647,
+        746
+      ],
+      [
+        625,
+        717
+      ],
+      [
+        1258,
+        756
+      ],
+      [
+        1236,
+        726
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1084426,
+    "edge_pixels": 14446,
+    "unchanged_paint_pixels": 473992,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

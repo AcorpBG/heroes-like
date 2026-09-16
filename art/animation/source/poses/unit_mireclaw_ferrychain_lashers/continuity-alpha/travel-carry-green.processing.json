@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source pixels/recipes, no invented or warped poses.",
+  "id": "ferry-travel-carry-green",
+  "source": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/travel-carry-green.png",
+  "source_sha256": "7b5c51a058f91a9d192e89662031a5a8a7ed701597aa95e3dc210d7abd98aa42",
+  "source_rect": [
+    0,
+    0,
+    1184,
+    1328
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/continuity-alpha/travel-carry-green.png",
+  "output_sha256": "835e99d4875d38303805abb2b9fae9e912d4ad57aa416578db6b331551ec96bc",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/continuity-cutouts.json",
+  "recipe_sha256": "6f97cc99dfcf9c9cf7a6998dd1628ffa1d625394ec5422a1c244b04dd4580092",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1183753,
+    "edge_pixels": 6668,
+    "unchanged_paint_pixels": 381931,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,82 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "poses",
+  "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/poses.png",
+  "source_sha256": "e8bdfd61ee25b00a3ccd777a21e5e9b2a0205eb40d2d64df53b30c6224e6a39f",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses.png",
+  "output_sha256": "7e3b2cdd97a3b3d030c4bfd01d5bfcd7dbe477b7425624d918828125e88f9e18",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-cutouts.json",
+  "recipe_sha256": "dc14a905cd3faff768a8d03ad70f6b4b77fdf920d2b454c66a1491e645669059",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 170,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        167,
+        220
+      ],
+      [
+        174,
+        205
+      ],
+      [
+        156,
+        228
+      ],
+      [
+        140,
+        108
+      ],
+      [
+        262,
+        171
+      ],
+      [
+        267,
+        175
+      ],
+      [
+        526,
+        245
+      ],
+      [
+        537,
+        207
+      ],
+      [
+        533,
+        879
+      ],
+      [
+        511,
+        805
+      ],
+      [
+        631,
+        175
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1214522,
+    "edge_pixels": 14096,
+    "unchanged_paint_pixels": 344246,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

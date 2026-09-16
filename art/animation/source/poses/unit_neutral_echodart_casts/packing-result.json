@@ -1,0 +1,185 @@
+{
+  "unit_id": "unit_neutral_echodart_casts",
+  "output": "art/animation/source/poses/unit_neutral_echodart_casts/candidate-atlas.png",
+  "sha256": "3e3fa4d024e3f620aacc22805201f851982c4c8b76fcebf4f9145cdc5fd3fc67",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        185,
+        34,
+        348,
+        243
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        173,
+        34,
+        334,
+        243
+      ]
+    },
+    {
+      "name": "run_extension_unaccepted",
+      "index": 2,
+      "alpha_bounds": [
+        141,
+        38,
+        357,
+        247
+      ]
+    },
+    {
+      "name": "run_gather_unaccepted",
+      "index": 3,
+      "alpha_bounds": [
+        164,
+        47,
+        346,
+        247
+      ]
+    },
+    {
+      "name": "crossbow_shove_windup",
+      "index": 4,
+      "alpha_bounds": [
+        163,
+        49,
+        354,
+        247
+      ]
+    },
+    {
+      "name": "crossbow_shove_contact",
+      "index": 5,
+      "alpha_bounds": [
+        151,
+        48,
+        365,
+        246
+      ]
+    },
+    {
+      "name": "crossbow_shove_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        134,
+        38,
+        338,
+        245
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 7,
+      "alpha_bounds": [
+        160,
+        84,
+        343,
+        244
+      ]
+    },
+    {
+      "name": "crossbow_reload",
+      "index": 8,
+      "alpha_bounds": [
+        178,
+        26,
+        342,
+        245
+      ]
+    },
+    {
+      "name": "crossbow_aim",
+      "index": 9,
+      "alpha_bounds": [
+        164,
+        31,
+        344,
+        248
+      ]
+    },
+    {
+      "name": "crossbow_release",
+      "index": 10,
+      "alpha_bounds": [
+        160,
+        30,
+        359,
+        248
+      ]
+    },
+    {
+      "name": "crossbow_empty_recovery",
+      "index": 11,
+      "alpha_bounds": [
+        161,
+        33,
+        331,
+        244
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 12,
+      "alpha_bounds": [
+        172,
+        40,
+        333,
+        252
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 13,
+      "alpha_bounds": [
+        167,
+        96,
+        346,
+        243
+      ]
+    },
+    {
+      "name": "death_tipping",
+      "index": 14,
+      "alpha_bounds": [
+        161,
+        102,
+        342,
+        253
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 15,
+      "alpha_bounds": [
+        154,
+        147,
+        359,
+        254
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 16,
+      "alpha_bounds": [
+        143,
+        158,
+        368,
+        242
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png": "bf20112d5937ece875adb86c0e2df0ec917eaba4f810208a9af128bcd6f85aae",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_echodart_casts/continuity-alpha/crossbow-recoveries-grounded-step-and-directional-rest.png": "1a622a8b97a995b9a3f5e4a5889f48a1c120cc1e0e71dd20e1753f3099ec5402"
+  }
+}

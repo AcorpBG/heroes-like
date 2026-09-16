@@ -1,0 +1,98 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "original-poses",
+  "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/poses.png",
+  "source_sha256": "9caf718c30efad07ce545a8a5fab31d0f09a7566f04117fcc0da55f898cb5797",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-alpha/original-poses.png",
+  "output_sha256": "d99421036c2d7ba7df4e843a155b509609f13868a885883bb56dd7361e277788",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-cutouts.json",
+  "recipe_sha256": "136769e7deb364600e1bdca1ba34431f2430fa6c2e84c59c8a12eb1ce34be570",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 150,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        185,
+        78
+      ],
+      [
+        206,
+        74
+      ],
+      [
+        105,
+        159
+      ],
+      [
+        132,
+        217
+      ],
+      [
+        671,
+        99
+      ],
+      [
+        528,
+        201
+      ],
+      [
+        662,
+        444
+      ],
+      [
+        555,
+        571
+      ],
+      [
+        890,
+        561
+      ],
+      [
+        657,
+        897
+      ],
+      [
+        1029,
+        951
+      ],
+      [
+        1427,
+        969
+      ],
+      [
+        1248,
+        905
+      ],
+      [
+        1262,
+        900
+      ],
+      [
+        1242,
+        919
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 990826,
+    "edge_pixels": 27131,
+    "unchanged_paint_pixels": 554907,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

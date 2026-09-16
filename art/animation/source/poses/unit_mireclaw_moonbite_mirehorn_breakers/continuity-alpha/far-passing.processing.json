@@ -1,0 +1,78 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "mirehorn-far-passing-checker",
+  "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/walk-far-passing-draft.png",
+  "source_sha256": "8353d398dccbd167c10411f0e5e2607684f6551efe3c2c9aec87a4f4b6d92be9",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/far-passing.png",
+  "output_sha256": "823df6c5a12d803ef54e4085897b7d481f8d691b470c8156c8324d89ca0a3b7c",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-cutouts.json",
+  "recipe_sha256": "20a1628cc0617030b0ffef9625afd92444077dfe9285559089a5a256e5ce6cbd",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 155,
+    "tolerance": 14,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        820,
+        169
+      ],
+      [
+        636,
+        342
+      ],
+      [
+        604,
+        365
+      ],
+      [
+        616,
+        380
+      ],
+      [
+        559,
+        523
+      ],
+      [
+        535,
+        558
+      ],
+      [
+        382,
+        669
+      ],
+      [
+        174,
+        574
+      ],
+      [
+        323,
+        602
+      ],
+      [
+        345,
+        633
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1013550,
+    "edge_pixels": 13205,
+    "unchanged_paint_pixels": 546109,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

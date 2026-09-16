@@ -1,0 +1,58 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "creep-and-guard-clear-vents",
+  "source": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/creep-and-guard-clear-vents.png",
+  "source_sha256": "8909feb20886e0c18c3ff1bc4fc17da4de34d7d663695db2fc6838c5eae02a2b",
+  "source_rect": [
+    0,
+    0,
+    1312,
+    1199
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/continuity-alpha/creep-and-guard-clear-vents.png",
+  "output_sha256": "8cb050676874f976a2097ea416059dca55a61922de910fdf3e3190d0199f32c5",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/continuity-cutouts.json",
+  "recipe_sha256": "9fe65a38d1a10a4449295e1e078c0eb31b73e30fd6d1b5f7fa7c037f48d7277c",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        177,
+        285
+      ],
+      [
+        1021,
+        323
+      ],
+      [
+        157,
+        876
+      ],
+      [
+        307,
+        895
+      ],
+      [
+        643,
+        1081
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 847635,
+    "edge_pixels": 20160,
+    "unchanged_paint_pixels": 705293,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,146 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "travel-reload-and-guard",
+  "source": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/travel-reload-and-guard.png",
+  "source_sha256": "77a64b2d93b2b75fb51aecea76eb9b056fe44d2615dd16898bad115b9688a1fd",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/continuity-alpha/travel-reload-and-guard.png",
+  "output_sha256": "d63287aef5357d8ca6de64eeb955a2760715085d13f3fe24bdd25478b75c1337",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/continuity-cutouts.json",
+  "recipe_sha256": "dc864d18ecf07911677ddac2edf51530887b138f268c7a5243c625416587f8cc",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        181,
+        209
+      ],
+      [
+        674,
+        208
+      ],
+      [
+        1175,
+        215
+      ],
+      [
+        877,
+        276
+      ],
+      [
+        384,
+        277
+      ],
+      [
+        1384,
+        279
+      ],
+      [
+        874,
+        470
+      ],
+      [
+        180,
+        688
+      ],
+      [
+        696,
+        687
+      ],
+      [
+        420,
+        704
+      ],
+      [
+        406,
+        716
+      ],
+      [
+        1381,
+        770
+      ],
+      [
+        376,
+        792
+      ],
+      [
+        927,
+        786
+      ],
+      [
+        823,
+        115
+      ],
+      [
+        344,
+        121
+      ],
+      [
+        1336,
+        123
+      ],
+      [
+        820,
+        153
+      ],
+      [
+        339,
+        178
+      ],
+      [
+        1329,
+        166
+      ],
+      [
+        823,
+        196
+      ],
+      [
+        852,
+        604
+      ],
+      [
+        360,
+        603
+      ],
+      [
+        1350,
+        608
+      ],
+      [
+        349,
+        660
+      ],
+      [
+        850,
+        657
+      ],
+      [
+        1341,
+        665
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 799510,
+    "edge_pixels": 15580,
+    "unchanged_paint_pixels": 757774,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

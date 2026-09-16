@@ -1,0 +1,116 @@
+{
+  "schema_id": "original_battle_pose_continuity_generation_v1",
+  "unit_id": "unit_mireclaw_gorefen_rippers",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_pending_whole_roster_refinement_and_acceptance",
+  "reference_crops": [
+    {
+      "path": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/standing-reference-light.png",
+      "sha256": "bfcce465a93b9479dc175d8967a5a1912360386921ed204f6363834e3f33ceb1",
+      "source": "poses.png",
+      "source_sha256": "04a33ad1eda8dcc21f7da4e7cf49b4c63b5b826c3b9b77284285979ef0a76525",
+      "rect": [
+        0,
+        66,
+        393,
+        361
+      ],
+      "method": "Original real alpha composited on light and nearest4x; unchanged source pixels."
+    },
+    {
+      "path": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/corpse-reference-light.png",
+      "sha256": "bb73de185d3ca042a0928f633fb8454b2d69e3b8e347b3a88a57cc595c17c704",
+      "source": "poses.png",
+      "source_sha256": "04a33ad1eda8dcc21f7da4e7cf49b4c63b5b826c3b9b77284285979ef0a76525",
+      "rect": [
+        1109,
+        810,
+        1536,
+        980
+      ],
+      "method": "Original side corpse crop, actual alpha on light, nearest4x; eye found open on inspection."
+    }
+  ],
+  "outputs": [
+    {
+      "source": "step-diagonal-a-green.png",
+      "sha256": "d74dc0629ece795e77595cab281613246cbaafdeaedad5931587611041147614",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c370a86d-7de5-4002-afad-256094ac1306.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Asset type: original Gorefen Ripper battle sprite, one controlled locomotion frame. Input image is the fixed identity and edit target. Preserve same crocodilian narrow closed toothed snout, golden eye, charcoal scales, muscular four-legged body, red spine ridge and long curled tail, moss rope and ivory bone charms, same three-quarter facing screen RIGHT, same painted texture. Change ONLY leg articulation: lift the LARGE NEAR FOREPAW (currently at bottom center-right) by bending its elbow, draw that paw back under the chest, claws pointing down with clear space underneath. Simultaneously lift the FAR HINDPAW (the small foot currently under belly left of that forepaw), bend its knee forward. Keep the NEAR HINDPAW at far screen-left and FAR FOREPAW at screen-right grounded and almost unchanged. Exactly FOUR connected legs with distinct complete paws, two planted and two lifted, no fifth foot or detached claws. Keep head, torso and tail size/orientation, not mirrored. No leaping or full-body rotation. Single whole creature centered, all tail and claws visible with margins. Flat pure vivid green RGB 0,255,0 background, no floor, shadows, green lighting/spill, text or grid. The green is removable production backing, not part of creature.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/standing-reference-light.png",
+          "sha256": "bfcce465a93b9479dc175d8967a5a1912360386921ed204f6363834e3f33ceb1"
+        }
+      ]
+    },
+    {
+      "source": "step-diagonal-b-green.png",
+      "sha256": "76a8c6280d9f3b3b9a51d561e9954eeaa5c209c499bda4cb94fb5e979f53f584",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3e9a0a92-f919-44b6-b39a-a25db56936c2.png",
+      "selected": false,
+      "reason": "Lowest foreclaw touches/crosses source bottom; replaced by margin repair.",
+      "prompt": "Use case: precise-object-edit. Asset type: original Gorefen Ripper battle sprite, opposite controlled locomotion frame. Input image is the fixed neutral identity/edit target, NOT a moving frame. Preserve same narrow closed crocodilian snout, golden eye, charcoal scaly muscular FOUR-legged body, long red-spined curled tail, bone charms and moss rope harness, fixed three-quarter facing screen RIGHT, painted texture. Change ONLY leg articulation: lift the NEAR HINDPAW at far screen-left by bending its hip/knee and tucking that paw forward under its rump; lift the FAR FOREPAW currently at screen-right by bending its elbow back and raising the paw just under the neck. Keep the LARGE NEAR FOREPAW (bottom center-right) and SMALL FAR HINDPAW (under belly center-left) planted, their original complete shoulder/hip connections unchanged. Four complete distinct legs and FOUR paws total: two planted and two lifted. Keep torso/head height and size, tail curvature, not a leap, not mirrored, no extra foot. Single whole creature with margins around tail and claws. Flat pure vivid green RGB0,255,0 background, no green spill/reflections, no floor or shadow, text, grid or scenery.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/standing-reference-light.png",
+          "sha256": "bfcce465a93b9479dc175d8967a5a1912360386921ed204f6363834e3f33ceb1"
+        }
+      ]
+    },
+    {
+      "source": "chest-collapse-green.png",
+      "sha256": "468f51ee2915c88615cfea686460b4f1d453a8b84261c25dbbb29a22850f93df",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-855c0e9c-5095-4850-a746-95deb7ebac2a.png",
+      "selected": true,
+      "prompt": "Use case: stylized-concept. Asset type: ONE original Gorefen Ripper death-transition battle sprite. Image1 is standing identity reference; image2 is the original side-fallen body reference, NOT the requested pose. Paint the intermediate collapse: front elbows folded under the chest, sternum and lower jaw almost touching the ground, hind knees buckling while rump remains slightly higher than shoulders. Entire body still mostly upright before rolling onto its side. FOUR connected legs, lowered forward-facing narrow crocodilian skull, golden eye half shut, jaws relaxed almost closed, red spine ridge and long curled tail lowering behind. Preserve charcoal scales, muscular proportions, moss harness, ivory bone charms, fixed three-quarter facing screen RIGHT, original painted style. No new gear or limbs, no injuries/gore. Full figure and complete long tail with generous margins. Pure vivid green RGB0,255,0 removable backing, no floor, shadow, glow, text or green spill.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/standing-reference-light.png",
+          "sha256": "bfcce465a93b9479dc175d8967a5a1912360386921ed204f6363834e3f33ceb1"
+        },
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/corpse-reference-light.png",
+          "sha256": "bb73de185d3ca042a0928f633fb8454b2d69e3b8e347b3a88a57cc595c17c704"
+        }
+      ]
+    },
+    {
+      "source": "dead-eye-closed-green.png",
+      "sha256": "50d1eadd9836ad800252934607861ae2e4afec05db3420afda8abbd569161d94",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-42ce15c0-f1c1-440b-b1dc-c56e32382932.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Asset type: persistent corpse sprite. Edit this ONE original side-lying Gorefen Ripper. Change ONLY the golden visible eye into a completely closed dark charcoal eyelid matching the skull scales; absolutely no yellow/gold eye glint or open pupil remains. Keep the exact collapsed side-lying posture, body shape, skull length, mouth, ALL FOUR legs (far foreleg may remain occluded), tail shape/length, harness, bone charms, red spines, claw count and original soft painted pixel texture. Do not redraw as standing, do not add creature parts. Replace the light beige backing with flat pure vivid green RGB0,255,0 without green spill; no floor, shadow, glow, text or checkerboard. Single whole corpse, generous margins; same three-quarter screen-right facing.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/corpse-reference-light.png",
+          "sha256": "bb73de185d3ca042a0928f633fb8454b2d69e3b8e347b3a88a57cc595c17c704"
+        }
+      ]
+    },
+    {
+      "source": "step-diagonal-b-margin-green.png",
+      "sha256": "c58f6dadd2c5e35898b22ecd00d43a1b7c98adee90d3dfcfbc99a1987f0fc902",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c3b8fe58-3c1b-48ae-b14f-4c841abacabc.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Preserve this EXACT Gorefen Ripper moving pose and all its paint. The lowest near-forepaw claw at the bottom edge is clipped: expand the plain green canvas below it, completing only the tiny missing claw tip naturally, and leave at least 70 pixels of plain green margin below it. Add 50 pixels of green margin at left and right too. Do not alter body, leg pose, other claws, tail, harness, colors, head, anatomy, crop or camera. No added feet, toes, limbs, floor, shadow, text or effects. Same solid pure green RGB0,255,0 backing and original painting. This is a canvas-margin repair, not a new pose.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/step-diagonal-b-green.png",
+          "sha256": "76a8c6280d9f3b3b9a51d561e9954eeaa5c209c499bda4cb94fb5e979f53f584"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "11 packed candidate frames: seven retained original poses plus four selected new paintings from five built-in masters.",
+    "Corrected poses.png has real alpha0..254. Actual light/green composites are clean despite brown RGB in raw transparent preview; reuse original pixels unchanged rather than rekey/redraw them.",
+    "Two new movement paintings lift opposite diagonal paw pairs; the first B draft clips its lowest foreclaw and remains unselected. Built-in canvas-margin repair retains the four-leg pose with full visible claw. This is a short-step candidate, not accepted translated quadruped gait.",
+    "New chest-down collapse precedes the retained side-fall. Close-up exposed golden eye in original persistent corpse; targeted new final corpse closes it. Original open-eyed corpse and near-standing buckle remain preserved but unselected.",
+    "Banded hit crop excludes the next pose's tail without altering the Ripper. New selected green art uses approved color-distance75/edge2 extraction; original alpha is not reprocessed.",
+    "Head/body/tail and harness/bone/spine continuity, exact paw support/ground anchors, alternating travel and action/death event timing require full-roster refinement. Final atlas and registered art desk are production inspection only; acceptance0/160. No tests/imports/exports or gameplay/save/footprint changes."
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source paintings and exact parameters, no synthesized poses.",
+  "id": "sluicebrand-poses",
+  "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/poses.png",
+  "source_sha256": "46ab7e6db8f9fad4763c42293557413d4170449b56841e0f05f9fe49be491680",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/poses.png",
+  "output_sha256": "6652be31c8805b8f55a0f2ca3833e5f411f371cb498214907ae867cedcad0ac6",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-cutouts.json",
+  "recipe_sha256": "f4196e7e872d35548ca6d6a06da41702b79d7a7e756d59c20d2c609de5a092e5",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 185,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        238,
+        169
+      ],
+      [
+        619,
+        160
+      ],
+      [
+        978,
+        179
+      ],
+      [
+        1343,
+        179
+      ],
+      [
+        236,
+        499
+      ],
+      [
+        596,
+        557
+      ],
+      [
+        968,
+        514
+      ],
+      [
+        1330,
+        557
+      ],
+      [
+        237,
+        869
+      ],
+      [
+        592,
+        873
+      ],
+      [
+        211,
+        185
+      ],
+      [
+        577,
+        186
+      ],
+      [
+        929,
+        188
+      ],
+      [
+        1296,
+        181
+      ],
+      [
+        293,
+        216
+      ],
+      [
+        77,
+        215
+      ],
+      [
+        452,
+        232
+      ],
+      [
+        798,
+        241
+      ],
+      [
+        1187,
+        238
+      ],
+      [
+        204,
+        527
+      ],
+      [
+        941,
+        543
+      ],
+      [
+        631,
+        550
+      ],
+      [
+        554,
+        542
+      ],
+      [
+        1305,
+        555
+      ],
+      [
+        642,
+        595
+      ],
+      [
+        195,
+        866
+      ],
+      [
+        82,
+        926
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1001971,
+    "edge_pixels": 22429,
+    "unchanged_paint_pixels": 548128,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

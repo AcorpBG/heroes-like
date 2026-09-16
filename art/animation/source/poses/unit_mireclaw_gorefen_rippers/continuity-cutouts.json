@@ -1,0 +1,74 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative matte/edge cleanup; preserve source paint, original masters and exact recipes.",
+  "jobs": [
+    {
+      "id": "gorefen-step-diagonal-a-green",
+      "source": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/step-diagonal-a-green.png",
+      "source_sha256": "d74dc0629ece795e77595cab281613246cbaafdeaedad5931587611041147614",
+      "output": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-alpha/step-diagonal-a-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "gorefen-chest-collapse-green",
+      "source": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/chest-collapse-green.png",
+      "source_sha256": "468f51ee2915c88615cfea686460b4f1d453a8b84261c25dbbb29a22850f93df",
+      "output": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-alpha/chest-collapse-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "gorefen-dead-eye-closed-green",
+      "source": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/dead-eye-closed-green.png",
+      "source_sha256": "50d1eadd9836ad800252934607861ae2e4afec05db3420afda8abbd569161d94",
+      "output": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-alpha/dead-eye-closed-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "gorefen-step-diagonal-b-margin-green",
+      "source": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/step-diagonal-b-margin-green.png",
+      "source_sha256": "c58f6dadd2c5e35898b22ecd00d43a1b7c98adee90d3dfcfbc99a1987f0fc902",
+      "output": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-alpha/step-diagonal-b-margin-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "2026-09-15 explicit permission for local raster background removal and edge cleanup; preserve original paintings; no paid APIs",
+  "jobs": [
+    {
+      "id": "rootcrown-poses",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/poses.png",
+      "source_sha256": "ce72f91681aec53511d05fc5951667fc180411aa1776e807ff4942d570302979",
+      "output": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/poses.png",
+      "matte": {
+        "minimum": 165,
+        "tolerance": 18,
+        "all_neutral_is_background": true,
+        "edge_radius": 2
+      }
+    },
+    {
+      "id": "quenchbell-loaded-ready",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-loaded-claw-clear.png",
+      "source_sha256": "14ad1db61006780e811b7e38e10852a98995ca17b16fb5ff44d0af045a664ad2",
+      "source_rect": [
+        325,
+        640,
+        627,
+        945
+      ],
+      "output": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/local-alpha/loaded-ready.png",
+      "matte": {
+        "minimum": 180,
+        "tolerance": 18,
+        "all_neutral_is_background": true,
+        "edge_radius": 2
+      }
+    },
+    {
+      "id": "prism-adept-poses",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/poses.png",
+      "source_sha256": "e5ea10cf00a537eeeeef4894dc0882e957e818ba7fe653c8178b7eba0b5e9104",
+      "output": "art/animation/source/poses/unit_sunvault_prism_adepts/local-alpha/poses.png",
+      "matte": {
+        "minimum": 178,
+        "tolerance": 12,
+        "edge_radius": 1,
+        "max_edge_residual": 60,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "rootcrown-contact-guided",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/walk-contact-guided.png",
+      "source_sha256": "eb52db6824c870dd2283c4a1018ce5e01ab829e57b4087cd1c291d2ec6224527",
+      "output": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/walk-contact-guided.png",
+      "matte": {
+        "minimum": 230,
+        "tolerance": 15,
+        "edge_radius": 2,
+        "all_neutral_is_background": true
+      }
+    },
+    {
+      "id": "rootcrown-passing-guided",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/walk-passing-guided.png",
+      "source_sha256": "ee56603c41c1eb84e6595d5c4e88bbe6c63913e4800122258a8095ffedc9c1ab",
+      "output": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/walk-passing-guided.png",
+      "matte": {
+        "minimum": 230,
+        "tolerance": 15,
+        "edge_radius": 2,
+        "all_neutral_is_background": true
+      }
+    },
+    {
+      "id": "prismwake-poses",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/poses-corrected.png",
+      "source_sha256": "1fb58dc614d47486e3ff47c402f0ff903c2eb45c8c958d8cfa844f49917ea303",
+      "output": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "matte": {
+        "minimum": 170,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "all_neutral_is_background": false
+      }
+    },
+    {
+      "id": "gloambell-poses",
+      "source": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/poses.png",
+      "source_sha256": "8253b3d41d2af687e4df6dd4d236d921ecb9d3171dc234eb9bab265795e7449a",
+      "output": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/local-alpha/poses.png",
+      "matte": {
+        "minimum": 170,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "all_neutral_is_background": false
+      }
+    },
+    {
+      "id": "prismwake-defend-breath",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/defend-breath.png",
+      "source_sha256": "d946f5097373aa774d884885bd8eae4bfe693332e57616e61ea37b66b7d74253",
+      "output": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/defend-breath.png",
+      "matte": {
+        "minimum": 170,
+        "tolerance": 12,
+        "edge_radius": 1
+      }
+    }
+  ]
+}

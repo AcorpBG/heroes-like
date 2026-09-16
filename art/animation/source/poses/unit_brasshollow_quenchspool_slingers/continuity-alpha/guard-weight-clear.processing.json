@@ -1,0 +1,50 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "guard-weight-clear",
+  "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/guard-weight-clear.png",
+  "source_sha256": "bdce228d677db5c00147d24bb5b7a77efef1d38dea70c1f02fb2037ff195707e",
+  "source_rect": [
+    0,
+    0,
+    1774,
+    887
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guard-weight-clear.png",
+  "output_sha256": "7765aeab89d7ad66483cf4b7870713dd13e11cdbc9888e338895d0f2e8c897bf",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-cutouts.json",
+  "recipe_sha256": "0b7f1272dd735837b7e447f290ea28d72c6265ff0ef6123559c2beb10176ab07",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 135,
+    "tolerance": 36,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        470,
+        150
+      ],
+      [
+        636,
+        206
+      ],
+      [
+        1451,
+        357
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1014676,
+    "edge_pixels": 6140,
+    "unchanged_paint_pixels": 552722,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

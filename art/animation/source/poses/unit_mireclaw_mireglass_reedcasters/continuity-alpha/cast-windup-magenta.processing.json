@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte/edge cleanup; preserve source paint, original masters and exact recipes.",
+  "id": "mireglass-cast-windup-magenta",
+  "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/cast-windup-magenta.png",
+  "source_sha256": "bb2ad6e819f8b8f3486460ada318a1b4fcb27c85bfd33bebeb192f949e4cc851",
+  "source_rect": [
+    0,
+    0,
+    1244,
+    1265
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/cast-windup-magenta.png",
+  "output_sha256": "9d11c80b45e346b5c16901021e941752fa9f41d022a66e7c4d3ef5a2b3728540",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-cutouts.json",
+  "recipe_sha256": "649a419fe320a9ab83f3d7e97f6723e9ea19738480017e75dce164a7f82e8162",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 970903,
+    "edge_pixels": 21649,
+    "unchanged_paint_pixels": 581108,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

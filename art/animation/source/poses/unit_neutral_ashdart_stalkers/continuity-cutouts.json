@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "blowpipe-action-recovery-and-directional-collapse",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/blowpipe-action-recovery-and-directional-collapse.png",
+      "source_sha256": "2ad89eca0d6360a9525f8fefddd40653745afde0a043a29e5de32f860dc33ca1",
+      "output": "art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-alpha/blowpipe-action-recovery-and-directional-collapse.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_rivet_hounds",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "motion-pair",
+      "source": "art/animation/source/poses/unit_brasshollow_rivet_hounds/motion-pair.png",
+      "source_sha256": "057c34aa32fc537e72f1589bce31966178a279e3cf6783130c13f4d90b8c565c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3d0aca3f-ba4a-44ea-bcc1-6c5b78dc984b.png",
+      "prompt": "Use case: identity-preserve. Asset type: original battle animation, TWO isolated complete mechanical dog poses arranged side by side with wide gutters. Image1 identity reference: Rivet Hound, FOUR metal dog legs with blue-steel cylindrical joints, brass linkage bars, three-toed paws, compact segmented dark iron torso with brass rivets and orange side vents, SHORT blue-metal neck, wedge head with two dorsal fins, orange eye and short orange-tipped drill snout; segmented tail triangular spear tip. Three-quarter facing RIGHT. Preserve exact head/body/limb/tail proportions and plating. Left pose: gathered run suspension, all four knees flexed under same torso, four distinct paws tucked, all legs fully visible, compact head at same shoulder level, drill entirely in frame. Right pose: opposite extended diagonal stride: NEAR foreground front leg reaches BACK toward screen left underneath chest, FAR front leg reaches FORWARD toward right, NEAR hind leg folds FORWARD beneath belly, FAR hind pushes BACK left. Trace all four limb connections correctly, no fifth leg. Tail extends rearwards with gentle lifted tip. Both poses same body size, same camera. Paint original articulated poses, not mirrored copies. Transparent RGBA, no scenery, ground shadows, speed lines, text, checkerboard or extras. Leave generous margin around complete tails and noses. No long-neck, no muzzle truncation, no redesign.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_rivet_hounds/identity-reference.png",
+          "sha256": "cfa0cde7c478b6cede795337d07311047770573952f0942f381dcc36c64d4b67"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Only left gathered suspension selected; right repeats extended lead."
+    },
+    {
+      "id": "breath-guard-pair",
+      "source": "art/animation/source/poses/unit_brasshollow_rivet_hounds/breath-guard-pair.png",
+      "source_sha256": "84181d9d71f04412ed068c65e4c30915acb48e795f40194dd893e5e730669e59",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-76be0e04-b386-4ca2-aafd-454da38e7ecb.png",
+      "prompt": "Use case: identity-preserve. Original battle sprite TWO poses in one horizontal strip, same scale generous separate margins. Image1 fixed identity reference Rivet Hound. FOUR-legged mechanical dog, compact dark iron/brass torso, blue-steel round shoulder/hip joints, brass linkage bars, three-toed paws, segmented spear-tip tail, short neck, wedge skull with two fins and orange slit eye/vents, SHORT orange drill snout. Left pose: subtle idle inhale, all four paws planted in same positions as reference, shoulder suspension rises slightly and tail tip flexes a little, head remains compact LOW at shoulder level not raised on a giraffe neck. Right pose: deep defensive crouch, all four paws planted, knees bend, belly lowered, compact skull aligned ahead of shoulders with drill aimed right. Same original armor plates, body proportions, short neck and full spear-tip tail/snouts retained. Both facing RIGHT same three-quarter camera. No painting outside subjects: genuine transparent RGBA background, no checkerboard, shadow, props, effects or lettering. Paint distinct articulated original states; don't mirror identity.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_rivet_hounds/identity-reference.png",
+          "sha256": "cfa0cde7c478b6cede795337d07311047770573952f0942f381dcc36c64d4b67"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Selected as candidate; motion/body/equipment continuity pending."
+    },
+    {
+      "id": "opposite-stride",
+      "source": "art/animation/source/poses/unit_brasshollow_rivet_hounds/opposite-stride.png",
+      "source_sha256": "f9b7968cbd273d8db03123d709607b5e383951c257fd274112670d67aa2e0926",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-276c19ac-7272-4314-9fbc-986646ac727e.png",
+      "prompt": "Use case: precise-object-edit. Output ONE isolated original-art Rivet Hound running pose. Image1 fixed identity. Image2 right-hand dog is the edit target; left-hand dog is irrelevant and must not be in output. Change ONLY its four leg articulation to the opposite diagonal running stride. Foreground FRONT shoulder is the blue round bearing on the RIGHT side of the torso. From this bearing its brass upper arm slopes DOWN-LEFT, elbow travels BACK beneath ribcage, shin flexes and its lifted paw is visibly LEFT of its shoulder, under the belly, NOT stretched toward the nose. Foreground REAR hip is the blue round bearing on the LEFT side of torso. From this bearing its thigh swings DOWN-RIGHT with knee and paw forward underneath belly. Far FRONT leg stretches long FORWARD toward screen RIGHT and far REAR leg pushes BACK toward screen LEFT; make far limbs visible beyond near limbs. Exactly FOUR distinct articulated metal legs connected correctly, no extra feet. Keep compact torso, SHORT neck, wedge head, orange eye/vents/drill, segmented spear tail, brass/iron armor, blue bearings, head/tail size, three-quarter RIGHT-facing camera identical. Do not mirror whole body. Complete uncropped nose, tail and all paws with ample margins. Genuine transparent RGBA background, no checkerboard, scenery, floor shadow, labels or effect. This is the missing reverse limb phase, not another copy with both front paws reaching right.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_rivet_hounds/identity-reference.png",
+          "sha256": "cfa0cde7c478b6cede795337d07311047770573952f0942f381dcc36c64d4b67"
+        },
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_rivet_hounds/motion-pair.png",
+          "sha256": "057c34aa32fc537e72f1589bce31966178a279e3cf6783130c13f4d90b8c565c"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Candidate only: traced contact/limb ownership is not yet reliable. Do not infer successful alternating gait from prompt/filename."
+    },
+    {
+      "id": "guided-opposite-stride",
+      "source": "art/animation/source/poses/unit_brasshollow_rivet_hounds/guided-opposite-stride.png",
+      "source_sha256": "b92a95ad36d2fe92cf4b508b5a5198d996e98a29a14f874e3696a2e5c0b0e230",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-dd310d23-8d15-49a2-96b0-c21664bace2c.png",
+      "prompt": "Use case: identity-preserve. Asset ONE original painted battle sprite. Image1 is ONLY identity reference: compact mechanical Rivet Hound. Image2 is ONLY four-leg skeleton pose reference, NEVER paint its colors, lines, letters, organic body, long neck or horse head. Match Image2's exact limb joint arrangement: blue NEAR front leg swings BACK LEFT from near front shoulder, its paw behind shoulder under belly; orange FAR front leg stretches FORWARD RIGHT. Blue NEAR hind leg stretches FORWARD RIGHT under belly from rear hip; orange FAR hind leg pushes BACK LEFT. Foreground blue legs visibly slant toward each other, while orange far pair extends away from each other. Exactly four robotic legs, all their bearings and three-toed paws visible. Image1 supplies compact LOW skull, very SHORT neck, wedge metal head, orange drill snout/eye/vents, two dorsal fins, blue cylinder bearings, dark iron plates brass edging, segmented spear-tip tail. Keep these dimensions and three-quarter facing RIGHT, don't inherit guide long neck. This MUST be opposite limb lead to Image1 not another same-stride copy. Original painterly cutout with complete tail/nose/paws, generous margins, genuinely transparent RGBA, no backdrop/checkerboard/floor shadow, text or effects.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_rivet_hounds/identity-reference.png",
+          "sha256": "cfa0cde7c478b6cede795337d07311047770573952f0942f381dcc36c64d4b67"
+        },
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_rivet_hounds/guides/quadruped-walk-phase-2.png",
+          "sha256": "c00c7d4f2a160e2c57a645d214e21752db93c3eb6a83f2620072a61012ae8fc2"
+        }
+      ],
+      "selected": false,
+      "selection_note": "Excluded: repeats original lead; superseded by separately inspected guide-first candidate, which still requires limb ownership refinement."
+    },
+    {
+      "id": "opposite-guide-first",
+      "source": "art/animation/source/poses/unit_brasshollow_rivet_hounds/opposite-guide-first.png",
+      "source_sha256": "d1ff4c5f34bbb830fd2702a3e7b944010ffbdd6a86b0dff3115d9e0136a894ee",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4b026687-fcca-4527-8e11-348ec4694dc0.png",
+      "prompt": "Use case: sketch-to-render. Image1 is the authoritative LEG POSE TARGET, not a suggestion. Image2 provides only the compact robotic dog's material/identity, NOT leg positions. Paint ONE original battle sprite. Render the four guide legs exactly: BOTH BLUE near legs point INWARDS with their paws together beneath the torso; the NEAR FRONT blue leg angles down-LEFT, NEAR REAR blue leg angles down-RIGHT. Both ORANGE far legs spread OUTWARDS with their paws far apart. Four total legs, all knees and paws anatomically connected. Do not repeat Image2 leg pose. Remove guide letters/colors/lines; replace with dark iron/brass robot limbs and blue bearings. Compact Rivet Hound with short neck and wedge head level with shoulders, small orange drill snout, orange eyes/side vents, dark iron armor with brass rivets, three-toed metal paws and segmented spear-tip tail, same three-quarter facing RIGHT. Do NOT copy Image1's long neck or organic horse body. Original painterly cutout, whole nose/tail/feet inside margins, transparent RGBA with no ground shadow/checkerboard/scenery/text or effects.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_rivet_hounds/guides/quadruped-walk-phase-2.png",
+          "sha256": "c00c7d4f2a160e2c57a645d214e21752db93c3eb6a83f2620072a61012ae8fc2"
+        },
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_rivet_hounds/identity-reference.png",
+          "sha256": "cfa0cde7c478b6cede795337d07311047770573952f0942f381dcc36c64d4b67"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Candidate only: traced contact/limb ownership is not yet reliable. Do not infer successful alternating gait from prompt/filename."
+    }
+  ],
+  "selection_note": "Five new paintings from four selected outputs; nine original real-alpha paintings reused unchanged. Clipped gathered source and stretched-neck idle excluded. Diagonal limb ownership unresolved; no motion acceptance claim."
+}

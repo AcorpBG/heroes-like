@@ -1,0 +1,58 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "guided-opposite-contact",
+  "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/guided-opposite-contact.png",
+  "source_sha256": "63c5f9fcd6805549224a568ee879722e8dbf7322aac8c94e8df2f75d8d7eb4ed",
+  "source_rect": [
+    0,
+    0,
+    1171,
+    1343
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-opposite-contact.png",
+  "output_sha256": "6b2e24483a42a6222190a0a8b36ddd2fd075cf2ef5c0bcff68de94305cbc7514",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-cutouts.json",
+  "recipe_sha256": "368878d47d07de7a85bf460e8843f6a37c67c6c8e0a31bf69b8f0ae6d504f2a5",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 170,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        916,
+        695
+      ],
+      [
+        970,
+        752
+      ],
+      [
+        884,
+        660
+      ],
+      [
+        837,
+        794
+      ],
+      [
+        440,
+        180
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1053015,
+    "edge_pixels": 6999,
+    "unchanged_paint_pixels": 512639,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

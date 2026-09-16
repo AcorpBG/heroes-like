@@ -1,0 +1,110 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_neutral_emberpack_lobbers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "source": "sling-release-gather-and-melee-recovery.png",
+      "source_sha256": "504b8bba42e9dd0236aa2fdb8993bb9fc7275b1696af2b28d7b349e9d69ac9c8",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8412d8ea-e48b-47a6-abf2-f3b591b29b1f.png",
+      "prompt": "Use case: stylized-concept. Original Emberpack Lobber battle animation additions. Image1 is fixed identity/equipment reference. Paint THREE full-body poses in ONE horizontal row, equal anatomical size, fixed elevated three-quarter camera facing RIGHT, generous margins and clear gutters. Keep charcoal hood with perforated brass brow, orange scarf/tattered tabard, soot leather armor, belt tools, wrapped boots and ONE complete wicker coal BACKPACK attached by both shoulder straps in EVERY pose. RIGHT hand is near shoulder at screen LEFT. LEFT pose: completed RIGHT-arm sling throw, right arm extends across chest toward screen RIGHT. The sling has exactly TWO cords connected to opposite ends of ONE EMPTY brown leather pouch: retention cord from ring on right finger to one pouch end, second released cord from other pouch end trailing freely farther right/down ending in a visible knot, NOT returning to hand. Thus one open continuous hand-cord-pouch-cord-free-knot chain, not a one-cord spoon, not a closed loop. No projectile/flame in pouch. MIDDLE pose: post-throw recovery, right elbow bends lowering retained cord, left hand reaches for the separate released knotted cord end; ONE empty pouch hangs low between the two cords. Do not reload early. RIGHT pose: melee recovery after right cross, RIGHT elbow bends drawing empty right fist across chest back toward sternum, LEFT empty fist guards ribs; entire EMPTY sling gathered and securely stowed at belt, neither hand holding a sling or coal. Slightly bent knees, stable stance. Preserve full limbs/backpack/cord ends inside each cell, no neighboring overlaps. Richly painted original raster matching reference. Flat opaque pure magenta RGB255,0,255 background, no reflected pink, floor shadow, labels, grids, smoke, scenery or effects. Exactly two arms, two boots and one sling per figure.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/emberpack-continuity-20260916/idle-reference/unit_neutral_emberpack_lobbers-poses-rect-0-0-301-320-light.png",
+          "sha256": "300322822b55f9d820fd3e53d61eb21732bcbc947fc70e7b06a8ed851b825526"
+        }
+      ],
+      "selection_note": "Three poses visually inspected as source candidates; prepared-alpha composites, crop assembly and motion continuity still pending."
+    }
+  ],
+  "selected_frames": [
+    {
+      "index": 0,
+      "name": "idle_loaded_a",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 1,
+      "name": "idle_loaded_b",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 2,
+      "name": "travel_right_coiled_contact",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 3,
+      "name": "travel_right_coiled_passing",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 4,
+      "name": "right_fist_windup",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 5,
+      "name": "right_fist_cross",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 6,
+      "name": "melee_recovery_sling_stowed",
+      "source": "continuity-alpha/sling-release-gather-and-melee-recovery.png"
+    },
+    {
+      "index": 7,
+      "name": "crouched_guard",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 8,
+      "name": "hit_recoil",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 9,
+      "name": "load_ember_sling",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 10,
+      "name": "loaded_sling_windup",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 11,
+      "name": "released_two_cord_open_sling",
+      "source": "continuity-alpha/sling-release-gather-and-melee-recovery.png"
+    },
+    {
+      "index": 12,
+      "name": "empty_sling_gather",
+      "source": "continuity-alpha/sling-release-gather-and-melee-recovery.png"
+    },
+    {
+      "index": 13,
+      "name": "death_knees",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 14,
+      "name": "death_side_fall",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 15,
+      "name": "dead_head_left_dark_coals",
+      "source": "alpha/poses.png"
+    }
+  ],
+  "review_notes": [
+    "16 frames retain thirteen original paintings and select three new paintings. Sling release now has retention cord, one empty pouch and a separate freely trailing knotted release cord; empty recovery gathers that same sling. Melee recovery stows sling at belt and preserves right-fist ownership. Original wrong-handed travel contact is unselected; retained travel uses right-hand coil.",
+    "Approved bounded magenta preparation and inspected crop bands retain both cord ends, full coal backpack, limbs and head-left dark-coal corpse. Original genuine alpha is reused. Final whole atlas inspected.",
+    "Candidate only: full alternating gait, sling continuity between loaded/empty/stowed states, backpack/body/hand proportions, palette/edge continuity and connected timing need full-roster refinement. No automated/import/gameplay/platform acceptance."
+  ]
+}

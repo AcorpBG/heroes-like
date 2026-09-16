@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "output": "art/animation/source/poses/unit_neutral_bogbell_mauls/candidate-atlas.png",
+  "sha256": "245980107f05d2b0e5ba48dec8e7607558a2b7a5f92f1266b377f2e0224abb5c",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        166,
+        30,
+        346,
+        243
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        174,
+        29,
+        343,
+        242
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        170,
+        24,
+        343,
+        246
+      ]
+    },
+    {
+      "name": "walk_passing",
+      "index": 3,
+      "alpha_bounds": [
+        177,
+        25,
+        345,
+        244
+      ]
+    },
+    {
+      "name": "maul_windup",
+      "index": 4,
+      "alpha_bounds": [
+        168,
+        21,
+        334,
+        246
+      ]
+    },
+    {
+      "name": "maul_downward_strike",
+      "index": 5,
+      "alpha_bounds": [
+        176,
+        74,
+        368,
+        249
+      ]
+    },
+    {
+      "name": "maul_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        182,
+        47,
+        369,
+        245
+      ]
+    },
+    {
+      "name": "maul_ready_brace",
+      "index": 7,
+      "alpha_bounds": [
+        179,
+        33,
+        354,
+        244
+      ]
+    },
+    {
+      "name": "maul_crouched_guard",
+      "index": 8,
+      "alpha_bounds": [
+        172,
+        86,
+        345,
+        251
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        179,
+        57,
+        346,
+        250
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        186,
+        65,
+        330,
+        252
+      ]
+    },
+    {
+      "name": "death_side_head_left",
+      "index": 11,
+      "alpha_bounds": [
+        160,
+        96,
+        346,
+        248
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 12,
+      "alpha_bounds": [
+        148,
+        119,
+        347,
+        251
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_bogbell_mauls/alpha/poses.png": "ae7c4ccb7c5295f0c9e2dc6277215645aae9f30f2a1b29c0fbe902fdc5557eaa",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_bogbell_mauls/continuity-alpha/barrel-maul-recovery-ready-and-passing-step.png": "c4425ecf3e1df3b095565a1bddf608a60f77439c3a0ed3972f64d8af1a06241f"
+  }
+}

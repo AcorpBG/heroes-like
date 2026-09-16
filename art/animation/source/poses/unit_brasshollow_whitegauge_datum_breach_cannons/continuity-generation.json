@@ -1,0 +1,64 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/poses-quiet-vents.png",
+      "source_sha256": "9fa0b59d9ab68cf7800fab607c0102c359a4cad14307537b0261255f552158ae",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-de78ff95-ec3a-4c32-bfdd-28816571b157.png",
+      "prompt": "Use case: precise-object-edit. Original tactical battle sprite sheet, keep this EXACT 12-pose 4 columns x3 rows layout. Change ONLY floating effects: remove airborne chimney steam/smoke from every pose, remove muzzle flash in row2 column3 and flying sparks/fragments in row3 column1. Retain ALL physical chimney pipes, vents, valves, hoses, boiler, cannon barrel, white armor panels, six mechanical legs and the ONE operator in each pose, unchanged position/proportions/pose. Keep original orange furnace/muzzle heat on living figures; final bottom-right wreck stays cold, operator goggles DARK and body prone. Do not invent new gear, remove legs/operator, shorten cannon or redraw joints. Quiet intervals between exhaust puffs, no new smoke. Preserve pale ivory armor, white gauge faces and original paint. Clean genuinely transparent background, no checkerboard, floor, shadow, text or extra elements.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/poses-wreck-dark-lenses.png",
+          "sha256": "6413d30bc71db9bb79a5e3cb5cc1372942fbb05e2f2435f380bed0ec51ad0ae0",
+          "role": "edit_target_or_motion_guide"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        5,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "selection": "Quiet vents retain hardware and operator; no baked smoke/shot/hit particles. Cold corpse remains unlit."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/supported-creep-melee-recoil.png",
+      "source_sha256": "1e830154813e3eb9a88e4893337cd0bc4d86eabd24d92f5ce680caf0285230f5",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-dd4d4a6c-9e8f-41d9-9f8c-c99df73d3c7d.png",
+      "prompt": "Use case: identity-preserve. SIX original painted tactical battle poses in 3 columns by2 rows, generous gutters and margins. Input1 fixes the SAME six-legged ivory/brass/black cannon and ONE human operator walking at its rear viewer-RIGHT side. Cannon barrel points screen LEFT, camera unchanged, never mirror. Preserve SIX attached mechanical leg chains (three near ivory-armored legs and three far dark legs), three toes per foot, boiler/gauges/red valves/hoses/chimney and complete white-coated goggle operator with two arms/two legs, hands on control bar. Top-left: near FRONT foot at viewer-left lifts forward, all other five feet support; operator advances one boot. Top-middle: near MIDDLE leg lifts folded under chassis, five others support; operator opposite boot advances. Top-right: near REAR leg by operator lifts and swings forward, five others support, operator front boot planted. Keep same chassis height and barrel dimensions in all travel poses, no new legs or leg vanishing. Bottom-left: PHYSICAL melee shove, body leans a little forward on spread legs, complete barrel extended normally at chest height pointing left, dark muzzle WITHOUT firing heat/flash, operator braced behind handles; no shot. Bottom-middle: ranged recoil, cannon INNER barrel visibly telescopes BACK into fixed ivory mounting sleeve by one third of its normal exposed length, same muzzle diameter, body braces down on all six feet, operator bends both elbows absorbing recoil. Do not shrink whole cannon or shorten outer sleeve. Bottom-right: deep defensive brace, all six legs flex low evenly under boiler, unchanged barrel, operator crouches protectively behind rear white plating while keeping hands on controls. Living orange furnace stays on, quiet vents/no airborne smoke. Preserve original identity/equipment relative scale, full unit/operator/feet visible. Genuine transparent background; no checkerboard, background, floor/shadows, text, projectiles, effects or extra units.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/identity-reference-v2.png",
+          "sha256": "502f5b59631ca2632f4a815098e499806706e822374db62c206e910d37dc7cc8",
+          "role": "edit_target_or_motion_guide"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "limitation": "Near-foot lifts and telescoping barrel visible; far-leg occlusion, operator stride, support/travel and body-scale transitions still require motion refinement."
+    }
+  ],
+  "preparation": "Owner-approved deterministic background/edge extraction and explicit frame packing only. Original/rejected paintings, exact prompts/reference hashes and processing proofs retained. No local pose drawing, warping or mirroring; runtime-facing transform is presentation only.",
+  "review_notes": [
+    "14-frame left-facing candidate: eight quiet-vent derivatives plus six new paintings from two built-in outputs; physical pipes, gauges and operator preserved.",
+    "Planted poses separate near front/middle/rear foot lifts. Six mechanical legs include occluded far chains; no acceptance of full support cycle/operator travel yet.",
+    "New physical shove and telescoped recoil differ. Original buckle, settle and cold wreck retain fallen operator; dead lenses and muzzle unlit.",
+    "Banded crops exclude adjacent feet/muzzle/hand fragments. Approved neutral preparation preserves ivory armor and far-leg paint; body/operator scale and muzzle glow transitions require whole-roster review.",
+    "Manifest source-facing metadata needed so shared runtime facing helper orients both live and dead poses correctly. No simulation/save/footprint changes."
+  ]
+}

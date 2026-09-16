@@ -1,0 +1,125 @@
+{
+  "schema_id": "original_battle_pose_continuity_generation_v1",
+  "unit_id": "unit_mireclaw_mudglass_slingers",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_pending_whole_roster_refinement_and_acceptance",
+  "identity_reference": {
+    "path": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/standing-reference-light.png",
+    "sha256": "de9ad8bea93d9b5763b8bd1466189d0089bd19445b53373a8ecd5571b97c3b6a",
+    "derived_from": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/alpha/poses.png",
+    "rect": [
+      0,
+      0,
+      313,
+      320
+    ],
+    "operation": "Unchanged source pixels composited on light backing; nearest-neighbor 4x reference only."
+  },
+  "outputs": [
+    {
+      "source": "walk-phase-0-green.png",
+      "sha256": "1921b5d6bc96f8260fefaf6893c86b4081fea4043ab86b7da24102e036ff034d",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ca661c6f-18ef-4b0e-a4e6-faa6ac23dea7.png",
+      "selected": false,
+      "prompt": "Use case: stylized-concept. Original painted battle sprite, one full figure only. Image 1 is PRIMARY leg-pose guide, Image 2 SECONDARY costume/face/equipment identity reference. Render the character from Image2 in Image1 leg arrangement; do not reproduce diagram or lettering. CONTACT A: NEAR leg (blue guide) extends down-forward to screen RIGHT with heel landing; FAR leg (orange) stretches back to screen LEFT with toe on ground. Near thigh passes IN FRONT of far thigh at crossing. Lean young woman with long brown hair and yellow reed ties; olive mouth scarf, dark green fitted leather, two reed-fringe shoulder nets, bone-tooth necklace and three round bone belt charms, two woven brown hip ammunition baskets, olive ragged skirt, brown wrapped thigh/knee armor, yellow-tied boots. Anatomical RIGHT hand is near arm/screen LEFT holding BOTH ends of a complete two-cord brown leather sling gathered low with one pouch; anatomical LEFT hand screen RIGHT relaxed bent for balance. Preserve same sling hand, two baskets, pale skin, youthful face. Do not add staff shield or new gear. Fixed elevated three-quarter view facing RIGHT, torso remains three-quarter as identity. Natural weight-bearing joints, exactly two arms and legs. Match original painted strategy-game rendering and material colors. Canvas 1210x1300, generous clear margin around full boots hair and weapon. Figure upright head near y160 boots near y1230, torso centered x580, consistent body scale with subsequent phases. Flat pure RGB(0,255,0) green background without green spill; character greens stay dark olive. No floor, shadow, text, diagram, effects, scenery or extra figures.",
+      "references": [
+        {
+          "path": "art/animation/source/workflow_20260915/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+        },
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/standing-reference-light.png",
+          "sha256": "de9ad8bea93d9b5763b8bd1466189d0089bd19445b53373a8ecd5571b97c3b6a"
+        }
+      ]
+    },
+    {
+      "source": "walk-phase-1-green.png",
+      "sha256": "b74c8511635470acabfec9f94ac95abd14abbda7243911580e2e761d35131d59",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9b3fdee0-55b1-4ce4-b6e2-e77b2e89337d.png",
+      "selected": true,
+      "prompt": "Use case: stylized-concept. Original painted battle sprite, one full figure only. Image 1 is PRIMARY leg-pose guide, Image 2 SECONDARY costume/face/equipment identity reference. Render character from Image2 in Image1 leg arrangement; no diagram or lettering. PASSING A: NEAR leg (blue guide) supports body vertically, boot planted beneath pelvis. FAR leg (orange) knee bends forward, heel lifted behind, ankle passes BEHIND planted near shin, boot OFF ground. Narrow silhouette, NOT a wide running stride. Lean young woman with long brown hair and yellow reed ties; olive mouth scarf, dark green fitted leather, two reed-fringe shoulder nets, bone-tooth necklace and three round bone belt charms, two woven brown hip ammunition baskets, olive ragged skirt, brown wrapped thigh/knee armor, yellow-tied boots. Anatomical RIGHT hand is near arm/screen LEFT holding BOTH ends of a complete two-cord brown leather sling gathered low with one pouch; anatomical LEFT hand screen RIGHT relaxed bent for balance. Preserve same sling hand, two baskets, pale skin, youthful face. Do not add staff shield or new gear. Fixed elevated three-quarter view facing RIGHT, torso remains as identity. Exactly two arms and legs, believable weight on planted supporting foot. Match original painted strategy-game style and colors. Canvas 1210x1300, generous full-figure margins, head near y100 and boots near y1240, centered torso x580. Keep normal full human limb proportions, no compressed legs. Flat pure RGB(0,255,0) background no spill, character greens dark olive. No floor/shadow/text/effects/scenery/extra figures.",
+      "references": [
+        {
+          "path": "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/standing-reference-light.png",
+          "sha256": "de9ad8bea93d9b5763b8bd1466189d0089bd19445b53373a8ecd5571b97c3b6a"
+        }
+      ]
+    },
+    {
+      "source": "walk-phase-2-green.png",
+      "sha256": "5f2d1ef3de9fa2c588bf6f71185b5764ff155cd02e553d6e8f48c3b7a4827841",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e0595426-ae2f-4125-ac38-a420edfb0838.png",
+      "selected": true,
+      "prompt": "Use case: stylized-concept. Original painted battle sprite, one full figure only. Image1 PRIMARY leg-pose guide; Image2 SECONDARY costume/face/equipment identity. Render Image2 character using Image1 leg placement, not the standing pose. CONTACT B: FAR leg (orange guide) extends down-forward to screen RIGHT with heel landing; NEAR leg (blue) stretches back to screen LEFT with toe on ground. Backward NEAR thigh visibly crosses IN FRONT of forward far thigh. Not the same leg lead as contact A; no torso mirroring. IMPORTANT at the pelvis, the leg rooted on screen LEFT is the NEAR leg and must travel BACK to screen LEFT; the leg rooted screen RIGHT is FAR and travels FORWARD to screen RIGHT behind the near thigh. Do not simply swap boots while leaving thighs unchanged. Lean young woman with long brown hair and yellow reed ties; olive mouth scarf, dark green fitted leather, two reed-fringe shoulder nets, bone-tooth necklace and three round bone belt charms, two woven brown hip ammunition baskets, olive ragged skirt, brown wrapped thigh/knee armor, yellow-tied boots. Anatomical RIGHT hand is near arm/screen LEFT holding BOTH ends of a complete two-cord brown leather sling gathered low with one pouch; anatomical LEFT hand screen RIGHT relaxed bent for balance. Preserve same sling hand, two baskets, pale skin, youthful face. Do not add staff shield or new gear. Fixed elevated three-quarter view RIGHT, torso/camera never mirrored. Original painterly strategy-game colors and style. Canvas 1210x1300, head near y80 boots near y1240, normal limb proportions full boots weapon hair with generous margins. Flat pure RGB(0,255,0) background no spill, character greens dark olive. No floor shadow text diagram effects scenery extra figures.",
+      "references": [
+        {
+          "path": "art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/standing-reference-light.png",
+          "sha256": "de9ad8bea93d9b5763b8bd1466189d0089bd19445b53373a8ecd5571b97c3b6a"
+        }
+      ]
+    },
+    {
+      "source": "walk-phase-3-green.png",
+      "sha256": "0cec346096df8c22e41444d7da3d0e945562bff2e0242b69571a044a3432100a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1c2c0352-0d83-4cf1-af18-78721ce6f9e2.png",
+      "selected": true,
+      "prompt": "Use case: stylized-concept. Original painted battle sprite, one full figure only. Image1 PRIMARY leg-pose guide; Image2 SECONDARY costume/face/equipment identity. Use Image1 actual leg arrangement, not standing Image2. PASSING B: FAR leg (orange guide) supports vertically beneath pelvis with boot planted. NEAR leg (blue) bent knee swings forward to screen RIGHT, ankle lifted toward far knee and passes IN FRONT of supporting shin. Near boot OFF ground; narrow silhouette, not wide stride. The lifted leg starts at NEAR hip on screen LEFT, crosses diagonally IN FRONT of the other thigh to a raised knee screen RIGHT; its lower shin folds backward to an airborne boot near center. The leg rooted on screen RIGHT/FAR hip supports body almost vertically to the planted boot beneath pelvis, partly occluded by crossing near shin. Lean young woman with long brown hair and yellow reed ties; olive mouth scarf, dark green fitted leather, two reed-fringe shoulder nets, bone-tooth necklace and three round bone belt charms, two woven brown hip ammunition baskets, olive ragged skirt, brown wrapped thigh/knee armor, yellow-tied boots. Anatomical RIGHT hand is near arm/screen LEFT holding BOTH ends of a complete two-cord brown leather sling gathered low with one pouch; anatomical LEFT hand screen RIGHT relaxed bent for balance. Preserve same sling hand, two baskets, pale skin, youthful face. Do not add staff shield or new gear. Fixed elevated three-quarter view RIGHT same torso/camera. Normal full human limb proportions. Match original painted strategy-game colors. Canvas 1210x1300 head near y80 boots near y1240, full figure weapon generous margins. Flat pure RGB(0,255,0) background no spill, dark olive character greens. No floor shadow lettering diagram effects scenery extra figures.",
+      "references": [
+        {
+          "path": "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/standing-reference-light.png",
+          "sha256": "de9ad8bea93d9b5763b8bd1466189d0089bd19445b53373a8ecd5571b97c3b6a"
+        }
+      ]
+    },
+    {
+      "source": "walk-phase-0-crossing-corrected-green.png",
+      "sha256": "d7c525665bd8dd5a5e42742130bba2753cd78124640e0ef709f65892024f4248",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7f55e3ca-2e8b-44ec-ab31-66d11e1f0741.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 EDIT TARGET, correct ONLY walking leg arrangement below belt. Everything above belt, both arms, full sling and two hip baskets, identity, original canvas, scale, pure green background remain unchanged. Need opposite contact: NEAR leg rooted at the screen-LEFT hip must cross diagonally DOWN-RIGHT IN FRONT OF the other thigh; clearly show a continuous exposed armored thigh diagonal from screen-left hip across center to the screen-right knee, then near shin to forward screen-RIGHT boot. FAR leg rooted at screen-RIGHT hip extends diagonally DOWN-LEFT BEHIND near thigh to rear screen-LEFT boot. Move a little skirt cloth aside at crossing so near thigh occlusion is legible, without removing skirt. Exact two legs, no joint duplication. Both boots point right; front heel planted and rear toe planted, small balanced stride, no sideways split. Anatomical crossing is the ONLY request. Do NOT just alter boots or copy the existing uncrossed leg arrangement. Maintain same painted textures, proportions, light, head and equipment, no labels shadow or effects.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/walk-phase-0-green.png",
+          "sha256": "1921b5d6bc96f8260fefaf6893c86b4081fea4043ab86b7da24102e036ff034d"
+        }
+      ]
+    },
+    {
+      "source": "reload-right-hand-green.png",
+      "sha256": "35362cd2ca52b19626446b31eaa3d703dd310470be2543e93bfd6f76c094e85c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8e3cec82-9f6a-41b0-8b30-5cbf2bae9a69.png",
+      "selected": true,
+      "prompt": "Use case: stylized-concept. One original painted battle sprite. Image1 is costume/identity reference, not pose target. Same Mudglass Slinger woman in RELOAD pose. Long brown hair yellow reed ties, olive mouth scarf, dark green leather/reed shoulder fringe, bone necklace and round belt charms, BOTH woven hip baskets, ragged olive skirt, brown wrapped boots all unchanged. Elevated three-quarter camera faces RIGHT. Standing balanced with knees slightly bent, leans head to watch loading at waist. Anatomical RIGHT hand belongs to near shoulder on screen LEFT: bent right elbow stays screen LEFT and right hand at upper left waist holds BOTH free ends of the TWO sling cords firmly. These two brown cords hang down about 250px in a loose U to a SINGLE leather sling pouch below center belt. Anatomical LEFT arm starts screen RIGHT, reaches forward/down across torso to pouch. Left palm supports that same pouch from beneath, left fingertips seat one small dark mudglass pellet in pouch. Both cord ends REMAIN in the right-hand grip; left hand does not take the cord ends. Each cord connects continuously from right hand to opposite side of the ONE pouch, with enough slack for left hand support. Full figure within 1210x1300 canvas, head near y100 boots y1240, clear margin. Exact original painterly strategy-game look and proportions. Flat pure RGB(0,255,0) green no reflected spill, character greens dark olive. No extra arms, free-floating cords, second sling/pouch, large projectile, effects, floor, shadows, text or scenery.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/standing-reference-light.png",
+          "sha256": "de9ad8bea93d9b5763b8bd1466189d0089bd19445b53373a8ecd5571b97c3b6a"
+        }
+      ]
+    }
+  ],
+  "review_notes": [
+    "Original generated masters retained; first contact draft excluded in favor of targeted thigh-crossing repair. Guide first plus independent fixed identity preserves costume better than chaining all poses, but initial contacts still repeated lead.",
+    "Four authored contact/passing candidates are production material, not final acceptance of limb ownership, weight bearing or smooth translated gait.",
+    "No tests/imports/exports or paid API. Owner-approved deterministic matte processing only. Full roster production precedes consolidated acceptance."
+  ],
+  "runtime_candidate": "art/animation/runtime/poses/unit_mireclaw_mudglass_slingers.png",
+  "runtime_sha256": "9b8f42efdaee4b73435935ed72cac274119807c12056178adb17541ace72689e",
+  "packing": "packing.json",
+  "preparation": "continuity-cutouts.json"
+}

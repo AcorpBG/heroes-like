@@ -1,0 +1,39 @@
+{
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "sources": [
+    {
+      "file": "walk-passing-a-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e410cf9a-fd76-40f6-a44c-27a17126cdba.png",
+      "prompt": "Use case: sketch-to-render. ONE original Beacon Lector passing-A walking sprite. FIRST image supplies anatomy: BLUE NEAR leg planted under pelvis, ORANGE FAR leg bends knee with boot lifted behind supporting shin. SECOND image supplies exact woman identity: brown hair pinned bun/loose strands, cream mantle with red stripes and long split robes, dark leather belts/chain keys/scroll tube, gray armor kneepads, brown boots. RIGHT hand at screen LEFT holds full tall dark wood/iron staff topped one steel bell and ONE hanging amber lantern with red/cream streamers. LEFT hand at screen RIGHT hangs relaxed beside hip, not casting. Preserve one bell, one lantern, full staff head and butt; same hand ownership. Same elevated three-quarter RIGHT-facing tactical camera, upright stable torso, moderate natural step, split robes part around two correct legs. Match original adult proportions and detailed painterly game raster, no guide colors or diagram marks, no mirroring. Full staff and body inside broad empty margins. Flat vivid GREEN #00ff00 background only, neutral lighting no green spill/reflections on cream robe; no floor/shadow/text/scenery/effects.",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+        "art/units/source/curated/unit_embercourt_beacon_lectors.png"
+      ],
+      "selection": "Select rear lifted-foot passing, staff stays in right hand.",
+      "sha256": "258bea01364d4c5196d74a758516c42c0c6b6e763bc289d27e6ce4d23f8df534"
+    },
+    {
+      "file": "walk-passing-b-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-672b61e8-55ed-4f6b-bc55-64124ff8ec7e.png",
+      "prompt": "Use case: sketch-to-render. ONE original Beacon Lector passing-B WALKING sprite. FIRST image supplies anatomy: ORANGE FAR leg planted beneath pelvis, BLUE NEAR thigh raises forward toward RIGHT, knee bent with boot visibly lifted in foreground. SECOND image supplies exact woman identity: brown hair pinned bun/loose strands, cream mantle with red stripes and long split robes, dark leather belts/chain keys/scroll tube, gray armor kneepads, brown boots. RIGHT hand at screen LEFT holds full tall dark wood/iron staff topped one steel bell and ONE hanging amber lantern with red/cream streamers. LEFT hand at screen RIGHT hangs relaxed beside hip, not casting. Keep one bell one lantern full staff head and butt and same hand ownership. Same elevated three-quarter RIGHT-facing tactical camera, upright stable torso, moderate natural walking step not a high kick; split robes part to show near bent foreground knee lifted forward and far supporting straight leg. Exact adult proportions and detailed painterly game raster, no guide colors or diagram marks, no mirroring. Full staff and body inside broad empty margins. Flat vivid GREEN #00ff00 background only, neutral lighting no green spill/reflections on cream robe; no floor/shadow/text/scenery/effects.",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+        "art/units/source/curated/unit_embercourt_beacon_lectors.png"
+      ],
+      "selection": "Select raised foreground knee with opposite supporting foot; connected gait acceptance pending.",
+      "sha256": "3bad65318c923585fef9fdb89771c82041522681de7ff36801884ead3b68d873"
+    },
+    {
+      "file": "walk-near-landing-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3567f0df-ca1e-44bb-827e-24bd9958031d.png",
+      "prompt": "Use case: precise-edit. Edit this exact Beacon Lector walking image into the NEXT near-foot landing phase. Preserve exact face hair costume belt mantle scale torso head hands staff full bell ONE amber lantern and screen positions of upper body; same camera orientation. Only articulate the legs and nearby split robe fabric: the foreground bent knee now extends forward toward RIGHT and its raised boot lowers to the ground ahead of her, heel contacting ground. The other FAR leg trails backward, its heel lifts with toe still behind the pelvis. Show a moderate forward walking contact, not a kick or two parallel planted feet. Do not mirror or swap anatomical legs. Keep right hand at screen LEFT holding upright full staff; left hand at screen RIGHT relaxed. Preserve equipment dimensions and ivory cloth without green tint. Same full-body original painterly raster with complete staff inside generous margins. Flat vivid GREEN #00ff00 background, no floor/shadow/text/effects.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_beacon_lectors/walk-passing-b-green.png"
+      ],
+      "selection": "Select foreground landing derived from lifted-knee image, preserving upper-body equipment.",
+      "sha256": "ed5984ab7b19d18338655ccba4ab15e8a63188e591f21ffddcc8e4b5f1b97ee6"
+    }
+  ]
+}

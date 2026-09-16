@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved local non-generative matte and narrow edge cleanup. Preserve original paintings; no synthesized or warped poses.",
+  "id": "beaconline-walk-standard-side-lift-green",
+  "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/walk-standard-side-lift-green.png",
+  "source_sha256": "65cea77da39459e7830ff5a982c1d4ab0f80e515fa45a663f24d8cac549589ce",
+  "source_rect": [
+    0,
+    0,
+    1020,
+    1542
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-alpha/walk-standard-side-lift-green.png",
+  "output_sha256": "717fa47fce019f3754cb56334e27df322b9b70693f387d9f4b3d38cbec0416d8",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-cutouts.json",
+  "recipe_sha256": "37edcb142ff0fa736c04782094aba58459da1c649c8aef5a92afef3395addd77",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 966459,
+    "edge_pixels": 11046,
+    "unchanged_paint_pixels": 595335,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

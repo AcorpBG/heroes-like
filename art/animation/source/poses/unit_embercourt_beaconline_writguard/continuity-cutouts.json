@@ -1,0 +1,372 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved local non-generative matte and narrow edge cleanup. Preserve original paintings; no synthesized or warped poses.",
+  "jobs": [
+    {
+      "id": "beaconline-original",
+      "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/poses.png",
+      "source_sha256": "f6d73efc67e6e7b8e30125eb3f7eba35533baad1bd784c2ef8ffcc6911ba92b3",
+      "output": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-alpha/poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 185,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            117,
+            46
+          ],
+          [
+            140,
+            46
+          ],
+          [
+            165,
+            156
+          ],
+          [
+            157,
+            305
+          ],
+          [
+            438,
+            46
+          ],
+          [
+            463,
+            46
+          ],
+          [
+            492,
+            150
+          ],
+          [
+            489,
+            305
+          ],
+          [
+            775,
+            45
+          ],
+          [
+            798,
+            45
+          ],
+          [
+            830,
+            150
+          ],
+          [
+            813,
+            236
+          ],
+          [
+            1223,
+            46
+          ],
+          [
+            1249,
+            46
+          ],
+          [
+            1246,
+            155
+          ],
+          [
+            1213,
+            230
+          ],
+          [
+            110,
+            426
+          ],
+          [
+            133,
+            426
+          ],
+          [
+            165,
+            520
+          ],
+          [
+            152,
+            610
+          ],
+          [
+            450,
+            425
+          ],
+          [
+            472,
+            425
+          ],
+          [
+            488,
+            605
+          ],
+          [
+            790,
+            425
+          ],
+          [
+            811,
+            425
+          ],
+          [
+            827,
+            511
+          ],
+          [
+            1173,
+            425
+          ],
+          [
+            1195,
+            425
+          ],
+          [
+            1210,
+            598
+          ],
+          [
+            82,
+            772
+          ],
+          [
+            99,
+            770
+          ],
+          [
+            126,
+            850
+          ],
+          [
+            141,
+            955
+          ],
+          [
+            445,
+            44
+          ],
+          [
+            464,
+            44
+          ],
+          [
+            816,
+            139
+          ],
+          [
+            819,
+            159
+          ],
+          [
+            1210,
+            497
+          ],
+          [
+            486,
+            643
+          ],
+          [
+            137,
+            922
+          ],
+          [
+            153,
+            974
+          ],
+          [
+            826,
+            594
+          ],
+          [
+            1231,
+            222
+          ],
+          [
+            839,
+            517
+          ],
+          [
+            140,
+            862
+          ],
+          [
+            814,
+            221
+          ],
+          [
+            1273,
+            105
+          ],
+          [
+            128,
+            829
+          ],
+          [
+            158,
+            983
+          ],
+          [
+            814,
+            551
+          ],
+          [
+            73,
+            849
+          ],
+          [
+            71,
+            770
+          ],
+          [
+            90,
+            762
+          ],
+          [
+            1190,
+            424
+          ],
+          [
+            832,
+            132
+          ],
+          [
+            1193,
+            551
+          ]
+        ]
+      }
+    },
+    {
+      "id": "beaconline-dark-collapse",
+      "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/poses-collapse-forearm-shield.png",
+      "source_sha256": "d4b3d04a5bbb54ecdbeb86cdcda603412059438382fb3d63fbbad01626b1a582",
+      "output": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-alpha/poses-collapse-forearm-shield.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 185,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            484,
+            778
+          ],
+          [
+            500,
+            779
+          ],
+          [
+            1134,
+            887
+          ],
+          [
+            1143,
+            888
+          ],
+          [
+            749,
+            854
+          ],
+          [
+            762,
+            861
+          ],
+          [
+            453,
+            865
+          ],
+          [
+            495,
+            952
+          ],
+          [
+            715,
+            869
+          ],
+          [
+            727,
+            858
+          ],
+          [
+            751,
+            944
+          ],
+          [
+            1116,
+            898
+          ],
+          [
+            1123,
+            887
+          ],
+          [
+            1184,
+            950
+          ],
+          [
+            1223,
+            990
+          ],
+          [
+            457,
+            872
+          ],
+          [
+            1144,
+            958
+          ],
+          [
+            1111,
+            898
+          ],
+          [
+            713,
+            904
+          ],
+          [
+            1233,
+            999
+          ]
+        ]
+      }
+    },
+    {
+      "id": "beaconline-walk-shield-side-lift-green",
+      "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/walk-shield-side-lift-green.png",
+      "source_sha256": "4021c611dc252c78664c5c4bd418594c290a944b27e4e9285204c520de61d023",
+      "output": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-alpha/walk-shield-side-lift-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "beaconline-walk-standard-side-lift-green",
+      "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/walk-standard-side-lift-green.png",
+      "source_sha256": "65cea77da39459e7830ff5a982c1d4ab0f80e515fa45a663f24d8cac549589ce",
+      "output": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-alpha/walk-standard-side-lift-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

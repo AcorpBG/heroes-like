@@ -1,0 +1,93 @@
+{
+  "schema_id": "original_unit_pose_refinement_v1",
+  "unit_id": "unit_neutral_basalt_wardens",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "date": "2026-09-16",
+  "status": "two_selected_poses_registered_candidate_not_final_acceptance",
+  "jobs": [
+    {
+      "key": "contact_b",
+      "source": "contact-b.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/biped-walk-phase-2.png",
+        "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/basalt-continuity-20260916/idle-reference/unit_neutral_basalt_wardens-poses-rect-0-0-311-416-light.png"
+      ],
+      "prompt": "Use case: sketch-to-render. Original battle sprite for Basalt Warden. Image 1 is the anatomical POSE GUIDE and primary edit target, not costume. Image 2 is costume and identity reference only. Paint ONE complete original character, three-quarter camera facing RIGHT, matching the man's brown wavy hair, pale clean-shaven face, charcoal scarf, grey steel layered armor, brown trousers/boots, grey split tabard with two pale diagonal stripes, belt pouch and copper flask. RIGHT hand on screen LEFT holds the same short dark faceted mace downward; LEFT hand on screen RIGHT carries the same tall dark basalt slab shield, copper horizontal straps, irregular pointed top. Keep those hands and original shield/mace proportions; NEVER mirror torso or exchange hands. All shield corners, mace head, hair and boots inside a tall 1024x1536 portrait with generous 90px margins. Consistent painterly raster with original reference, no photographic skin, no model redesign. Crucial single pose: OPPOSITE CONTACT, matching guide blue leg as the foreground anatomical RIGHT leg. That foreground near thigh emerges beneath the belt pouch on LEFT side of pelvis, runs diagonally DOWN-LEFT IN FRONT OF the other thigh, its knee continues LEFT and rear boot on LEFT has raised heel and toe touching the common ground. The distant LEFT leg is BEHIND this foreground thigh, extends down-RIGHT and forward under the shield to a RIGHT-side heel on ground, toe slightly raised. Blue/near leg must be BACK, orange/far leg FORWARD. Both legs remain visibly connected to their own hip, knees not crossing into reversed ownership; camera not reversed. Do not repeat near-leg-forward walk. Remove all diagram colors, lines, labels and guide background in the finished painting. Actual transparent background requested, clean preserved alpha, no checkerboard. If transparency cannot be represented, use perfectly uniform saturated magenta RGB(255,0,255), including every empty gap, with absolutely no magenta reflections on the figure. No floor, shadows, haze, text, labels, grid, motion trail or extra figures. Only articulate the prescribed legs and consequent tabard folds; preserve chest/head/shield/mace appearance and camera. ",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a6db2b2b-e2bb-495e-b701-f203277dbabd.png",
+      "source_sha256": "2a67aea4cfc61b3340cdf0449b7cf9b7794f9f3cdf4895c284d1b3b6e64acd7c",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": ".artifacts/battle-unit-animation-size-20260913/basalt-continuity-20260916/idle-reference/unit_neutral_basalt_wardens-poses-rect-0-0-311-416-light.png",
+          "sha256": "b3769b42aa7e410f9b814263c12d34005b90160232c530eed5dc8655ef0140b5"
+        }
+      ],
+      "selected": false,
+      "review": "RGB fake checkerback; contact shield clipped at right edge. Preserved unselected as precursor to controlled matte/reframing edit."
+    },
+    {
+      "key": "passing_b",
+      "source": "passing-b.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/biped-walk-phase-3.png",
+        "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/basalt-continuity-20260916/idle-reference/unit_neutral_basalt_wardens-poses-rect-0-0-311-416-light.png"
+      ],
+      "prompt": "Use case: sketch-to-render. Original battle sprite for Basalt Warden. Image 1 is the anatomical POSE GUIDE and primary edit target, not costume. Image 2 is costume and identity reference only. Paint ONE complete original character, three-quarter camera facing RIGHT, matching the man's brown wavy hair, pale clean-shaven face, charcoal scarf, grey steel layered armor, brown trousers/boots, grey split tabard with two pale diagonal stripes, belt pouch and copper flask. RIGHT hand on screen LEFT holds the same short dark faceted mace downward; LEFT hand on screen RIGHT carries the same tall dark basalt slab shield, copper horizontal straps, irregular pointed top. Keep those hands and original shield/mace proportions; NEVER mirror torso or exchange hands. All shield corners, mace head, hair and boots inside a tall 1024x1536 portrait with generous 90px margins. Consistent painterly raster with original reference, no photographic skin, no model redesign. Crucial single pose: OPPOSITE PASSING, exactly guide blue/near foreground RIGHT leg lifted. The foreground thigh beneath the LEFT side belt pouch swings forward DOWN-RIGHT, visibly bent knee in front, lower leg folds back DOWN-LEFT toward the other shin, its near boot lifted clearly OFF the floor at mid-shin height with toe pointing RIGHT. The distant LEFT leg supports body weight vertically behind it, distant boot planted flat under pelvis. The near shin must not touch the ground. Not high kicking, not backwards toe, not two grounded boots. Distinct from the forward near-leg planted passing. No torso rotation or mirrored gear. Remove all diagram colors, lines, labels and guide background in the finished painting. Actual transparent background requested, clean preserved alpha, no checkerboard. If transparency cannot be represented, use perfectly uniform saturated magenta RGB(255,0,255), including every empty gap, with absolutely no magenta reflections on the figure. No floor, shadows, haze, text, labels, grid, motion trail or extra figures. Only articulate the prescribed legs and consequent tabard folds; preserve chest/head/shield/mace appearance and camera. ",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1d8d360c-ce78-4bee-9e51-decb910355a3.png",
+      "source_sha256": "59bc2735264457366dbfe59edc803bb4ed49d8bf7330cf009d1a61169d347386",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": ".artifacts/battle-unit-animation-size-20260913/basalt-continuity-20260916/idle-reference/unit_neutral_basalt_wardens-poses-rect-0-0-311-416-light.png",
+          "sha256": "b3769b42aa7e410f9b814263c12d34005b90160232c530eed5dc8655ef0140b5"
+        }
+      ],
+      "selected": false,
+      "review": "RGB fake checkerback; contact shield clipped at right edge. Preserved unselected as precursor to controlled matte/reframing edit."
+    },
+    {
+      "key": "contact_b_clean",
+      "source": "contact-b-matte.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/contact-b.png"
+      ],
+      "prompt": "Use case: precise-object-edit. Edit this exact original game character painting. Replace the ENTIRE fake grey checkerboard with perfectly uniform vivid MAGENTA RGB(255,0,255), including all negative-space holes. This is an opaque chroma production source, NOT a transparency request: absolutely no checkerboard or gradients. No magenta reflected on character. Reframe on a square 1536x1536 canvas with the whole unchanged figure smaller and centered, at least 120px clear magenta margin on EVERY side. Preserve exact pose, near/far legs and their overlap, head, camera, costume, hands, mace, shield size relative to body, painted colors and linework. Complete the tiny clipped outer shield edge on the right where necessary, matching its original contour/straps; do not clip any shield corner, mace, boot or hair. The foreground/near leg stays BACK on screen left; the far leg stays FORWARD on screen right. Do not swap knees or reverse lead. Do not add poses, text, floor, contact shadow, effects or redesign. Change only background, overall framing and missing extreme shield-edge continuation; preserve the articulated painting.",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-77f8a3c7-46c1-42aa-a3e6-96b963454927.png",
+      "source_sha256": "322e7ebd88432b593b61c6375b11484589ae4611b5a18d97a56e5620e855a452",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/contact-b.png",
+          "sha256": "2a67aea4cfc61b3340cdf0449b7cf9b7794f9f3cdf4895c284d1b3b6e64acd7c"
+        }
+      ],
+      "selected": true,
+      "review": "Selected after approved matte cleanup. Near-leg-back contact and near-leg-raised passing preserve right-hand mace and left-hand shield; full atlas inspected."
+    },
+    {
+      "key": "passing_b_clean",
+      "source": "passing-b-matte.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/passing-b.png"
+      ],
+      "prompt": "Use case: precise-object-edit. Edit this exact original game character painting. Replace the ENTIRE fake grey checkerboard with perfectly uniform vivid MAGENTA RGB(255,0,255), including all negative-space holes. This is an opaque chroma production source, NOT a transparency request: absolutely no checkerboard or gradients. No magenta reflected on character. Reframe on a square 1536x1536 canvas with the whole unchanged figure smaller and centered, at least 120px clear magenta margin on EVERY side. Preserve exact pose, near/far legs and their overlap, head, camera, costume, hands, mace, shield size relative to body, painted colors and linework. Complete the tiny clipped outer shield edge on the right where necessary, matching its original contour/straps; do not clip any shield corner, mace, boot or hair. The foreground/near bent leg remains lifted off the ground, far leg remains planted. Keep that exact opposite-passing leg configuration. Do not add poses, text, floor, contact shadow, effects or redesign. Change only background, overall framing and missing extreme shield-edge continuation; preserve the articulated painting.",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a99eeec8-da4c-4848-932e-75db8d7f9da0.png",
+      "source_sha256": "044a98f7674de1683aa2631b544b7c29a56abf0a52187ec4bbdcca70acd59829",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/passing-b.png",
+          "sha256": "59bc2735264457366dbfe59edc803bb4ed49d8bf7330cf009d1a61169d347386"
+        }
+      ],
+      "selected": true,
+      "review": "Selected after approved matte cleanup. Near-leg-back contact and near-leg-raised passing preserve right-hand mace and left-hand shield; full atlas inspected."
+    }
+  ],
+  "evidence": ".artifacts/battle-unit-animation-size-20260913/basalt-gait-refinement-20260916"
+}

@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved local non-generative background/edge cleanup. Preserve originals; no pose invention, limb warping or procedural runtime artwork.",
+  "id": "charter-walk-passing-b-green",
+  "source": "art/animation/source/poses/unit_embercourt_charter_colossus/walk-passing-b-green.png",
+  "source_sha256": "896704836b82fe9d4b0eef5925b6ca42c2b5606dfdf0f0f6f89a8cc0286caed7",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_charter_colossus/continuity-alpha/walk-passing-b-green.png",
+  "output_sha256": "77a5f511b94d56e438b833079fb9df9732a0bf5c274efa9909f531e528b43469",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_charter_colossus/continuity-cutouts.json",
+  "recipe_sha256": "112702be081e99ea0310a7746b7d297bbc608f07bf2df64e8df7bf249576b6de",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 988949,
+    "edge_pixels": 9195,
+    "unchanged_paint_pixels": 574372,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

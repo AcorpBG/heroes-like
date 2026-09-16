@@ -1,0 +1,165 @@
+{
+  "unit_id": "unit_brasshollow_crucible_crawlers",
+  "output": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/candidate-atlas.png",
+  "sha256": "2ad5ca2a46112241c28e67c5f3a9b7ba7afbd837190cf21e8fb0535bf44c36f6",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        152,
+        21,
+        362,
+        241
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        147,
+        11,
+        363,
+        238
+      ]
+    },
+    {
+      "name": "creep_near_front_lift",
+      "index": 2,
+      "alpha_bounds": [
+        150,
+        30,
+        373,
+        238
+      ]
+    },
+    {
+      "name": "creep_near_rear_lift",
+      "index": 3,
+      "alpha_bounds": [
+        141,
+        21,
+        374,
+        240
+      ]
+    },
+    {
+      "name": "creep_far_front_lift",
+      "index": 4,
+      "alpha_bounds": [
+        150,
+        21,
+        376,
+        240
+      ]
+    },
+    {
+      "name": "melee_closed_nozzle_windup",
+      "index": 5,
+      "alpha_bounds": [
+        146,
+        31,
+        363,
+        238
+      ]
+    },
+    {
+      "name": "melee_closed_nozzle_strike",
+      "index": 6,
+      "alpha_bounds": [
+        139,
+        52,
+        392,
+        238
+      ]
+    },
+    {
+      "name": "ranged_aim",
+      "index": 7,
+      "alpha_bounds": [
+        151,
+        28,
+        363,
+        239
+      ]
+    },
+    {
+      "name": "ranged_pour",
+      "index": 8,
+      "alpha_bounds": [
+        146,
+        29,
+        390,
+        239
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 9,
+      "alpha_bounds": [
+        150,
+        40,
+        364,
+        251
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 10,
+      "alpha_bounds": [
+        150,
+        58,
+        371,
+        237
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 11,
+      "alpha_bounds": [
+        145,
+        37,
+        362,
+        239
+      ]
+    },
+    {
+      "name": "death_buckle",
+      "index": 12,
+      "alpha_bounds": [
+        144,
+        44,
+        361,
+        241
+      ]
+    },
+    {
+      "name": "death_tip",
+      "index": 13,
+      "alpha_bounds": [
+        146,
+        88,
+        363,
+        238
+      ]
+    },
+    {
+      "name": "dead_cold",
+      "index": 14,
+      "alpha_bounds": [
+        147,
+        100,
+        359,
+        241
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png": "6421b6f36c383407f6d966a445218f945d1d00e2817542746b860e1cde65d39e",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-alpha/creep-melee-four-legs.png": "c780ee448a7a9a0b7be0c6797c97d0a83ac830cc8027cdb0da2992c85fc0ef63"
+  }
+}

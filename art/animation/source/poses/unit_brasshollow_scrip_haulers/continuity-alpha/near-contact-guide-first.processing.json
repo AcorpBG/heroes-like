@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative background and edge cleanup on 2026-09-15; original masters and interior paint must remain unchanged.",
+  "id": "near-contact-guide-first",
+  "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/near-contact-guide-first.png",
+  "source_sha256": "97cabd3d84e1c2b15b91015196cda4909b3fa66aae94dc3fe1b92bede3a00bf8",
+  "source_rect": [
+    0,
+    0,
+    1055,
+    1491
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/near-contact-guide-first.png",
+  "output_sha256": "39988203bd1712699d8d0af700c5b1fd6cf77b881dba3951d8cc71ca3f181a96",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-cutouts.json",
+  "recipe_sha256": "49d972465737ffd2369a9642270d29471d11bb3b57be6cab8afcd96bbea36b11",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        710,
+        703
+      ],
+      [
+        343,
+        694
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 931354,
+    "edge_pixels": 8888,
+    "unchanged_paint_pixels": 632763,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

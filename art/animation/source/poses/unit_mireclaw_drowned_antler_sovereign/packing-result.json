@@ -1,0 +1,126 @@
+{
+  "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+  "output": "art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign/candidate-atlas.png",
+  "sha256": "387f17793d2e84314edf5c99746c22b9fcffd20f3e10d7529a8802d0b3e1e1b7",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        89,
+        34,
+        375,
+        238
+      ]
+    },
+    {
+      "name": "idle_1",
+      "index": 1,
+      "alpha_bounds": [
+        112,
+        20,
+        348,
+        239
+      ]
+    },
+    {
+      "name": "step_diagonal_a",
+      "index": 2,
+      "alpha_bounds": [
+        82,
+        33,
+        372,
+        237
+      ]
+    },
+    {
+      "name": "step_diagonal_b",
+      "index": 3,
+      "alpha_bounds": [
+        73,
+        33,
+        372,
+        240
+      ]
+    },
+    {
+      "name": "charge_windup",
+      "index": 4,
+      "alpha_bounds": [
+        132,
+        51,
+        366,
+        241
+      ]
+    },
+    {
+      "name": "charge_contact",
+      "index": 5,
+      "alpha_bounds": [
+        93,
+        73,
+        381,
+        238
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 6,
+      "alpha_bounds": [
+        129,
+        79,
+        360,
+        240
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 7,
+      "alpha_bounds": [
+        123,
+        34,
+        351,
+        241
+      ]
+    },
+    {
+      "name": "kneel",
+      "index": 8,
+      "alpha_bounds": [
+        115,
+        68,
+        370,
+        239
+      ]
+    },
+    {
+      "name": "side_fall",
+      "index": 9,
+      "alpha_bounds": [
+        111,
+        96,
+        370,
+        240
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 10,
+      "alpha_bounds": [
+        92,
+        126,
+        379,
+        240
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign/continuity-alpha/original.png": "6d473c24388ebf00e4cfdb3d29b1dc4e262873119c71654e394d7c6b27156053",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign/continuity-alpha/step-diagonal-a-green.png": "18e7cf2eb324fc669b9e8b1480eb687b8c15fb8d895d0179a211afe25593e8a8",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign/continuity-alpha/step-diagonal-b-green.png": "3de2a2fa26709ef5ceb44cdd41d5f3aaf9288f31fb25d79663b27a029e2cb473"
+  }
+}

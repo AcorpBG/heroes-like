@@ -1,0 +1,58 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "guided-near-passing",
+  "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/guided-near-passing.png",
+  "source_sha256": "e1a1fd3b42dd4a2cb6e48c237aa96db1c7af77387f5ae72312f9283f64cb20d4",
+  "source_rect": [
+    0,
+    0,
+    1171,
+    1343
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-near-passing.png",
+  "output_sha256": "af38c52c503fe0b5ae4c4a13df86f399c58e968aabd7c46f727c552939e9c6b0",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-cutouts.json",
+  "recipe_sha256": "368878d47d07de7a85bf460e8843f6a37c67c6c8e0a31bf69b8f0ae6d504f2a5",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 170,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        982,
+        619
+      ],
+      [
+        918,
+        561
+      ],
+      [
+        864,
+        662
+      ],
+      [
+        674,
+        448
+      ],
+      [
+        448,
+        153
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1105668,
+    "edge_pixels": 7233,
+    "unchanged_paint_pixels": 459752,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

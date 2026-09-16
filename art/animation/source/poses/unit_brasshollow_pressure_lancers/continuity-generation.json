@@ -1,0 +1,32 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_pressure_lancers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/tripod-creep-and-guard.png",
+      "source_sha256": "0d1b989b78daa12967d50f558cae38e2d8b1eac5e62fedf4ce5cd6690f0e441d",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7fc7576c-37c5-4766-90ed-02d9935e2c06.png",
+      "prompt": "Use case: identity-preserve. Asset type: original painted fantasy tactical battle animation supplement. SIX complete articulated figures in 3 columns x 2 rows, clear generous gutters and margins around every weapon and foot. Same three-quarter camera facing screen RIGHT, identical body and equipment scale throughout. Genuine transparent background, no drawn checkerboard, no text, no numbers, no ground shadows, no scenery. No new equipment or added limbs. Preserve original paint style and identity.\nInput1 fixed identity: Pressure Lancer, ONE upright brass/black boiler on exactly THREE jointed mechanical legs and broad conical hoof feet; central piston lance points right, triangular steel tip, red pennant, gauges, side reservoir and attached copper hoses. No arms, no rider. Quiet exhaust interval: no airborne steam/smoke/flames, retain actual chimney/openings and orange furnace. Top-left all THREE feet planted, same boiler and lance as reference. Top-middle near front leg on viewer-right lifts and folds under front boiler while rear leg at viewer-left and middle far leg remain planted. Top-right near front foot lands again and rear leg on viewer-left lifts and swings under rear boiler while front and far feet remain planted. Bottom-left far middle leg lifts visibly beneath boiler with bent joint, both large outer front/rear feet stay planted. Exactly THREE legs in every pose, clear hip-to-knee-to-hoof chains, no extra or detached feet. Bottom-middle low braced guard, all THREE feet spread and planted, boiler lowered, lance remains mechanically connected at same central cylinder and tilts only slightly up. Bottom-right second low guard with boiler compressed a little farther, three feet still planted, same spear tip/shaft, hoses flex minimally. Maintain fixed body proportions, correct mechanical attachments, visible ground gaps under lifted feet, no whole-sprite rotation.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_pressure_lancers/identity-reference.png",
+          "sha256": "b53961d26aaf9bb81390e753d18306d9a8ba51db8c4889f28ee96bf0e9ec297b",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "preparation": "Owner-approved deterministic background and narrow-edge extraction only. No local pose painting, mirroring, warping or equipment synthesis. Guides/composites are authoring references, not runtime art."
+}

@@ -1,0 +1,197 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers",
+  "output": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/candidate-atlas.png",
+  "sha256": "fb3f5a13a140037221c44c6a40e2f0bdebfffa0b9a501ec61b4f001145833bd7",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        176,
+        30,
+        330,
+        240
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        174,
+        29,
+        332,
+        240
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        162,
+        24,
+        339,
+        241
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        207,
+        25,
+        320,
+        240
+      ]
+    },
+    {
+      "name": "walk_planted_bridge",
+      "index": 4,
+      "alpha_bounds": [
+        161,
+        27,
+        330,
+        243
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        209,
+        24,
+        331,
+        240
+      ]
+    },
+    {
+      "name": "melee_pullback",
+      "index": 6,
+      "alpha_bounds": [
+        169,
+        23,
+        339,
+        238
+      ]
+    },
+    {
+      "name": "melee_two_hand_shove",
+      "index": 7,
+      "alpha_bounds": [
+        164,
+        31,
+        349,
+        239
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        168,
+        47,
+        350,
+        240
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        187,
+        66,
+        328,
+        242
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        169,
+        45,
+        349,
+        240
+      ]
+    },
+    {
+      "name": "ranged_aim",
+      "index": 11,
+      "alpha_bounds": [
+        169,
+        44,
+        348,
+        240
+      ]
+    },
+    {
+      "name": "ranged_recoil",
+      "index": 12,
+      "alpha_bounds": [
+        170,
+        33,
+        339,
+        240
+      ]
+    },
+    {
+      "name": "reload_cocking",
+      "index": 13,
+      "alpha_bounds": [
+        164,
+        35,
+        341,
+        241
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        159,
+        79,
+        329,
+        243
+      ]
+    },
+    {
+      "name": "death_forward_collapse",
+      "index": 15,
+      "alpha_bounds": [
+        157,
+        115,
+        354,
+        241
+      ]
+    },
+    {
+      "name": "death_settle",
+      "index": 16,
+      "alpha_bounds": [
+        137,
+        146,
+        367,
+        243
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 17,
+      "alpha_bounds": [
+        144,
+        150,
+        367,
+        239
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/poses-projectile-separated.png": "d80d361446ad7657a8a4e39de6c7ae3b340f052c802bba9f9b49ff1b87f19e19",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/guided-walk-and-guard.png": "132b1f89a7bca34eeb0f3ae20b27abc7c5be286c0c1dbbb3991f37405addc354",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/guided-far-passing.png": "9ce466c0c367724d4ab693e785abc17d3f11e81fac22f0c82ff22e95e9a63fe5",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/shove-recoil-forward-collapse.png": "effeb2cb735336c83859d580ac3fa32c7c8dd4601b56cc9aba25728a86772fee"
+  }
+}

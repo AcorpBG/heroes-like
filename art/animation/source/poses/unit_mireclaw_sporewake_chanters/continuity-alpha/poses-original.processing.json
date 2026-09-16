@@ -1,0 +1,242 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source, coordinates and exact recipes.",
+  "id": "sporewake-original-checker",
+  "source": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/poses.png",
+  "source_sha256": "8621b20f1dbd8a0c3cd1f184fc05ac2203c4f7e4ff5dc2d2ee0ca844e95f2efe",
+  "source_rect": [
+    0,
+    0,
+    1232,
+    1277
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/continuity-alpha/poses-original.png",
+  "output_sha256": "98de58148e0e4671e626fb5d9b9d8ce571b468d825bcb98c2808220b0dbfc61b",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/continuity-cutouts.json",
+  "recipe_sha256": "de75b0bc6ffc88ee315097e12dc4abd7ee6a31414ba883fbcd9d304cfb470a6b",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 185,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        1140,
+        102
+      ],
+      [
+        564,
+        123
+      ],
+      [
+        561,
+        131
+      ],
+      [
+        401,
+        139
+      ],
+      [
+        105,
+        147
+      ],
+      [
+        1096,
+        152
+      ],
+      [
+        992,
+        157
+      ],
+      [
+        829,
+        174
+      ],
+      [
+        241,
+        195
+      ],
+      [
+        236,
+        209
+      ],
+      [
+        116,
+        262
+      ],
+      [
+        427,
+        266
+      ],
+      [
+        415,
+        374
+      ],
+      [
+        444,
+        391
+      ],
+      [
+        1155,
+        399
+      ],
+      [
+        1171,
+        417
+      ],
+      [
+        1159,
+        421
+      ],
+      [
+        500,
+        468
+      ],
+      [
+        219,
+        506
+      ],
+      [
+        771,
+        509
+      ],
+      [
+        790,
+        515
+      ],
+      [
+        215,
+        523
+      ],
+      [
+        784,
+        526
+      ],
+      [
+        970,
+        675
+      ],
+      [
+        264,
+        742
+      ],
+      [
+        271,
+        742
+      ],
+      [
+        708,
+        765
+      ],
+      [
+        1164,
+        768
+      ],
+      [
+        1173,
+        780
+      ],
+      [
+        63,
+        785
+      ],
+      [
+        1163,
+        789
+      ],
+      [
+        540,
+        820
+      ],
+      [
+        535,
+        830
+      ],
+      [
+        810,
+        1187
+      ],
+      [
+        419,
+        1194
+      ],
+      [
+        1169,
+        1198
+      ],
+      [
+        492,
+        1209
+      ],
+      [
+        89,
+        101
+      ],
+      [
+        376,
+        95
+      ],
+      [
+        383,
+        101
+      ],
+      [
+        384,
+        113
+      ],
+      [
+        71,
+        414
+      ],
+      [
+        79,
+        432
+      ],
+      [
+        969,
+        421
+      ],
+      [
+        693,
+        724
+      ],
+      [
+        43,
+        736
+      ],
+      [
+        384,
+        735
+      ],
+      [
+        967,
+        741
+      ],
+      [
+        50,
+        755
+      ],
+      [
+        700,
+        758
+      ],
+      [
+        59,
+        1066
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1099808,
+    "edge_pixels": 33245,
+    "unchanged_paint_pixels": 440211,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "guided-walk-and-guard",
+  "source": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/guided-walk-and-guard.png",
+  "source_sha256": "f91148045587c77f770d6ed96f37485fc10d9678cbc8f3fbc541991f9746866c",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-alpha/guided-walk-and-guard.png",
+  "output_sha256": "132b1f89a7bca34eeb0f3ae20b27abc7c5be286c0c1dbbb3991f37405addc354",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_tallyspring_throwers/continuity-cutouts.json",
+  "recipe_sha256": "e593eaef92fb10fd50f3c2e98095d6c9f3e8b2b2794a1a9d0143f9df3706a886",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 120,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1054790,
+    "edge_pixels": 8959,
+    "unchanged_paint_pixels": 509115,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

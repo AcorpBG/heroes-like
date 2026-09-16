@@ -1,0 +1,53 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "jobs": [
+    {
+      "id": "votive-original-checker",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/poses.png",
+      "source_sha256": "450d6d9c252ae90087776afd667f978dbb7651d3bf7f523f9e69297154b527e8",
+      "output": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/original.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 110,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "votive-poses-facing-right-green",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/poses-facing-right-green.png",
+      "source_sha256": "7e2e19028e48121ad017a9cb49761e94dcb3629ff8c66ae6fbd654a4466e1135",
+      "output": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "votive-poses-state-corrections-green",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/poses-state-corrections-green.png",
+      "source_sha256": "cc876ec5906491eca2d7b63255815c1bcabe74fdcbdbcf2878df91100a1b65a3",
+      "output": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

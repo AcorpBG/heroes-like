@@ -1,0 +1,170 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "mirehorn-original-checker",
+  "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/poses.png",
+  "source_sha256": "e1c4b8f0fa843799dd3ddce9894b5dda9582a6ce759112c3c73f2f9b60dcca02",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/original.png",
+  "output_sha256": "5eab6685c5a7f22caf3c594f6ab58b08320e8adf51122d20f21d0fb0340232b6",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-cutouts.json",
+  "recipe_sha256": "20a1628cc0617030b0ffef9625afd92444077dfe9285559089a5a256e5ce6cbd",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 155,
+    "tolerance": 14,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        164,
+        122
+      ],
+      [
+        678,
+        161
+      ],
+      [
+        688,
+        160
+      ],
+      [
+        334,
+        203
+      ],
+      [
+        848,
+        264
+      ],
+      [
+        604,
+        273
+      ],
+      [
+        249,
+        288
+      ],
+      [
+        999,
+        285
+      ],
+      [
+        823,
+        283
+      ],
+      [
+        470,
+        284
+      ],
+      [
+        103,
+        284
+      ],
+      [
+        1201,
+        288
+      ],
+      [
+        1015,
+        290
+      ],
+      [
+        200,
+        311
+      ],
+      [
+        172,
+        465
+      ],
+      [
+        895,
+        506
+      ],
+      [
+        1208,
+        552
+      ],
+      [
+        881,
+        583
+      ],
+      [
+        1101,
+        584
+      ],
+      [
+        854,
+        614
+      ],
+      [
+        115,
+        608
+      ],
+      [
+        466,
+        627
+      ],
+      [
+        676,
+        643
+      ],
+      [
+        323,
+        801
+      ],
+      [
+        109,
+        824
+      ],
+      [
+        129,
+        926
+      ],
+      [
+        458,
+        945
+      ],
+      [
+        279,
+        952
+      ],
+      [
+        841,
+        976
+      ],
+      [
+        884,
+        978
+      ],
+      [
+        1265,
+        988
+      ],
+      [
+        762,
+        993
+      ],
+      [
+        776,
+        994
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 998283,
+    "edge_pixels": 35650,
+    "unchanged_paint_pixels": 538595,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

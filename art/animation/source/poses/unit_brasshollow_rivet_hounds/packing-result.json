@@ -1,0 +1,158 @@
+{
+  "unit_id": "unit_brasshollow_rivet_hounds",
+  "output": "art/animation/source/poses/unit_brasshollow_rivet_hounds/candidate-atlas.png",
+  "sha256": "6a7034f9b10acd9e2e8a2391b2905a3b581f8fb9bade0c964bca56d0d7180ade",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle",
+      "index": 0,
+      "alpha_bounds": [
+        120,
+        64,
+        370,
+        246
+      ]
+    },
+    {
+      "name": "compact_head_idle_breath",
+      "index": 1,
+      "alpha_bounds": [
+        126,
+        58,
+        382,
+        240
+      ]
+    },
+    {
+      "name": "run_extended",
+      "index": 2,
+      "alpha_bounds": [
+        118,
+        85,
+        383,
+        245
+      ]
+    },
+    {
+      "name": "run_gathered",
+      "index": 3,
+      "alpha_bounds": [
+        120,
+        46,
+        401,
+        217
+      ]
+    },
+    {
+      "name": "run_gathered_support_requires_limb_review",
+      "index": 4,
+      "alpha_bounds": [
+        130,
+        73,
+        374,
+        239
+      ]
+    },
+    {
+      "name": "run_passing_requires_limb_review",
+      "index": 5,
+      "alpha_bounds": [
+        101,
+        66,
+        394,
+        240
+      ]
+    },
+    {
+      "name": "drill_windup",
+      "index": 6,
+      "alpha_bounds": [
+        136,
+        60,
+        372,
+        245
+      ]
+    },
+    {
+      "name": "drill_lunge",
+      "index": 7,
+      "alpha_bounds": [
+        112,
+        103,
+        403,
+        249
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 8,
+      "alpha_bounds": [
+        126,
+        97,
+        355,
+        248
+      ]
+    },
+    {
+      "name": "guard_braced",
+      "index": 9,
+      "alpha_bounds": [
+        112,
+        77,
+        385,
+        240
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 10,
+      "alpha_bounds": [
+        151,
+        36,
+        385,
+        242
+      ]
+    },
+    {
+      "name": "front_joints_buckle",
+      "index": 11,
+      "alpha_bounds": [
+        159,
+        92,
+        365,
+        250
+      ]
+    },
+    {
+      "name": "collapse_unlit",
+      "index": 12,
+      "alpha_bounds": [
+        136,
+        144,
+        375,
+        243
+      ]
+    },
+    {
+      "name": "dead_unlit",
+      "index": 13,
+      "alpha_bounds": [
+        112,
+        152,
+        362,
+        244
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_rivet_hounds/poses.png": "f29ebbf31a211bcd9e336ebad3e7678148cddc7e7bc28a28a7c183bcf650c306",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/breath-guard-pair.png": "cdcafc5aaadbc99eaf7ce2cf65cc461a0c8628e32b8efe4151712e659e94fd9d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/motion-pair.png": "326c70c95214265ff93cacd85179d7c898233b8b7379bb2b30358e5d6ac0a7e9",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/opposite-guide-first.png": "57bbe94cbe5e740202d0dc67dac051b4404b4148d035ba9a0b85f2049560b41c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/opposite-stride.png": "ea8d365619cf0119fd3d93dcbef93dd54ad3bc3f93c4bcd2c2e66f9df9c6e11e"
+  }
+}

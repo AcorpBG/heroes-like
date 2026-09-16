@@ -1,0 +1,128 @@
+{
+  "unit_id": "unit_mireclaw_gorefen_rippers",
+  "output": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/candidate-atlas.png",
+  "sha256": "6a542e7de5cb2382c00bccf2643045fcc3a4bb8b45635b20b4403dbec704bf93",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        98,
+        29,
+        394,
+        244
+      ]
+    },
+    {
+      "name": "idle_1",
+      "index": 1,
+      "alpha_bounds": [
+        132,
+        31,
+        378,
+        245
+      ]
+    },
+    {
+      "name": "step_diagonal_a",
+      "index": 2,
+      "alpha_bounds": [
+        103,
+        53,
+        393,
+        224
+      ]
+    },
+    {
+      "name": "step_diagonal_b",
+      "index": 3,
+      "alpha_bounds": [
+        105,
+        51,
+        387,
+        239
+      ]
+    },
+    {
+      "name": "bite_windup",
+      "index": 4,
+      "alpha_bounds": [
+        134,
+        56,
+        383,
+        251
+      ]
+    },
+    {
+      "name": "bite_contact",
+      "index": 5,
+      "alpha_bounds": [
+        112,
+        74,
+        439,
+        252
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 6,
+      "alpha_bounds": [
+        127,
+        42,
+        365,
+        253
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 7,
+      "alpha_bounds": [
+        128,
+        58,
+        388,
+        246
+      ]
+    },
+    {
+      "name": "chest_collapse",
+      "index": 8,
+      "alpha_bounds": [
+        96,
+        109,
+        389,
+        239
+      ]
+    },
+    {
+      "name": "side_fall",
+      "index": 9,
+      "alpha_bounds": [
+        130,
+        129,
+        412,
+        252
+      ]
+    },
+    {
+      "name": "dead_closed_eye",
+      "index": 10,
+      "alpha_bounds": [
+        78,
+        140,
+        396,
+        242
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_gorefen_rippers/poses.png": "04a33ad1eda8dcc21f7da4e7cf49b4c63b5b826c3b9b77284285979ef0a76525",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-alpha/step-diagonal-a-green.png": "40fb77569e27031049dc32d1252167d43018a5b13f396bba4f7c02116f5d38da",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-alpha/step-diagonal-b-margin-green.png": "6a8be693017e20dc9d4d327f61198214b425aeecf2ff8b78ce8f6d955a4439e6",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-alpha/chest-collapse-green.png": "7e3509a134d8ed049efeaa8d1825fcdb082b980259f32504b00fca8e56c2185f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-alpha/dead-eye-closed-green.png": "5617d6ee6d55c3f425016fcf037522488e04335ffa4e6ec8f4a5692143ed4bca"
+  }
+}

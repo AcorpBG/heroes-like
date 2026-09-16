@@ -1,0 +1,121 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_neutral_basalt_wardens",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "source": "mace-recovery-ready-and-passing.png",
+      "source_sha256": "9c46edeff5ca22022deae39f88909cde2b000c7f4bd3d3df15a21152defd1f7b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-deb46e40-7deb-43dd-bc2b-4593161ab197.png",
+      "prompt": "Use case: stylized-concept. Original Basalt Warden battle animation additions. Image1 fixed identity/reference. Paint THREE full-body poses in ONE horizontal row, equal anatomical size and fixed elevated three-quarter RIGHT-facing camera, clear wide gutters. Preserve young adult pale face/wavy brown shoulder-length hair, charcoal scarf, dark armor/silver shoulder and knee plates, brown belts/boots, gray split tabard. LEFT arm carries ONE enormous full-height angular BLACK BASALT slab shield with peaked corners and copper straps, same shape/scale in every pose; RIGHT hand at near/screen-LEFT shoulder carries ONE short brown/metal-haft faceted basalt mace. LEFT pose: recover from downward right-hand strike, right elbow flexes drawing mace back upward toward right hip after follow-through across torso; complete mace head/shaft/right grip visible in FRONT of shield, not appearing out of unrelated far edge. MIDDLE pose: shallow defensive ready stance, knees flex slightly, LEFT shield braces upright covering left side/chest, RIGHT glove visibly holds mace vertically beside screen-LEFT shoulder OUTSIDE the shield silhouette, full shaft from hand to head clear. No floating mace, no invisible grip behind shield. RIGHT pose: actual walking PASSING step, one boot flat planted vertically below hips, other knee bent with boot raised behind/under body, NOT split contact stride. Shield held clear of moving legs LEFT, right hand keeps same mace low at right hip. No mirrored torso/hand swaps, no new weapon. Full shield bottom, corners, hair, mace and both boots in frame. Match painterly original muted palette. Flat opaque pure magenta RGB255,0,255 background without reflected color, shadows, grid, text, effects or scenery.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/basalt-continuity-20260916/idle-reference/unit_neutral_basalt_wardens-poses-rect-0-0-311-416-light.png",
+          "sha256": "b3769b42aa7e410f9b814263c12d34005b90160232c530eed5dc8655ef0140b5"
+        }
+      ],
+      "selection_note": "Three poses visually inspected as source candidates; prepared-alpha composites, crop assembly and motion continuity still pending."
+    },
+    {
+      "source": "visible-grip-crouched-shield-guard.png",
+      "source_sha256": "b90c0c9095c7e441798cc3fb7eba1b8330238a71f71ec5d55f07c65da0e8059e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-fe2bc43b-7f3d-4ca1-b47f-e228fe041621.png",
+      "prompt": "Use case: precise-object-edit. Original Basalt Warden defense frame. Image1 EXACT edit target and fixed reference. Paint ONE complete full-body figure. Change ONLY the stance into a deeper grounded defensive crouch: bend BOTH knees, lower hips/chest, left elbow braces the SAME full-height peaked basalt slab shield upright forward/right while keeping its bottom near ground. Preserve exact young man's face/wavy brown hair/scarf/armor/gray tabard/boots and original camera three-quarter RIGHT. Crucial: keep RIGHT hand/forearm/mace together in the SAME CLEAR configuration as reference at SCREEN LEFT of shield; right glove visibly wraps the short vertical haft and faceted mace head stays above that glove, visible outside shield silhouette. No mace appearing out the far/right edge of shield, no hidden grip, no floating head. Entire original shield corners/copper straps, mace head/shaft/butt and BOTH boots visible; no scale changes, weapon/body redesign, extra limbs or cropped hair. Both soles grounded with knees bent, not a kneeling death pose. Same painterly original style and palette. Flat opaque pure magenta RGB255,0,255 backing, no reflected magenta, no floor shadow, labels/effects/scenery.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/basalt-continuity-20260916/guard-reference/unit_neutral_basalt_wardens-mace-recovery-ready-and-passing-rect-558-110-1039-960-light.png",
+          "sha256": "9b43c7c282d7e4d55c5eb88ede20e71fd27ee65aa184838e678a6f48675e0889"
+        }
+      ],
+      "selection_note": "Unselected because right edge of shield is clipped by source canvas. Preserve original as failure evidence; framed derivative required."
+    },
+    {
+      "source": "visible-grip-crouched-shield-guard-full.png",
+      "source_sha256": "b2523d6b2b782ee707f9809a3af3b18ad1e8d610cdf5e869533c875b1c005ec4",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d3104a16-2b31-43c1-96d4-8a394babfb87.png",
+      "prompt": "Use case: precise-object-edit. Image1 is exact edit target. Its RIGHTMOST shield edge is visibly cut by canvas. Fix framing ONLY: use a wider landscape canvas, center this SAME complete crouched Basalt Warden, extend/reconstruct the missing right edge and copper straps/corners of the basalt shield from existing artwork, and put at least 100px flat-magenta empty margin beyond EVERY painted extremity. Show the ENTIRE tall shield and its whole pointed lower corner, full left mace and both boots. Preserve exact anatomy, bent knees, visible right glove/shaft/maul, pose, face, hair, armor, tabard, palette and relative dimensions; do NOT stretch, crop, zoom in or make the shield narrower. If needed uniformly scale the ENTIRE intact figure to fit but not individual parts. ONE figure only with room all around, no labels/shadows/text/new effects. Same flat opaque pure magenta background RGB255,0,255. This is outpainting/reframing the clipped shield edge, not a redesign.",
+      "references": [
+        {
+          "path": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-fe2bc43b-7f3d-4ca1-b47f-e228fe041621.png",
+          "sha256": "b90c0c9095c7e441798cc3fb7eba1b8330238a71f71ec5d55f07c65da0e8059e"
+        }
+      ],
+      "selection_note": "Selected full-shield derivative, deeper knee-flex with visible right glove/shaft/head outside shield. Replaces original obscured-grip guard. Full paint retained with uniform anatomical scale."
+    }
+  ],
+  "selected_frames": [
+    {
+      "index": 0,
+      "name": "idle_a",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 1,
+      "name": "idle_b",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 2,
+      "name": "walk_contact",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 3,
+      "name": "walk_passing",
+      "source": "continuity-alpha/mace-recovery-ready-and-passing.png"
+    },
+    {
+      "index": 4,
+      "name": "mace_windup",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 5,
+      "name": "mace_down_strike",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 6,
+      "name": "mace_recovery",
+      "source": "continuity-alpha/mace-recovery-ready-and-passing.png"
+    },
+    {
+      "index": 7,
+      "name": "mace_visible_ready",
+      "source": "continuity-alpha/mace-recovery-ready-and-passing.png"
+    },
+    {
+      "index": 8,
+      "name": "crouched_guard_visible_mace_grip",
+      "source": "continuity-alpha/visible-grip-crouched-shield-guard-full.png"
+    },
+    {
+      "index": 9,
+      "name": "hit_mace_retained",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 10,
+      "name": "death_kneel",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 11,
+      "name": "death_side_fall",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 12,
+      "name": "dead_head_left_shield_and_mace",
+      "source": "alpha/poses.png"
+    }
+  ],
+  "review_notes": [
+    "13 frames retain nine original paintings and select four new paintings. Mace recovery, clearly gripped ready defense, planted passing and deeper guarded knee-flex are packed. The old obscured-grip defense remains unselected. New guard keeps complete right glove/shaft/head outside shield.",
+    "The first new guard clipped its shield at the source canvas; retained unselected. Built-in reframing reconstructs the missing shield edge with complete corners/straps. Approved bounded preparation and uniform anatomical scales preserve paintings. Inspected narrow crop bands separate overlapping neighbor corpse hair/shield/boots without losing this unit's own shield and detached corpse mace.",
+    "Candidate only: full alternating gait, shield/mace/body dimensions and limb/grip/stance continuity, palette/edges and connected timing need full-roster refinement. Final whole atlas inspected; no automated/import/gameplay/platform acceptance."
+  ]
+}

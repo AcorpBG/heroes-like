@@ -1,0 +1,128 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_mirehorn_breakers",
+  "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/candidate-atlas.png",
+  "sha256": "36186bf3dda5c5398825572151bad04e03984daab98b9fadba3445b9de950132",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        77,
+        31,
+        378,
+        245
+      ]
+    },
+    {
+      "name": "idle_1_planted",
+      "index": 1,
+      "alpha_bounds": [
+        95,
+        45,
+        374,
+        244
+      ]
+    },
+    {
+      "name": "step_diagonal_a",
+      "index": 2,
+      "alpha_bounds": [
+        65,
+        26,
+        378,
+        238
+      ]
+    },
+    {
+      "name": "step_diagonal_b",
+      "index": 3,
+      "alpha_bounds": [
+        69,
+        27,
+        376,
+        240
+      ]
+    },
+    {
+      "name": "ram_windup",
+      "index": 4,
+      "alpha_bounds": [
+        79,
+        38,
+        369,
+        244
+      ]
+    },
+    {
+      "name": "ram_contact",
+      "index": 5,
+      "alpha_bounds": [
+        59,
+        42,
+        382,
+        239
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 6,
+      "alpha_bounds": [
+        97,
+        62,
+        344,
+        240
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 7,
+      "alpha_bounds": [
+        78,
+        15,
+        356,
+        242
+      ]
+    },
+    {
+      "name": "kneel",
+      "index": 8,
+      "alpha_bounds": [
+        71,
+        54,
+        366,
+        242
+      ]
+    },
+    {
+      "name": "side_fall",
+      "index": 9,
+      "alpha_bounds": [
+        71,
+        111,
+        364,
+        245
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 10,
+      "alpha_bounds": [
+        91,
+        117,
+        370,
+        252
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/original.png": "5eab6685c5a7f22caf3c594f6ab58b08320e8adf51122d20f21d0fb0340232b6",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/idle.png": "a666d633c1d7f40fe07c004b05c8a82e4fba2ffa3ab7595028ba349b2e183417",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/step-diagonal-a-green.png": "04b30411d03e112da0de624e8836129d5ffdf404e3cacf02c595bf9c0f2a8e76",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/step-diagonal-b-green.png": "bc56e7bb123eef6ca0c712f22a7d9f86454f73857ac0145fb385a42db1851034",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/ram-contact-four-paw-green.png": "5cd06903c5e372353da8059acd578cc1c58c090c9555b977e5bb3c8521f99378"
+  }
+}

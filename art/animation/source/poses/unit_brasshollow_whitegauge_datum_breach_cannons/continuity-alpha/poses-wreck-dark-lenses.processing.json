@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "poses-wreck-dark-lenses",
+  "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/poses-wreck-dark-lenses.png",
+  "source_sha256": "6413d30bc71db9bb79a5e3cb5cc1372942fbb05e2f2435f380bed0ec51ad0ae0",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-wreck-dark-lenses.png",
+  "output_sha256": "831c6e1a45c134d3968203470de94b233e9aef3a66405303cf3551ff3316641a",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-cutouts.json",
+  "recipe_sha256": "f10222212c65234e227c92423968109a3cd7d512e25f9c31e862083e9512b4c9",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 170,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 832303,
+    "edge_pixels": 24005,
+    "unchanged_paint_pixels": 716220,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

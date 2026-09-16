@@ -1,0 +1,79 @@
+{
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "reference_crops": [
+    {
+      "file": "standing-reference-light.png",
+      "sha256": "649f3d914cb765280afa6049911052b229c4a399db3ee99b68907464de2399ac",
+      "source": "poses.png",
+      "source_sha256": "46ab7e6db8f9fad4763c42293557413d4170449b56841e0f05f9fe49be491680",
+      "rect": [
+        0,
+        35,
+        355,
+        347
+      ],
+      "method": "Prepared source crop and nearest4x light composite before final enclosed-gap seeds; exact reference PNG retained."
+    },
+    {
+      "file": "pushing-reference-light.png",
+      "sha256": "3c7c44f9bde83fb7f2833318a1f78e9f8b502defa4e1cf9ad30ccc0d0c617a2c",
+      "source": "poses.png",
+      "source_sha256": "46ab7e6db8f9fad4763c42293557413d4170449b56841e0f05f9fe49be491680",
+      "rect": [
+        720,
+        35,
+        1096,
+        347
+      ],
+      "method": "Prepared source crop and nearest4x light composite before final enclosed-gap seeds. Final packing uses wider x716 crop to preserve left boot."
+    }
+  ],
+  "sources": [
+    {
+      "file": "walk-outer-lift-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-dfe2ce75-abd6-4091-9387-6589d1395abe.png",
+      "prompt": "Use case: precise-object-edit. Input image 1 is the edit target and exact original machine/crew identity. Produce ONE next walking animation pose, same elevated three-quarter camera facing right. Change only crew lower-body stepping and wheel spoke angles: BOTH crew's visible OUTER boots (leftmost boot of left worker, rightmost boot of right worker) lift clearly above ground, knees bent and boots tucked inward; each worker's other leg remains planted behind its wheel. Their heads, torsos, two hands and existing grips stay in the exact positions. Rotate spoke patterns about the SAME fixed wheel hubs by about 25 degrees clockwise without changing wheel count or diameter. Entire wooden/brass four-wheel mangonel, central pivot, raised arm, bronze counterweight, loaded claw cup, two blue pumps, gauges and red heraldic panel stay exactly the same size and construction. Exactly two complete red-clad brass-helmeted crew, no extra hands or feet. Frame the entire group with generous margins and same body proportions. Original painterly raster, no label, ground shadow or added effects. Background uniformly pure green RGB 0,255,0 including every empty aperture between arm/ropes/crew/wheels; no green on the people or equipment and no green reflected spill. This is a short pushing step, not a different composition.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/pushing-reference-light.png"
+      ],
+      "sha256": "12db7db1d496bf2519176b3a9bd30f148dac19258ee971433f38aa57cc565dff",
+      "selected": true,
+      "selection": "Both visible outer boots lifted with changed wheel spokes; inner support is partly occluded. Interleave original planted contact; not final translated gait acceptance."
+    },
+    {
+      "file": "walk-inner-lift-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d263946a-6368-49b6-8769-065adc2e5351.png",
+      "prompt": "Use case: precise-object-edit. Input image 1 is the fixed original identity and camera reference. ONE complementary short-step walking sprite. BOTH workers now plant their OUTER boots flat on ground (leftmost boot for worker at left, rightmost boot for worker at right). Each worker lifts his OTHER inner knee/boot beside the adjacent wheel; visibly show the lifted boot through or just outside the side gap, without changing legs or adding limbs. Keep two legs per person, anatomically joined to their own hips. Heads/torsos/hands stay at their same pumping/pushing and rope/winch stations. Rotate wheel spokes roughly 50 degrees clockwise about unchanged original hubs; four wheels on original axles, no new wheels. Preserve entire machine geometry, sizes, loaded raised throwing arm, bronze counterweight, red heraldic plate, blue pressure pumps and gauges, both red tunics/brass helmets. Same fixed elevated three-quarter right-facing view, full group inside generous margins, same original painterly raster. Background pure flat green RGB 0,255,0 in all empty spaces including enclosed apertures, no green equipment/reflections, no ground/shadow/text or effects. Deliberate alternating supporting feet, not a new machine or two airborne workers.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/pushing-reference-light.png"
+      ],
+      "sha256": "6955850d0546b4a5bac5555e60804f174ad93c06597be9b45c15a91effda7a97",
+      "selected": true,
+      "selection": "Complementary lifted inner boots with outer feet planted; retains two crew and their machine stations. Wheel ordering and connected support remain final review items."
+    },
+    {
+      "file": "melee-windup-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-87bdab12-4687-43c9-9054-4475e9180cff.png",
+      "prompt": "Use case: precise-object-edit. Input image is edit target, preserve exact original mangonel and two crew. ONE close-range MELEE ANTICIPATION animation pose. Change only the RIGHT worker: he steps just to the right of the right wheel, turns his chest toward the offscreen enemy on RIGHT, bends knees into a braced stance. His LEFT hand keeps a firm supporting grip on the winch frame. His RIGHT arm is pulled back, right gloved fist beside his shoulder with elbow bent, preparing a short straight punch toward RIGHT. No weapon added. He remains the same red-tunicked brass-helmeted worker and same body size. The LEFT pump worker stays at his original station with both hands on pump handle. Keep every machine part completely unchanged: original four wheels/axles, raised loaded arm, cup/stone, spherical counterweight, frame proportions, red panel, blue pumps and gauges. Exactly two complete workers, no duplicated hands or legs. Same fixed elevated three-quarter view and painterly raster; full group/fist/boots framed with broad margins. Empty background and all enclosed gaps pure green RGB 0,255,0, no green on paint/reflected light. No text, ground, shadow, hit flash or projectile.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/standing-reference-light.png"
+      ],
+      "sha256": "60f94f46f20e68332a4fd6f861e614c92a2f1cce55aea144a67371463c52a594",
+      "selected": true,
+      "selection": "Right-side crew raises outer fist while other hand remains on rope; no new weapon. Name actual screen-side action rather than claiming anatomical hand from prompt."
+    },
+    {
+      "file": "melee-contact-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-86206d65-e1f9-4c2e-b205-15516eecea33.png",
+      "prompt": "Use case: precise-object-edit. Input image is the exact preceding melee windup. Make ONE contact frame by changing ONLY the right worker's already-raised fist arm: extend THAT same arm fully in a straight shoulder-height punch to screen RIGHT, slight forward shoulder twist. The other hand remains firmly on the SAME rope at the SAME position, never swapped. Same right worker face/helmet/tunic/body size and feet, same left worker pumping unchanged. Do not add a third arm or change grip anatomy. Preserve the entire original mangonel, its four wheels and hub positions, raised loaded throwing arm, counterweight, panels, gauges and pumps exactly. Widen green canvas at RIGHT as necessary so complete fist has at least 60 pixels of margin; do not shrink individual people or machine to fit. Same elevated three-quarter camera, crisp original painterly raster, no text, ground, shadow or impact effect. Uniform pure green RGB 0,255,0 background in every empty aperture, no reflected green or paint recoloring. This is a connected straight punch after the shown anticipation, not a different attack.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/melee-windup-green.png"
+      ],
+      "sha256": "ab0d578f8fb44b6ca3de8dc4251b58f2c1fd969fe3c0a4d8760a05988368e8df",
+      "selected": true,
+      "selection": "Same outer fist extends toward right, other hand retains rope; additional canvas keeps fist framed."
+    }
+  ]
+}

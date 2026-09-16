@@ -1,0 +1,77 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative background and edge cleanup on 2026-09-15; original masters and interior paint must remain unchanged.",
+  "jobs": [
+    {
+      "id": "motion-pair",
+      "source": "art/animation/source/poses/unit_brasshollow_rivet_hounds/motion-pair.png",
+      "source_sha256": "057c34aa32fc537e72f1589bce31966178a279e3cf6783130c13f4d90b8c565c",
+      "output": "art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/motion-pair.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            357,
+            484
+          ],
+          [
+            534,
+            459
+          ]
+        ]
+      }
+    },
+    {
+      "id": "breath-guard-pair",
+      "source": "art/animation/source/poses/unit_brasshollow_rivet_hounds/breath-guard-pair.png",
+      "source_sha256": "84181d9d71f04412ed068c65e4c30915acb48e795f40194dd893e5e730669e59",
+      "output": "art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/breath-guard-pair.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            1432,
+            572
+          ]
+        ]
+      }
+    },
+    {
+      "id": "opposite-stride",
+      "source": "art/animation/source/poses/unit_brasshollow_rivet_hounds/opposite-stride.png",
+      "source_sha256": "f9b7968cbd273d8db03123d709607b5e383951c257fd274112670d67aa2e0926",
+      "output": "art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/opposite-stride.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "opposite-guide-first",
+      "source": "art/animation/source/poses/unit_brasshollow_rivet_hounds/opposite-guide-first.png",
+      "source_sha256": "d1ff4c5f34bbb830fd2702a3e7b944010ffbdd6a86b0dff3115d9e0136a894ee",
+      "output": "art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/opposite-guide-first.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            686,
+            636
+          ]
+        ]
+      }
+    }
+  ]
+}

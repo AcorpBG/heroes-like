@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative background and edge cleanup on 2026-09-15; original masters and interior paint must remain unchanged.",
+  "id": "opposite-guide-first",
+  "source": "art/animation/source/poses/unit_brasshollow_rivet_hounds/opposite-guide-first.png",
+  "source_sha256": "d1ff4c5f34bbb830fd2702a3e7b944010ffbdd6a86b0dff3115d9e0136a894ee",
+  "source_rect": [
+    0,
+    0,
+    1426,
+    1103
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-alpha/opposite-guide-first.png",
+  "output_sha256": "57bbe94cbe5e740202d0dc67dac051b4404b4148d035ba9a0b85f2049560b41c",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_rivet_hounds/continuity-cutouts.json",
+  "recipe_sha256": "1f7a0967f733b75c5388407e14ff54848fec0cb4e0abe080e8082ac3266f2372",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        686,
+        636
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1088060,
+    "edge_pixels": 5635,
+    "unchanged_paint_pixels": 479183,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

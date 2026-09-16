@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source pixels/recipes, no invented or warped poses.",
+  "id": "ferry-lash-connected-green",
+  "source": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/lash-connected-green.png",
+  "source_sha256": "00fdd0af9661bb0c82d1569e4d3e6f39d7a2a53391a1b474bd57cf24f4f7c6c0",
+  "source_rect": [
+    0,
+    0,
+    1500,
+    1049
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/continuity-alpha/lash-connected-green.png",
+  "output_sha256": "d1ed13e31b297398aeef62416c7efb7bb8bedff23dc40756976cac95bbfc09c8",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/continuity-cutouts.json",
+  "recipe_sha256": "6f97cc99dfcf9c9cf7a6998dd1628ffa1d625394ec5422a1c244b04dd4580092",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1204411,
+    "edge_pixels": 13147,
+    "unchanged_paint_pixels": 355942,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

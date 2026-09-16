@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "poses-hit-hand-corrected",
+  "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/poses-hit-hand-corrected.png",
+  "source_sha256": "762b34eee0b2d0b6af84d6fdb34aeaa35690e394676b1536b8558b66e2545cb9",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-hit-hand-corrected.png",
+  "output_sha256": "4c8b1d31b3f62758cfdb1f0c094307d3a538c06a4cbab88a189ff2ab3e580655",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-cutouts.json",
+  "recipe_sha256": "dc14a905cd3faff768a8d03ad70f6b4b77fdf920d2b454c66a1491e645669059",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 170,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        148,
+        858
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1214842,
+    "edge_pixels": 12698,
+    "unchanged_paint_pixels": 345324,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

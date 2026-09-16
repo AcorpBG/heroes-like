@@ -1,0 +1,40 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "date": "2026-09-16",
+  "tool": "image_gen.imagegen",
+  "mode": "built_in",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_not_final_accepted",
+  "outputs": [
+    {
+      "id": "travel-reload-and-guard",
+      "source": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/travel-reload-and-guard.png",
+      "source_sha256": "77a64b2d93b2b75fb51aecea76eb9b056fe44d2615dd16898bad115b9688a1fd",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ba0f87f2-d8c1-4029-8d8b-b67305c4622f.png",
+      "prompt": "Use case: identity-preserve. Asset type: original painted fantasy battle sprite animation supplement. Input image 1 is the exact identity and paint-style reference, not a pose to duplicate. Create a 3-column by 2-row sheet, SIX complete clearly separated poses, consistent scale, camera and ground baseline, ample transparent margins around every silhouette. Genuine transparent background, no drawn checker pattern, no ground shadow, no scenery, no text, no labels, no arrows. Preserve all equipment and anatomical ownership. Render new articulated poses, not translations, zooms, or whole-body rotations. Keep every part inside its cell.\nPreserve exact LEFT-facing wheeled rivet cannon with TWO goblin crew only: upper gunner and near-side loader, brass pointed caps, orange goggles, gray face scarves, leather coats; two brass-rim wheels, white mantlet plates, large leftward barrel, rear upright boiler with orange vents, gauges, black hoses, hot rivet rack, red/ivory cog banner. No third crew. Top-left travel phase: front stabilizer fully retracted ABOVE ground under chassis, gunner holds lever, near loader walks alongside with near boot forward and far boot behind; visible gap below stabilizer. Top-middle travel passing: stabilizer remains raised, loader one boot supports and other swings under hips, wheel spokes rotated modestly, gunner leans for balance. Top-right opposite travel contact: stabilizer raised, loader FAR boot now forward and near boot behind, no mirroring of cannon or crew, same left-facing orientation. Bottom-left reload anticipation: stationary stabilizer planted, loader pulls ONE orange-tipped rivet from rack using both hands, rivet visibly clear of gun chamber; gunner waits hand on lever. Bottom-middle reload insertion: loader pushes same ONE rivet into rear loading slot on cannon, visible hand-to-projectile-to-slot contact, barrel left, no fired projectile or blast. Bottom-right second guard: planted stabilizer, loader crouched behind near white mantlet, upper gunner ducks behind breech, both heads still individually readable; cannon unchanged, no third goblin. Do not crop banner or muzzle.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/identity-reference.png",
+          "sha256": "8827dd76d93ea3c82313e887035a15fe617cca5f0c68e34d1994296b1585555f"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "selection_note": "18-frame candidate reuses12 original RGBA paintings and6 new paintings. Raised-stabilizer travel, explicit rivet lift/insertion and second guard added; left-facing source is preserved and normalized only by runtime/preview render transform via pose_source_facing. Both crew persist into cold wreck. Third travel contact still repeats leg lead and wheel rotation is subtle; translated gait, visible reload slot/grip, punch reach, crew accounting during collapse, banner/body scale and event timing remain refinement, not acceptance. Inspected elbow/pipe/flag apertures keyed; narrow neighboring flag-tip fragments excluded with bands."
+    }
+  ],
+  "identity_reference": {
+    "source": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/alpha/poses.png",
+    "crop": "15 0 350 285",
+    "reference": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/identity-reference.png",
+    "role": "Authoring reference only; no locally synthesized pose."
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "original-poses",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/poses-defense-weight.png",
+      "source_sha256": "e0016b8f098635e17fd2929dec16b6ebeaae0b20c946d0744387d0f9fdd48a9c",
+      "output": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/original-poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 135,
+        "tolerance": 36,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            1041,
+            823
+          ],
+          [
+            700,
+            741
+          ],
+          [
+            528,
+            476
+          ],
+          [
+            493,
+            1157
+          ],
+          [
+            431,
+            741
+          ],
+          [
+            81,
+            1171
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guided-carry-and-cable-arcs",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/guided-carry-and-cable-arcs.png",
+      "source_sha256": "374f0dc425290dd7de38e726dfd12703ed88a940b6a38027baa5773f2651505e",
+      "output": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guided-carry-and-cable-arcs.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 135,
+        "tolerance": 36,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "guided-opposite-gathered-contact",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/guided-opposite-gathered-contact.png",
+      "source_sha256": "edac50acaeb05fbbd2858e539ee84b9f872708f3b7151952e5ab10b82a5cee62",
+      "output": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guided-opposite-gathered-contact.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 135,
+        "tolerance": 36,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "reel-attached-cast-cycle",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/reel-attached-cast-cycle.png",
+      "source_sha256": "5121986232f3d218e70fcfb683d3bf879b8faecbf46a29b5b59e479fdaf35209",
+      "output": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/reel-attached-cast-cycle.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 135,
+        "tolerance": 36,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            1010,
+            875
+          ],
+          [
+            1027,
+            763
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guard-weight-clear",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/guard-weight-clear.png",
+      "source_sha256": "bdce228d677db5c00147d24bb5b7a77efef1d38dea70c1f02fb2037ff195707e",
+      "output": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guard-weight-clear.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 135,
+        "tolerance": 36,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            470,
+            150
+          ],
+          [
+            636,
+            206
+          ],
+          [
+            1451,
+            357
+          ]
+        ]
+      }
+    },
+    {
+      "id": "corpse-directed-collapse",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/corpse-directed-collapse.png",
+      "source_sha256": "a2480ace8e7c540882856bf13bf8fb2a62578c22c1c5ea036e28f4802263b4a9",
+      "output": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/corpse-directed-collapse.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 135,
+        "tolerance": 36,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            953,
+            704
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit permission for local raster background removal and edge cleanup; preserve original paintings; no paid APIs",
+  "id": "quenchbell-loaded-ready",
+  "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/poses-loaded-claw-clear.png",
+  "source_sha256": "14ad1db61006780e811b7e38e10852a98995ca17b16fb5ff44d0af045a664ad2",
+  "source_rect": [
+    325,
+    640,
+    627,
+    945
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/local-alpha/loaded-ready.png",
+  "output_sha256": "389f58b5c91a6053deb0d631274f023d13dcf922f416be76ec060591b045f342",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/cutout-recovery-20260915/recipes.json",
+  "recipe_sha256": "9da53b1bc7c1369623ceee66004193b5fb1ad5fd485de3eb6153e63f3b03fd2e",
+  "parameters": {
+    "minimum": 180,
+    "tolerance": 18,
+    "all_neutral_is_background": true,
+    "edge_radius": 2
+  },
+  "measurements": {
+    "removed_background_pixels": 52786,
+    "edge_pixels": 3849,
+    "unchanged_paint_pixels": 35475,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

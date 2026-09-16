@@ -1,0 +1,70 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_debt_engine_exactors",
+  "date": "2026-09-16",
+  "tool": "image_gen.imagegen",
+  "mode": "built_in",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_not_final_accepted",
+  "outputs": [
+    {
+      "id": "creep-and-guard",
+      "source": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/creep-and-guard.png",
+      "source_sha256": "78a2b180e8dfee50bcfaee3cc6eb7a031b4122d001f79af588f92e70353cfe69",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b87f6cdd-85b8-47ec-9edf-6402a2c50fb9.png",
+      "prompt": "Use case: identity-preserve. Asset type: original painted fantasy battle sprite animation supplement. Input image 1 is the exact identity and paint-style reference, not a pose to duplicate. Create a 3-column by 2-row sheet, SIX complete clearly separated poses, consistent scale, camera and ground baseline, ample transparent margins around every silhouette. Genuine transparent background, no drawn checker pattern, no ground shadow, no scenery, no text, no labels, no arrows. Preserve all equipment and anatomical ownership. Render new articulated poses, not translations, zooms, or whole-body rotations. Keep every part inside its cell.\nKeep this exact right-facing heavy debt furnace automaton: enormous RIGHT hammer gauntlet is the near arm on viewer-left, small LEFT clamp stays viewer-right; crowned furnace helmet, two exhaust chimneys with soft white steam, orange barred chest, ledger satchel, chains, parchment seals. EXACTLY two legs, one knee per leg. Same three-quarter camera throughout, no turning. Slow weighty alternating mechanical step: top-left both soles planted with torso loaded over FAR left leg; top-middle near RIGHT leg lifted at hip, ONE bent knee, entire near boot clearly above ground in front while far boot alone supports machine; top-right near RIGHT boot settles forward and weight transfers over it, far heel rises behind. Bottom-left far LEFT boot lifted clear and advances past supporting near boot, far knee visible on viewer-right without crossing/duplicating knee plates; bottom-middle far LEFT boot lands forward while near heel lifts behind. Bottom-right second defensive pose: near huge right hammer raised diagonally across chest below face, small far clamp close beneath it, BOTH feet planted and knees braced. No extra gauntlet, no weapon hand swaps. Large clean negative gaps under lifted soles. Slow stomp, not running.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/identity-reference.png",
+          "sha256": "49efbbfeb2d51a4ff83637777d1a955997e6a4cdad41270033f1c2e30b9f3a95"
+        }
+      ],
+      "selected": false,
+      "selected_cells": [],
+      "selection_note": "Excluded from runtime: neutral key damaged soft steam; quiet-vent built-in derivative selected instead. Repeated lead contacts2/4 remain unselected."
+    },
+    {
+      "id": "creep-and-guard-chroma",
+      "source": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/creep-and-guard-chroma.png",
+      "source_sha256": "53b3e73782f7722fa5dbe9372317e4e80dd03bca9b5780c6d440865fde20e4bb",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-eaf9c501-11d3-4120-97d6-4f40b8d0013d.png",
+      "prompt": "Use case: precise-object-edit. Input image is the six-pose battle sheet to edit. Replace ONLY the gray/white checker background by a completely uniform solid saturated magenta #FF00FF authoring matte. Preserve all SIX poses in exactly their current positions, pixel dimensions, silhouette, scale, anatomy, equipment, lighting, colors and leg/hand configurations. In particular retain the soft white steam from both shoulder exhausts as continuous white/peach clouds, not jagged clipped shapes. Do NOT recolor or repaint the robot, do not add magenta rim light or magenta reflections or drop shadows. No text, no guides. Output the same complete six-pose sheet, 3 columns and 2 rows. This opaque magenta background will later be removed using approved deterministic compositing, not delivered as game art.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/creep-and-guard.png",
+          "sha256": "78a2b180e8dfee50bcfaee3cc6eb7a031b4122d001f79af588f92e70353cfe69"
+        }
+      ],
+      "selected": false,
+      "selected_cells": [],
+      "selection_note": "Excluded: magenta contamination in soft steam; no runtime use."
+    },
+    {
+      "id": "creep-and-guard-clear-vents",
+      "source": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/creep-and-guard-clear-vents.png",
+      "source_sha256": "8909feb20886e0c18c3ff1bc4fc17da4de34d7d663695db2fc6838c5eae02a2b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c98b246b-c0b6-4c10-89ff-da257b20e415.png",
+      "prompt": "Use case: precise-object-edit. Input is this exact six-pose robot sheet. Change ONE thing only: these are the CLOSED-VENT interval frames of its intermittent steam cycle, so remove every white/peach airborne steam cloud and flame tongue above the two shoulder exhaust outlets in ALL SIX cells. Both physical chimney pipes and their warm orange INNER openings remain intact. No smoke, no steam, no external flames, no airborne particles anywhere. Preserve exactly the existing six poses, anatomy, knee/foot placements, near huge right hammer/far small left clamp ownership, all equipment, camera, scale, painting, layout and background. Do not make new poses, do not recolor or rotate the robot. Keep the entire six-pose sheet in 3 columns x 2 rows. Transparent background preferred, no magenta or colored backing. This is a timed quiet interval between steam puffs; the machine remains alive with orange chest and visor.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/creep-and-guard.png",
+          "sha256": "78a2b180e8dfee50bcfaee3cc6eb7a031b4122d001f79af588f92e70353cfe69"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        3,
+        5
+      ],
+      "selection_note": "13-frame candidate reuses9 original RGBA paintings and4 new quiet-vent paintings. All-planted pose alternates with distinct near/far foot lifts as slow mechanical creep; repeated-leading-leg contact drafts are not selected. New second hammer guard retains near huge right gauntlet and far small left clamp. Original idle steam, corrected strike and cold corpse retained. Neutral-steam key produced jagged cloud edges; magenta matte edit contaminated steam pink and is excluded. Built-in quiet-vent interval removes only airborne plumes while retaining physical outlets; original clean steam stays in idle. Continuous translated support/travel, vent transitions, torso/arm/body scale and timing still require full-roster review."
+    }
+  ],
+  "identity_reference": {
+    "source": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/alpha/poses.png",
+    "crop": "25 0 342 365",
+    "reference": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/identity-reference.png",
+    "role": "Authoring reference only; no locally synthesized pose."
+  }
+}
