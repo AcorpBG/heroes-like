@@ -1,0 +1,189 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "output": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/candidate-atlas.png",
+  "sha256": "50d52c33b78d2121fa8fd62b336a20b7da619cac322cf28f8b7d1ccbb007d1b2",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_loaded_a",
+      "index": 0,
+      "alpha_bounds": [
+        193,
+        22,
+        322,
+        240
+      ]
+    },
+    {
+      "name": "idle_loaded_b",
+      "index": 1,
+      "alpha_bounds": [
+        195,
+        21,
+        316,
+        241
+      ]
+    },
+    {
+      "name": "travel_planted",
+      "index": 2,
+      "alpha_bounds": [
+        208,
+        20,
+        336,
+        239
+      ]
+    },
+    {
+      "name": "travel_near_foot_lift",
+      "index": 3,
+      "alpha_bounds": [
+        203,
+        20,
+        336,
+        233
+      ]
+    },
+    {
+      "name": "travel_far_foot_lift",
+      "index": 4,
+      "alpha_bounds": [
+        208,
+        20,
+        336,
+        239
+      ]
+    },
+    {
+      "name": "right_fist_windup",
+      "index": 5,
+      "alpha_bounds": [
+        176,
+        32,
+        328,
+        241
+      ]
+    },
+    {
+      "name": "right_cross_left_cradled_bow",
+      "index": 6,
+      "alpha_bounds": [
+        175,
+        19,
+        335,
+        239
+      ]
+    },
+    {
+      "name": "right_cross_recovery_left_cradled_bow",
+      "index": 7,
+      "alpha_bounds": [
+        181,
+        19,
+        332,
+        239
+      ]
+    },
+    {
+      "name": "deep_guard",
+      "index": 8,
+      "alpha_bounds": [
+        165,
+        69,
+        354,
+        241
+      ]
+    },
+    {
+      "name": "hit_retained_bow",
+      "index": 9,
+      "alpha_bounds": [
+        179,
+        29,
+        336,
+        238
+      ]
+    },
+    {
+      "name": "reload",
+      "index": 10,
+      "alpha_bounds": [
+        186,
+        12,
+        324,
+        241
+      ]
+    },
+    {
+      "name": "loaded_aim",
+      "index": 11,
+      "alpha_bounds": [
+        163,
+        25,
+        351,
+        241
+      ]
+    },
+    {
+      "name": "empty_release_front_string",
+      "index": 12,
+      "alpha_bounds": [
+        167,
+        20,
+        354,
+        239
+      ]
+    },
+    {
+      "name": "empty_recovery_front_string",
+      "index": 13,
+      "alpha_bounds": [
+        179,
+        12,
+        331,
+        239
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        168,
+        76,
+        343,
+        241
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 15,
+      "alpha_bounds": [
+        151,
+        118,
+        364,
+        242
+      ]
+    },
+    {
+      "name": "dead_head_right_bow_retained",
+      "index": 16,
+      "alpha_bounds": [
+        153,
+        156,
+        358,
+        241
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png": "777d3d698814327944e1dbfbf29c02f7a1c4121062dcc5d062678b2d0912a62a",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/planted.png": "82c45ecb1b2a38ecca771c28a3fc002504d66426a11487fc188c2545c46819d0",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/near-lift-selected.png": "39f82849ef7f555cf05dc3fc1609e87f3b2c3db0304d01e539ff8f219e76791e",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/far-lift.png": "2e2fb442340c7bdcadb3309405d561928c3210871c05db3fbe994409c9ef2ad4",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/right-cross-recovery-and-loaded-passing.png": "bf99bcc7b91d25add608eaae5a324ad3cbc5d54679abb7b10cdebbb535976202",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/fired-front-nocks-corrected.png": "9cb156b7560bbd1f836255037ddc51951cded6e402b9d311b2500ac948e2cd24"
+  }
+}

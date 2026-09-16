@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "short-spear-actions-and-passing-step",
+      "file": "short-spear-actions-and-passing-step.png",
+      "sha256": "1b1967763c7cd95327ef251afad14dee97a53fc1fc9215fcaa2647b25ec7dfc0",
+      "tool": "built_in_image_gen",
+      "model": "not_exposed_by_tool",
+      "prompt": "Use case: stylized-concept. FOUR original full-body battle-animation poses arranged TWO columns TWO rows with wide clear gutters, identical scale. Image 1 is sole identity/equipment reference: stocky stern stubbled man in charcoal hood with bronze arrow badge, dark iron armor bronze rivets/edges, olive tabard, rope/leather pouches, heavy armored boots. LEFT forearm always bears tall oval dark wooden shield with bronze rim and amber cage lantern fixed to FRONT; RIGHT hand holds ONE short straight wooden spear with full metal point. Preserve exact spear design and SHORT length, overall butt-to-tip only about shoulder-to-knee distance, never a long pike. Same elevated three-quarter view facing RIGHT in all panels. TOP LEFT: spear windup, right elbow draws fist back beside shoulder, complete spear horizontal, tip pointing RIGHT above shield. TOP RIGHT: right-arm forward spear thrust RIGHT, arm extended, forward knee bent, left lantern shield covers torso. BOTTOM LEFT: recovery, right elbow halfway drawn back to ribs and short spear lowering diagonally RIGHT, torso rises, shield still left. BOTTOM RIGHT: walking passing step, weight on straight planted front leg under hips, other knee bent with rear boot lifted behind and passing toward planted calf, spear low in right hand shield on left; do not repeat extended stride. Full heads, boots, spear ends and lantern shields within generous margins. Match original painterly raster and proportions, one body each panel. Flat pure BLUE #0000FF without spill. No shadows, scenery, grids, text, blood, effects, detached equipment or extra limbs.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/tunnel-continuity-20260916/idle-reference/unit_neutral_tunnel_lanterns-poses-rect-0-0-315-420-light.png",
+          "sha256": "273d899aaf5063c2a217441c258eb649774536eb84cbe2daad211837c693f5e1"
+        }
+      ],
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-df9443d6-503d-4bbe-82de-9207d481d57e.png",
+      "selection": "Selected; exact crops/scales/anchors in packing.json. Static composites inspected, not final connected-motion acceptance.",
+      "selected_frames": [
+        "walk_passing",
+        "short_spear_windup",
+        "short_spear_thrust",
+        "short_spear_recovery"
+      ]
+    }
+  ],
+  "review_notes": [
+    "12 packed frames retain eight original paintings and select four new paintings: short-spear windup/thrust/recovery and a bent-knee passing step. The longer old action spear and repeated extra contacts are unselected. Left-arm lantern shield, right-hand spear and extinguished final corpse lantern remain.",
+    "Original genuine alpha is reused. Approved blue preparation, uniform anatomical scales (old 0.60, new 0.35) and explicit crop bands preserve spear tips and keep neighboring thrust paint out of the crouched shield pose.",
+    "All-state candidate only. Contact/passing are distinct but a complete alternating support cycle remains unproven. Spear length/perspective and rear-butt visibility through thrust, shield/body proportions, lantern state, palette/edge continuity and connected timing remain refinement. No automated tests/imports/gameplay/platform validation in this increment."
+  ]
+}

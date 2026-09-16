@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "right-cross-recovery-and-loaded-passing",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/right-cross-recovery-and-loaded-passing.png",
+      "source_sha256": "0e7db33a918126baba3312264bf8bea8bf67d7175a7a2dd1f46171c55dd6f560",
+      "output": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/right-cross-recovery-and-loaded-passing.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "fired-front-nocks-corrected",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/fired-front-nocks-corrected.png",
+      "source_sha256": "3b30410eadbc0f5379fabba8b93ace9dc5e0f2ab1c973ab4b98286588153b3dd",
+      "output": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/fired-front-nocks-corrected.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

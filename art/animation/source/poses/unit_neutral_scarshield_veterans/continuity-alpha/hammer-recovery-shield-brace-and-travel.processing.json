@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "hammer-recovery-shield-brace-and-travel",
+  "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/hammer-recovery-shield-brace-and-travel.png",
+  "source_sha256": "4a8963f273de3bfddd384b8ec9c896c94ec039a5e94233713bd26bd42b4a2428",
+  "source_rect": [
+    0,
+    0,
+    1082,
+    1454
+  ],
+  "output": "art/animation/source/poses/unit_neutral_scarshield_veterans/continuity-alpha/hammer-recovery-shield-brace-and-travel.png",
+  "output_sha256": "ca85940c4db5f5f6dace1a991515188b536feb5a580709987f5b9219e1674cf8",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_scarshield_veterans/continuity-cutouts.json",
+  "recipe_sha256": "111d4ecd959b567262db47bade1cc4ab59d5356b238bda18e283ae4dee5ccd94",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 844204,
+    "edge_pixels": 26730,
+    "unchanged_paint_pixels": 702294,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

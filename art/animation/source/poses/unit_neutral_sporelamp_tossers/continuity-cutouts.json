@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "jobs": [
+    {
+      "id": "four-phase-step-left-lamp-and-left-corpse-blue",
+      "source": "art/animation/source/poses/unit_neutral_sporelamp_tossers/four-phase-step-left-lamp-and-left-corpse-blue.png",
+      "source_sha256": "cacd76113aa04c1341ed4cfa67c43a38b852c417d6884371f26ba6f8889d6a2a",
+      "output": "art/animation/source/poses/unit_neutral_sporelamp_tossers/continuity-alpha/four-phase-step-left-lamp-and-left-corpse-blue.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

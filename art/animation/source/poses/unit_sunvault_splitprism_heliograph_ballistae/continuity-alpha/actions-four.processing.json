@@ -1,0 +1,130 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "heliograph-actions-four",
+  "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/actions-four.png",
+  "source_sha256": "e40dc15ca4aa239f46e037f735a63dc225e5b7c15dc2ccb96c08a5a404f2142f",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/actions-four.png",
+  "output_sha256": "04121f36568899198532dda4388a7e0a04768cffd2c1bf16f1273fa47234fe46",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "732acb7b8f20636e57c5a5479a01928c28f52c8eaf068c4b28f1baee0b970be4",
+  "recipe": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-cutouts.json",
+  "recipe_sha256": "1361aee5de2be1f63099dc2e8d4644a0e573728f65b61f3b307017d9d4902fc5",
+  "parameters": {
+    "minimum": 100,
+    "maximum": 185,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        852,
+        186
+      ],
+      [
+        235,
+        187
+      ],
+      [
+        444,
+        246
+      ],
+      [
+        1085,
+        253
+      ],
+      [
+        542,
+        279
+      ],
+      [
+        536,
+        288
+      ],
+      [
+        386,
+        318
+      ],
+      [
+        995,
+        326
+      ],
+      [
+        212,
+        427
+      ],
+      [
+        826,
+        430
+      ],
+      [
+        844,
+        437
+      ],
+      [
+        1015,
+        481
+      ],
+      [
+        995,
+        485
+      ],
+      [
+        385,
+        483
+      ],
+      [
+        214,
+        746
+      ],
+      [
+        416,
+        793
+      ],
+      [
+        494,
+        816
+      ],
+      [
+        524,
+        838
+      ],
+      [
+        521,
+        851
+      ],
+      [
+        366,
+        876
+      ],
+      [
+        205,
+        983
+      ],
+      [
+        390,
+        1034
+      ],
+      [
+        371,
+        1042
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1130408,
+    "edge_pixels": 12581,
+    "unchanged_paint_pixels": 429527,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

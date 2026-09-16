@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "right-fist-strike-recovery-and-ready",
+      "source": "art/animation/source/poses/unit_neutral_lanternskate_throwers/right-fist-strike-recovery-and-ready.png",
+      "source_sha256": "98ba0702aaaca55951f2dabff492f0ecd4cc9bbc5854a051c4d83c049807feed",
+      "output": "art/animation/source/poses/unit_neutral_lanternskate_throwers/continuity-alpha/right-fist-strike-recovery-and-ready.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

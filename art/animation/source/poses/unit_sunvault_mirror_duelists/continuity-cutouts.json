@@ -1,0 +1,184 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "jobs": [
+    {
+      "id": "mirror-duelist-walk-contact-a",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/walk-contact-a.png",
+      "source_sha256": "2e2142d491efaf04b777b7f51829ce049b40d2418ec3e3ae43c5ddaef2176c75",
+      "output": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/walk-contact-a.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            678,
+            190
+          ],
+          [
+            826,
+            232
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mirror-duelist-walk-passing-a",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/walk-passing-a.png",
+      "source_sha256": "f448e22c8ec51d593277795fe3f1ce37f75ee3cb6bd5bc1e0c40ee8eefa84c8e",
+      "output": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/walk-passing-a.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            650,
+            208
+          ],
+          [
+            606,
+            190
+          ],
+          [
+            625,
+            224
+          ],
+          [
+            760,
+            225
+          ],
+          [
+            497,
+            608
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mirror-duelist-walk-contact-b",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/walk-contact-b.png",
+      "source_sha256": "8af89c5d184c21234b4f34d3652d250e061dbecc96aa1d30e257b3ff36fcb10e",
+      "output": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/walk-contact-b.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            650,
+            203
+          ],
+          [
+            650,
+            240
+          ],
+          [
+            698,
+            235
+          ],
+          [
+            811,
+            237
+          ],
+          [
+            518,
+            624
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mirror-duelist-walk-passing-b",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/walk-passing-b.png",
+      "source_sha256": "fa3705f87d4f159deaf6ed2a4568d8aae7423047ebcd672f6ece22e87146230b",
+      "output": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/walk-passing-b.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            623,
+            180
+          ],
+          [
+            646,
+            215
+          ],
+          [
+            777,
+            216
+          ],
+          [
+            772,
+            257
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mirror-duelist-windup-full-blade",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/windup-full-blade.png",
+      "source_sha256": "b2a159215aab455c2825de6191b42407c419d526276cbd09f6de125be3fafcc2",
+      "output": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/windup-full-blade.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            498,
+            504
+          ],
+          [
+            523,
+            298
+          ],
+          [
+            541,
+            261
+          ],
+          [
+            699,
+            333
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mirror-duelist-defend-breath",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/defend-breath.png",
+      "source_sha256": "540bb85a3ad204ec489f13f7c39caf8fed1fb4c86c36f8dc71833166575326d0",
+      "output": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/defend-breath.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            668,
+            209
+          ],
+          [
+            628,
+            264
+          ],
+          [
+            615,
+            285
+          ],
+          [
+            719,
+            269
+          ],
+          [
+            861,
+            343
+          ]
+        ]
+      }
+    }
+  ]
+}

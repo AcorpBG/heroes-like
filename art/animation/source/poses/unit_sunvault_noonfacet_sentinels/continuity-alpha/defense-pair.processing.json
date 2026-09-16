@@ -1,0 +1,45 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "noonfacet-defense-pair",
+  "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/defense-pair.png",
+  "source_sha256": "5434a44f43a5ab6177b2c900934e7898d766590ff5b5e576b06cf4ea8109587f",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/defense-pair.png",
+  "output_sha256": "48168ec2ef91d3f708be81f88cf3082abdd67a18a20ea720d5b79043c9e6385f",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-cutouts.json",
+  "recipe_sha256": "07f55a52ec215d11147b648eb71057ac857603c3bc6ced77760e1970b8e879a0",
+  "parameters": {
+    "minimum": 100,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        331,
+        518
+      ],
+      [
+        1054,
+        524
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1107807,
+    "edge_pixels": 4640,
+    "unchanged_paint_pixels": 460417,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,69 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing clean genuine alpha is reused without rekeying.",
+  "id": "poses-released-string-draft",
+  "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/poses-released-string-draft.png",
+  "source_sha256": "3da16192e86c06aa7a9a67800428e7797c6ba68070df72c3bbcf35a794245c1d",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/poses-released-string-draft.png",
+  "output_sha256": "569b278649ed21a4c7b590991953187610f46dcc8df576289dc7b6580342e42c",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-cutouts.json",
+  "recipe_sha256": "113a66a25db00e9ab6a4d0de300fedcdd214a64cdc9218803c51ef31e038ddda",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      210,
+      211,
+      212
+    ],
+    "distance": 32,
+    "edge_radius": 3,
+    "max_edge_residual": 60,
+    "all_keyed_is_background": false,
+    "background_seeds": [
+      [
+        868,
+        717
+      ],
+      [
+        1192,
+        722
+      ],
+      [
+        771,
+        864
+      ],
+      [
+        1103,
+        858
+      ],
+      [
+        740,
+        711
+      ],
+      [
+        1080,
+        711
+      ]
+    ],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 853196,
+    "edge_pixels": 50546,
+    "unchanged_paint_pixels": 668774,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

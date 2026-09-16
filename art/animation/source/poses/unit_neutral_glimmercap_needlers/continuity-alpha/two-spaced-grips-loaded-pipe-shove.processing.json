@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "two-spaced-grips-loaded-pipe-shove",
+  "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/two-spaced-grips-loaded-pipe-shove.png",
+  "source_sha256": "9bda84c1ed5fda23ee8b7de1a17a6d38807ee4d90dce441e85f82a56d5fa168f",
+  "source_rect": [
+    0,
+    0,
+    1051,
+    1496
+  ],
+  "output": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/two-spaced-grips-loaded-pipe-shove.png",
+  "output_sha256": "9b3976d8b00c746ab1ba50fb324d952c758a894d1ee620f3471824e552d22005",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-cutouts.json",
+  "recipe_sha256": "401e383f8b4057083425ffca5514a43b2e9b143fea7453d8afba01cb678201ea",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1127705,
+    "edge_pixels": 6408,
+    "unchanged_paint_pixels": 438183,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "walk-contact-a",
+  "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/walk-contact-a.png",
+  "source_sha256": "dac517882dc45bf1d5c9b6fce2c0ae881533b95d1b50f7ab36127710082be643",
+  "source_rect": [
+    0,
+    0,
+    1237,
+    1272
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/continuity-alpha/walk-contact-a.png",
+  "output_sha256": "ba13154df10012847d99b3eef643534a83c0301dccb642a100923e85f655c2ad",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ff1f73325fca7f721787f27ed5462948ed77f856c70303e0e28f53c5b06bab14",
+  "recipe": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/continuity-cutouts.json",
+  "recipe_sha256": "c8a5713f7d938391a6e3c0e221c11bc159e4c24ab5daff1a2c240c77d981fcd3",
+  "parameters": {
+    "minimum": 100,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        414,
+        330
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1087123,
+    "edge_pixels": 6876,
+    "unchanged_paint_pixels": 479465,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

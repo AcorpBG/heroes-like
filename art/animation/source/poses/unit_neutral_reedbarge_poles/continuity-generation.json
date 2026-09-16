@@ -1,0 +1,56 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_reedbarge_poles",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "supported-travel-hook-forward-and-left-corpse",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/supported-travel-hook-forward-and-left-corpse.png",
+      "sha256": "578292a512edf6a27d23dafbce276646a23ebc6a08720ff1b1ba9ea860f3f6fe",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-faafb647-c465-405e-b2e9-56bf99f7aeec.png",
+      "prompt": "Use case: stylized-concept. Six original Reedbarge Pole tactical sprites, THREE columns TWO rows, generous clear gutters for full long pole. Image1 exact near/far leg geometry for TOP LEFT only, no guide graphics/colors/text. Image2 character identity/style; Image3 HEAD-LEFT fall orientation for final corpse, ignore tiny unrelated border fragment at upper left. Same rugged bearded middle-aged bargeman, wide woven reed hat/teal tie, straw shoulder cape, dark teal scarf, olive-brown layered coat/cream sleeves/split teal tabard, belt rope coil and small brass lantern, muddy leather boots. ONE straight long wooden pole, curved iron hook at upper/far end and pointed brass butt at other end; both hands grip same uninterrupted shaft. Fixed elevated three-quarter camera facing RIGHT, preserve front costume view, never turn back to viewer. TOP LEFT: NEAR thigh angles backward LEFT in front of FAR thigh reaching forward RIGHT as guide, pole diagonal held with both hands. TOP MIDDLE: FAR foot planted, NEAR knee lifted forward, same pole/hat/gear. TOP RIGHT: NEAR foot planted, FAR foot lifted behind moving underneath pelvis, same diagonal pole. BOTTOM LEFT: thrust anticipation, knees bent, pole nearly horizontal across upper torso, HOOK end pointing screen RIGHT, brass butt LEFT, right rear hand near butt left of body, left forward hand ahead on shaft; elbows pull back. BOTTOM MIDDLE: after-thrust recovery, shaft drawn back halfway, hook still RIGHT, both grips unchanged, knees soften. BOTTOM RIGHT: final DEAD continuation from Image3, HEAD LEFT and FEET RIGHT, cheek rests on left forearm, torso fully settled on SIDE eyes closed, hat and cape retained, limp arms/legs, pole beside body with pointed butt LEFT and hook RIGHT, lantern dark. Do not reverse corpse. No blood, extra pole, effects, text/grid/scenery/shadows. Original painted raster. Uniform pure GREEN RGB(0,255,0) background with no reflected green/spill.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/reedbarge-continuity-20260916/idle-reference/unit_neutral_reedbarge_poles-poses-rect-0-0-350-397-green.png",
+          "sha256": "197043a2c7cf08fa83c2bbfb0a30b72a45cc4919c61b39131e22925125ff0253"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/reedbarge-continuity-20260916/fall-reference/unit_neutral_reedbarge_poles-poses-rect-642-796-1030-1074-green.png",
+          "sha256": "4f3d29c41943289d4af9c3772dac721545b9cffcf938df500ec8e9a33806e2e7"
+        }
+      ],
+      "selection_notes": "Three travel/support poses keep front costume view; windup/recovery keep hooked end right and both grips. Head-left final painting remains too propped like original fall, requiring targeted resting-corpse edit.",
+      "selected_frames": [
+        "contact_front_camera",
+        "passing_knee_lift",
+        "passing_rear_lift",
+        "hook_forward_windup",
+        "hook_forward_recovery"
+      ]
+    },
+    {
+      "id": "dead-head-left-cheek-on-arm",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/dead-head-left-cheek-on-arm.png",
+      "sha256": "edb4428016076550cf9b2442e2751c495113a6f8cb7289c2cac2be4bbb57a754",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e76e9842-de14-472b-8707-5157154fcefd.png",
+      "prompt": "Use case: precise-object-edit. SINGLE head-left falling Reedbarge bargeman is the edit target. Make the NEXT final resting DEAD pose by lowering his HEAD and chest fully onto his SIDE. HEAD stays at screen LEFT, BOOTS stay at screen RIGHT. His cheek must visibly rest directly on his limp near forearm, not stay raised or propped by an elbow. Eyes closed under hat brim, neck/shoulders slack, chest horizontal and fully resting, legs softly bent exactly same direction. Preserve reed hat/teal tie, straw cape, cream sleeves, olive-brown coat, teal tabard, rope coil and belt brass lantern now dark. Keep ONE full pole beside body with pointed brass butt LEFT and curved iron hook RIGHT. Delete only the unrelated partial hook fragment at upper-left border of the supplied crop. Do not flip/rotate/reverse body, do not duplicate weapon. Same original painterly sprite style and elevated camera. Whole hat, hair, boots and pole inside generous margins. Uniform pure GREEN RGB(0,255,0) background without spill, no floor/shadow/text/blood/effects. One original painted corpse, clearly limp and fully resting, not another supported fall.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/reedbarge-continuity-20260916/fall-reference/unit_neutral_reedbarge_poles-poses-rect-642-796-1030-1074-green.png",
+          "sha256": "4f3d29c41943289d4af9c3772dac721545b9cffcf938df500ec8e9a33806e2e7"
+        }
+      ],
+      "selection_notes": "Head remains left and boots right; cheek and chest fully lowered onto limp arm/side, eyes closed under brim; full hook pole and dark lantern retained. Selected final corpse candidate.",
+      "selected_frames": [
+        "dead_head_left"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,210 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. No local pose or equipment synthesis.",
+  "jobs": [
+    {
+      "id": "compact-hook-actions-gray",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/compact-hook-actions-gray.png",
+      "source_sha256": "350998ac5b59bbd691e3d15b54dbe9f8434a335b3b6ccfa0bfde995f1c2c1ff1",
+      "output": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-actions-gray.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 145,
+        "maximum": 190,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "max_edge_residual": 40,
+        "all_neutral_is_background": false,
+        "background_seeds": [
+          [
+            280,
+            220
+          ],
+          [
+            290,
+            735
+          ],
+          [
+            970,
+            700
+          ],
+          [
+            488,
+            67
+          ],
+          [
+            360,
+            86
+          ],
+          [
+            1127,
+            92
+          ],
+          [
+            1123,
+            103
+          ],
+          [
+            296,
+            181
+          ],
+          [
+            917,
+            228
+          ],
+          [
+            929,
+            259
+          ],
+          [
+            308,
+            253
+          ],
+          [
+            484,
+            538
+          ],
+          [
+            359,
+            558
+          ],
+          [
+            1144,
+            556
+          ],
+          [
+            1137,
+            565
+          ],
+          [
+            971,
+            661
+          ],
+          [
+            471,
+            673
+          ],
+          [
+            309,
+            701
+          ],
+          [
+            295,
+            699
+          ],
+          [
+            971,
+            748
+          ],
+          [
+            306,
+            744
+          ],
+          [
+            271,
+            214
+          ],
+          [
+            925,
+            680
+          ],
+          [
+            270,
+            721
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "compact-hook-collapse-gray",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/compact-hook-collapse-gray.png",
+      "source_sha256": "5e458e6fee767abbc4700133e0db734f22b642e0f0d9d7d650f2bd58ca03aafa",
+      "output": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-collapse-gray.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 145,
+        "maximum": 190,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "max_edge_residual": 40,
+        "all_neutral_is_background": false,
+        "background_seeds": [
+          [
+            298,
+            610
+          ],
+          [
+            1177,
+            610
+          ],
+          [
+            546,
+            272
+          ],
+          [
+            525,
+            302
+          ],
+          [
+            686,
+            338
+          ],
+          [
+            677,
+            333
+          ],
+          [
+            474,
+            348
+          ],
+          [
+            1550,
+            418
+          ],
+          [
+            1483,
+            418
+          ],
+          [
+            1564,
+            426
+          ],
+          [
+            1587,
+            442
+          ],
+          [
+            1655,
+            511
+          ],
+          [
+            1664,
+            541
+          ],
+          [
+            622,
+            528
+          ],
+          [
+            570,
+            569
+          ],
+          [
+            1304,
+            587
+          ],
+          [
+            267,
+            610
+          ],
+          [
+            1129,
+            606
+          ]
+        ],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

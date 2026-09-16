@@ -1,0 +1,30 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_thornbow_scouts",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "bow-recovery-and-grounded-travel",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/bow-recovery-and-grounded-travel.png",
+      "sha256": "a0c08525e2c3fd1c472b8bebf2221d663bec3e67539d95988a60f40cccdb9403",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-de1a7350-60ef-4024-8df6-3c224058856a.png",
+      "prompt": "Use case: stylized-concept. Asset type: four original battle-animation raster poses, TWO columns TWO rows. Input image is sole character/costume reference. Preserve original Thornbow Scout woman: pointed ears, long brown braid, green leaf cowl/tabard, leather vest/bracers/leggings, boots, LEFT upper-arm green tattoo, side quiver, curved wooden thorn bow held in LEFT hand. Same elevated three-quarter camera facing RIGHT. Top-left: melee recovery after a two-handed vertical-bow shove, both hands around thorn-free center wooden grip, both elbows bending back to ribs, bow remains vertical and complete with fine straight string. Top-right: relaxed upright defensive-ready pose preceding a crouch, left hand holds vertical bow beside torso, right forearm protecting upper chest, feet planted. Bottom-left: grounded passing step, near/right boot flat directly under hip, far/left knee swings slightly forward with its foot barely lifted; left hand carries lowered bow well clear of knees, right arm naturally balances. Bottom-right: opposite passing step, far/left boot flat directly below hip, near/right knee swings slightly forward and near boot barely lifted; reverse overlapping knee order without mirroring upper body or gear. No floating support foot or airborne running. Consistent body scale and proportions, readable two-boot support change, full bow/string/braid/boots with generous margins and empty gutters. Original painterly raster same palette, no arrow in these poses, no extra weapon/limb/shield. Uniform pure blue #0000FF backdrop for approved extraction, no blue reflected spill, cast shadows, scenery, text, grid, labels, effects or copied game art.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/thornbow-continuity-20260916/idle-reference/unit_neutral_thornbow_scouts-poses-rect-0-0-313-330-light.png",
+          "sha256": "320d2494adba9d8d4f229ca4ec7b21e88f33b0f2c51adfd784dcd0cb58215895"
+        }
+      ],
+      "selection_notes": "17 packed frames retain thirteen original paintings and select four new vertical-bow recovery/ready-guard/grounded-travel paintings. Recovery keeps both hands on the wooden bow grip; distinct nock/draw/release/reload remains separate from melee. Original crouch/recoil/kneel/side fall and head-right horizontal corpse retain complete bow and quiver. Existing original alpha composites are clean and reused. New blue-backed source uses approved bounded preparation preserving green costume. Source scales 0.64/0.345 and anatomical ground anchors; banded crops remove neighboring boot/head/other-corpse fragments while retaining draw string and both fallen bow tips. Original airborne/duplicate travel paintings are unselected; new contact/passing attempts still repeat leading-leg geometry, not an accepted full alternating gait. Bow scale/string/grip, braid/tattoo/body/palette/edge consistency and connected transitions remain refinement. Static production review is not motion/gameplay acceptance.",
+      "selected_frames": [
+        "walk_contact_attempt",
+        "walk_passing_attempt",
+        "bow_shove_recovery",
+        "guard_ready"
+      ]
+    }
+  ]
+}

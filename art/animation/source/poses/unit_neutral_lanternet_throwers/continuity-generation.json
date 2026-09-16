@@ -1,0 +1,40 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "supported-travel-single-net-and-recovery",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/supported-travel-single-net-and-recovery.png",
+      "sha256": "6294bf1aa1293c5f85f4333b641be77fafe798d8393e20f270632200aae1d989",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a4cffdaf-c78e-4119-95a7-511ebb785eab.png",
+      "prompt": "Use case: stylized-concept. Six original Lanternet Thrower tactical sprites, THREE columns TWO rows, generous empty gutters, complete boots, net and lanterns inside cells. Image1 exact opposite-contact leg constraint TOP LEFT only, no guide graphics/colors/text. Image2 fixed identity/style, Image3 original costume. Same athletic adult woman with dark brown braids, green headband/scarf and ragged green split tabard, brown leather cuirass/bracers/knee guards/wrapped boots, belt rope coils and small brass amber lantern. ONE folded rope fishing net with small brass lantern weights, never duplicate weapon bundles. Fixed elevated three-quarter camera facing RIGHT, same body proportions. TOP LEFT: NEAR thigh extends backward LEFT in front of FAR thigh reaching forward RIGHT like guide, both hands hold single gathered net compactly at waist outside leg sweep. TOP MIDDLE: FAR foot planted, NEAR knee raised forward, both hands keep compact net above knee path. TOP RIGHT: NEAR foot planted, FAR foot lifted behind and passing below pelvis, compact net above waist. BOTTOM LEFT: close-melee anticipation, RIGHT fist holds the ONE bundled net pulled back near right shoulder, LEFT hand EMPTY guarding chin; no second net in left hand. BOTTOM MIDDLE: melee recovery from forward right punch, right elbow recoils to waist still holding ONE bundled net, left empty forearm guarding chest, boots planted. BOTTOM RIGHT: ranged recovery after releasing net, RIGHT hand EMPTY returning toward chest, LEFT hand reaches belt rope/net supply without yet pulling out another net; both hands and belt visible, forward knee soft, no airborne net/projectile. Preserve rope/lantern construction and body, no magical trails/effects/text/grid/scenery/floor/shadow. Original painted raster. Uniform pure BLUE RGB(0,0,255) background, no reflected blue/spill; protect all green cloth.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+          "sha256": "81195809a937dc10d08efc33ff17d9f522c2d624d489874623cd7733bcc60c42"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/units/source/curated/unit_neutral_lanternet_throwers.png",
+          "sha256": "63409f8f2bf17a119b09c6e2523ebb4f6866270d0917a12667b75690cd04d83f"
+        }
+      ],
+      "selection_notes": "Three travel/support candidates repeat lead geometry; single-net windup/recovery remove duplicated left-hand bundle. Ranged recovery keeps right hand empty and begins gathering belt net with left, rather than fully empty hands. Full support/rope/lantern continuity remains unaccepted.",
+      "selected_frames": [
+        "contact_attempt",
+        "passing_knee_lift",
+        "passing_rear_lift",
+        "single_net_melee_windup",
+        "single_net_melee_recovery",
+        "net_recovery_reach_belt"
+      ]
+    }
+  ]
+}

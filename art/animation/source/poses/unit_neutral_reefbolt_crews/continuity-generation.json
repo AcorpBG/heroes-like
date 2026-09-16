@@ -1,0 +1,48 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_reefbolt_crews",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "crew-recovery-and-directional-rest",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/crew-recovery-and-directional-rest.png",
+      "sha256": "9425dc3cc1ea2b234450bc4e97cf05fb70bc818e8da35ea12d70352de5529a50",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7cd3de7c-f60c-47d6-bc52-ef6c80d271af.png",
+      "prompt": "Use case: stylized-concept. Original Reefbolt Crew battle animation continuation: exactly TWO wide full-team pictures vertically stacked, no extra panels. Image1 fixes crew/rig identity, image2 fixes collapsing bodies and toppled rig orientation (ignore any tiny neighboring sprite fragments at crop edge). Same elevated three-quarter game camera and body/equipment scale. Two humans: tall bearded man teal brimmed sailor hat brass badge/teal coat; shorter woman teal bandana braid/teal coat. One heavy wood/brass arbalest with curved transverse bow, thin red string, winch spool and THREE rope-bound wooden tripod legs with brass feet; one wooden rope basket of shell-tipped spare bolts. TOP: recovery after pushing this whole loaded rig forward in melee, both crew bend elbows and shift weight back, woman grips leg/hub with both hands, basket strapped securely to her back; man at rear grips, both sets of boots firmly grounded. Retain complete original rig, three attached legs and one loaded shell bolt, no extra barrel. BOTTOM: settled dead team continuing image2, BOTH HEADS stay RIGHT and both sets of BOOTS LEFT. Man lies fully on side behind woman, woman lies fully on side in front; both cheeks down and eyes closed, nobody propped on an elbow. Toppled intact rig rests beside/behind them, not through bodies; basket and spare bolts remain beside rig. Keep both hats and all four human arms/legs, no third person, no detached hands, no missing gear. Whole group in frame with generous margins and clear gap between panels. Original painterly raster same palette, flat vivid green #00FF00 background without spill. No shadows, floor, text, labels, grid, blood, magic or copied art.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/reefbolt-continuity-20260916/idle-reference/unit_neutral_reefbolt_crews-poses-rect-0-0-315-323-light.png",
+          "sha256": "917938e7453af29fd41ad92e25f7482983a9ed7f2656e9bf402815dc8824d001"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/reefbolt-continuity-20260916/fall-reference/unit_neutral_reefbolt_crews-poses-rect-574-966-928-1217-light.png",
+          "sha256": "c27f71a9de57b1737aa20e14349a40a483487c5bfbbe4104f0cd702904822082"
+        }
+      ],
+      "selection_notes": "16 packed frames retain fourteen previously generated paintings and select two new paintings: original continuation top-panel equipped recovery, and corrected continuation bottom-panel head-right resting crew. Separate bolt load/aim/release/empty reset remains distinct from melee. Both crew members move and keep the basket and complete tripod. The original new corpse had a detached glove beneath the crossbow rail. A targeted built-in edit removes it, but also removes a legitimate glove in its top panel: select only the corrected bottom and preserve the original top. Retain both outputs and exact prompts as evidence. Reuse clean original RGBA including corrected basket hit/kneel. Approved bounded gray preparation with inspected enclosed-background seeds opens carry-rig apertures; green preparation handles new paintings. Banded crops exclude neighboring harpoon tips, boots, hands and basket fragments. Source scales 0.75/0.225/0.30 and fixed anatomical anchors are explicit. Carry steps remain incomplete gait; crew/rig relative scale, hand/string/leg consistency, palette/edges and connected transition timing need whole-roster refinement. Static production review is not motion/gameplay acceptance.",
+      "selected_frames": [
+        "rig_shove_recovery"
+      ]
+    },
+    {
+      "id": "crew-recovery-and-directional-rest-corrected",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/crew-recovery-and-directional-rest-corrected.png",
+      "sha256": "6ee536844bb02cc87a79f5e2b73e675716b5b190befef950df1634c1fdf45eed",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7f60cca0-86b6-4439-84ac-50627454cc7e.png",
+      "prompt": "Use case: precise-object-edit. Preserve this original two-panel Reefbolt Crew sprite sheet exactly. Change ONLY the BOTTOM panel: remove the extra detached black gloved hand gripping the underside of the crossbow rail, located just right of center underneath the brass winch/wooden horizontal rail and above the lower red cord. That isolated glove does not belong to either resting body. Reveal the existing wooden/brass rail and green background behind that glove, without adding a new support or any hand. Keep both dead bodies and their real resting hands, hats, basket/bolts, three wooden tripod legs, complete bow/red cords, colors, pixel layout, scale, green background and TOP panel unchanged. No extra limbs or equipment, no text/effects; only remove that stray bottom-panel glove.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/crew-recovery-and-directional-rest.png",
+          "sha256": "9425dc3cc1ea2b234450bc4e97cf05fb70bc818e8da35ea12d70352de5529a50"
+        }
+      ],
+      "selection_notes": "16 packed frames retain fourteen previously generated paintings and select two new paintings: original continuation top-panel equipped recovery, and corrected continuation bottom-panel head-right resting crew. Separate bolt load/aim/release/empty reset remains distinct from melee. Both crew members move and keep the basket and complete tripod. The original new corpse had a detached glove beneath the crossbow rail. A targeted built-in edit removes it, but also removes a legitimate glove in its top panel: select only the corrected bottom and preserve the original top. Retain both outputs and exact prompts as evidence. Reuse clean original RGBA including corrected basket hit/kneel. Approved bounded gray preparation with inspected enclosed-background seeds opens carry-rig apertures; green preparation handles new paintings. Banded crops exclude neighboring harpoon tips, boots, hands and basket fragments. Source scales 0.75/0.225/0.30 and fixed anatomical anchors are explicit. Carry steps remain incomplete gait; crew/rig relative scale, hand/string/leg consistency, palette/edges and connected transition timing need whole-roster refinement. Static production review is not motion/gameplay acceptance.",
+      "selected_frames": [
+        "dead_both_heads_right"
+      ]
+    }
+  ]
+}

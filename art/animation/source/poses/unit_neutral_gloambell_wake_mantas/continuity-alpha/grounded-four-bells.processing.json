@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "gloambell-grounded-four-bells",
+  "source": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/grounded-four-bells.png",
+  "source_sha256": "84d21bb87a5e64b0c768961be7b7a8c959c09fe7df3aa763d9228a5fa746ca47",
+  "source_rect": [
+    0,
+    0,
+    1942,
+    809
+  ],
+  "output": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-alpha/grounded-four-bells.png",
+  "output_sha256": "34e2fffce4f2e234a1d1fde02519960b5d6cd0c73c1dfb4fb41c7e1de5416354",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-cutouts.json",
+  "recipe_sha256": "6ba5aac35b5897163f76d11d24c6e9f0f81bab827b98b40d92feb76e49da5d0f",
+  "parameters": {
+    "minimum": 110,
+    "tolerance": 4,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        345,
+        425
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1256702,
+    "edge_pixels": 12208,
+    "unchanged_paint_pixels": 302168,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

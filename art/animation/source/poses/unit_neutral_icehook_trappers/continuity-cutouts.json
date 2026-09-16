@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "matched-icehook-strike-guard-and-travel",
+      "source": "art/animation/source/poses/unit_neutral_icehook_trappers/matched-icehook-strike-guard-and-travel.png",
+      "source_sha256": "eac20522568516c5f86c886d2f510719d549af62dfb302776f743c9a7ab4eda4",
+      "output": "art/animation/source/poses/unit_neutral_icehook_trappers/continuity-alpha/matched-icehook-strike-guard-and-travel.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

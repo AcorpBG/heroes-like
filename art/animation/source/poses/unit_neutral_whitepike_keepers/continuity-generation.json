@@ -1,0 +1,30 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_whitepike_keepers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "full-pike-thrust-recovery-brace-and-step",
+      "source": "art/animation/source/poses/unit_neutral_whitepike_keepers/full-pike-thrust-recovery-brace-and-step.png",
+      "sha256": "c080fedbfd53e80e298a6c1e9e84471d1616096202fe17ea02292703d37e090b",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-948f985f-781e-46cf-9bfc-619d2fc6d29a.png",
+      "prompt": "Use case: stylized-concept. Asset type: FOUR original battle-animation raster poses TWO columns TWO rows, generous empty gutters for LONG pike. Image 1 is sole identity and equipment authority: Whitepike Keeper middle-aged bearded man, blue knit cap white fur rim, cream quilted long coat and white fur mantle, gray lamellar chest/hip plates, blue scarf/tabard, gray trousers and brown leather gloves/boots. Both hands on ONE long pale wood pike, long narrow silver spearpoint and smaller silver butt spike. Same elevated three-quarter camera, body faces RIGHT. Top-left: full thrust toward screen RIGHT, leading knee bent, LEFT hand forward and RIGHT hand rear spaced apart on shaft. Crucial: full-length rear shaft and butt spike extend visibly FAR BEHIND the right elbow toward screen LEFT; do NOT truncate pike at the fist or hide its rear length. Entire point and butt visible with generous side margins. Top-right: recovery after thrust, elbows pull pike halfway back to waist, torso rises; same full-length horizontal pike remains visible both ends. Bottom-left: upright defensive-ready, feet braced, pike diagonal across chest in both hands with point to upper RIGHT and butt to lower LEFT. Bottom-right: grounded passing walk, near/right boot flat directly beneath hip bearing weight, far/left knee swings forward with boot lifted slightly, pike securely diagonal with both ends complete. Match face/costume/body scale and weapon length, no shield/extra props/extra limbs. Original painterly raster, uniform pure green #00FF00 no spill, shadow, grid, text, scenery, effects or blood.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/whitepike-continuity-20260916/idle-reference/unit_neutral_whitepike_keepers-poses-unaccepted-rect-365-0-639-367-light.png",
+          "sha256": "2fe196516ac33de57ec502f511120209d838ebe107548d5b29381e4e8e21dafd"
+        }
+      ],
+      "selection_notes": "13 frames retain nine original paintings and select four new full-pike thrust, recovery, ready brace and passing-step paintings. The new thrust preserves the rear shaft and butt spike missing from the old thrust. Original equipped kneel, low fall and head-right corpse remain. Actual original alpha composites are clean and reused unchanged despite historical raw-preview rejection. New green source uses approved bounded preparation. Original scale 0.59; new horizontal attack/recovery 0.42 and enlarged lower-row guard/step 0.36, based on head/body anatomy rather than bounding-box fitting. Banded source selections preserve full pike ends while excluding neighboring leg, spearpoint and lower fragments. New travel carry points the spear opposite to the old contact carry; consistent carry/grip and a full alternating gait remain refinement, not an accepted walk. Pike length, body/palette/edge consistency and connected action/death timing remain unaccepted. Static production review is not gameplay acceptance.",
+      "selected_frames": [
+        "walk_passing_attempt",
+        "pike_full_thrust",
+        "pike_recovery",
+        "guard_ready"
+      ]
+    }
+  ]
+}

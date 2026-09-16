@@ -1,0 +1,187 @@
+{
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "output": "art/animation/source/poses/unit_neutral_glimmercap_needlers/candidate-atlas.png",
+  "sha256": "c18e4af19731fcd74f90601091c4e992bea623f702e25905e0c669dd99fc07d8",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        164,
+        37,
+        339,
+        244
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        146,
+        43,
+        347,
+        244
+      ]
+    },
+    {
+      "name": "run_extension_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        135,
+        43,
+        341,
+        244
+      ]
+    },
+    {
+      "name": "run_gather_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        143,
+        40,
+        328,
+        247
+      ]
+    },
+    {
+      "name": "loaded_pipe_anticipation",
+      "index": 4,
+      "alpha_bounds": [
+        188,
+        41,
+        333,
+        243
+      ]
+    },
+    {
+      "name": "loaded_pipe_two_grip_shove",
+      "index": 5,
+      "alpha_bounds": [
+        166,
+        35,
+        351,
+        242
+      ]
+    },
+    {
+      "name": "loaded_pipe_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        183,
+        44,
+        328,
+        243
+      ]
+    },
+    {
+      "name": "loaded_guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        185,
+        39,
+        328,
+        243
+      ]
+    },
+    {
+      "name": "loaded_guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        179,
+        71,
+        334,
+        242
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        159,
+        48,
+        345,
+        243
+      ]
+    },
+    {
+      "name": "ranged_reload",
+      "index": 10,
+      "alpha_bounds": [
+        169,
+        21,
+        323,
+        248
+      ]
+    },
+    {
+      "name": "ranged_loaded_aim",
+      "index": 11,
+      "alpha_bounds": [
+        140,
+        27,
+        367,
+        247
+      ]
+    },
+    {
+      "name": "ranged_empty_release",
+      "index": 12,
+      "alpha_bounds": [
+        156,
+        18,
+        332,
+        244
+      ]
+    },
+    {
+      "name": "ranged_empty_recovery",
+      "index": 13,
+      "alpha_bounds": [
+        187,
+        34,
+        321,
+        243
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        164,
+        94,
+        337,
+        250
+      ]
+    },
+    {
+      "name": "death_side_pipe_point_right",
+      "index": 15,
+      "alpha_bounds": [
+        144,
+        124,
+        355,
+        241
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 16,
+      "alpha_bounds": [
+        133,
+        150,
+        360,
+        255
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png": "e4d55650d8ffd1c4803ab64ff2d13525ef4ef58746e26db77c9854f23c8da1a7",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/loaded-pipe-melee-defense-and-empty-recovery.png": "c8025a27d4f26fddad07408ce7e152fa94e0c425ae15a358c27ceef74dc1adca",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/two-spaced-grips-loaded-pipe-shove.png": "9b3976d8b00c746ab1ba50fb324d952c758a894d1ee620f3471824e552d22005",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/side-fall-pipe-point-right.png": "d801cec149282198a4a72f601c246caefbfee5f48330ebbe033cc864eb19ba56"
+  }
+}

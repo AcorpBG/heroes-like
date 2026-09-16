@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "jobs": [
+    {
+      "id": "supported-travel-hook-forward-and-left-corpse",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/supported-travel-hook-forward-and-left-corpse.png",
+      "source_sha256": "578292a512edf6a27d23dafbce276646a23ebc6a08720ff1b1ba9ea860f3f6fe",
+      "output": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/supported-travel-hook-forward-and-left-corpse.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "dead-head-left-cheek-on-arm",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/dead-head-left-cheek-on-arm.png",
+      "source_sha256": "edb4428016076550cf9b2442e2751c495113a6f8cb7289c2cac2be4bbb57a754",
+      "output": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/dead-head-left-cheek-on-arm.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

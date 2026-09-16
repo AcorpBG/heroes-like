@@ -1,0 +1,70 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "two-hook-recovery-ready-and-passing",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/two-hook-recovery-ready-and-passing.png",
+      "source_sha256": "6515313c318805fc45906d03fa0a563f0d9a55597631de2243a8be5f38258611",
+      "output": "art/animation/source/poses/unit_neutral_frostwharf_cutters/continuity-alpha/two-hook-recovery-ready-and-passing.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "two-hook-recovery-ready-and-passing-gray",
+      "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/two-hook-recovery-ready-and-passing-gray.png",
+      "source_sha256": "dde767dc3246b760ed61c059f446a9a93d764cef663213a25e86b0e28feda8f1",
+      "output": "art/animation/source/poses/unit_neutral_frostwharf_cutters/continuity-alpha/two-hook-recovery-ready-and-passing-gray.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 150,
+        "maximum": 200,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "max_edge_residual": 40,
+        "background_seeds": [],
+        "protected_polygons": [],
+        "background_regions": [
+          {
+            "polygon": [
+              [
+                610,
+                235
+              ],
+              [
+                614,
+                235
+              ],
+              [
+                615,
+                254
+              ],
+              [
+                610,
+                254
+              ]
+            ],
+            "minimum": 110,
+            "tolerance": 20,
+            "seed": [
+              611,
+              245
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

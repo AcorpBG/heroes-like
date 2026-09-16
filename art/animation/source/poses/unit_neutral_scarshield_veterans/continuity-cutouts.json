@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "hammer-recovery-shield-brace-and-travel",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/hammer-recovery-shield-brace-and-travel.png",
+      "source_sha256": "4a8963f273de3bfddd384b8ec9c896c94ec039a5e94233713bd26bd42b4a2428",
+      "output": "art/animation/source/poses/unit_neutral_scarshield_veterans/continuity-alpha/hammer-recovery-shield-brace-and-travel.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

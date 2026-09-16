@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "solar-walk-contact-a",
+  "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/walk-contact-a.png",
+  "source_sha256": "4217488ebd1b0438f8b5dc6a9d39e01f5f180bf05410b8e8d3e0a54eb77c27e4",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_solar_array_striders/continuity-alpha/walk-contact-a.png",
+  "output_sha256": "882cce7b9aa81125f60a733d5221092dfb2a111ea111069ceda17cc3421ddbc1",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "732acb7b8f20636e57c5a5479a01928c28f52c8eaf068c4b28f1baee0b970be4",
+  "recipe": "art/animation/source/poses/unit_sunvault_solar_array_striders/continuity-cutouts.json",
+  "recipe_sha256": "2737fc3fc9bdd02a6da3234c9577cfeda7413cbd85d927eeb6bbfb259e56aa16",
+  "parameters": {
+    "minimum": 100,
+    "maximum": 185,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        926,
+        438
+      ],
+      [
+        1103,
+        515
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 987853,
+    "edge_pixels": 9484,
+    "unchanged_paint_pixels": 575179,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,75 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_windglass_slingers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "supported-travel-melee-and-left-corpse",
+      "source": "art/animation/source/poses/unit_neutral_windglass_slingers/supported-travel-melee-and-left-corpse.png",
+      "sha256": "83726ee34945496cbe5c6639708e010307e5f2e4c802170667cab7da9aa1c225",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3381e4e6-1be8-4aa3-9029-249c84b1ce4b.png",
+      "prompt": "Use case: stylized-concept. Six original Windglass Slinger tactical sprites, THREE columns TWO rows, generous clear gutters around every boot and sling cord. Image1 is the exact near/far leg geometry constraint for TOP LEFT only, never reproduce guide marks/colors/text. Image2 is fixed character identity/style; Image3 is exact HEAD-LEFT side-fall orientation reference for final corpse. Preserve adult woman brown hair/goggles, teal scarf, cream sleeveless tunic, diagonal leather strap, brown belt/pouch with blue stones, dark blue trousers, leather knee guards/bracers and wrapped boots. ONE complete leather two-cord sling in anatomical RIGHT hand (near/viewer left), not bow/staff. Fixed elevated three-quarter camera facing RIGHT, same body size. TOP LEFT opposite walking contact: NEAR leg extends BACK LEFT with thigh visibly in front of FAR thigh, FAR leg reaches forward RIGHT like guide, sling hanging from right hand. TOP MIDDLE: FAR foot planted under pelvis, NEAR knee raised toward RIGHT, right hand keeps whole sling folded short outside thighs. TOP RIGHT: NEAR foot planted, FAR heel lifted behind with far knee passing forward, same sling and unchanged torso camera. BOTTOM LEFT: close melee right-hand punch extended toward RIGHT, sling cords wrapped around that fist with small leather pouch visible beneath it; left hand guarding chest, knees bent. No projectile. BOTTOM MIDDLE: punch recovery right elbow pulled back near ribs, sling still wrapped right hand, left forearm protecting chin, two planted boots. BOTTOM RIGHT: final corpse lowering from Image3, HEAD LEFT and BOOTS RIGHT, eyes closed cheek rests on limp forearm, horizontal torso on SIDE, bent legs slack, teal scarf and pouch retained, whole slack sling rests by right hand. Do not reverse corpse orientation. Original painted raster, no blood/effects/text/grid/scenery/floor/shadow. Pure GREEN RGB(0,255,0) background, no reflected green or green fringe.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/windglass-continuity-20260916/idle-reference/unit_neutral_windglass_slingers-poses-rect-0-0-312-332-green.png",
+          "sha256": "c519376abf2dca49ab7df18a0fc5a8c881714d4d7e9c6eb741b4bc59472d28dd"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/windglass-continuity-20260916/fall-reference/unit_neutral_windglass_slingers-poses-rect-610-1008-936-1248-green.png",
+          "sha256": "78d49cddf1fc5db62a0bb2a64de9d9090dd241c473bd80a27c25f4bbf995191e"
+        }
+      ],
+      "selection_notes": "Leading contact repeats geometry; select supported travel, recovery and head-left corpse as motion candidates. Exclude new punch because hand/torso continuity is uncertain; selected targeted original-contact repair retains the original body pose and adds its sling.",
+      "selected_frames": [
+        "contact_attempt",
+        "passing_knee_lift",
+        "passing_rear_lift",
+        "melee_recovery",
+        "dead_head_left"
+      ]
+    },
+    {
+      "id": "original-punch-with-retained-sling",
+      "source": "art/animation/source/poses/unit_neutral_windglass_slingers/original-punch-with-retained-sling.png",
+      "sha256": "96ecd6e3628a665327435df3aead14b26d908f4557e8fd0589da3e1a4822b744",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a9f260a4-b9a2-435e-8428-46195f4a5678.png",
+      "prompt": "Use case: precise-object-edit. SINGLE supplied Windglass punch painting is the edit target. Preserve this exact head/torso twist, both arms, extended fist, legs, costume, goggles, teal scarf, cream tunic, blue-stone pouch, camera and original painterly finish. ONLY restore the missing complete leather sling to the EXTENDED punching fist at screen RIGHT: its two brown cords are wrapped compactly around the fist/wrist, both descend a short distance to ONE empty small leather pouch just beneath the fist. It is a compact bundled sling, not a dangling long whip, no stone or projectile. The folded fist near the chest stays EMPTY. Do not swap the arms, mirror, rotate, change body pose or add a second weapon. Whole figure including both boots and new sling stays within generous margins. Uniform pure GREEN RGB(0,255,0) background, no reflected green, floor/shadows, text or effects. One original painted tactical sprite.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/windglass-continuity-20260916/punch-reference/unit_neutral_windglass_slingers-poses-rect-625-331-937-640-green.png",
+          "sha256": "2e5729cc19cf9cbf840c5d29f2cfc5b3cca371d1a1fcfd4f4bbc2bd81dd3e23c"
+        }
+      ],
+      "selection_notes": "Preserved original punching pose and restored retained cords, but invented bucket-like bag instead of flat sling cradle; retain as rejected source, not selected.",
+      "selected_frames": []
+    },
+    {
+      "id": "original-punch-flat-sling-cradle",
+      "source": "art/animation/source/poses/unit_neutral_windglass_slingers/original-punch-flat-sling-cradle.png",
+      "sha256": "d147b48c3f15acf175f37aa3675a2dbb679404a85e4619c6235f7a07c631af1e",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4ebcb9be-484b-42d2-a048-8319901068a5.png",
+      "prompt": "Use case: precise-object-edit. Image1 is edit target, Image2 is exact sling construction reference. Change ONLY the incorrect bucket-shaped bag hanging beneath the extended fist in Image1. Replace that bag with Image2's small FLAT shallow crescent/almond leather sling cradle: a simple narrow curved leather patch, open concave top, no vertical walls, NO bucket, NO purse, NO bag, NO straps/rivets/decorations. Keep exactly TWO slender cords from opposite tips of this shallow leather cradle up to the existing wraps around the extended fist. Cradle width about one fist width, depth only a third of its width. Preserve every other pixel's intent: body pose, extended punching arm, other empty fist, face, hair, goggles, scarf, tunic, belt BLUE-STONE BAG AT HIP (do not change the hip bag), trousers, boots, same camera and paint. Uniform pure GREEN RGB(0,255,0) backdrop unchanged. Single full-body original tactical sprite; no text/effects/projectile. The sling is the flat empty leather cradle shown in Image2, never a container bag.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_windglass_slingers/original-punch-with-retained-sling.png",
+          "sha256": "96ecd6e3628a665327435df3aead14b26d908f4557e8fd0589da3e1a4822b744"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/windglass-continuity-20260916/sling-reference/unit_neutral_windglass_slingers-poses-rect-50-172-108-285-green.png",
+          "sha256": "b7ea784462e92d0b00139cb3a780ed0d1adffd229b36b40870d3ae1e340a94c5"
+        }
+      ],
+      "selection_notes": "Targeted sling construction reference replaces bucket-like bag with shallow leather cradle and two retained cords on original punch. Original torso/extended-arm pose retained; continuous hand/body identity remains review.",
+      "selected_frames": [
+        "melee_retained_sling"
+      ]
+    }
+  ]
+}

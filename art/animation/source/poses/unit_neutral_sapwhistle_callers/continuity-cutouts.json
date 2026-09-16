@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "left-launcher-melee-guard-and-recovery",
+      "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/left-launcher-melee-guard-and-recovery.png",
+      "source_sha256": "edc710284b9d99d8ef2751b165e293acc1150ce6c5419961a305625ce232c67e",
+      "output": "art/animation/source/poses/unit_neutral_sapwhistle_callers/continuity-alpha/left-launcher-melee-guard-and-recovery.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "left-grip-crouched-defense",
+      "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/left-grip-crouched-defense.png",
+      "source_sha256": "666e383487aef43ab0d328aebd7e25e228af6e7d08a440d60c816e3e3682ded8",
+      "output": "art/animation/source/poses/unit_neutral_sapwhistle_callers/continuity-alpha/left-grip-crouched-defense.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

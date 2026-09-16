@@ -1,0 +1,34 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "twin-blade-recovery-and-directional-corpse",
+      "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/twin-blade-recovery-and-directional-corpse.png",
+      "sha256": "fa654d6b36dafe056da5d3d9a91c627e2e92fba27dccdbe883fd9433030bb404",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b32f1e67-5d49-440e-9661-90aadf9c630b.png",
+      "prompt": "Use case: stylized-concept. Four original Tidepool Cutter full-body battle poses in TWO columns TWO rows with generous clear gutters. Image1 is identity/style/gear reference, image2 is the head-LEFT side fall reference for corpse direction. Same woman dark shell-beaded braids, teal headscarf/trailing strips and worn teal coat over cream blouse, bronze pendant, rope belt/net pouch, dark trousers, rope-wrapped boots. Exactly TWO short curved hooked steel knives with bronze hilts, one per hand. Same elevated three-quarter camera facing RIGHT for upright poses; identical body scale. TOP LEFT: recovery after right-hand cross-body slash, right elbow bending and blade returning low in front of waist; left blade guards ribs separately, no overlapping extra blade. TOP RIGHT: upright ready defense with blades beginning to cross before chest, head visible, feet grounded, preceding deeper crouch. BOTTOM LEFT: grounded walking passing stance, one boot firmly flat beneath hip, other knee lightly bent with lifted boot close beside it, no airborne jump, both knives low clear of legs. BOTTOM RIGHT: final dead body continuing image2, HEAD stays LEFT and FEET RIGHT, body settles fully on side, cheek resting down, eyes closed, two arms relaxed. Both intact knives lie beside their actual hands at front of body; no detached hand or extra blade. Net pouch and scarf remain, no blood. Do not reverse corpse. Preserve camera, skin/costume colors, anatomy, gear size/count. Entire silhouettes/blades inside cells, no effects/text/shadows/scenery. Flat pure green #00FF00 background, no green reflection or spill; original painterly raster, no copied game art.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/tidepool-continuity-20260916/idle-reference/unit_neutral_tidepool_cutters-poses-rect-0-0-313-413-light.png",
+          "sha256": "d929fabd42eace9795d502df8f2ef8d6eac8fd4bc3265863ae328423c6ec3f1b"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/tidepool-continuity-20260916/fall-reference/unit_neutral_tidepool_cutters-poses-rect-579-985-890-1205-light.png",
+          "sha256": "e88d5ae3f23125788637819beba6882726e4d2b0834a7dbc20a2ae3cc52f68a4"
+        }
+      ],
+      "selection_notes": "13 packed frames retain nine original paintings and select four new blade recovery, crossed-blade guard, grounded passing attempt and head-left resting corpse paintings. Both original blades remain throughout attack and death; the new corpse follows the original head-left fall rather than reversing the body. Clean original RGBA is reused; new green-backed art uses approved bounded matte/edge preparation. Source scales 0.52/0.30 preserve body proportions. Inspected banded crop boundaries exclude neighboring knives, scarf and corpse fragments without painting or warping. Original stride is airborne and the new passing step does not establish a full alternating grounded gait. Blade/grip, body/palette/edge consistency and connected action/death timing remain refinement. Static production review is not motion/gameplay acceptance.",
+      "selected_frames": [
+        "walk_passing_attempt",
+        "blade_recovery",
+        "guard_ready",
+        "dead_head_left"
+      ]
+    }
+  ]
+}

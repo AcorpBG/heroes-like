@@ -1,0 +1,206 @@
+{
+  "unit_id": "unit_neutral_windglass_slingers",
+  "output": "art/animation/source/poses/unit_neutral_windglass_slingers/candidate-atlas.png",
+  "sha256": "953707d56f80219bf76e50b2f50dcd9fb75ed372aa82e04dd2daf1ab637a8077",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        175,
+        17,
+        361,
+        246
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        171,
+        18,
+        365,
+        247
+      ]
+    },
+    {
+      "name": "contact_original",
+      "index": 2,
+      "alpha_bounds": [
+        175,
+        21,
+        370,
+        246
+      ]
+    },
+    {
+      "name": "passing_original",
+      "index": 3,
+      "alpha_bounds": [
+        188,
+        39,
+        333,
+        251
+      ]
+    },
+    {
+      "name": "contact_attempt",
+      "index": 4,
+      "alpha_bounds": [
+        167,
+        27,
+        333,
+        244
+      ]
+    },
+    {
+      "name": "passing_knee_lift",
+      "index": 5,
+      "alpha_bounds": [
+        185,
+        25,
+        318,
+        242
+      ]
+    },
+    {
+      "name": "passing_rear_lift",
+      "index": 6,
+      "alpha_bounds": [
+        158,
+        24,
+        314,
+        243
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 7,
+      "alpha_bounds": [
+        156,
+        38,
+        353,
+        250
+      ]
+    },
+    {
+      "name": "melee_retained_sling",
+      "index": 8,
+      "alpha_bounds": [
+        175,
+        32,
+        354,
+        242
+      ]
+    },
+    {
+      "name": "melee_recovery",
+      "index": 9,
+      "alpha_bounds": [
+        182,
+        46,
+        329,
+        247
+      ]
+    },
+    {
+      "name": "guard_brace",
+      "index": 10,
+      "alpha_bounds": [
+        156,
+        58,
+        340,
+        240
+      ]
+    },
+    {
+      "name": "sling_load",
+      "index": 11,
+      "alpha_bounds": [
+        179,
+        38,
+        369,
+        246
+      ]
+    },
+    {
+      "name": "sling_windup",
+      "index": 12,
+      "alpha_bounds": [
+        166,
+        35,
+        355,
+        250
+      ]
+    },
+    {
+      "name": "sling_release",
+      "index": 13,
+      "alpha_bounds": [
+        152,
+        35,
+        433,
+        254
+      ]
+    },
+    {
+      "name": "sling_followthrough",
+      "index": 14,
+      "alpha_bounds": [
+        140,
+        36,
+        334,
+        248
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 15,
+      "alpha_bounds": [
+        181,
+        48,
+        330,
+        248
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 16,
+      "alpha_bounds": [
+        160,
+        74,
+        337,
+        243
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 17,
+      "alpha_bounds": [
+        148,
+        92,
+        366,
+        241
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 18,
+      "alpha_bounds": [
+        147,
+        142,
+        358,
+        247
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_windglass_slingers/alpha/poses.png": "8ea73bb0041cff4c69af9a05240b4c26b7432416c51601536062f9e83845691d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_windglass_slingers/continuity-alpha/supported-travel-melee-and-left-corpse.png": "3b333db6c335243e6c013f38f6c6bb6695a60621771286eb475063e44323a152",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_windglass_slingers/continuity-alpha/original-punch-flat-sling-cradle.png": "1a398112415640d7b87634f5ce2f9a5f0c005e7d65cfd71cb05f93d724b877a1"
+  }
+}

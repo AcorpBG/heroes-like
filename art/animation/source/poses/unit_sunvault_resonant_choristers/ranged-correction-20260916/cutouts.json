@@ -1,0 +1,133 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner-approved deterministic background/edge cleanup only; preserve all original interior costume, glass and anatomy. No pose synthesis.",
+  "jobs": [
+    {
+      "id": "unit_sunvault_resonant_choristers-ranged-source",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/ranged-correction-20260916/ranged-source.png",
+      "source_sha256": "13f53edba940d384710e630d4adb879ae89382281ade929272c479100d869823",
+      "output": "art/animation/source/poses/unit_sunvault_resonant_choristers/ranged-correction-20260916/alpha/ranged-source.png",
+      "matte": {
+        "minimum": 95,
+        "maximum": 170,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "max_edge_residual": 40,
+        "background_seeds": [
+          [
+            352,
+            107
+          ],
+          [
+            375,
+            125
+          ],
+          [
+            342,
+            127
+          ],
+          [
+            379,
+            141
+          ],
+          [
+            346,
+            151
+          ],
+          [
+            331,
+            149
+          ],
+          [
+            395,
+            144
+          ],
+          [
+            426,
+            149
+          ],
+          [
+            1803,
+            157
+          ],
+          [
+            1744,
+            171
+          ],
+          [
+            346,
+            185
+          ],
+          [
+            1767,
+            185
+          ],
+          [
+            378,
+            185
+          ],
+          [
+            290,
+            190
+          ],
+          [
+            323,
+            180
+          ],
+          [
+            1801,
+            184
+          ],
+          [
+            1280,
+            292
+          ],
+          [
+            1296,
+            297
+          ],
+          [
+            1310,
+            303
+          ],
+          [
+            119,
+            330
+          ],
+          [
+            1322,
+            327
+          ],
+          [
+            1500,
+            343
+          ],
+          [
+            1933,
+            331
+          ],
+          [
+            535,
+            332
+          ],
+          [
+            567,
+            344
+          ],
+          [
+            1955,
+            346
+          ],
+          [
+            574,
+            369
+          ],
+          [
+            1961,
+            369
+          ]
+        ]
+      }
+    }
+  ]
+}

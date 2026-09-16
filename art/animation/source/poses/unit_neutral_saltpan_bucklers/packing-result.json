@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_saltpan_bucklers",
+  "output": "art/animation/source/poses/unit_neutral_saltpan_bucklers/candidate-atlas.png",
+  "sha256": "76922fc9993f6b676068159a0d2e43a627e6d0367b418647bde540395fc55204",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        188,
+        17,
+        325,
+        241
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        177,
+        17,
+        329,
+        243
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        184,
+        17,
+        323,
+        243
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        168,
+        17,
+        314,
+        241
+      ]
+    },
+    {
+      "name": "club_windup",
+      "index": 4,
+      "alpha_bounds": [
+        173,
+        21,
+        341,
+        242
+      ]
+    },
+    {
+      "name": "club_strike",
+      "index": 5,
+      "alpha_bounds": [
+        172,
+        41,
+        344,
+        242
+      ]
+    },
+    {
+      "name": "club_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        172,
+        33,
+        336,
+        242
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        175,
+        1,
+        339,
+        245
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        166,
+        60,
+        344,
+        241
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        155,
+        51,
+        358,
+        243
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        171,
+        80,
+        338,
+        242
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 11,
+      "alpha_bounds": [
+        149,
+        139,
+        364,
+        242
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 12,
+      "alpha_bounds": [
+        137,
+        172,
+        374,
+        243
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_saltpan_bucklers/alpha/poses.png": "c987e86b1ff377efef9f8a63b3b6027bbb021b6e520d49fb0fed02bd3bd2db5d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_saltpan_bucklers/continuity-alpha/club-recovery-guard-and-directional-rest.png": "e1999f9a02402cef2c7f5351d7c8cc4de28c893c039d612e2ffb2cc3294dec22"
+  }
+}

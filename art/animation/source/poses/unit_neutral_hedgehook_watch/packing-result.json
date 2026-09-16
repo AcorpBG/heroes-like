@@ -1,0 +1,155 @@
+{
+  "unit_id": "unit_neutral_hedgehook_watch",
+  "output": "art/animation/source/poses/unit_neutral_hedgehook_watch/candidate-atlas.png",
+  "sha256": "c9635ed31c434f110e610e98922aa3361674738df924cdf8728aaaa3467d90ca",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        185,
+        31,
+        338,
+        241
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        172,
+        30,
+        350,
+        241
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        162,
+        34,
+        348,
+        241
+      ]
+    },
+    {
+      "name": "walk_near_support_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        198,
+        24,
+        348,
+        240
+      ]
+    },
+    {
+      "name": "walk_far_support_attempt",
+      "index": 4,
+      "alpha_bounds": [
+        177,
+        28,
+        318,
+        240
+      ]
+    },
+    {
+      "name": "hook_windup",
+      "index": 5,
+      "alpha_bounds": [
+        176,
+        10,
+        370,
+        238
+      ]
+    },
+    {
+      "name": "hook_slash",
+      "index": 6,
+      "alpha_bounds": [
+        158,
+        41,
+        355,
+        235
+      ]
+    },
+    {
+      "name": "hook_recovery",
+      "index": 7,
+      "alpha_bounds": [
+        178,
+        33,
+        341,
+        239
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 8,
+      "alpha_bounds": [
+        178,
+        31,
+        323,
+        239
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 9,
+      "alpha_bounds": [
+        172,
+        83,
+        331,
+        242
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 10,
+      "alpha_bounds": [
+        177,
+        45,
+        329,
+        244
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 11,
+      "alpha_bounds": [
+        171,
+        82,
+        336,
+        248
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 12,
+      "alpha_bounds": [
+        142,
+        129,
+        375,
+        253
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 13,
+      "alpha_bounds": [
+        138,
+        140,
+        371,
+        241
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png": "d0f0e666f435734b891bc855d72cf1717a0284aecbc64711732f5f8e12ed2673",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_hedgehook_watch/continuity-alpha/hook-recovery-and-grounded-travel.png": "f5a5f6e839871ceb599717dfac73c1a856174d7fdf0fdb27109415f0dc6c9734"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "jobs": [
+    {
+      "id": "billhook-recovery-supported-step-and-corpse",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/billhook-recovery-supported-step-and-corpse.png",
+      "source_sha256": "2df37af6ced26c48e7bae106a0b97c25278994378ea499dfb497f5c759a9caba",
+      "output": "art/animation/source/poses/unit_neutral_orchard_halberds/continuity-alpha/billhook-recovery-supported-step-and-corpse.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

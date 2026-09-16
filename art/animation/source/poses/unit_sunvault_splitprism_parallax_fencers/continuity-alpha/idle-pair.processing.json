@@ -1,0 +1,50 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "parallax-idle-pair",
+  "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/idle-pair.png",
+  "source_sha256": "b9e37c78322e8da773b7d78b94fc81b702580e2f380e3b8032ccc26aef149edb",
+  "source_rect": [
+    0,
+    0,
+    1774,
+    887
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/idle-pair.png",
+  "output_sha256": "bd4abb2a5b3a43fefcf4f35d6ea7ea73cd8b0eced1c2fe8ee4bc0c08910ff857",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "732acb7b8f20636e57c5a5479a01928c28f52c8eaf068c4b28f1baee0b970be4",
+  "recipe": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-cutouts.json",
+  "recipe_sha256": "43d3384f7c2a970ca66d163dcbea8bb6323840f8c90f4b26d7310c9d4a4c6bee",
+  "parameters": {
+    "minimum": 100,
+    "maximum": 185,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        489,
+        112
+      ],
+      [
+        345,
+        154
+      ],
+      [
+        1190,
+        144
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1213527,
+    "edge_pixels": 8812,
+    "unchanged_paint_pixels": 351199,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

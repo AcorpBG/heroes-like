@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "loaded-pipe-melee-defense-and-empty-recovery",
+  "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/loaded-pipe-melee-defense-and-empty-recovery.png",
+  "source_sha256": "632a6cfafb1b960a89125955122dcff2631e0891fe45494c8062d80ed4916e95",
+  "source_rect": [
+    0,
+    0,
+    1312,
+    1199
+  ],
+  "output": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/loaded-pipe-melee-defense-and-empty-recovery.png",
+  "output_sha256": "c8025a27d4f26fddad07408ce7e152fa94e0c425ae15a358c27ceef74dc1adca",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-cutouts.json",
+  "recipe_sha256": "401e383f8b4057083425ffca5514a43b2e9b143fea7453d8afba01cb678201ea",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1024069,
+    "edge_pixels": 21117,
+    "unchanged_paint_pixels": 527902,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

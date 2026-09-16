@@ -1,0 +1,126 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams",
+  "output": "art/animation/source/poses/unit_thornwake_barkmantle_rams/candidate-atlas.png",
+  "sha256": "1cb173e61905e031d3f7e0c4006372a524394c698c6ed6d3e3276f1fe11a60df",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        102,
+        42,
+        401,
+        243
+      ]
+    },
+    {
+      "name": "idle_1",
+      "index": 1,
+      "alpha_bounds": [
+        104,
+        24,
+        401,
+        244
+      ]
+    },
+    {
+      "name": "walk_near_diagonal",
+      "index": 2,
+      "alpha_bounds": [
+        104,
+        48,
+        410,
+        239
+      ]
+    },
+    {
+      "name": "walk_far_diagonal",
+      "index": 3,
+      "alpha_bounds": [
+        98,
+        34,
+        409,
+        239
+      ]
+    },
+    {
+      "name": "ram_windup",
+      "index": 4,
+      "alpha_bounds": [
+        107,
+        60,
+        403,
+        244
+      ]
+    },
+    {
+      "name": "ram_contact",
+      "index": 5,
+      "alpha_bounds": [
+        98,
+        70,
+        438,
+        243
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 6,
+      "alpha_bounds": [
+        99,
+        66,
+        389,
+        243
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 7,
+      "alpha_bounds": [
+        121,
+        14,
+        388,
+        250
+      ]
+    },
+    {
+      "name": "kneel",
+      "index": 8,
+      "alpha_bounds": [
+        100,
+        73,
+        416,
+        250
+      ]
+    },
+    {
+      "name": "side_fall",
+      "index": 9,
+      "alpha_bounds": [
+        109,
+        83,
+        408,
+        245
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 10,
+      "alpha_bounds": [
+        106,
+        111,
+        405,
+        248
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png": "080fb428a56f86fba082912da5a07abf1205068713154553347c8201d014aaff",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/walk-near-diagonal-magenta.png": "8a84a1dcb1dca1605757692faef34f4b62eb44855746591d0242a2a1f631186c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/walk-far-diagonal-magenta.png": "e6299b24370d6734526f7825e9ce3aeee26262fdbecef92fe6402b92ea27ee89"
+  }
+}

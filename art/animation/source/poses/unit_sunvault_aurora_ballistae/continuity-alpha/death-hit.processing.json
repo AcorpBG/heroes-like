@@ -1,0 +1,143 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "aurora-death-hit",
+  "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/death-hit.png",
+  "source_sha256": "630d14af2503ca43b58e13f2d053fa66d44623abac3a05c068235a26188af51f",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/death-hit.png",
+  "output_sha256": "f15b67f11ba5a1419f964b5774adc81064bc4adda8c91e06731191ac2be4121c",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "97f7e2833d4cbed6db4e986dddebdfd79825b532dc47a326b82c75cb1749e907",
+  "recipe": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-cutouts.json",
+  "recipe_sha256": "afbdc6087cf69114e6886e9bd89d9f59740fad13ca3ed53e08b913beea72411c",
+  "parameters": {
+    "minimum": 100,
+    "maximum": 185,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [],
+    "protected_polygons": [
+      [
+        [
+          195,
+          401
+        ],
+        [
+          211,
+          407
+        ],
+        [
+          250,
+          462
+        ],
+        [
+          237,
+          494
+        ],
+        [
+          222,
+          469
+        ],
+        [
+          201,
+          430
+        ]
+      ],
+      [
+        [
+          786,
+          494
+        ],
+        [
+          803,
+          496
+        ],
+        [
+          846,
+          525
+        ],
+        [
+          838,
+          547
+        ],
+        [
+          811,
+          531
+        ],
+        [
+          793,
+          514
+        ]
+      ],
+      [
+        [
+          249,
+          1054
+        ],
+        [
+          266,
+          1051
+        ],
+        [
+          356,
+          1072
+        ],
+        [
+          347,
+          1093
+        ],
+        [
+          316,
+          1088
+        ],
+        [
+          281,
+          1080
+        ]
+      ],
+      [
+        [
+          851,
+          1057
+        ],
+        [
+          868,
+          1054
+        ],
+        [
+          958,
+          1075
+        ],
+        [
+          949,
+          1096
+        ],
+        [
+          918,
+          1091
+        ],
+        [
+          883,
+          1083
+        ]
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 958273,
+    "edge_pixels": 19716,
+    "unchanged_paint_pixels": 594527,
+    "protected_pixels": 8007,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

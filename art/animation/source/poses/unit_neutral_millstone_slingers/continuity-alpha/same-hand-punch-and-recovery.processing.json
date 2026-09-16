@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "id": "same-hand-punch-and-recovery",
+  "source": "art/animation/source/poses/unit_neutral_millstone_slingers/same-hand-punch-and-recovery.png",
+  "source_sha256": "5fa0217dd2995ba1d0b9f5f729ffb55ba99f5ede9e6bad3fb2e214db951681c7",
+  "source_rect": [
+    0,
+    0,
+    1234,
+    1274
+  ],
+  "output": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/same-hand-punch-and-recovery.png",
+  "output_sha256": "7e44caf820e21601cdb4096f6a64ba011bb1ba88e3256fa71f3245b7cf26e800",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-cutouts.json",
+  "recipe_sha256": "280f2728df5c84353eaaf7e56891d76fb85e6f6c07ff315a4878e5147599f57d",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1095492,
+    "edge_pixels": 20482,
+    "unchanged_paint_pixels": 456142,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

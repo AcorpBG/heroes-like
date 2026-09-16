@@ -1,0 +1,33 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_orchard_halberds",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "billhook-recovery-supported-step-and-corpse",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/billhook-recovery-supported-step-and-corpse.png",
+      "sha256": "2df37af6ced26c48e7bae106a0b97c25278994378ea499dfb497f5c759a9caba",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-65582b58-8130-440d-bbc8-8aed59487d6e.png",
+      "prompt": "Use case: stylized-concept. FOUR full-body original Orchard Halberd tactical battle poses in TWO columns TWO rows. Image1 is authoritative original character and gear reference. Image2 is the fall before the final corpse; keep HEAD LEFT and FEET RIGHT for that corpse. Preserve bearded orchard militia man with apple/leaf sprig on brown brimmed hat, moss green scarf, rust-orange quilted split coat cream trim, brown trousers/wrapped boots, fruit pouch/rope coil; LEFT forearm bears ONE oval wicker shield with iron crossbands and boss, RIGHT hand carries ONE long wooden billhook polearm with tall curved steel blade and rear hook. Identical weapon length and shield size in all poses, original painted game style, fixed elevated 3/4 camera facing RIGHT while standing.\nTOP LEFT: clear supported passing step absent from current art: right/near boot visibly lifted clear of ground, near thigh passes forward, LEFT/far boot planted beneath hip; no extended heel-first contact stance. Carry full billhook upright at viewer left with one right-hand grip; left shield remains forward. Keep original torso camera, no mirror.\nTOP RIGHT: RECOVERY after downward right-hand billhook strike: right elbow bends bringing shaft back up from low RIGHT, shield held forward on LEFT forearm, feet planted, torso returns upright. Full wooden butt extends behind right grip, head low-forward right; no disappearing rear shaft.\nBOTTOM LEFT: guard release: knees straightening from deep block, shield lowered from face to chest height but still forward on left arm, polearm upright outside shield in right hand. Both feet planted, no extra hands.\nBOTTOM RIGHT: final DEAD resting body directly following image2, HEAD LEFT and FEET RIGHT, eyes CLOSED and hat still on; chest horizontal entirely on ground, head rests on relaxed arm, left forearm with wicker shield resting in front of chest (not vanishing), intact full billhook flat alongside body, right hand relaxed near shaft. No supported torso, no blood.\nUse generous gutters for full long blades/shafts, feet, hat and shield. Equal body scale, no neighbor overlap. Pure flat vivid BLUE RGB(0,0,255) backing, NO blue cast/spill, so the original green scarf/leaf paint is retained. No ground shadow, text, diagrams, border, extra weapons or effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/orchard-continuity-20260916/idle-reference/unit_neutral_orchard_halberds-poses-rect-0-0-287-421-green.png",
+          "sha256": "ab1746ebaeb50f5874adc36c802bf472fc39f134fb0f8ab9f51e43a1b5f15a08"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/orchard-continuity-20260916/fall-reference/unit_neutral_orchard_halberds-poses-rect-609-931-924-1207-green.png",
+          "sha256": "d0496373944802e4cd095cc4e9635c1732dba364c35720f63679724d2102aced"
+        }
+      ],
+      "selection_notes": "13 packed frames retain ten original paintings and select three new billhook recovery, guard-release and head-left corpse paintings. Shield remains on left arm and original full-shaft windup/strike stay distinct. New body follows the existing head-left fall with closed eyes/hat, wicker shield and intact polearm present; reversed original corpse is unselected. Original alpha reused; blue-backed continuation protects green scarf/leaves during approved bounded preparation. Uniform per-source scales 0.55/0.37 and anatomical anchors. Inspected banded crops preserve own blade, pole butt and boots while excluding neighboring blade/cape fragments. New travel attempt has no convincing grounded support foot and is deliberately unselected. Original repeated contact/passing attempts remain incomplete gait, not accepted walking. Full alternating support, shield/weapon/hand/body/palette/edge continuity and connected attack/death timing remain refinement.",
+      "selected_frames": [
+        "billhook_recovery",
+        "guard_ready",
+        "dead_head_left"
+      ]
+    }
+  ]
+}

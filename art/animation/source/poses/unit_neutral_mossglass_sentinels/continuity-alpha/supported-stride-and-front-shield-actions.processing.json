@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "id": "supported-stride-and-front-shield-actions",
+  "source": "art/animation/source/poses/unit_neutral_mossglass_sentinels/supported-stride-and-front-shield-actions.png",
+  "source_sha256": "d5d746b69246f76b6b3bf632915d60c448e0fb96430728059a66d3da97ad8649",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_neutral_mossglass_sentinels/continuity-alpha/supported-stride-and-front-shield-actions.png",
+  "output_sha256": "403c2b3cf60910722d71e5f47652833d28e78ed4204d9c848788e313c4460188",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_mossglass_sentinels/continuity-cutouts.json",
+  "recipe_sha256": "6621b8b7a908038de036004acaa5eee000e9b3de12b8018facbf69ecf29ff674",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1117180,
+    "edge_pixels": 24607,
+    "unchanged_paint_pixels": 431077,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

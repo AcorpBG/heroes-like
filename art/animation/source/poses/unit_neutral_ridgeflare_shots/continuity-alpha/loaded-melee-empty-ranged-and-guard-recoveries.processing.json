@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "loaded-melee-empty-ranged-and-guard-recoveries",
+  "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/loaded-melee-empty-ranged-and-guard-recoveries.png",
+  "source_sha256": "6702fb7a4dc1b7adb03826d1e9f46ddd8e7e44c343e2b2713522bdd49f6b8682",
+  "source_rect": [
+    0,
+    0,
+    2172,
+    724
+  ],
+  "output": "art/animation/source/poses/unit_neutral_ridgeflare_shots/continuity-alpha/loaded-melee-empty-ranged-and-guard-recoveries.png",
+  "output_sha256": "4d3ec004b0448d05e5786306875d679a501b7018e35017a5449ee18158552071",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_ridgeflare_shots/continuity-cutouts.json",
+  "recipe_sha256": "6c74a419ee492e8ef6085b9330174c7456fcd3e4282acacf04154e5a42f1d79d",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1123866,
+    "edge_pixels": 18112,
+    "unchanged_paint_pixels": 430550,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

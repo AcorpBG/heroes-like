@@ -1,0 +1,270 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "heliograph-rolling-four",
+  "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/rolling-four.png",
+  "source_sha256": "f392330dc46f8c39110e2ce58c6c770d8fcd622b87d2eeb0d90a0ec499731aee",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/rolling-four.png",
+  "output_sha256": "e6872d7e42f16e5345c7f2fb9127ccc4051e4ca4d051248f2d0667e84fb4bd0a",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "732acb7b8f20636e57c5a5479a01928c28f52c8eaf068c4b28f1baee0b970be4",
+  "recipe": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-cutouts.json",
+  "recipe_sha256": "1361aee5de2be1f63099dc2e8d4644a0e573728f65b61f3b307017d9d4902fc5",
+  "parameters": {
+    "minimum": 100,
+    "maximum": 185,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        217,
+        198
+      ],
+      [
+        827,
+        199
+      ],
+      [
+        417,
+        237
+      ],
+      [
+        1039,
+        259
+      ],
+      [
+        503,
+        273
+      ],
+      [
+        1138,
+        280
+      ],
+      [
+        509,
+        283
+      ],
+      [
+        1137,
+        289
+      ],
+      [
+        364,
+        317
+      ],
+      [
+        965,
+        315
+      ],
+      [
+        194,
+        390
+      ],
+      [
+        389,
+        424
+      ],
+      [
+        1007,
+        430
+      ],
+      [
+        178,
+        434
+      ],
+      [
+        227,
+        430
+      ],
+      [
+        793,
+        439
+      ],
+      [
+        840,
+        436
+      ],
+      [
+        212,
+        454
+      ],
+      [
+        187,
+        453
+      ],
+      [
+        390,
+        451
+      ],
+      [
+        828,
+        456
+      ],
+      [
+        805,
+        463
+      ],
+      [
+        1004,
+        456
+      ],
+      [
+        953,
+        455
+      ],
+      [
+        346,
+        465
+      ],
+      [
+        365,
+        479
+      ],
+      [
+        992,
+        475
+      ],
+      [
+        965,
+        476
+      ],
+      [
+        831,
+        763
+      ],
+      [
+        214,
+        764
+      ],
+      [
+        1039,
+        801
+      ],
+      [
+        1128,
+        846
+      ],
+      [
+        508,
+        849
+      ],
+      [
+        1132,
+        853
+      ],
+      [
+        504,
+        858
+      ],
+      [
+        368,
+        875
+      ],
+      [
+        977,
+        881
+      ],
+      [
+        194,
+        953
+      ],
+      [
+        815,
+        952
+      ],
+      [
+        799,
+        971
+      ],
+      [
+        392,
+        996
+      ],
+      [
+        1025,
+        1002
+      ],
+      [
+        798,
+        1002
+      ],
+      [
+        178,
+        1002
+      ],
+      [
+        230,
+        1003
+      ],
+      [
+        847,
+        1009
+      ],
+      [
+        217,
+        1020
+      ],
+      [
+        195,
+        1027
+      ],
+      [
+        803,
+        1026
+      ],
+      [
+        390,
+        1020
+      ],
+      [
+        832,
+        1027
+      ],
+      [
+        1019,
+        1024
+      ],
+      [
+        971,
+        1025
+      ],
+      [
+        344,
+        1026
+      ],
+      [
+        380,
+        1044
+      ],
+      [
+        355,
+        1048
+      ],
+      [
+        1011,
+        1043
+      ],
+      [
+        979,
+        1047
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1184331,
+    "edge_pixels": 10966,
+    "unchanged_paint_pixels": 377219,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

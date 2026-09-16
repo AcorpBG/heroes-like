@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "pick-recovery-guard-and-grounded-travel",
+  "source": "art/animation/source/poses/unit_neutral_sumpstone_guards/pick-recovery-guard-and-grounded-travel.png",
+  "source_sha256": "61d1ef552d5aec21e7363722927e9faf19fedf90084ec14086a49530c80bc256",
+  "source_rect": [
+    0,
+    0,
+    1326,
+    1187
+  ],
+  "output": "art/animation/source/poses/unit_neutral_sumpstone_guards/continuity-alpha/pick-recovery-guard-and-grounded-travel.png",
+  "output_sha256": "dfb870897ed133e6d77256edbcdb1cb3dd167b8cdb462dd5474d1398fcf8a554",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_sumpstone_guards/continuity-cutouts.json",
+  "recipe_sha256": "4568325b9d72b75dd06a5ff365edd9d38f81047050770d81a16ededd1a949bb5",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 920265,
+    "edge_pixels": 14764,
+    "unchanged_paint_pixels": 638933,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

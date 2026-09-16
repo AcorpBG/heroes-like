@@ -1,0 +1,180 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "output": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/candidate-atlas.png",
+  "sha256": "a3fee96a035786f243cedb3443af26d9c036e927bc3c595f2253630d10b4deab",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        154,
+        24,
+        349,
+        240
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        168,
+        22,
+        337,
+        239
+      ]
+    },
+    {
+      "name": "travel_planted",
+      "index": 2,
+      "alpha_bounds": [
+        156,
+        20,
+        361,
+        240
+      ]
+    },
+    {
+      "name": "travel_near_hind_lift",
+      "index": 3,
+      "alpha_bounds": [
+        156,
+        20,
+        361,
+        240
+      ]
+    },
+    {
+      "name": "travel_near_fore_lift",
+      "index": 4,
+      "alpha_bounds": [
+        156,
+        20,
+        361,
+        233
+      ]
+    },
+    {
+      "name": "travel_far_hind_lift",
+      "index": 5,
+      "alpha_bounds": [
+        156,
+        20,
+        361,
+        240
+      ]
+    },
+    {
+      "name": "travel_far_fore_lift",
+      "index": 6,
+      "alpha_bounds": [
+        156,
+        20,
+        361,
+        240
+      ]
+    },
+    {
+      "name": "crown_windup",
+      "index": 7,
+      "alpha_bounds": [
+        153,
+        57,
+        372,
+        240
+      ]
+    },
+    {
+      "name": "crown_forward_strike",
+      "index": 8,
+      "alpha_bounds": [
+        121,
+        86,
+        386,
+        239
+      ]
+    },
+    {
+      "name": "crown_recovery",
+      "index": 9,
+      "alpha_bounds": [
+        157,
+        23,
+        349,
+        240
+      ]
+    },
+    {
+      "name": "crown_shallow_brace",
+      "index": 10,
+      "alpha_bounds": [
+        146,
+        57,
+        359,
+        240
+      ]
+    },
+    {
+      "name": "crown_deep_brace",
+      "index": 11,
+      "alpha_bounds": [
+        150,
+        68,
+        361,
+        240
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 12,
+      "alpha_bounds": [
+        149,
+        42,
+        352,
+        240
+      ]
+    },
+    {
+      "name": "death_knees_buckle",
+      "index": 13,
+      "alpha_bounds": [
+        155,
+        77,
+        360,
+        239
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 14,
+      "alpha_bounds": [
+        145,
+        94,
+        391,
+        238
+      ]
+    },
+    {
+      "name": "dead_head_right_dark_lanterns",
+      "index": 15,
+      "alpha_bounds": [
+        138,
+        141,
+        391,
+        239
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/poses.png": "ab7fc17c15ca0d02dbd0c6ed37881dcf943ed7ccf55105dabc2251e3e9d63a21",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/planted.png": "572475c88a916718672f32d8f5a66d6ac90215e7dc84cda27e0572e1e3e9ffc2",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/near-hind-lift.png": "3e603e14f3c074ee31325cea8b52c612e2936b364a505395d178a6048b2fe89e",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/near-fore-lift.png": "5808f2d7cad8c56c96649544232d9b586cad693192bc91e007fc85609741d540",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/far-hind-lift.png": "b56493403b63dd2a07f44bbfeed50e51b7d6326504413edd37adf00a949d6836",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/far-fore-lift.png": "a62ba1a8ce2aebe4d7b276584330ef0cda7caed18c2480f973e37382ed524641",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png": "c8e1140944a002074fd2dddd07cb38dcb5d192b4586d59f64a667cd72dc3f31b"
+  }
+}

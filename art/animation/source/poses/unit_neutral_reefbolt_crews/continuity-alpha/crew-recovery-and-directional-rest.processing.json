@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing clean genuine alpha is reused without rekeying.",
+  "id": "crew-recovery-and-directional-rest",
+  "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/crew-recovery-and-directional-rest.png",
+  "source_sha256": "9425dc3cc1ea2b234450bc4e97cf05fb70bc818e8da35ea12d70352de5529a50",
+  "source_rect": [
+    0,
+    0,
+    1239,
+    1269
+  ],
+  "output": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/crew-recovery-and-directional-rest.png",
+  "output_sha256": "d5defbc82b42745519f45d53baca7c3e3e6a35bcd98e19810dda291e39c1da2a",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-cutouts.json",
+  "recipe_sha256": "113a66a25db00e9ab6a4d0de300fedcdd214a64cdc9218803c51ef31e038ddda",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 936598,
+    "edge_pixels": 16105,
+    "unchanged_paint_pixels": 619588,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

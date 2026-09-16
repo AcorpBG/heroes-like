@@ -1,0 +1,158 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "heliograph-ready-defense-margins",
+  "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/ready-defense-margins.png",
+  "source_sha256": "e86c94dcf8c8de03df28d919203104e096a309e948ef3f65a7d38a887c5db586",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense-margins.png",
+  "output_sha256": "6dfc46598161ecfc0238f12b12be101b6335486e0efb99e4bd6dedb225dfb586",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "732acb7b8f20636e57c5a5479a01928c28f52c8eaf068c4b28f1baee0b970be4",
+  "recipe": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-cutouts.json",
+  "recipe_sha256": "1361aee5de2be1f63099dc2e8d4644a0e573728f65b61f3b307017d9d4902fc5",
+  "parameters": {
+    "minimum": 100,
+    "maximum": 185,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        295,
+        216
+      ],
+      [
+        855,
+        213
+      ],
+      [
+        463,
+        259
+      ],
+      [
+        1017,
+        268
+      ],
+      [
+        1022,
+        277
+      ],
+      [
+        525,
+        280
+      ],
+      [
+        536,
+        301
+      ],
+      [
+        1096,
+        303
+      ],
+      [
+        415,
+        328
+      ],
+      [
+        982,
+        321
+      ],
+      [
+        832,
+        418
+      ],
+      [
+        272,
+        416
+      ],
+      [
+        287,
+        420
+      ],
+      [
+        843,
+        420
+      ],
+      [
+        447,
+        422
+      ],
+      [
+        427,
+        454
+      ],
+      [
+        412,
+        457
+      ],
+      [
+        974,
+        458
+      ],
+      [
+        301,
+        744
+      ],
+      [
+        863,
+        742
+      ],
+      [
+        1087,
+        834
+      ],
+      [
+        531,
+        831
+      ],
+      [
+        417,
+        863
+      ],
+      [
+        980,
+        864
+      ],
+      [
+        287,
+        948
+      ],
+      [
+        844,
+        948
+      ],
+      [
+        1005,
+        976
+      ],
+      [
+        427,
+        985
+      ],
+      [
+        411,
+        989
+      ],
+      [
+        993,
+        993
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1261295,
+    "edge_pixels": 10907,
+    "unchanged_paint_pixels": 300314,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

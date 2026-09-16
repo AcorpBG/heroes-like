@@ -1,0 +1,38 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_snowglass_markers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "bow-recovery-nock-and-resting-corpse",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/bow-recovery-nock-and-resting-corpse.png",
+      "sha256": "4d3f24eaf29ddd99f7f5f3c04a1c63a5954b03918afd94ca3b1b7d5a2133f111",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-47adce97-4253-4adb-abd0-8fbc062508de.png",
+      "prompt": "Use case: stylized-concept. FOUR original Snowglass Marker full-body battle sprite paintings in TWO columns TWO rows with large gutters. Image1 fixes identity/palette/camera. Image2 fixes the complete horizontal bow and two-hand melee grip. Image3 fixes head-LEFT feet-RIGHT fall direction for the new dead pose. Same woman archer, brass blue-lens goggles, white fur-lined hood and white split coat with cobalt embroidered panels, blue scarf/cape, leather straps, dark trousers and fur boots, back quiver blue-fletched arrows. Original painted game art, fixed elevated 3/4 camera facing RIGHT for upright poses.\nTOP LEFT: recovery immediately after image2's horizontal bow-stave shove: both hands still grasp WOOD, elbows bend returning one curved wooden bow toward chest. Bow is horizontal and string unpulled. Keep its brass central blue sight and both tips; no arrows, no new straight rod.\nTOP RIGHT: softer defensive ready: bow vertical close to left side of body in LEFT hand, RIGHT forearm protecting chest; both knees slightly bent, feet planted. Same face/goggles/cape/quiver.\nBOTTOM LEFT: visibly distinct NOCKING preparation BEFORE draw: LEFT hand holds bow vertical low at waist, left elbow bent, RIGHT fingertips fit tail of one blue-fletched arrow onto UNPULLED straight bowstring near middle of bow. Bow and arrow low before torso, neither hand at cheek and not aiming yet. One attached arrow only; no floating ammunition.\nBOTTOM RIGHT: fully settled dead body continuing image3: HEAD remains LEFT, feet RIGHT, chest lies completely down on side, cheek/hood rests on relaxed right forearm, goggles remain on face, blue cape settles behind, LEFT hand relaxes beside complete bow now flat on ground in front. Body and head horizontal, no raised elbow or propped torso. No blood or glow.\nConsistent anatomy, body and bow scale. All extremities/gear visible inside own cell, no overlap. Uniform vivid green #00ff00 background, no green color spill; preserve white fur. No shadows, text, border, extra hands or effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/snowglass-continuity-20260916/idle-reference/unit_neutral_snowglass_markers-poses-rect-0-0-310-331-green.png",
+          "sha256": "ee8516fc8875a645e2e199204fe960580e166079dd91cb1cfaeee2d358fb9e6a"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/snowglass-continuity-20260916/original-shove/unit_neutral_snowglass_markers-melee-shove-light.png",
+          "sha256": "082aa97f4af66dfdbaff8de8909ec8d792bde5160d3501a4d8a5e62961bdf344"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/snowglass-continuity-20260916/fall-reference/unit_neutral_snowglass_markers-poses-rect-565-1026-915-1254-green.png",
+          "sha256": "39538c782dbcdf078f0978ac92cdc989d1bb313b40ab9018a5c3e0c3a30d7619"
+        }
+      ],
+      "selection_notes": "17 packed frames retain thirteen original paintings, including the corrected separate two-hand melee shove, and select four new recovery/ready-guard/low-nock/head-left-corpse paintings. New low nocking differs from aimed draw; melee and firing stay separate. New relaxed head-left body follows the original fall with goggles, quiver, cape and complete bow retained; reversed original corpse is unselected. Original sheet and corrected shove alpha composites are clean and reused. New green-backed source uses approved bounded edge preparation preserving white fur. Source scales 0.65/0.17/0.42 and anatomical anchors; inspected banded crops exclude neighboring bow tips, boots and next-row hood pixels without clipping own string/bow or recoil tip. Original contact/passing remain migration candidates, not a complete alternating gait. Nock/string mechanics, bow length/sight/grip continuity, body/cape/palette/edges, stance transition and connected timing remain refinement. Static art review is not motion/gameplay acceptance.",
+      "selected_frames": [
+        "bow_recovery",
+        "guard_ready",
+        "arrow_nock",
+        "dead_head_left"
+      ]
+    }
+  ]
+}

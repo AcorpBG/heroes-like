@@ -1,0 +1,185 @@
+{
+  "unit_id": "unit_neutral_lanternskate_throwers",
+  "output": "art/animation/source/poses/unit_neutral_lanternskate_throwers/candidate-atlas.png",
+  "sha256": "5fef9bcaefea3ed4b55854d99d0231d5cf941cd024c6fd2c2f49b2139cd6c47f",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a_lantern",
+      "index": 0,
+      "alpha_bounds": [
+        180,
+        21,
+        326,
+        239
+      ]
+    },
+    {
+      "name": "idle_b_lantern",
+      "index": 1,
+      "alpha_bounds": [
+        174,
+        21,
+        329,
+        240
+      ]
+    },
+    {
+      "name": "skate_push",
+      "index": 2,
+      "alpha_bounds": [
+        125,
+        33,
+        335,
+        240
+      ]
+    },
+    {
+      "name": "skate_gather",
+      "index": 3,
+      "alpha_bounds": [
+        167,
+        28,
+        361,
+        239
+      ]
+    },
+    {
+      "name": "right_fist_windup",
+      "index": 4,
+      "alpha_bounds": [
+        161,
+        35,
+        349,
+        240
+      ]
+    },
+    {
+      "name": "right_fist_cross",
+      "index": 5,
+      "alpha_bounds": [
+        161,
+        23,
+        370,
+        239
+      ]
+    },
+    {
+      "name": "right_fist_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        163,
+        23,
+        345,
+        239
+      ]
+    },
+    {
+      "name": "empty_fists_ready",
+      "index": 7,
+      "alpha_bounds": [
+        175,
+        23,
+        334,
+        239
+      ]
+    },
+    {
+      "name": "empty_fists_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        183,
+        64,
+        321,
+        244
+      ]
+    },
+    {
+      "name": "hit_recoil_hood_retained",
+      "index": 9,
+      "alpha_bounds": [
+        167,
+        45,
+        333,
+        242
+      ]
+    },
+    {
+      "name": "draw_lantern",
+      "index": 10,
+      "alpha_bounds": [
+        166,
+        40,
+        351,
+        239
+      ]
+    },
+    {
+      "name": "throw_lantern_aim",
+      "index": 11,
+      "alpha_bounds": [
+        143,
+        26,
+        373,
+        242
+      ]
+    },
+    {
+      "name": "throw_empty_release",
+      "index": 12,
+      "alpha_bounds": [
+        167,
+        44,
+        375,
+        241
+      ]
+    },
+    {
+      "name": "empty_hand_recovery",
+      "index": 13,
+      "alpha_bounds": [
+        173,
+        12,
+        324,
+        239
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        167,
+        98,
+        337,
+        239
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 15,
+      "alpha_bounds": [
+        140,
+        121,
+        369,
+        239
+      ]
+    },
+    {
+      "name": "dead_head_right_dim_lanterns",
+      "index": 16,
+      "alpha_bounds": [
+        131,
+        136,
+        373,
+        242
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_lanternskate_throwers/alpha/poses.png": "61c6e1a190cf492b5d5a51625c39720ee85f35d79dafebad41953dfe8e738456",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_lanternskate_throwers/right-fist-strike-recovery-and-ready-extracted.png": "6587d5158d257685127d7a121bbb7fc3313c6e9094b9e900fa40e94c28256ec8"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "short-spear-actions-and-passing-step",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/short-spear-actions-and-passing-step.png",
+      "source_sha256": "df33d70d9c4dad1c7d985bf5ed2429a44b4ec538287c4f829806caba27016ba4",
+      "output": "art/animation/source/poses/unit_neutral_milestone_bucklers/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

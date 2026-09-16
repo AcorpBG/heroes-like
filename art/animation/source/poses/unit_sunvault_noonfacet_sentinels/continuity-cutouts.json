@@ -1,0 +1,109 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "jobs": [
+    {
+      "id": "noonfacet-walk-contact-a",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/walk-contact-a.png",
+      "source_sha256": "e85f769ad72ddb2b143ab3a3e215555d37dc2bbd170fbd7f4631b524f0db14ac",
+      "output": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/walk-contact-a.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "noonfacet-walk-passing-a",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/walk-passing-a.png",
+      "source_sha256": "5cccf7dab4d20c737f2e868e21e2b1c83d8d839003c640f2689d352d1fd7a34d",
+      "output": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/walk-passing-a.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "noonfacet-walk-contact-b",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/walk-contact-b.png",
+      "source_sha256": "526df0862aebff64a3eace8eaa1e89e3ab1da578e39f21f1d0419966cbae52d5",
+      "output": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/walk-contact-b.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "noonfacet-walk-passing-b",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/walk-passing-b.png",
+      "source_sha256": "447c0305bed6785ef830122b8b5d1a3357e22ae83bcfe9fbf1e1ba39113269c2",
+      "output": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/walk-passing-b.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "noonfacet-defense-pair",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/defense-pair.png",
+      "source_sha256": "5434a44f43a5ab6177b2c900934e7898d766590ff5b5e576b06cf4ea8109587f",
+      "output": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/defense-pair.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            331,
+            518
+          ],
+          [
+            1054,
+            524
+          ]
+        ]
+      }
+    },
+    {
+      "id": "noonfacet-collapse-low",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/collapse-low.png",
+      "source_sha256": "368cdbe6e72344854936596789cf41d8735bc2e3af983ca36bc51c0ce2ef551d",
+      "output": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/collapse-low.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            546,
+            520
+          ]
+        ]
+      }
+    },
+    {
+      "id": "noonfacet-collapse-low-corrected",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/collapse-low-corrected.png",
+      "source_sha256": "b6b1158f6a21384c138cdcbc16c0e603a849cc885ee298b0f697c9a675d6f7d5",
+      "output": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/collapse-low-corrected.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            546,
+            520
+          ]
+        ]
+      }
+    }
+  ]
+}

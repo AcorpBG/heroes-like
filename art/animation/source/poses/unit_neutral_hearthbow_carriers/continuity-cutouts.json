@@ -1,0 +1,91 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner explicitly approved local non-generative raster background/edge preparation; preserve original masters and never synthesize poses.",
+  "jobs": [
+    {
+      "id": "walk-contact-a-green",
+      "source": "art/animation/source/poses/unit_neutral_hearthbow_carriers/walk-contact-a-green.png",
+      "source_sha256": "632ed454fda34e271bca4f4212d25fd096b46e7722c0a179a2a2a9176e058dcb",
+      "output": "art/animation/source/poses/unit_neutral_hearthbow_carriers/continuity-alpha/walk-contact-a-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "walk-passing-a-green",
+      "source": "art/animation/source/poses/unit_neutral_hearthbow_carriers/walk-passing-a-green.png",
+      "source_sha256": "c5ed28bfd723026c8b5faf2a924d22fc0b5d350715a81cea6ce085d0a57635fd",
+      "output": "art/animation/source/poses/unit_neutral_hearthbow_carriers/continuity-alpha/walk-passing-a-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "walk-passing-b-green",
+      "source": "art/animation/source/poses/unit_neutral_hearthbow_carriers/walk-passing-b-green.png",
+      "source_sha256": "d335335facc2eba30f17e645422291fa90e6593f4c96065b8bbbce987e015062",
+      "output": "art/animation/source/poses/unit_neutral_hearthbow_carriers/continuity-alpha/walk-passing-b-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "walk-near-landing-green",
+      "source": "art/animation/source/poses/unit_neutral_hearthbow_carriers/walk-near-landing-green.png",
+      "source_sha256": "853491f2d8b4ddc07f419ad0b10d96a6c3a5ecda660e987a030038e9ca9f4712",
+      "output": "art/animation/source/poses/unit_neutral_hearthbow_carriers/continuity-alpha/walk-near-landing-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "melee-brace-green",
+      "source": "art/animation/source/poses/unit_neutral_hearthbow_carriers/melee-brace-green.png",
+      "source_sha256": "5b17d652384bcf1b8f48f7554ef928e7121b89d3f64c6f574d40278da9f2d7d4",
+      "output": "art/animation/source/poses/unit_neutral_hearthbow_carriers/continuity-alpha/melee-brace-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

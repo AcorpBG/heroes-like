@@ -1,0 +1,107 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte extraction and narrow edge cleanup; retain original paints.",
+  "jobs": [
+    {
+      "id": "tunnelmark_step_planted",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/planted.png",
+      "source_sha256": "9016cff9c3260c50010a3e6d537de8da50fd874ff1bb0dca8d3efe7f62272b9c",
+      "output": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/planted.png",
+      "matte": {
+        "minimum": 145,
+        "maximum": 190,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "max_edge_residual": 40,
+        "background_seeds": [
+          [
+            855,
+            509
+          ],
+          [
+            891,
+            593
+          ],
+          [
+            974,
+            635
+          ],
+          [
+            885,
+            539
+          ],
+          [
+            885,
+            534
+          ]
+        ]
+      }
+    },
+    {
+      "id": "tunnelmark_step_far",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/far-lift.png",
+      "source_sha256": "0401035fe94b85038fefa9fd2c83ff752bbe7367354783e6d6d984c2988ba51f",
+      "output": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/far-lift.png",
+      "matte": {
+        "minimum": 145,
+        "maximum": 190,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "max_edge_residual": 40,
+        "background_seeds": [
+          [
+            855,
+            509
+          ],
+          [
+            891,
+            593
+          ],
+          [
+            974,
+            635
+          ],
+          [
+            885,
+            539
+          ]
+        ]
+      }
+    },
+    {
+      "id": "tunnelmark_step_near_selected",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/near-lift-selected.png",
+      "source_sha256": "84e13be4e17e70c17693727396e8e90d555273b0a3433eeb73ec1c575b6ed5df",
+      "output": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/near-lift-selected.png",
+      "matte": {
+        "minimum": 145,
+        "maximum": 190,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "max_edge_residual": 40,
+        "background_seeds": [
+          [
+            855,
+            509
+          ],
+          [
+            891,
+            593
+          ],
+          [
+            974,
+            635
+          ],
+          [
+            885,
+            539
+          ],
+          [
+            882,
+            531
+          ]
+        ]
+      }
+    }
+  ]
+}

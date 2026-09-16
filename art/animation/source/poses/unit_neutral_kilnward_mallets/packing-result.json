@@ -1,0 +1,165 @@
+{
+  "unit_id": "unit_neutral_kilnward_mallets",
+  "output": "art/animation/source/poses/unit_neutral_kilnward_mallets/candidate-atlas.png",
+  "sha256": "e9d4fe0a429b23a14dca1f39fab30dd0bd7fb0ab237da671a9296f25111863e8",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        189,
+        22,
+        357,
+        242
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        178,
+        20,
+        369,
+        240
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        185,
+        23,
+        372,
+        242
+      ]
+    },
+    {
+      "name": "walk_passing",
+      "index": 3,
+      "alpha_bounds": [
+        169,
+        36,
+        366,
+        243
+      ]
+    },
+    {
+      "name": "passing_back",
+      "index": 4,
+      "alpha_bounds": [
+        187,
+        23,
+        346,
+        241
+      ]
+    },
+    {
+      "name": "passing_forward",
+      "index": 5,
+      "alpha_bounds": [
+        193,
+        23,
+        352,
+        241
+      ]
+    },
+    {
+      "name": "mallet_windup",
+      "index": 6,
+      "alpha_bounds": [
+        166,
+        38,
+        348,
+        244
+      ]
+    },
+    {
+      "name": "mallet_strike",
+      "index": 7,
+      "alpha_bounds": [
+        158,
+        37,
+        399,
+        244
+      ]
+    },
+    {
+      "name": "mallet_recovery",
+      "index": 8,
+      "alpha_bounds": [
+        174,
+        42,
+        353,
+        241
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 9,
+      "alpha_bounds": [
+        184,
+        33,
+        348,
+        241
+      ]
+    },
+    {
+      "name": "guard_brace",
+      "index": 10,
+      "alpha_bounds": [
+        154,
+        37,
+        344,
+        244
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 11,
+      "alpha_bounds": [
+        167,
+        47,
+        361,
+        242
+      ]
+    },
+    {
+      "name": "death_buckle",
+      "index": 12,
+      "alpha_bounds": [
+        164,
+        51,
+        352,
+        244
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 13,
+      "alpha_bounds": [
+        144,
+        137,
+        373,
+        249
+      ]
+    },
+    {
+      "name": "dead_side",
+      "index": 14,
+      "alpha_bounds": [
+        137,
+        120,
+        367,
+        254
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kilnward_mallets/continuity-alpha/guided-passing-and-mallet-recovery.png": "6a98d8df571934d89cdc2c24e1cfe9557a26fa3c24136f73d30623d3865bf3a9"
+  }
+}

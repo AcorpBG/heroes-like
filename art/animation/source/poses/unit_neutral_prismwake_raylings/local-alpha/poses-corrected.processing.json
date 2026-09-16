@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit permission for local raster background removal and edge cleanup; preserve original paintings; no paid APIs",
+  "id": "prismwake-poses",
+  "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/poses-corrected.png",
+  "source_sha256": "1fb58dc614d47486e3ff47c402f0ff903c2eb45c8c958d8cfa844f49917ea303",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+  "output_sha256": "8898a70d074be7a0188b38cb15f2684e5a59d6aec26e8483b715dd88e2ee6c51",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/cutout-recovery-20260915/recipes.json",
+  "recipe_sha256": "9da53b1bc7c1369623ceee66004193b5fb1ad5fd485de3eb6153e63f3b03fd2e",
+  "parameters": {
+    "minimum": 170,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "all_neutral_is_background": false
+  },
+  "measurements": {
+    "removed_background_pixels": 1218853,
+    "edge_pixels": 15005,
+    "unchanged_paint_pixels": 338670,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

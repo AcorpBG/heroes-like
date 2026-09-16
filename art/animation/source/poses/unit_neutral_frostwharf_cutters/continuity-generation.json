@@ -1,0 +1,118 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_neutral_frostwharf_cutters",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "source": "two-hook-recovery-ready-and-passing.png",
+      "source_sha256": "6515313c318805fc45906d03fa0a563f0d9a55597631de2243a8be5f38258611",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-46240c53-644d-4f9c-8caa-45590b450400.png",
+      "reference": ".artifacts/battle-unit-animation-size-20260913/frostwharf-continuity-20260916/idle-reference/unit_neutral_frostwharf_cutters-poses-rect-0-0-347-377-light.png",
+      "reference_sha256": "a052150d913196902e5fe258ef744ef1e3309a53b93cefa609b0aa9cdebd6e86",
+      "prompt": "Use case: stylized-concept. Asset type: original Frostwharf Cutter battle animation additions. Image 1 fixed character/equipment reference. Paint THREE full-body poses in ONE horizontal row, same realistic body scale and elevated three-quarter camera facing RIGHT, generous empty gutters. Preserve navy long coat and silver trim, cream fur collar, blue scarf, rope sash with brass bells and blue/red pennants, brown knee patches, steel crampon boots, dark hair and TWO distinct forward-hook cutlasses with brown handle cords. Exactly one COMPLETE hook blade in EACH hand in ALL poses. LEFT: recover from right-handed downward slash: right arm (near shoulder at screen LEFT) has crossed torso toward screen RIGHT, right elbow begins flexing drawing its own low hook blade back from low-right; left elbow bent near ribs, left hand keeps its separate blade raised forward/right as guard. Keep blades apart, no merged hilts or blade through body. MIDDLE: ready defensive stance with both separately gripped blades angled up to cross before chest, slight knee bend, torso still three-quarter right rather than frontal, complete hooks. RIGHT: travel PASSING phase, one crampon boot planted below hips, other knee bent with boot clearly raised behind and under pelvis, NOT split stride; blades held outward and low clear of legs as reference, coat/cords trail naturally. Entire hair, tips, tassels, fingers and boot spikes visible. Same subdued painterly original raster. Flat opaque pure magenta RGB255,0,255 backing without reflected magenta or floor shadows. No grid/text/effects/scenery/copied game art.",
+      "selection_note": "Unselected magenta precursor preserved for provenance; use the selected later derivative for the three final paintings."
+    },
+    {
+      "source": "two-hook-recovery-ready-and-passing-extracted.png",
+      "source_sha256": "354c2da20eda08b6b6c575a332e36cab20199d77a7c99be3a10346e61c94448d",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4b1b4d28-5061-4a3e-ba83-d724f0a98d92.png",
+      "references": [
+        {
+          "path": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-46240c53-644d-4f9c-8caa-45590b450400.png",
+          "sha256": "6515313c318805fc45906d03fa0a563f0d9a55597631de2243a8be5f38258611"
+        }
+      ],
+      "prompt": "Use case: background-extraction. Image 1 is the exact three-pose Frostwharf Cutter edit target. Extract all THREE full-body poses onto genuinely transparent RGBA, removing magenta backing and pink edge spill from cream fur, hair, navy coat, blade edges, rope/tassels and boot crampons. Preserve original sheet layout, pose sizes, anatomy, facial identity, painterly colors and each pose's TWO COMPLETE hook cutlasses in separate hands. Preserve both hooks, brown handle cords, brass bells and blue/red sash pennants. Do not redraw bodies, restyle faces, change weapon shapes, trim fur/spikes, alter grips or add effects. No fake checker, white or gray backdrop, floor shadow, labels or border. Real alpha only; preserve painted interior detail.",
+      "selection_note": "Unselected failed extraction: file is RGB with painted checkerboard, not transparency. Do not use it as the identity anchor."
+    },
+    {
+      "source": "two-hook-recovery-ready-and-passing-gray.png",
+      "source_sha256": "dde767dc3246b760ed61c059f446a9a93d764cef663213a25e86b0e28feda8f1",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-05cda8d4-ab74-4ce0-97ae-cc8b8704eafc.png",
+      "reference": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-46240c53-644d-4f9c-8caa-45590b450400.png",
+      "reference_sha256": "6515313c318805fc45906d03fa0a563f0d9a55597631de2243a8be5f38258611",
+      "prompt": "Use case: precise-object-edit. Image 1 is the exact three-pose Frostwharf Cutter target. Change ONLY the magenta background to perfectly flat opaque neutral medium gray RGB176,176,176 (#B0B0B0). Remove reflected pink/magenta contamination from the fine fur/hair edges, ropes and blue-steel blades, restoring natural cream/brown/blue edge colors. Preserve ALL three original poses, same full framing/layout/size, anatomical proportions, faces, navy coats, fur, TWO separate hooked cutlasses per pose, tassels, ropes, bells, colored pennants and crampon boots. Do NOT add a checker pattern or request fake transparency; output simple uniform mid-gray everywhere outside character silhouettes and in gaps. No floor shadows, gradients, outlines, text, weapons changes, restyling or new scenery. Preserve painted interior texture.",
+      "selection_note": "Selected plain-gray derivative retains three poses without magenta spill. Bounded connected-neutral preparation preserves painted interiors; generative detail changes are not original pixel reuse."
+    }
+  ],
+  "retained_original_alpha": {
+    "source": "alpha/poses.png",
+    "sha256": "b738300f2ce86b7cc8e60cbab932040cf21ac3b4edfb4a26d08039be65699746"
+  },
+  "selected_frames": [
+    {
+      "index": 0,
+      "name": "idle_a",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 1,
+      "name": "idle_b",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 2,
+      "name": "run_contact",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 3,
+      "name": "run_passing",
+      "source": "continuity-alpha/two-hook-recovery-ready-and-passing-gray.png"
+    },
+    {
+      "index": 4,
+      "name": "right_hook_windup",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 5,
+      "name": "right_hook_slash_left_guard",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 6,
+      "name": "two_hook_recovery",
+      "source": "continuity-alpha/two-hook-recovery-ready-and-passing-gray.png"
+    },
+    {
+      "index": 7,
+      "name": "crossed_blades_ready",
+      "source": "continuity-alpha/two-hook-recovery-ready-and-passing-gray.png"
+    },
+    {
+      "index": 8,
+      "name": "crossed_blades_crouch",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 9,
+      "name": "hit_recoil",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 10,
+      "name": "death_kneel",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 11,
+      "name": "death_side_fall",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 12,
+      "name": "dead_head_left_two_blades",
+      "source": "alpha/poses.png"
+    }
+  ],
+  "review_notes": [
+    "13 packed frames retain ten original paintings and select three new gray-backed paintings for two-hook recovery, crossed-blade readiness and a planted passing step. Both complete cutlasses and the detached grounded corpse blade are preserved.",
+    "The magenta precursor had visible pink fur/edge spill; the requested extraction returned painted RGB checker and remains unselected. The selected built-in gray derivative removes spill before approved connected-neutral preparation, including one tightly inspected handle-cord gap. Generative detail changes are not unchanged-original pixel reuse.",
+    "Inspected crop bands separate the windup blade from idle boots and the neighboring kneeling blade from hit recoil; uniform original/new scales 0.58/0.31 preserve anatomy rather than normalizing each silhouette. Complete atlas visually inspected.",
+    "Candidate only: full alternating gait, body/weapon length and curvature, rope/fur/gear consistency, palette/edges and connected timing remain refinement. No automated/import/gameplay/Linux/Windows acceptance."
+  ]
+}

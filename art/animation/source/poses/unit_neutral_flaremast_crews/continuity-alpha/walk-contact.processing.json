@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "prepared-walk-contact",
+  "source": "art/animation/source/poses/unit_neutral_flaremast_crews/walk-contact-draft.png",
+  "source_sha256": "fbc533e96ac41b8f61b5552ff621affa25d0db76597cedcaea709c8c30e28df0",
+  "source_rect": [
+    0,
+    0,
+    1024,
+    1536
+  ],
+  "output": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/walk-contact.png",
+  "output_sha256": "7f8b5b16bd30ad8e93e6dae8e12cb1131e22fb753a0cf3a0c4181c555242608c",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-cutouts.json",
+  "recipe_sha256": "29fd781637ff25e2bbdceb0cb59658fdcb26dff866a8642a9804360dd8485249",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 105,
+    "tolerance": 18,
+    "maximum": 255,
+    "edge_radius": 3,
+    "max_edge_residual": 60,
+    "all_neutral_is_background": false,
+    "background_seeds": [
+      [
+        711,
+        1135
+      ]
+    ],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1160124,
+    "edge_pixels": 9468,
+    "unchanged_paint_pixels": 403272,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,250 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "local-alpha/poses.png",
+      "rects": [
+        [
+          39,
+          7,
+          359,
+          357
+        ]
+      ],
+      "anchor": [
+        205,
+        350
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "idle_b",
+      "source": "local-alpha/poses.png",
+      "rects": [
+        [
+          418,
+          5,
+          695,
+          359
+        ]
+      ],
+      "anchor": [
+        561,
+        352
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "guided_contact",
+      "source": "local-alpha/walk-contact-guided.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        671,
+        1211
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "guided_passing",
+      "source": "local-alpha/walk-passing-guided.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        668,
+        1210
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "crown_windup",
+      "source": "local-alpha/poses.png",
+      "rects": [
+        [
+          389,
+          370,
+          745,
+          668
+        ]
+      ],
+      "anchor": [
+        556,
+        661
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "crown_forward_strike",
+      "source": "local-alpha/poses.png",
+      "rects": [
+        [
+          747,
+          412,
+          1177,
+          662
+        ]
+      ],
+      "anchor": [
+        967,
+        655
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "crown_recovery",
+      "source": "continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png",
+      "rects": [
+        [
+          0,
+          0,
+          669,
+          763
+        ]
+      ],
+      "anchor": [
+        360,
+        734
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "crown_shallow_brace",
+      "source": "continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png",
+      "rects": [
+        [
+          670,
+          0,
+          1380,
+          400
+        ],
+        [
+          670,
+          400,
+          1350,
+          763
+        ]
+      ],
+      "anchor": [
+        1035,
+        734
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "crown_deep_brace",
+      "source": "local-alpha/poses.png",
+      "rects": [
+        [
+          1180,
+          386,
+          1525,
+          666
+        ]
+      ],
+      "anchor": [
+        1352,
+        659
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "hit_recoil",
+      "source": "local-alpha/poses.png",
+      "rects": [
+        [
+          12,
+          665,
+          342,
+          987
+        ]
+      ],
+      "anchor": [
+        187,
+        980
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "death_knees_buckle",
+      "source": "continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png",
+      "rects": [
+        [
+          1384,
+          0,
+          2060,
+          550
+        ],
+        [
+          1360,
+          550,
+          2060,
+          763
+        ]
+      ],
+      "anchor": [
+        1712,
+        734
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "death_side_fall",
+      "source": "local-alpha/poses.png",
+      "rects": [
+        [
+          763,
+          731,
+          1117,
+          845
+        ],
+        [
+          715,
+          845,
+          1117,
+          970
+        ]
+      ],
+      "anchor": [
+        895,
+        961
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "dead_head_right_dark_lanterns",
+      "source": "local-alpha/poses.png",
+      "rects": [
+        [
+          1114,
+          799,
+          1527,
+          964
+        ]
+      ],
+      "anchor": [
+        1306,
+        954
+      ],
+      "scale": 0.62
+    }
+  ],
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20
+}

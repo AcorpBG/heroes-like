@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing clean genuine alpha is reused without rekeying.",
+  "id": "twin-blade-recovery-and-directional-corpse",
+  "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/twin-blade-recovery-and-directional-corpse.png",
+  "source_sha256": "fa654d6b36dafe056da5d3d9a91c627e2e92fba27dccdbe883fd9433030bb404",
+  "source_rect": [
+    0,
+    0,
+    1092,
+    1441
+  ],
+  "output": "art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-alpha/twin-blade-recovery-and-directional-corpse.png",
+  "output_sha256": "24d3948a8e03b7f237303c469c843a3458b324e5f7f6c59c923044818b1a7fa9",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-cutouts.json",
+  "recipe_sha256": "d1b6a806ce4532742e8ce2322834f8e1360bbe3807ae455ff079759fb1abfeea",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1062597,
+    "edge_pixels": 25278,
+    "unchanged_paint_pixels": 485697,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

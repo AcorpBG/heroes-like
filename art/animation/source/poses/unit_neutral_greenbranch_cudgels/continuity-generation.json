@@ -1,0 +1,67 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_greenbranch_cudgels",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "cudgel-recovery-ready-step-and-directional-rest",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/cudgel-recovery-ready-step-and-directional-rest.png",
+      "sha256": "1c675f9cf0eed51205b7b2c0849fb4c5d23bb649a05eba365978cc3d59900ed7",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1e8640db-b8b1-447f-b3e0-7711b89b9763.png",
+      "prompt": "Use case: stylized-concept. Asset type: FOUR original battle-animation raster poses in TWO columns TWO rows, wide clear gutters. Image 1 is the sole identity authority: Greenbranch Cudgel, sturdy bearded man in twig-crown wooden cap, bark-slat chest and shoulder armor, olive scarf and tunic, bark greaves and brown boots. RIGHT hand carries ONE knotted wooden cudgel with vine binding, LEFT arm carries ONE round woven branch shield with radial sticks and knot boss. Fixed elevated three-quarter camera, facing RIGHT; preserve identity, costume, anatomy, equipment size and painterly rendering. Top-left: recovery immediately after a downstroke toward screen RIGHT: right elbow draws the low cudgel back toward right hip, torso straightens, shield remains ahead on left arm. Top-right: upright defensive-ready stance, shield lifted to protect upper chest, cudgel close beside right shoulder, feet braced. Bottom-left: grounded walking passing pose: NEAR/right boot is flat under hip bearing weight; FAR/left knee advances forward with its boot lifted just clear of ground. Keep cudgel upright on right side and shield on left, same carry as reference. Bottom-right: genuinely horizontal relaxed SIDE corpse, HEAD at screen RIGHT and FEET at screen LEFT, eyes closed, twig crown intact. Right hand near the full cudgel resting along lower edge, shield rests against left forearm and torso; retain all gear and body volume. Corpse must not be a rotated standing pose. Original painted raster on uniform pure BLUE #0000FF with no reflected spill; no shadows, grid, text, scenery, blood or effects. Whole boots, crown twigs, club ends and shield visible within generous margins.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/greenbranch-continuity-20260916/idle-reference-clean/unit_neutral_greenbranch_cudgels-poses-rect-325-0-643-443-light.png",
+          "sha256": "4d14a2f0414fa317315f730f16c97dba708ae6fcaa5cfca830e765ea53612620"
+        }
+      ],
+      "selection_notes": "13 frames retain ten original paintings and select three new cudgel recovery, upright shield-ready and head-right corpse paintings. Original head-right low fall now leads to a head-right corpse instead of the old head-left rest. Correct original alpha is reused unchanged; original movement contact/passing remain candidates, not a full alternating gait. New walking attempts are unselected: the first sheet repeats contact rather than passing; the four-phase diagram attempt repeats phases with backward-pointing feet; the single-phase diagram still repeats the wrong leading leg. Changed reference mechanisms were inspected, not claimed successful. Stop further same-constraint retries and retain exact unresolved near/right contact plus alternating support ownership for later refinement. Approved blue extraction and explicit source bands preserve original paint, crown, club and shield. Old/new standing scales 0.54/0.45; corpse 0.42 is anatomy-normalized without warping. Ground anchors keep lowered club ends inside the frame. Club/shield size, bark-pattern/body/palette/edge continuity and connected motion remain unaccepted.",
+      "selected_frames": [
+        "cudgel_recovery",
+        "guard_ready",
+        "dead_head_right"
+      ]
+    },
+    {
+      "id": "guided-four-phase-walk",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/guided-four-phase-walk.png",
+      "sha256": "44e0e1967ecae7ccca5230845b584e8fcc2ee2b4e564877c569fbb7fb12cb9a2",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-da108cc6-26a9-4872-9b54-e82443593b7a.png",
+      "prompt": "Use case: sketch-to-render. Image 1 is the PRIMARY edit target: a FOUR-phase walk diagram, BLUE is always the near/anatomical RIGHT leg and ORANGE is always the far/anatomical LEFT leg. Image 2 supplies original character identity, gear, painted style ONLY; do not copy its standing leg pose. Replace the four diagram mannequins with FOUR full-body painted versions of this SAME character, arranged in TWO columns TWO rows in reading order. Match the diagram's hip/knee/ankle relationships exactly: top-left near/right foot FORWARD, far/left foot BACK; top-right near/right foot PLANTED under hips, far/left knee swung forward with foot lifted; bottom-left far/left foot FORWARD, near/right foot BACK; bottom-right far/left foot PLANTED under hips, near/right knee swung forward with foot lifted. Crucially top-left and bottom-left have OPPOSITE anatomical legs forward WITHOUT mirroring the torso or equipment; one support foot always touches the common ground plane. Both passing frames are distinct from contact frames. Camera/body consistently faces RIGHT at original three-quarter angle; head, torso and equipment scale stay identical across all four. Greenbranch Cudgel keeps twig crown, bark armor, olive cloth, RIGHT hand upright knotted vine club and LEFT woven branch shield in exactly the reference carry. Preserve complete anatomy/gear, generous margins and empty gutters. Remove all guide colors, lines, ground line and text; no diagram marks remain. Original raster artwork on flat pure BLUE #0000FF without reflected spill, no shadow, scenery, text, effects or duplicate limbs.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/batch144-guides-20260916/biped-walk-guide.png",
+          "sha256": "e82785b7504af90c20176fb202c4c869376233f7311cb3694e71b9284ce2fa7b"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/greenbranch-continuity-20260916/idle-reference-clean/unit_neutral_greenbranch_cudgels-poses-rect-325-0-643-443-light.png",
+          "sha256": "4d14a2f0414fa317315f730f16c97dba708ae6fcaa5cfca830e765ea53612620"
+        }
+      ],
+      "selected_frames": [],
+      "selection_notes": "Unselected: multi-phase guide failed to preserve anatomical leg alternation and produced backward-facing feet. Four panels repeat a contact/passing pair. Do not claim a full gait."
+    },
+    {
+      "id": "single-guide-walk-phase-0",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/single-guide-walk-phase-0.png",
+      "sha256": "42c163bb0ff7e542ae4bfa255bc8cee36155159087b3760d609c071f6c01fcc1",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8a98d5b5-1e23-4937-9365-40899985fc8c.png",
+      "prompt": "Use case: sketch-to-render. Image 1 is the exact SINGLE pose to render. Replace this one mannequin with the Greenbranch Cudgel shown in Image 2; Image 2 supplies costume/equipment only, not stance. One full-body painted figure only. Keep the mannequin's fixed right-facing torso and exact hip/knee/ankle positions. BLUE limb is his near/anatomical RIGHT leg; ORANGE limb is far/anatomical LEFT leg. Near RIGHT thigh crosses diagonally DOWN-RIGHT across the front of the body, its shin extends DOWN-RIGHT to the leading heel on screen RIGHT. Far LEFT thigh/shin extend DOWN-LEFT behind him to the trailing toes on screen LEFT. Both boots' toes point screen RIGHT, never backward. Body/face/clothing do not mirror. Exact original bearded man, twig crown, bark slat armor, olive scarf/tunic, bark greaves, RIGHT hand upright vine-wrapped knotted club on viewer-left and LEFT woven branch shield on viewer-right. Translate the guide limb colors into original brown bark/leather, preserve all equipment and body proportions. Match original painterly art. Large empty margins, isolated on flat pure BLUE #0000FF without spill; remove ALL diagram marks, labels, linework and ground line. No shadows, scenery, text, effects, extra gear or limbs.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/batch144-guides-20260916/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/greenbranch-continuity-20260916/idle-reference-clean/unit_neutral_greenbranch_cudgels-poses-rect-325-0-643-443-light.png",
+          "sha256": "4d14a2f0414fa317315f730f16c97dba708ae6fcaa5cfca830e765ea53612620"
+        }
+      ],
+      "selected_frames": [],
+      "selection_notes": "Unselected: single-phase guide still repeats far-leg-leading contact instead of requested near/right leading contact. Stop retries for this constraint; original two-pose movement remains pending full alternating-gait refinement."
+    }
+  ]
+}

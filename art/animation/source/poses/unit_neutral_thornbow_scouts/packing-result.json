@@ -1,0 +1,185 @@
+{
+  "unit_id": "unit_neutral_thornbow_scouts",
+  "output": "art/animation/source/poses/unit_neutral_thornbow_scouts/candidate-atlas.png",
+  "sha256": "a01659900e2856d892c0f53b4677589edeaaf9fdbef2c27eee04c313eceb0b95",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        210,
+        28,
+        359,
+        238
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        159,
+        28,
+        349,
+        240
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        191,
+        32,
+        332,
+        239
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        192,
+        29,
+        338,
+        240
+      ]
+    },
+    {
+      "name": "bow_shove_windup",
+      "index": 4,
+      "alpha_bounds": [
+        174,
+        53,
+        340,
+        242
+      ]
+    },
+    {
+      "name": "bow_shove_contact",
+      "index": 5,
+      "alpha_bounds": [
+        157,
+        56,
+        393,
+        240
+      ]
+    },
+    {
+      "name": "bow_shove_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        193,
+        27,
+        320,
+        239
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        197,
+        29,
+        313,
+        239
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        191,
+        66,
+        342,
+        242
+      ]
+    },
+    {
+      "name": "arrow_nock",
+      "index": 9,
+      "alpha_bounds": [
+        177,
+        38,
+        351,
+        242
+      ]
+    },
+    {
+      "name": "bow_draw",
+      "index": 10,
+      "alpha_bounds": [
+        179,
+        25,
+        355,
+        241
+      ]
+    },
+    {
+      "name": "bow_release",
+      "index": 11,
+      "alpha_bounds": [
+        168,
+        25,
+        355,
+        239
+      ]
+    },
+    {
+      "name": "bow_reload",
+      "index": 12,
+      "alpha_bounds": [
+        174,
+        30,
+        331,
+        241
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 13,
+      "alpha_bounds": [
+        196,
+        57,
+        351,
+        240
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        160,
+        99,
+        351,
+        241
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 15,
+      "alpha_bounds": [
+        154,
+        141,
+        360,
+        242
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 16,
+      "alpha_bounds": [
+        144,
+        144,
+        367,
+        245
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png": "32712aa8d2a5ce4533634001189d1dd3a33ceea0b7b61ff03c6f68e0d14877a5",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_thornbow_scouts/continuity-alpha/bow-recovery-and-grounded-travel.png": "700b8688cd627cda57f03412a1efe6ea761ed676166aa84dca87e5177b6631e3"
+  }
+}

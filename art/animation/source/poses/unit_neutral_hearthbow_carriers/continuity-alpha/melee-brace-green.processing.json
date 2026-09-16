@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved local non-generative raster background/edge preparation; preserve original masters and never synthesize poses.",
+  "id": "melee-brace-green",
+  "source": "art/animation/source/poses/unit_neutral_hearthbow_carriers/melee-brace-green.png",
+  "source_sha256": "5b17d652384bcf1b8f48f7554ef928e7121b89d3f64c6f574d40278da9f2d7d4",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_neutral_hearthbow_carriers/continuity-alpha/melee-brace-green.png",
+  "output_sha256": "f2a2ad8a37c39eb5a512ec8969e4a26fb66f9d97d2cbd0a879a2b5a024a61e07",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_hearthbow_carriers/continuity-cutouts.json",
+  "recipe_sha256": "e5331c9a07172859d63963262f0cc26d75ebeb2340b33a62e51e67ea3d22120e",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1258835,
+    "edge_pixels": 5957,
+    "unchanged_paint_pixels": 307724,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

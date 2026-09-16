@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved local non-generative raster background/edge preparation; preserve original masters and never synthesize poses.",
+  "id": "walk-passing-b-green",
+  "source": "art/animation/source/poses/unit_neutral_hearthbow_carriers/walk-passing-b-green.png",
+  "source_sha256": "d335335facc2eba30f17e645422291fa90e6593f4c96065b8bbbce987e015062",
+  "source_rect": [
+    0,
+    0,
+    1145,
+    1374
+  ],
+  "output": "art/animation/source/poses/unit_neutral_hearthbow_carriers/continuity-alpha/walk-passing-b-green.png",
+  "output_sha256": "9c15a353718bd024c86c2df831ac32d63a38224ca63297ee71b4464ca4d376f7",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_hearthbow_carriers/continuity-cutouts.json",
+  "recipe_sha256": "e5331c9a07172859d63963262f0cc26d75ebeb2340b33a62e51e67ea3d22120e",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1218980,
+    "edge_pixels": 7576,
+    "unchanged_paint_pixels": 346674,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

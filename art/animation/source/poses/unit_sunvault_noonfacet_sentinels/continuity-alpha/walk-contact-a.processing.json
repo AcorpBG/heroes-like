@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "noonfacet-walk-contact-a",
+  "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/walk-contact-a.png",
+  "source_sha256": "e85f769ad72ddb2b143ab3a3e215555d37dc2bbd170fbd7f4631b524f0db14ac",
+  "source_rect": [
+    0,
+    0,
+    1227,
+    1282
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/walk-contact-a.png",
+  "output_sha256": "f09dc68c01ac7854fd11f791e68d5ec3113dfa4226c3e056847dec8717c314fb",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-cutouts.json",
+  "recipe_sha256": "07f55a52ec215d11147b648eb71057ac857603c3bc6ced77760e1970b8e879a0",
+  "parameters": {
+    "minimum": 100,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1110066,
+    "edge_pixels": 6504,
+    "unchanged_paint_pixels": 456444,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

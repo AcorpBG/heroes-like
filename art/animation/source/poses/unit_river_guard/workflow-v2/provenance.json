@@ -1,0 +1,96 @@
+{
+  "schema_id": "original_unit_pose_workflow_v2",
+  "unit_id": "unit_river_guard",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "reference": "art/units/source/curated/unit_river_guard.png",
+  "reference_sha256": "95e7c9fc8dfddeebe0d5cd7439347dc1e6538b4d0e1f52584dac8cbaf76354eb",
+  "guides": {
+    "art/animation/source/workflow_20260915/biped-walk-guide.png": "e82785b7504af90c20176fb202c4c869376233f7311cb3694e71b9284ce2fa7b",
+    "art/animation/source/workflow_20260915/biped-walk-phase-0.png": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716",
+    "art/animation/source/workflow_20260915/biped-walk-phase-1.png": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734",
+    "art/animation/source/workflow_20260915/biped-walk-phase-2.png": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d",
+    "art/animation/source/workflow_20260915/biped-walk-phase-3.png": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+  },
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/contact-b-white.png",
+      "source_sha256": "70a4a722d62ea4520705a93aab78073589bce67872b0029c7a4ad3cbb350976b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-fb7a0815-512a-4eb1-9dc7-c1428d1907ad.png",
+      "prompt": "Use case: sketch-to-render. Image1 is the PRIMARY edit target: replace its mannequin with a painted game soldier, preserving its two hip/knee/ankle positions and limb overlap. Image2 is COSTUME/IDENTITY ONLY, not pose. Dress the mannequin as River Guard: brass helmet, bearded face, red quilted coat, brown trousers and boots, spear in near hand screen-left, river-pattern oval shield on far arm screen-right. The blue near leg MUST remain trailing to lower-left exactly as diagram; orange far leg reaches lower-right. Replace blue/orange with brown fabric/leather, never change their geometry or which hip they join. Keep the torso facing right, but DO NOT copy legs from costume reference. Reposition arms to carry spear/shield consistently; all tips/body contained. Remove all text and guide marks; retain pure white background for later separate matte preparation. One full figure, same painterly style as costume reference, no effects, no shadow."
+    },
+    {
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/contact-b.png",
+      "source_sha256": "70276ad4ad27c952535141563594bb9a962ef2d02247872659bddbf68373d667",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-772dfd0f-b8f8-48f3-bf51-0ca8ee04b436.png",
+      "prompt": "Use case: background-extraction. Remove ONLY the white backing of this original River Guard sprite and return genuine transparent RGBA. Keep every painted part, including white scarf/coat trim, beard, boots, spear tip and shield. Preserve this exact pose, proportions and equipment; do not redraw, resize, mirror, add checkerboard, ground or effects. Exterior and the gap between legs/spear become transparent; white material on the figure stays opaque."
+    },
+    {
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/passing-b-white.png",
+      "source_sha256": "d9d992aaa5c29c0398942205412fe08f4c2928fc3384905f6e3ea020e75c241b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d464dea3-bb77-4afb-a37c-d40de0013fe7.png",
+      "prompt": "Use case: sketch-to-render. Image1 is PRIMARY pose diagram; replace its mannequin with River Guard wearing the exact costume/materials of image2. Preserve image1's leg geometry: ORANGE far leg straight supporting the body, BLUE near thigh slopes forward to the raised knee, lower leg bends back so lifted foot crosses IN FRONT of the supporting shin. Same hip ownership and overlap; blue/orange become brown trousers/boots, not colored clothes. Do not copy the wide stance from costume image2. One full soldier facing RIGHT; same brass helmet, bearded face, red quilted coat/scarf, spear carried screen-left, river-pattern oval shield screen-right, unchanged equipment hand ownership and proportions. No floor, shadows, guide labels or effects. Plain white background for separate extraction. Painted original game sprite matching image2, ample margins around head/spear/boots."
+    },
+    {
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/passing-b.png",
+      "source_sha256": "4444082b534a5ae90435436a3a6dfef6722c67cd0a9ff52118c84ffa184ef1ce",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-28231626-4cfe-4d7f-ab5a-f00ff14fd23f.png",
+      "prompt": "Use case: background-extraction. Remove only the white background from this River Guard passing sprite to genuine transparent RGBA. Preserve the exact lifted near leg crossing in FRONT of the planted far leg, white costume trim, shield, spear, scale, pose and painted colors. Clean transparent exterior and gaps, no backdrop/checkerboard/shadow. Do not redesign or mirror anything."
+    },
+    {
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/contact-a-white.png",
+      "source_sha256": "afc8aee7988c71ed59a1a98d04b727b3f2f9770765601c428e308c89818dc111",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5f584d54-24b4-4ae3-a173-a158e3ba5f51.png",
+      "prompt": "Use case: sketch-to-render. Repaint the mannequin in image1 as the soldier in image2; image2 supplies only costume, never the stance. Preserve image1's CROSSED-THIGH gait: near hip starts viewer-left and its thigh runs diagonally forward across the other thigh to viewer-right knee, then front boot; far leg passes behind to viewer-left trailing boot. The crossed-thigh overlap is mandatory, not the neutral separated-leg stance from image2. Dress both legs in original brown trousers and boots. Same original brass helmet/bearded face/red coat/scarf, spear in screen-left hand and river shield on screen-right arm. All body and equipment fully contained. Plain white background without text, shadows, effects or colored guide marks. One original painted full-body game sprite."
+    },
+    {
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/contact-a.png",
+      "source_sha256": "12f15cd8a8f274a0fc510b55c87db9d0053443b131c43fbb6915a3e1b9f98baa",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f62033e2-0107-4434-8b01-a395ecb5e07a.png",
+      "prompt": "Use case: background-extraction. Remove ONLY white backing to genuine transparent RGBA, keeping exact River Guard crossed-leg contact pose and all painted pixels including cream clothing/trim. Preserve spear, shield, proportions and camera. No checkerboard, new shadows/effects or redesign. Transparent exterior and gaps between limbs/equipment."
+    },
+    {
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/passing-a-white.png",
+      "source_sha256": "0ec8ab8d8602269dcf90630b9373bda878bc503a1f90191b7e4ff48fd46af946",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-50c6959c-ac9f-4545-ab2c-f1e136e19e0c.png",
+      "prompt": "Use case: sketch-to-render. Image1 is PRIMARY pose diagram; repaint that exact pose as soldier2. BLUE near leg is straight planted below hips; ORANGE far thigh lifts FORWARD but stays BEHIND near thigh, with bent lower leg and boot visible just beyond the supporting calf. Preserve which hip each leg attaches to and the diagram's overlap. Image2 supplies original brass helmet/beard/red quilted coat/scarf, brown trousers/boots, upright spear screen-left and river shield screen-right. No image2 neutral stance. Same fixed three-quarter camera facing right, natural low walking knee not a kick. All extremities visible with margin. Plain white backdrop, no diagram labels/colors, floor, shadows or effects. One painted original game sprite."
+    },
+    {
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/passing-a.png",
+      "source_sha256": "1c72ab32b3d428d26d777028804984fbf347ec8c4adc8158b314dcaa6d04be70",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b6b01fab-214d-4a41-96a9-26f260c470d4.png",
+      "prompt": "Use case: background-extraction. Remove ONLY the white background from this River Guard passing pose, return genuinely transparent RGBA with exterior and holes clear. Preserve exactly the straight near supporting leg and far lifted boot BEHIND it, original cream clothing, spear and shield, proportions, pose and texture. No checkerboard or solid matte, new shadows/effects, mirror or redesign."
+    }
+  ],
+  "rejected": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7941537c-1ae7-4899-8c75-5262604d78fb.png",
+      "prompt": "Use case: sketch-to-render. Image1 is the ORIGINAL CHARACTER identity reference, Image2 is an AUTHORING POSE GUIDE, not a style reference. Produce one horizontal 4-frame WALK strip of this exact River Guard, fixed three-quarter camera facing RIGHT. Follow all FOUR leg skeletons of image2 precisely from left to right. BLUE denotes the same near leg in every frame, ORANGE denotes the same far leg: preserve which hip each leg belongs to and its overlap. Render BOTH legs in the character's original brown trousers/boots, not blue/orange. Frame1 near leg forward; frame2 near leg supports while far knee lifts; frame3 near leg trails while far leg reaches forward; frame4 far leg supports while near knee lifts. Do not repeat frame1's leg geometry in frame3. Match original helmet, face, red quilted coat/scarf, spear and oval river-pattern shield; shield always same hand/side, spear same opposite hand and tip, no swaps. Fixed body dimensions and baseline across four 512px-wide cells with ample margins; spear never leaves its cell. Small leg movement and natural weight transfer, not high stepping, duplicate standing figures or whole-body mirroring. Original painted game raster style, genuine transparent RGBA, no reference guide colors, text, floor, shadow or checkerboard. Upper body stays consistent, equipment moves only subtly with gait.",
+      "reason": "Identity-first full strip still repeated contact and returned RGB checkerboard; not retained or registered."
+    },
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a75f109a-c6cf-443b-9d98-92e4d6a92f1a.png",
+      "prompt": "Use case: sketch-to-render. Image1 PRIMARY pose, Image2 costume/identity ONLY. Repaint mannequin1 as exactly River Guard2, preserving hip/knee/ankle locations and overlap. The BLUE NEAR leg crosses in FRONT and reaches lower-right; ORANGE FAR leg trails lower-left behind it. Render both brown trousers and boots, no blue/orange; never copy costume2's opposite stance. Same head/helmet/coat/scarf, beard, shield/spear hand ownership and proportions; carry upright spear screen-left and oval river shield screen-right. Feet at same ground level. Full figure, generous margin, painted original art. Remove diagram labels/lines; pure white backdrop, no shadows, effects or new equipment.",
+      "reason": "Using generated B contact as costume reference repeated B stance; keep neutral curated anchor instead."
+    }
+  ],
+  "assembly": {
+    "recipe": "art/animation/source/poses/unit_river_guard/packing.json",
+    "previous_recipe": "art/animation/source/poses/unit_river_guard/workflow-v2/packing-before.json",
+    "runtime": "art/animation/runtime/poses/unit_river_guard.png",
+    "runtime_sha256": "c881efa307190963035e8345c4aeac8711f7b772da320ae98ce8b6a489e3f4af",
+    "changed_indices": [
+      2,
+      3,
+      4,
+      5
+    ]
+  },
+  "review": {
+    "status": "candidate_pending_playback_acceptance",
+    "observed": "Distinct crossed/uncrossed contact and front/behind passing silhouettes; deterministic crops align feet. Separate white-background generation/extraction yielded four real RGBA sources. Art desk screenshot inspected with all required states.",
+    "open": "Stride widths, body/shield proportions, knee lift and event-speed continuity need final playback review. Alpha presence does not prove edge quality. No gameplay/export validation or final unit acceptance.",
+    "tests": "Deferred until generation/integration finished per owner.",
+    "cleanup": "No temporary game/export profiles created; retain source, guides, previous recipe and before/after review evidence."
+  }
+}

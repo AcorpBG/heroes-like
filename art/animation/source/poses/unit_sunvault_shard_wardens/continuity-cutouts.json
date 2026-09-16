@@ -1,0 +1,71 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "jobs": [
+    {
+      "id": "shard-warden-walk-contact-a",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/walk-contact-a.png",
+      "source_sha256": "b507b383fb5cce2eb814c765d3a6201ee3824e89349ddf04d815f61cf2908e5e",
+      "output": "art/animation/source/poses/unit_sunvault_shard_wardens/continuity-alpha/walk-contact-a.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "shard-warden-walk-passing-a",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/walk-passing-a.png",
+      "source_sha256": "7d163ba76010f2c025a501d755b441478373a9439deecb59df59a41d619157ec",
+      "output": "art/animation/source/poses/unit_sunvault_shard_wardens/continuity-alpha/walk-passing-a.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "shard-warden-walk-contact-b",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/walk-contact-b.png",
+      "source_sha256": "2d62737d848d535d062366f7f4cb95c48d1fd5abc6d89bc7fbc8878fe3a01ab7",
+      "output": "art/animation/source/poses/unit_sunvault_shard_wardens/continuity-alpha/walk-contact-b.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "shard-warden-walk-passing-b",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/walk-passing-b.png",
+      "source_sha256": "f752b7d4cc879c1e1b296be176235b4320a4c22516708e1202bd00a21a691200",
+      "output": "art/animation/source/poses/unit_sunvault_shard_wardens/continuity-alpha/walk-passing-b.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "shard-warden-defend-breath",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/defend-breath.png",
+      "source_sha256": "9b2034a600b139e058f5ab383962725f912452ec6211f36b759e10b57148c449",
+      "output": "art/animation/source/poses/unit_sunvault_shard_wardens/continuity-alpha/defend-breath.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            350,
+            680
+          ]
+        ]
+      }
+    }
+  ]
+}

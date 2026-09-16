@@ -1,0 +1,147 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "output": "art/animation/source/poses/unit_neutral_kitehook_runners/candidate-atlas.png",
+  "sha256": "b51ea050982057a27fbd8dbfc1e2752c7e3d2bde38dc39d14980a17162975dc4",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        178,
+        38,
+        344,
+        246
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        184,
+        42,
+        332,
+        246
+      ]
+    },
+    {
+      "name": "run_extension_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        140,
+        46,
+        327,
+        246
+      ]
+    },
+    {
+      "name": "run_gather_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        184,
+        54,
+        328,
+        250
+      ]
+    },
+    {
+      "name": "complete_pole_windup",
+      "index": 4,
+      "alpha_bounds": [
+        125,
+        22,
+        412,
+        250
+      ]
+    },
+    {
+      "name": "complete_pole_thrust",
+      "index": 5,
+      "alpha_bounds": [
+        115,
+        37,
+        429,
+        244
+      ]
+    },
+    {
+      "name": "complete_pole_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        128,
+        30,
+        366,
+        246
+      ]
+    },
+    {
+      "name": "pole_ready_brace",
+      "index": 7,
+      "alpha_bounds": [
+        120,
+        25,
+        378,
+        247
+      ]
+    },
+    {
+      "name": "guard_deep",
+      "index": 8,
+      "alpha_bounds": [
+        180,
+        122,
+        330,
+        252
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        186,
+        77,
+        350,
+        248
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        172,
+        94,
+        358,
+        250
+      ]
+    },
+    {
+      "name": "death_side_complete_pole",
+      "index": 11,
+      "alpha_bounds": [
+        126,
+        108,
+        377,
+        241
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 12,
+      "alpha_bounds": [
+        63,
+        146,
+        353,
+        253
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png": "9da3a14da4ec16f15a9346b163183151f83f0f399323e1b1fe23e5a5dc8f85d3",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/alpha/windup.png": "1e90e3877b16a0e9c0ddce960cbc0464c1341b79c256087b23e2c09468f67d12",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/continuity-alpha/complete-pole-thrust-recovery-and-brace.png": "6a30a019869ed0bacabc6d8645af3e281da29f2547c13f733fce17c67ca921b8",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/alpha/side-fall.png": "551906c17d3bb273f3ef64281d2ae640808157abf6f42caddc3bec7884698564"
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_whitepike_keepers",
+  "output": "art/animation/source/poses/unit_neutral_whitepike_keepers/candidate-atlas.png",
+  "sha256": "03aee1d3f6056bcd1fc30e96035a828ee9bdf943380c05411885af6ad03577de",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        162,
+        27,
+        333,
+        244
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        170,
+        28,
+        327,
+        245
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        185,
+        28,
+        338,
+        250
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        158,
+        33,
+        367,
+        243
+      ]
+    },
+    {
+      "name": "pike_windup",
+      "index": 4,
+      "alpha_bounds": [
+        166,
+        78,
+        410,
+        248
+      ]
+    },
+    {
+      "name": "pike_full_thrust",
+      "index": 5,
+      "alpha_bounds": [
+        136,
+        68,
+        437,
+        242
+      ]
+    },
+    {
+      "name": "pike_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        143,
+        48,
+        399,
+        244
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        157,
+        32,
+        360,
+        244
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        173,
+        105,
+        381,
+        250
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        163,
+        84,
+        345,
+        250
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        155,
+        110,
+        349,
+        246
+      ]
+    },
+    {
+      "name": "death_low_fall",
+      "index": 11,
+      "alpha_bounds": [
+        134,
+        146,
+        396,
+        252
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 12,
+      "alpha_bounds": [
+        131,
+        181,
+        394,
+        241
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_whitepike_keepers/alpha/poses-unaccepted.png": "952f5c630809810a93d5b223fa6c6b21351e10bdda972a26ac5c969f8c2da321",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_whitepike_keepers/continuity-alpha/full-pike-thrust-recovery-brace-and-step.png": "4c7e2f4a7f5d020dd033dab4bd82bdc92cb5b588f1a1c92745f636462ce5e638"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "workflow": "built-in imagegen; painted lower-body reference plus upper-body-only identity; no local pose synthesis",
+  "status": "reviewed_unselected_runtime_unchanged",
+  "job": {
+    "key": "tunnelmark_painted_contact",
+    "unit_id": "unit_neutral_tunnelmark_bolters",
+    "base": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/painted-contact-20260916",
+    "source": "contact-b-painted.png",
+    "reference_image_paths": [
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/painted-contact-20260916/painted-leg-reference.png",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/painted-contact-20260916/identity-upper-reference.png"
+    ],
+    "prompt": "Use case: compositing. Asset type: one original painted battle animation frame.\nImage 1 is a LOWER-BODY POSE REFERENCE ONLY, not character design. Image 2 is the UPPER-BODY IDENTITY AND EQUIPMENT reference.\nPaint the full character from image 2 with exactly the leg gesture in image 1. Copy the visible leg ownership and contour overlap: foreground RIGHT thigh slopes DOWN-LEFT from the near hip, its knee and boot back on screen LEFT; rear LEFT thigh passes BEHIND it and stretches forward DOWN-RIGHT, left heel contacts ground on screen RIGHT. Foreground right heel is raised with toe contact. This is opposite-contact during walking right, not running or a stationary wide stance. Match image 1's actual hip-knee-ankle chains while replacing all plate armor with this character's simple cloth trousers and brown boots.\nTunnelmark Bolter: young clean-shaven man, silver-stitched charcoal hood and padded tunic, ochre scarf, dark trousers, wrapped brown boots, ONE bolt quiver at near hip. Holds ONE LOADED wooden crossbow diagonally down toward screen RIGHT: near RIGHT hand on rear grip screen LEFT and far LEFT hand supports wooden fore-end screen RIGHT. Preserve taut rear-drawn strings and bolt. No armor plates, shield, mace, sword, or extra weapons.\nFull body, mild elevated three-quarter camera facing screen RIGHT, original painterly strategy-game style. Stable realistic proportions and head-to-torso scale, two legs, two arms. Paint the upper body exactly as image 2, do not transfer image 1's equipment or costume. Entire head/backpack/weapon/boots visible with generous 10 percent margins. Square 1536x1536. Uniform flat neutral gray RGB(170,170,170) backdrop and all gaps, no gradient, no floor or shadows. No magenta, checkers, labels, grid, pose lines, motion trails, extra figures or borrowed game assets. Only one complete full-body pose.",
+    "status": "rejected",
+    "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9be96bb2-90ca-4331-ad59-52f6ba39094e.png",
+    "sha256": "1c86eb59faea0000d15442c1e69b47e6ee624cebce40773c681255a31872e84f",
+    "review": "Painted guide preserved equipment but repeats ambiguous front-thigh overlap. Keep unselected."
+  }
+}

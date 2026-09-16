@@ -1,0 +1,115 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "source": "fist-recovery-ready-and-passing-step.png",
+      "source_sha256": "ee04e121212adcea8e35e79b12178704881ef7d79b71ab31452ae47c8c61a564",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ebbb1e45-0eee-4be9-98b9-c2aa21ae5cac.png",
+      "reference": ".artifacts/battle-unit-animation-size-20260913/peatflare-continuity-20260916/reference/unit_neutral_peatflare_jarriers-poses-rect-0-0-295-315-light.png",
+      "reference_sha256": "8274fa51c4905c4dce54fc8526e60a9d41edeb74f30b4e7add2cfc9d26e75141",
+      "prompt": "Use case: stylized-concept. Asset type: original Peatflare Jarrier battle animation additions. Image 1 is the fixed character/costume/paint reference, not the pose layout. Paint THREE complete full-body poses in ONE horizontal row with broad empty gutters, identical body scale and elevated three-quarter view facing RIGHT. Same wiry adult woman, dark hair bun/loose forelock, olive scarf, worn brown leather crossed straps, ragged dark teal cape, charcoal trousers, wrapped brown boots, soot-dark ceramic ember jars on belt. LEFT pose: melee recovery immediately after a RIGHT-hand punch toward RIGHT, right elbow bends drawing the EMPTY right fist back across chest to ribs, left fist protects chin, jars all stowed at belt, knees slightly bent. MIDDLE: ready defensive stance with BOTH EMPTY fists raised near brow, torso partly crouched, jars stowed, same arm ownership. RIGHT: running passing phase with ONE straight support leg planted under hips and OTHER knee bent with boot lifted under the pelvis, not a long split stride; right hand retains one corked glowing jar snug by torso, left arm balances, cape trails behind. All bodies full, fingers and boots in frame. Preserve the reference small-head realistic anatomy, weathered cloth paint, subdued palette and gear, no new weapon. Background perfectly flat opaque pure magenta RGB255,0,255 with no reflected magenta/no shadow. No text, grid, border, particles, fire effects, extra objects or cropped extremities.",
+      "selection_note": "Selected new candidate paintings; full continuity/playback review remains."
+    }
+  ],
+  "retained_original_alpha": {
+    "source": "alpha/poses.png",
+    "sha256": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04"
+  },
+  "review_notes": [
+    "17 frames retain fourteen original paintings and add three new candidates: empty right-fist melee recovery, empty-fist ready guard and jar-carrying bent-knee passing. Original right-fist windup/strike, draw/aim/empty release/recovery and head-right collapse/dark-jar corpse remain. Repeated extra contacts are unselected.",
+    "Reuse original genuine alpha. Approved magenta preparation uses bounded four-source-pixel edge cleanup; original interiors are unchanged. Uniform original/new scales 0.70/0.295 and inspected crop bands preserve hair, fingertips and corpse jar while excluding neighboring boots/head/cape fragments.",
+    "All-state candidate only. Full alternating gait is not achieved; contact/passing, jar stow/retrieval continuity, body/head/cape/glove proportions, palette and fine chroma edges, and connected timing need full-roster refinement. No tests/imports/gameplay/platform acceptance in this increment."
+  ],
+  "selected_frames": [
+    {
+      "index": 0,
+      "name": "idle_a",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 1,
+      "name": "idle_b",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 2,
+      "name": "run_contact",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 3,
+      "name": "run_passing",
+      "source": "continuity-alpha/fist-recovery-ready-and-passing-step.png"
+    },
+    {
+      "index": 4,
+      "name": "right_fist_windup",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 5,
+      "name": "right_fist_strike",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 6,
+      "name": "right_fist_recovery",
+      "source": "continuity-alpha/fist-recovery-ready-and-passing-step.png"
+    },
+    {
+      "index": 7,
+      "name": "empty_fists_ready",
+      "source": "continuity-alpha/fist-recovery-ready-and-passing-step.png"
+    },
+    {
+      "index": 8,
+      "name": "empty_fists_crouch",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 9,
+      "name": "hit_recoil",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 10,
+      "name": "draw_jar",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 11,
+      "name": "throw_jar_aim",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 12,
+      "name": "throw_empty_release",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 13,
+      "name": "empty_hand_recovery",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 14,
+      "name": "death_kneel",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 15,
+      "name": "death_side_fall",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 16,
+      "name": "dead_head_right_dark_jars",
+      "source": "alpha/poses.png"
+    }
+  ]
+}

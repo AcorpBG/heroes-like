@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_orchard_halberds",
+  "output": "art/animation/source/poses/unit_neutral_orchard_halberds/candidate-atlas.png",
+  "sha256": "ec25b6987e84539432a78ffdbcae8685fbf6d0d0959e51c93abaa160bfc43513",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        190,
+        10,
+        322,
+        241
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        167,
+        11,
+        321,
+        242
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        172,
+        7,
+        322,
+        238
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        199,
+        26,
+        332,
+        243
+      ]
+    },
+    {
+      "name": "billhook_windup",
+      "index": 4,
+      "alpha_bounds": [
+        145,
+        23,
+        333,
+        240
+      ]
+    },
+    {
+      "name": "billhook_strike",
+      "index": 5,
+      "alpha_bounds": [
+        170,
+        52,
+        369,
+        242
+      ]
+    },
+    {
+      "name": "billhook_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        179,
+        52,
+        378,
+        244
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        188,
+        8,
+        316,
+        240
+      ]
+    },
+    {
+      "name": "guard_brace",
+      "index": 8,
+      "alpha_bounds": [
+        194,
+        28,
+        319,
+        241
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        170,
+        36,
+        337,
+        248
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        174,
+        60,
+        317,
+        243
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 11,
+      "alpha_bounds": [
+        176,
+        97,
+        349,
+        245
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 12,
+      "alpha_bounds": [
+        136,
+        132,
+        382,
+        238
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png": "a04bde04f580b52b9ff08a79dcfba5ceffed386a63f86b54078fd1426bfcfbe4",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_orchard_halberds/continuity-alpha/billhook-recovery-supported-step-and-corpse.png": "9dc18220e27e71e13b57edd3310194e3c98fa5f5fb102c9be88f9a01f29308e5"
+  }
+}

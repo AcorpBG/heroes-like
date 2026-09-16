@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "club-recovery-guard-and-directional-rest",
+      "source": "art/animation/source/poses/unit_neutral_saltpan_bucklers/club-recovery-guard-and-directional-rest.png",
+      "source_sha256": "39f7a1543e4678be4ee3043dc991c82e7d560d5f7bbb3756abbf07fe6610753c",
+      "output": "art/animation/source/poses/unit_neutral_saltpan_bucklers/continuity-alpha/club-recovery-guard-and-directional-rest.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

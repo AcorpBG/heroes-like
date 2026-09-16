@@ -1,0 +1,30 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "hammer-recovery-shield-brace-and-travel",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/hammer-recovery-shield-brace-and-travel.png",
+      "sha256": "4a8963f273de3bfddd384b8ec9c896c94ec039a5e94233713bd26bd42b4a2428",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-eb252c27-f59e-432a-9b33-5ad1e3714e46.png",
+      "prompt": "Use case: stylized-concept. Asset type: FOUR original painted battle-animation poses TWO columns TWO rows broad gutters. Input image is sole original Scarshield Veteran identity and equipment reference. Same weathered gray-haired bearded man in gray scarf, dark bronze-edged plate/chain, torn red tabard and scorched red shoulder mantle, battered iron boots. LEFT forearm retains ONE jagged black stone kite shield with bronze boss/rim and thin orange fissures; RIGHT hand retains ONE short rectangular black/bronze hammer with red handle ribbons. Same elevated three-quarter camera facing RIGHT, same body size, proportions and gear. Top-left: hammer recovery after downward forward strike, right elbow bends and draws hammer low toward right hip, left shield still guards ribs, torso rises from lunge and feet planted. Top-right: upright ready defense, left shield raised in front of chest, right hammer close beside shoulder, two planted feet. Bottom-left: grounded heavy walking contact, near/right boot heel planted forward toward screen RIGHT, far/left boot behind at LEFT on toe, shield and hammer securely carried low. Bottom-right: next passing pose, near/right foot flat under hip bearing weight, far/left knee advancing and boot lifted slightly. Keep tall heavy adult anatomy, no airborne support foot or mirrored torso, no weapon or shield hand swapping. Full shield/hammer/ribbons/boots with margins. Original painterly raster on flat pure green #00FF00 background, no spill, cast shadows, text, grid, scenery, particles, extra weapons or limbs.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/scarshield-continuity-20260916/idle-reference/unit_neutral_scarshield_veterans-poses-rect-0-0-312-419-light.png",
+          "sha256": "28754eb3aab2c9ff6bc4a51b33ce1f1cf02dc03f698dc318fe7b71b577f771c6"
+        }
+      ],
+      "selection_notes": "13 frames retain nine original paintings and select four new hammer recovery, shield-ready brace and grounded travel paintings. Original corrected hammer contact, equipped collapse and head-right resting corpse remain. Replaced original repeated movement pair with two new travel candidates, not a complete accepted gait. Reused clean original alpha; new green backing uses approved bounded preparation. Uniform original/new scales 0.52/0.31. Inspected source bands remove previous-pose boots and neighboring glove/ribbon fragments around the hammer while retaining shield, hammer, boots and cloak. Full alternating gait, hammer/left-shield grip and crack-pattern consistency, body/gear/palette/edges and connected timing remain refinement. New guard raises hammer and shield differently from deep crouch; inspect the transition in consolidated playback. Static production review is not motion/gameplay acceptance.",
+      "selected_frames": [
+        "walk_contact_attempt",
+        "walk_passing_attempt",
+        "hammer_recovery",
+        "guard_ready"
+      ]
+    }
+  ]
+}

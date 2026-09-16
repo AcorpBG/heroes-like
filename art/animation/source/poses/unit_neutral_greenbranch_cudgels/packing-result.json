@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_greenbranch_cudgels",
+  "output": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/candidate-atlas.png",
+  "sha256": "fec6bd6a7683096beed1a81ba543dcbc254be6c4d7b4fb41afa3e6216ead9d60",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        155,
+        28,
+        331,
+        246
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        161,
+        26,
+        334,
+        247
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        181,
+        19,
+        322,
+        252
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        179,
+        26,
+        313,
+        247
+      ]
+    },
+    {
+      "name": "cudgel_windup",
+      "index": 4,
+      "alpha_bounds": [
+        176,
+        25,
+        344,
+        248
+      ]
+    },
+    {
+      "name": "cudgel_strike",
+      "index": 5,
+      "alpha_bounds": [
+        169,
+        51,
+        345,
+        250
+      ]
+    },
+    {
+      "name": "cudgel_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        169,
+        24,
+        345,
+        245
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        173,
+        24,
+        331,
+        247
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        180,
+        68,
+        321,
+        249
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        157,
+        53,
+        332,
+        249
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        167,
+        75,
+        331,
+        253
+      ]
+    },
+    {
+      "name": "death_fall_head_right",
+      "index": 11,
+      "alpha_bounds": [
+        146,
+        109,
+        358,
+        249
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 12,
+      "alpha_bounds": [
+        94,
+        136,
+        402,
+        247
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_greenbranch_cudgels/alpha/poses.png": "24165b26c1b3467bc1a6370ad72370d488debad146794b2affe05c4b73f384e8",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_greenbranch_cudgels/continuity-alpha/cudgel-recovery-ready-step-and-directional-rest.png": "15924844e7cb4450a2a0b2913bd3154d5fe4ed3017c4051ca6fb3a5b7b4ff8c6"
+  }
+}

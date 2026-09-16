@@ -1,0 +1,78 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "jobs": [
+    {
+      "id": "roadwarden-walk-contact-a-green",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/walk-contact-a-green.png",
+      "source_sha256": "17ce17d1a0c62b35262d4db59e71d501414679b22344f68dfc58dca4e788173b",
+      "output": "art/animation/source/poses/unit_neutral_roadwardens/continuity-alpha/walk-contact-a-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true,
+        "inspection_note": "Vivid green is backing only; muted olive trousers are not the chroma color. No original garment pixels repainted."
+      }
+    },
+    {
+      "id": "roadwarden-walk-passing-a-green",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/walk-passing-a-green.png",
+      "source_sha256": "2f98d3a1ea495ab1f944ea91060bef6f1cae7e490f12c5b82d4e8a3ece1ec64a",
+      "output": "art/animation/source/poses/unit_neutral_roadwardens/continuity-alpha/walk-passing-a-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true,
+        "inspection_note": "Vivid green is backing only; muted olive trousers are not the chroma color. No original garment pixels repainted."
+      }
+    },
+    {
+      "id": "roadwarden-walk-contact-b-green",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/walk-contact-b-green.png",
+      "source_sha256": "4a9d3fc4d4781ddab5e35b691726734a8c0984216e4ddfd54f3a9b9e3fd6f0d4",
+      "output": "art/animation/source/poses/unit_neutral_roadwardens/continuity-alpha/walk-contact-b-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true,
+        "inspection_note": "Vivid green is backing only; muted olive trousers are not the chroma color. No original garment pixels repainted."
+      }
+    },
+    {
+      "id": "roadwarden-walk-passing-b-green",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/walk-passing-b-green.png",
+      "source_sha256": "a19466fbf5f01ebf3a287a954356afce17abe67731cb19f722d9b57971131ca1",
+      "output": "art/animation/source/poses/unit_neutral_roadwardens/continuity-alpha/walk-passing-b-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true,
+        "inspection_note": "Vivid green is backing only; muted olive trousers are not the chroma color. No original garment pixels repainted."
+      }
+    }
+  ]
+}

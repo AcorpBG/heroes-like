@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "death-pair",
+  "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/death-pair.png",
+  "source_sha256": "d201e2797305ae9e9307258075ad0b6bf1f45e406b8076e825d984c212de63ea",
+  "source_rect": [
+    0,
+    0,
+    2048,
+    768
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/death-pair.png",
+  "output_sha256": "ddebde5ac3245206d0c1395c2766f3c136e4c1c341730a2507b5bf64a244cb4d",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "732acb7b8f20636e57c5a5479a01928c28f52c8eaf068c4b28f1baee0b970be4",
+  "recipe": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-cutouts.json",
+  "recipe_sha256": "4b53aabba48c4372a67aa89793237c0b18311fbc19c8ff615f6efbf06f02e833",
+  "parameters": {
+    "minimum": 100,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        650,
+        320
+      ]
+    ],
+    "maximum": 185
+  },
+  "measurements": {
+    "removed_background_pixels": 989034,
+    "edge_pixels": 7443,
+    "unchanged_paint_pixels": 576387,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,34 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_millstone_slingers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "same-hand-punch-and-recovery",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/same-hand-punch-and-recovery.png",
+      "sha256": "5fa0217dd2995ba1d0b9f5f729ffb55ba99f5ede9e6bad3fb2e214db951681c7",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2f59d0bc-fc07-4e4b-b6d2-b8983a3b1670.png",
+      "prompt": "Use case: stylized-concept. Asset type: four original battle-animation raster poses, TWO columns TWO rows. Input image 1 is Millstone Slinger's identity/costume reference; image 2 is the right-arm anticipation reference. Preserve this woman's face, green headband/scarf, hair bun, cream rolled sleeves, leather apron, olive trousers, wrapped boots and LEFT-hip stone pouch. Same elevated three-quarter camera facing RIGHT. Create a connected single RIGHT-fist punch: top-left anticipation, RIGHT fist with bundled sling drawn beside her RIGHT shoulder (screen-left), LEFT open hand guarding chest. Top-right contact, that SAME RIGHT shoulder rotates forward, RIGHT forearm crosses the chest, right fist extends to screen-right, LEFT hand remains near chest; show the forearm visibly continuing from the screen-left shoulder, not the other arm. Bottom-left recovery, right elbow bends bringing the same sling-holding fist back toward ribs, left hand guarding. Bottom-right softer upright two-forearm guard before crouching, sling still bundled at right fist. Sling is a small slack leather loop, not a flail/stone/long swinging rope. Grounded stable feet in all four, consistent anatomy and body size, identical gear count. Full bodies and entire equipment, large blank gutters and margins. Original painterly raster matching supplied art. Solid uniform pure blue #0000FF backdrop for approved cutout; no blue reflection, cast shadows, ground, text, labels, grid, effects, opponent, extra arms or copied game art.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/millstone-continuity-20260916/idle-reference/unit_neutral_millstone_slingers-poses-cord-corrected-rect-0-0-314-324-light.png",
+          "sha256": "ab926174e7cefe55bc858edf55fe8105180f799166ccc5ade8cb72d372a79e51"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/millstone-continuity-20260916/windup-reference/unit_neutral_millstone_slingers-poses-cord-corrected-rect-314-324-614-637-light.png",
+          "sha256": "a3baea618557a0bac3abbc81769e259e37c0e5da0601a1966751daad9eca1bff"
+        }
+      ],
+      "selection_notes": "17 packed frames retain thirteen original paintings and select four new right-hand punch/guard paintings. A connected same-hand anticipation/contact/recovery replaces the old arm-switching melee frames. Corrected open-cord ranged release remains separate from melee; original head-right fall and horizontal corpse retain sling and stone pouch. Actual crop composites exposed nonzero gray background alpha (sample values 4..13) across the old RGBA sheet. Preserve that source as evidence; derive a clean matte directly from the inspected original RGB poses-cord-corrected.png using the approved bounded color-distance recipe and inspected enclosed-gap seeds. Do not rekey or modify the old RGBA. Clean matte and packed fall were visually inspected on contrasting backgrounds. Banded crops exclude neighboring sling cradle, boot and next-row head fragments without clipping intended cord/hand. Original/new scales 0.64/0.35 with anatomical anchors, not per-frame bounding-box normalization. Full alternating gait/ground contact, tool and pouch consistency, sling/hand mechanics, body/palette/edge continuity and connected timing remain refinement. Current static production review is not final motion/gameplay acceptance.",
+      "selected_frames": [
+        "right_punch_anticipation",
+        "right_punch_contact",
+        "right_punch_recovery",
+        "guard_ready"
+      ]
+    }
+  ]
+}

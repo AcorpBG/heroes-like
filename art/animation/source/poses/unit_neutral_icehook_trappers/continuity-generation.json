@@ -1,0 +1,32 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_icehook_trappers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "matched-icehook-strike-guard-and-travel",
+      "source": "art/animation/source/poses/unit_neutral_icehook_trappers/matched-icehook-strike-guard-and-travel.png",
+      "sha256": "eac20522568516c5f86c886d2f510719d549af62dfb302776f743c9a7ab4eda4",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-815de072-9251-4204-a732-5ec0ccafa2c3.png",
+      "prompt": "Use case: stylized-concept. Asset type: SIX original painted battle-animation poses in TWO columns THREE rows with broad empty gutters. Input image is original identity and EXACT weapon-design authority. Same lean rugged Icehook Trapper man: brown hair, offwhite fur-lined coat/hood down, blue scarf and inner split cloth, gray trousers, brown harness/bracers/fur winter boots, rope coil and steel cable loop on belt. RIGHT hand ALWAYS retains ONE short steel icehook with blue-wrapped grip, curved crescent forward blade and small rear spur exactly as reference; LEFT hand stays empty. Keep blade shape/size/material throughout, not an axe, not an icicle or knife. Elevated three-quarter camera faces RIGHT, same body scale. Top-left: attack windup, right elbow draws hook beside right shoulder, left hand balances ahead, both feet planted. Top-right: attack contact, right shoulder and elbow drive hook in a forward/downward sweep across body toward screen RIGHT; entire curved blade visible just beyond left forearm, left open hand pulled back safely, bent knees and rear toe support. Middle-left: attack recovery, right elbow draws the SAME hook back low beside right hip, left hand returns to ready, torso straightens. Middle-right: guard-ready, both feet planted, right hook held diagonally across chest, free left forearm raised behind the blade clear of its edge. Bottom-left: grounded walking contact, near/right boot reaches forward toward RIGHT and touches heel, far/left leg behind toward LEFT touches toe; weapon carried safely low. Bottom-right: next passing pose, near/right boot planted under hip supports body, far/left knee advances with lifted boot just clear of ground. No airborne support, same equipment and face, complete blade/rope/boots with large margins. Original painterly raster on uniform pure green #00FF00 background without spill/shadow. No grid, text, scenery, speed effects, blood, extra hands or new weapons.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/icehook-continuity-20260916/idle-reference/unit_neutral_icehook_trappers-poses-unaccepted-rect-0-0-382-353-light.png",
+          "sha256": "acb861e60d8bbb18e3c8538ed45bcd5d626b382859f984b346dbeca6f01530c3"
+        }
+      ],
+      "selection_notes": "13 frames retain seven original paintings and select six new matching-hook windup/contact/recovery, ready guard and grounded travel paintings. Replace the old attack pair whose hook became a thin icicle/axe-like blade. Keep the original idle pair, crouched guard, recoil and three-stage equipped head-right collapse/rest. Original clean alpha is reused unchanged, despite its historical unaccepted filename/raw-preview notes. New green source uses approved bounded preparation. Uniform old/new scales 0.61/0.43; inspected crop bands remove neighboring boot and hand fragments while preserving the falling figure's entire supporting hand. Two travel poses are candidates, not a complete accepted alternating gait. Near/far leg ownership, hook grip/foreshortening, rope/cable layout, body/palette/edges and connected timing still need refinement. Static production review is not motion/gameplay acceptance.",
+      "selected_frames": [
+        "walk_contact_attempt",
+        "walk_passing_attempt",
+        "hook_windup",
+        "hook_contact",
+        "hook_recovery",
+        "guard_ready"
+      ]
+    }
+  ]
+}

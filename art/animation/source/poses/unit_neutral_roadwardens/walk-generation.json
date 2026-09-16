@@ -1,0 +1,51 @@
+{
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "sources": [
+    {
+      "file": "walk-contact-a-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-77bb1c91-aaf8-4413-9e79-2aa9b3beed76.png",
+      "prompt": "Paint ONE original Roadwarden walking contact-A sprite. FIRST image is authoritative leg anatomy: BLUE near foreground leg goes diagonally FORWARD RIGHT from near hip, heel reaches ground on right; ORANGE far leg stretches backward LEFT with rear toe touching. Near thigh visibly overlaps far thigh at crossover. SECOND image supplies exact identity, not standing leg pose: rugged bearded man, dull steel kettle helmet, short worn ochre shoulder cloak bronze clasp, rust leather toll coat with medallions, cream sleeves, olive trousers, wrapped brown boots. Both gloved hands keep hold of ONE long brown hooked-steel polearm diagonal from lower LEFT butt to upper RIGHT hook. No shield. Three-quarter RIGHT-facing camera, same original proportions and detailed painterly game style. Moderate walking stride, stable spine, actual independent hips/knees/ankles, no mirror/no bent wrong-way knee. Match original gear and costume, not guide colors. Whole body and entire polearm inside generous margins. Flat vivid GREEN #00ff00 backing only; neutral light no green spill, no floor/shadows/text/grid/effects.",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-0.png",
+        "art/units/source/curated/unit_neutral_roadwardens.png"
+      ],
+      "selection": "Guided original walking candidate; final connected-motion acceptance deferred.",
+      "sha256": "17ce17d1a0c62b35262d4db59e71d501414679b22344f68dfc58dca4e788173b"
+    },
+    {
+      "file": "walk-passing-a-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-25a5c431-326c-47b6-8e01-810378271a10.png",
+      "prompt": "Paint ONE original Roadwarden passing-A walking sprite using FIRST image as exact leg pose and SECOND as clothing/identity. BLUE NEAR foreground leg is weight-bearing almost vertical beneath near hip, its boot planted beneath body; ORANGE FAR leg bends at hip/knee behind near thigh, far boot lifted off ground behind planted shin. Clearly separate planted near leg and raised far leg. Keep head/body fixed three-quarter facing RIGHT, moderate stride and stable torso. Rugged bearded human man, steel kettle helmet, worn short ochre shoulder cloak fastened with bronze clasp, rust leather toll coat with medallions, cream sleeves, dark olive trousers, wrapped brown boots. Exactly TWO hands continuously grip ONE long brown hooked-steel polearm angled lower LEFT butt to upper RIGHT hook. No shield or other gear. Original detailed painterly tactical-game raster art, same character proportions; no blue/orange diagram paint, no text. Full body, full weapon, generous empty margin. Flat vivid GREEN #00ff00 backing only with neutral light and absolutely no green spill/reflections/glow on clothing. No ground, shadows, particles or background scene.",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+        "art/units/source/curated/unit_neutral_roadwardens.png"
+      ],
+      "selection": "Guided original walking candidate; final connected-motion acceptance deferred.",
+      "sha256": "2f98d3a1ea495ab1f944ea91060bef6f1cae7e490f12c5b82d4e8a3ece1ec64a"
+    },
+    {
+      "file": "walk-contact-b-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-675a437a-272b-4690-8e2b-0dca41b51cf1.png",
+      "prompt": "Paint one original Roadwarden tactical-game walking sprite by dressing the FIRST image's exact leg pose with the SECOND image's character identity. First image is the authoritative contact-B pose, not an art style: NEAR foreground leg runs from left/near hip diagonally BACK toward screen LEFT, planted boot at left; FAR leg extends forward to RIGHT with heel planted, knee of far leg partly behind near thigh. Keep this crossover ownership; do not change to near-leg-forward. Face/body fixed three-quarter RIGHT like character reference, never mirror torso or equipment. Character: rugged bearded man in dull steel kettle helmet, ochre short torn shoulder cloak bronze clasp, rust leather coat with toll medallions, cream sleeves, dark olive trousers and wrapped brown boots. Exactly TWO hands holding ONE long brown hooked-steel polearm diagonally from lower LEFT butt to upper RIGHT hook, like reference; no shield/new equipment. Moderate normal walking stride, straight spine, two clear separately attached legs, real knee/ankle articulation, clothes respond naturally. Full polearm tip and boots inside generous margins, same original painterly detailed game style. NO guide blue/orange lines, no diagram/text/ground/shadows. Flat vivid GREEN #00ff00 backing only, neutral light no green spill/reflections/glow on man. Preserve ordinary dark olive pants as real paint, not chroma green.",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+        "art/units/source/curated/unit_neutral_roadwardens.png"
+      ],
+      "selection": "Guided original walking candidate; final connected-motion acceptance deferred.",
+      "sha256": "4a9d3fc4d4781ddab5e35b691726734a8c0984216e4ddfd54f3a9b9e3fd6f0d4"
+    },
+    {
+      "file": "walk-passing-b-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-df3dfe82-2b68-4ad4-8aad-b5cbcc0076eb.png",
+      "prompt": "Paint ONE original Roadwarden walking passing-B sprite. FIRST image's leg skeleton is authoritative: ORANGE far leg bears all weight vertically below the body with foot planted; BLUE NEAR foreground thigh swings FORWARD RIGHT from near hip, knee bent up in front of far thigh, near boot lifted clearly above the ground beneath that raised knee. Replace guide with actual human anatomy/clothing, do not leave diagram colors. SECOND image is exact identity and equipment: bearded rugged man, steel kettle helmet, short ochre shoulder cloak, rust leather coat with bronze toll medallions, cream sleeves, olive trousers and wrapped brown boots, both gloved hands on one long brown hooked-steel polearm slanting lower LEFT to upper RIGHT. Same three-quarter RIGHT-facing camera, normal adult proportions, no mirror, no shield. Keep torso erect and fixed, both hands/grip stable; show distinct planted far boot and raised forward near boot with correct knee/ankle joints and cloth overlap, not a rear heel kick. Full spearhead/butt/boots in roomy canvas margins. Original detailed painterly tactical game sprite, neutral light. Flat pure vivid GREEN #00ff00 backing only, no green highlights/spill/reflection on costume, no shadows/ground/text/guide/extra effects.",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+        "art/units/source/curated/unit_neutral_roadwardens.png"
+      ],
+      "selection": "Guided original walking candidate; final connected-motion acceptance deferred.",
+      "sha256": "a19466fbf5f01ebf3a287a954356afce17abe67731cb19f722d9b57971131ca1"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_neutral_milestone_bucklers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "source": "short-spear-actions-and-passing-step.png",
+      "source_sha256": "df33d70d9c4dad1c7d985bf5ed2429a44b4ec538287c4f829806caba27016ba4",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2826b5a6-2690-496c-a72b-1f255ee26bf2.png",
+      "reference": ".artifacts/battle-unit-animation-size-20260913/milestone-continuity-20260916/reference/unit_neutral_milestone_bucklers-poses-rect-0-0-350-374-light.png",
+      "reference_sha256": "be9fb684a53a8ba44e4cd17be819fdd92ecd9e8e007937363ac207343e9af4bc",
+      "prompt": "Use case: stylized-concept. Asset type: original Milestone Buckler battle animation additions. Image 1 fixed identity/equipment/paint reference. FOUR complete full-body poses in a TWO by TWO sheet, generous empty gutters, consistent body scale, elevated three-quarter view facing RIGHT throughout. Same brown-haired bearded man, cream scarf, rust quilted coat, navy/cream split tabard, steel shoulder plates, brown gloves/boots. LEFT arm holds exactly the same tall navy rectangular brass-rim shield with vertical brass strip and boss. RIGHT hand wields exactly the reference SHORT wooden spear with leaf-steel tip, total tip-to-butt length roughly two-thirds of standing body height, NOT a long pike. TOP LEFT thrust anticipation: right fist beside shoulder, point RIGHT above shield, show entire rear butt and point. TOP RIGHT completed thrust: right arm extends RIGHT over shield, grip near rear quarter of same short shaft, full point plus small rear butt visible, left shield stays attached. BOTTOM LEFT recovery: draw same right spear fist back near chest, spear point remains RIGHT, entire weapon visible. BOTTOM RIGHT walking passing step: one boot supports beneath hips, other knee bent with boot off ground beneath body, not a long split stride, right spear held low as in reference pointing down-left, shield steady. Preserve anatomy, costume, shield size, consistent spear length and grip. Same painterly original raster, isolated on perfectly flat opaque pure magenta RGB255,0,255, no reflected color or floor shadows. No texts, grid, frames, copied game art, effects or clipped weapons.",
+      "selection_note": "Selected new candidate paintings; full continuity/playback review remains."
+    }
+  ],
+  "retained_original_alpha": {
+    "source": "alpha/poses.png",
+    "sha256": "cfa8e91eb6558e1ca47a7c6a83bbb6945fcd35b7da3642e3b111f4a1c7f4d560"
+  },
+  "review_notes": [
+    "12 frames retain eight original paintings and add four new candidates: short-spear windup/thrust/recovery and a bent-knee passing step. Original shield guard, hit and head-right grounded spear/shield corpse remain. Longer earlier attack paintings and repeated extra contacts are unselected.",
+    "Original alpha is reused; approved magenta preparation and uniform original/new scales 0.60/0.36 retain painted equipment. Source bands exclude neighboring thrust tip from shield guard and a neighboring boot from hit without trimming the owned spear or shield.",
+    "All-state candidate only. Full alternating gait, spear length/perspective and obscured rear butt during thrust, old/new body and shield proportions, grounded-weapon continuity, palette/edge consistency and connected motion remain refinement. New actions are not final visual acceptance. No tests/imports/gameplay/platform validation."
+  ],
+  "selected_frames": [
+    {
+      "index": 0,
+      "name": "idle_a",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 1,
+      "name": "idle_b",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 2,
+      "name": "walk_contact",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 3,
+      "name": "walk_passing",
+      "source": "continuity-alpha/short-spear-actions-and-passing-step.png"
+    },
+    {
+      "index": 4,
+      "name": "short_spear_windup",
+      "source": "continuity-alpha/short-spear-actions-and-passing-step.png"
+    },
+    {
+      "index": 5,
+      "name": "short_spear_thrust",
+      "source": "continuity-alpha/short-spear-actions-and-passing-step.png"
+    },
+    {
+      "index": 6,
+      "name": "short_spear_recovery",
+      "source": "continuity-alpha/short-spear-actions-and-passing-step.png"
+    },
+    {
+      "index": 7,
+      "name": "shield_guard",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 8,
+      "name": "hit_recoil",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 9,
+      "name": "death_kneel",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 10,
+      "name": "death_side_fall",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 11,
+      "name": "dead_head_right_spear_point_right",
+      "source": "alpha/poses.png"
+    }
+  ]
+}

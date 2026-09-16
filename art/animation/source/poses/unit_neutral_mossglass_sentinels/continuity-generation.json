@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_mossglass_sentinels",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "supported-stride-and-front-shield-actions",
+      "source": "art/animation/source/poses/unit_neutral_mossglass_sentinels/supported-stride-and-front-shield-actions.png",
+      "sha256": "d5d746b69246f76b6b3bf632915d60c448e0fb96430728059a66d3da97ad8649",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1f2d4512-22f8-41a9-9e52-b0a1528236cc.png",
+      "prompt": "Use case: stylized-concept. SIX original painted battle sprites, THREE columns TWO rows, full bodies and broad gutters. Images1/2 are PRIMARY skeletal pose constraints for first two cells only, do not draw guides/colors/text. Image3 supplies body/style/equipment, image4 canonical identity. Same Mossglass Sentinel humanoid in emerald glass/tarnished bronze armor, moss, short branch crown, closed green-eye helm, faded green/tan split tabard. Exactly ONE short heavy glass-headed mace anatomical RIGHT near hand on viewer LEFT; ONE oval leaf-medallion mossglass shield strapped/gripped anatomical LEFT forearm, always in front of torso or left flank, NEVER on back or detached. Fixed elevated three-quarter camera facing RIGHT, constant anatomy/materials/crown size. TOP LEFT matches Image1: FAR leg extends forward RIGHT, NEAR thigh angles backward LEFT in front of the far thigh, both boots contact. Shield carried forward-left flank, mace low near hip, no equipment hand swap. TOP MIDDLE matches Image2: FAR leg straight planted under pelvis, NEAR thigh lifts forward knee bent and near foot off ground. TOP RIGHT opposite passing: NEAR boot planted below hip, FAR heel lifts behind while far knee folds, same weapon carry. BOTTOM LEFT: downward-forward mace contact toward RIGHT, right elbow extends across torso, front knee bent; LEFT FOREARM shield still held visibly in front of upper chest with its leaf face toward viewer. Do not place shield on back. BOTTOM MIDDLE: recovery after impact, mace pulls back low beside right knee, shield still left-front, hips return upright braced. BOTTOM RIGHT: deep defensive crouch, left forearm raises shield covering chest up to chin, helmet visible above rim, right mace held low beside knee, both soles planted. Preserve full crown, boots, shield and mace with clear margins. Uniform pure BLUE RGB(0,0,255) background absent from green/bronze subject, NO blue reflected light/spill, floor, shadows, text, diagrams or grid. Original painterly raster.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_mossglass_sentinels/alpha/poses.png",
+          "sha256": "09f6012abebe70f2b8ff51fb2d31bec83fd152f4140a4c3e25e6d2b2e9617b4d"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/units/source/curated/unit_neutral_mossglass_sentinels.png",
+          "sha256": "0170d88b2f5eef69d51419cbe1fcaabb147b6c27ceca9797a282428aada0c8ae"
+        }
+      ],
+      "selection_notes": "First guide contact is a planted transfer, not opposite contact. Select planted transfer, supported lifts, front-shield mace strike, recovery and deep shield guard; leg ownership/body scale remain review.",
+      "selected_frames": [
+        "transfer_planted",
+        "passing_knee_lift",
+        "passing_rear_lift",
+        "mace_front_shield_contact",
+        "mace_recovery",
+        "guard_deep"
+      ]
+    }
+  ]
+}

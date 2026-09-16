@@ -1,0 +1,119 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner-approved deterministic matte removal/edge cleanup. Preserve original warm wood, leaves, ivory beard and gray hooves; no pose synthesis.",
+  "id": "rootcrown_step_near-fore",
+  "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/near-fore-lift.png",
+  "source_sha256": "133f60d9946d8319dd2cd0f4ec446ba66b3ea3563d0a9b34dd9ef572d3f9026b",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/near-fore-lift.png",
+  "output_sha256": "5808f2d7cad8c56c96649544232d9b586cad693192bc91e007fc85609741d540",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/cutouts.json",
+  "recipe_sha256": "8030491685b9c34c37d403da2887d364fa4957110747e1b5ad850c6a6ca7f6c4",
+  "parameters": {
+    "minimum": 145,
+    "maximum": 190,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "max_edge_residual": 40,
+    "background_seeds": [
+      [
+        855,
+        114
+      ],
+      [
+        694,
+        129
+      ],
+      [
+        847,
+        155
+      ],
+      [
+        718,
+        185
+      ],
+      [
+        402,
+        147
+      ],
+      [
+        1040,
+        150
+      ],
+      [
+        413,
+        177
+      ],
+      [
+        1045,
+        204
+      ],
+      [
+        878,
+        278
+      ],
+      [
+        1103,
+        275
+      ],
+      [
+        448,
+        272
+      ],
+      [
+        1014,
+        325
+      ],
+      [
+        629,
+        301
+      ],
+      [
+        840,
+        299
+      ],
+      [
+        956,
+        365
+      ],
+      [
+        683,
+        466
+      ],
+      [
+        693,
+        475
+      ],
+      [
+        934,
+        625
+      ],
+      [
+        223,
+        687
+      ],
+      [
+        522,
+        1002
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 939377,
+    "edge_pixels": 16735,
+    "unchanged_paint_pixels": 616404,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "two-hook-recovery-ready-and-passing",
+  "source": "art/animation/source/poses/unit_neutral_frostwharf_cutters/two-hook-recovery-ready-and-passing.png",
+  "source_sha256": "6515313c318805fc45906d03fa0a563f0d9a55597631de2243a8be5f38258611",
+  "source_rect": [
+    0,
+    0,
+    2069,
+    760
+  ],
+  "output": "art/animation/source/poses/unit_neutral_frostwharf_cutters/continuity-alpha/two-hook-recovery-ready-and-passing.png",
+  "output_sha256": "6916fad40283c442d3d8062ea923af66d7b3fd0d81cf235e1ed0a7e75572cf5b",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_frostwharf_cutters/continuity-cutouts.json",
+  "recipe_sha256": "8e90644dcbc37e60224f9fbe5589d5583edc53ca5c7ed4c68e9970602eb1eea8",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 4,
+    "max_edge_residual": 100,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1033242,
+    "edge_pixels": 28411,
+    "unchanged_paint_pixels": 510787,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

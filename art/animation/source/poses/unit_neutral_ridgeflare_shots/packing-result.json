@@ -1,0 +1,185 @@
+{
+  "unit_id": "unit_neutral_ridgeflare_shots",
+  "output": "art/animation/source/poses/unit_neutral_ridgeflare_shots/candidate-atlas.png",
+  "sha256": "614562adb9f4e7c95085151b902611172263b50775697659f546aab59ea28642",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        204,
+        28,
+        342,
+        233
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        202,
+        27,
+        349,
+        234
+      ]
+    },
+    {
+      "name": "run_extension_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        137,
+        39,
+        339,
+        236
+      ]
+    },
+    {
+      "name": "run_gather_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        156,
+        41,
+        324,
+        233
+      ]
+    },
+    {
+      "name": "right_fist_anticipation",
+      "index": 4,
+      "alpha_bounds": [
+        175,
+        38,
+        331,
+        232
+      ]
+    },
+    {
+      "name": "right_fist_punch",
+      "index": 5,
+      "alpha_bounds": [
+        169,
+        39,
+        325,
+        235
+      ]
+    },
+    {
+      "name": "right_fist_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        191,
+        22,
+        342,
+        237
+      ]
+    },
+    {
+      "name": "loaded_guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        182,
+        30,
+        325,
+        237
+      ]
+    },
+    {
+      "name": "loaded_guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        184,
+        42,
+        333,
+        234
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        181,
+        44,
+        335,
+        235
+      ]
+    },
+    {
+      "name": "ranged_reload",
+      "index": 10,
+      "alpha_bounds": [
+        181,
+        39,
+        352,
+        240
+      ]
+    },
+    {
+      "name": "ranged_loaded_aim",
+      "index": 11,
+      "alpha_bounds": [
+        177,
+        37,
+        334,
+        239
+      ]
+    },
+    {
+      "name": "ranged_empty_release",
+      "index": 12,
+      "alpha_bounds": [
+        177,
+        36,
+        329,
+        238
+      ]
+    },
+    {
+      "name": "ranged_empty_recovery",
+      "index": 13,
+      "alpha_bounds": [
+        193,
+        21,
+        339,
+        237
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        176,
+        69,
+        338,
+        239
+      ]
+    },
+    {
+      "name": "death_side_head_left",
+      "index": 15,
+      "alpha_bounds": [
+        157,
+        96,
+        358,
+        241
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 16,
+      "alpha_bounds": [
+        148,
+        122,
+        361,
+        243
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png": "962f7cac21bf12839c5524c88243f011dec20d7f0b3db3208340fb937df465b5",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_ridgeflare_shots/continuity-alpha/loaded-melee-empty-ranged-and-guard-recoveries.png": "4d3ec004b0448d05e5786306875d679a501b7018e35017a5449ee18158552071"
+  }
+}

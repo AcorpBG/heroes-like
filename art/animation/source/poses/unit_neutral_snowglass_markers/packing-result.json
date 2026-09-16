@@ -1,0 +1,186 @@
+{
+  "unit_id": "unit_neutral_snowglass_markers",
+  "output": "art/animation/source/poses/unit_neutral_snowglass_markers/candidate-atlas.png",
+  "sha256": "12acb241f801511c7705212693099ec28c664ba95aebfdc838329f08e35e90d5",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        169,
+        27,
+        338,
+        243
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        170,
+        27,
+        364,
+        243
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        166,
+        27,
+        341,
+        243
+      ]
+    },
+    {
+      "name": "walk_passing",
+      "index": 3,
+      "alpha_bounds": [
+        172,
+        44,
+        362,
+        242
+      ]
+    },
+    {
+      "name": "bow_windup",
+      "index": 4,
+      "alpha_bounds": [
+        155,
+        45,
+        349,
+        243
+      ]
+    },
+    {
+      "name": "bow_shove",
+      "index": 5,
+      "alpha_bounds": [
+        153,
+        28,
+        366,
+        239
+      ]
+    },
+    {
+      "name": "bow_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        146,
+        34,
+        370,
+        237
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        145,
+        29,
+        341,
+        240
+      ]
+    },
+    {
+      "name": "guard_brace",
+      "index": 8,
+      "alpha_bounds": [
+        160,
+        51,
+        314,
+        249
+      ]
+    },
+    {
+      "name": "arrow_nock",
+      "index": 9,
+      "alpha_bounds": [
+        151,
+        26,
+        349,
+        240
+      ]
+    },
+    {
+      "name": "arrow_draw",
+      "index": 10,
+      "alpha_bounds": [
+        149,
+        22,
+        348,
+        243
+      ]
+    },
+    {
+      "name": "arrow_release",
+      "index": 11,
+      "alpha_bounds": [
+        157,
+        26,
+        366,
+        244
+      ]
+    },
+    {
+      "name": "arrow_recovery",
+      "index": 12,
+      "alpha_bounds": [
+        152,
+        20,
+        342,
+        242
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 13,
+      "alpha_bounds": [
+        163,
+        61,
+        357,
+        245
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        169,
+        79,
+        329,
+        243
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 15,
+      "alpha_bounds": [
+        140,
+        133,
+        368,
+        239
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 16,
+      "alpha_bounds": [
+        128,
+        139,
+        411,
+        245
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png": "3c4e63c44f8e7c28288a8ab6bfe4f9798cf6f1926c5cef371075c7fb7de28767",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_snowglass_markers/alpha/melee-shove.png": "1a69b1ecae9d549eba79b0b84550b39b4dd85b0faa13232f214e3e1083d822a9",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_snowglass_markers/continuity-alpha/bow-recovery-nock-and-resting-corpse.png": "d27dd4e205deade585a16215236b08b1127fd122ad6be5886050548853c911a1"
+  }
+}

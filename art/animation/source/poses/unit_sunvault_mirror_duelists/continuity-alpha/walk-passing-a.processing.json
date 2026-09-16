@@ -1,0 +1,57 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "mirror-duelist-walk-passing-a",
+  "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/walk-passing-a.png",
+  "source_sha256": "f448e22c8ec51d593277795fe3f1ce37f75ee3cb6bd5bc1e0c40ee8eefa84c8e",
+  "source_rect": [
+    0,
+    0,
+    1158,
+    1358
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/walk-passing-a.png",
+  "output_sha256": "589d1ad6d78ac210805dbaa1ae3b5f08b25430a9dd00d6ca591cad21c29cfef1",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-cutouts.json",
+  "recipe_sha256": "96db7e9a7499b49c8abf31339b05fed48f05d647f0b7522839b1d8cf2596e0a5",
+  "parameters": {
+    "minimum": 100,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        650,
+        208
+      ],
+      [
+        606,
+        190
+      ],
+      [
+        625,
+        224
+      ],
+      [
+        760,
+        225
+      ],
+      [
+        497,
+        608
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1163772,
+    "edge_pixels": 5233,
+    "unchanged_paint_pixels": 403559,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

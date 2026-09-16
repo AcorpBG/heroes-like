@@ -1,0 +1,81 @@
+{
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "sources": [
+    {
+      "file": "walk-contact-a-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7a7c8e5c-f3c8-495a-85fe-68854c0081d7.png",
+      "prompt": "Use case: sketch-to-render. Paint ONE original Hearthbow Carrier walking contact-A sprite. FIRST image is exact leg pose: BLUE NEAR foreground leg strides FORWARD RIGHT, heel grounded; ORANGE FAR leg extends backward LEFT with toe grounded. Near thigh crosses in front of far thigh. SECOND image provides exact original identity and style: young clean-shaven brown-haired hooded archer, charcoal hood with rust-red lining and ragged red shoulder cape, dark brown layered leather coat and trousers, bronze fasteners, leather bracers/gloves, brown boots with red ankle wraps, amber lantern on near hip, back quiver of red-fletched arrows. LEFT hand holds one curved brown wooden bow low before body on screen RIGHT, RIGHT hand relaxed near belt, no drawn arrow while walking. Same three-quarter RIGHT-facing tactical camera, erect stable torso, normal adult proportions, moderate stride, no equipment swap/mirror. Keep entire bow/string and all gear inside ample empty margins. Real painted anatomy and cloth, not guide colors. Original detailed painterly fantasy game raster. Flat vivid GREEN #00ff00 backing only, neutral light no green spill/reflections, no floor/shadows/text/grid/effects.",
+      "selection": "Select far-forward contact; generated source did not follow requested guide ownership.",
+      "sha256": "632ed454fda34e271bca4f4212d25fd096b46e7722c0a179a2a2a9176e058dcb",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-0.png",
+        "art/units/source/curated/unit_neutral_hearthbow_carriers.png"
+      ]
+    },
+    {
+      "file": "walk-passing-a-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2b95ecf1-b932-45e1-98f5-bc3f14c1aac1.png",
+      "prompt": "Use case: sketch-to-render. Paint ONE original Hearthbow Carrier passing-A walking sprite. FIRST image supplies exact leg articulation: BLUE NEAR foreground leg supports weight almost vertically below near hip, boot firmly planted; ORANGE FAR leg bends at knee with far boot raised behind the planted near shin. Two independently attached legs, not a standing stride. SECOND image supplies original character identity, NOT leg pose: young clean-shaven hooded brown-haired archer, charcoal hood rust-red lining, ragged red shoulder cape, layered dark brown leather coat/trousers, bronze clasps, leather bracers/gloves, wrapped brown boots/red ankle wraps, amber lantern near hip and back quiver. LEFT hand holds ONE brown wooden bow low at screen RIGHT with complete string, RIGHT hand relaxed beside belt, no drawn arrow while walking. Preserve equipment ownership and fixed three-quarter RIGHT camera; erect stable torso, moderate ordinary walking motion. Painterly tactical-game raster, original realistic adult proportions; never guide colors/lines, mirror, extra limb or bow. Full body/boots/bow inside generous margin. Flat vivid GREEN #00ff00 backing only, neutral illumination no green spill/highlights/reflections; no floor, shadows, background scene, labels or effects.",
+      "selection": "Select raised rear-foot passing candidate.",
+      "sha256": "c5ed28bfd723026c8b5faf2a924d22fc0b5d350715a81cea6ce085d0a57635fd",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+        "art/units/source/curated/unit_neutral_hearthbow_carriers.png"
+      ]
+    },
+    {
+      "file": "walk-contact-b-draft-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-162d5c90-5c87-459d-bb0f-cdfe97a13984.png",
+      "prompt": "Use case: sketch-to-render. Paint ONE original Hearthbow Carrier walking contact-B sprite, dressing FIRST image's authoritative anatomy in SECOND image's original costume. BLUE NEAR foreground leg runs from near hip BACKWARD LEFT to planted left boot. ORANGE FAR leg strides FORWARD RIGHT behind the near thigh, right heel grounded. Show near thigh crossing OVER far thigh; not the opposite near-forward stride. Same fixed three-quarter RIGHT-facing head/torso, no mirror. Young brown-haired clean-shaven archer in charcoal hood with rust-red lining, ragged red cape, dark brown layered leather coat/trousers, bronze clasps, bracers/gloves, brown boots with red wraps, amber hip lantern and quiver of arrows. LEFT hand carries ONE curved wooden bow low before body at screen RIGHT; RIGHT hand relaxed near belt, no arrow drawn while walking. Exactly two attached legs and two arms; moderate normal walking stride, upright stable torso. Identity/proportions/painterly raster style from second image, NEVER blue/orange guide paint. Preserve complete bow/string/gear inside broad margins. Flat vivid GREEN #00ff00 backing only, neutral light no green spill/reflections/highlights, no ground, shadows, text, diagram, effects or scenery.",
+      "selection": "Reject repeated lead relative to contact A; retained source only.",
+      "sha256": "a059d5b6138b76b48482e683c9782f001473a6e9fc5aeddcdf8e20c1f0650daf",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+        "art/units/source/curated/unit_neutral_hearthbow_carriers.png"
+      ]
+    },
+    {
+      "file": "walk-contact-leg-edit-draft-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6423ebac-4fb0-44df-b510-35bcd5885305.png",
+      "prompt": "Use case: precise-object-edit. Edit this original Hearthbow Carrier sprite to show the OPPOSITE LEG forward, keeping head, torso, hands, bow, lantern, quiver, lighting and exact camera unchanged. Current leg beginning under the lantern at screen x520 goes backward to left boot. REDRAW that NEAR leg: its upper thigh now runs DIAGONALLY DOWN RIGHT across IN FRONT OF the other thigh from hip x520,y680 toward foreground knee x770,y900 and grounded foreground boot x900,y1150. Its thigh must visibly overlap and occlude the other thigh at their crossing. Redraw the FAR leg from opposite hip x660,y670 behind this crossing diagonally down LEFT to rear knee x460,y880 and boot x350,y1100. Exactly two correctly connected human legs, natural walking, not crossed ankles only; both hips change articulation. Trouser seams and near hip pouch stay attached correctly. Near boot slightly bigger than far boot. Preserve whole original adult character and complete bow in same canvas. No mirroring torso/equipment, no blue/red guides, no extra limb or green paint on character. Keep exact vivid green backing and original painterly style, no ground or shadows.",
+      "selection": "Reject direct leg edit: crossover still insufficiently distinct; retained source only.",
+      "sha256": "991b2c8443fb78396832779a6a0a5fd0ebd3d405f8e9200fda793bafa8543596",
+      "references": [
+        "art/animation/source/poses/unit_neutral_hearthbow_carriers/walk-contact-a-green.png"
+      ]
+    },
+    {
+      "file": "walk-passing-b-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-855bdba6-1df6-434e-a8b8-25cb2e6f9ea7.png",
+      "prompt": "Use case: sketch-to-render. One original Hearthbow Carrier walking passing-B sprite, FIRST image exact anatomy, SECOND exact identity. BLUE NEAR leg starts at foreground hip on left and reaches diagonally FORWARD RIGHT: raised thigh CROSSES IN FRONT OF planted far thigh, knee up toward right, bent shin and boot lifted in front of other leg. ORANGE FAR leg alone supports weight vertically with boot on ground. Make hip ownership and raised foreground knee unmistakable, not a rear heel kick. Same three-quarter RIGHT-facing camera and erect torso, moderate natural step. Young adult woman archer in charcoal hood with rust lining, ragged red cape, worn brown leather layers/trousers, bronze clasps, gloves/bracers, brown boots with red wraps, amber hip lantern and back quiver. LEFT hand holds one curved wooden bow low on screen RIGHT, RIGHT hand by belt, no drawn arrow. Preserve identity/gear proportions and full bow/string; no mirror or swapped equipment. Original detailed painterly game raster, no guide paint/colors/lines. Full figure in generous margins. Flat vivid GREEN #00ff00 backing only, neutral light no green spill/reflections, no floor/shadows/effects/text.",
+      "selection": "Select raised foreground-knee passing candidate.",
+      "sha256": "d335335facc2eba30f17e645422291fa90e6593f4c96065b8bbbce987e015062",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+        "art/units/source/curated/unit_neutral_hearthbow_carriers.png"
+      ]
+    },
+    {
+      "file": "walk-near-landing-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a88d3bae-7725-459d-a1b0-596c8ce53d08.png",
+      "prompt": "Use case: precise-object-edit. Make the NEXT FOOT-LANDING FRAME from this original archer raised-knee pose. Preserve exact character identity, upper body, head, hands, bow, lantern, quiver, torso position, camera, canvas, painterly style and green background. The currently raised foreground leg is the one to keep FORWARD: retain its thigh overlapping in front of the supporting far leg. LOWER that raised knee slightly from x650,y780 to x700,y860, then EXTEND its shin DOWN AND RIGHT so this same foreground boot reaches the ground at x880,y1300, heel first, toes pointing RIGHT. Do not swap legs or rotate entire body. Supporting far leg now angles slightly BACK toward screen LEFT, with far boot at x390,y1270. Thus a clearly visible near thigh crosses diagonally from x510,y620 to right knee x700,y860 IN FRONT OF far thigh; near shin continues down-right to near boot. Two legs only, correct human knee joints, normal grounded walking contact, no high-kick. Keep red hip cloth split around the thigh so crossover remains legible. Entire bow and both boots inside margins. No new equipment, effects, shadows, labels, floor or guide lines.",
+      "selection": "Select planted foreground-leg landing derived from raised-knee frame, not repeated-stride draft.",
+      "sha256": "853491f2d8b4ddc07f419ad0b10d96a6c3a5ecda660e987a030038e9ca9f4712",
+      "references": [
+        "art/animation/source/poses/unit_neutral_hearthbow_carriers/walk-passing-b-green.png"
+      ]
+    },
+    {
+      "file": "melee-brace-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b32248e0-f12b-48b3-ad9e-435244c9d0c6.png",
+      "prompt": "Use case: identity-preserve. ONE original Hearthbow Carrier melee windup sprite. Use attached exact young woman identity: charcoal hood rust-red lining, ragged red mantle and hip cloth, worn brown leather armor/trousers, gloves/bracers, bronze clasps, red-wrapped boots, amber hip lantern, back quiver, one brown curved wooden bow. Same three-quarter RIGHT-facing tactical camera. Preparing a close-range BOW-STAVE SHOVE, not shooting: both hands clearly grip the WOODEN STAVE itself, separated by about shoulder width, right hand on lower wooden limb near body at screen left and left hand around center grip at screen right. Hold bow nearly horizontal/crosswise across lower chest with one curved tip rising to right. Elbows BENT, stave pulled close to torso before pushing forward. Bowstring stays relaxed straight between tips, NO fingers pulling string, NO arrow outside quiver. Knees flexed in a balanced modest stance, torso slightly back to wind up. Exactly two hands attached to arms, one intact bow with both tips/string within frame, no extra weapons. Original detailed painterly tactical-game raster. Full body and bow inside generous margins; flat vivid GREEN #00ff00 backing only, neutral light no green reflections/spill, no floor/shadows/scenery/text/effects.",
+      "selection": "Select two-handed stave anticipation; replaces arrow-drawing old melee windup.",
+      "sha256": "5b17d652384bcf1b8f48f7554ef928e7121b89d3f64c6f574d40278da9f2d7d4",
+      "references": [
+        "art/units/source/curated/unit_neutral_hearthbow_carriers.png"
+      ]
+    }
+  ]
+}

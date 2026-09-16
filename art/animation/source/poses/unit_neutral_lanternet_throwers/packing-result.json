@@ -1,0 +1,215 @@
+{
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "output": "art/animation/source/poses/unit_neutral_lanternet_throwers/candidate-atlas.png",
+  "sha256": "ab3cb1e8eceb9bd58b88bad6fccc6aa10c8778e0d0267767c65f8d7fce443b02",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        156,
+        28,
+        364,
+        245
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        155,
+        26,
+        339,
+        245
+      ]
+    },
+    {
+      "name": "contact_original",
+      "index": 2,
+      "alpha_bounds": [
+        160,
+        21,
+        364,
+        244
+      ]
+    },
+    {
+      "name": "passing_original",
+      "index": 3,
+      "alpha_bounds": [
+        169,
+        32,
+        368,
+        250
+      ]
+    },
+    {
+      "name": "contact_attempt",
+      "index": 4,
+      "alpha_bounds": [
+        180,
+        29,
+        326,
+        244
+      ]
+    },
+    {
+      "name": "passing_knee_lift",
+      "index": 5,
+      "alpha_bounds": [
+        189,
+        29,
+        319,
+        243
+      ]
+    },
+    {
+      "name": "passing_rear_lift",
+      "index": 6,
+      "alpha_bounds": [
+        185,
+        26,
+        319,
+        243
+      ]
+    },
+    {
+      "name": "single_net_melee_windup",
+      "index": 7,
+      "alpha_bounds": [
+        166,
+        34,
+        347,
+        246
+      ]
+    },
+    {
+      "name": "net_melee_contact",
+      "index": 8,
+      "alpha_bounds": [
+        156,
+        31,
+        364,
+        249
+      ]
+    },
+    {
+      "name": "single_net_melee_recovery",
+      "index": 9,
+      "alpha_bounds": [
+        181,
+        36,
+        346,
+        245
+      ]
+    },
+    {
+      "name": "guard_brace",
+      "index": 10,
+      "alpha_bounds": [
+        149,
+        56,
+        344,
+        254
+      ]
+    },
+    {
+      "name": "net_gather",
+      "index": 11,
+      "alpha_bounds": [
+        163,
+        41,
+        370,
+        251
+      ]
+    },
+    {
+      "name": "net_windup",
+      "index": 12,
+      "alpha_bounds": [
+        152,
+        35,
+        343,
+        247
+      ]
+    },
+    {
+      "name": "net_release",
+      "index": 13,
+      "alpha_bounds": [
+        161,
+        38,
+        365,
+        248
+      ]
+    },
+    {
+      "name": "net_recovery_reach_belt",
+      "index": 14,
+      "alpha_bounds": [
+        186,
+        32,
+        326,
+        246
+      ]
+    },
+    {
+      "name": "net_reload",
+      "index": 15,
+      "alpha_bounds": [
+        132,
+        42,
+        317,
+        253
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 16,
+      "alpha_bounds": [
+        159,
+        33,
+        369,
+        248
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 17,
+      "alpha_bounds": [
+        155,
+        42,
+        348,
+        243
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 18,
+      "alpha_bounds": [
+        144,
+        78,
+        350,
+        242
+      ]
+    },
+    {
+      "name": "dead_cold",
+      "index": 19,
+      "alpha_bounds": [
+        135,
+        107,
+        383,
+        243
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png": "81195809a937dc10d08efc33ff17d9f522c2d624d489874623cd7733bcc60c42",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-alpha/supported-travel-single-net-and-recovery.png": "cc648d996dcb895b6e6c0796237adb4457ba931265be388b28bdfa92fc368776"
+  }
+}

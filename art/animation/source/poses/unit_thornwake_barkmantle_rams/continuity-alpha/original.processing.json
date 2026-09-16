@@ -1,0 +1,62 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "barkram-original-checker",
+  "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/alpha/poses.png",
+  "source_sha256": "a31148c9c83d48ce849968da8d82354f6e7677fd6e31ba8cd51cf92cadc2d5b9",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png",
+  "output_sha256": "080fb428a56f86fba082912da5a07abf1205068713154553347c8201d014aaff",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-cutouts.json",
+  "recipe_sha256": "f678085f2a94bb0396ae1b52989967c25cdc90a9e2662ecc178e05acc69fed5f",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 185,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        564,
+        276
+      ],
+      [
+        941,
+        284
+      ],
+      [
+        1268,
+        278
+      ],
+      [
+        247,
+        265
+      ],
+      [
+        168,
+        277
+      ],
+      [
+        184,
+        581
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 948488,
+    "edge_pixels": 22278,
+    "unchanged_paint_pixels": 602098,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

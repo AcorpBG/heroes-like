@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "walk-passing-a",
+  "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/walk-passing-a.png",
+  "source_sha256": "4896329174ac0e907bbb2815976f7ccda68607b01cb9007b56f58cf44472452d",
+  "source_rect": [
+    0,
+    0,
+    1205,
+    1305
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-passing-a.png",
+  "output_sha256": "54c56ed4a9459b8f6805f893ae7aba473d4aad6ba0b1ca2cffd4d2cf36b8207f",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "732acb7b8f20636e57c5a5479a01928c28f52c8eaf068c4b28f1baee0b970be4",
+  "recipe": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-cutouts.json",
+  "recipe_sha256": "4b53aabba48c4372a67aa89793237c0b18311fbc19c8ff615f6efbf06f02e833",
+  "parameters": {
+    "minimum": 100,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [],
+    "maximum": 185
+  },
+  "measurements": {
+    "removed_background_pixels": 855240,
+    "edge_pixels": 11785,
+    "unchanged_paint_pixels": 705500,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

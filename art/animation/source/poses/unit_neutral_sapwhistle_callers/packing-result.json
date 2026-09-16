@@ -1,0 +1,186 @@
+{
+  "unit_id": "unit_neutral_sapwhistle_callers",
+  "output": "art/animation/source/poses/unit_neutral_sapwhistle_callers/candidate-atlas.png",
+  "sha256": "6fb819b17bddb3a73e4be5e05efbbcb18716cd9f9fc0a20a72a47693b9d6612b",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        198,
+        26,
+        336,
+        252
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        164,
+        29,
+        358,
+        250
+      ]
+    },
+    {
+      "name": "run_extension_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        150,
+        39,
+        356,
+        253
+      ]
+    },
+    {
+      "name": "run_gather_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        165,
+        53,
+        344,
+        253
+      ]
+    },
+    {
+      "name": "left_launcher_anticipation",
+      "index": 4,
+      "alpha_bounds": [
+        183,
+        29,
+        323,
+        249
+      ]
+    },
+    {
+      "name": "left_launcher_shove",
+      "index": 5,
+      "alpha_bounds": [
+        171,
+        30,
+        387,
+        250
+      ]
+    },
+    {
+      "name": "left_launcher_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        183,
+        26,
+        326,
+        247
+      ]
+    },
+    {
+      "name": "left_grip_defense",
+      "index": 7,
+      "alpha_bounds": [
+        182,
+        48,
+        328,
+        243
+      ]
+    },
+    {
+      "name": "reload_dart",
+      "index": 8,
+      "alpha_bounds": [
+        167,
+        54,
+        342,
+        252
+      ]
+    },
+    {
+      "name": "aim_launcher",
+      "index": 9,
+      "alpha_bounds": [
+        165,
+        37,
+        351,
+        251
+      ]
+    },
+    {
+      "name": "fire_recoil",
+      "index": 10,
+      "alpha_bounds": [
+        154,
+        43,
+        352,
+        254
+      ]
+    },
+    {
+      "name": "ranged_recovery",
+      "index": 11,
+      "alpha_bounds": [
+        185,
+        26,
+        336,
+        250
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 12,
+      "alpha_bounds": [
+        166,
+        58,
+        337,
+        253
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 13,
+      "alpha_bounds": [
+        166,
+        84,
+        334,
+        245
+      ]
+    },
+    {
+      "name": "death_tip",
+      "index": 14,
+      "alpha_bounds": [
+        154,
+        124,
+        336,
+        253
+      ]
+    },
+    {
+      "name": "death_side_land",
+      "index": 15,
+      "alpha_bounds": [
+        157,
+        147,
+        349,
+        250
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 16,
+      "alpha_bounds": [
+        132,
+        148,
+        375,
+        252
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sapwhistle_callers/alpha/poses.png": "c2ddbf74381e5b523a8aee7222722c768052d1fc6c151de193b48bc35ca673af",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sapwhistle_callers/continuity-alpha/left-launcher-melee-guard-and-recovery.png": "d221a44bcdd6c006876ec745f680f799a6174154feb267199df63746cab796ce",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sapwhistle_callers/continuity-alpha/left-grip-crouched-defense.png": "af0f0c8904c7103cc49d23c7f1fbd4b40398264c47977d36295a95aa1e1f0c4c"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_sumpstone_guards",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "pick-recovery-guard-and-grounded-travel",
+      "source": "art/animation/source/poses/unit_neutral_sumpstone_guards/pick-recovery-guard-and-grounded-travel.png",
+      "sha256": "61d1ef552d5aec21e7363722927e9faf19fedf90084ec14086a49530c80bc256",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2819747d-7482-4149-ae5e-d6b40bf27c17.png",
+      "prompt": "Use case: stylized-concept. Asset type: FOUR original painted battle-animation poses in TWO columns TWO rows with broad empty gutters. Input image is sole original character identity, gear and material reference. Same Sumpstone Guard: compact broad dwarf, orange braided beard, dark iron/brass mining plate, blue scarf/tabard, cyan/violet crystal shoulder and knee inlays, helmet with round cyan miner lamp. LEFT arm holds ONE large faceted oval brass-rimmed blue/violet crystal shield; RIGHT hand grips ONE short wooden-shaft double-ended curved crystal pick. Same elevated three-quarter camera facing screen RIGHT, same body size throughout. Top-left: recovering from a downward pick strike, RIGHT elbow bends back toward ribs, pick head low ahead of belt and safely clear of shield, body rising from lunge, shield still on left arm, both feet grounded. Top-right: standing ready guard, left shield raised ahead of chest, right pick close beside right thigh, two planted boots and braced shoulders. Bottom-left: grounded heavy travel contact, near/right boot forward toward screen RIGHT planted heel, far/left boot behind toward LEFT on toe, shield tucked and pick safely clear of legs. Bottom-right: following passing pose, same near/right boot now planted under hips bearing weight, far/left knee advancing past it with far boot lifted a little. Keep short dwarf legs, no airborne body, same distinct equipment and full extremities. Original painterly raster on flat pure green #00FF00 without spill or shadow. No labels, grid, scenery, particle effects, extra props/limbs, blood or copied game art.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/sumpstone-continuity-20260916/idle-reference-clean/unit_neutral_sumpstone_guards-poses-unaccepted-rect-0-0-382-342-light.png",
+          "sha256": "597b7a2b17ae97e6c111b22667611b4b686abf3d3d5ab64b38f46df3214464ff"
+        }
+      ],
+      "selection_notes": "13 frames retain nine original paintings and select four new pick recovery, shield-ready and grounded travel paintings. Original equipped kneel, low fall and head-right resting corpse remain. Actual original RGBA composites are clean, despite the historical cloudy raw-preview rejection. Reuse alpha/poses-unaccepted.png unchanged; the filename records its historical state, not a new extraction. New green source uses approved bounded preparation. Uniform old/new scales 0.62/0.38 preserve short dwarf anatomy. Banded crops exclude adjacent boots/pick fragments; anatomical ground anchors retain complete weapon tips. Travel contact/passing still does not establish a complete alternating-support gait. Pick length/grip, shield/crystal pattern, body/palette/edge consistency and connected timing remain refinement. No final motion/gameplay acceptance.",
+      "selected_frames": [
+        "walk_contact_attempt",
+        "walk_passing_attempt",
+        "pick_recovery",
+        "guard_ready"
+      ]
+    }
+  ]
+}

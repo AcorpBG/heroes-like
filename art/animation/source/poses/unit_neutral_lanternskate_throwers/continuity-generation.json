@@ -1,0 +1,129 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_neutral_lanternskate_throwers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "source": "right-fist-strike-recovery-and-ready.png",
+      "source_sha256": "98ba0702aaaca55951f2dabff492f0ecd4cc9bbc5854a051c4d83c049807feed",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b1c9d6b0-eb1c-457b-be20-1d2318307bce.png",
+      "reference": ".artifacts/battle-unit-animation-size-20260913/lanternskate-continuity-20260916/windup-reference/unit_neutral_lanternskate_throwers-poses-rect-319-328-608-627-light.png",
+      "reference_sha256": "7979fdcf714f59da0463559fa164bfe968be6f8b1a302db5b816122666a2b98d",
+      "prompt": "Use case: precise-object-edit. Asset type: original Lanternskate Thrower melee animation. Image 1 is exact WINDUP pose and fixed anatomy/costume reference. Create THREE full-body poses in a horizontal row with broad clear gutters, same size and camera facing RIGHT. Preserve teal hood with gold trim, brown braid, ivory scarf/cuffs, navy quilted knees, brown gloves and laced boots, exactly one connected silver ice-skate runner under each boot, TWO lanterns stowed together at belt, both hands EMPTY. LEFT: follow this windup with the SAME RIGHT fist (currently raised at screen LEFT) punching across the chest toward screen RIGHT. The extended punching arm must visibly originate at the NEAR/screen-LEFT shoulder; the sleeve crosses OVER the scarf/chest before extending to the right. LEFT fist remains tucked at ribs below the extended right arm. This must NOT be a left-arm jab coming directly from screen-RIGHT shoulder. MIDDLE: recovery from that right cross, right elbow bends and right fist retracts toward sternum, left fist stays by ribs; identical stance and arm ownership. RIGHT: defensive readiness, both EMPTY fists lifted beside hood with forearms shielding head, knees slightly bent but not the existing deep crouch. Keep full boots/runners on ground, no skate backwards, no new lantern in a hand, no changed head/hood. Painterly original raster matching reference. Flat opaque pure magenta RGB255,0,255 background with no reflected color, no floor shadow, labels, grid, particles or effects.",
+      "selection_note": "Unselected magenta precursor preserved for provenance; use the selected later derivative for the three final paintings."
+    },
+    {
+      "source": "right-fist-strike-recovery-and-ready-extracted.png",
+      "source_sha256": "6587d5158d257685127d7a121bbb7fc3313c6e9094b9e900fa40e94c28256ec8",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-544f800e-3e9c-4a70-a560-5db252d6b983.png",
+      "references": [
+        {
+          "path": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b1c9d6b0-eb1c-457b-be20-1d2318307bce.png",
+          "sha256": "98ba0702aaaca55951f2dabff492f0ecd4cc9bbc5854a051c4d83c049807feed"
+        }
+      ],
+      "prompt": "Use case: background-extraction. Image 1 is the exact edit target: THREE Lanternskate poses on magenta. Extract all three onto a genuinely transparent RGBA background, removing magenta backing AND pink edge contamination in fine hair, braid, ivory scarf fibers, cuffs and skate-runner apertures. Preserve layout, size, exact right-arm strike/recovery/ready poses, anatomy, face, teal hood/coat, TWO stowed belt lanterns, bright lantern glass and both boots/runners. Keep complete painted fibers and hair, no shrinking/eroding cloth or repainting interior details. No gray/white/checker painted backdrop, no floor shadow, no new glow, no labels or framing. Transparency must be real alpha, not a drawn checkerboard.",
+      "selection_note": "Selected genuine RGBA derivative after composite review: fine scarf/hair edges no longer magenta. Small generative detail changes are not unchanged-original pixel reuse."
+    }
+  ],
+  "retained_original_alpha": {
+    "source": "alpha/poses.png",
+    "sha256": "61c6e1a190cf492b5d5a51625c39720ee85f35d79dafebad41953dfe8e738456"
+  },
+  "selected_frames": [
+    {
+      "index": 0,
+      "name": "idle_a_lantern",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 1,
+      "name": "idle_b_lantern",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 2,
+      "name": "skate_push",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 3,
+      "name": "skate_gather",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 4,
+      "name": "right_fist_windup",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 5,
+      "name": "right_fist_cross",
+      "source": "right-fist-strike-recovery-and-ready-extracted.png"
+    },
+    {
+      "index": 6,
+      "name": "right_fist_recovery",
+      "source": "right-fist-strike-recovery-and-ready-extracted.png"
+    },
+    {
+      "index": 7,
+      "name": "empty_fists_ready",
+      "source": "right-fist-strike-recovery-and-ready-extracted.png"
+    },
+    {
+      "index": 8,
+      "name": "empty_fists_crouch",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 9,
+      "name": "hit_recoil_hood_retained",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 10,
+      "name": "draw_lantern",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 11,
+      "name": "throw_lantern_aim",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 12,
+      "name": "throw_empty_release",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 13,
+      "name": "empty_hand_recovery",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 14,
+      "name": "death_kneel",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 15,
+      "name": "death_side_fall",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 16,
+      "name": "dead_head_right_dim_lanterns",
+      "source": "alpha/poses.png"
+    }
+  ],
+  "review_notes": [
+    "17 packed frames retain fourteen original paintings and select three new paintings: a near-shoulder right cross matching the original right-hand windup, right-arm recovery and empty-fist readiness. The old left jab remains unselected. Throwing retains draw/aim/empty release/recovery and three head-right collapse/corpse states.",
+    "Approved preparation of the magenta precursor exposed pink scarf/hair spill. Selected built-in extraction has genuine alpha and clean inspected composites; the precursor remains preserved but unselected. Genuine original alpha and generated extraction are not rekeyed.",
+    "Inspected crop bands preserve hair, hands, both skate runners and complete corpses while excluding neighboring runners/arms/boots. Uniform original/new scales 0.67/0.29; full atlas visually inspected.",
+    "Candidate only: full alternating skating gait and glide/foot ownership, scarf/lantern/hood/gear proportions, anatomy and palette/edge continuity, full motion/timing remain refinement. No automated/import/gameplay/Linux/Windows acceptance."
+  ]
+}

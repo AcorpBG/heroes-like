@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "shard-warden-walk-passing-b",
+  "source": "art/animation/source/poses/unit_sunvault_shard_wardens/walk-passing-b.png",
+  "source_sha256": "f752b7d4cc879c1e1b296be176235b4320a4c22516708e1202bd00a21a691200",
+  "source_rect": [
+    0,
+    0,
+    1229,
+    1280
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_shard_wardens/continuity-alpha/walk-passing-b.png",
+  "output_sha256": "5769473586cb21ff03744e59bdd3d0472bed69d8846faa60e12631424f7a1e09",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/poses/unit_sunvault_shard_wardens/continuity-cutouts.json",
+  "recipe_sha256": "08e4fa640f5f1e769daef857a21eefcb2db517841650225e7a9a110bedce571b",
+  "parameters": {
+    "minimum": 100,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1080640,
+    "edge_pixels": 4826,
+    "unchanged_paint_pixels": 487654,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

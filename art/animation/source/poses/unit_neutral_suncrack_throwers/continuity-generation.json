@@ -1,0 +1,30 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_suncrack_throwers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "punch-throw-recoveries-and-grounded-step",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/punch-throw-recoveries-and-grounded-step.png",
+      "sha256": "79f781209f983512708d8233bfb5c94b4898947e423c725f1a57858a1ed64c63",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f527a117-9307-478f-b57f-dd6437a4ec59.png",
+      "prompt": "Use case: stylized-concept. Asset type: four original battle-animation raster poses TWO columns TWO rows. Input image is sole original identity reference. Preserve Suncrack Thrower woman: athletic build/dark hair high bun, cream headband brass goggles, trailing turquoise gold-edged scarf, cream wrapped sleeveless top and split trousers/skirt ochre trim, brown calf-laced sandals, crossed leather straps and waist belt with several round turquoise-glass/clay throwing flasks in rope sleeves. Same elevated three-quarter camera facing RIGHT and same body scale. Top-left: recovery after RIGHT-handed straight punch toward right; empty RIGHT fist pulled halfway back across chest with elbow bending down, LEFT fist guards ribs, both boots grounded. Top-right: recovery after RIGHT overarm flask release, empty RIGHT throwing arm lowers diagonally forward as shoulder relaxes, LEFT hand balances near waist; no flask in either hand, belt flasks intact. Bottom-left: upright defensive ready, both empty wrapped forearms raised near upper chest without covering face, feet planted; preparing for deep crossed-forearm crouch. Bottom-right: supported passing step, RIGHT/near sandal flat directly beneath hips and FAR/left knee swings forward with foot lifted only slightly clear of ground; upper body subtly leans forward and empty arms balance, scarf stays behind, retain asymmetric original trouser wraps. No airborne support foot, no new weapons or gear, no extra arms. Complete scarf/goggles/flasks/sandals, generous margins and gutters. Original painted raster same palette, uniform pure green #00FF00 background without spill; no shadows, scenery, text, grid, labels, blood or effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/suncrack-continuity-20260916/idle-reference/unit_neutral_suncrack_throwers-poses-rect-0-0-313-324-light.png",
+          "sha256": "280a983b9fb706b2b03122cbcd748ba1908c963e47695a3de938f9c180f2df82"
+        }
+      ],
+      "selection_notes": "18 frames retain fourteen original paintings and select four new near-right punch recovery, empty-hand throwing recovery, upright guard and supported passing-step paintings. Distinct flask preparation/windup/release remains separate from empty-fist melee; four original collapse/rest paintings retain goggles/scarf/flask belt. Reuse inspected clean original alpha; new green-backed source uses approved bounded preparation. Uniform original/new scales are 0.64/0.335. Banded crops exclude adjacent heads, hands, scarf fragments and the neighboring corpse's boot while retaining own fall toes, fingers and cloth. Original airborne travel variants are excluded; retained contact and new passing still do not establish full alternating gait. Arm/grip ownership, flask count, asymmetric trousers, body/palette/edges and connected event timing remain refinement. Static production review is not motion/gameplay acceptance.",
+      "selected_frames": [
+        "walk_passing_attempt",
+        "punch_recovery",
+        "guard_ready",
+        "flask_recovery"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_flaremast_crews",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "deployed-mast-action-recoveries-and-defense",
+      "source": "art/animation/source/poses/unit_neutral_flaremast_crews/deployed-mast-action-recoveries-and-defense.png",
+      "sha256": "fb9cd0b213cb2c25055693f30102e3a4a7a7ce2630259ecde2cb85f5b775140d",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-acae92cf-2153-4bbe-9957-467e93733c67.png",
+      "prompt": "Use case: stylized-concept. THREE separate full-body original battle animation poses, THREE columns ONE row on a wide canvas with generous clear gutters. Image 1 supplies EXACT woman, clothing, launcher and signal-mast identity. One Flaremast operator per column: brown curly hair, navy cap with amber goggles, weathered teal jacket cream lapels/cuffs over brown vest, red scarf and long sash, cream trousers, tall brown boots. RIGHT hand on brass flare launcher trigger, LEFT hand supports long brass flared barrel with red chamber. In EVERY panel her ONE tall brass/wood signal mast stands deployed on THREE tripod feet on image LEFT beside her, same height/position/canister arrangement as reference, RED and BLUE on viewer-left side, ORANGE on viewer-right, no backpack duplicate. Fixed elevated three-quarter camera/body faces RIGHT, same anatomical scale in all columns. LEFT panel: recovery from two-hand launcher shove, bent elbows draw horizontal launcher toward ribs, torso rises from slight forward brace, muzzle RIGHT. CENTER panel: post-shot recovery, launcher lowered halfway from shoulder toward waist, muzzle diagonally down-right, knees straighten, scarf settles. RIGHT panel: defensive crouch, knees deeply bent, shoulders hunched, launcher held close across upper chest with both hands same ownership, muzzle RIGHT. Signal mast stays deployed upright undamaged in all three, woman's cap/goggles retained. Preserve full body, mast, tripod feet and weapon with margins. Original painterly raster on flat pure GREEN #00FF00 with no spill. No shadows, scenery, grid, text, blood, effects, extra people or equipment.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/flaremast-continuity-20260916/extra-original-alpha/poses-idle-breath-draft-light.png",
+          "sha256": "b8ea1603fac185d114b6d0f571bb9cb37cb5d3539de43a257fd142be24ac3a41"
+        }
+      ],
+      "selection_notes": "New deployed-mast melee recovery, post-shot recovery and crouched defense paintings visually inspected; not yet prepared, packed or registered.",
+      "selection": "All three source paintings selected; exact source rectangles/scales/anchors are in packing.json. Static composites inspected; connected-motion acceptance remains open.",
+      "selected_frames": [
+        "launcher_recovery",
+        "guard_ready",
+        "ranged_empty_recovery"
+      ]
+    }
+  ],
+  "review_notes": [
+    "18 packed frames retain fifteen earlier paintings, including genuine-alpha idle breath, prepared contact/passing drafts and cap-corrected kneel; three new built-in paintings add deployed-mast melee recovery, crouched ready defense and post-shot recovery. The old repeated walking contacts and capless kneel are not selected.",
+    "Original alpha and approved neutral/green preparation preserve painted interiors. Explicit crop bands exclude adjacent-row boots and neighboring collapse pixels. Old/new body scales are anatomical and uniform, with a smaller corpse scale to avoid inflating the extended body; no mirroring, pose synthesis or warping.",
+    "All-state candidate only. Walking still lacks a proven alternating four-phase support cycle; carried/deployed mast transition is abrupt. Mast/launcher/body proportions, grip and cap/palette/edge consistency, fall expression and connected timing remain unaccepted. No automated suites/imports/gameplay/platform exports in this increment."
+  ]
+}

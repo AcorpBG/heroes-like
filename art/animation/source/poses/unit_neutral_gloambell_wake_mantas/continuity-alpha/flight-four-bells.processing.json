@@ -1,0 +1,57 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "gloambell-flight-four-bells",
+  "source": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/flight-four-bells.png",
+  "source_sha256": "b5c8e0148041aedf30a947b54950530bdecaac0f4a18aea9152788920cd8d1ff",
+  "source_rect": [
+    0,
+    0,
+    2172,
+    724
+  ],
+  "output": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-alpha/flight-four-bells.png",
+  "output_sha256": "bd3318230914439a4a88e5ebc5fae304cfa29e2f71aeab2890a648ddae082e12",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-cutouts.json",
+  "recipe_sha256": "6ba5aac35b5897163f76d11d24c6e9f0f81bab827b98b40d92feb76e49da5d0f",
+  "parameters": {
+    "minimum": 110,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        347,
+        429
+      ],
+      [
+        1813,
+        430
+      ],
+      [
+        1963,
+        449
+      ],
+      [
+        1138,
+        523
+      ],
+      [
+        1970,
+        466
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1133953,
+    "edge_pixels": 8072,
+    "unchanged_paint_pixels": 430503,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}
