@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_neutral_cliffhawk_wardens",
+  "output": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/candidate-atlas.png",
+  "sha256": "77787b04b7ac5c300d56b290dd2e60c8c56bfddb4a18b340a469ab58bbbc4606",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        163,
+        22,
+        334,
+        247
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        171,
+        26,
+        348,
+        249
+      ]
+    },
+    {
+      "name": "contact_original",
+      "index": 2,
+      "alpha_bounds": [
+        184,
+        21,
+        357,
+        246
+      ]
+    },
+    {
+      "name": "passing_original",
+      "index": 3,
+      "alpha_bounds": [
+        162,
+        39,
+        333,
+        245
+      ]
+    },
+    {
+      "name": "contact_attempt",
+      "index": 4,
+      "alpha_bounds": [
+        157,
+        25,
+        365,
+        243
+      ]
+    },
+    {
+      "name": "passing_knee_lift",
+      "index": 5,
+      "alpha_bounds": [
+        163,
+        22,
+        350,
+        243
+      ]
+    },
+    {
+      "name": "pike_two_hand_windup",
+      "index": 6,
+      "alpha_bounds": [
+        144,
+        18,
+        385,
+        243
+      ]
+    },
+    {
+      "name": "pike_thrust",
+      "index": 7,
+      "alpha_bounds": [
+        159,
+        60,
+        399,
+        254
+      ]
+    },
+    {
+      "name": "pike_recovery",
+      "index": 8,
+      "alpha_bounds": [
+        154,
+        28,
+        369,
+        241
+      ]
+    },
+    {
+      "name": "guard_braced",
+      "index": 9,
+      "alpha_bounds": [
+        179,
+        63,
+        335,
+        255
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 10,
+      "alpha_bounds": [
+        172,
+        48,
+        336,
+        252
+      ]
+    },
+    {
+      "name": "death_kneel_hawk_depart",
+      "index": 11,
+      "alpha_bounds": [
+        166,
+        43,
+        337,
+        246
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 12,
+      "alpha_bounds": [
+        125,
+        97,
+        386,
+        255
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 13,
+      "alpha_bounds": [
+        130,
+        124,
+        383,
+        250
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cliffhawk_wardens/alpha/poses.png": "2a48c34b08bea58c6a59dacc11580082e5f44e2a7075cd43981128208f522a1e",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cliffhawk_wardens/continuity-alpha/travel-two-hand-recovery-and-left-collapse.png": "16b5811a8399201380ea2075bda71980f97c345a386e70a58261dcaf228005f8",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cliffhawk_wardens/continuity-alpha/dead-head-left-from-fall.png": "5a065ff3b663645d18331c3bd48f19a692c6fd07497075a4f51b0ff5e4aa476d"
+  }
+}

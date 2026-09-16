@@ -1,0 +1,35 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_dustjack_blades",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "four-phase-step-and-two-blade-recovery",
+      "source": "art/animation/source/poses/unit_neutral_dustjack_blades/four-phase-step-and-two-blade-recovery.png",
+      "sha256": "e6a99372e8a351306ff6bb093f68decb8265b508e7cc46d40324b881e4aa735c",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1651eb06-ab58-44b8-b436-0dc24ddacfaa.png",
+      "prompt": "Use case: stylized-concept. SIX original Dustjack Blades full-body tactical sprites in THREE columns TWO rows, wide clear gutters around complete TWO blades and boots. Image1 is a FOUR-phase leg-ownership guide, not character anatomy: use its near/far overlap and planted/lifted soles for the FIRST FOUR paintings in reading order (top left A contact, top middle A passing, top right B contact, bottom left B passing). Shorten the step lengths to this character's own proportions. Near leg means viewer-facing hip; it stays in front of the far thigh when it extends BACK in B contact. Never mirror torso or swap equipment. The two passing poses must visibly exchange which boot is planted and which knee/sole is lifted. Fixed elevated three-quarter camera and body facing RIGHT. Image2 is fixed identity/style: athletic short-brown-haired adult human, bronze goggles on forehead, teal trailing scarf, tan sleeveless leather tunic, one asymmetrical bronze shoulder plate on anatomical LEFT (viewer right), diagonal straps/belts, tan trousers, metal knee guards and leather boots. ONE broad hooked scrap-steel short blade in EACH hand, exactly two blades throughout, no hand/equipment swaps. For FOUR travel poses use grounded brisk steps with one supporting foot rather than repeated airborne leaps. Both blades lowered outside leg sweep, preserve original torso camera and asymmetrical armor. BOTTOM MIDDLE: after forward right-hand slash recover right elbow toward near ribs, that blade low pointing right, left blade guarding across chest, two boots planted, torso turns back to ready without reversing. BOTTOM RIGHT: ready defensive guard just before crossing blades, elbows bent with both blades raised apart before chest, knees softly bent and both boots grounded. Same face/body/gear proportions in every frame, original painterly finish. Pure GREEN RGB(0,255,0) backing, no green spill/fringe. No guide marks, text, borders, floor/shadows, effects, extra weapons/arms or scenery.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-guide.png",
+          "sha256": "e82785b7504af90c20176fb202c4c869376233f7311cb3694e71b9284ce2fa7b"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/dustjack-continuity-20260916/idle-reference/unit_neutral_dustjack_blades-poses-rect-0-0-298-432-green.png",
+          "sha256": "b8ddb8694f571b6bb41822561f6ecbedbde6afb98c2a6715cd2e8e4520f0dcf4"
+        }
+      ],
+      "selection_notes": "Four-phase sheet still repeats leading-leg and passing support geometry; do not claim alternating gait. Preserve original identity and choose useful supported poses/recovery. Two-blade recovery/ready guard selected; asymmetrical shoulder and hand continuity remain review.",
+      "selected_frames": [
+        "contact_attempt",
+        "passing_a",
+        "passing_b_attempt",
+        "blade_recovery",
+        "guard_ready"
+      ]
+    }
+  ]
+}

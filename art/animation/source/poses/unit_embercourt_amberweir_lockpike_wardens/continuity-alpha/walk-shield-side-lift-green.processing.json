@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source paintings and exact parameters, no synthesized poses.",
+  "id": "lockpike-walk-shield-side-lift-green",
+  "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/walk-shield-side-lift-green.png",
+  "source_sha256": "713c7ea4c30951d2578b7b56c79eb9df8b525ead3ee5e0d39ac860fa669ee6b5",
+  "source_rect": [
+    0,
+    0,
+    890,
+    1767
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/walk-shield-side-lift-green.png",
+  "output_sha256": "fe8619550741d3278c587189fc3f1a02062387eb426865f8dc5f4b44b88cae98",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-cutouts.json",
+  "recipe_sha256": "6f6da17a62f229b9abf1e4c3cd03e56889c3a00f0e531baf21b79ad66cc1ded8",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 975338,
+    "edge_pixels": 10432,
+    "unchanged_paint_pixels": 586860,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

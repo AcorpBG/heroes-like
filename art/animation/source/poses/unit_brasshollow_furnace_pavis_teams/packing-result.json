@@ -1,0 +1,160 @@
+{
+  "unit_id": "unit_brasshollow_furnace_pavis_teams",
+  "output": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/candidate-atlas.png",
+  "sha256": "592b7b09259d451f5cbee5625203e76e40bd07f7e6dc90b78e4f74545ba810cc",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle",
+      "index": 0,
+      "alpha_bounds": [
+        186,
+        29,
+        342,
+        240
+      ]
+    },
+    {
+      "name": "idle_breath",
+      "index": 1,
+      "alpha_bounds": [
+        183,
+        31,
+        338,
+        240
+      ]
+    },
+    {
+      "name": "contact_a_requires_limb_review",
+      "index": 2,
+      "alpha_bounds": [
+        183,
+        25,
+        331,
+        241
+      ]
+    },
+    {
+      "name": "far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        188,
+        26,
+        336,
+        240
+      ]
+    },
+    {
+      "name": "contact_b_requires_limb_review",
+      "index": 4,
+      "alpha_bounds": [
+        183,
+        27,
+        337,
+        240
+      ]
+    },
+    {
+      "name": "near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        184,
+        29,
+        340,
+        241
+      ]
+    },
+    {
+      "name": "full_pole_windup",
+      "index": 6,
+      "alpha_bounds": [
+        130,
+        3,
+        341,
+        241
+      ]
+    },
+    {
+      "name": "full_pole_contact",
+      "index": 7,
+      "alpha_bounds": [
+        146,
+        58,
+        409,
+        241
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 8,
+      "alpha_bounds": [
+        182,
+        30,
+        320,
+        242
+      ]
+    },
+    {
+      "name": "guard_braced",
+      "index": 9,
+      "alpha_bounds": [
+        185,
+        34,
+        331,
+        239
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 10,
+      "alpha_bounds": [
+        149,
+        46,
+        358,
+        247
+      ]
+    },
+    {
+      "name": "knees_buckle",
+      "index": 11,
+      "alpha_bounds": [
+        150,
+        49,
+        356,
+        242
+      ]
+    },
+    {
+      "name": "side_collapse",
+      "index": 12,
+      "alpha_bounds": [
+        123,
+        120,
+        373,
+        243
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 13,
+      "alpha_bounds": [
+        130,
+        155,
+        374,
+        250
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/poses.png": "6baf1b7383336ff0ec3020afd61db66e1f971fdf92989ca3ac161cfb8ee64314",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/near-contact-guide-first.png": "6212c1a7d21df1cf4da4998a55f850eba18ba66adbedc1f692137aa977272521",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/walk-1.png": "5a0b1d51f5391cf59131e41246af47849b379c82ee446ef2d1178a3b4de56758",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/walk-2.png": "2fde454b915f0b0f7eb8fe1974f9edd864871793c67521ac2d2865558d529ad5",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/walk-3.png": "d007339a58894988b794dca4bf47ddfdf5f451c55abf4dd7234366f29794e340",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/full-pole-attack-pair.png": "c886178cca1d78719a773d232f31b99358a243d3fb6b968b016f1f38d554418b",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/guard-braced.png": "a1ad932227b04be899f856321b6f05a99cafcb0e52220c98bd0e69bacdb8f51d"
+  }
+}

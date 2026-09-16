@@ -1,0 +1,175 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+  "output": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/candidate-atlas.png",
+  "sha256": "070af05685bc9bdd0bed0a5cb53e1699ba9c029c308400d6993a2acad36b2aca",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        180,
+        31,
+        303,
+        239
+      ]
+    },
+    {
+      "name": "idle_1",
+      "index": 1,
+      "alpha_bounds": [
+        188,
+        31,
+        315,
+        240
+      ]
+    },
+    {
+      "name": "walk_near_contact",
+      "index": 2,
+      "alpha_bounds": [
+        178,
+        33,
+        326,
+        240
+      ]
+    },
+    {
+      "name": "walk_far_contact",
+      "index": 3,
+      "alpha_bounds": [
+        164,
+        34,
+        321,
+        240
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 4,
+      "alpha_bounds": [
+        174,
+        38,
+        330,
+        243
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 5,
+      "alpha_bounds": [
+        176,
+        38,
+        336,
+        241
+      ]
+    },
+    {
+      "name": "melee_contact",
+      "index": 6,
+      "alpha_bounds": [
+        177,
+        49,
+        377,
+        241
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 7,
+      "alpha_bounds": [
+        174,
+        72,
+        323,
+        242
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 8,
+      "alpha_bounds": [
+        174,
+        48,
+        352,
+        244
+      ]
+    },
+    {
+      "name": "cast_windup",
+      "index": 9,
+      "alpha_bounds": [
+        190,
+        38,
+        326,
+        243
+      ]
+    },
+    {
+      "name": "cast_contact",
+      "index": 10,
+      "alpha_bounds": [
+        185,
+        40,
+        335,
+        243
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 11,
+      "alpha_bounds": [
+        170,
+        34,
+        324,
+        241
+      ]
+    },
+    {
+      "name": "kneel",
+      "index": 12,
+      "alpha_bounds": [
+        174,
+        90,
+        326,
+        251
+      ]
+    },
+    {
+      "name": "side_fall",
+      "index": 13,
+      "alpha_bounds": [
+        162,
+        98,
+        350,
+        252
+      ]
+    },
+    {
+      "name": "prone_settle",
+      "index": 14,
+      "alpha_bounds": [
+        158,
+        135,
+        360,
+        249
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 15,
+      "alpha_bounds": [
+        152,
+        142,
+        354,
+        250
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png": "a51523f7e1f64ede5837f6d1a4566c849b02c109e16b0cb77a472feab243d48b",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png": "28aa6bf32a1850925dabbf895db6408f12e457c2bae92d1d67c1d7ccc4912403"
+  }
+}

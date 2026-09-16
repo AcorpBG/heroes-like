@@ -1,0 +1,54 @@
+{
+  "workflow": "built-in original-art deliberate foot-lift sequence from fixed planted travel anchor; not long-stride guide",
+  "status": "selected_frames_registered_pending_playback_acceptance",
+  "jobs": [
+    {
+      "key": "emberpack_step_planted",
+      "prefix": "emberpack",
+      "unit_id": "unit_neutral_emberpack_lobbers",
+      "base": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916",
+      "source": "planted.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/identity-travel-reference.png"
+      ],
+      "prompt": "Use case: precise-object-edit. Edit target: the provided original battle character. Make ONE complete full-body stable travel stance to anchor a deliberate stepping animation. Change ONLY legs from the raised-knee pose to BOTH FEET PLANTED directly beneath hips, modest shoulder-width apart, knees relaxed. Not a stride, no leg crossing. Near RIGHT boot is screen LEFT, far LEFT boot screen RIGHT, both soles on ground. Preserve exact original head/face, torso, lean, colors, proportions, costume, equipment, hands and camera angle. Keep the short coiled EMPTY leather sling in near RIGHT hand on screen LEFT, empty far LEFT hand beside chest, ONE coal backpack, brass-trim hood, charcoal leather, orange cloth and plain brown wrapped boots WITHOUT metal toe caps or new armor.\nFull-body three-quarter view facing right. Same painterly original game style. Clean uniform neutral gray RGB(170,170,170) background in all gaps, no floor, shadows, gradients, magenta spill, checkers or text. Square 1536x1536, entire character and gear inside a generous margin. Preserve torso scale. No other character or reference-unit equipment.",
+      "status": "visually_reviewed_planted_anchor",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-95c01af4-fb25-44a3-8112-3fc1187db714.png",
+      "sha256": "eeb46e770d11803c5c2643498344b4329d1083cb06cee39673971984c7c27c41"
+    },
+    {
+      "key": "emberpack_step_near",
+      "prefix": "emberpack",
+      "unit_id": "unit_neutral_emberpack_lobbers",
+      "base": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916",
+      "source": "near-lift.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/planted.png"
+      ],
+      "prompt": "Use case: precise-object-edit. Edit this original battle sprite into ONE next footstep frame. Keep the image canvas, camera, torso, head, hands, weapon, all equipment, scale and uniform gray background exactly the same. Change ONLY SCREEN-LEFT leg (camera-near RIGHT leg), the boot below the quiver/sling. Bend this selected knee a little forward and raise its boot from the floor by about half a shin (120 to 160 pixels in this 1254-square reference). Keep that raised boot on its original side of the body, heel just behind its knee; the foot advances only a little. The OTHER SCREEN-RIGHT far/left boot stays exactly planted in its ORIGINAL position and supports weight. Two legs total. No crossed legs, no kick, no jump, no two-foot lift. This is one cautious natural walking step while carrying equipment. Keep hip position almost fixed and preserve clear leg ownership. Plain brown leather wrapped boots, NO metal toe caps. Near right hand still holds the coiled empty sling, far left hand empty at chest. Entire original character visible, same original painterly game style, uniform RGB(170,170,170) background including gaps. No shadows, floor, text, arrows, guides or extra limbs.",
+      "status": "visually_reviewed_step_candidate",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-dd057555-93eb-41ef-94a0-d7fc37ffb34e.png",
+      "sha256": "0e116513f8614f61891f6b132015a8997e8c2ee2e262e794879923e78526d3ae"
+    },
+    {
+      "key": "emberpack_step_far",
+      "prefix": "emberpack",
+      "unit_id": "unit_neutral_emberpack_lobbers",
+      "base": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916",
+      "source": "far-lift.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/planted.png"
+      ],
+      "prompt": "Use case: precise-object-edit. Edit this original battle sprite into ONE next footstep frame. Keep the image canvas, camera, torso, head, hands, weapon, all equipment, scale and uniform gray background exactly the same. Change ONLY SCREEN-RIGHT leg (distant LEFT leg), opposite the quiver/sling. Bend this selected knee a little forward and raise its boot from the floor by about half a shin (120 to 160 pixels in this 1254-square reference). Keep that raised boot on its original side of the body, heel just behind its knee; the foot advances only a little. The OTHER SCREEN-LEFT near/right boot stays exactly planted in its ORIGINAL position and supports weight. Two legs total. No crossed legs, no kick, no jump, no two-foot lift. This is one cautious natural walking step while carrying equipment. Keep hip position almost fixed and preserve clear leg ownership. Plain brown leather wrapped boots, NO metal toe caps. Near right hand still holds the coiled empty sling, far left hand empty at chest. Entire original character visible, same original painterly game style, uniform RGB(170,170,170) background including gaps. No shadows, floor, text, arrows, guides or extra limbs.",
+      "status": "visually_reviewed_step_candidate",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8088cc35-235a-4f71-8b22-204d0c13969c.png",
+      "sha256": "fc16d33fbf79ba58b0708ca47dad787a32de44990466985b718e4d1dad5662cd"
+    }
+  ],
+  "selected_sources": [
+    "planted.png",
+    "near-lift.png",
+    "far-lift.png"
+  ],
+  "runtime_sha256": "f3930e1575335983f70687c8efdc2c3f83b12c9f73f16126c50eccaa18e57336"
+}

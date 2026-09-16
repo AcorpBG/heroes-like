@@ -1,0 +1,135 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/guided-gait-and-guard.png",
+      "source_sha256": "3f9ece1264d4967eced6122ccb350f5a01f9dec6153382ed4460d6e5b31d5e0d",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-39ee3738-e67b-4cd0-aaf2-83a2da129e34.png",
+      "prompt": "Use case: sketch-to-render. Original painted tactical animation supplement. SIX complete figures in 3 columns x 2 rows with clear gutters and generous margins. Inputs1-4 are exact leg-phase diagrams; input5 is fixed identity/armor/equipment reference. FIRST FOUR cells sequentially render diagrams1-4: near RIGHT leg forward contact; near RIGHT foot planted while far LEFT foot passes lifted; far LEFT leg forward contact; far LEFT foot planted while near RIGHT foot passes lifted. BLUE guide means near anatomical RIGHT leg, ORANGE guide means far LEFT leg; render original black/brass armor, not guide colors. Exactly two legs and one knee per leg. Keep identical three-quarter RIGHT-facing head/torso camera and fixed body size. Last TWO cells: protective crossbow brace across upper chest with knees flexed, then slightly compressed brace, both feet planted. Identity: Gaugefire Arbalist in black iron/brass plate, closed helmet and narrow orange visor, long split dark leather coat with rust inner cloth, hip bolt quiver and small orange boiler at rear shoulder. ONE fixed mechanical crossbow, same paired metal limbs, taut strings, orange chamber/red circular gauge. RIGHT hand trigger stock at viewer-left; LEFT hand supports front underside at viewer-right. Keep bow low and steady during walking; exactly ONE loaded bolt on central rail, no duplicated spear/bolt tips. Retain crossbow/string open apertures and correct hand support, never mirror or swap grips. No steam, no action effects or projectile. Full figure and whole bow visible, genuine transparent background, no diagrams, checkerboard, scenery, floor, text or shadows.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/identity-reference-v2.png",
+          "sha256": "746bda991810505996642e9ac179b1178434a7167eec072e4d463c11be2e9a0e",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "excluded_cells": {
+        "2": "Repeats contact lead; single wide planted bridge selected instead.",
+        "3": "Weapon clipped at right canvas edge."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/guided-opposite-contact.png",
+      "source_sha256": "63c5f9fcd6805549224a568ee879722e8dbf7322aac8c94e8df2f75d8d7eb4ed",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c8f8069a-21d8-4a06-aeed-4b7a6c13217c.png",
+      "prompt": "Use case: sketch-to-render. Input1 is the mandatory EXACT leg pose and must override input2's standing legs; input2 is identity/armor/crossbow reference ONLY. Paint ONE whole Gaugefire Arbalist. Orange far LEFT leg reaches FORWARD toward screen RIGHT, heel planted ahead; BLUE near RIGHT leg extends BACK toward screen LEFT, toe on ground behind. This is opposite to a near-right-leading contact. Show near foreground knee plate trailing left of the far forward knee, not the familiar near leg leading again. Color both legs original black/brass, never diagram colors. One knee per leg, exactly two legs. Preserve three-quarter right-facing head/torso/camera, fixed black/brass plate, narrow orange closed visor, split dark leather coat/rust lining, quiver and shoulder boiler. Same full crossbow held low in both hands with ONE loaded bolt: right hand stock, left under front. Do not move bow toward camera or enlarge it. Full body, full bow and all extremities inside generous transparent margins. No checkerboard, text, diagram, ground, shadow, steam or new gear.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/identity-reference-v2.png",
+          "sha256": "746bda991810505996642e9ac179b1178434a7167eec072e4d463c11be2e9a0e",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0
+      ],
+      "limitation": "Did not follow opposite-leg guide; selected only as a planted bridge, not accepted opposite contact."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/guided-near-passing.png",
+      "source_sha256": "e1a1fd3b42dd4a2cb6e48c237aa96db1c7af77387f5ae72312f9283f64cb20d4",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-81b33cba-3b16-4ec9-aab7-97c9a22069a7.png",
+      "prompt": "Use case: sketch-to-render. Input1 mandatory exact leg pose; input2 supplies only Gaugefire Arbalist identity/armor/crossbow. ONE complete battle sprite, same three-quarter RIGHT-facing torso/head camera as input2. BLUE near anatomical RIGHT thigh and knee raised FORWARD, near boot fully off ground in front of body; ORANGE far LEFT leg straight with foot PLANTED supporting weight. Render original black/brass leg armor, not blue/orange colors. One knee per leg, no third joint, no running. Preserve fixed closed orange-slit helmet, leather split coat/rust lining, quiver and shoulder boiler. Both hands keep same loaded mechanical crossbow low and level with ONE bolt, right at stock, left under front. No mirroring or grip swap. Full body/bow/boots with generous margins, genuine transparent background, no diagrams, checkerboard, labels, floor, shadows or steam.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/identity-reference-v2.png",
+          "sha256": "746bda991810505996642e9ac179b1178434a7167eec072e4d463c11be2e9a0e",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0
+      ]
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/discharge-and-visible-reload.png",
+      "source_sha256": "0eacef2394c743151fb61e6f9534cf1bc7d6b960b29fe4d23370de8a1e8c28c6",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e3199b17-eb60-462f-a245-3ee86e7e7b41.png",
+      "prompt": "Use case: precise-object-edit. THREE complete full-body Gaugefire Arbalist sprites in ONE horizontal row, generous gutters/margins, same body and weapon size, same three-quarter RIGHT-facing camera. Input1 is ranged stance/crossbow geometry edit target; input2 supplies full identity/costume. Preserve black/brass plate, closed orange-slit visor, split leather coat/rust cloth, quiver and rear shoulder boiler, one crossbow with red round gauge and orange chamber. LEFT figure: discharged shot recoil, same shoulder aim as input1 but crossbow central rail now EMPTY, bowstring forward relaxed, no bolt spearhead sticking out, no projectile anywhere (game effect owns it); right hand trigger stock, left supports underside, slight shoulder recoil. MIDDLE: cocking, bow lowered diagonally slightly; LEFT hand supports front body while RIGHT hand pulls cocking handle/string mechanism visibly back toward rear latch, empty central rail, both boots planted. RIGHT: insertion, LEFT hand still supports front, RIGHT hand holds ONE fresh metal bolt above empty rail, shaft aligned toward muzzle ready to seat it, visible gap between bolt and rail, no second bolt. Bow design/size/camera unchanged, no invented giant lever, no hand detached from wrist, exactly two arms/hands/legs. Show all bows/boots within frame. Original painted style, genuine transparent background, no checkerboard, text, floor, shadows, steam, fire flashes or floating projectiles.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/ranged-aim-reference.png",
+          "sha256": "cc8f7a844fef9db24d116c8366c9a6c42a29686e44a4d9b1a4856402d8f523f9",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/identity-reference-v2.png",
+          "sha256": "746bda991810505996642e9ac179b1178434a7167eec072e4d463c11be2e9a0e",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [],
+      "reason": "Cocking pose erroneously retains loaded bolt; corrected derivative selected."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/discharge-and-visible-reload-empty-rail.png",
+      "source_sha256": "df4a895b2f63d41fdc9af7ebeb279e942a95fe6fbaba096cdb7f6533d2e84e64",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-79598e43-fb4d-4b01-8320-2b3e086ec546.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY the central (second) figure in this three-figure crossbow reload strip. It is cocking but mistakenly still has a LOADED bolt projecting from muzzle. REMOVE that one bolt: remove its triangular steel point and shaft from the central rail, leaving a visibly EMPTY dark rail and complete U-shaped front bow/brass limb tips. Match the bolt-free front end already correctly shown by the LEFT figure. Keep the central figure's right hand operating cocking handle, left support hand, empty string/mechanism, all body/armor/proportions and exact pose unchanged. Preserve the LEFT discharged figure and RIGHT bolt-insertion figure pixel-identical if possible; RIGHT intentionally holds ONE bolt above empty rail, do not remove it. No new bolts, no projectile, no replacement spear-shaped muzzle decoration. Same full canvas/three positions, genuine transparent background, no checkerboard or text or added effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/discharge-and-visible-reload.png",
+          "sha256": "0eacef2394c743151fb61e6f9534cf1bc7d6b960b29fe4d23370de8a1e8c28c6",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        2
+      ]
+    }
+  ],
+  "preparation": "Owner-approved deterministic background and narrow-edge extraction only. No local pose painting, mirroring, warping or equipment synthesis. Guides/composites are authoring references, not runtime art."
+}

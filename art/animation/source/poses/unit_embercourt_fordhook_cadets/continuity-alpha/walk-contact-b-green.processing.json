@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "fordhook-walk-contact-b-green",
+  "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/walk-contact-b-green.png",
+  "source_sha256": "66d39195b9837ec4d9fc426b54c1078061b0401522731309c5261f6a79caa38a",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-contact-b-green.png",
+  "output_sha256": "433fbb5c3131952a6d2b2e4c1f5f078041f6bf377669997475d77ad2a63f8705",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-cutouts.json",
+  "recipe_sha256": "20a96730e491c149501debfd7eeddf083fcf11241bd88b394b9c1e8e9965e48f",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true,
+    "inspection_note": "Vivid green appears only as backing; original red/brown/cream/brass character paint is retained."
+  },
+  "measurements": {
+    "removed_background_pixels": 1198671,
+    "edge_pixels": 4050,
+    "unchanged_paint_pixels": 369795,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

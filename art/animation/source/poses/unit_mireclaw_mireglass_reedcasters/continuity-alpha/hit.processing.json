@@ -1,0 +1,90 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte/edge cleanup; preserve source paint, original masters and exact recipes.",
+  "id": "mireglass-hit-checker",
+  "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/poses-hit-grip.png",
+  "source_sha256": "768bff94d9832cd456484a0a6fe6094fd3edf09e93894e00994596b0f136ee4d",
+  "source_rect": [
+    0,
+    0,
+    1230,
+    1278
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/hit.png",
+  "output_sha256": "277f8b6049042686c5e2f4949c9aa972a9739e8e486b1d8082e8182cab7284d5",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-cutouts.json",
+  "recipe_sha256": "649a419fe320a9ab83f3d7e97f6723e9ea19738480017e75dce164a7f82e8162",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 110,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        1164,
+        715
+      ],
+      [
+        1179,
+        719
+      ],
+      [
+        1161,
+        746
+      ],
+      [
+        1190,
+        772
+      ],
+      [
+        1071,
+        776
+      ],
+      [
+        1005,
+        758
+      ],
+      [
+        994,
+        815
+      ],
+      [
+        1030,
+        875
+      ],
+      [
+        1120,
+        838
+      ],
+      [
+        1158,
+        747
+      ],
+      [
+        959,
+        834
+      ],
+      [
+        1016,
+        842
+      ],
+      [
+        1000,
+        855
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 917750,
+    "edge_pixels": 54518,
+    "unchanged_paint_pixels": 599672,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

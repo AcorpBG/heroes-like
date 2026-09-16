@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source paintings and exact parameters, no synthesized poses.",
+  "id": "sluicebrand-reload-seated-draft",
+  "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/reload-seated-draft.png",
+  "source_sha256": "33fa0d7fa7f56a80dceb7871dcdf562c0bee2301d36dadb395a7bc260539c79a",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/reload-seated-draft.png",
+  "output_sha256": "9cd0375fda6b8ee0299d2759c49a2a0f37110cabd02d1421c11c768e55cb48d3",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-cutouts.json",
+  "recipe_sha256": "f4196e7e872d35548ca6d6a06da41702b79d7a7e756d59c20d2c609de5a092e5",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 185,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        1237,
+        583
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1053143,
+    "edge_pixels": 5975,
+    "unchanged_paint_pixels": 513410,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

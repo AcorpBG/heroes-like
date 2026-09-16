@@ -1,0 +1,86 @@
+{
+  "schema_id": "original_battle_pose_continuity_generation_v1",
+  "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_pending_whole_roster_refinement_and_acceptance",
+  "reference_crops": [],
+  "outputs": [
+    {
+      "source": "poses-facing-right-green.png",
+      "sha256": "7e2e19028e48121ad017a9cb49761e94dcb3629ff8c66ae6fbd654a4466e1135",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-12c306eb-0c42-4b7a-aa26-6078ad966ff0.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image 1 is a completed original game-character 4-column by 4-row sprite sheet, with exactly SIXTEEN separate poses. Correct only inconsistent HEAD/Gaze facing, leaving body poses, limbs, costume, accessories and every cell layout intact. In every upright, walking, braced, recoiling or casting pose, the woman's face must look toward screen RIGHT as it already does in row2 columns2 and3. Rotate only her head naturally at the neck; do NOT mirror the sprite, swap arms, move the weapon across her body, or change leg poses. RIGHT hand continues holding the short crescent-headed mallet; LEFT forearm continues carrying the round wicker buckler; moon-pattern waist drum stays strapped at the same hip. Preserve the exact original soft painted pixel texture, olive ragged cloak, brown wicker/leather armor, wrapped boots, small antler hair charm, dark dreadlocked hair and amber pods. Keep all 16 poses, relative scales and positions, including all four death poses in bottom row. Do not replace movement poses with standing copies. Keep attack/cast/death articulation and equipment unchanged in this pass. Replace only the gray checker backing with flat pure vivid green RGB0,255,0 including all empty apertures, no checker pattern, floor, shadow or added effect. Full entire 4x4 sheet, every mallet, toe, hair tip and corpse visible with clean separate gutters, no text or grid lines. This is a head-facing continuity correction, not new character design.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/poses.png",
+          "sha256": "450d6d9c252ae90087776afd667f978dbb7651d3bf7f523f9e69297154b527e8"
+        }
+      ],
+      "selected_source_indices": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        12,
+        13,
+        14
+      ],
+      "unselected_source_indices": [
+        3,
+        10,
+        11,
+        15
+      ]
+    },
+    {
+      "source": "poses-state-corrections-green.png",
+      "sha256": "cc876ec5906491eca2d7b63255815c1bcabe74fdcbdbcf2878df91100a1b65a3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2fec8e72-a552-4264-bbd4-674eb9f31e49.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 is the EXACT original Votive Drummer 4x4 game-sprite sheet to edit. Keep exactly sixteen cells, the same character scale, original dark olive/brown painted texture, facing screen RIGHT, anatomical RIGHT-hand crescent mallet and LEFT-arm round wicker buckler. Fix only these FOUR specified cells; every other cell must remain unchanged.\n1. ROW1 COLUMN4: this walking contact incorrectly omits her waist drum. Restore the SAME gold moon-pattern round drum strapped at her FRONT WAIST, the same size/hip attachment seen in row1 column3. Keep both current walking leg positions, mallet and buckler unchanged. The drum must not replace a lantern or cover the whole torso.\n2. ROW3 COLUMN3: remove the floating luminous disc, orbit and specks. Make the RIGHT hand bring the ORIGINAL short CRESCENT-headed brass mallet DOWN so its curved head visibly TOUCHES the skin of the real waist drum, near the drum's upper center. The drum is the one strapped at her hip, not a second floating drum. RIGHT wrist naturally angled, short shaft in that hand, LEFT buckler still on her forearm. Keep the gold moon skin pattern visible, no particle effects, no extra hand or second mallet.\n3. ROW3 COLUMN4: replace the redundant raised-mallet recovery pose with the OPPOSITE WALK PASSING pose to row2 column1. Keep the same torso facing right and same equipment, drum included. Row2column1 has the near knee raised and other leg planted. In this new pose PLANT that near leg fully beneath the hip toward screen LEFT; lift the OTHER leg at screen RIGHT with its knee bent and toe raised clearly off the ground. One supporting boot and one lifted boot, exactly two legs, no whole-body mirroring. Mallet lowered in RIGHT hand and buckler carried LEFT, as in the walking poses.\n4. ROW4 COLUMN4: persistent corpse stays in EXACT same prone position with closed eyes, mallet/drum/buckler retained. Extinguish all hanging lantern pods: dark bronze/amber glass, absolutely NO bright yellow centers, flame or luminous highlights. Moon drum decoration stays ordinary gold paint, not emissive.\nEvery mallet, cloak tip, antler, foot and corpse fits its original cell with clear green gutters. Pure flat green RGB0,255,0 backdrop including apertures. No text, grid, floor, extra poses, extra equipment, changed camera or effect clouds. Preserve all other twelve poses exactly.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/poses-facing-right-green.png",
+          "sha256": "7e2e19028e48121ad017a9cb49761e94dcb3629ff8c66ae6fbd654a4466e1135"
+        }
+      ],
+      "selected_source_indices": [
+        3,
+        10,
+        11,
+        15
+      ],
+      "unselected_source_indices": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        12,
+        13,
+        14
+      ]
+    }
+  ],
+  "notes": [
+    "16 packed candidate frames from two new built-in sheet edits. Twelve selected frames come from the head-facing correction; only cells3,10,11,15 (zero-based) come from the second state repair. Original sheet and all unselected derivative cells remain preserved.",
+    "Original idles/walks/recoil/cast preparation faced left while attacks faced right. First sheet edit normalizes head/gaze without whole-body mirroring; right mallet and left buckler remain in their original hands. These are generated derivative paintings, not claimed unchanged original pixels.",
+    "The far-contact pose omitted its waist drum in both original and first correction. Second edit restores the attached moon-pattern drum; clear cast contact replaces floating disc/orbit with mallet touching the real drum skin.",
+    "Second edit replaces redundant cast recovery with the opposite bent-knee passing pose. Move uses contacts and opposing passing candidates in order2,11,3,4; cast returns through windup9 instead of that repurposed slot.",
+    "Final corpse keeps equipped prone pose and closed eyes but extinguishes lantern pods. Kneel, supported side-fall and prone settling precede it. Crop bands separate neighboring boot/shield pixels in the final two corpses.",
+    "Selected green sheets use approved distance75/edge2. Original checker neutral110/tolerance12/edge2 preparation remains diagnostic and is not selected. No global olive/gold recolor or procedural pose synthesis.",
+    "Four walking phases are candidates, not accepted gait. Face/hair/antler, mallet head and wrist, drum/buckler scale/strap, pod count and attachment, limb ownership/support, fine green edges and actual event/death timing need full-roster motion refinement. No tests/imports/exports or gameplay/save/footprint changes."
+  ]
+}

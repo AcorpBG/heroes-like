@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "votive-poses-state-corrections-green",
+  "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/poses-state-corrections-green.png",
+  "source_sha256": "cc876ec5906491eca2d7b63255815c1bcabe74fdcbdbcf2878df91100a1b65a3",
+  "source_rect": [
+    0,
+    0,
+    1226,
+    1283
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+  "output_sha256": "28aa6bf32a1850925dabbf895db6408f12e457c2bae92d1d67c1d7ccc4912403",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-cutouts.json",
+  "recipe_sha256": "62cfd61e2060c9e7e62d77185977754545146743e4339f698c89acd5246fb418",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1026312,
+    "edge_pixels": 45671,
+    "unchanged_paint_pixels": 500975,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

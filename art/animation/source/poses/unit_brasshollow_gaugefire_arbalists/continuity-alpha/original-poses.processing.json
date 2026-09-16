@@ -1,0 +1,102 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "original-poses",
+  "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/poses.png",
+  "source_sha256": "8a49b830da8bd7c2c994288455dcf543d308c2f593224fc08bd0a928d21bc0db",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+  "output_sha256": "92b1019b6ac11894ba2d4ea6616a20d51e408dcffa02a9b6f50750583551eb89",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-cutouts.json",
+  "recipe_sha256": "eb37c0c7fefc7fc28244ad6b93a0e1af674b82022a683b876585730db9c58b14",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 115,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        245,
+        190
+      ],
+      [
+        258,
+        204
+      ],
+      [
+        176,
+        137
+      ],
+      [
+        238,
+        182
+      ],
+      [
+        567,
+        193
+      ],
+      [
+        543,
+        182
+      ],
+      [
+        544,
+        465
+      ],
+      [
+        528,
+        446
+      ],
+      [
+        507,
+        486
+      ],
+      [
+        256,
+        790
+      ],
+      [
+        236,
+        778
+      ],
+      [
+        266,
+        1146
+      ],
+      [
+        241,
+        1130
+      ],
+      [
+        1169,
+        1189
+      ],
+      [
+        852,
+        1185
+      ],
+      [
+        477,
+        1201
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1061540,
+    "edge_pixels": 23554,
+    "unchanged_paint_pixels": 487422,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

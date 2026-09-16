@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source, coordinates and exact recipes.",
+  "id": "spore-step-right-green",
+  "source": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/step-right-green.png",
+  "source_sha256": "47853ee927cd28a4ce43ff287e4bf8ce46af4414586a24132aea6a109eefc17e",
+  "source_rect": [
+    0,
+    0,
+    1124,
+    1399
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/continuity-alpha/step-right-green.png",
+  "output_sha256": "19b12d44487d446f7343cbe117a3182e72cb9c4c5d337b31c8b7d68e4969b3cd",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/continuity-cutouts.json",
+  "recipe_sha256": "de75b0bc6ffc88ee315097e12dc4abd7ee6a31414ba883fbcd9d304cfb470a6b",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1055990,
+    "edge_pixels": 17078,
+    "unchanged_paint_pixels": 499408,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

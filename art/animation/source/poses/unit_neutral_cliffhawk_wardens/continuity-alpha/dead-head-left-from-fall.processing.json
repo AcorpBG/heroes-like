@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "id": "dead-head-left-from-fall",
+  "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/dead-head-left-from-fall.png",
+  "source_sha256": "36a243b2c7b865bf4e557bf8aed0b62ab1573e9d305ffac2171d21a573bedc40",
+  "source_rect": [
+    0,
+    0,
+    1500,
+    1049
+  ],
+  "output": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/continuity-alpha/dead-head-left-from-fall.png",
+  "output_sha256": "5a065ff3b663645d18331c3bd48f19a692c6fd07497075a4f51b0ff5e4aa476d",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/continuity-cutouts.json",
+  "recipe_sha256": "74770c747cd790d8ab03b06ede53f83591748960ac6e544876caf04026068ca7",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1099942,
+    "edge_pixels": 18744,
+    "unchanged_paint_pixels": 454814,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

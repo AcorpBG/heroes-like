@@ -1,0 +1,216 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative background and edge cleanup on 2026-09-15; original masters and interior paint must remain unchanged.",
+  "jobs": [
+    {
+      "id": "poses",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/poses.png",
+      "source_sha256": "996f31e0d62979fb54c1122bb40c03be05e3739110226c8c3b03acd959184247",
+      "output": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            900,
+            210
+          ],
+          [
+            526,
+            233
+          ],
+          [
+            131,
+            229
+          ],
+          [
+            176,
+            872
+          ],
+          [
+            966,
+            514
+          ],
+          [
+            532,
+            426
+          ],
+          [
+            250,
+            42
+          ],
+          [
+            638,
+            63
+          ],
+          [
+            1050,
+            53
+          ],
+          [
+            1430,
+            58
+          ],
+          [
+            255,
+            399
+          ],
+          [
+            632,
+            405
+          ],
+          [
+            1025,
+            418
+          ],
+          [
+            1395,
+            484
+          ],
+          [
+            267,
+            725
+          ],
+          [
+            631,
+            777
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-1",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/walk-1.png",
+      "source_sha256": "d72af9d3adfccd9a3fdc60f52f737545a6563f805ef7dbc121706b4c3bdb963c",
+      "output": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/walk-1.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            808,
+            163
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-2",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/walk-2.png",
+      "source_sha256": "eae327943ef0454594517ae6e579d6fc58ef921e5a103cfcfc6bb16083db15c5",
+      "output": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/walk-2.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            241,
+            762
+          ],
+          [
+            826,
+            205
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-3",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/walk-3.png",
+      "source_sha256": "8ef5e22219b90670180706717b6849fbc70b988085ec7780d925c5b34ce47c1b",
+      "output": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/walk-3.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            825,
+            192
+          ]
+        ]
+      }
+    },
+    {
+      "id": "near-contact-guide-first",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/near-contact-guide-first.png",
+      "source_sha256": "f8e7e7064091023d77eec866ef03d70fefa78837d73852af676850d0e0c4792f",
+      "output": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/near-contact-guide-first.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 100,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            410,
+            631
+          ],
+          [
+            844,
+            287
+          ],
+          [
+            688,
+            622
+          ],
+          [
+            694,
+            726
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guard-braced",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/guard-braced.png",
+      "source_sha256": "1436ffbccf2d6999834d07a8dc43be3a84cca3f2efbce7815bec3cfedc3c8805",
+      "output": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/guard-braced.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            354,
+            652
+          ],
+          [
+            825,
+            266
+          ]
+        ]
+      }
+    },
+    {
+      "id": "full-pole-attack-pair",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/full-pole-attack-pair.png",
+      "source_sha256": "2f3f9e88cf9768abcca667925a5c08e06408e79d8f2ee96637a4ba1774ed5452",
+      "output": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/continuity-alpha/full-pole-attack-pair.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            609,
+            275
+          ],
+          [
+            1356,
+            267
+          ]
+        ]
+      }
+    }
+  ]
+}

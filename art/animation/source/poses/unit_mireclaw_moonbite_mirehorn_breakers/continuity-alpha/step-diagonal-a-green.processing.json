@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "mirehorn-step-diagonal-a-green",
+  "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/step-diagonal-a-green.png",
+  "source_sha256": "077f75372d63236f556e19993be0b6546a5f779fc81ef9ec5e5be118f6c44742",
+  "source_rect": [
+    0,
+    0,
+    1413,
+    1113
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/step-diagonal-a-green.png",
+  "output_sha256": "04b30411d03e112da0de624e8836129d5ffdf404e3cacf02c595bf9c0f2a8e76",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-cutouts.json",
+  "recipe_sha256": "20a1628cc0617030b0ffef9625afd92444077dfe9285559089a5a256e5ce6cbd",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 889478,
+    "edge_pixels": 20921,
+    "unchanged_paint_pixels": 662270,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

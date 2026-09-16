@@ -1,0 +1,91 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve sources and exact parameters. No synthesized or warped poses.",
+  "jobs": [
+    {
+      "id": "mud-walk-phase-1-green",
+      "source": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/walk-phase-1-green.png",
+      "source_sha256": "b74c8511635470acabfec9f94ac95abd14abbda7243911580e2e761d35131d59",
+      "output": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/continuity-alpha/walk-phase-1-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "mud-walk-phase-2-green",
+      "source": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/walk-phase-2-green.png",
+      "source_sha256": "5f2d1ef3de9fa2c588bf6f71185b5764ff155cd02e553d6e8f48c3b7a4827841",
+      "output": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/continuity-alpha/walk-phase-2-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "mud-walk-phase-3-green",
+      "source": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/walk-phase-3-green.png",
+      "source_sha256": "0cec346096df8c22e41444d7da3d0e945562bff2e0242b69571a044a3432100a",
+      "output": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/continuity-alpha/walk-phase-3-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "mud-walk-phase-0-crossing-corrected-green",
+      "source": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/walk-phase-0-crossing-corrected-green.png",
+      "source_sha256": "d7c525665bd8dd5a5e42742130bba2753cd78124640e0ef709f65892024f4248",
+      "output": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/continuity-alpha/walk-phase-0-crossing-corrected-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "mud-reload-right-hand-green",
+      "source": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/reload-right-hand-green.png",
+      "source_sha256": "35362cd2ca52b19626446b31eaa3d703dd310470be2543e93bfd6f76c094e85c",
+      "output": "art/animation/source/poses/unit_mireclaw_mudglass_slingers/continuity-alpha/reload-right-hand-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved local non-generative background/edge cleanup; no pose creation, limb warping or procedural runtime stand-ins.",
+  "id": "lector-walk-near-landing-green",
+  "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/walk-near-landing-green.png",
+  "source_sha256": "ed5984ab7b19d18338655ccba4ab15e8a63188e591f21ffddcc8e4b5f1b97ee6",
+  "source_rect": [
+    0,
+    0,
+    1225,
+    1284
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_beacon_lectors/continuity-alpha/walk-near-landing-green.png",
+  "output_sha256": "4238ae3d48100834d02c1daefee111e12edd5087445af6c58260f6e9b6bfd2e3",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_beacon_lectors/continuity-cutouts.json",
+  "recipe_sha256": "aaa140003bedd13c9c5a26945455e7860cd63f23d9d273df66bf3d115f301fe1",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1164384,
+    "edge_pixels": 14104,
+    "unchanged_paint_pixels": 394412,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

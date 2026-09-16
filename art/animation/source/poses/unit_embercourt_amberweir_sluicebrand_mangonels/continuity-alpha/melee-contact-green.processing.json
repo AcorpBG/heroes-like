@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source paintings and exact parameters, no synthesized poses.",
+  "id": "sluicebrand-melee-contact-green",
+  "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/melee-contact-green.png",
+  "source_sha256": "ab0d578f8fb44b6ca3de8dc4251b58f2c1fd969fe3c0a4d8760a05988368e8df",
+  "source_rect": [
+    0,
+    0,
+    1479,
+    1064
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/melee-contact-green.png",
+  "output_sha256": "0dd49786f6437aee0e1cca53a62309b83a2a40f63c99e0e3c1294d43b36b4e86",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-cutouts.json",
+  "recipe_sha256": "f4196e7e872d35548ca6d6a06da41702b79d7a7e756d59c20d2c609de5a092e5",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 945021,
+    "edge_pixels": 10087,
+    "unchanged_paint_pixels": 618548,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "barrel-maul-recovery-ready-and-passing-step",
+  "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/barrel-maul-recovery-ready-and-passing-step.png",
+  "source_sha256": "ecac9517e6fcf4471a50600acdccb6cb3b7eb84d38a68cb9c09ee4f624603a67",
+  "source_rect": [
+    0,
+    0,
+    1916,
+    821
+  ],
+  "output": "art/animation/source/poses/unit_neutral_bogbell_mauls/continuity-alpha/barrel-maul-recovery-ready-and-passing-step.png",
+  "output_sha256": "c4425ecf3e1df3b095565a1bddf608a60f77439c3a0ed3972f64d8af1a06241f",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_bogbell_mauls/continuity-cutouts.json",
+  "recipe_sha256": "e5cfa98e74b3027843b019e183ef8b2063c656c4c16725d58832c2939f342e15",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 944854,
+    "edge_pixels": 21279,
+    "unchanged_paint_pixels": 606903,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

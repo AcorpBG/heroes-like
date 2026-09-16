@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "antler-step-diagonal-a-green",
+  "source": "art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign/step-diagonal-a-green.png",
+  "source_sha256": "8760c198c6b70fd553ab12520652b0a4fbbb34f240bb44d8e6a56b18d30ba177",
+  "source_rect": [
+    0,
+    0,
+    1491,
+    1055
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign/continuity-alpha/step-diagonal-a-green.png",
+  "output_sha256": "18e7cf2eb324fc669b9e8b1480eb687b8c15fb8d895d0179a211afe25593e8a8",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign/continuity-cutouts.json",
+  "recipe_sha256": "6c53b576da75009df4559ac3864a3355ecaf6fb399400004c7f570238db94024",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1041641,
+    "edge_pixels": 24634,
+    "unchanged_paint_pixels": 506730,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

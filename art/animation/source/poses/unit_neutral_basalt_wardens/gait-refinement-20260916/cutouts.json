@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original generated paintings and interior paint. No local pose synthesis.",
+  "jobs": [
+    {
+      "id": "contact_b_clean",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/contact-b-matte.png",
+      "source_sha256": "322e7ebd88432b593b61c6375b11484589ae4611b5a18d97a56e5620e855a452",
+      "output": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/alpha/contact-b-matte.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "passing_b_clean",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/passing-b-matte.png",
+      "source_sha256": "044a98f7674de1683aa2631b544b7c29a56abf0a52187ec4bbdcca70acd59829",
+      "output": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/alpha/passing-b-matte.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

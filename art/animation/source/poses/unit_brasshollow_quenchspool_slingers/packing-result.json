@@ -1,0 +1,199 @@
+{
+  "unit_id": "unit_brasshollow_quenchspool_slingers",
+  "output": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/candidate-atlas.png",
+  "sha256": "99a800351f0a68ae348275c7e59524887d44f636ebcbcd53ac396e42e6d1f700",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        179,
+        28,
+        309,
+        237
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        177,
+        26,
+        314,
+        239
+      ]
+    },
+    {
+      "name": "walk_contact_a",
+      "index": 2,
+      "alpha_bounds": [
+        191,
+        30,
+        318,
+        238
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        203,
+        28,
+        303,
+        240
+      ]
+    },
+    {
+      "name": "walk_planted_bridge",
+      "index": 4,
+      "alpha_bounds": [
+        184,
+        25,
+        322,
+        239
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        201,
+        23,
+        299,
+        239
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        179,
+        38,
+        331,
+        239
+      ]
+    },
+    {
+      "name": "melee_reel_shove",
+      "index": 7,
+      "alpha_bounds": [
+        171,
+        39,
+        364,
+        240
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        174,
+        51,
+        315,
+        238
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        170,
+        73,
+        315,
+        239
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        181,
+        39,
+        344,
+        240
+      ]
+    },
+    {
+      "name": "ranged_curved_windup",
+      "index": 11,
+      "alpha_bounds": [
+        110,
+        29,
+        358,
+        237
+      ]
+    },
+    {
+      "name": "ranged_extended_release",
+      "index": 12,
+      "alpha_bounds": [
+        146,
+        41,
+        478,
+        238
+      ]
+    },
+    {
+      "name": "ranged_rewind",
+      "index": 13,
+      "alpha_bounds": [
+        180,
+        42,
+        338,
+        240
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        173,
+        80,
+        344,
+        242
+      ]
+    },
+    {
+      "name": "death_forward_collapse",
+      "index": 15,
+      "alpha_bounds": [
+        145,
+        132,
+        360,
+        240
+      ]
+    },
+    {
+      "name": "death_settle",
+      "index": 16,
+      "alpha_bounds": [
+        155,
+        133,
+        352,
+        236
+      ]
+    },
+    {
+      "name": "dead_cold",
+      "index": 17,
+      "alpha_bounds": [
+        155,
+        131,
+        344,
+        235
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/original-poses.png": "457b2ef7ae36fbe9a27ff2f749abda0f02d16e343f325a2aaddf128380b8ba31",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guided-carry-and-cable-arcs.png": "acd150890bff5ede6098daa907d12ed651d2b4e27be4be765970058af3d5e7c1",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guided-opposite-gathered-contact.png": "1284900a2bff5ed20823f429fdd45dc71370ab88670d52536a5bfe19a4274c76",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guard-weight-clear.png": "7765aeab89d7ad66483cf4b7870713dd13e11cdbc9888e338895d0f2e8c897bf",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/reel-attached-cast-cycle.png": "c85f69ec761606d377f319553f256b5ee1be38ea9b60de14f6f715760358940b",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/corpse-directed-collapse.png": "92b8661dab38a3e1495c266e2bda2b7c11337c907fc894c53d92bd2e7a929e4f"
+  }
+}

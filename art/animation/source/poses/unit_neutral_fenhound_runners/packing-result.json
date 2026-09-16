@@ -1,0 +1,185 @@
+{
+  "unit_id": "unit_neutral_fenhound_runners",
+  "output": "art/animation/source/poses/unit_neutral_fenhound_runners/candidate-atlas.png",
+  "sha256": "4290011bb099a1fdbec0ad886dacc91682ac873fdf14e824abbd429cb962f708",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        124,
+        44,
+        362,
+        246
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        136,
+        45,
+        355,
+        245
+      ]
+    },
+    {
+      "name": "run_extended",
+      "index": 2,
+      "alpha_bounds": [
+        117,
+        13,
+        415,
+        225
+      ]
+    },
+    {
+      "name": "run_gathered",
+      "index": 3,
+      "alpha_bounds": [
+        141,
+        25,
+        359,
+        224
+      ]
+    },
+    {
+      "name": "run_hind_push",
+      "index": 4,
+      "alpha_bounds": [
+        125,
+        47,
+        367,
+        242
+      ]
+    },
+    {
+      "name": "run_fore_landing",
+      "index": 5,
+      "alpha_bounds": [
+        112,
+        70,
+        376,
+        243
+      ]
+    },
+    {
+      "name": "landing_original",
+      "index": 6,
+      "alpha_bounds": [
+        146,
+        52,
+        364,
+        255
+      ]
+    },
+    {
+      "name": "bite_windup",
+      "index": 7,
+      "alpha_bounds": [
+        129,
+        52,
+        370,
+        245
+      ]
+    },
+    {
+      "name": "bite_open_lunge",
+      "index": 8,
+      "alpha_bounds": [
+        120,
+        56,
+        383,
+        253
+      ]
+    },
+    {
+      "name": "bite_closed_contact",
+      "index": 9,
+      "alpha_bounds": [
+        122,
+        74,
+        390,
+        244
+      ]
+    },
+    {
+      "name": "bite_recovery",
+      "index": 10,
+      "alpha_bounds": [
+        116,
+        59,
+        372,
+        243
+      ]
+    },
+    {
+      "name": "guard_planted",
+      "index": 11,
+      "alpha_bounds": [
+        145,
+        47,
+        368,
+        251
+      ]
+    },
+    {
+      "name": "guard_low",
+      "index": 12,
+      "alpha_bounds": [
+        127,
+        100,
+        372,
+        241
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 13,
+      "alpha_bounds": [
+        161,
+        59,
+        363,
+        249
+      ]
+    },
+    {
+      "name": "death_buckle",
+      "index": 14,
+      "alpha_bounds": [
+        135,
+        75,
+        378,
+        256
+      ]
+    },
+    {
+      "name": "death_side_lower",
+      "index": 15,
+      "alpha_bounds": [
+        102,
+        112,
+        373,
+        237
+      ]
+    },
+    {
+      "name": "dead_cold",
+      "index": 16,
+      "alpha_bounds": [
+        129,
+        107,
+        394,
+        252
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_fenhound_runners/alpha/poses.png": "25af57c315e8eb6f40854393e0e33a1bafd48cf08503d90987d3533587ca727f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_fenhound_runners/continuity-alpha/supported-run-bite-and-fold.png": "19d91f643ddc6aec9d5c5f9d5e377418350f47aae128e186dc34a098e13782a1"
+  }
+}

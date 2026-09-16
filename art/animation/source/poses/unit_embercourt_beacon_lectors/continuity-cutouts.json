@@ -1,0 +1,57 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner explicitly approved local non-generative background/edge cleanup; no pose creation, limb warping or procedural runtime stand-ins.",
+  "jobs": [
+    {
+      "id": "lector-walk-passing-a-green",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/walk-passing-a-green.png",
+      "source_sha256": "258bea01364d4c5196d74a758516c42c0c6b6e763bc289d27e6ce4d23f8df534",
+      "output": "art/animation/source/poses/unit_embercourt_beacon_lectors/continuity-alpha/walk-passing-a-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "lector-walk-passing-b-green",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/walk-passing-b-green.png",
+      "source_sha256": "3bad65318c923585fef9fdb89771c82041522681de7ff36801884ead3b68d873",
+      "output": "art/animation/source/poses/unit_embercourt_beacon_lectors/continuity-alpha/walk-passing-b-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "lector-walk-near-landing-green",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/walk-near-landing-green.png",
+      "source_sha256": "ed5984ab7b19d18338655ccba4ab15e8a63188e591f21ffddcc8e4b5f1b97ee6",
+      "output": "art/animation/source/poses/unit_embercourt_beacon_lectors/continuity-alpha/walk-near-landing-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "sources": [
+    {
+      "file": "walk-passing-a-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0f5f04aa-5075-4cd6-9cd1-91a74ed3f9f4.png",
+      "prompt": "Use case: sketch-to-render. Original Charter Colossus tactical battle sprite, ONE heavy walking passing pose. Image1 leg articulation: BLUE NEAR leg planted beneath pelvis, ORANGE FAR knee bends with massive foot lifted behind supporting shin. Image2 exact automaton identity/equipment: pale masonry rectangular plates, exposed timber joints and dark iron bands, red wax seals/chains, central tower head narrow amber slit, small shoulder turrets, ONE brass bell hanging visibly in open chest, red cloth strips. Keep original giant broad body, squared stone feet and joint locations. Same gear screen sides as identity: tall dark staff in hand at screen RIGHT, massive rectangular wood/iron shield with red inset on forearm at screen LEFT. Full staff from amber lantern beacon above head to pointed iron butt near foot ground, never shortened; red streamers and hanging brass charms. Arms carry equipment close while hip/knee/ankle joints articulate for a slow weight-bearing step, no human face. Fixed elevated three-quarter RIGHT-facing camera, no mirrored torso, exactly two legs/two arms. Original detailed painterly raster, no guide colors/diagram lines. Full giant and complete gear inside broad empty margins. Flat vivid GREEN #00ff00 backing, neutral illumination no green spill/reflections on pale stone; no ground, shadows, scenery, text, effects or detached rubble.",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+        "art/units/source/curated/unit_embercourt_charter_colossus.png"
+      ],
+      "selected": false,
+      "selection": "Unselected wide lateral shield-side foot lift; does not follow named supporting leg in guide.",
+      "sha256": "06f08066296ac63fc0eb790d800785afcc76eff9095adc9cf30fa95310a98aa0"
+    },
+    {
+      "file": "walk-passing-b-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-10d4307a-6b64-41d8-9177-d6c68ce3a246.png",
+      "prompt": "Use case: sketch-to-render. Original Charter Colossus ONE slow walking passing-B sprite. Image1 specifies BLUE NEAR thigh swings forward RIGHT with knee bent and foot LIFTED in front of the opposite planted shin; ORANGE FAR leg bears weight under pelvis. Image2 is exact identity/equipment and body proportions. Broad pale masonry automaton with timber/iron hinged joints, chains/red wax seals/red cloth strips, central tower head amber slit, shoulder turrets, one brass bell visible in open chest. Gear stays on original screen sides: massive rectangular wood/iron shield with red relief on forearm screen LEFT; tall dark beacon staff gripped screen RIGHT. Whole staff length from amber lantern above head to pointed iron butt near ground, red streamers/brass charms intact, no shorter club. Near leg originates beneath shield-side hip and swings forward/right in FRONT of far shin, one raised large stone foot and one firmly planted foot. Torso stable facing RIGHT at fixed elevated three-quarter camera, moderate knee lift for heavy stone walker not high kick, no mirror or human face. Same original painterly raster, no diagram lines/blue/orange guide colors. Full giant and complete shield/staff within wide margins. Flat vivid GREEN #00ff00, neutral light no green spill on stone; no ground/shadows/scenery/text/effects/detached rubble.",
+      "references": [
+        "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+        "art/units/source/curated/unit_embercourt_charter_colossus.png"
+      ],
+      "selected": true,
+      "selection": "Select raised shield-side foot; leg articulation and connected movement remain pending acceptance.",
+      "sha256": "896704836b82fe9d4b0eef5925b6ca42c2b5606dfdf0f0f6f89a8cc0286caed7"
+    },
+    {
+      "file": "walk-opposite-passing-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b5e601c3-0876-42c5-be72-1843194a0b6c.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY the legs of this exact Charter Colossus into opposite supporting-foot passing pose. Keep head torso shoulder turrets chest bell shield staff both arms hands and all gear dimensions/framing unchanged. The SHIELD-SIDE foreground leg, currently lifted on screen LEFT, lowers and bears the weight: knee under left hip, sole flat on ground around x500,y1190. The STAFF-SIDE farther leg, currently planted on screen RIGHT, now lifts: bend its knee and ankle, raise its foot about 120 pixels above ground, draw that foot BACK behind the planted shield-side shin, showing a clear gap under lifted stone toes. Exactly two connected stone legs, maintain matching pale plates wood shins hinge axes red knee seals; no extra foot, no mirrored torso. Moderate heavy walking step, not high knee kick. Whole tall staff unchanged from amber beacon to pointed butt, shield remains screen LEFT. Original painterly raster, same vivid GREEN #00ff00 background, no floor/shadows/effects/text or green spill.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_charter_colossus/walk-passing-b-green.png"
+      ],
+      "selected": true,
+      "selection": "Select targeted staff-side foot lift with shield-side sole planted, equipment unchanged.",
+      "sha256": "bf1919ee6377463aa2b894554a0c793733afb0f915950a0f0d1292e0bfeb8cb0"
+    },
+    {
+      "file": "walk-near-landing-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a483ae26-e949-49da-85c3-ab5bccf6c3d7.png",
+      "prompt": "Use case: precise-object-edit. NEXT foreground-foot landing of this exact Charter Colossus walking sprite. Keep upper body, head, shield, BOTH arms/hands, complete tall beacon staff, camera, proportions and all equipment unchanged. Lower the currently raised SHIELD-SIDE leg at screen LEFT into a weight-bearing forward step: extend its knee and plant its whole broad stone sole in the FOREGROUND around x480,y1210, with stone toes nearest viewer. STAFF-SIDE leg trails behind on screen RIGHT: its foot around x790,y1110, heel raised slightly, toe contacting behind the forward foot. Same hips and red knee seals; exactly two correctly attached stone legs. The foreground left foot is clearly farther forward than right foot, not another right-leading contact. Moderate stride, no kick or floating feet. Wood/iron joints articulate naturally and red cloth shifts around thighs; no redesign/mirror. Original painterly game raster on flat vivid GREEN #00ff00, neutral light no green spill; full figure/gear safely inside margins, no floor/shadow/text/scenery/effects.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_charter_colossus/walk-passing-b-green.png"
+      ],
+      "selected": true,
+      "selection": "Select forward shield-side planted contact derived from raised foot, opposite original staff-side-leading contact.",
+      "sha256": "38b98d1563f7ed0484fa34cd134e3911c21b5fffdffbdbfbe75121f0285fe172"
+    },
+    {
+      "file": "attack-windup-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-390f522a-d117-4834-b393-718f33ff6e4b.png",
+      "prompt": "Use case: stylized-concept. ONE original Charter Colossus attack WINDUP battle sprite, same exact attached identity. Massive pale masonry/timber/iron humanoid automaton, tower head amber slit, two shoulder turrets, red wax seals/chains/red cloth, ONE brass bell visible in open chest. Shield forearm remains at screen LEFT with same large rectangular wood/iron shield and red inset relief. Staff arm remains screen RIGHT: raise that arm above right shoulder gripping the MIDDLE of its FULL LENGTH beacon staff, preparing a down-right blow. Staff slopes across upper space: amber beacon and red streamers at upper RIGHT, long pointed iron butt extends to upper LEFT of grip. Crucial: staff tip-to-beacon length stays approximately the colossus's entire standing height, NOT a club. Keep BOTH long shaft halves on either side of fist, brass hanging charms, full beacon and pointed butt. Heavy wide planted legs, bent knees, stable center of gravity, shield guards front-left without hiding chest bell. Same elevated three-quarter RIGHT-facing tactical camera/body proportions, no mirror or hand swap; no humanoid face. Original detailed painterly raster, entire body and full long overhead staff inside very generous wide canvas margins. Flat vivid GREEN #00ff00 backing, neutral light no green spill/reflections on stone; no floor/shadow/text/scenery/effects/detached rubble.",
+      "references": [
+        "art/units/source/curated/unit_embercourt_charter_colossus.png"
+      ],
+      "selected": true,
+      "selection": "Select full overhead beacon staff with complete rear shaft/pointed butt; shield screen left and bell visible.",
+      "sha256": "a7cc85645eb8fa1e924e758276e6d23da52fafde4c3252cb2a2dcd12134cf9d6"
+    },
+    {
+      "file": "attack-contact-green.png",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e30a8de5-9dfc-46f8-a2f6-bd2f24c3eb01.png",
+      "prompt": "Use case: precise-object-edit. Next attack CONTACT frame of this exact Charter Colossus. Same identity stone/wood/iron body, camera, scale, shield screen LEFT, bell visible, two arms and two legs. Lower the STAFF arm on screen RIGHT from overhead into a strong down-right diagonal strike: right elbow extends forward, fist near chest/waist height to right of body; amber beacon strikes low toward screen RIGHT. FULL staff stays identical length and thickness to reference, fist at same middle grip, long rear half extends UP LEFT behind the fist, pointed butt complete. Do not truncate rear shaft at arm or turn long pole into short club. Beacon, pointed butt, red streamers and both hanging brass charms retained. Torso leans modestly into blow, knees flex, shield guards left side and feet firmly planted; not a mirrored or swapped-arm pose. Entire extended staff and colossus inside wide empty margins; widen canvas as needed instead of shrinking weapon independently. Original painterly tactical raster. Flat vivid GREEN #00ff00, neutral light no green reflections/spill on pale stone; no floor/shadows/text/scenery/impact effects/rubble.",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_charter_colossus/attack-windup-green.png"
+      ],
+      "selected": true,
+      "selection": "Select full-length down-right staff release with same hand and shield, replacing short-club source strike.",
+      "sha256": "10dedc46432ef15de7b36bc7dc54c9251d7e4451ef3ea4491e1c0005a677c415"
+    }
+  ]
+}

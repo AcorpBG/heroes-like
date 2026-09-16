@@ -1,0 +1,58 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "creep-melee-four-legs",
+  "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/creep-melee-four-legs.png",
+  "source_sha256": "4cfe16787083f1f8212fe8e890e75cc77dde7e6f4c65ef8cab6560b917bafa02",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-alpha/creep-melee-four-legs.png",
+  "output_sha256": "c780ee448a7a9a0b7be0c6797c97d0a83ac830cc8027cdb0da2992c85fc0ef63",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-cutouts.json",
+  "recipe_sha256": "ba44eeefaf8e93ff118b1a225a8345213f2e4dec170c75272e903391e34829a7",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        1348,
+        292
+      ],
+      [
+        1413,
+        339
+      ],
+      [
+        253,
+        613
+      ],
+      [
+        341,
+        778
+      ],
+      [
+        821,
+        787
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 933114,
+    "edge_pixels": 14241,
+    "unchanged_paint_pixels": 625509,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

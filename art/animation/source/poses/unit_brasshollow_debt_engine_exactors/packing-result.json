@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_brasshollow_debt_engine_exactors",
+  "output": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/candidate-atlas.png",
+  "sha256": "b3c167d024367d33985028435848d3819e3ba7136fab206dc28e2ddb65776550",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        157,
+        15,
+        362,
+        239
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        141,
+        15,
+        363,
+        238
+      ]
+    },
+    {
+      "name": "creep_planted",
+      "index": 2,
+      "alpha_bounds": [
+        152,
+        30,
+        321,
+        240
+      ]
+    },
+    {
+      "name": "creep_near_foot_lift",
+      "index": 3,
+      "alpha_bounds": [
+        154,
+        28,
+        329,
+        239
+      ]
+    },
+    {
+      "name": "creep_far_foot_lift",
+      "index": 4,
+      "alpha_bounds": [
+        153,
+        30,
+        324,
+        239
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 5,
+      "alpha_bounds": [
+        166,
+        28,
+        329,
+        240
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        161,
+        21,
+        371,
+        239
+      ]
+    },
+    {
+      "name": "melee_hammer_strike",
+      "index": 7,
+      "alpha_bounds": [
+        149,
+        20,
+        388,
+        239
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        165,
+        15,
+        348,
+        239
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 9,
+      "alpha_bounds": [
+        142,
+        44,
+        376,
+        240
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        153,
+        49,
+        350,
+        242
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 11,
+      "alpha_bounds": [
+        123,
+        57,
+        369,
+        243
+      ]
+    },
+    {
+      "name": "dead_cold",
+      "index": 12,
+      "alpha_bounds": [
+        145,
+        114,
+        369,
+        237
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_debt_engine_exactors/alpha/poses.png": "b9aee0c3d7e5815222d6ae1b130acaf64a6be6f0df1de784349d2df569c111d3",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_debt_engine_exactors/continuity-alpha/creep-and-guard-clear-vents.png": "8cb050676874f976a2097ea416059dca55a61922de910fdf3e3190d0199f32c5"
+  }
+}

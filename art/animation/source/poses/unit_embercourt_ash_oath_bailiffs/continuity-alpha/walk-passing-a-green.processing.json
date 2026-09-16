@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved local non-generative raster background/edge preparation; preserve immutable masters and original anatomy.",
+  "id": "walk-passing-a-green",
+  "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/walk-passing-a-green.png",
+  "source_sha256": "525c2fb08ddbd62bc8eaeb801f879daa0daa593ba10353b369fad0ae5f05fcdd",
+  "source_rect": [
+    0,
+    0,
+    1145,
+    1374
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/walk-passing-a-green.png",
+  "output_sha256": "5735b314896aa3910b05cafbe14c71ef98f2ffe27ad90d1fb17f4492386ae669",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-cutouts.json",
+  "recipe_sha256": "7aef4cba15b2cd33a3a859c4aabb2e421886cedabd5f1779f7944cc1be318512",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1216528,
+    "edge_pixels": 8838,
+    "unchanged_paint_pixels": 347864,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

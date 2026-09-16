@@ -1,0 +1,128 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "travel-reload-and-guard",
+      "source": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/travel-reload-and-guard.png",
+      "source_sha256": "77a64b2d93b2b75fb51aecea76eb9b056fe44d2615dd16898bad115b9688a1fd",
+      "output": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/continuity-alpha/travel-reload-and-guard.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            181,
+            209
+          ],
+          [
+            674,
+            208
+          ],
+          [
+            1175,
+            215
+          ],
+          [
+            877,
+            276
+          ],
+          [
+            384,
+            277
+          ],
+          [
+            1384,
+            279
+          ],
+          [
+            874,
+            470
+          ],
+          [
+            180,
+            688
+          ],
+          [
+            696,
+            687
+          ],
+          [
+            420,
+            704
+          ],
+          [
+            406,
+            716
+          ],
+          [
+            1381,
+            770
+          ],
+          [
+            376,
+            792
+          ],
+          [
+            927,
+            786
+          ],
+          [
+            823,
+            115
+          ],
+          [
+            344,
+            121
+          ],
+          [
+            1336,
+            123
+          ],
+          [
+            820,
+            153
+          ],
+          [
+            339,
+            178
+          ],
+          [
+            1329,
+            166
+          ],
+          [
+            823,
+            196
+          ],
+          [
+            852,
+            604
+          ],
+          [
+            360,
+            603
+          ],
+          [
+            1350,
+            608
+          ],
+          [
+            349,
+            660
+          ],
+          [
+            850,
+            657
+          ],
+          [
+            1341,
+            665
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "unit_id": "unit_brasshollow_pressure_lancers",
+  "output": "art/animation/source/poses/unit_brasshollow_pressure_lancers/candidate-atlas.png",
+  "sha256": "6fd069f6e09e469bc4c58a2756dae49fbbee6db223ea0c2042592bc9f5029a9a",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        170,
+        36,
+        387,
+        239
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        169,
+        26,
+        385,
+        239
+      ]
+    },
+    {
+      "name": "creep_planted",
+      "index": 2,
+      "alpha_bounds": [
+        167,
+        49,
+        378,
+        239
+      ]
+    },
+    {
+      "name": "creep_near_foot_lift",
+      "index": 3,
+      "alpha_bounds": [
+        168,
+        49,
+        379,
+        238
+      ]
+    },
+    {
+      "name": "creep_rear_foot_lift",
+      "index": 4,
+      "alpha_bounds": [
+        180,
+        50,
+        368,
+        239
+      ]
+    },
+    {
+      "name": "creep_far_foot_lift",
+      "index": 5,
+      "alpha_bounds": [
+        166,
+        56,
+        379,
+        238
+      ]
+    },
+    {
+      "name": "lance_retract_windup",
+      "index": 6,
+      "alpha_bounds": [
+        152,
+        69,
+        361,
+        239
+      ]
+    },
+    {
+      "name": "lance_extended_strike",
+      "index": 7,
+      "alpha_bounds": [
+        158,
+        57,
+        423,
+        239
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        173,
+        77,
+        377,
+        238
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        172,
+        84,
+        368,
+        239
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        156,
+        65,
+        375,
+        240
+      ]
+    },
+    {
+      "name": "death_buckle",
+      "index": 11,
+      "alpha_bounds": [
+        139,
+        80,
+        381,
+        239
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 12,
+      "alpha_bounds": [
+        155,
+        119,
+        372,
+        238
+      ]
+    },
+    {
+      "name": "dead_cold",
+      "index": 13,
+      "alpha_bounds": [
+        143,
+        149,
+        374,
+        238
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png": "06e5b243f7cf18da634c531512c91384f04721d671a15d2f3bcbc68f69f7f8cd",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png": "011ee1a674cb0173d7765fff56ea4aa7748c80533274c6433d63ec3b4e240371"
+  }
+}

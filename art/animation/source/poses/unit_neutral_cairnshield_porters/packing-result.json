@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_cairnshield_porters",
+  "output": "art/animation/source/poses/unit_neutral_cairnshield_porters/candidate-atlas.png",
+  "sha256": "94e81be960c350278a43b8ee429be45e86d53355d441c990a8e6f67a03952921",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        185,
+        37,
+        328,
+        241
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        182,
+        40,
+        330,
+        241
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        182,
+        42,
+        326,
+        244
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        179,
+        46,
+        323,
+        238
+      ]
+    },
+    {
+      "name": "shield_bash_windup",
+      "index": 4,
+      "alpha_bounds": [
+        176,
+        50,
+        328,
+        240
+      ]
+    },
+    {
+      "name": "shield_bash_contact",
+      "index": 5,
+      "alpha_bounds": [
+        170,
+        55,
+        342,
+        240
+      ]
+    },
+    {
+      "name": "shield_bash_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        191,
+        54,
+        327,
+        242
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        178,
+        48,
+        335,
+        240
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        180,
+        74,
+        323,
+        244
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        180,
+        72,
+        330,
+        242
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        179,
+        82,
+        327,
+        241
+      ]
+    },
+    {
+      "name": "death_low_fall",
+      "index": 11,
+      "alpha_bounds": [
+        146,
+        122,
+        369,
+        242
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 12,
+      "alpha_bounds": [
+        159,
+        130,
+        345,
+        241
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cairnshield_porters/alpha/poses.png": "dbf31d55e3ac13fba27531def46b612131b8a4d8e35ecd512407709cece0628f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cairnshield_porters/continuity-alpha/shield-recovery-brace-and-fall.png": "fe42eb129f233b87510a15eaccccede98af86b232fd1ec4bf08f27da7ac54b8c"
+  }
+}

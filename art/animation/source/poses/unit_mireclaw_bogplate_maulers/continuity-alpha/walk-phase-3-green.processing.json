@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve sources and exact parameters. No synthesized or warped poses.",
+  "id": "bog-walk-phase-3-green",
+  "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/walk-phase-3-green.png",
+  "source_sha256": "90a0451c0bd6d0a6d7fa118e581d3ab78ed400145d346432edad8d53230942ef",
+  "source_rect": [
+    0,
+    0,
+    1210,
+    1300
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/continuity-alpha/walk-phase-3-green.png",
+  "output_sha256": "8468d0f104afe7438ec595b6119d4dbc2d6b32e4ce576d5d41f2c3297b979f7d",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/continuity-cutouts.json",
+  "recipe_sha256": "cd27d0e41194cf299442a4abef14ade17955a00869e8c5e474afc60d2ec3b05d",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1041689,
+    "edge_pixels": 6470,
+    "unchanged_paint_pixels": 524841,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

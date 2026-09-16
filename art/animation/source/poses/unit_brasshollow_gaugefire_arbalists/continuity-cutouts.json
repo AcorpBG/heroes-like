@@ -1,0 +1,249 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "original-poses",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/poses.png",
+      "source_sha256": "8a49b830da8bd7c2c994288455dcf543d308c2f593224fc08bd0a928d21bc0db",
+      "output": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 115,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            245,
+            190
+          ],
+          [
+            258,
+            204
+          ],
+          [
+            176,
+            137
+          ],
+          [
+            238,
+            182
+          ],
+          [
+            567,
+            193
+          ],
+          [
+            543,
+            182
+          ],
+          [
+            544,
+            465
+          ],
+          [
+            528,
+            446
+          ],
+          [
+            507,
+            486
+          ],
+          [
+            256,
+            790
+          ],
+          [
+            236,
+            778
+          ],
+          [
+            266,
+            1146
+          ],
+          [
+            241,
+            1130
+          ],
+          [
+            1169,
+            1189
+          ],
+          [
+            852,
+            1185
+          ],
+          [
+            477,
+            1201
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guided-gait-and-guard",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/guided-gait-and-guard.png",
+      "source_sha256": "3f9ece1264d4967eced6122ccb350f5a01f9dec6153382ed4460d6e5b31d5e0d",
+      "output": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-gait-and-guard.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            382,
+            274
+          ],
+          [
+            363,
+            245
+          ],
+          [
+            794,
+            268
+          ],
+          [
+            768,
+            246
+          ],
+          [
+            647,
+            746
+          ],
+          [
+            625,
+            717
+          ],
+          [
+            1258,
+            756
+          ],
+          [
+            1236,
+            726
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guided-opposite-contact",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/guided-opposite-contact.png",
+      "source_sha256": "63c5f9fcd6805549224a568ee879722e8dbf7322aac8c94e8df2f75d8d7eb4ed",
+      "output": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-opposite-contact.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            916,
+            695
+          ],
+          [
+            970,
+            752
+          ],
+          [
+            884,
+            660
+          ],
+          [
+            837,
+            794
+          ],
+          [
+            440,
+            180
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guided-near-passing",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/guided-near-passing.png",
+      "source_sha256": "e1a1fd3b42dd4a2cb6e48c237aa96db1c7af77387f5ae72312f9283f64cb20d4",
+      "output": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-near-passing.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            982,
+            619
+          ],
+          [
+            918,
+            561
+          ],
+          [
+            864,
+            662
+          ],
+          [
+            674,
+            448
+          ],
+          [
+            448,
+            153
+          ]
+        ]
+      }
+    },
+    {
+      "id": "discharge-and-visible-reload",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/discharge-and-visible-reload.png",
+      "source_sha256": "0eacef2394c743151fb61e6f9534cf1bc7d6b960b29fe4d23370de8a1e8c28c6",
+      "output": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "discharge-and-visible-reload-empty-rail",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/discharge-and-visible-reload-empty-rail.png",
+      "source_sha256": "df4a895b2f63d41fdc9af7ebeb279e942a95fe6fbaba096cdb7f6533d2e84e64",
+      "output": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload-empty-rail.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            517,
+            165
+          ],
+          [
+            572,
+            189
+          ],
+          [
+            1246,
+            397
+          ],
+          [
+            1794,
+            339
+          ],
+          [
+            1758,
+            297
+          ],
+          [
+            1067,
+            292
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "mirehorn-idle-checker",
+  "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/poses-idle-planted.png",
+  "source_sha256": "678c40703dca2702754c00ae920293f8561bb2d06c8d32f16df5a3dd8aaa5e00",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/idle.png",
+  "output_sha256": "a666d633c1d7f40fe07c004b05c8a82e4fba2ffa3ab7595028ba349b2e183417",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-cutouts.json",
+  "recipe_sha256": "20a1628cc0617030b0ffef9625afd92444077dfe9285559089a5a256e5ce6cbd",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 155,
+    "tolerance": 14,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        465,
+        260
+      ],
+      [
+        467,
+        283
+      ],
+      [
+        611,
+        286
+      ],
+      [
+        563,
+        314
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 998550,
+    "edge_pixels": 38552,
+    "unchanged_paint_pixels": 535426,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

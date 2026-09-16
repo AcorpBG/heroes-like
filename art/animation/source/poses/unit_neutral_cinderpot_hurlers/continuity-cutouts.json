@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "jobs": [
+    {
+      "id": "passing-recovery-and-directional-corpse",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/passing-recovery-and-directional-corpse.png",
+      "source_sha256": "b165760a0751c1c0374f4e20369593092396f7e3523204f867cc3b9bde8c3a70",
+      "output": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/continuity-alpha/passing-recovery-and-directional-corpse.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

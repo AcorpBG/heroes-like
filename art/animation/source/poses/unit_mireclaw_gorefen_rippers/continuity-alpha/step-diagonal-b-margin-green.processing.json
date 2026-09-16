@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte/edge cleanup; preserve source paint, original masters and exact recipes.",
+  "id": "gorefen-step-diagonal-b-margin-green",
+  "source": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/step-diagonal-b-margin-green.png",
+  "source_sha256": "c58f6dadd2c5e35898b22ecd00d43a1b7c98adee90d3dfcfbc99a1987f0fc902",
+  "source_rect": [
+    0,
+    0,
+    1446,
+    1087
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-alpha/step-diagonal-b-margin-green.png",
+  "output_sha256": "6a8be693017e20dc9d4d327f61198214b425aeecf2ff8b78ce8f6d955a4439e6",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-cutouts.json",
+  "recipe_sha256": "b1d91a2d8d9346716d3822edadc30d78ea8f2bb76b002b52a8a205b68968a63f",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1084351,
+    "edge_pixels": 11721,
+    "unchanged_paint_pixels": 475730,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "fired-string-release-and-recovery",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/fired-string-release-and-recovery.png",
+      "source_sha256": "bb32dfecd45178ca9ee2ca944a16998c2f8a5d68138079c9d64290734cd7437c",
+      "output": "art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-alpha/fired-string-release-and-recovery.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "loaded-passing-and-shove-recovery",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/loaded-passing-and-shove-recovery.png",
+      "source_sha256": "faf0929a449e61d3ca0e9e5a1bd7afd884ace3e8fe4215750938ebc4e279ad02",
+      "output": "art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-alpha/loaded-passing-and-shove-recovery.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

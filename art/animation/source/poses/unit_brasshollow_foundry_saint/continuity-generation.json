@@ -1,0 +1,76 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_foundry_saint",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/creep-guard-and-collapse.png",
+      "source_sha256": "98d23421c5c060a94472d65726e85e91b50aabdf0676970ce8904a0523ffa77c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c9d59e2d-8dd3-43d9-9adc-97d615592457.png",
+      "prompt": "Use case: identity-preserve. Asset type: original painted fantasy tactical battle animation supplement. SIX complete articulated figures in 3 columns x 2 rows, clear generous gutters and margins around every weapon and foot. Same three-quarter camera facing screen RIGHT, identical body and equipment scale throughout. Genuine transparent background, no drawn checkerboard, no text, no numbers, no ground shadows, no scenery. No new equipment or added limbs. Preserve original paint style and identity.\nInput1 exact fixed identity reference: tall biped Foundry Saint with black/brass/ivory armor, spiked orange circular halo, cathedral furnace chest, ivory knees/long seal-marked cloth and hanging banners. EXACTLY two arms: anatomical RIGHT arm at viewer LEFT holds long forge tongs gripping ONE orange rectangular ingot; LEFT arm at viewer RIGHT holds one forge hammer. Keep hammer handle same fixed elbow-to-hand length as reference, NOT a long staff; do not switch hands. Top-left all-planted travel stance, hammer upright close to left shoulder, tongs held clear of thighs. Top-middle near RIGHT boot lifts at hip/knee, sole fully clear, far LEFT boot alone supports torso; keep one knee per leg. Top-right far LEFT boot lifts forward at hip/knee, near RIGHT boot alone supports torso. Keep torso facing fixed; this is a deliberate one-foot-at-a-time mechanical creep, not running. Bottom-left second guard with LEFT hammer held across upper chest, RIGHT tongs low clear of legs still gripping ingot, both boots grounded. Bottom-middle dying kneel with right knee down, head bows and furnace/halo fading; retain normal-length hammer in LEFT hand resting beside knee, NOT stretched into a walking stick, RIGHT tongs still retain dimming ingot. Bottom-right intermediate fall toward its RIGHT side/viewer-left, hips already near ground and torso diagonal, one bent knee and one stretched leg, halo tilts with head; hammer/tongs lower with their correct hands, cooled ingot still retained, furnace nearly dark. It is not yet fully prone. Keep all tool shafts and body inside their cells.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_foundry_saint/identity-reference-v2.png",
+          "sha256": "5b8379ef15a5be5ac04b2180cfaf12f2934c36fa7b571ba7cc5cf6ac2f0f3e57",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        3,
+        4
+      ],
+      "unselected_cells": {
+        "2": "Repeats far-leg lift; replaced by guide-led near-leg pose.",
+        "5": "Head-right fall opposes head-left corpse; replaced by corpse-led collapse."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/guided-near-leg-lift.png",
+      "source_sha256": "5b9d91407d3ed7fe3501d46ee5a916ab6bfc90a7e2f3e803a7061db177ac66b0",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e65f0f44-4411-4497-9a34-fb8a7458f6ed.png",
+      "prompt": "Use case: sketch-to-render. Input1 is the EXACT leg-pose target, input2 is the Foundry Saint identity/armor/weapon reference. Paint ONE complete original battle sprite matching diagram1's support ownership: BLUE foreground near RIGHT thigh bends FORWARD with its single knee raised; this RIGHT boot is lifted, sole completely above ground. ORANGE background far LEFT leg is straight and sole PLANTED, supporting the body. Render both with original gold/black/ivory armor, not guide colors. The raised leg belongs under the RIGHT tongs arm at viewer-left; the planted leg belongs under the LEFT hammer arm at viewer-right. Preserve the reference's head/torso three-quarter facing right, exact furnace halo, cloth seals, anatomy and equipment. RIGHT near hand at viewer-left carries long tongs gripping ONE orange ingot, LEFT far hand at viewer-right carries the same short fixed-handle forge hammer upright. Hold both tools clear of legs. No equipment swaps. Exactly two legs, one knee each. No running, no falling. Full figure/halo/tongs/ingot/hammer visible with ample margins. Genuine transparent background, no diagrams, no text, no shadows.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9",
+          "role": "authoring_only_pose_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_foundry_saint/identity-reference-v2.png",
+          "sha256": "5b8379ef15a5be5ac04b2180cfaf12f2934c36fa7b571ba7cc5cf6ac2f0f3e57",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0
+      ]
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/collapse-toward-matched-corpse.png",
+      "source_sha256": "4d0f317e8ddb2a63b861ba635851e93c419717d394e0b693abbbdb649730171c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4d3dd79a-95c3-4ca0-9f1d-147d12e98505.png",
+      "prompt": "Use case: precise-object-edit. Input1 is the final Foundry Saint corpse and establishes the mandatory fall direction and equipment placement. Input2 supplies living body anatomy/material reference only. Derive ONE intermediate collapsing pose immediately BEFORE this corpse, retaining HEAD/HALO on screen LEFT, hips in center and BOOTS extending toward screen RIGHT. Raise head and upper chest partway off the ground so torso is diagonal down-left, hips already low, knees bent toward right. Do NOT put head on right or flip the body. LEFT far hand still holds the short original forge hammer at front-right; RIGHT near hand retains long tongs and cooled rectangular ingot at front-left. Exactly two hands/arms/legs, one tool each. Halo stays attached behind head, ivory knee plates and cloth seals preserved, all tools/shafts fully shown. Furnace chest and halo only faint dim ember light, not full living brightness, ingot cooling dark orange. This is a visibly articulated side collapse, not a rotation of a standing sprite and not already identical to flat corpse. Full single figure with generous margins, matching same painted style/camera, genuine transparent background, no scenery/floor/shadow/text. Do not add flames or smoke.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_foundry_saint/corpse-reference.png",
+          "sha256": "a0afdeb1ccb7644ad7161a7cd831cbee7e267ba51a63f6aba2edf97b2a1defd1",
+          "role": "mandatory_fall_direction_and_equipment_reference"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_foundry_saint/identity-reference-v2.png",
+          "sha256": "5b8379ef15a5be5ac04b2180cfaf12f2934c36fa7b571ba7cc5cf6ac2f0f3e57",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0
+      ]
+    }
+  ],
+  "preparation": "Owner-approved deterministic background and narrow-edge extraction only. No local pose painting, mirroring, warping or equipment synthesis. Guides/composites are authoring references, not runtime art."
+}

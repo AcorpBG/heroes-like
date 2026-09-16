@@ -1,0 +1,118 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved local non-generative matte and narrow edge cleanup. Preserve original paintings; no synthesized or warped poses.",
+  "id": "beaconline-dark-collapse",
+  "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/poses-collapse-forearm-shield.png",
+  "source_sha256": "d4b3d04a5bbb54ecdbeb86cdcda603412059438382fb3d63fbbad01626b1a582",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-alpha/poses-collapse-forearm-shield.png",
+  "output_sha256": "cc1e87d9fea8c0fa799d92923fe2f7b104b1d482f18b37516e502097a4d4b995",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-cutouts.json",
+  "recipe_sha256": "37edcb142ff0fa736c04782094aba58459da1c649c8aef5a92afef3395addd77",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 185,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        484,
+        778
+      ],
+      [
+        500,
+        779
+      ],
+      [
+        1134,
+        887
+      ],
+      [
+        1143,
+        888
+      ],
+      [
+        749,
+        854
+      ],
+      [
+        762,
+        861
+      ],
+      [
+        453,
+        865
+      ],
+      [
+        495,
+        952
+      ],
+      [
+        715,
+        869
+      ],
+      [
+        727,
+        858
+      ],
+      [
+        751,
+        944
+      ],
+      [
+        1116,
+        898
+      ],
+      [
+        1123,
+        887
+      ],
+      [
+        1184,
+        950
+      ],
+      [
+        1223,
+        990
+      ],
+      [
+        457,
+        872
+      ],
+      [
+        1144,
+        958
+      ],
+      [
+        1111,
+        898
+      ],
+      [
+        713,
+        904
+      ],
+      [
+        1233,
+        999
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1013461,
+    "edge_pixels": 46670,
+    "unchanged_paint_pixels": 512397,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,159 @@
+{
+  "unit_id": "unit_brasshollow_scrip_haulers",
+  "output": "art/animation/source/poses/unit_brasshollow_scrip_haulers/candidate-atlas.png",
+  "sha256": "f55317aa6d02b9a65b4c46a78ff6841275669ca9667f1d34b3377e1ee12b6207",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle",
+      "index": 0,
+      "alpha_bounds": [
+        183,
+        22,
+        330,
+        241
+      ]
+    },
+    {
+      "name": "idle_breath",
+      "index": 1,
+      "alpha_bounds": [
+        181,
+        20,
+        338,
+        241
+      ]
+    },
+    {
+      "name": "contact_a_requires_limb_review",
+      "index": 2,
+      "alpha_bounds": [
+        188,
+        23,
+        331,
+        238
+      ]
+    },
+    {
+      "name": "far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        184,
+        14,
+        333,
+        239
+      ]
+    },
+    {
+      "name": "contact_b_requires_limb_review",
+      "index": 4,
+      "alpha_bounds": [
+        182,
+        21,
+        330,
+        242
+      ]
+    },
+    {
+      "name": "near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        181,
+        17,
+        330,
+        240
+      ]
+    },
+    {
+      "name": "hook_windup",
+      "index": 6,
+      "alpha_bounds": [
+        169,
+        34,
+        356,
+        243
+      ]
+    },
+    {
+      "name": "hook_contact",
+      "index": 7,
+      "alpha_bounds": [
+        173,
+        61,
+        412,
+        242
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 8,
+      "alpha_bounds": [
+        190,
+        90,
+        333,
+        241
+      ]
+    },
+    {
+      "name": "guard_braced",
+      "index": 9,
+      "alpha_bounds": [
+        185,
+        80,
+        329,
+        239
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 10,
+      "alpha_bounds": [
+        173,
+        57,
+        348,
+        245
+      ]
+    },
+    {
+      "name": "knees_buckle",
+      "index": 11,
+      "alpha_bounds": [
+        181,
+        80,
+        350,
+        245
+      ]
+    },
+    {
+      "name": "side_collapse",
+      "index": 12,
+      "alpha_bounds": [
+        151,
+        107,
+        366,
+        249
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 13,
+      "alpha_bounds": [
+        135,
+        146,
+        366,
+        252
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/poses.png": "eb777f9d5f5caae75bc0ffa25c5fde120e4d86c70f674ddbeb59cbb5c00d53f7",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/near-contact-guide-first.png": "39988203bd1712699d8d0af700c5b1fd6cf77b881dba3951d8cc71ca3f181a96",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/walk-1.png": "5063eaa90a76e454ed3cd9663d979c80e84afe5f55339c36f946f38be8b5f08a",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/walk-2.png": "688b458f291b219ac5485b5877091713dcdea7895f9be3f4f08228fd09cf586b",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/walk-3.png": "68119535e5f396605958c498bc20fffab12df742500065a1b2f87d24f8d82d46",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/guard-braced.png": "ee869daca8dcf5072117c448ecc0532cca29613af0040dd833e035c5ea3365b8"
+  }
+}

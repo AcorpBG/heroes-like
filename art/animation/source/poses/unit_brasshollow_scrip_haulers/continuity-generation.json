@@ -1,0 +1,121 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_scrip_haulers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "walk-3",
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/walk-3.png",
+      "source_sha256": "69052b35e2546051b2ffdd52865afb757256f1a6913e6abfd35a67fa6fcb0b5d",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d3bb1738-f3dc-4b40-8f5e-c3a322a52fd6.png",
+      "prompt": "Use case: identity-preserve. Asset type: original painted battle sprite, ONE full-body pose. Image 1 is the fixed identity/equipment reference; Image 2 is ONLY an anatomical walking guide, never render its lines/colors/text. Scrip Hauler: young brown-haired worker-soldier, brass dome helmet/ear discs, dark scarf, brass shoulder/chest/knee plates over brown quilted leather, brass-toed boots, canvas bedroll backpack, belt ledger tags and brass tokens. RIGHT hand short hooked iron bill with wooden shaft and brass ferrules, LEFT arm rectangular black iron shield brass rim and oval boss. Exactly same tool length, shield dimensions, torso, proportions, palette and gear. Paint the same soldier in this exact walking phase: The farther LEFT leg (ORANGE guide) is straight and supports weight with its boot directly below pelvis. The FOREGROUND RIGHT leg attached viewer-left hip (BLUE guide) swings forwards towards screen RIGHT with the near knee visibly raised and lower leg folded back; its boot is off the ground in front of the support shin. Feet close, not wide contact. Keep upper-body three-quarter camera facing screen RIGHT unchanged, face looking right. Equipment stays in original hands and original carry attitude; hook stays low in near right hand, shield remains on far left arm. Pose is an actual articulated repaint, not mirrored or shifted copy. Transparent RGBA background with no checkerboard, scenery, ground shadow or reference-color backing. Full helmet, all gear, both boots in frame with ample margins; no text, effects, extras or amputations. Match original painted palette, brushwork and body proportions.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_scrip_haulers/identity-reference.png",
+          "sha256": "266a75ad9ca3fbf33b4a28794fdc2551dec06a8860215bfb7f5667a4eabf9a38"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Selected as candidate; motion/body/equipment continuity pending."
+    },
+    {
+      "id": "walk-1",
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/walk-1.png",
+      "source_sha256": "a8a02130c6c51fd1274ee7beb3403bb0cf91d91697f7105b485f128cc6ff5ecd",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-fe0062c1-24e3-4ca4-995c-64aee405841e.png",
+      "prompt": "Use case: identity-preserve. Asset type: original painted battle sprite, ONE full-body pose. Image 1 is the fixed identity/equipment reference; Image 2 is ONLY an anatomical walking guide, never render its lines/colors/text. Scrip Hauler: young brown-haired worker-soldier, brass dome helmet/ear discs, dark scarf, brass shoulder/chest/knee plates over brown quilted leather, brass-toed boots, canvas bedroll backpack, belt ledger tags and brass tokens. RIGHT hand short hooked iron bill with wooden shaft and brass ferrules, LEFT arm rectangular black iron shield brass rim and oval boss. Exactly same tool length, shield dimensions, torso, proportions, palette and gear. Paint the same soldier in this exact walking phase: The FOREGROUND RIGHT leg on viewer-left hip (BLUE guide) is straight and supports all weight, boot planted directly below pelvis. The farther LEFT thigh swings forward towards screen RIGHT and its knee flexes, its heel off ground and ankle folded beneath pelvis. Feet are close in passing, not a wide contact stance. Keep upper-body three-quarter camera facing screen RIGHT unchanged, face looking right. Equipment stays in original hands and original carry attitude; hook stays low in near right hand, shield remains on far left arm. Pose is an actual articulated repaint, not mirrored or shifted copy. Transparent RGBA background with no checkerboard, scenery, ground shadow or reference-color backing. Full helmet, all gear, both boots in frame with ample margins; no text, effects, extras or amputations. Match original painted palette, brushwork and body proportions.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_scrip_haulers/identity-reference.png",
+          "sha256": "266a75ad9ca3fbf33b4a28794fdc2551dec06a8860215bfb7f5667a4eabf9a38"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Selected as candidate; motion/body/equipment continuity pending."
+    },
+    {
+      "id": "walk-2",
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/walk-2.png",
+      "source_sha256": "d54a03b97e5d57b9aa7a56988874595ef35744bd41ffedd50172e0dc0b96f28b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-af53e9d7-0d0b-4ce3-b741-d084f3042dc5.png",
+      "prompt": "Use case: identity-preserve. Asset type: original painted battle sprite, ONE full-body pose. Image 1 is the fixed identity/equipment reference; Image 2 is ONLY an anatomical walking guide, never render its lines/colors/text. Scrip Hauler: young brown-haired worker-soldier, brass dome helmet/ear discs, dark scarf, brass shoulder/chest/knee plates over brown quilted leather, brass-toed boots, canvas bedroll backpack, belt ledger tags and brass tokens. RIGHT hand short hooked iron bill with wooden shaft and brass ferrules, LEFT arm rectangular black iron shield brass rim and oval boss. Exactly same tool length, shield dimensions, torso, proportions, palette and gear. Paint the same soldier in this exact walking phase: The FOREGROUND RIGHT leg attached viewer-left hip (BLUE guide) trails clearly BACK towards screen LEFT, toe on ground. The farther LEFT leg (ORANGE guide) extends FORWARD towards screen RIGHT and heel lands. Show both legs separately down to their boots; do not substitute the usual nearer leg forward. Keep upper-body three-quarter camera facing screen RIGHT unchanged, face looking right. Equipment stays in original hands and original carry attitude; hook stays low in near right hand, shield remains on far left arm. Pose is an actual articulated repaint, not mirrored or shifted copy. Transparent RGBA background with no checkerboard, scenery, ground shadow or reference-color backing. Full helmet, all gear, both boots in frame with ample margins; no text, effects, extras or amputations. Match original painted palette, brushwork and body proportions.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_scrip_haulers/identity-reference.png",
+          "sha256": "266a75ad9ca3fbf33b4a28794fdc2551dec06a8860215bfb7f5667a4eabf9a38"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Selected as candidate; motion/body/equipment continuity pending."
+    },
+    {
+      "id": "near-contact-unfolded",
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/near-contact-unfolded.png",
+      "source_sha256": "4a50c54db341f099b5a41d6278556ba92f6e629c5b2de271655a7a33240746fc",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-67f8d10b-afd1-40b5-95d0-4474fd7278cc.png",
+      "prompt": "Use case: precise-object-edit. Image1 is edit target. Output ONE full-body original battle sprite of exactly this soldier, same camera and torso facing RIGHT. Change ONLY the two legs to unfold the already lifted FOREGROUND RIGHT leg into its forward heel-strike: keep that exact visible near thigh connected to its hip, extend its shin and boot FORWARD toward screen RIGHT so its brass-capped heel lands well in front of the body; the currently supporting farther LEFT leg now trails behind toward screen LEFT with toe touching ground. The nearer leg must be the forward leg, opposite to a pose with the shield-side leg forward. Preserve all upper-body pixels/identity as closely as possible, helmet/face, torso, shield scale, hand ownership, full short bill hook in near RIGHT hand held low, backpack and tags. Don't turn or mirror torso; do not swap hands or bend into a crouch. Keep full body/tool inside ample margins, exact painted style. Transparent RGBA background, no checkerboard, shadows, text, effects or added objects.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_scrip_haulers/walk-3.png",
+          "sha256": "69052b35e2546051b2ffdd52865afb757256f1a6913e6abfd35a67fa6fcb0b5d"
+        }
+      ],
+      "selected": false,
+      "selection_note": "Excluded: duplicated knee armor/ambiguous leg anatomy."
+    },
+    {
+      "id": "near-contact-guide-first",
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/near-contact-guide-first.png",
+      "source_sha256": "97cabd3d84e1c2b15b91015196cda4909b3fa66aae94dc3fe1b92bede3a00bf8",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-aefe725f-1c81-4845-bc70-7028638cef83.png",
+      "prompt": "Use case: sketch-to-render. Image1 is the authoritative POSE TARGET. Image2 provides ONLY the soldier's appearance and equipment, NOT its leg pose. Paint ONE original complete battle sprite matching Image1 leg skeleton exactly: BLUE near/right leg connects viewer-left hip to a knee forward screen RIGHT then shin and forward heel; ORANGE farther left leg trails screen LEFT. Exactly TWO THIGHS, TWO KNEES, TWO SHINS and TWO BOOTS. Each leg has ONLY ONE knee plate, no doubled knee, no ghost limb, no disconnected foot. Render Scrip Hauler: young brown-haired worker-soldier, brass dome helmet/ear discs, dark scarf, brass shoulder/chest/knee plates over brown quilted leather, brass-toed boots, canvas bedroll backpack, belt ledger tags and brass tokens. RIGHT hand short hooked iron bill with wooden shaft and brass ferrules, LEFT arm rectangular black iron shield brass rim and oval boss. Exactly same tool length, shield dimensions, torso, proportions, palette and gear. Retain three-quarter RIGHT-facing torso, original near right hand short hook held low and far left shield, same proportions and painted style. Body must stand tall in a walking contact, not crouch or high-step. Guide colors, lines and text are authoring-only: NEVER draw them. True transparent RGBA background, no shadow/checkerboard/scenery/effects. Include complete gear/body with margin.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+        },
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_scrip_haulers/identity-reference.png",
+          "sha256": "266a75ad9ca3fbf33b4a28794fdc2551dec06a8860215bfb7f5667a4eabf9a38"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Candidate only: traced contact/limb ownership is not yet reliable. Do not infer successful alternating gait from prompt/filename."
+    },
+    {
+      "id": "guard-braced",
+      "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/guard-braced.png",
+      "source_sha256": "12d2c0b0cc1cc2970031aa40a929400a635159eada30677d204b37ce90987b72",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-67657b62-3751-49bf-85fe-d332a55f5bf2.png",
+      "prompt": "Use case: identity-preserve. ONE full-body original painted defensive sprite. Image1 fixed identity/equipment, Image2 row2 column4 defensive pose is the pose reference. Paint a second breathing/bracing beat of that crouched guard: same bent knees and planted feet, torso subtly presses forward behind shield and right elbow flexes slightly. Scrip Hauler: young brown-haired worker-soldier, brass dome helmet/ear discs, dark scarf, brass shoulder/chest/knee plates over brown quilted leather, brass-toed boots, canvas bedroll backpack, belt ledger tags and brass tokens. RIGHT hand short hooked iron bill with wooden shaft and brass ferrules, LEFT arm rectangular black iron shield brass rim and oval boss. Exactly same tool length, shield dimensions, torso, proportions, palette and gear. Keep original left shield dimensions and short bill tool held horizontally close across waist in near RIGHT hand. Exactly two connected legs with one knee each, full gear retained, face/head oriented RIGHT from same three-quarter camera. No extra limbs or weapon truncation. Original brass/dark painted rendering, generous full-body margins; transparent RGBA, no checkerboard, colored background, text, effects, ground shadow or scenery.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_scrip_haulers/identity-reference.png",
+          "sha256": "266a75ad9ca3fbf33b4a28794fdc2551dec06a8860215bfb7f5667a4eabf9a38"
+        },
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_scrip_haulers/poses.png",
+          "sha256": "fe1e8f9ae21367e545a8340ceb6a3b41f24c9666fad54c40d3bc7063633a1aeb"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Selected as candidate; motion/body/equipment continuity pending."
+    }
+  ],
+  "selection_note": "Five new paintings selected; nine original paintings retained. Unfolded duplicate-knee draft excluded. Contact ownership still needs refinement."
+}

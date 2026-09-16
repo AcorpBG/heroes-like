@@ -1,0 +1,314 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "poses",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/poses.png",
+      "source_sha256": "e8bdfd61ee25b00a3ccd777a21e5e9b2a0205eb40d2d64df53b30c6224e6a39f",
+      "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            167,
+            220
+          ],
+          [
+            174,
+            205
+          ],
+          [
+            156,
+            228
+          ],
+          [
+            140,
+            108
+          ],
+          [
+            262,
+            171
+          ],
+          [
+            267,
+            175
+          ],
+          [
+            526,
+            245
+          ],
+          [
+            537,
+            207
+          ],
+          [
+            533,
+            879
+          ],
+          [
+            511,
+            805
+          ],
+          [
+            631,
+            175
+          ]
+        ]
+      }
+    },
+    {
+      "id": "poses-windup-corrected",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/poses-windup-corrected.png",
+      "source_sha256": "d52978aa5659e1b450be6d57afdac8450ab0eb38c2687702802505214047fb91",
+      "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-windup-corrected.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            522,
+            516
+          ]
+        ],
+        "background_regions": [
+          {
+            "polygon": [
+              [
+                499,
+                458
+              ],
+              [
+                533,
+                458
+              ],
+              [
+                533,
+                470
+              ],
+              [
+                499,
+                470
+              ]
+            ],
+            "minimum": 170,
+            "tolerance": 35,
+            "seed": [
+              516,
+              467
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "poses-thrust-shaft-corrected",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/poses-thrust-shaft-corrected.png",
+      "source_sha256": "2c816271b1782202dd7d1779e43237bc37eea087f66a54e510dcad04a0e3a660",
+      "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-thrust-shaft-corrected.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            811,
+            504
+          ],
+          [
+            795,
+            551
+          ]
+        ]
+      }
+    },
+    {
+      "id": "poses-hit-hand-corrected",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/poses-hit-hand-corrected.png",
+      "source_sha256": "762b34eee0b2d0b6af84d6fdb34aeaa35690e394676b1536b8558b66e2545cb9",
+      "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-hit-hand-corrected.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            148,
+            858
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-contact-draft",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/walk-contact-draft.png",
+      "source_sha256": "254f2db19bd753ee29d6bc2fa066785a0b0867d0e99053cdc02c12059bb3da5f",
+      "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/walk-contact-draft.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            552,
+            635
+          ],
+          [
+            548,
+            678
+          ],
+          [
+            532,
+            715
+          ],
+          [
+            795,
+            552
+          ],
+          [
+            695,
+            435
+          ],
+          [
+            432,
+            300
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-next-contact-draft",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/walk-next-contact-draft.png",
+      "source_sha256": "46d8375d575338d34fc3d1d6b636947b89fd992038e660bedcec5fd886164a27",
+      "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/walk-next-contact-draft.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "walk-passing-draft",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/walk-passing-draft.png",
+      "source_sha256": "485ab18d24bd4d9dfa0e67a9edb50fde8334896d94ef720f89f3f665df7fd88f",
+      "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/walk-passing-draft.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            540,
+            631
+          ],
+          [
+            533,
+            674
+          ],
+          [
+            527,
+            715
+          ],
+          [
+            783,
+            550
+          ],
+          [
+            680,
+            414
+          ],
+          [
+            600,
+            1110
+          ],
+          [
+            432,
+            300
+          ]
+        ]
+      }
+    },
+    {
+      "id": "fall-side-draft",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/fall-side-draft.png",
+      "source_sha256": "3a8de10bc42d2658056c98d1fe5e3bf51b325be7f79baf58ce5ab60ea2df0046",
+      "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/fall-side-draft.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "guided-opposite-step-and-guard",
+      "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/guided-opposite-step-and-guard.png",
+      "source_sha256": "7c567c7182403691caae98f6a5dbc20bd5294490acfa39de10415da2dd5e9eec",
+      "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/guided-opposite-step-and-guard.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 105,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            244,
+            397
+          ],
+          [
+            744,
+            406
+          ],
+          [
+            781,
+            392
+          ],
+          [
+            791,
+            373
+          ],
+          [
+            934,
+            340
+          ],
+          [
+            278,
+            392
+          ],
+          [
+            294,
+            376
+          ],
+          [
+            383,
+            253
+          ],
+          [
+            884,
+            259
+          ],
+          [
+            174,
+            1147
+          ],
+          [
+            668,
+            1169
+          ]
+        ]
+      }
+    }
+  ]
+}

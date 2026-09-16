@@ -1,0 +1,141 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_quenchspool_slingers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/guided-carry-and-cable-arcs.png",
+      "source_sha256": "374f0dc425290dd7de38e726dfd12703ed88a940b6a38027baa5773f2651505e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b584a323-76de-468c-858c-150afe4089ab.png",
+      "prompt": "Use case: sketch-to-render. Original painted tactical animation supplement, SIX complete figures in 3 columns x 2 rows, generous margins around boots and extended cable. Inputs1-4 are leg-phase diagrams only; input5 is fixed Quenchspool Slinger identity/costume/equipment. FIRST FOUR cells render diagrams1-4 respectively: near RIGHT leg forward contact; near RIGHT foot supports, far LEFT foot lifted passing; far LEFT leg forward opposite contact; far LEFT foot supports, near RIGHT foot lifted passing. BLUE is near RIGHT leg, ORANGE is far LEFT leg, but render original costume colors. Exactly two legs with one knee each, unchanged RIGHT-facing three-quarter torso/head camera. Travel carry change for ALL FOUR: wind the cable short so the ONE orange caged cylindrical weight rests safely against outside of handheld brass reel at waist height, clear of both thighs, held there by short attached cable; no long swinging weight near knees. Both hands hold original reel and crank; do not add a hook or extra hand. Identity unchanged: young adult human woman, brown topknot/forelock, orange-lens goggles on forehead, black scarf, brown leather/tattered coat, red sash tails, brass shoulder/knee plates, leather boots, small back orange pressure reservoir with white/red gauge. Fifth cell: planted ranged anticipation, hands still retain reel, she begins casting the same ONE weight on a length of curved cable swinging up behind her shoulder toward screen LEFT; no duplicate weight at waist. Sixth cell: planted release follow-through, same one weight travels on a curved arc above and toward screen RIGHT, flexible cable curves back continuously to the same reel exit, not a rigid pole, hands still on reel. Keep whole body/weight/cable inside cell and machinery scale fixed. Cable never detaches, no sparks/explosion/flames. Genuine transparent background, no checkerboard, diagrams, captions, floor, scenery or shadows.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/identity-reference-v2.png",
+          "sha256": "2ca4cb23a4eee9bed333e063b38de535a1b6b1746cb8d6db59d81e95eae6e1e6",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        3
+      ],
+      "excluded_cells": {
+        "2": "Repeated leading leg.",
+        "4": "Cable originates behind body rather than handheld reel.",
+        "5": "Cable originates behind body rather than handheld reel."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/guided-opposite-gathered-contact.png",
+      "source_sha256": "edac50acaeb05fbbd2858e539ee84b9f872708f3b7151952e5ab10b82a5cee62",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d165404e-74a0-4a3d-abcd-fc37188b1558.png",
+      "prompt": "Use case: sketch-to-render. Input1 EXACT mandatory leg pose. Input2's first four figures supply Quenchspool Slinger's fixed identity and gathered travel equipment ONLY, not their repeated leading-leg geometry. Paint ONE complete woman, same RIGHT-facing three-quarter torso/head and unchanged costume/reel. ORANGE far LEFT leg reaches FORWARD toward screen RIGHT heel planted ahead, BLUE near RIGHT leg trails BACK toward screen LEFT toe on ground behind. Near foreground knee plate must be behind the far forward knee, visibly opposite of input2's first/third contacts. Render original brown pants/leather boots and brass knee guards, not guide colors; exactly two legs, one knee each. Preserve brown topknot, forehead orange goggles, black scarf, brass shoulder plates, red sash, back pressure reservoir/gauge. Both hands hold same brass reel/crank at waist. ONE orange caged weight is gathered SHORT against viewer-left outside of reel near hip, cable attached to reel and fully clear of legs. No extended/backpack cable from last two reference figures. Full body/gear and generous margins. Genuine transparent background, no diagram, text, checkerboard, shadows, floor or added equipment.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/guided-carry-and-cable-arcs.png",
+          "sha256": "374f0dc425290dd7de38e726dfd12703ed88a940b6a38027baa5773f2651505e",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0
+      ],
+      "limitation": "Did not follow opposite-leg guide; selected only as a planted bridge, not accepted opposite contact."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/reel-attached-cast-cycle.png",
+      "source_sha256": "5121986232f3d218e70fcfb683d3bf879b8faecbf46a29b5b59e479fdaf35209",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7ef1d925-d18c-4b43-af25-94b86bfeaa24.png",
+      "prompt": "Use case: precise-object-edit. FOUR full-body original Quenchspool Slinger battle poses in TWO columns TWO rows, generous wide cells/gutters to contain all cable and ONE weight. Input1 is the authoritative cable attachment/extended cast reference: cable starts DIRECTLY at the FRONT circular opening of the handheld reel, in front of her left hand. Input2 supplies full body identity/costume. Do not copy input1's clipped margin; render complete boots. Same RIGHT-facing three-quarter camera, same woman/armor/body/reel/weight scale. Top-left: ranged windup, planted stance, both hands retain handheld waist reel/crank, ONE orange caged weight swings toward screen LEFT at shoulder height on curved cable. Cable must remain visibly attached to front reel opening with continuous unobscured length in FRONT of torso, never behind shoulder. Top-right: midcast, ONE weight arcs high toward screen RIGHT, flexible cable forms a clear curved bow from FRONT handheld reel opening to weight; leave visible clearance from backpack, neck and shoulders. Bottom-left: release, weight farther forward screen RIGHT at chest height, continuous almost-straight but slightly sagging cable from same reel front, body braced, no second weight. Bottom-right: winding recovery, RIGHT hand visibly turns reel crank while LEFT supports reel, weight drawn close below reel on short curved cable, weight and cable remain visible in FRONT of body. No cable ever originates at back reservoir/gauge/neck or passes behind torso. Preserve brown topknot, forehead orange goggles, black scarf, brown leather coat, brass shoulder/knee plates, red sash and back reservoir/gauge. Original painterly style, genuine transparent background, no checkerboard, floor, shadows, text, steam/flames, disconnected/duplicated cable or equipment.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/ranged-release-reference.png",
+          "sha256": "f09b1a232695bd25e77145f7fafa0e26b4510a31d966cc7195b8c2ff3b5e39a3",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/identity-reference-v2.png",
+          "sha256": "2ca4cb23a4eee9bed333e063b38de535a1b6b1746cb8d6db59d81e95eae6e1e6",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0,
+        2,
+        3
+      ],
+      "excluded_cells": {
+        "1": "Overhead cable incorrectly originates at head/backpack."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/guard-weight-clear.png",
+      "source_sha256": "bdce228d677db5c00147d24bb5b7a77efef1d38dea70c1f02fb2037ff195707e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-184e6190-3ed7-474a-9ee4-69a0e377be95.png",
+      "prompt": "Use case: precise-object-edit. Input1 is the exact Quenchspool Slinger defensive stance/identity reference. TWO complete full-body sprites side by side with generous margins, matching scale and fixed three-quarter RIGHT-facing camera. LEFT: same low one-knee defensive crouch, both hands keep brass reel/crank across chest, ONE orange caged weight hangs on short attached cable to viewer-left, clear of knee/boots and still visible. RIGHT: a second defensive compression, head/shoulders tuck slightly farther behind raised reel and support elbow bends, planted boot remains grounded and kneeling leg stays attached. Preserve exact adult woman's brown topknot/forelock, orange goggles on forehead, black scarf, brown leather coat, red sash, brass shoulder/knee plates, back pressure reservoir and white/red gauge. Exactly two arms and legs, no extra kneecap. Keep weight count one, same size and same cable attached directly to reel not backpack. No injury, dying expression, face redesign or weapon swap. Complete boots/weight/cable visible; genuine transparent background, no checkerboard, floor, shadows, captions or effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/guard-reference.png",
+          "sha256": "16a5fdfafcd7ad64a9b98158f513d7b3bb3494c0adeb384541f5ba4d764c52d1",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1
+      ]
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/corpse-directed-collapse.png",
+      "source_sha256": "a2480ace8e7c540882856bf13bf8fb2a62578c22c1c5ea036e28f4802263b4a9",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7bf995be-8424-4f2d-b4dd-829c82cc2572.png",
+      "prompt": "Use case: identity-preserve. Paint ONE original full-body battle animation pose, a death-collapse intermediate that leads into input1's prone body. Input1 is mandatory body direction and equipment placement target: HEAD toward screen RIGHT, boots trailing screen LEFT; not mirrored. Input2 supplies living costume/colors/face. She has fallen onto both knees and is tipping forward-right, torso low about 30 degrees above ground, RIGHT forearm braced under chest, LEFT hand losing grip on brass reel which rests on ground foreground LEFT of her torso. Both legs trail left behind her with knees bent, two boots attached. Her head descends toward right forearm, eyes shutting; no gore. ONE orange caged weight lies foreground RIGHT, cable continuously connects it to the foreground LEFT reel. Preserve brown topknot, orange forehead goggles, black scarf, brass shoulder/knee armor, brown leather coat/red tails, rear pressure reservoir/gauge, exactly two arms/two legs. Keep reel/weight design and relative body scale. Full body and all gear, generous clear margins, original painterly fantasy tactical style. Genuine transparent background, no green, no checkerboard, floor, shadows, text, effects or extra objects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/corpse-direction-reference.png",
+          "sha256": "815895b233bca21cb4599606213355f6aa8dbe0da476eb6b795cc067e3628dc1",
+          "role": "source_identity_or_edit_target"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/identity-reference-v2.png",
+          "sha256": "2ca4cb23a4eee9bed333e063b38de535a1b6b1746cb8d6db59d81e95eae6e1e6",
+          "role": "source_identity_or_edit_target"
+        }
+      ],
+      "selected_cells": [
+        0
+      ],
+      "replaces": "Original side-fall reverses body direction before retained head-right corpse."
+    }
+  ],
+  "preparation": "Owner-approved deterministic background and narrow-edge extraction only. No local pose painting, mirroring, warping or equipment synthesis. Guides/composites are authoring references, not runtime art."
+}

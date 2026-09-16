@@ -1,0 +1,114 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "jobs": [
+    {
+      "id": "fordhook-walk-contact-a-green",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/walk-contact-a-green.png",
+      "source_sha256": "864fc6cb6836a79e107e3a65c83a3b78ba01b8760d7b9bdc74b0338167ac0c19",
+      "output": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-contact-a-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true,
+        "inspection_note": "Vivid green appears only as backing; original red/brown/cream/brass character paint is retained."
+      }
+    },
+    {
+      "id": "fordhook-walk-passing-a-green",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/walk-passing-a-green.png",
+      "source_sha256": "84c61d71096c019c8f16e1c6ccfa7ea3bd6b67ede9fa489d2b92af061136579e",
+      "output": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-passing-a-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true,
+        "inspection_note": "Vivid green appears only as backing; original red/brown/cream/brass character paint is retained."
+      }
+    },
+    {
+      "id": "fordhook-walk-contact-b-green",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/walk-contact-b-green.png",
+      "source_sha256": "66d39195b9837ec4d9fc426b54c1078061b0401522731309c5261f6a79caa38a",
+      "output": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-contact-b-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true,
+        "inspection_note": "Vivid green appears only as backing; original red/brown/cream/brass character paint is retained."
+      }
+    },
+    {
+      "id": "fordhook-walk-passing-b-green",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/walk-passing-b-green.png",
+      "source_sha256": "57b2a5cc95ba32f46c482d46f69e25717ec8e631396290510a15b9f30a6836fd",
+      "output": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-passing-b-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true,
+        "inspection_note": "Vivid green appears only as backing; original red/brown/cream/brass character paint is retained."
+      }
+    },
+    {
+      "id": "fordhook-attack-brace-green",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/attack-brace-green.png",
+      "source_sha256": "08943a4922a5ec7633c914cae5f807002516d45a7efda9fc073902029e20f6bd",
+      "output": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/attack-brace-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true,
+        "inspection_note": "Vivid green appears only as backing; original red/brown/cream/brass character paint is retained."
+      }
+    },
+    {
+      "id": "fordhook-attack-release-green",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/attack-release-green.png",
+      "source_sha256": "368ba4946b92c24ad55371c1ec8674bb24d24a02518470e098b30baff45e7ed3",
+      "output": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/attack-release-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true,
+        "inspection_note": "Vivid green appears only as backing; original red/brown/cream/brass character paint is retained."
+      }
+    }
+  ]
+}

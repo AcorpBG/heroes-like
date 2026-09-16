@@ -1,0 +1,134 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_neutral_cartbow_tenders",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "source": "empty-rail-release-and-recovery.png",
+      "source_sha256": "d14f6b1d83a4319c081bd73b134236ba2d0977da78ef4c539d30576bf75d28f0",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1869ff9c-ecf7-4b7e-885e-f64a36f3ea4d.png",
+      "reference": ".artifacts/battle-unit-animation-size-20260913/cartbow-continuity-20260916/reference/unit_neutral_cartbow_tenders-poses-rect-945-607-1254-906-light.png",
+      "reference_sha256": "b844b2c31fa5ebee633c782018e66236cda5b565f8613bb5776ec51f66bc4485",
+      "prompt": "Use case: precise-object-edit. Asset type: original Cartbow Tender battle animation release and recovery. Image 1 is the exact edit target and character/cart identity anchor. Create TWO complete operator-plus-cart poses SIDE BY SIDE with generous empty gutter, identical camera, cart dimensions and body scale. LEFT: preserve the reference backward recoil operator pose, complete two-wheel wood cart, brown limbs, steel rail, rear winding crank and basket of spare bolts, but correct the FIRED crossbow: remove the orange bolt lying on the central rail; central rail visibly EMPTY from rear to muzzle; single released string goes directly BETWEEN THE TWO FRONT BOW TIPS and is no longer drawn back to the rear lock. RIGHT: same unloaded cart and front-tip-to-front-tip relaxed string, operator settles forward after recoil with elbows bent holding rear handles, boots stable, NO new bolt yet. Keep ONE operator with brown flat cap red scarf mustard coat cream rolled sleeves leather apron brown gloves boots and knee pads per pose. Preserve original painterly texture and colors. Whole cart including both wheel rims/spokes, complete bow tips and boots in frame. Background flat opaque pure magenta RGB255,0,255 with no reflected magenta or cast floor shadow. No text, grid, extra crew, floating projectile or disappearing basket/cart. Change only the shot state and recovery articulation, not the cart design.",
+      "selection_note": "Rail is empty, but string remained drawn back. Preserve as unselected correction target; not a proven fired state."
+    },
+    {
+      "source": "fired-string-release-and-recovery.png",
+      "source_sha256": "bb32dfecd45178ca9ee2ca944a16998c2f8a5d68138079c9d64290734cd7437c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5c4e1394-6fb4-4f20-b055-cd0793648f91.png",
+      "reference": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1869ff9c-ecf7-4b7e-885e-f64a36f3ea4d.png",
+      "reference_sha256": "d14f6b1d83a4319c081bd73b134236ba2d0977da78ef4c539d30576bf75d28f0",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target. Correct ONLY the bowstring on BOTH cartbows in this two-pose sheet. They have FIRED. The rail already has no bolt: preserve its empty state. REMOVE the existing diagonal tan cord from the man's hand/rear lock to the upper-right bow tip, and REMOVE the short diagonal tan cord running from lower-left bow tip toward the rear lock. Those two rearward cords are the error. Replace them with ONE STRAIGHT tan string spanning DIRECTLY across the front of the weapon from the brass/metal nock at the LOWER LEFT bow-limb TIP to the nock at the UPPER RIGHT bow-limb TIP. It crosses the front muzzle/rail at the bow, not the rear trigger or hand; NO cord connects to either hand, crank or rear lock. On left cart the new string goes roughly from (385,450) to (821,363); on right cart from (1268,476) to (1720,372). Keep both full operators, poses, faces, clothing, cart dimensions, wheels, baskets, EMPTY rails and pure-magenta backing exactly unchanged. Do not redesign the bow, add projectiles, crop, shift scale, add labels, or alter any other pixels.",
+      "selection_note": "Selected two poses: empty rail and direct front-tip string confirmed visually; full cart/body continuity remains."
+    },
+    {
+      "source": "loaded-passing-and-shove-recovery.png",
+      "source_sha256": "faf0929a449e61d3ca0e9e5a1bd7afd884ace3e8fe4215750938ebc4e279ad02",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5f657d1a-0ad7-4d03-8458-f919418bc8c8.png",
+      "reference": ".artifacts/battle-unit-animation-size-20260913/cartbow-continuity-20260916/loaded-reference/unit_neutral_cartbow_tenders-poses-rect-618-0-945-313-light.png",
+      "reference_sha256": "055a660717bff6b7798ff2abc1cc520260af9bf84f7c1cb557b529db62022ee2",
+      "prompt": "Use case: stylized-concept. Asset type: original Cartbow Tender additional battle poses. Image 1 fixed loaded cart/body identity reference, not a request to repeat its leg position. Paint TWO complete single-operator-plus-cart poses SIDE BY SIDE, same camera, body and machine scale and subdued original painterly texture. LEFT is a genuine PASSING STEP while pushing: one boot planted vertically under hips, other knee flexed boot raised behind under the coat, legs close under pelvis instead of split stride; both hands on rear handles; exactly TWO wheels, same mounted loaded crossbow, orange bolt along rail, drawn-back string, crank and bolt basket. RIGHT is melee-shove RECOVERY: operator draws torso back toward upright after forward shove, elbows visibly flexed and both hands on same handles, two boots planted, no shot fired so bolt remains seated and string cocked. Same man brown cap red scarf mustard coat cream sleeves leather apron brown gloves knee pads boots. Preserve cart structure, wheel diameter, rail length, tips, basket and crank. Separate full silhouettes with generous gutters and padding, no cut-off wheels/boots/weapons. Flat opaque pure magenta RGB255,0,255, no reflected magenta or floor shadow, no labels/grid/effects/projectiles/additional crew.",
+      "selection_note": "Selected loaded passing and shove recovery candidates; full gait/wheel/body continuity remains."
+    }
+  ],
+  "retained_original_alpha": {
+    "source": "alpha/poses.png",
+    "sha256": "095b159f33f5b1717fb5330b0c75e6e3cc54c4d6282f82722daac1c47ad998e1"
+  },
+  "review_notes": [
+    "17 frames retain thirteen original paintings and select four new paintings from two of three built-in outputs: loaded passing/shove recovery and mechanically corrected fired release/recovery. Exactly one operator and one equipped two-wheel cart remain through all death stages and persistent head-left corpse.",
+    "The first empty-rail output retained the drawn-back string and is preserved unselected. A constrained edit explicitly removes rearward cords and connects the two front bow-tip nocks directly, preserving the empty rail and spare-bolt basket. Loaded melee/travel and unloaded shot recovery have separate clips.",
+    "Original alpha is reused. Approved magenta preparation and uniform original/new scales 0.70/0.285 preserve full carts. Inspected source bands remove neighboring cart fragments while restoring the formerly clipped shove bow-tip, kneeling boot and corpse head.",
+    "All-state candidate only. Full alternating gait and wheel rotation, operator/cart relative size, hand/handle contact, reload mechanics, bow/gear/body proportions, head direction during near-identical old idles, palette/edges and connected timing remain refinement. No automated tests/imports/gameplay/platform acceptance."
+  ],
+  "selected_frames": [
+    {
+      "index": 0,
+      "name": "idle_a_loaded",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 1,
+      "name": "idle_b_loaded",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 2,
+      "name": "push_contact",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 3,
+      "name": "push_passing_loaded",
+      "source": "continuity-alpha/loaded-passing-and-shove-recovery.png"
+    },
+    {
+      "index": 4,
+      "name": "melee_shove_windup_loaded",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 5,
+      "name": "melee_shove_loaded",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 6,
+      "name": "melee_shove_recovery_loaded",
+      "source": "continuity-alpha/loaded-passing-and-shove-recovery.png"
+    },
+    {
+      "index": 7,
+      "name": "crouch_guard_loaded",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 8,
+      "name": "hit_recoil",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 9,
+      "name": "reload_crank_and_bolt",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 10,
+      "name": "aim_loaded",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 11,
+      "name": "fired_empty_rail_front_string",
+      "source": "continuity-alpha/fired-string-release-and-recovery.png"
+    },
+    {
+      "index": 12,
+      "name": "fired_empty_recovery_front_string",
+      "source": "continuity-alpha/fired-string-release-and-recovery.png"
+    },
+    {
+      "index": 13,
+      "name": "death_buckle",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 14,
+      "name": "death_kneel",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 15,
+      "name": "death_side_fall",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 16,
+      "name": "dead_head_left_intact_cart",
+      "source": "alpha/poses.png"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "id": "travel-two-hand-recovery-and-left-collapse",
+  "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/travel-two-hand-recovery-and-left-collapse.png",
+  "source_sha256": "8d54f7a0b6e04754c3cda0f7b1f7cc92fefe2502c71c4454e3b9e68a96146a26",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/continuity-alpha/travel-two-hand-recovery-and-left-collapse.png",
+  "output_sha256": "16b5811a8399201380ea2075bda71980f97c345a386e70a58261dcaf228005f8",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/continuity-cutouts.json",
+  "recipe_sha256": "74770c747cd790d8ab03b06ede53f83591748960ac6e544876caf04026068ca7",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1122017,
+    "edge_pixels": 35877,
+    "unchanged_paint_pixels": 414970,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

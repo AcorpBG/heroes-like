@@ -1,0 +1,82 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "guided-opposite-step-and-guard",
+  "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/guided-opposite-step-and-guard.png",
+  "source_sha256": "7c567c7182403691caae98f6a5dbc20bd5294490acfa39de10415da2dd5e9eec",
+  "source_rect": [
+    0,
+    0,
+    1024,
+    1536
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/guided-opposite-step-and-guard.png",
+  "output_sha256": "62925c80253fa3b0b7a95fb89548d6d1a30739a15b24fffd5cf9adc33d9acd5d",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-cutouts.json",
+  "recipe_sha256": "87d441a251756415cf07c355c43857e6f1e3f003cbf25d9d944b99938f6fa9a3",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 105,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        244,
+        397
+      ],
+      [
+        744,
+        406
+      ],
+      [
+        781,
+        392
+      ],
+      [
+        791,
+        373
+      ],
+      [
+        934,
+        340
+      ],
+      [
+        278,
+        392
+      ],
+      [
+        294,
+        376
+      ],
+      [
+        383,
+        253
+      ],
+      [
+        884,
+        259
+      ],
+      [
+        174,
+        1147
+      ],
+      [
+        668,
+        1169
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1052701,
+    "edge_pixels": 6199,
+    "unchanged_paint_pixels": 513964,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

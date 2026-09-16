@@ -1,0 +1,118 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "resupply-creep-and-guard",
+  "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/resupply-creep-and-guard.png",
+  "source_sha256": "8856c4b99f639401bef9aaf563419ad4e77854ca3086f36dad10a027f59653ef",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/continuity-alpha/resupply-creep-and-guard.png",
+  "output_sha256": "dc3fa157cea2400e5f8cbeb5c1edf08e733f8ec3dd2573454664ddea70743712",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/continuity-cutouts.json",
+  "recipe_sha256": "78689bc158cca2a14da721f75cb432515374ad671609941001c0a0ce4c1d1eac",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 170,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        400,
+        55
+      ],
+      [
+        438,
+        136
+      ],
+      [
+        636,
+        295
+      ],
+      [
+        1168,
+        277
+      ],
+      [
+        652,
+        811
+      ],
+      [
+        1127,
+        775
+      ],
+      [
+        413,
+        404
+      ],
+      [
+        435,
+        861
+      ],
+      [
+        957,
+        900
+      ],
+      [
+        1503,
+        902
+      ],
+      [
+        394,
+        114
+      ],
+      [
+        618,
+        197
+      ],
+      [
+        1153,
+        269
+      ],
+      [
+        899,
+        122
+      ],
+      [
+        1428,
+        117
+      ],
+      [
+        118,
+        784
+      ],
+      [
+        1201,
+        300
+      ],
+      [
+        1254,
+        922
+      ],
+      [
+        426,
+        856
+      ],
+      [
+        936,
+        406
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 833576,
+    "edge_pixels": 16012,
+    "unchanged_paint_pixels": 723276,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

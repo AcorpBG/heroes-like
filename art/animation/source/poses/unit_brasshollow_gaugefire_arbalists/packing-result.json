@@ -1,0 +1,208 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "output": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/candidate-atlas.png",
+  "sha256": "db001c8b63b1240c98e75789eb20233d5bcb01ba0477b48e9b33fd73b0714e33",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        199,
+        31,
+        348,
+        239
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        199,
+        31,
+        346,
+        239
+      ]
+    },
+    {
+      "name": "walk_contact_a",
+      "index": 2,
+      "alpha_bounds": [
+        189,
+        28,
+        345,
+        239
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        198,
+        29,
+        348,
+        238
+      ]
+    },
+    {
+      "name": "walk_planted_bridge",
+      "index": 4,
+      "alpha_bounds": [
+        177,
+        23,
+        353,
+        238
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        177,
+        17,
+        350,
+        239
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        177,
+        31,
+        336,
+        238
+      ]
+    },
+    {
+      "name": "melee_shove",
+      "index": 7,
+      "alpha_bounds": [
+        167,
+        37,
+        394,
+        238
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        185,
+        24,
+        365,
+        237
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        190,
+        27,
+        366,
+        238
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        179,
+        47,
+        358,
+        239
+      ]
+    },
+    {
+      "name": "ranged_aim",
+      "index": 11,
+      "alpha_bounds": [
+        174,
+        44,
+        355,
+        238
+      ]
+    },
+    {
+      "name": "ranged_discharged",
+      "index": 12,
+      "alpha_bounds": [
+        170,
+        26,
+        350,
+        238
+      ]
+    },
+    {
+      "name": "reload_cocking_empty",
+      "index": 13,
+      "alpha_bounds": [
+        188,
+        26,
+        350,
+        238
+      ]
+    },
+    {
+      "name": "reload_insert_single_bolt",
+      "index": 14,
+      "alpha_bounds": [
+        184,
+        26,
+        333,
+        238
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 15,
+      "alpha_bounds": [
+        171,
+        88,
+        354,
+        238
+      ]
+    },
+    {
+      "name": "death_fall",
+      "index": 16,
+      "alpha_bounds": [
+        161,
+        84,
+        357,
+        237
+      ]
+    },
+    {
+      "name": "death_settle",
+      "index": 17,
+      "alpha_bounds": [
+        163,
+        139,
+        359,
+        239
+      ]
+    },
+    {
+      "name": "dead_cold",
+      "index": 18,
+      "alpha_bounds": [
+        160,
+        140,
+        354,
+        239
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png": "92b1019b6ac11894ba2d4ea6616a20d51e408dcffa02a9b6f50750583551eb89",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-gait-and-guard.png": "58fc4bc3086c87dbe06bd009c9b1c05735bdbcb4608587daa5ea10ba16386a3b",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-opposite-contact.png": "6b2e24483a42a6222190a0a8b36ddd2fd075cf2ef5c0bcff68de94305cbc7514",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-near-passing.png": "af38c52c503fe0b5ae4c4a13df86f399c58e968aabd7c46f727c552939e9c6b0",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload-empty-rail.png": "f2beb5def04aed3deb64bbada50f28ffd1fde8fcb96887d938ff356f83161fb8"
+  }
+}

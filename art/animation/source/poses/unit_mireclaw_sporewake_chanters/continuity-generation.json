@@ -1,0 +1,61 @@
+{
+  "schema_id": "original_battle_pose_continuity_generation_v1",
+  "unit_id": "unit_mireclaw_sporewake_chanters",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_pending_whole_roster_refinement_and_acceptance",
+  "reference_crops": [
+    {
+      "path": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/standing-reference-light.png",
+      "sha256": "8a0bda0d694cb19e357cd75c3f4d754375f4f098eff211b40654bb8e54401767",
+      "source": "continuity-alpha/poses-original.png",
+      "source_sha256": "98de58148e0e4671e626fb5d9b9d8ce571b468d825bcb98c2808220b0dbfc61b",
+      "rect": [
+        25,
+        0,
+        286,
+        325
+      ],
+      "method": "Unchanged original/approved-prepared source pixels composited on light and nearest4x; reference only."
+    }
+  ],
+  "outputs": [
+    {
+      "source": "step-left-green.png",
+      "sha256": "68fe2f4f28ad0b71ad247953905fe0acdd13f2cff0dcb90c41e9abb2626bdbc7",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c043e3c8-c644-4d28-9ac1-b22f2954ffa9.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 exact original character EDIT TARGET. Create ONE short advancing step with the SCREEN-LEFT boot lifted, retaining the other boot planted. Change only lower body joints, weight shift and slight robe follow-through. The leg originally ending in screen-LEFT boot is the lifted leg: bend that knee forward toward screen right, lift its whole boot a modest one boot-height above ground, with an anatomically connected thigh from SAME hip. SCREEN-RIGHT boot remains planted in original place; body weight shifts over it slightly. Do NOT swap hip ownership, mirror torso, exchange boots or raise both feet. This is a measured walking step carrying equipment, not a jump or running split. Keep the whole character, feet and full antler-topped staff and complete hanging censer inside broad margins. Preserve masked pale-green face, dark dreadlocks/topknot, moss leaf mantle, purple embroidered tattered robes, bone/reed charms and dark tied boots. RIGHT hand screen LEFT holds full antler staff vertically. LEFT hand screen RIGHT holds ring of three censer chains and hanging brass bowl with three pendants. Staff lifts subtly off ground alongside raised foot without shortening shaft; same full antler branching and charms. Censer held LOW as reference, not swung or raised. Both hands stay on original equipment. Same elevated three-quarter camera facing RIGHT, same painted style, lighting, colors, anatomy and body scale. No new costume details or weapon. Flat pure RGB0,255,0 green background including empty gaps, no spill on dark olive material. No floor, shadow, letters, effects, scenery or other figures.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/standing-reference-light.png",
+          "sha256": "8a0bda0d694cb19e357cd75c3f4d754375f4f098eff211b40654bb8e54401767"
+        }
+      ]
+    },
+    {
+      "source": "step-right-green.png",
+      "sha256": "47853ee927cd28a4ce43ff287e4bf8ce46af4414586a24132aea6a109eefc17e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-458c8ccc-8cc6-4dd0-aec0-454eac8e35bb.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 exact Sporewake Chanter EDIT TARGET. ONE measured advancing foot-lift pose. Keep staff, censer, upper body, pale-green masked face, dreadlock topknot, moss leaf mantle, purple embroidered tattered robes, all reed/bone charms, camera, original painterly style and proportions. ONLY the SCREEN-RIGHT leg/boot lifts for this pose: bend knee gently forward toward right, its boot rises ONE boot-height above ground, connected to its ORIGINAL screen-right hip under robe. SCREEN-LEFT boot remains planted under its original hip; supporting leg straightens and weight shifts slightly onto it. Do not exchange boots or mirror body. Right anatomical hand screen LEFT still holds full vertical antler staff; staff bottom stays near planted supporting boot at ground. Left anatomical hand screen RIGHT still holds top ring of THREE censer chains and hanging bowl with THREE pendants, held low as reference not swung or raised. Exactly two legs, one planted foot, one lifted foot; reveal enough boot to read off-ground support change. Keep full antlers, shaft, bowl, charms and both feet inside wide margins. Flat pure RGB0,255,0 backdrop no spill, no floor/shadow/text/effects/extra objects.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/standing-reference-light.png",
+          "sha256": "8a0bda0d694cb19e357cd75c3f4d754375f4f098eff211b40654bb8e54401767"
+        }
+      ]
+    }
+  ],
+  "review_notes": [
+    "Original poses.png and prior alpha/poses.png are both RGB checkerboard; prior extraction is unselected, not transparency. Approved connected neutral extraction plus51 explicit enclosed-gap seeds prepares original without redrawing pale-green skin, ivory antlers or gold charms.",
+    "Two independent fixed-reference foot lifts retain same staff/censer hands and create alternate planted support. Existing original melee/casting/guard/hit/death poses reused; repeated original contact/gait and spare prone corpse excluded.",
+    "Short-step movement candidate, not accepted translated gait. Full staff/antler scale, grips, chain attachment/count, pendants, robe/face continuity, edges and action/death timing remain for whole-roster refinement."
+  ],
+  "validation": "No tests/imports/exports; full160 production/refinement before one consolidated gameplay/repository/Linux/Windows pass. Built-in tool only; no paid API.",
+  "runtime_candidate": "art/animation/runtime/poses/unit_mireclaw_sporewake_chanters.png",
+  "runtime_sha256": "5940b69d61cbfb8c133b0b8449dbdedb024c58933c69d3e2784e05ac1cab1b1e",
+  "packing": "packing.json",
+  "preparation": "continuity-cutouts.json"
+}

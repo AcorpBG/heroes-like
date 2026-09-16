@@ -1,0 +1,161 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_lancers",
+  "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/candidate-atlas.png",
+  "sha256": "f6382dd8433fd39436dc6367eab360cf1b333167f1f07f597d594205b178930c",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        192,
+        15,
+        315,
+        240
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        196,
+        15,
+        316,
+        240
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        200,
+        13,
+        313,
+        238
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        195,
+        15,
+        304,
+        240
+      ]
+    },
+    {
+      "name": "walk_planted_bridge",
+      "index": 4,
+      "alpha_bounds": [
+        179,
+        12,
+        320,
+        239
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        171,
+        7,
+        294,
+        240
+      ]
+    },
+    {
+      "name": "melee_forward_windup",
+      "index": 6,
+      "alpha_bounds": [
+        145,
+        78,
+        396,
+        240
+      ]
+    },
+    {
+      "name": "melee_full_shaft_thrust",
+      "index": 7,
+      "alpha_bounds": [
+        161,
+        85,
+        455,
+        240
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        169,
+        16,
+        342,
+        240
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        181,
+        18,
+        320,
+        239
+      ]
+    },
+    {
+      "name": "hit_corrected_hand",
+      "index": 10,
+      "alpha_bounds": [
+        155,
+        35,
+        330,
+        240
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 11,
+      "alpha_bounds": [
+        152,
+        65,
+        327,
+        249
+      ]
+    },
+    {
+      "name": "death_forward_fall",
+      "index": 12,
+      "alpha_bounds": [
+        125,
+        119,
+        377,
+        239
+      ]
+    },
+    {
+      "name": "dead_equipped",
+      "index": 13,
+      "alpha_bounds": [
+        124,
+        161,
+        382,
+        243
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses.png": "7e3b2cdd97a3b3d030c4bfd01d5bfcd7dbe477b7425624d918828125e88f9e18",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/walk-contact-draft.png": "65fb041523d2edbb02c428dd413b7695a40b5ee9ababfc38b45bd96654c4e79f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/walk-passing-draft.png": "4303a891854beb5a4ddf7b40447b633327df3e74a71bba52a7923a8a4a5ded01",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/guided-opposite-step-and-guard.png": "62925c80253fa3b0b7a95fb89548d6d1a30739a15b24fffd5cf9adc33d9acd5d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-windup-corrected.png": "0439892d5a7a4d933c1a736438ae1024315e501f512162b7333ab1753d3b8eba",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-thrust-shaft-corrected.png": "45a234d6767b72de1c892a48fce5f12f5bdbddf2b1a58bed8ce343fa91fa7d14",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/poses-hit-hand-corrected.png": "4c8b1d31b3f62758cfdb1f0c094307d3a538c06a4cbab88a189ff2ab3e580655",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/fall-side-draft.png": "44a50189df87e9bbb84e14898022f1f4f1143ca86ccaaff8c1bd34f51ba203f3"
+  }
+}

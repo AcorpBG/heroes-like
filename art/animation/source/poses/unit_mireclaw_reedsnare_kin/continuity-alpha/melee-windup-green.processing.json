@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source paintings and exact parameters, no synthesized poses.",
+  "id": "reedsnare-melee-windup-green",
+  "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/melee-windup-green.png",
+  "source_sha256": "9ac0ffb43999bbb77bb768be09fcdd37f5481eabb229a23c431dee763b3751c3",
+  "source_rect": [
+    0,
+    0,
+    1210,
+    1300
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/melee-windup-green.png",
+  "output_sha256": "bf1b2c792d9fa86f03d628076a6d05259bb95583efd1148a2ee3d677a7fb6736",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-cutouts.json",
+  "recipe_sha256": "d23eaba7c21f5658264e2f8b1adde2de5f64fb1c23337dc1041b0b5bc70c2ea4",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1055853,
+    "edge_pixels": 10689,
+    "unchanged_paint_pixels": 506458,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

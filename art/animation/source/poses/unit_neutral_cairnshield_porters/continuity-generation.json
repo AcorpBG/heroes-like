@@ -1,0 +1,29 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_cairnshield_porters",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "shield-recovery-brace-and-fall",
+      "source": "art/animation/source/poses/unit_neutral_cairnshield_porters/shield-recovery-brace-and-fall.png",
+      "sha256": "45142354567ee5bb21d173f355813ee02ba12e7fa5b98c3124fc73c2b4f0ee48",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d966f0e3-cf6a-4a97-a7db-357617984214.png",
+      "prompt": "Use case: stylized-concept. Asset type: three original painted battle-animation poses, THREE rows ONE column with broad empty gutters. Input image is sole original identity/equipment reference. Preserve this powerful stocky Cairnshield Porter woman: black hair bun, ochre padded tabard with blue geometric borders/scarf, gray wool/fur and trousers, metal bracers, heavy boots, giant wood-frame backpack with blue bedroll, rope/sacks/pots, tall rectangular stone-and-wood slab shield with iron bands and ropes. Same elevated three-quarter battle camera; no separate weapon. Top: after a shield bash toward screen RIGHT, she draws the upright shield back to chest, elbows bent, torso straightening, weight centered between two planted boots; both hands brace the rear grips. Middle: upright defensive-ready stance facing RIGHT, shield upright slightly ahead of chest, both hands secure, feet planted, preparing to crouch. Bottom: distinct intermediate collapse between kneeling and lying head-left: hips and folded knees grounded, torso tipping DOWN toward screen LEFT, cheek not yet grounded, lower shoulder near the horizontal shield, one elbow folds to break the fall; backpack stays strapped behind torso, whole shield begins settling flat beside hands. Match identity/materials/palette, full pack/shield/boots, same body scale in every row. Do not flip the pack or invent gear/limbs. Original painterly raster, uniform pure green #00FF00 background without spill, no cast shadows, text, grid, scenery, gore, effects or copied game art.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/cairnshield-continuity-20260916/idle-reference/unit_neutral_cairnshield_porters-poses-rect-0-0-307-430-light.png",
+          "sha256": "2dd41ed4b5a00e563a1f48c36db2798e3fb663da57310f953a8d1060af3bc041"
+        }
+      ],
+      "selection_notes": "13 frames retain ten original paintings and select three new shield-bash recovery, ready brace and low side-fall paintings. Shield-only melee and heavy expedition pack remain; new fall supplies a distinct intermediate before the head-left resting corpse. Original alpha composites are clean and reused. New green-backed art uses approved bounded preparation. Old source uses 0.50 uniform scale; new standing poses 0.38 and enlarged source fall 0.27 based on body/head comparison, not silhouette-box normalization or distortion. Banded crops exclude neighboring corpse/shield fragments while retaining own pack and boots. Walking contact/passing repeats leg ownership and does not establish full alternating gait. Shield hand/orientation, pack/body proportion, edges/palette and connected collapse/action timing need whole-roster refinement. Static production review is not motion/gameplay acceptance.",
+      "selected_frames": [
+        "shield_bash_recovery",
+        "guard_ready",
+        "death_low_fall"
+      ]
+    }
+  ]
+}

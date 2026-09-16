@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "barrel-maul-recovery-ready-and-passing-step",
+      "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/barrel-maul-recovery-ready-and-passing-step.png",
+      "source_sha256": "ecac9517e6fcf4471a50600acdccb6cb3b7eb84d38a68cb9c09ee4f624603a67",
+      "output": "art/animation/source/poses/unit_neutral_bogbell_mauls/continuity-alpha/barrel-maul-recovery-ready-and-passing-step.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

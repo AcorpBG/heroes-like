@@ -1,0 +1,155 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+  "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/candidate-atlas.png",
+  "sha256": "fa8094207f0d8bc8e058be2e637c18a11e07d8999e4b74d4344a3f71f135485c",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        120,
+        34,
+        385,
+        242
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        125,
+        34,
+        382,
+        242
+      ]
+    },
+    {
+      "name": "creep_front_lift",
+      "index": 2,
+      "alpha_bounds": [
+        137,
+        32,
+        375,
+        242
+      ]
+    },
+    {
+      "name": "creep_middle_lift",
+      "index": 3,
+      "alpha_bounds": [
+        139,
+        40,
+        371,
+        240
+      ]
+    },
+    {
+      "name": "creep_rear_lift",
+      "index": 4,
+      "alpha_bounds": [
+        133,
+        34,
+        366,
+        242
+      ]
+    },
+    {
+      "name": "attack_windup",
+      "index": 5,
+      "alpha_bounds": [
+        121,
+        37,
+        387,
+        243
+      ]
+    },
+    {
+      "name": "melee_shove",
+      "index": 6,
+      "alpha_bounds": [
+        137,
+        42,
+        381,
+        242
+      ]
+    },
+    {
+      "name": "ranged_telescoped_recoil",
+      "index": 7,
+      "alpha_bounds": [
+        132,
+        42,
+        374,
+        242
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        132,
+        66,
+        375,
+        241
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        140,
+        65,
+        369,
+        240
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        119,
+        49,
+        388,
+        241
+      ]
+    },
+    {
+      "name": "death_buckle",
+      "index": 11,
+      "alpha_bounds": [
+        124,
+        65,
+        385,
+        244
+      ]
+    },
+    {
+      "name": "death_settle",
+      "index": 12,
+      "alpha_bounds": [
+        118,
+        99,
+        384,
+        237
+      ]
+    },
+    {
+      "name": "dead_operator_and_wreck",
+      "index": 13,
+      "alpha_bounds": [
+        129,
+        106,
+        385,
+        248
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/poses-quiet-vents.png": "5a197782b513e6d40742781f672b9d438b13aa31037a13ac6747deeb61c70628",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_whitegauge_datum_breach_cannons/continuity-alpha/supported-creep-melee-recoil.png": "2c30a36f88bd7327efa6d369714e2c07549c438935c691a4e1d57903eae24009"
+  }
+}

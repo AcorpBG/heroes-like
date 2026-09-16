@@ -1,0 +1,136 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_furnace_pavis_teams",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "walk-3",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/walk-3.png",
+      "source_sha256": "8ef5e22219b90670180706717b6849fbc70b988085ec7780d925c5b34ce47c1b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-59def69a-cb50-4fb1-a928-70b82e588c2d.png",
+      "prompt": "Use case: identity-preserve. Asset type: original painted battle sprite, ONE full-body pose. Image 1 is the fixed identity/equipment reference; Image 2 is ONLY an anatomical walking guide, never render its lines/colors/text. ONE Furnace Pavis soldier, dark blue facewrap/scarf/quilted sleeves, black iron brass helmet, iron breastplate, brass shoulders and knee plates, brown apron and boots. LEFT forearm carries the very tall rectangular iron furnace pavise: brass rim/rivets, upper horizontal orange slit, lower vertical vents, black top pipe handle. RIGHT hand grips one full-height hooked crescent pole, long dark shaft with brass ferrules. Same human body, shield dimensions, full pole length and hand ownership. Paint the same soldier in this exact walking phase: The farther LEFT leg (ORANGE guide) is straight and supports weight with its boot directly below pelvis. The FOREGROUND RIGHT leg attached viewer-left hip (BLUE guide) swings forwards towards screen RIGHT with the near knee visibly raised and lower leg folded back; its boot is off the ground in front of the support shin. Feet close, not wide contact. Keep upper-body three-quarter camera facing screen RIGHT unchanged, face looking right. Equipment stays in original hands and original carry attitude; shield remains raised enough above ground to expose both boots, full upright pole floats just above floor without shortening. Pose is an actual articulated repaint, not mirrored or shifted copy. Transparent RGBA background with no checkerboard, scenery, ground shadow or reference-color backing. Full helmet, all gear, both boots in frame with ample margins; no text, effects, extras or amputations. Match original painted palette, brushwork and body proportions.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/identity-reference.png",
+          "sha256": "d7da94bb31cc209e40b063cb99a74b95a59e9cc259c75c4304c87ffbd03c7595"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Selected as candidate; motion/body/equipment continuity pending."
+    },
+    {
+      "id": "walk-1",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/walk-1.png",
+      "source_sha256": "d72af9d3adfccd9a3fdc60f52f737545a6563f805ef7dbc121706b4c3bdb963c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3db99e6c-f4fe-4bc0-acb8-c7f149422c36.png",
+      "prompt": "Use case: identity-preserve. Asset type: original painted battle sprite, ONE full-body pose. Image 1 is the fixed identity/equipment reference; Image 2 is ONLY an anatomical walking guide, never render its lines/colors/text. ONE Furnace Pavis soldier, dark blue facewrap/scarf/quilted sleeves, black iron brass helmet, iron breastplate, brass shoulders and knee plates, brown apron and boots. LEFT forearm carries the very tall rectangular iron furnace pavise: brass rim/rivets, upper horizontal orange slit, lower vertical vents, black top pipe handle. RIGHT hand grips one full-height hooked crescent pole, long dark shaft with brass ferrules. Same human body, shield dimensions, full pole length and hand ownership. Paint the same soldier in this exact walking phase: The FOREGROUND RIGHT leg on viewer-left hip (BLUE guide) is straight and supports all weight, boot planted directly below pelvis. The farther LEFT thigh swings forward towards screen RIGHT and its knee flexes, its heel off ground and ankle folded beneath pelvis. Feet are close in passing, not a wide contact stance. Keep upper-body three-quarter camera facing screen RIGHT unchanged, face looking right. Equipment stays in original hands and original carry attitude; shield remains raised enough above ground to expose both boots, full upright pole floats just above floor without shortening. Pose is an actual articulated repaint, not mirrored or shifted copy. Transparent RGBA background with no checkerboard, scenery, ground shadow or reference-color backing. Full helmet, all gear, both boots in frame with ample margins; no text, effects, extras or amputations. Match original painted palette, brushwork and body proportions.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/identity-reference.png",
+          "sha256": "d7da94bb31cc209e40b063cb99a74b95a59e9cc259c75c4304c87ffbd03c7595"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Selected as candidate; motion/body/equipment continuity pending."
+    },
+    {
+      "id": "walk-2",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/walk-2.png",
+      "source_sha256": "eae327943ef0454594517ae6e579d6fc58ef921e5a103cfcfc6bb16083db15c5",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3e6061cd-07f0-4c4a-839a-706109e00798.png",
+      "prompt": "Use case: identity-preserve. Asset type: original painted battle sprite, ONE full-body pose. Image 1 is the fixed identity/equipment reference; Image 2 is ONLY an anatomical walking guide, never render its lines/colors/text. ONE Furnace Pavis soldier, dark blue facewrap/scarf/quilted sleeves, black iron brass helmet, iron breastplate, brass shoulders and knee plates, brown apron and boots. LEFT forearm carries the very tall rectangular iron furnace pavise: brass rim/rivets, upper horizontal orange slit, lower vertical vents, black top pipe handle. RIGHT hand grips one full-height hooked crescent pole, long dark shaft with brass ferrules. Same human body, shield dimensions, full pole length and hand ownership. Paint the same soldier in this exact walking phase: The FOREGROUND RIGHT leg attached viewer-left hip (BLUE guide) trails clearly BACK towards screen LEFT, toe on ground. The farther LEFT leg (ORANGE guide) extends FORWARD towards screen RIGHT and heel lands. Show both legs separately down to their boots; do not substitute the usual nearer leg forward. Keep upper-body three-quarter camera facing screen RIGHT unchanged, face looking right. Equipment stays in original hands and original carry attitude; shield remains raised enough above ground to expose both boots, full upright pole floats just above floor without shortening. Pose is an actual articulated repaint, not mirrored or shifted copy. Transparent RGBA background with no checkerboard, scenery, ground shadow or reference-color backing. Full helmet, all gear, both boots in frame with ample margins; no text, effects, extras or amputations. Match original painted palette, brushwork and body proportions.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/identity-reference.png",
+          "sha256": "d7da94bb31cc209e40b063cb99a74b95a59e9cc259c75c4304c87ffbd03c7595"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Selected as candidate; motion/body/equipment continuity pending."
+    },
+    {
+      "id": "near-contact-unfolded",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/near-contact-unfolded.png",
+      "source_sha256": "2149829940f44b730282a5ba32b3074df0047f256b1125598cf143c8600db3a7",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c11fd51f-992c-4b78-80a1-e05a1d5a31ea.png",
+      "prompt": "Use case: precise-object-edit. Image1 is edit target. Output ONE full-body original battle sprite of exactly this soldier, same camera and torso facing RIGHT. Change ONLY the two legs to unfold the already lifted FOREGROUND RIGHT leg into its forward heel-strike: keep that exact visible near thigh connected to its hip, extend its shin and boot FORWARD toward screen RIGHT so its brass-capped heel lands well in front of the body; the currently supporting farther LEFT leg now trails behind toward screen LEFT with toe touching ground. The nearer leg must be the forward leg, opposite to a pose with the shield-side leg forward. Preserve all upper-body pixels/identity as closely as possible, helmet/face, torso, shield scale, hand ownership, entire tall hooked pole in near RIGHT hand upright, tall LEFT furnace shield with orange slit and top handle. Don't turn or mirror torso; do not swap hands or bend into a crouch. Keep full body/tool inside ample margins, exact painted style. Transparent RGBA background, no checkerboard, shadows, text, effects or added objects.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/walk-3.png",
+          "sha256": "8ef5e22219b90670180706717b6849fbc70b988085ec7780d925c5b34ce47c1b"
+        }
+      ],
+      "selected": false,
+      "selection_note": "Excluded: duplicated knee armor/ambiguous leg anatomy."
+    },
+    {
+      "id": "near-contact-guide-first",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/near-contact-guide-first.png",
+      "source_sha256": "f8e7e7064091023d77eec866ef03d70fefa78837d73852af676850d0e0c4792f",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-84b06879-7a9a-499a-bc48-e8a7c47cd9b6.png",
+      "prompt": "Use case: sketch-to-render. Image1 is the authoritative POSE TARGET. Image2 provides ONLY the soldier's appearance and equipment, NOT its leg pose. Paint ONE original complete battle sprite matching Image1 leg skeleton exactly: BLUE near/right leg connects viewer-left hip to a knee forward screen RIGHT then shin and forward heel; ORANGE farther left leg trails screen LEFT. Exactly TWO THIGHS, TWO KNEES, TWO SHINS and TWO BOOTS. Each leg has ONLY ONE knee plate, no doubled knee, no ghost limb, no disconnected foot. Render ONE Furnace Pavis soldier, dark blue facewrap/scarf/quilted sleeves, black iron brass helmet, iron breastplate, brass shoulders and knee plates, brown apron and boots. LEFT forearm carries the very tall rectangular iron furnace pavise: brass rim/rivets, upper horizontal orange slit, lower vertical vents, black top pipe handle. RIGHT hand grips one full-height hooked crescent pole, long dark shaft with brass ferrules. Same human body, shield dimensions, full pole length and hand ownership. Retain three-quarter RIGHT-facing torso, original near right hand full hooked pole held upright and far left shield, same proportions and painted style. Body must stand tall in a walking contact, not crouch or high-step. Guide colors, lines and text are authoring-only: NEVER draw them. True transparent RGBA background, no shadow/checkerboard/scenery/effects. Include complete gear/body with margin.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+        },
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/identity-reference.png",
+          "sha256": "d7da94bb31cc209e40b063cb99a74b95a59e9cc259c75c4304c87ffbd03c7595"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Candidate only: traced contact/limb ownership is not yet reliable. Do not infer successful alternating gait from prompt/filename."
+    },
+    {
+      "id": "guard-braced",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/guard-braced.png",
+      "source_sha256": "1436ffbccf2d6999834d07a8dc43be3a84cca3f2efbce7815bec3cfedc3c8805",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9eac8dfe-8e7e-4093-b077-f88bda01153b.png",
+      "prompt": "Use case: identity-preserve. ONE full-body original painted defensive sprite. Image1 fixed identity/equipment, Image2 row2 column4 defensive pose is the pose reference. Paint a second breathing/bracing beat of that crouched guard: same bent knees and planted feet, torso subtly presses forward behind shield and right elbow flexes slightly. ONE Furnace Pavis soldier, dark blue facewrap/scarf/quilted sleeves, black iron brass helmet, iron breastplate, brass shoulders and knee plates, brown apron and boots. LEFT forearm carries the very tall rectangular iron furnace pavise: brass rim/rivets, upper horizontal orange slit, lower vertical vents, black top pipe handle. RIGHT hand grips one full-height hooked crescent pole, long dark shaft with brass ferrules. Same human body, shield dimensions, full pole length and hand ownership. Keep original left shield dimensions and full LONG hooked pole upright close in near RIGHT hand, one soldier only. Exactly two connected legs with one knee each, full gear retained, face/head oriented RIGHT from same three-quarter camera. No extra limbs or weapon truncation. Original brass/dark painted rendering, generous full-body margins; transparent RGBA, no checkerboard, colored background, text, effects, ground shadow or scenery.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/identity-reference.png",
+          "sha256": "d7da94bb31cc209e40b063cb99a74b95a59e9cc259c75c4304c87ffbd03c7595"
+        },
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/poses.png",
+          "sha256": "996f31e0d62979fb54c1122bb40c03be05e3739110226c8c3b03acd959184247"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Selected as candidate; motion/body/equipment continuity pending."
+    },
+    {
+      "id": "full-pole-attack-pair",
+      "source": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/full-pole-attack-pair.png",
+      "source_sha256": "2f3f9e88cf9768abcca667925a5c08e06408e79d8f2ee96637a4ba1774ed5452",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c1d2df54-91ba-4a6c-95b3-544cabc09194.png",
+      "prompt": "Use case: identity-preserve. Asset TWO original painted battle attack sprites side by side, wide canvas, generous gutters. Image1 fixed identity: ONE armored Furnace Pavis soldier per pose, blue facewrap/sleeves, black brass helmet, breastplate, apron, brass knees and boots, LEFT arm holds full-height furnace pavise with brass rim horizontal orange slit lower vents top pipe handle. RIGHT hand wields a LONG crescent-hooked pole. Pole total length equals standing soldier height and MUST remain this same length in both poses. Left pose WINDUP: right hand grips center of full pole above near shoulder; hook head at upper LEFT of soldier, long shaft runs behind raised wrist toward upper RIGHT ending in brass cap, keep the entire rear shaft visible above shield. Bent legs preparing forward strike. Right pose CONTACT: right arm extended across chest toward RIGHT, the pole is horizontal pointing RIGHT, big crescent hook at far RIGHT end; right hand grips middle, long butt section extends back to screen LEFT behind wrist, fully visible. Do not shrink weapon into a short axe. LEFT furnace shield stays on left forearm forward protecting torso in both. Same body/shield/pole/head size, three-quarter RIGHT-facing camera and painted palette. Exactly two arms and legs per soldier. Full uncropped pole from butt to hook inside each separate pose with wide blank margin; same body scale both. Transparent RGBA, no checkerboard, background, effects, text, ground shadow or extras.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/identity-reference.png",
+          "sha256": "d7da94bb31cc209e40b063cb99a74b95a59e9cc259c75c4304c87ffbd03c7595"
+        }
+      ],
+      "selected": true,
+      "selection_note": "Selected as candidate; motion/body/equipment continuity pending."
+    }
+  ],
+  "selection_note": "Seven new paintings from six selected outputs; seven original paintings retained. Unfolded duplicate-knee draft excluded. Full pole restored but pole/guard/body scale and contact ownership remain refinement."
+}

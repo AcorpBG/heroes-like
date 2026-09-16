@@ -1,0 +1,106 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "creep-guard-and-collapse",
+  "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/creep-guard-and-collapse.png",
+  "source_sha256": "98d23421c5c060a94472d65726e85e91b50aabdf0676970ce8904a0523ffa77c",
+  "source_rect": [
+    0,
+    0,
+    1312,
+    1199
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-alpha/creep-guard-and-collapse.png",
+  "output_sha256": "577b8e503803cf2f7ccdc4a82d1d9345e62f5ff88c4c8d2217cfab5aba58cdeb",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-cutouts.json",
+  "recipe_sha256": "136769e7deb364600e1bdca1ba34431f2430fa6c2e84c59c8a12eb1ce34be570",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        196,
+        137
+      ],
+      [
+        284,
+        132
+      ],
+      [
+        369,
+        194
+      ],
+      [
+        138,
+        267
+      ],
+      [
+        133,
+        414
+      ],
+      [
+        621,
+        130
+      ],
+      [
+        701,
+        130
+      ],
+      [
+        801,
+        208
+      ],
+      [
+        558,
+        423
+      ],
+      [
+        235,
+        724
+      ],
+      [
+        361,
+        817
+      ],
+      [
+        130,
+        1000
+      ],
+      [
+        651,
+        832
+      ],
+      [
+        155,
+        360
+      ],
+      [
+        361,
+        188
+      ],
+      [
+        790,
+        191
+      ],
+      [
+        158,
+        927
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 831279,
+    "edge_pixels": 15190,
+    "unchanged_paint_pixels": 726619,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

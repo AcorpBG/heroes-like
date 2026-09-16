@@ -1,0 +1,113 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_neutral_charcoal_mauls",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "source": "maul-recovery-ready-and-passing.png",
+      "source_sha256": "dded815720a1043dcf629e6f981386b3aa46c97f2496b24d1cbe8c6273ce95b7",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-03862ea9-8be1-4ea8-9a34-ba59b7033406.png",
+      "reference": ".artifacts/battle-unit-animation-size-20260913/charcoal-continuity-20260916/idle-reference/unit_neutral_charcoal_mauls-poses-rect-0-0-374-395-light.png",
+      "reference_sha256": "3e3817fddfdd95551ceef31624db4b33634a3c49e8ad646dae42e46fe6136b01",
+      "prompt": "Use case: stylized-concept. Asset type: original Charcoal Maul battle animation additions. Image 1 is fixed identity/equipment/paint reference. THREE full-body poses in ONE horizontal row, generous gutters, same body size and elevated three-quarter view facing RIGHT. Preserve broad stocky dark-bearded man black headband small red rune, dark riveted plate armor, red scarf/wrist/shin wraps, dirty ash-beige long forge apron dark geometric marks, heavy iron boots and attached charcoal basket at screen-RIGHT hip. BOTH hands retain same long iron maul shaft, red grip wraps, circular butt ring at LEFT and double-block stone/iron head at RIGHT with narrow ember seam. Show COMPLETE maul ring/head in all poses, two separate gripping hands with bare shaft between, do not fuse hands or change shaft length. LEFT: recover from downward blow, torso still slightly leaning right, bend elbows to lift the low head toward hip height on RIGHT, right hand near rear ring and left hand forward nearer head. MIDDLE: ready protective stance knees slightly bent, shaft horizontal across upper abdomen/chest and head right, shoulders settle, two separate hands. RIGHT: walking PASSING, one heavy boot planted under hips, other knee flexed and boot lifted off ground under body rather than a wide split stride; maul carried low clear of knees, basket visibly stays attached at right hip. Same weathered muted painterly original art, no restyling. Flat opaque pure magenta RGB255,0,255, no color reflection/floor shadow. No text/grid/effects/blood/smoke/scenery or extra equipment.",
+      "selection_note": "Selected first recovery and second readiness after approved chroma preparation. Third attempted passing repeats contact/unclear support and is unselected; guided separate painting supplies passing."
+    },
+    {
+      "source": "guided-planted-passing-step.png",
+      "source_sha256": "1c8f60ebcbc2cb0bd3696c3659af109a6d85476b51405e56465bf8d11b076633",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6623fb0c-0fbe-4707-9e96-4cba3a66835c.png",
+      "references": [
+        {
+          "path": ".artifacts/battle-unit-animation-size-20260913/charcoal-continuity-20260916/passing-guide/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": ".artifacts/battle-unit-animation-size-20260913/charcoal-continuity-20260916/idle-reference/unit_neutral_charcoal_mauls-poses-rect-0-0-374-395-light.png",
+          "sha256": "3e3817fddfdd95551ceef31624db4b33634a3c49e8ad646dae42e46fe6136b01"
+        }
+      ],
+      "prompt": "Use case: sketch-to-render. Asset type: one original Charcoal Maul battle movement pose. Image 1 is the PRIMARY POSE GUIDE, image 2 the fixed character/equipment identity reference. Replace the diagram with fully painted raster art, following the guide leg joints, NOT the neutral reference leg stance. ONE full-body stocky bearded maul carrier facing RIGHT in passing: guide BLUE near leg almost vertically planted under pelvis, sole FLAT; guide ORANGE far knee bends forward and far boot folds back and lifts clearly off ground below the knee. Feet must not be in a long split contact stride, no two hovering boots. Preserve muscular thick body, apron, dark plate armor, red scarf/wraps, headband/rune, attached charcoal basket visible at screen-right hip. Two separate hands on original complete long iron maul, circular butt ring LEFT, double block ember-seam head RIGHT, carried at abdomen clear of knees. Same subdued painterly style and proportions as image2, no blue/orange diagram colors or guide lines/labels in artwork. Entire head, feet, maul ring/head and basket in frame with generous margin. Flat opaque pure magenta RGB255,0,255 background, no reflected color or floor shadow. No scenery/particles/effects/additional equipment.",
+      "selection_note": "Select guided passing candidate: one planted boot and one lifted boot. Full alternating support cycle remains unproven; original requested-passing strip pose is unselected."
+    }
+  ],
+  "retained_original_alpha": {
+    "source": "alpha/poses.png",
+    "sha256": "2405ed14950563ebc07a14baf83e30f239ef306d2f023ede3a7de7ff68a77114"
+  },
+  "selected_frames": [
+    {
+      "index": 0,
+      "name": "idle_a",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 1,
+      "name": "idle_b",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 2,
+      "name": "walk_contact",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 3,
+      "name": "guided_passing",
+      "source": "continuity-alpha/guided-planted-passing-step.png"
+    },
+    {
+      "index": 4,
+      "name": "maul_overhead_windup",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 5,
+      "name": "maul_downward_strike",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 6,
+      "name": "maul_recovery",
+      "source": "continuity-alpha/maul-recovery-ready-and-passing.png"
+    },
+    {
+      "index": 7,
+      "name": "maul_ready_guard",
+      "source": "continuity-alpha/maul-recovery-ready-and-passing.png"
+    },
+    {
+      "index": 8,
+      "name": "maul_deep_guard",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 9,
+      "name": "hit_recoil",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 10,
+      "name": "death_kneel",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 11,
+      "name": "death_side_fall",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 12,
+      "name": "dead_head_left_dark_maul",
+      "source": "alpha/poses.png"
+    }
+  ],
+  "review_notes": [
+    "13 packed frames retain ten original paintings and select three new paintings: two-hand maul recovery, readiness and a guided planted passing step. Original overhead/downward strike, deep guard, hit and three head-left collapse/corpse states remain; final maul seam is dark.",
+    "The first three-pose output repeated a contact/unclear support instead of passing in its third pose, retained unselected. The subsequent passing output used a single phase authoring-only guide first and fixed original idle reference second. The guide is not shipped art; no local pose synthesis.",
+    "Approved bounded magenta cutouts and uniform scales 0.57/0.31/0.18 preserve paint. Inspected crop bands separate neighboring boots/maul ends without losing the overhead gripping hand. Complete atlas visually inspected.",
+    "Candidate only: full alternating gait, body mass, maul shaft/head/butt and basket/hand contact continuity, palette/edges and connected timing remain refinement. No automated/import/gameplay/Linux/Windows acceptance."
+  ]
+}

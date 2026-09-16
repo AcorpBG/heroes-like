@@ -1,0 +1,566 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative matte/edge cleanup; preserve source paint, original masters and exact recipes.",
+  "jobs": [
+    {
+      "id": "mireglass-original-checker",
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/poses.png",
+      "source_sha256": "e89407d9f1a69636249ca3fdf23319ea7868edcb3f4d4ef1da8a5fb751d2e653",
+      "output": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/original.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 110,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            116,
+            42
+          ],
+          [
+            116,
+            55
+          ],
+          [
+            277,
+            99
+          ],
+          [
+            288,
+            110
+          ],
+          [
+            259,
+            137
+          ],
+          [
+            62,
+            112
+          ],
+          [
+            167,
+            123
+          ],
+          [
+            43,
+            129
+          ],
+          [
+            87,
+            157
+          ],
+          [
+            272,
+            173
+          ],
+          [
+            422,
+            61
+          ],
+          [
+            568,
+            116
+          ],
+          [
+            495,
+            110
+          ],
+          [
+            551,
+            144
+          ],
+          [
+            395,
+            161
+          ],
+          [
+            408,
+            256
+          ],
+          [
+            375,
+            367
+          ],
+          [
+            446,
+            360
+          ],
+          [
+            349,
+            360
+          ],
+          [
+            379,
+            376
+          ],
+          [
+            438,
+            378
+          ],
+          [
+            461,
+            387
+          ],
+          [
+            472,
+            380
+          ],
+          [
+            534,
+            409
+          ],
+          [
+            424,
+            440
+          ],
+          [
+            417,
+            452
+          ],
+          [
+            373,
+            491
+          ],
+          [
+            425,
+            494
+          ],
+          [
+            407,
+            566
+          ],
+          [
+            771,
+            397
+          ],
+          [
+            797,
+            407
+          ],
+          [
+            673,
+            418
+          ],
+          [
+            665,
+            425
+          ],
+          [
+            711,
+            440
+          ],
+          [
+            758,
+            421
+          ],
+          [
+            751,
+            469
+          ],
+          [
+            690,
+            539
+          ],
+          [
+            1162,
+            375
+          ],
+          [
+            1164,
+            405
+          ],
+          [
+            1034,
+            378
+          ],
+          [
+            1041,
+            385
+          ],
+          [
+            1029,
+            398
+          ],
+          [
+            1189,
+            455
+          ],
+          [
+            1007,
+            483
+          ],
+          [
+            992,
+            523
+          ],
+          [
+            1008,
+            532
+          ],
+          [
+            1133,
+            533
+          ],
+          [
+            731,
+            705
+          ],
+          [
+            711,
+            712
+          ],
+          [
+            869,
+            794
+          ],
+          [
+            683,
+            779
+          ],
+          [
+            773,
+            777
+          ],
+          [
+            892,
+            793
+          ],
+          [
+            865,
+            817
+          ],
+          [
+            689,
+            810
+          ],
+          [
+            663,
+            817
+          ],
+          [
+            794,
+            829
+          ],
+          [
+            151,
+            999
+          ],
+          [
+            168,
+            996
+          ],
+          [
+            292,
+            1046
+          ],
+          [
+            277,
+            1066
+          ],
+          [
+            178,
+            1074
+          ],
+          [
+            195,
+            1080
+          ],
+          [
+            445,
+            1110
+          ],
+          [
+            356,
+            1129
+          ],
+          [
+            549,
+            1191
+          ],
+          [
+            521,
+            1190
+          ],
+          [
+            355,
+            1178
+          ],
+          [
+            354,
+            1195
+          ],
+          [
+            526,
+            1209
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mireglass-hit-checker",
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/poses-hit-grip.png",
+      "source_sha256": "768bff94d9832cd456484a0a6fe6094fd3edf09e93894e00994596b0f136ee4d",
+      "output": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/hit.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 110,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            1164,
+            715
+          ],
+          [
+            1179,
+            719
+          ],
+          [
+            1161,
+            746
+          ],
+          [
+            1190,
+            772
+          ],
+          [
+            1071,
+            776
+          ],
+          [
+            1005,
+            758
+          ],
+          [
+            994,
+            815
+          ],
+          [
+            1030,
+            875
+          ],
+          [
+            1120,
+            838
+          ],
+          [
+            1158,
+            747
+          ],
+          [
+            959,
+            834
+          ],
+          [
+            1016,
+            842
+          ],
+          [
+            1000,
+            855
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mireglass-fall-checker",
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/poses-fall-globes-dim.png",
+      "source_sha256": "eccdcd74dca299a8ef99cfaebe1d4fba628a62d3308be2915e5b4c91bf57d2ef",
+      "output": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/fall.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 110,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            783,
+            1139
+          ],
+          [
+            861,
+            1164
+          ],
+          [
+            819,
+            1163
+          ],
+          [
+            754,
+            1153
+          ],
+          [
+            819,
+            1170
+          ],
+          [
+            643,
+            1100
+          ],
+          [
+            628,
+            1099
+          ],
+          [
+            688,
+            1086
+          ],
+          [
+            730,
+            1052
+          ],
+          [
+            770,
+            1056
+          ],
+          [
+            633,
+            1102
+          ],
+          [
+            639,
+            1102
+          ],
+          [
+            788,
+            1143
+          ],
+          [
+            821,
+            1173
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mireglass-dead-checker",
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/poses-dead-eyes-dark.png",
+      "source_sha256": "a17a176ea8d885a583970d0c18fe968fb68b49be0a2e7973bb4277d29375e0fa",
+      "output": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/dead.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 110,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            994,
+            1096
+          ],
+          [
+            1004,
+            1161
+          ],
+          [
+            1202,
+            1166
+          ],
+          [
+            1160,
+            1168
+          ],
+          [
+            1197,
+            1176
+          ],
+          [
+            1015,
+            1120
+          ],
+          [
+            1100,
+            1080
+          ],
+          [
+            1028,
+            1155
+          ],
+          [
+            1010,
+            1159
+          ],
+          [
+            1160,
+            1166
+          ],
+          [
+            1189,
+            1172
+          ],
+          [
+            1198,
+            1179
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mireglass-step-right-magenta",
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/step-right-magenta.png",
+      "source_sha256": "fd07a9230d5ce5ec6483c97024f67a814067234c004017c489c6946d7759a0e0",
+      "output": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/step-right-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "mireglass-step-left-guided-magenta",
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/step-left-guided-magenta.png",
+      "source_sha256": "e7a5867c91bb23e0283b2d159b15994fcaa2775c810924d98d78db6675bf1c30",
+      "output": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/step-left-guided-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "mireglass-cast-windup-magenta",
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/cast-windup-magenta.png",
+      "source_sha256": "bb2ad6e819f8b8f3486460ada318a1b4fcb27c85bfd33bebeb192f949e4cc851",
+      "output": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/cast-windup-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "mireglass-cast-release-two-hands-magenta",
+      "source": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/cast-release-two-hands-magenta.png",
+      "source_sha256": "3ac5197895d9029d48f72b97acb4b9558f8602c0c7a888ebdd59e332b8e6d2ab",
+      "output": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/continuity-alpha/cast-release-two-hands-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

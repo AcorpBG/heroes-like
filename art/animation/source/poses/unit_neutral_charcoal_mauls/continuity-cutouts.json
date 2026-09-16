@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "maul-recovery-ready-and-passing",
+      "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/maul-recovery-ready-and-passing.png",
+      "source_sha256": "dded815720a1043dcf629e6f981386b3aa46c97f2496b24d1cbe8c6273ce95b7",
+      "output": "art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-alpha/maul-recovery-ready-and-passing.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "guided-planted-passing-step",
+      "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/guided-planted-passing-step.png",
+      "source_sha256": "1c8f60ebcbc2cb0bd3696c3659af109a6d85476b51405e56465bf8d11b076633",
+      "output": "art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-alpha/guided-planted-passing-step.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+  "output": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/candidate-atlas.png",
+  "sha256": "24d92bfefeb3cf7b054c5120e747209f559aa83fddb5e5e5e1fa41a172b6d68b",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        129,
+        28,
+        347,
+        241
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        129,
+        28,
+        350,
+        242
+      ]
+    },
+    {
+      "name": "walk_near_contact",
+      "index": 2,
+      "alpha_bounds": [
+        138,
+        28,
+        354,
+        241
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        128,
+        25,
+        342,
+        239
+      ]
+    },
+    {
+      "name": "walk_far_contact",
+      "index": 4,
+      "alpha_bounds": [
+        139,
+        30,
+        354,
+        239
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        138,
+        26,
+        359,
+        238
+      ]
+    },
+    {
+      "name": "hammer_windup",
+      "index": 6,
+      "alpha_bounds": [
+        160,
+        10,
+        368,
+        239
+      ]
+    },
+    {
+      "name": "hammer_strike",
+      "index": 7,
+      "alpha_bounds": [
+        158,
+        45,
+        396,
+        239
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        138,
+        36,
+        338,
+        239
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        154,
+        33,
+        346,
+        239
+      ]
+    },
+    {
+      "name": "guard_c",
+      "index": 10,
+      "alpha_bounds": [
+        146,
+        41,
+        343,
+        237
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 11,
+      "alpha_bounds": [
+        122,
+        49,
+        357,
+        240
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 12,
+      "alpha_bounds": [
+        169,
+        45,
+        370,
+        242
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 13,
+      "alpha_bounds": [
+        130,
+        68,
+        386,
+        234
+      ]
+    },
+    {
+      "name": "dead_cold",
+      "index": 14,
+      "alpha_bounds": [
+        142,
+        117,
+        372,
+        240
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/poses-quiet-vents.png": "d6eb6c14132e056bdf7640f6fd33cde62ce3d75d4c6d0656783c08aad139e7e7",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-gait-and-guard.png": "b476bef9f1fe004d1988384daa235d94d8824200fd41054aa814743b4a9f57a9",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-far-leg-lift.png": "c37be685923ea369ee54ff6f9f756435786bb6801f96a3d603691627dffaba22"
+  }
+}

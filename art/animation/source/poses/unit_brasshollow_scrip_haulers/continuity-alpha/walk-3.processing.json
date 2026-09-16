@@ -1,0 +1,54 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative background and edge cleanup on 2026-09-15; original masters and interior paint must remain unchanged.",
+  "id": "walk-3",
+  "source": "art/animation/source/poses/unit_brasshollow_scrip_haulers/walk-3.png",
+  "source_sha256": "69052b35e2546051b2ffdd52865afb757256f1a6913e6abfd35a67fa6fcb0b5d",
+  "source_rect": [
+    0,
+    0,
+    1055,
+    1491
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-alpha/walk-3.png",
+  "output_sha256": "68119535e5f396605958c498bc20fffab12df742500065a1b2f87d24f8d82d46",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_scrip_haulers/continuity-cutouts.json",
+  "recipe_sha256": "49d972465737ffd2369a9642270d29471d11bb3b57be6cab8afcd96bbea36b11",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        286,
+        684
+      ],
+      [
+        729,
+        691
+      ],
+      [
+        659,
+        550
+      ],
+      [
+        430,
+        903
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 933022,
+    "edge_pixels": 9495,
+    "unchanged_paint_pixels": 630488,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

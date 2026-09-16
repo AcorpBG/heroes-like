@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "creep-melee-and-guard",
+  "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/creep-melee-and-guard.png",
+  "source_sha256": "131c927cc6371559b242eb45a68aaea4d50e87a5945cc27d7b4c0109f8967b33",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-alpha/creep-melee-and-guard.png",
+  "output_sha256": "0c05e607c8cd4ab1214e02442dc24111b51ebac2911f0b1f1b71828ac5d8f7c8",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-cutouts.json",
+  "recipe_sha256": "ba44eeefaf8e93ff118b1a225a8345213f2e4dec170c75272e903391e34829a7",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 945528,
+    "edge_pixels": 13036,
+    "unchanged_paint_pixels": 614300,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

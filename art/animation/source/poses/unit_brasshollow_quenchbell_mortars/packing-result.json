@@ -1,0 +1,223 @@
+{
+  "unit_id": "unit_brasshollow_quenchbell_mortars",
+  "output": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/candidate-atlas.png",
+  "sha256": "0e7819721682d2003d0da3d41cd9256119fc68231ab298f7f9b00f53559c8d3c",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle",
+      "index": 0,
+      "alpha_bounds": [
+        163,
+        40,
+        362,
+        241
+      ]
+    },
+    {
+      "name": "idle_breath",
+      "index": 1,
+      "alpha_bounds": [
+        158,
+        40,
+        352,
+        241
+      ]
+    },
+    {
+      "name": "attack_windup",
+      "index": 2,
+      "alpha_bounds": [
+        164,
+        48,
+        357,
+        239
+      ]
+    },
+    {
+      "name": "attack_contact",
+      "index": 3,
+      "alpha_bounds": [
+        135,
+        38,
+        352,
+        239
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 4,
+      "alpha_bounds": [
+        165,
+        32,
+        358,
+        236
+      ]
+    },
+    {
+      "name": "loading",
+      "index": 5,
+      "alpha_bounds": [
+        136,
+        34,
+        335,
+        239
+      ]
+    },
+    {
+      "name": "recoil",
+      "index": 6,
+      "alpha_bounds": [
+        143,
+        15,
+        342,
+        243
+      ]
+    },
+    {
+      "name": "recovery",
+      "index": 7,
+      "alpha_bounds": [
+        166,
+        56,
+        357,
+        238
+      ]
+    },
+    {
+      "name": "death_buckle",
+      "index": 8,
+      "alpha_bounds": [
+        154,
+        61,
+        358,
+        252
+      ]
+    },
+    {
+      "name": "death_fall",
+      "index": 9,
+      "alpha_bounds": [
+        159,
+        51,
+        357,
+        240
+      ]
+    },
+    {
+      "name": "death_settle",
+      "index": 10,
+      "alpha_bounds": [
+        154,
+        70,
+        358,
+        241
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 11,
+      "alpha_bounds": [
+        158,
+        115,
+        359,
+        239
+      ]
+    },
+    {
+      "name": "shell_insertion",
+      "index": 12,
+      "alpha_bounds": [
+        142,
+        31,
+        338,
+        239
+      ]
+    },
+    {
+      "name": "loaded_ready_claw_clear",
+      "index": 13,
+      "alpha_bounds": [
+        175,
+        45,
+        341,
+        236
+      ]
+    },
+    {
+      "name": "resupply_reach_empty",
+      "index": 14,
+      "alpha_bounds": [
+        173,
+        37,
+        336,
+        238
+      ]
+    },
+    {
+      "name": "resupply_return_shell",
+      "index": 15,
+      "alpha_bounds": [
+        153,
+        37,
+        339,
+        238
+      ]
+    },
+    {
+      "name": "creep_near_foot_lift",
+      "index": 16,
+      "alpha_bounds": [
+        146,
+        34,
+        331,
+        238
+      ]
+    },
+    {
+      "name": "creep_far_foot_lift",
+      "index": 17,
+      "alpha_bounds": [
+        157,
+        45,
+        349,
+        239
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 18,
+      "alpha_bounds": [
+        156,
+        43,
+        358,
+        238
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 19,
+      "alpha_bounds": [
+        167,
+        48,
+        346,
+        239
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/poses-base.png": "bbeb2a4876cec71a6dc0bf92d7b27fdaa4e426f309f34b82586c792dc56353b0",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/melee-contact.png": "a7146492465439e11dbaf1cb82f65d18fd4d27280e390cddff8645233e73cf01",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/poses-hit-shell.png": "5cffa75066dca26a199631867171a43b71681ea9a31d30fce578a939e663f501",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/loading.png": "51b5eafdb1d987e59f9fef0bb32a035431198f2f3030514d125ea3fb31073658",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/recoil.png": "044cfebd5f225652b5a52964c62ba7f2767b4b57a1911f5ec90d9e348461fb7f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/poses-knee-buckle.png": "0b22fb61c40212d4a37a3636d587e8d5e8d95a3ce5ec1eccbf57c5c9406946ef",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/dead.png": "a19ad644482afdb7ed7ae1df166a5676b8c03df6559a685e55e632af2bc6db27",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/alpha/shell-insertion.png": "0566db653e4d674aa2c02ccee481e4ad3c51dcce3dda896e24b3d8a310279cbf",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/local-alpha/loaded-ready.png": "389f58b5c91a6053deb0d631274f023d13dcf922f416be76ec060591b045f342",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchbell_mortars/continuity-alpha/resupply-creep-and-guard.png": "dc3fa157cea2400e5f8cbeb5c1edf08e733f8ec3dd2573454664ddea70743712"
+  }
+}

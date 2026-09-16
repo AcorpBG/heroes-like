@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved local non-generative raster background/edge preparation. Preserve immutable original sources; no pose synthesis.",
+  "id": "walk-passing-b-green",
+  "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/walk-passing-b-green.png",
+  "source_sha256": "4b833ae5d0d8c99e870a719312067850fbb96946204ff87485e637758e8e2fd1",
+  "source_rect": [
+    0,
+    0,
+    1145,
+    1374
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_lantern_sappers/continuity-alpha/walk-passing-b-green.png",
+  "output_sha256": "a326f179f606c776f93bd1530024347ac4c8999efd2f64b518c3437299cf9c8f",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_lantern_sappers/continuity-cutouts.json",
+  "recipe_sha256": "f136ef288371ff11e9d4db59084de5f5a02d4abc97a6fdd8f34507e53239e006",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1138894,
+    "edge_pixels": 8720,
+    "unchanged_paint_pixels": 425616,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

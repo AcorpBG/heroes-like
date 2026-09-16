@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "fired-string-release-and-recovery",
+  "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/fired-string-release-and-recovery.png",
+  "source_sha256": "bb32dfecd45178ca9ee2ca944a16998c2f8a5d68138079c9d64290734cd7437c",
+  "source_rect": [
+    0,
+    0,
+    1802,
+    872
+  ],
+  "output": "art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-alpha/fired-string-release-and-recovery.png",
+  "output_sha256": "7aafc1ec4b398e77907675cc8e7d9aabc5a4957db58c50ca57a55ded778d1e10",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-cutouts.json",
+  "recipe_sha256": "d5fcafa8535b65778e5038693d261e3471b4ab18854d3fabd6f38d63a3848bc8",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 4,
+    "max_edge_residual": 100,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 983527,
+    "edge_pixels": 15759,
+    "unchanged_paint_pixels": 572058,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte/edge cleanup; preserve source paint, original masters and exact recipes.",
+  "id": "gorefen-chest-collapse-green",
+  "source": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/chest-collapse-green.png",
+  "source_sha256": "468f51ee2915c88615cfea686460b4f1d453a8b84261c25dbbb29a22850f93df",
+  "source_rect": [
+    0,
+    0,
+    1447,
+    1087
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-alpha/chest-collapse-green.png",
+  "output_sha256": "7e3509a134d8ed049efeaa8d1825fcdb082b980259f32504b00fca8e56c2185f",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_gorefen_rippers/continuity-cutouts.json",
+  "recipe_sha256": "b1d91a2d8d9346716d3822edadc30d78ea8f2bb76b002b52a8a205b68968a63f",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1162943,
+    "edge_pixels": 6337,
+    "unchanged_paint_pixels": 403609,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

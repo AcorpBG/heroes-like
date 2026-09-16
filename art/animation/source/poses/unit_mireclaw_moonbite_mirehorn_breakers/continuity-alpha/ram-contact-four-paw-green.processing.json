@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "mirehorn-ram-contact-four-paw-green",
+  "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/ram-contact-four-paw-green.png",
+  "source_sha256": "8d4f4547a1405465c1a8a166b336d21bce81bab93e587ea3ad2d78c00514865a",
+  "source_rect": [
+    0,
+    0,
+    1412,
+    1114
+  ],
+  "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/ram-contact-four-paw-green.png",
+  "output_sha256": "5cd06903c5e372353da8059acd578cc1c58c090c9555b977e5bb3c8521f99378",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-cutouts.json",
+  "recipe_sha256": "20a1628cc0617030b0ffef9625afd92444077dfe9285559089a5a256e5ce6cbd",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1009117,
+    "edge_pixels": 15569,
+    "unchanged_paint_pixels": 548282,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

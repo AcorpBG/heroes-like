@@ -1,0 +1,125 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source paintings and exact parameters, no synthesized poses.",
+  "jobs": [
+    {
+      "id": "reedsnare-walk-phase-0-green",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/walk-phase-0-green.png",
+      "source_sha256": "e379424267f8a1e8eded418d63f9acc2c156a6f63b319722da93bef1b8961744",
+      "output": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/walk-phase-0-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "reedsnare-walk-phase-1-tail-corrected-green",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/walk-phase-1-tail-corrected-green.png",
+      "source_sha256": "6a901d5f962273669a349296cfe633c6d7789df39c83089984fa4c4ecbecfc38",
+      "output": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/walk-phase-1-tail-corrected-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "reedsnare-walk-phase-2-green",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/walk-phase-2-green.png",
+      "source_sha256": "e4748353fb98eebc8a3a0f4ef15205f38ddeaf8b240016604a7e240385ea1113",
+      "output": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/walk-phase-2-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "reedsnare-walk-phase-3-green",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/walk-phase-3-green.png",
+      "source_sha256": "518b22d999180cc9032cca2a20fb513600b99c7402847f28056dc7e4054e6bc3",
+      "output": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/walk-phase-3-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "reedsnare-melee-windup-green",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/melee-windup-green.png",
+      "source_sha256": "9ac0ffb43999bbb77bb768be09fcdd37f5481eabb229a23c431dee763b3751c3",
+      "output": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/melee-windup-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "reedsnare-melee-contact-green",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/melee-contact-green.png",
+      "source_sha256": "d912749780de641d36f0bff86fd70699e75511a13ca0303ce8e4cf06cd2b7d9d",
+      "output": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/melee-contact-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "reedsnare-melee-contact-length-corrected-green",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/melee-contact-length-corrected-green.png",
+      "source_sha256": "81c9df53e88e26d9c4ba1f490a8f438fc137e546fff2c0a0db965ab640102cfe",
+      "output": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/melee-contact-length-corrected-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

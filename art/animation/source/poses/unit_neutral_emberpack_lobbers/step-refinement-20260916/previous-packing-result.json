@@ -1,0 +1,175 @@
+{
+  "unit_id": "unit_neutral_emberpack_lobbers",
+  "output": "art/animation/source/poses/unit_neutral_emberpack_lobbers/candidate-atlas.png",
+  "sha256": "4592adc4a6c3404fe6eb0749a1e4234e004ee18bf00b696492edd92cbace2f7d",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_loaded_a",
+      "index": 0,
+      "alpha_bounds": [
+        199,
+        24,
+        312,
+        240
+      ]
+    },
+    {
+      "name": "idle_loaded_b",
+      "index": 1,
+      "alpha_bounds": [
+        184,
+        24,
+        311,
+        240
+      ]
+    },
+    {
+      "name": "travel_right_coiled_contact",
+      "index": 2,
+      "alpha_bounds": [
+        174,
+        29,
+        326,
+        240
+      ]
+    },
+    {
+      "name": "travel_right_coiled_passing",
+      "index": 3,
+      "alpha_bounds": [
+        191,
+        26,
+        326,
+        240
+      ]
+    },
+    {
+      "name": "right_fist_windup",
+      "index": 4,
+      "alpha_bounds": [
+        166,
+        27,
+        343,
+        241
+      ]
+    },
+    {
+      "name": "right_fist_cross",
+      "index": 5,
+      "alpha_bounds": [
+        156,
+        27,
+        345,
+        240
+      ]
+    },
+    {
+      "name": "melee_recovery_sling_stowed",
+      "index": 6,
+      "alpha_bounds": [
+        191,
+        24,
+        321,
+        239
+      ]
+    },
+    {
+      "name": "crouched_guard",
+      "index": 7,
+      "alpha_bounds": [
+        186,
+        49,
+        330,
+        242
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 8,
+      "alpha_bounds": [
+        181,
+        22,
+        339,
+        238
+      ]
+    },
+    {
+      "name": "load_ember_sling",
+      "index": 9,
+      "alpha_bounds": [
+        187,
+        49,
+        330,
+        240
+      ]
+    },
+    {
+      "name": "loaded_sling_windup",
+      "index": 10,
+      "alpha_bounds": [
+        140,
+        45,
+        384,
+        240
+      ]
+    },
+    {
+      "name": "released_two_cord_open_sling",
+      "index": 11,
+      "alpha_bounds": [
+        186,
+        24,
+        405,
+        239
+      ]
+    },
+    {
+      "name": "empty_sling_gather",
+      "index": 12,
+      "alpha_bounds": [
+        183,
+        27,
+        325,
+        239
+      ]
+    },
+    {
+      "name": "death_knees",
+      "index": 13,
+      "alpha_bounds": [
+        176,
+        77,
+        334,
+        241
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 14,
+      "alpha_bounds": [
+        130,
+        109,
+        386,
+        242
+      ]
+    },
+    {
+      "name": "dead_head_left_dark_coals",
+      "index": 15,
+      "alpha_bounds": [
+        135,
+        137,
+        362,
+        242
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/alpha/poses.png": "aaec28781c46518f0b948fc90356e6a99610b8d363d100266d1fe58e2bf567a8",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/continuity-alpha/sling-release-gather-and-melee-recovery.png": "a8bdde13f3ea599c1e609ad27c9e2c5f39a1fdce551d76cc864047ecd2cda7d9"
+  }
+}

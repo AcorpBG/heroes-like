@@ -1,0 +1,71 @@
+{
+  "schema_id": "original_unit_pose_refinement_v1",
+  "unit_id": "unit_neutral_emberpack_lobbers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "reviewed_gait_incomplete_runtime_unchanged",
+  "jobs": [
+    {
+      "key": "emberpack_phase_2",
+      "unit_id": "unit_neutral_emberpack_lobbers",
+      "prefix": "emberpack",
+      "phase": 2,
+      "source": "walk-phase-2.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/gait-refinement-20260916/biped-walk-phase-2.png",
+        "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/emberpack-gait-refinement-20260916/clean-reference/poses-candidate-atlas-rect-1024-0-1536-256-light.png"
+      ],
+      "prompt": "Use case: sketch-to-render. Asset type: original painted tactical battle animation sprite. Image 1 is the PRIMARY leg-pose guide; image 2 is identity, equipment and painting-style reference only, NOT the leg pose to repeat. Paint ONE complete full-body character in the exact leg phase below, not a strip. Emberpack Lobber: same clean-shaven pale hooded young man, charcoal hood with perforated brass forehead band, black/grey padded leather, orange scarf and ragged orange waist cloth, brown fitted trousers and wrapped brown boots. Preserve ONE wicker coal basket backpack. Camera-near RIGHT hand at screen LEFT holds the COILED EMPTY leather sling low, exactly as the reference travel hold. Far LEFT hand is empty and bent beside chest. Do not load the sling, ignite it, swap the carrying hand, add smoke, or change the hood. Only body/legs and flowing cloth articulate. Opposite CONTACT: foreground near/right thigh from the camera-near hip beneath the left-screen belt side extends diagonally DOWN-LEFT in front of the other thigh. Near knee and boot are BACK on screen LEFT, heel raised, toe on ground. The distant left leg emerges behind that crossing and extends FORWARD DOWN-RIGHT to heel on ground with toe slightly raised. Do NOT repeat near-leg-forward geometry. Keep two clear hip/knee/boot chains and the foreground-back thigh visibly overlapping the forward-far thigh. Match the reference painterly game style, stable torso size and equipment. Retain near/far limb ownership: blue guide = foreground limbs, orange = far limbs behind. Remove all guide lines/colors/text, leaving real painted anatomy. Square 1536x1536 composition with entire creature, crown/weapons, hair and feet at least 100px inside every edge. Perfectly uniform opaque saturated magenta RGB(255,0,255) everywhere behind and in gaps. Zero magenta reflection/spill on the figure, no checkerboard or simulated transparency. No floor, cast shadow, grid, labels, motion trail, scene, border or second character. This is a new original raster pose, never a rotated or mirrored standing cutout.",
+      "review": "Unselected initial gait draft: full-body identity reference dominates guide, contact lead ambiguous/repeated and passing lower leg extends forward like a kick.",
+      "sha256": "49371ed5989202cf8098fac4c17c2e1406d1bc57fbff451f5fa74ce896fdd511",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5a25e56b-fe11-4c23-a7b3-2480214fd721.png"
+    },
+    {
+      "key": "emberpack_phase_3",
+      "unit_id": "unit_neutral_emberpack_lobbers",
+      "prefix": "emberpack",
+      "phase": 3,
+      "source": "walk-phase-3.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/gait-refinement-20260916/biped-walk-phase-3.png",
+        "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/emberpack-gait-refinement-20260916/clean-reference/poses-candidate-atlas-rect-1024-0-1536-256-light.png"
+      ],
+      "prompt": "Use case: sketch-to-render. Asset type: original painted tactical battle animation sprite. Image 1 is the PRIMARY leg-pose guide; image 2 is identity, equipment and painting-style reference only, NOT the leg pose to repeat. Paint ONE complete full-body character in the exact leg phase below, not a strip. Emberpack Lobber: same clean-shaven pale hooded young man, charcoal hood with perforated brass forehead band, black/grey padded leather, orange scarf and ragged orange waist cloth, brown fitted trousers and wrapped brown boots. Preserve ONE wicker coal basket backpack. Camera-near RIGHT hand at screen LEFT holds the COILED EMPTY leather sling low, exactly as the reference travel hold. Far LEFT hand is empty and bent beside chest. Do not load the sling, ignite it, swap the carrying hand, add smoke, or change the hood. Only body/legs and flowing cloth articulate. Opposite PASSING: foreground near/right thigh swings DOWN-RIGHT, knee lifted forward, near shin folds DOWN-LEFT and its boot is clearly OFF the ground at mid-shin height pointing right. Distant left leg is planted straight beneath hips and supports weight. Do NOT plant the foreground leg or put both feet on the floor. Natural moderate stride, not a kick; preserve two hips/knees/boots, no extra limbs. Match the reference painterly game style, stable torso size and equipment. Retain near/far limb ownership: blue guide = foreground limbs, orange = far limbs behind. Remove all guide lines/colors/text, leaving real painted anatomy. Square 1536x1536 composition with entire creature, crown/weapons, hair and feet at least 100px inside every edge. Perfectly uniform opaque saturated magenta RGB(255,0,255) everywhere behind and in gaps. Zero magenta reflection/spill on the figure, no checkerboard or simulated transparency. No floor, cast shadow, grid, labels, motion trail, scene, border or second character. This is a new original raster pose, never a rotated or mirrored standing cutout.",
+      "review": "Unselected initial gait draft: full-body identity reference dominates guide, contact lead ambiguous/repeated and passing lower leg extends forward like a kick.",
+      "sha256": "afa336075c90df0070a32b9135d8b10d596ed14cce60b52af25ee6fc51f0a2da",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bd0a79f3-5245-47f8-ade4-cef5f3b96f11.png"
+    },
+    {
+      "key": "emberpack_phase_2_upper_guided",
+      "unit_id": "unit_neutral_emberpack_lobbers",
+      "prefix": "emberpack",
+      "phase": 2,
+      "source": "walk-phase-2-upper-guided.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/gait-refinement-20260916/biped-walk-phase-2.png",
+        "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/emberpack-gait-refinement-20260916/upper-body-reference/unit_neutral_emberpack_lobbers-walk-phase-3-rect-252-49-881-567-light.png"
+      ],
+      "prompt": "Use case: sketch-to-render. Asset type: original painted tactical battle animation sprite. Image 1 is the PRIMARY leg-pose guide; image 2 is UPPER-BODY ONLY costume reference. Image 1 alone defines the lower-body pose. Build legs from the guide joint coordinates, not an imagined running pose. Paint ONE complete full-body character in the exact leg phase below, not a strip. Emberpack Lobber: same clean-shaven pale hooded young man, charcoal hood with perforated brass forehead band, black/grey padded leather, orange scarf and ragged orange waist cloth, brown fitted trousers and wrapped brown boots. Preserve ONE wicker coal basket backpack. Camera-near RIGHT hand at screen LEFT holds the COILED EMPTY leather sling low, exactly as the reference travel hold. Far LEFT hand is empty and bent beside chest. Do not load the sling, ignite it, swap the carrying hand, add smoke, or change the hood. Only body/legs and flowing cloth articulate. Opposite CONTACT: foreground near/right thigh from the camera-near hip beneath the left-screen belt side extends diagonally DOWN-LEFT in front of the other thigh. Near knee and boot are BACK on screen LEFT, heel raised, toe on ground. The distant left leg emerges behind that crossing and extends FORWARD DOWN-RIGHT to heel on ground with toe slightly raised. Do NOT repeat near-leg-forward geometry. Keep two clear hip/knee/boot chains and the foreground-back thigh visibly overlapping the forward-far thigh. Match the reference painterly game style, stable torso size and equipment. Retain near/far limb ownership: blue guide = foreground limbs, orange = far limbs behind. Remove all guide lines/colors/text, leaving real painted anatomy. Square 1536x1536 composition with entire creature, crown/weapons, hair and feet at least 100px inside every edge. Perfectly uniform opaque saturated magenta RGB(255,0,255) everywhere behind and in gaps. Zero magenta reflection/spill on the figure, no checkerboard or simulated transparency. No floor, cast shadow, grid, labels, motion trail, scene, border or second character. This is a new original raster pose, never a rotated or mirrored standing cutout. Critical silhouette: make camera-near thigh the one going toward the LEFT rear boot; draw its front contour continuously from left-screen hip down-left and OVER the distant forward-right thigh at the crotch. Do not put the near knee on the right.",
+      "sha256": "dd4d16018caaed3d32e8856c0528f3b2ab413c64ed9cd1e5393fd089a875028a",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-07295a48-aa89-4f48-9dfb-c741e3137cbb.png",
+      "review": "Unselected: foreground/back leg ownership still ambiguous or repeats previous lead; not proof of opposite contact."
+    },
+    {
+      "key": "emberpack_phase_3_upper_guided",
+      "unit_id": "unit_neutral_emberpack_lobbers",
+      "prefix": "emberpack",
+      "phase": 3,
+      "source": "walk-phase-3-upper-guided.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/gait-refinement-20260916/biped-walk-phase-3.png",
+        "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/emberpack-gait-refinement-20260916/upper-body-reference/unit_neutral_emberpack_lobbers-walk-phase-3-rect-252-49-881-567-light.png"
+      ],
+      "prompt": "Use case: sketch-to-render. Asset type: original painted tactical battle animation sprite. Image 1 is the PRIMARY leg-pose guide; image 2 is UPPER-BODY ONLY costume reference. Image 1 alone defines the lower-body pose. Build legs from the guide joint coordinates, not an imagined running pose. Paint ONE complete full-body character in the exact leg phase below, not a strip. Emberpack Lobber: same clean-shaven pale hooded young man, charcoal hood with perforated brass forehead band, black/grey padded leather, orange scarf and ragged orange waist cloth, brown fitted trousers and wrapped brown boots. Preserve ONE wicker coal basket backpack. Camera-near RIGHT hand at screen LEFT holds the COILED EMPTY leather sling low, exactly as the reference travel hold. Far LEFT hand is empty and bent beside chest. Do not load the sling, ignite it, swap the carrying hand, add smoke, or change the hood. Only body/legs and flowing cloth articulate. Opposite PASSING: foreground near/right thigh swings DOWN-RIGHT, knee lifted forward, near shin folds DOWN-LEFT and its boot is clearly OFF the ground at mid-shin height pointing right. Distant left leg is planted straight beneath hips and supports weight. Do NOT plant the foreground leg or put both feet on the floor. Natural moderate stride, not a kick; preserve two hips/knees/boots, no extra limbs. Match the reference painterly game style, stable torso size and equipment. Retain near/far limb ownership: blue guide = foreground limbs, orange = far limbs behind. Remove all guide lines/colors/text, leaving real painted anatomy. Square 1536x1536 composition with entire creature, crown/weapons, hair and feet at least 100px inside every edge. Perfectly uniform opaque saturated magenta RGB(255,0,255) everywhere behind and in gaps. Zero magenta reflection/spill on the figure, no checkerboard or simulated transparency. No floor, cast shadow, grid, labels, motion trail, scene, border or second character. This is a new original raster pose, never a rotated or mirrored standing cutout. Critical geometry: the lifted boot is UNDER THE PELVIS and BEHIND the lifted knee, not extended in front. Its x coordinate must be smaller than the knee x coordinate. Lower leg slopes DOWN-LEFT from forward knee. Keep lifted sole around the planted mid-shin, leaving clear empty background below it. No kick.",
+      "sha256": "6fcc85f9cd7f59d4cf87c079c799f05da54818450c59a7197b96d2b0f652ffc4",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-77e39fd7-4282-4e78-a141-cc6f0e95b9cc.png",
+      "review": "Passing candidate: near knee forward with folded shin and elevated boot, opposite leg planted; correct equipment retained. Not runtime-selected until opposite contact and complete cycle are coherent."
+    }
+  ],
+  "next_action": "No wording-only retries. Preserve viable passing poses for later connected-cycle assembly; opposite contact and Rootcrown near/far hind-leg ownership remain unresolved. Continue independent equipment/body refinement."
+}

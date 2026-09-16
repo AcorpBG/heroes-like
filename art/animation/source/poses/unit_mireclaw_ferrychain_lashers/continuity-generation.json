@@ -1,0 +1,139 @@
+{
+  "schema_id": "original_battle_pose_continuity_generation_v1",
+  "unit_id": "unit_mireclaw_ferrychain_lashers",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_pending_whole_roster_refinement_and_acceptance",
+  "reference_crops": [
+    {
+      "path": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/standing-reference-light.png",
+      "sha256": "d78e654187d07c7b99f492827ac40625d0416d2aba7764017e9be315eccb6cf6",
+      "source": "alpha/poses.png",
+      "source_sha256": "a8920670fa09e92b39bfa9be1016683e2471113dbdd3a3cfc94fe755092b4a52",
+      "rect": [
+        0,
+        0,
+        340,
+        381
+      ],
+      "method": "Unchanged original/approved-prepared source pixels composited on light and nearest4x; reference only."
+    },
+    {
+      "path": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/lash-reference-light.png",
+      "sha256": "0dd5615135f3660cfd0a95ffc06481d9b0f32085234224fdf065ef8389c17971",
+      "source": "alpha/poses.png",
+      "source_sha256": "a8920670fa09e92b39bfa9be1016683e2471113dbdd3a3cfc94fe755092b4a52",
+      "rect": [
+        688,
+        383,
+        1189,
+        733
+      ],
+      "method": "Original actual-alpha crop, light nearest4x. Neighboring arm/boot fragments explicitly excluded in edit prompt."
+    }
+  ],
+  "outputs": [
+    {
+      "source": "lash-connected-green.png",
+      "sha256": "00fdd0af9661bb0c82d1569e4d3e6f39d7a2a53391a1b474bd57cf24f4f7c6c0",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-517aed33-fb4b-4834-81e6-3c4976994ce3.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 is exact EDIT TARGET: repair the chain of the single central Ferrychain Lasher in her extended lash pose. Preserve her face, dark braids, green cheek paint, olive/brown sleeveless wrap armor, bone charms, trousers, wrapped boots, body pose and camera. Preserve right arm extending toward screen RIGHT, right fist gripping outgoing chain, large curved iron hook at right end. ADD THE MISSING CONTINUOUS CHAIN segment from the BACK of that outstretched RIGHT fist down in a sagging U, visibly IN FRONT of her waist, returning to her LEFT fist at her left waist (screen left). The left fist retains the loose tail coils. It is ONE physically connected chain from hooked end through right fist to left fist and slack tail: visible individual oval iron links, same thickness as outgoing chain. Chain must not disappear into body/arm, float detached or attach to both sides of the hook. Preserve original hook silhouette rust metal moss/yellow wrapping and three bone teeth at socket. Ignore and REMOVE the unrelated cropped arm and boot at far right margin; they are neighboring sheet fragments, not another person to draw. ONE complete central figure only, entire hook and both boots inside generous margin. Same painterly raster style, no body redesign. Flat pure RGB0,255,0 green background including link holes, no green spill on dark olive materials. No floor, shadow, text, effects, projectile, new weapons or extra limbs.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/lash-reference-light.png",
+          "sha256": "0dd5615135f3660cfd0a95ffc06481d9b0f32085234224fdf065ef8389c17971"
+        }
+      ]
+    },
+    {
+      "source": "step-left-low-chain-draft-green.png",
+      "sha256": "56646933a1c0041eb3c08c4dbdc130f47492c3c0cdfcaf65a4e08b2cb52513fe",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-be6aa975-66c3-419c-8b73-b40fb626f573.png",
+      "selected": false,
+      "prompt": "Use case: precise-object-edit. Image1 exact original character EDIT TARGET. Create ONE short advancing step with the SCREEN-LEFT boot lifted, retaining the other boot planted. Change only lower body joints, weight shift and slight braid/skirt follow-through. The leg originally ending in screen-LEFT boot is the lifted leg: bend that knee forward toward screen right, lift its whole boot a modest one boot-height above ground, with an anatomically connected thigh from SAME hip. SCREEN-RIGHT boot remains planted in original place; body weight shifts over it slightly. Do NOT swap hip ownership, mirror torso, exchange boots or raise both feet. This is a measured walking step carrying equipment, not a jump or running split. Keep the whole character, feet and ONE large rusted hook, full continuous chain and loose tail inside broad margins. Preserve exact chain carry: anatomical RIGHT hand screen LEFT controls short hook-end chain with hook hanging at screen LEFT; chain sags across front to LEFT hand screen RIGHT, which holds gathered loose tail. BOTH hands stay at original low carry positions. Hook must never switch to the left hand. Same athletic woman, dark braids, green cheek stripes, sleeveless brown/olive armor, bone charms, dark trousers/wrapped boots. Same elevated three-quarter camera facing RIGHT, same painted style, lighting, colors, anatomy and body scale. No new costume details or weapon. Flat pure RGB0,255,0 green background including empty gaps, no spill on dark olive material. No floor, shadow, letters, effects, scenery or other figures.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/standing-reference-light.png",
+          "sha256": "d78e654187d07c7b99f492827ac40625d0416d2aba7764017e9be315eccb6cf6"
+        }
+      ]
+    },
+    {
+      "source": "travel-carry-green.png",
+      "sha256": "7b5c51a058f91a9d192e89662031a5a8a7ed701597aa95e3dc210d7abd98aa42",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-572a6766-50f3-4ff3-92f7-75a788754c8f.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 Ferrychain Lasher identity and standing edit target. Produce ONE TRAVEL CARRY pose, both feet planted as reference. Change ONLY arm/chain positions into safe gathered carry above knees, with slight forward-ready torso lean. RIGHT hand from near shoulder screen LEFT is bent at WAIST HEIGHT screen LEFT holding chain near hooked end: hook hangs downward OUTSIDE the screen-LEFT thigh, about hip-to-knee height, never below boots. LEFT hand from screen-RIGHT shoulder is also at waist height screen RIGHT holding the gathered slack tail loops. The short chain span between hands hangs in one shallow U immediately in FRONT OF BELT, ABOVE BOTH THIGHS. There must be no low chain crossing knees or wrapping a leg. ONE continuous rusty oval-link iron chain, ONE large curved rusted hook with yellow/moss socket wrap and three bone teeth; tail gathered in left palm and short loops hanging outside right hip. Preserve same athletic woman, dark braids, green cheek paint, sleeveless olive/brown leather wrap armor, bone charms, black trousers, tied brown boots, original body scale/camera/painterly style. Both full feet planted, no gait yet. Full figure/hook/tail clear inside generous margins. Flat pure RGB0,255,0 green background through links, no spill, floor, shadow, effects, letters or extra figures.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/standing-reference-light.png",
+          "sha256": "d78e654187d07c7b99f492827ac40625d0416d2aba7764017e9be315eccb6cf6"
+        }
+      ]
+    },
+    {
+      "source": "travel-step-left-green.png",
+      "sha256": "cbba40e1318042c50ed124b9cd0cd8f4e5b5b65d841113ece30b472d7a46db3b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7fc03102-5daf-4558-af34-b344e8e6d5fb.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 EXACT Ferrychain Lasher travel-carry EDIT TARGET. Change ONLY legs and slight cloth/hip weight shift for a short walking foot lift. The SCREEN-LEFT boot is lifted just about half to one boot-height (roughly100 source pixels), with knee softly bent forward to screen RIGHT from its OWN original hip. SCREEN-RIGHT boot stays planted, supporting body weight. Keep knees BELOW the shallow chain U at waist, no chain or hook crossing/behind a lifted leg. Same two legs, no mirrored torso, no exchanged hips, no exaggerated high knee or jumping. Preserve the complete upper-body pose, face, braids, hands and ALL chain topology exactly: right anatomical hand screen LEFT grips the short hook-end chain; ONE rusted hook hangs OUTSIDE screen-left thigh; continuous shallow chain U above thighs connects to left anatomical hand screen RIGHT holding gathered tail coils outside right hip. Chain remains IN FRONT of waist and clear of legs, same link size, hook scale, length and tail loops. Full original body proportions and 3/4 right-facing camera, painterly raster, same olive/brown outfit/bone charms/wrapped boots. Same1184x1328 canvas with full boots hook and hair inside margins. Pure RGB0,255,0 green backing no spill, shadow, scenery, text, extra limbs or effects.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/travel-carry-green.png",
+          "sha256": "7b5c51a058f91a9d192e89662031a5a8a7ed701597aa95e3dc210d7abd98aa42"
+        }
+      ]
+    },
+    {
+      "source": "travel-step-right-green.png",
+      "sha256": "fa0efb5efdca944302f2e221ff31b87e397aa08f2309d424ee71ba8f087750ca",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cfee5936-6c40-419c-984a-4acfedaad6dc.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 EXACT Ferrychain Lasher travel-carry EDIT TARGET. Change ONLY legs and slight cloth/hip weight shift for a short walking foot lift. The SCREEN-RIGHT boot is lifted just about half to one boot-height (roughly100 source pixels), with knee softly bent forward to screen RIGHT from its OWN original hip. SCREEN-LEFT boot stays planted, supporting body weight. Keep knees BELOW the shallow chain U at waist, no chain or hook crossing/behind a lifted leg. Same two legs, no mirrored torso, no exchanged hips, no exaggerated high knee or jumping. Preserve the complete upper-body pose, face, braids, hands and ALL chain topology exactly: right anatomical hand screen LEFT grips the short hook-end chain; ONE rusted hook hangs OUTSIDE screen-left thigh; continuous shallow chain U above thighs connects to left anatomical hand screen RIGHT holding gathered tail coils outside right hip. Chain remains IN FRONT of waist and clear of legs, same link size, hook scale, length and tail loops. Full original body proportions and 3/4 right-facing camera, painterly raster, same olive/brown outfit/bone charms/wrapped boots. Same1184x1328 canvas with full boots hook and hair inside margins. Pure RGB0,255,0 green backing no spill, shadow, scenery, text, extra limbs or effects.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/travel-carry-green.png",
+          "sha256": "7b5c51a058f91a9d192e89662031a5a8a7ed701597aa95e3dc210d7abd98aa42"
+        }
+      ]
+    },
+    {
+      "source": "guard-hook-hand-green.png",
+      "sha256": "1efb5397deb0c0f998881c9c20c1bfab76414e36d7251db20a1f72a62d7fdb17",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-de2f1feb-adaa-4cbc-a678-29b905d0d1c8.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 exact Ferrychain Lasher travel-carry identity/gear edit target. Paint ONE DEFENSIVE BRACE: bend both knees into a low balanced crouch, lean shoulders forward and tuck chin. Raise both forearms to chest height with elbows bent; pull the chain segment BETWEEN hands taut horizontally across upper chest. Right hand remains screen LEFT controlling hook-end section, so hooked end hangs outside screen-LEFT side of body, NOT on screen RIGHT. Left hand screen RIGHT retains gathered tail loops. This is a guarding posture, no attack and no hand swapping. Preserve same woman, face, dark braids, green cheek stripes, sleeveless olive/brown leather armor, bone charms, dark trousers, original wrapped boots, full body proportions, elevated 3/4 RIGHT camera, original painted raster colors. Preserve ONE complete continuous rusty oval-link chain from ONE curved hook through right-hand grip, across to left-hand grip and gathered tail; original socket wrapping and three bone teeth, no chain branching or detached links. Do not redesign hook or stretch chain length. Both complete boots, braids, full hook and tail stay within generous margins on same1184x1328 canvas. Flat pure RGB0,255,0 backing through chain holes, no spill, floor, shadow, text, extra people or effects.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/travel-carry-green.png",
+          "sha256": "7b5c51a058f91a9d192e89662031a5a8a7ed701597aa95e3dc210d7abd98aa42"
+        }
+      ]
+    },
+    {
+      "source": "hit-hook-hand-green.png",
+      "sha256": "d5fbb0173016d6d593d71834dbc1136bffbadf14bb79b7870d597dffe5b25b72",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8e5f46a3-1136-4cce-a7ca-cf19470a2559.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 exact Ferrychain Lasher travel-carry identity/gear edit target. Paint ONE HIT RECOIL: keep both feet planted with knees bending, chest rocks backward, shoulders recoil, chin lifts and eyes flinch. Arms stay bent in front of waist retaining their chain grips, shallow chain U still visible between hands. Right hand screen LEFT controls hook section and the hooked end hangs OUTSIDE screen LEFT; left hand screen RIGHT retains gathered tail loops. Chain follows hands slightly, stays clear of legs and never disappears or changes hands. Preserve same woman, face, dark braids, green cheek stripes, sleeveless olive/brown leather armor, bone charms, dark trousers, original wrapped boots, full body proportions, elevated 3/4 RIGHT camera, original painted raster colors. Preserve ONE complete continuous rusty oval-link chain from ONE curved hook through right-hand grip, across to left-hand grip and gathered tail; original socket wrapping and three bone teeth, no chain branching or detached links. Do not redesign hook or stretch chain length. Both complete boots, braids, full hook and tail stay within generous margins on same1184x1328 canvas. Flat pure RGB0,255,0 backing through chain holes, no spill, floor, shadow, text, extra people or effects.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_mireclaw_ferrychain_lashers/travel-carry-green.png",
+          "sha256": "7b5c51a058f91a9d192e89662031a5a8a7ed701597aa95e3dc210d7abd98aa42"
+        }
+      ]
+    }
+  ],
+  "review_notes": [
+    "Low idle-chain first foot-lift places chain behind/beside bent knee: preserved unselected. Fixed new travel carry raises chain above thighs, keeps original hook-end/right hand and tail/left hand, then independent left/right foot lifts preserve those connections.",
+    "Lash adds missing return chain between outstretched right fist and tail-holding left fist. New guard/hit preserve hooked-end hand. Reuse viable original idles, windup and equipped death poses.",
+    "Short-step planted/lift movement candidate, not accepted as smooth translated gait. Full chain link/socket connections, hook/face/gear scale, contact timing and death transitions still require whole-roster refinement."
+  ],
+  "validation": "No tests/imports/exports; full160 production/refinement before one consolidated gameplay/repository/Linux/Windows pass. Built-in tool only; no paid API.",
+  "runtime_candidate": "art/animation/runtime/poses/unit_mireclaw_ferrychain_lashers.png",
+  "runtime_sha256": "feced67252ca1e3ef42c25e7dea493d73f503ae60b758bc9af751f161bae61fc",
+  "packing": "packing.json",
+  "preparation": "continuity-cutouts.json"
+}

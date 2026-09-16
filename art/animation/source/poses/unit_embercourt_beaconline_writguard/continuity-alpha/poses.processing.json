@@ -1,0 +1,262 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved local non-generative matte and narrow edge cleanup. Preserve original paintings; no synthesized or warped poses.",
+  "id": "beaconline-original",
+  "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/poses.png",
+  "source_sha256": "f6d73efc67e6e7b8e30125eb3f7eba35533baad1bd784c2ef8ffcc6911ba92b3",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-alpha/poses.png",
+  "output_sha256": "c651a3eed515da7c2cfe8e8417244b1895b7128ec2386bfda13186165b483da1",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_beaconline_writguard/continuity-cutouts.json",
+  "recipe_sha256": "37edcb142ff0fa736c04782094aba58459da1c649c8aef5a92afef3395addd77",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 185,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        117,
+        46
+      ],
+      [
+        140,
+        46
+      ],
+      [
+        165,
+        156
+      ],
+      [
+        157,
+        305
+      ],
+      [
+        438,
+        46
+      ],
+      [
+        463,
+        46
+      ],
+      [
+        492,
+        150
+      ],
+      [
+        489,
+        305
+      ],
+      [
+        775,
+        45
+      ],
+      [
+        798,
+        45
+      ],
+      [
+        830,
+        150
+      ],
+      [
+        813,
+        236
+      ],
+      [
+        1223,
+        46
+      ],
+      [
+        1249,
+        46
+      ],
+      [
+        1246,
+        155
+      ],
+      [
+        1213,
+        230
+      ],
+      [
+        110,
+        426
+      ],
+      [
+        133,
+        426
+      ],
+      [
+        165,
+        520
+      ],
+      [
+        152,
+        610
+      ],
+      [
+        450,
+        425
+      ],
+      [
+        472,
+        425
+      ],
+      [
+        488,
+        605
+      ],
+      [
+        790,
+        425
+      ],
+      [
+        811,
+        425
+      ],
+      [
+        827,
+        511
+      ],
+      [
+        1173,
+        425
+      ],
+      [
+        1195,
+        425
+      ],
+      [
+        1210,
+        598
+      ],
+      [
+        82,
+        772
+      ],
+      [
+        99,
+        770
+      ],
+      [
+        126,
+        850
+      ],
+      [
+        141,
+        955
+      ],
+      [
+        445,
+        44
+      ],
+      [
+        464,
+        44
+      ],
+      [
+        816,
+        139
+      ],
+      [
+        819,
+        159
+      ],
+      [
+        1210,
+        497
+      ],
+      [
+        486,
+        643
+      ],
+      [
+        137,
+        922
+      ],
+      [
+        153,
+        974
+      ],
+      [
+        826,
+        594
+      ],
+      [
+        1231,
+        222
+      ],
+      [
+        839,
+        517
+      ],
+      [
+        140,
+        862
+      ],
+      [
+        814,
+        221
+      ],
+      [
+        1273,
+        105
+      ],
+      [
+        128,
+        829
+      ],
+      [
+        158,
+        983
+      ],
+      [
+        814,
+        551
+      ],
+      [
+        73,
+        849
+      ],
+      [
+        71,
+        770
+      ],
+      [
+        90,
+        762
+      ],
+      [
+        1190,
+        424
+      ],
+      [
+        832,
+        132
+      ],
+      [
+        1193,
+        551
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1032593,
+    "edge_pixels": 42611,
+    "unchanged_paint_pixels": 497324,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

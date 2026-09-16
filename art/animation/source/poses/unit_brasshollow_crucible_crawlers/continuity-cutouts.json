@@ -1,0 +1,53 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "creep-melee-and-guard",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/creep-melee-and-guard.png",
+      "source_sha256": "131c927cc6371559b242eb45a68aaea4d50e87a5945cc27d7b4c0109f8967b33",
+      "output": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-alpha/creep-melee-and-guard.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "creep-melee-four-legs",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/creep-melee-four-legs.png",
+      "source_sha256": "4cfe16787083f1f8212fe8e890e75cc77dde7e6f4c65ef8cab6560b917bafa02",
+      "output": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-alpha/creep-melee-four-legs.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            1348,
+            292
+          ],
+          [
+            1413,
+            339
+          ],
+          [
+            253,
+            613
+          ],
+          [
+            341,
+            778
+          ],
+          [
+            821,
+            787
+          ]
+        ]
+      }
+    }
+  ]
+}

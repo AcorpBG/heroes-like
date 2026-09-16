@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "blowpipe-action-recovery-and-directional-collapse",
+  "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/blowpipe-action-recovery-and-directional-collapse.png",
+  "source_sha256": "2ad89eca0d6360a9525f8fefddd40653745afde0a043a29e5de32f860dc33ca1",
+  "source_rect": [
+    0,
+    0,
+    1201,
+    1310
+  ],
+  "output": "art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-alpha/blowpipe-action-recovery-and-directional-collapse.png",
+  "output_sha256": "0f93630aa1409b58d51550050d06b987417797f4440f6e66f03c2e7e4591aabe",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-cutouts.json",
+  "recipe_sha256": "15f492e2a28fbf087eaf895ba4cbceb7aaf7f9685084fdd3095bca74e48e31eb",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1085341,
+    "edge_pixels": 28018,
+    "unchanged_paint_pixels": 459951,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

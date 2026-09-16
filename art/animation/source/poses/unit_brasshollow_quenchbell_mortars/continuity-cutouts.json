@@ -1,0 +1,100 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "resupply-creep-and-guard",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/resupply-creep-and-guard.png",
+      "source_sha256": "8856c4b99f639401bef9aaf563419ad4e77854ca3086f36dad10a027f59653ef",
+      "output": "art/animation/source/poses/unit_brasshollow_quenchbell_mortars/continuity-alpha/resupply-creep-and-guard.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 170,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            400,
+            55
+          ],
+          [
+            438,
+            136
+          ],
+          [
+            636,
+            295
+          ],
+          [
+            1168,
+            277
+          ],
+          [
+            652,
+            811
+          ],
+          [
+            1127,
+            775
+          ],
+          [
+            413,
+            404
+          ],
+          [
+            435,
+            861
+          ],
+          [
+            957,
+            900
+          ],
+          [
+            1503,
+            902
+          ],
+          [
+            394,
+            114
+          ],
+          [
+            618,
+            197
+          ],
+          [
+            1153,
+            269
+          ],
+          [
+            899,
+            122
+          ],
+          [
+            1428,
+            117
+          ],
+          [
+            118,
+            784
+          ],
+          [
+            1201,
+            300
+          ],
+          [
+            1254,
+            922
+          ],
+          [
+            426,
+            856
+          ],
+          [
+            936,
+            406
+          ]
+        ]
+      }
+    }
+  ]
+}

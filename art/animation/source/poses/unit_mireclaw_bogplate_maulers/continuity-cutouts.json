@@ -1,0 +1,74 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve sources and exact parameters. No synthesized or warped poses.",
+  "jobs": [
+    {
+      "id": "bog-walk-phase-1-green",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/walk-phase-1-green.png",
+      "source_sha256": "ce1ae1a6ffa6a541828b9a4da1c1790207f820b48486d8b9bb2e41395da5728b",
+      "output": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/continuity-alpha/walk-phase-1-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "bog-walk-phase-2-green",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/walk-phase-2-green.png",
+      "source_sha256": "f5e20a0057b29cc08af30089306ddf5adc7b05536260be45cda9eca314322a4f",
+      "output": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/continuity-alpha/walk-phase-2-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "bog-walk-phase-3-green",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/walk-phase-3-green.png",
+      "source_sha256": "90a0451c0bd6d0a6d7fa118e581d3ab78ed400145d346432edad8d53230942ef",
+      "output": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/continuity-alpha/walk-phase-3-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "bog-walk-phase-0-crossing-corrected-green",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/walk-phase-0-crossing-corrected-green.png",
+      "source_sha256": "a6757ce55af23b047ff019809f7c87f3d8d339674d29944b2d0cf0babfc4cfa1",
+      "output": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/continuity-alpha/walk-phase-0-crossing-corrected-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

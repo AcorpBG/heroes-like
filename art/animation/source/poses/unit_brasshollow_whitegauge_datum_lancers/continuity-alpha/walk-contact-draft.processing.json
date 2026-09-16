@@ -1,0 +1,62 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "walk-contact-draft",
+  "source": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/walk-contact-draft.png",
+  "source_sha256": "254f2db19bd753ee29d6bc2fa066785a0b0867d0e99053cdc02c12059bb3da5f",
+  "source_rect": [
+    0,
+    0,
+    1145,
+    1374
+  ],
+  "output": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-alpha/walk-contact-draft.png",
+  "output_sha256": "65fb041523d2edbb02c428dd413b7695a40b5ee9ababfc38b45bd96654c4e79f",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_brasshollow_whitegauge_datum_lancers/continuity-cutouts.json",
+  "recipe_sha256": "dc14a905cd3faff768a8d03ad70f6b4b77fdf920d2b454c66a1491e645669059",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 170,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        552,
+        635
+      ],
+      [
+        548,
+        678
+      ],
+      [
+        532,
+        715
+      ],
+      [
+        795,
+        552
+      ],
+      [
+        695,
+        435
+      ],
+      [
+        432,
+        300
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1235437,
+    "edge_pixels": 3763,
+    "unchanged_paint_pixels": 334030,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

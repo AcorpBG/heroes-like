@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative matte and edge cleanup; preserve source paintings and exact parameters, no synthesized poses.",
+  "id": "sluicebrand-melee-windup-green",
+  "source": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/melee-windup-green.png",
+  "source_sha256": "60f94f46f20e68332a4fd6f861e614c92a2f1cce55aea144a67371463c52a594",
+  "source_rect": [
+    0,
+    0,
+    1337,
+    1176
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-alpha/melee-windup-green.png",
+  "output_sha256": "e16a27af4c2293cac3647fecc5f8aa97f4318891a04160d27ba663150cb13d62",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_amberweir_sluicebrand_mangonels/continuity-cutouts.json",
+  "recipe_sha256": "f4196e7e872d35548ca6d6a06da41702b79d7a7e756d59c20d2c609de5a092e5",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 842621,
+    "edge_pixels": 10146,
+    "unchanged_paint_pixels": 719545,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_cinderpot_hurlers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "passing-recovery-and-directional-corpse",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/passing-recovery-and-directional-corpse.png",
+      "sha256": "b165760a0751c1c0374f4e20369593092396f7e3523204f867cc3b9bde8c3a70",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-13f6e188-aa63-41fa-8ad0-68c9e25a4559.png",
+      "prompt": "Use case: stylized-concept. FOUR original painted Cinderpot Hurler battle sprites, TWO columns TWO rows on uniform vivid #00ff00 chroma green with no color spill. Images 1 and 2 are leg motion guides only, for top-left and top-right. Image 3 is the authoritative original identity/camera/style. Image 4 is the fall immediately preceding the new corpse: preserve its head LEFT / feet RIGHT direction.\nSame lean adult human with charcoal hood edged burnt orange, black lower-face wrap, visible eyes only, dark leather cross harness and bracers, ragged charcoal tunic and orange split sash, wrapped boots, round corked terracotta firepots strapped to chest and belt. Original elevated 3/4 game camera facing RIGHT for upright poses. Exactly one person each cell.\nTOP LEFT: near leg planted vertically beneath hip, far knee forward with far boot raised behind near shin, matching guide1. Hands close to belt; pots secure.\nTOP RIGHT: OPPOSITE support, far leg planted beneath hip, near thigh forward RIGHT and knee bent with near boot visibly raised in front of far shin, matching guide2. Near thigh overlaps far leg. Do not mirror torso or repeat the left pose.\nBOTTOM LEFT: return after empty RIGHT fist melee punch, right elbow pulls to ribs and empty fist near chest, left hand guards lower torso, both feet planted. Pots remain on straps; no knife or added weapon.\nBOTTOM RIGHT: fully dead settled body derived from image4. Head remains on LEFT, feet on RIGHT, chest lowered entirely to ground, cheek/hood on relaxed forearm, eyes closed and FACE WRAP IN PLACE, no raised elbow or supported torso. Every pot cold dark terracotta with no orange light; all pots still attached/intact. Retain body proportions and orange sash, knees naturally folded, no blood.\nEqual anatomical scale, generous gutters and margins, complete boots/hood/hands. Faithfully match original painted finish and outfit; no diagrams, guide colors, captions, borders, duplicate limbs, loose projectiles, particles or floor shadows.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/cinderpot-continuity-20260916/idle-reference/unit_neutral_cinderpot_hurlers-poses-corrected-rect-0-0-310-319-green.png",
+          "sha256": "86360ad5850b88f0210289a5afe40033527fef2ba0e5568d6fc40a22af376855"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/cinderpot-continuity-20260916/fall-reference/unit_neutral_cinderpot_hurlers-poses-corrected-rect-622-999-916-1220-green.png",
+          "sha256": "3b3df3f5c6c2c3c48f602fbd08844d05a659aae9056072cba35b2c533b804a78"
+        }
+      ],
+      "selection_notes": "18 packed frames retain 14 original RGBA paintings and select four new supported passing, empty-right-fist recovery and final head-left corpse paintings. Melee remains separate from pot gather/windup/release/recovery; new resting body follows original head-left fall, keeps face wrap/closed eyes and dark attached pots. Reversed original corpse and duplicate original contact are unselected. Original corrected alpha reused; new green-backed sheet uses approved bounded edge preparation. Uniform per-source scales 0.72/0.40 and anatomical anchors; tightened recovery/corpse and kneel/fall crops exclude neighbor pixels and surplus alpha without cutting the intended boots, face wrap, pots or sash. Passing guides still do not establish opposite support; new frames read as backward/forward lift of the same leg. Pot count/strap continuity, body/hood/palette/edge consistency, travel-to-action transition, grounding and connected attack/death timing remain refinement, not final motion acceptance.",
+      "selected_frames": [
+        "passing_back",
+        "passing_forward",
+        "fist_recovery",
+        "dead_head_left"
+      ]
+    }
+  ]
+}

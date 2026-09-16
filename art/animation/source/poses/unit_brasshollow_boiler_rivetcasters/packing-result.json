@@ -1,0 +1,195 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "output": "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/candidate-atlas.png",
+  "sha256": "639f2d7c46ea927f935dc79bdb3f93be8e77efada54b6925b4f109aa7c699b30",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_breathe_a",
+      "index": 0,
+      "alpha_bounds": [
+        135,
+        28,
+        372,
+        240
+      ]
+    },
+    {
+      "name": "idle_breathe_b",
+      "index": 1,
+      "alpha_bounds": [
+        129,
+        28,
+        378,
+        240
+      ]
+    },
+    {
+      "name": "travel_raised_stabilizer_a",
+      "index": 2,
+      "alpha_bounds": [
+        141,
+        24,
+        371,
+        239
+      ]
+    },
+    {
+      "name": "travel_raised_stabilizer_passing",
+      "index": 3,
+      "alpha_bounds": [
+        141,
+        22,
+        360,
+        240
+      ]
+    },
+    {
+      "name": "travel_contact_b_requires_limb_review",
+      "index": 4,
+      "alpha_bounds": [
+        138,
+        23,
+        367,
+        239
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 5,
+      "alpha_bounds": [
+        129,
+        37,
+        388,
+        239
+      ]
+    },
+    {
+      "name": "melee_punch",
+      "index": 6,
+      "alpha_bounds": [
+        131,
+        37,
+        377,
+        239
+      ]
+    },
+    {
+      "name": "ranged_aim",
+      "index": 7,
+      "alpha_bounds": [
+        122,
+        37,
+        377,
+        239
+      ]
+    },
+    {
+      "name": "ranged_recoil",
+      "index": 8,
+      "alpha_bounds": [
+        129,
+        42,
+        388,
+        241
+      ]
+    },
+    {
+      "name": "reload_lift_single_rivet",
+      "index": 9,
+      "alpha_bounds": [
+        140,
+        30,
+        371,
+        240
+      ]
+    },
+    {
+      "name": "reload_insert_single_rivet",
+      "index": 10,
+      "alpha_bounds": [
+        141,
+        29,
+        366,
+        240
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 11,
+      "alpha_bounds": [
+        136,
+        42,
+        372,
+        241
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 12,
+      "alpha_bounds": [
+        136,
+        34,
+        368,
+        243
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 13,
+      "alpha_bounds": [
+        129,
+        42,
+        381,
+        241
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        142,
+        28,
+        377,
+        240
+      ]
+    },
+    {
+      "name": "death_tip",
+      "index": 15,
+      "alpha_bounds": [
+        130,
+        43,
+        382,
+        243
+      ]
+    },
+    {
+      "name": "death_wreck",
+      "index": 16,
+      "alpha_bounds": [
+        123,
+        41,
+        388,
+        243
+      ]
+    },
+    {
+      "name": "dead_cold",
+      "index": 17,
+      "alpha_bounds": [
+        119,
+        41,
+        386,
+        241
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/alpha/poses.png": "22b7470fe6ffd024996bb2ba090028c519f7be3fde29da53c9cb71b6f9e74312",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/continuity-alpha/travel-reload-and-guard.png": "d63287aef5357d8ca6de64eeb955a2760715085d13f3fe24bdd25478b75c1337"
+  }
+}

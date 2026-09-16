@@ -1,0 +1,391 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "jobs": [
+    {
+      "id": "mirehorn-original-checker",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/poses.png",
+      "source_sha256": "e1c4b8f0fa843799dd3ddce9894b5dda9582a6ce759112c3c73f2f9b60dcca02",
+      "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/original.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 155,
+        "tolerance": 14,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            164,
+            122
+          ],
+          [
+            678,
+            161
+          ],
+          [
+            688,
+            160
+          ],
+          [
+            334,
+            203
+          ],
+          [
+            848,
+            264
+          ],
+          [
+            604,
+            273
+          ],
+          [
+            249,
+            288
+          ],
+          [
+            999,
+            285
+          ],
+          [
+            823,
+            283
+          ],
+          [
+            470,
+            284
+          ],
+          [
+            103,
+            284
+          ],
+          [
+            1201,
+            288
+          ],
+          [
+            1015,
+            290
+          ],
+          [
+            200,
+            311
+          ],
+          [
+            172,
+            465
+          ],
+          [
+            895,
+            506
+          ],
+          [
+            1208,
+            552
+          ],
+          [
+            881,
+            583
+          ],
+          [
+            1101,
+            584
+          ],
+          [
+            854,
+            614
+          ],
+          [
+            115,
+            608
+          ],
+          [
+            466,
+            627
+          ],
+          [
+            676,
+            643
+          ],
+          [
+            323,
+            801
+          ],
+          [
+            109,
+            824
+          ],
+          [
+            129,
+            926
+          ],
+          [
+            458,
+            945
+          ],
+          [
+            279,
+            952
+          ],
+          [
+            841,
+            976
+          ],
+          [
+            884,
+            978
+          ],
+          [
+            1265,
+            988
+          ],
+          [
+            762,
+            993
+          ],
+          [
+            776,
+            994
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mirehorn-idle-checker",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/poses-idle-planted.png",
+      "source_sha256": "678c40703dca2702754c00ae920293f8561bb2d06c8d32f16df5a3dd8aaa5e00",
+      "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/idle.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 155,
+        "tolerance": 14,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            465,
+            260
+          ],
+          [
+            467,
+            283
+          ],
+          [
+            611,
+            286
+          ],
+          [
+            563,
+            314
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mirehorn-near-passing-checker",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/walk-near-passing-draft.png",
+      "source_sha256": "7027f4d97d3d4e05632dbe28da0457216fd7db3c9137ef1b3be533e8bae1beef",
+      "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/near-passing.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 155,
+        "tolerance": 14,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            819,
+            170
+          ],
+          [
+            640,
+            346
+          ],
+          [
+            601,
+            362
+          ],
+          [
+            614,
+            380
+          ],
+          [
+            560,
+            525
+          ],
+          [
+            536,
+            559
+          ],
+          [
+            387,
+            673
+          ],
+          [
+            170,
+            575
+          ],
+          [
+            322,
+            602
+          ],
+          [
+            243,
+            654
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mirehorn-far-passing-checker",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/walk-far-passing-draft.png",
+      "source_sha256": "8353d398dccbd167c10411f0e5e2607684f6551efe3c2c9aec87a4f4b6d92be9",
+      "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/far-passing.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 155,
+        "tolerance": 14,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            820,
+            169
+          ],
+          [
+            636,
+            342
+          ],
+          [
+            604,
+            365
+          ],
+          [
+            616,
+            380
+          ],
+          [
+            559,
+            523
+          ],
+          [
+            535,
+            558
+          ],
+          [
+            382,
+            669
+          ],
+          [
+            174,
+            574
+          ],
+          [
+            323,
+            602
+          ],
+          [
+            345,
+            633
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mirehorn-far-contact-checker",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/walk-far-contact-draft.png",
+      "source_sha256": "8ae08d16dae00dba950d6ab7416b26cc879b51e377c074b992b0396ea7bf0bd3",
+      "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/far-contact.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 155,
+        "tolerance": 14,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            815,
+            180
+          ],
+          [
+            649,
+            343
+          ],
+          [
+            602,
+            363
+          ],
+          [
+            556,
+            520
+          ],
+          [
+            542,
+            559
+          ],
+          [
+            381,
+            669
+          ],
+          [
+            172,
+            579
+          ],
+          [
+            247,
+            654
+          ],
+          [
+            343,
+            663
+          ]
+        ]
+      }
+    },
+    {
+      "id": "mirehorn-step-diagonal-a-green",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/step-diagonal-a-green.png",
+      "source_sha256": "077f75372d63236f556e19993be0b6546a5f779fc81ef9ec5e5be118f6c44742",
+      "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/step-diagonal-a-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "mirehorn-step-diagonal-b-green",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/step-diagonal-b-green.png",
+      "source_sha256": "a29d566ed32ddabfac041f311be36ea3678044cc394073549ac1ab88d78882e0",
+      "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/step-diagonal-b-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "mirehorn-ram-contact-four-paw-green",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/ram-contact-four-paw-green.png",
+      "source_sha256": "8d4f4547a1405465c1a8a166b336d21bce81bab93e587ea3ad2d78c00514865a",
+      "output": "art/animation/source/poses/unit_mireclaw_moonbite_mirehorn_breakers/continuity-alpha/ram-contact-four-paw-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

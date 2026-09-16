@@ -1,0 +1,60 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_brasshollow_crucible_crawlers",
+  "date": "2026-09-16",
+  "tool": "image_gen.imagegen",
+  "mode": "built_in",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_not_final_accepted",
+  "outputs": [
+    {
+      "id": "creep-melee-and-guard",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/creep-melee-and-guard.png",
+      "source_sha256": "131c927cc6371559b242eb45a68aaea4d50e87a5945cc27d7b4c0109f8967b33",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a7724ecb-c51b-4eeb-9163-9c297f2df611.png",
+      "prompt": "Use case: identity-preserve. Asset type: original painted fantasy battle sprite animation supplement. Input image 1 is the exact identity and paint-style reference, not a pose to duplicate. Create a 3-column by 2-row sheet, SIX complete clearly separated poses, consistent scale, camera and ground baseline, ample transparent margins around every silhouette. Genuine transparent background, no drawn checker pattern, no ground shadow, no scenery, no text, no labels, no arrows. Preserve all equipment and anatomical ownership. Render new articulated poses, not translations, zooms, or whole-body rotations. Keep every part inside its cell.\nPreserve exact right-facing four-legged crucible crawler, black iron/brass, one round open molten vat, coal hopper and two white gauges at rear-left, EXACTLY FOUR lower walking legs with spiked orange shin plates and claw feet; EXACTLY THREE articulated upper pouring tool arms: one long high tool and two shorter lower tools, all pointing right. No humanoid face or crew. Top-left slow crawl phase with near FRONT leg lifted and curled under vat while other three feet remain planted; top-middle near FRONT foot lands farther right and near REAR leg lifts forward beneath rear hopper, other three grounded; top-right near REAR foot lands while FAR FRONT leg lifts, other three grounded. Give visible joint-connected legs and unambiguous lifted foot gaps; do not duplicate upper tool arms as legs. Bottom-left physical melee anticipation: all four feet planted, long upper arm folds back toward vat, its capped nozzle aimed right, shorter two arms tucked safely; bottom-middle physical melee strike: long upper arm extends forward horizontally to push/ram with its closed metal nozzle, no pouring, NO airborne lava, other two short tool arms folded in, four legs braced. Bottom-right second defensive pose: low body, FOUR feet spread planted, three tools folded tightly above vat as protective frame; do not add shield. Preserve full long tool and rear hopper. Molten vat glows but tools do not spray or drip in these six poses.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/identity-reference.png",
+          "sha256": "f86832ea3d686f71cc06c7793d9acbbea8119d7e95a338425cdd83053bd532c4"
+        }
+      ],
+      "selected": false,
+      "selected_cells": [],
+      "selection_note": "Excluded: fourth walking leg omitted; corrected built-in derivative selected."
+    },
+    {
+      "id": "creep-melee-four-legs",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/creep-melee-four-legs.png",
+      "source_sha256": "4cfe16787083f1f8212fe8e890e75cc77dde7e6f4c65ef8cab6560b917bafa02",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-21a0b7bf-dbd9-4468-944d-40833a866746.png",
+      "prompt": "Use case: precise-object-edit. Image1 is the SIX-pose sheet to correct. Image2 is identity reference only. Fix ONE missing anatomical element: each crawler must have FOUR lower walking legs, not the three currently visible in Image1. Keep all existing three legs and three upper pouring tools unchanged. Restore the fourth, far-side rear leg emerging from the BACK of the vat chassis, visible as a smaller, partially occluded black-and-brass articulated shin and hooked claw foot in the negative gap under the central chassis, behind the large foreground leg. Follow the small fourth foot visible behind the body in image2. It must visibly connect through a mechanical joint to the underside of the vat, not be detached or be a fourth pouring arm. Correct all six poses consistently, with the new FAR REAR foot planted on the ground; existing selected feet can stay lifted in the top row. Preserve all other pixels/identity/poses/order/camera/scale/equipment. Exactly FOUR walking legs and THREE upper tool arms. Preserve bottom middle physical closed-nozzle melee strike with no molten discharge. Genuine transparent background if possible; no scenery, no text, no shadows. Keep full silhouettes inside their existing cells.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/creep-melee-and-guard.png",
+          "sha256": "131c927cc6371559b242eb45a68aaea4d50e87a5945cc27d7b4c0109f8967b33"
+        },
+        {
+          "path": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/identity-reference.png",
+          "sha256": "f86832ea3d686f71cc06c7793d9acbbea8119d7e95a338425cdd83053bd532c4"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "selection_note": "15-frame candidate reuses9 original RGBA paintings and6 corrected new paintings. First supplement omitted fourth walking leg and is excluded. Built-in correction restores a joint-connected partially occluded fourth leg in all six selected cells; three upper tools remain. Separate closed-nozzle physical melee and molten ranged attack, alternating foot-lift creep and braced guard added; cold original wreck retained. Limb occlusion/support sequencing, nozzle/tool-length and vat/body continuity, low guard height and ranged effect timing remain refinement. Explicit bands exclude neighboring feet, nozzle, pour stream and above-row fragments; original molten debris and coal retained."
+    }
+  ],
+  "identity_reference": {
+    "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png",
+    "crop": "10 16 359 379",
+    "reference": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/identity-reference.png",
+    "role": "Authoring reference only; no locally synthesized pose."
+  }
+}

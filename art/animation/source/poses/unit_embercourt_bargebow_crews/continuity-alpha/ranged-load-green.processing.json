@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved local non-generative background/edge cleanup; preserve originals, never generate or warp poses locally.",
+  "id": "bargebow-ranged-load-green",
+  "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/ranged-load-green.png",
+  "source_sha256": "cd1f7624e2067a95a555497b0ef5060e38afc81582b082da842355342b7aa017",
+  "source_rect": [
+    0,
+    0,
+    1162,
+    1354
+  ],
+  "output": "art/animation/source/poses/unit_embercourt_bargebow_crews/continuity-alpha/ranged-load-green.png",
+  "output_sha256": "a4d6f802e4af51880eb54030dd6a41eec060a65995b36714fdc358e1811b4a58",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_embercourt_bargebow_crews/continuity-cutouts.json",
+  "recipe_sha256": "80eb4b30866417b6c21c2825cbd5f07a1d5e08daa7b24b0f69b9ae59d606d8af",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 972792,
+    "edge_pixels": 5210,
+    "unchanged_paint_pixels": 595346,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}
