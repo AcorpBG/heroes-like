@@ -1,0 +1,54 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "canopy-hit-recoil",
+  "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/hit-recoil.png",
+  "source_sha256": "569d2b09a5a3fb6c347dfec04caea2deec334982b8c0da1c3bc513a4c86766d0",
+  "source_rect": [
+    0,
+    0,
+    1236,
+    1273
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/hit-recoil.png",
+  "output_sha256": "29f4566ae2af109433076f2fb320bc1f90ac1be2bac6707107bcb24935a48c34",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-cutouts.json",
+  "recipe_sha256": "a54d0f2fd78096bebda556dea59fbdf462be9b5167f357b5dad2ac9d4941a8f4",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        600,
+        304
+      ],
+      [
+        193,
+        363
+      ],
+      [
+        624,
+        192
+      ],
+      [
+        167,
+        310
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 844137,
+    "edge_pixels": 18660,
+    "unchanged_paint_pixels": 710631,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

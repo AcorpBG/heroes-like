@@ -1,0 +1,117 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "poses-cold-lanterns",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/poses-cold-lanterns.png",
+      "source_sha256": "f5d1dd5519d22468cf29a8574d30e129c7bd6cff07fdd6524b6762d8d49a7cdd",
+      "output": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/poses-cold-lanterns.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "opposite-contact-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/opposite-contact-and-guards.png",
+      "source_sha256": "b413055b55cd4389d2123592bbe25fb41c067a497ee8cc4786ad989e2b8b1710",
+      "output": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/opposite-contact-and-guards.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            548,
+            430
+          ],
+          [
+            1048,
+            440
+          ],
+          [
+            973,
+            215
+          ],
+          [
+            187,
+            840
+          ],
+          [
+            984,
+            887
+          ]
+        ]
+      }
+    },
+    {
+      "id": "recoil-retrieval-and-reload",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/recoil-retrieval-and-reload.png",
+      "source_sha256": "2036f5091debde2640a73a210101bf53a66b01ea3979fafc4ac416c8a41a2c71",
+      "output": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/recoil-retrieval-and-reload.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            186,
+            78
+          ],
+          [
+            171,
+            314
+          ],
+          [
+            398,
+            870
+          ],
+          [
+            376,
+            808
+          ],
+          [
+            826,
+            890
+          ],
+          [
+            474,
+            167
+          ]
+        ]
+      }
+    },
+    {
+      "id": "retrieval-contained",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/retrieval-contained.png",
+      "source_sha256": "bde01765d142982a1ee786936bbc9d60e5c34f84b6d4c69e6c006ad9ea6d71e4",
+      "output": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/retrieval-contained.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            1024,
+            288
+          ],
+          [
+            821,
+            339
+          ],
+          [
+            796,
+            219
+          ]
+        ]
+      }
+    }
+  ]
+}

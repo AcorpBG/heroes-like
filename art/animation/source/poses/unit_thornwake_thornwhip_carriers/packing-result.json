@@ -1,0 +1,126 @@
+{
+  "unit_id": "unit_thornwake_thornwhip_carriers",
+  "output": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/candidate-atlas.png",
+  "sha256": "8ff007de90b6ada3584ce5a68e37642572320f33f891380f4dbb82826acbe928",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        184,
+        16,
+        307,
+        241
+      ]
+    },
+    {
+      "name": "idle_1",
+      "index": 1,
+      "alpha_bounds": [
+        187,
+        18,
+        316,
+        242
+      ]
+    },
+    {
+      "name": "walk_near_lift",
+      "index": 2,
+      "alpha_bounds": [
+        182,
+        13,
+        307,
+        240
+      ]
+    },
+    {
+      "name": "walk_far_lift",
+      "index": 3,
+      "alpha_bounds": [
+        183,
+        11,
+        308,
+        240
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 4,
+      "alpha_bounds": [
+        143,
+        39,
+        355,
+        244
+      ]
+    },
+    {
+      "name": "melee_contact",
+      "index": 5,
+      "alpha_bounds": [
+        168,
+        53,
+        508,
+        244
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 6,
+      "alpha_bounds": [
+        174,
+        79,
+        332,
+        243
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 7,
+      "alpha_bounds": [
+        176,
+        75,
+        350,
+        244
+      ]
+    },
+    {
+      "name": "kneel",
+      "index": 8,
+      "alpha_bounds": [
+        166,
+        94,
+        350,
+        247
+      ]
+    },
+    {
+      "name": "side_fall",
+      "index": 9,
+      "alpha_bounds": [
+        147,
+        131,
+        375,
+        247
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 10,
+      "alpha_bounds": [
+        133,
+        141,
+        371,
+        246
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_thornwhip_carriers/continuity-alpha/original.png": "42f56e7ea244705dcf75fc0b3ea7052929554f41a832ca87d713d4e9e73e31f1",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_thornwhip_carriers/continuity-alpha/walk-near-lift-magenta.png": "cb45872fe9d66dd3f9e3da35a43454047e07e6e38a200ecd4582675e2a5f4404",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_thornwhip_carriers/continuity-alpha/walk-far-lift-magenta.png": "4a2c3a1408edb4ca182c823053acdaa2e95fc8c680991c2a27e65ecada8b746e"
+  }
+}

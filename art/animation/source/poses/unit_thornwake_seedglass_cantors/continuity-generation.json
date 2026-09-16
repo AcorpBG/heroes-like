@@ -1,0 +1,164 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_thornwake_seedglass_cantors",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "sources": [
+    {
+      "source": "continuity-walk-0.png",
+      "sha256": "2cd19af82c998f3fa3d928032f7e4061f8297ba694d26395c01ea4190fb21e85",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-083bc5e5-d534-4190-a3ed-d4df42f6867f.png",
+      "selected": false,
+      "selected_source_indices": [],
+      "prompt": "Use case: sketch-to-render. ONE original tactical battle walking sprite.\nImage 1 is the authoritative leg-pose guide. Image 2 is the fixed character/style/equipment reference. Paint image 2's slender forest archer with EXACTLY image 1's two hip-knee-foot chains and occlusion.\nNEAR/right foreground leg leads toward screen RIGHT, FAR/left leg trails toward LEFT. Near forward thigh crosses in FRONT of the trailing far thigh.\nPreserve its slender bark body, ivory antlered wooden face mask with orange narrow eye slits, leaf crown, amber leaf shoulder pendants, long ivory-and-green leaf skirt, root-toe feet, one complete tall twisting wooden bow held in the FAR LEFT hand at the waist toward screen RIGHT. The near RIGHT hand rests near its waist, no arrow nocked during travel. Keep both long bow tips and its continuous taut string. Same three-quarter right-facing camera and costume, no mirroring. Keep body mass and mask consistent. Exactly two arms and two legs. Flowing leaf skirts must not erase leg ownership.\nSingle full body centered with clear 12 percent borders around all bow tips, antlers, feet and skirt. Genuine transparent backdrop otherwise pure white; no checkerboard, shadow, ground, guide colors, lettering, particles, magic projectile or other objects. Painted original game-art finish.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedglass_cantors/standing-reference-light.png",
+          "sha256": "5b9e62cd8102e927bb67ee36ff6cdc90b6c07c6a9d24743163e968230637a5c9"
+        }
+      ],
+      "review": "Unselected repeated-contact precursor; diagram did not establish requested opposite leg lead."
+    },
+    {
+      "source": "continuity-walk-1.png",
+      "sha256": "194b43b6aed9981cd92282999078affa9a669597dcd7774cd3b09c28037dd11e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cb3f1dbe-b9ce-48db-a30f-814dd8fd2114.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: sketch-to-render. ONE original tactical battle walking sprite.\nImage 1 is the authoritative leg-pose guide. Image 2 is the fixed character/style/equipment reference. Paint image 2's slender forest archer with EXACTLY image 1's two hip-knee-foot chains and occlusion.\nNEAR/right leg planted vertically supports the weight. FAR/left knee bent, foot lifted behind the planted calf.\nPreserve its slender bark body, ivory antlered wooden face mask with orange narrow eye slits, leaf crown, amber leaf shoulder pendants, long ivory-and-green leaf skirt, root-toe feet, one complete tall twisting wooden bow held in the FAR LEFT hand at the waist toward screen RIGHT. The near RIGHT hand rests near its waist, no arrow nocked during travel. Keep both long bow tips and its continuous taut string. Same three-quarter right-facing camera and costume, no mirroring. Keep body mass and mask consistent. Exactly two arms and two legs. Flowing leaf skirts must not erase leg ownership.\nSingle full body centered with clear 12 percent borders around all bow tips, antlers, feet and skirt. Genuine transparent backdrop otherwise pure white; no checkerboard, shadow, ground, guide colors, lettering, particles, magic projectile or other objects. Painted original game-art finish.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedglass_cantors/standing-reference-light.png",
+          "sha256": "5b9e62cd8102e927bb67ee36ff6cdc90b6c07c6a9d24743163e968230637a5c9"
+        }
+      ],
+      "review": "Selected candidate painting; exact anatomy/equipment/continuity and event timing remain whole-roster refinement."
+    },
+    {
+      "source": "continuity-walk-2.png",
+      "sha256": "b7f3bb3e99d8e1e8c92ae872867ce7100b25e826e2f60791ef618573644dd954",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-856a6f84-ea44-4853-a94c-c056a815ced1.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: sketch-to-render. ONE original tactical battle walking sprite.\nImage 1 is the authoritative leg-pose guide. Image 2 is the fixed character/style/equipment reference. Paint image 2's slender forest archer with EXACTLY image 1's two hip-knee-foot chains and occlusion.\nFAR/left leg leads forward toward screen RIGHT. NEAR/right foreground leg trails toward LEFT, its backward thigh crossing in FRONT of the far thigh.\nPreserve its slender bark body, ivory antlered wooden face mask with orange narrow eye slits, leaf crown, amber leaf shoulder pendants, long ivory-and-green leaf skirt, root-toe feet, one complete tall twisting wooden bow held in the FAR LEFT hand at the waist toward screen RIGHT. The near RIGHT hand rests near its waist, no arrow nocked during travel. Keep both long bow tips and its continuous taut string. Same three-quarter right-facing camera and costume, no mirroring. Keep body mass and mask consistent. Exactly two arms and two legs. Flowing leaf skirts must not erase leg ownership.\nSingle full body centered with clear 12 percent borders around all bow tips, antlers, feet and skirt. Genuine transparent backdrop otherwise pure white; no checkerboard, shadow, ground, guide colors, lettering, particles, magic projectile or other objects. Painted original game-art finish.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedglass_cantors/standing-reference-light.png",
+          "sha256": "5b9e62cd8102e927bb67ee36ff6cdc90b6c07c6a9d24743163e968230637a5c9"
+        }
+      ],
+      "review": "Selected candidate painting; exact anatomy/equipment/continuity and event timing remain whole-roster refinement."
+    },
+    {
+      "source": "continuity-walk-3.png",
+      "sha256": "afd589cc0f614d6495b4f5fa9493cc89d3cce3cfc6fe43a52584928e8ab019b0",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c6607f9e-6ba2-41e3-be7f-1c2e4c65f0e9.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: sketch-to-render. ONE original tactical battle walking sprite.\nImage 1 is the authoritative leg-pose guide. Image 2 is the fixed character/style/equipment reference. Paint image 2's slender forest archer with EXACTLY image 1's two hip-knee-foot chains and occlusion.\nFAR/left leg planted vertically supports the weight. NEAR/right knee bent forward, foot lifted in the foreground alongside the planted calf.\nPreserve its slender bark body, ivory antlered wooden face mask with orange narrow eye slits, leaf crown, amber leaf shoulder pendants, long ivory-and-green leaf skirt, root-toe feet, one complete tall twisting wooden bow held in the FAR LEFT hand at the waist toward screen RIGHT. The near RIGHT hand rests near its waist, no arrow nocked during travel. Keep both long bow tips and its continuous taut string. Same three-quarter right-facing camera and costume, no mirroring. Keep body mass and mask consistent. Exactly two arms and two legs. Flowing leaf skirts must not erase leg ownership.\nSingle full body centered with clear 12 percent borders around all bow tips, antlers, feet and skirt. Genuine transparent backdrop otherwise pure white; no checkerboard, shadow, ground, guide colors, lettering, particles, magic projectile or other objects. Painted original game-art finish.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedglass_cantors/standing-reference-light.png",
+          "sha256": "5b9e62cd8102e927bb67ee36ff6cdc90b6c07c6a9d24743163e968230637a5c9"
+        }
+      ],
+      "review": "Selected candidate painting; exact anatomy/equipment/continuity and event timing remain whole-roster refinement."
+    },
+    {
+      "source": "continuity-punch-contact.png",
+      "sha256": "214568df477b54234d64f16c46fde37d9d6a3dfa44acc5224179219a30390b60",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9dc115dc-974f-4a6a-b494-bed7eafce6e0.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: sketch-to-render. One original painted battle melee contact sprite.\nImage 1 supplies ONLY the near-arm punching anatomy. Image 2 is the exact character, proportions, bow and style. The slim bark archer delivers a NEAR RIGHT-arm straight punch toward screen RIGHT: its near shoulder is at viewer LEFT, and that near arm extends ACROSS the chest to a clenched fist at screen RIGHT. The FAR LEFT hand keeps holding the ONE long twisting bow VERTICALLY at the waist to the right, preserving its full height, both curled tips and string. Do NOT copy the horizontal gray equipment block from the diagram. Exactly TWO arms/hands: one punching fist, one bow-holding hand. No arrow or extra weapon.\nPreserve ivory antlered mask, narrow orange eye slits, green leaf crown, amber shoulder leaves, long green/ivory skirt and root feet. Braced feet with a slight forward torso twist; same slender body and three-quarter right-facing camera, no mirrored anatomy.\nFully include every extremity and the COMPLETE original-height bow with generous clear margins. Genuine transparency otherwise white; no checkerboard, shadows, text, guide colors, effects or new accessories.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-near-arm-punch.png",
+          "sha256": "4caaf54d3a8c423b70b462eafe8c12c91970ab5ff66d2883b5fae171182190a3"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedglass_cantors/standing-reference-light.png",
+          "sha256": "5b9e62cd8102e927bb67ee36ff6cdc90b6c07c6a9d24743163e968230637a5c9"
+        }
+      ],
+      "review": "Selected candidate painting; exact anatomy/equipment/continuity and event timing remain whole-roster refinement."
+    },
+    {
+      "source": "continuity-guard-braced.png",
+      "sha256": "4a2a9e6c896dc70d5f6a394eec8b92c9a634a76f253f42173d0c221e605538a1",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3bbb4ca0-3846-42a7-9b94-44175c058f3f.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: identity-preserve. ONE original battle defend impact frame. Edit the single kneeling archer in the reference; ignore the tiny unrelated edge fragment at the extreme left.\nKeep the same slim bark archer with ivory antlered mask, green crown, orange slit eyes, amber shoulder leaves, long ivory/green leaf skirt, root feet and exactly one full-height vertical twisting wooden bow held by the FAR LEFT hand. Its NEAR RIGHT forearm protects the mask. Change only posture: head ducks slightly deeper behind that raised forearm, torso compresses and the front knee bends a little further as it braces an impact. No arm or equipment swap. Exactly two arms and two legs. Preserve its slender proportions and three-quarter right-facing camera.\nFully include the entire bow, both curls/string, antlers, skirt and feet with wide clear borders. Painted original sprite on genuine transparency or plain white otherwise; no checkerboard, ground shadows, labels, extra figures, impact sparks or particles.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedglass_cantors/guard-reference-isolated-light.png",
+          "sha256": "a65edaf3be160140d3ee7fb2641d535fb8e04d483db82dc99d0e081c6e098243"
+        }
+      ],
+      "review": "Selected candidate painting; exact anatomy/equipment/continuity and event timing remain whole-roster refinement."
+    },
+    {
+      "source": "continuity-ranged-release-clear.png",
+      "sha256": "9d54d4c7d2a04dedfce076c23a588e21ebc44d65da1ff806b0eb9192cb43ea54",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2b1028f5-859f-4296-a8a9-7cc68fd3ef35.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit. Edit ONE original archer battle release frame. Keep the entire archer pose unchanged: FAR LEFT arm extended gripping one full-height vertical wood bow, NEAR RIGHT hand released back beside the face, same slim bark body, ivory antlered mask, leaf crown, orange eye slits, amber shoulder leaves, green/ivory flowing skirt and root feet.\nRemove ONLY the glowing yellow arrow, the horizontal yellow light trail across the bow, and the detached flying gold particles. Reconstruct clean original bow wood, bowstring and the tiny background areas those effects obscured. There must be NO arrow on the bow, NO projectile, NO horizontal yellow beam, NO floating effect. The bowstring is now relaxed straight between both bow tips after release. The game renders its projectile separately.\nPreserve body anatomy, equipment scale, complete antlers and every toe. Keep the whole character within a generous clear canvas margin with both bow curls fully shown. Same right-facing camera and detailed original painted style. Genuine transparent background otherwise plain pure white; no checkerboard, shadows, text, guide art or new objects.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedglass_cantors/release-reference-full-light.png",
+          "sha256": "dc7a6e84d35b7a9697b559ceb90588b70f6ae02873df83e15110528774736daa"
+        }
+      ],
+      "review": "Selected release with painted projectile/trail removed generatively; one full bow remains."
+    },
+    {
+      "source": "continuity-near-contact-unfolded.png",
+      "sha256": "268b2a5b7a8cc68fc7f27a16785e230dcef32ab7b2d4d8b3dabbbd13644969b4",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a6f49376-fddb-4173-9552-4b971cbd4108.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit. Edit ONLY the legs of this ONE full-body original battle sprite into the next walking contact pose. Keep the entire upper body, mask, antlers, bow, arms, costume and camera unchanged.\nThe raised foreground RIGHT thigh crosses from the near hip diagonally toward the forward knee on screen RIGHT. KEEP that exact thigh, its foreground overlap and forward knee. Unfold that raised shin down and forward toward screen RIGHT until its root foot is planted well in FRONT of the body. The currently lifted foot becomes the FRONT contact foot. The other FAR LEFT leg moves backward to screen LEFT, its rear foot planted behind the body. Keep the near forward thigh in FRONT of the far backward thigh at the crossing; do not exchange ownership. Two legs and two feet, long slender body unchanged. Leaf skirt flows around the legs without hiding the forward knee.\nKeep the same ivory mask/leaf crown/amber shoulder leaves/ivory-green skirt and ONE complete tall vertical wood bow with both curls and taut string in FAR LEFT hand. No arrows. Same three-quarter facing RIGHT, no mirror. Entire character fully included with clear canvas margins. Genuine transparency or pure white otherwise; no floor, shadow, checkerboard, labels, particles or other figures.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-walk-3.png",
+          "sha256": "afd589cc0f614d6495b4f5fa9493cc89d3cce3cfc6fe43a52584928e8ab019b0"
+        }
+      ],
+      "review": "Selected foreground knee unfolding from passing reference; full gait acceptance deferred."
+    }
+  ]
+}

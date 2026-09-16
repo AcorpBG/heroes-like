@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint.",
+  "id": "poses-idle-planted",
+  "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-idle-planted.png",
+  "source_sha256": "ac6493f435ddf966282e9b8e38bccf33f9f8c716dfab67e115757f3accef4455",
+  "source_rect": [
+    0,
+    0,
+    1478,
+    1064
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses-idle-planted.png",
+  "output_sha256": "a59e1add30b987b2ae40c06a6b1692532f343eeed25744245dd8efb033994dd6",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-cutouts.json",
+  "recipe_sha256": "18b484c522c58ac6fd567419fd54136e559f5a0274914d81f3632c6aa34be056",
+  "parameters": {
+    "minimum": 175,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 972805,
+    "edge_pixels": 35751,
+    "unchanged_paint_pixels": 564036,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

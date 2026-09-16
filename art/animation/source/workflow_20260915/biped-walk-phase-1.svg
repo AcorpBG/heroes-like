@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="600" viewBox="0 0 512 600">
+<rect width="512" height="600" fill="white"/>
+<g font-family="DejaVu Sans" fill="#1b2330">
+<g transform="translate(0,0)">
+<text x="22" y="35" font-size="21">A passing / blue supports</text>
+<path d="M35 488H480" stroke="#9ba9ba" stroke-width="2"/>
+<polyline points="264,306 303,368 252,407" fill="none" stroke="#e08020" stroke-width="27" stroke-linecap="round" stroke-linejoin="round"/><circle cx="264" cy="306" r="9" fill="white" stroke="#e08020" stroke-width="5"/><circle cx="303" cy="368" r="9" fill="white" stroke="#e08020" stroke-width="5"/><circle cx="252" cy="407" r="9" fill="white" stroke="#e08020" stroke-width="5"/><path d="M243 407h40" stroke="#e08020" stroke-width="17" stroke-linecap="round"/>
+<path d="M216 180L273 180L290 294L261 317L219 303Z" fill="#d5dce5" stroke="#586879" stroke-width="3"/>
+<ellipse cx="251" cy="139" rx="32" ry="39" fill="#d5dce5" stroke="#586879" stroke-width="3"/>
+<path d="M281 132L298 146L281 149" fill="#d5dce5" stroke="#586879" stroke-width="3"/>
+<path d="M227 195L210 247L273 265 M271 198L304 235L293 265" fill="none" stroke="#586879" stroke-width="18" stroke-linecap="round"/>
+<polyline points="240,306 260,390 258,476" fill="none" stroke="#147dc1" stroke-width="27" stroke-linecap="round" stroke-linejoin="round"/><circle cx="240" cy="306" r="9" fill="white" stroke="#147dc1" stroke-width="5"/><circle cx="260" cy="390" r="9" fill="white" stroke="#147dc1" stroke-width="5"/><circle cx="258" cy="476" r="9" fill="white" stroke="#147dc1" stroke-width="5"/><path d="M249 476h40" stroke="#147dc1" stroke-width="17" stroke-linecap="round"/>
+<text x="55" y="545" font-size="18">BLUE = near leg; ORANGE = far leg</text>
+<text x="55" y="575" font-size="17">Fixed camera / body faces RIGHT</text>
+</g>
+</g></svg>

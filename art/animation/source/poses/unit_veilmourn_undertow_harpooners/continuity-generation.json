@@ -1,0 +1,126 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_undertow_harpooners",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/corpse-lantern-extinguished.png",
+      "source_sha256": "eeaa96e7f3413c8d52b89006e12dec0c748c3ecb4a1ed9be7c23ea9f120aaa65",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-dd8580ca-3abb-468b-a286-aa9db6490249.png",
+      "prompt": "Use case: precise-object-edit. This single original Undertow Harpooner corpse is the edit target. Make ONLY the tiny violet lantern at the waist, partly behind the upper elbow near image center, visibly extinguished: dark desaturated glass with no white luminous core or purple halo. Retain brass lantern cage, pearl ornaments, blue enamel knee plates, metal hands, hat and mask, net harness, navy/ivory cloak, prone body head LEFT feet RIGHT, and loaded tethered launcher on ground in front, identical geometry/camera/proportions. No limb/equipment redesign or added effects. Remove green authoring backdrop, output genuine transparent background with whole body/launcher uncut, no floor shadows text.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/harpoon-continuity-20260916/corpse/unit_veilmourn_undertow_harpooners-poses-rect-906-1055-1222-1287-green.png",
+          "sha256": "dd117e143c7926fa10552c6e2f72c69a6d84ba0dbe99c0b5ae35ecdb161060e7",
+          "role": "edit_target_or_motion_guide"
+        }
+      ],
+      "selected_cells": [],
+      "excluded_cells": {
+        "0": "Rejected entire output: thickened contours/restyling and clipped left helmet/beads."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/poses-cold-lanterns.png",
+      "source_sha256": "f5d1dd5519d22468cf29a8574d30e129c7bd6cff07fdd6524b6762d8d49a7cdd",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ceff4e89-b3cb-41af-aa70-298fd04efdb3.png",
+      "prompt": "Use case: precise-object-edit. Make a very small correction to this exact original 16-pose Undertow Harpooner sprite sheet; preserve 4x4 cell layout, pixel dimensions, poses, face mask, hat beads, body scale, painterly shading, fine edge style and all equipment. ONLY bottom row columns3 and4 fallen/final-corpse poses: extinguish their small violet WAIST LANTERN, partly occluded behind forearm. Keep lantern cage and glass present but dark desaturated violet-gray with no bright core, glow or emitted light. Keep pearl ornaments and blue enamel armor highlights unchanged. All other14 figures completely unchanged. Do not zoom, crop, redraw, thicken outlines, move figures or delete equipment. Whole bodies, hat beads, cloak tips and launchers stay uncut at original locations. Genuine transparent background replacing checkerboard, no floor, captions or effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/poses.png",
+          "sha256": "d839766250010228def6f7870c61b728ec76e7d9855c811280a796a5cb7df692",
+          "role": "edit_target_or_motion_guide"
+        }
+      ],
+      "selected_cells": [
+        14,
+        15
+      ],
+      "excluded_cells": {
+        "0-13": "Retain existing genuine RGBA original poses; no need to rekey or repaint."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/opposite-contact-and-guards.png",
+      "source_sha256": "b413055b55cd4389d2123592bbe25fb41c067a497ee8cc4786ad989e2b8b1710",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5a9d9b10-8713-4de0-9009-f2701401fa4c.png",
+      "prompt": "Use case: sketch-to-render. FOUR original Undertow Harpooner full-body poses in TWO columns TWO rows, generous margins and fixed RIGHT-facing three-quarter torso/head camera. Input1 is the exact leg pose for TOP LEFT only, input2 fixes identity and equipment. Top LEFT: follow orange-forward diagram: FAR LEFT thigh/leg extends toward screen RIGHT with heel planted ahead; NEAR RIGHT thigh/leg trails diagonally toward screen LEFT with toe behind. Foreground right knee must be BEHIND the far left knee, not the usual near-leg-forward pose; exactly two legs with visible continuous hip/knee/pointed-boot attachment. Keep upper body facing RIGHT, not mirrored. Original blue-black armor colors, never diagram colors. Top RIGHT: quiet planted ready stance, launcher carried diagonally down RIGHT, shoulders lowered, cloak settles. Bottom LEFT: crouched guard with both feet planted, loaded launcher close diagonally across chest. Bottom RIGHT: matching crouched guard, slightly shifted weight onto rear foot, shoulders tuck behind launcher, same two grips and equipment size. All four retain RIGHT hand rear grip and LEFT forward support, same single wooden/teal-metal harpoon launcher with mounted cylindrical rope spool and exactly ONE long barbed bolt seated in guide, no loose rope near feet. White angular face mask/black eye slots, dark teal ornate coral-trimmed tricorn with hanging pearls, blue-enamel bronze-trimmed armor, torn navy/off-white cloak, fishing-net belt with blue medallions, violet belt lantern and pointed armored boots unchanged. Preserve fine painterly original shading, not thick comic outlines. Whole figure, cloak and harpoon uncut. Genuinely transparent background, no checkerboard, diagrams, labels, floor, shadow, firing effect or added gear.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d",
+          "role": "edit_target_or_motion_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/identity-reference.png",
+          "sha256": "21aa35b9d45d0c41329a69caedd1988e1ac24a26009c724923e2d98e1299d344",
+          "role": "identity_or_supporting_reference"
+        }
+      ],
+      "selected_cells": [
+        0,
+        2,
+        3
+      ],
+      "excluded_cells": {
+        "1": "Existing idle pair preferred."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/recoil-retrieval-and-reload.png",
+      "source_sha256": "2036f5091debde2640a73a210101bf53a66b01ea3979fafc4ac416c8a41a2c71",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3a362fa7-dba1-4992-8076-2ec247787a8a.png",
+      "prompt": "Use case: precise-object-edit. FOUR original Undertow Harpooner ranged-action poses in TWO columns TWO rows. Input1 fixed identity/loaded weapon reference; input2 row3 first three cells show existing aim/discharge/empty guide, preserve that weapon mechanism. Same full-body RIGHT-facing three-quarter camera, painterly style, body/launcher scale and planted stance in all four. Top-left: after-shot recoil, RIGHT hand stays on rear grip, LEFT supports front, open EMPTY muzzle guide has no seated barbed bolt, barrel tips up slightly and shoulders absorb kick; no detached projectile or muzzle flash. Top-right: retrieval, LEFT supports same EMPTY launcher at waist, RIGHT hand turns a small crank attached to its EXISTING large rope spool, short taut tether leaves muzzle toward screen RIGHT; keep visible end contained in cell, no extra spool or spare harpoon. Bottom-left: same launcher slightly lowered, LEFT supports stock, RIGHT hand holds exactly ONE retrieved barbed harpoon shaft just above guide, parallel to barrel pointing RIGHT, short tether visibly joins harpoon rear to original spool; no second bolt in barrel. Bottom-right: insertion finishes, RIGHT hand pushes the same single shaft into guide while LEFT supports launcher; loaded barbed head now protrudes normally like input1, rope wound back onto original spool. Keep complete connected hands, one spool and one bolt only. White angular mask, dark teal/bronze coral tricorn/pearls, blue armor, ivory/navy ragged cloak, fishing-net belt/medallions, violet lantern unchanged. Full uncut figure/boots/cloak/weapon with generous margins. No thick comic outlines, no blood/effects, no labels, no floor/shadows. Genuine transparent background, never painted checkerboard.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/identity-reference.png",
+          "sha256": "21aa35b9d45d0c41329a69caedd1988e1ac24a26009c724923e2d98e1299d344",
+          "role": "edit_target_or_motion_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/poses.png",
+          "sha256": "d839766250010228def6f7870c61b728ec76e7d9855c811280a796a5cb7df692",
+          "role": "identity_or_supporting_reference"
+        }
+      ],
+      "selected_cells": [
+        0,
+        2,
+        3
+      ],
+      "excluded_cells": {
+        "1": "Tether extends past cell edge; replaced by contained retrieval."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/retrieval-contained.png",
+      "source_sha256": "bde01765d142982a1ee786936bbc9d60e5c34f84b6d4c69e6c006ad9ea6d71e4",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-71430043-ba4a-4da9-8e0d-9a033d759603.png",
+      "prompt": "Use case: precise-object-edit. Preserve this exact four-cell 2x2 Undertow Harpooner action sheet, all figures and gear sizes, pose positions, camera and painterly shading. ONLY TOP-RIGHT cranking pose: remove the taut rope segment extending from launcher beyond the RIGHT canvas edge. Show retrieval nearly finished: shorten that tether into a small loose curve immediately under/in front of the EMPTY muzzle, ending in one retrieved barbed harpoon bolt lying parallel and just beneath muzzle, fully INSIDE the top-right cell with at least30 pixels margin from right edge. Keep original existing rope spool, right hand on its crank, left hand supporting launcher, guide still empty, only ONE bolt on the short tether, no second loaded head. This is the retrieved bolt before bottom-left hand lifts it for insertion. No other changes to any of the four poses, do not crop or zoom. All original boots/cloak/hat beads and equipment preserved. Genuine transparent background, no checkerboard, floor, shadow, text or added effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/recoil-retrieval-and-reload.png",
+          "sha256": "2036f5091debde2640a73a210101bf53a66b01ea3979fafc4ac416c8a41a2c71",
+          "role": "edit_target_or_motion_guide"
+        }
+      ],
+      "selected_cells": [
+        1
+      ],
+      "excluded_cells": {
+        "0,2,3": "Original action supplement retained; only corrected retrieval selected."
+      }
+    }
+  ],
+  "review_notes": [
+    "20-frame candidate: eleven original RGBA paintings reused unchanged, two whole-sheet cold-lantern derivatives and seven selected new contact/guard/action paintings across five built-in outputs including one fully rejected corpse edit.",
+    "Single-corpse edit changes paint style and clips helmet; excluded. Whole-sheet edit preserves style and extinguishes fall/corpse waist lantern without removing its cage, harness or grounded launcher.",
+    "Ranged sequence retains loaded aim then empty-guide recoil, contained retrieved barb, one lifted bolt above an empty rail, and insertion. Original off-cell tether retrieval excluded.",
+    "Retrieved barb shaft length/attachment changes before next full-bolt lift and hand/mechanism ownership still require refinement; selected retrieval is not final mechanical acceptance.",
+    "New contact still resembles original leading leg, so it is a planted bridge rather than an accepted opposite contact. New/original body scale/palette and full-roster support/travel and transitions/timing remain unaccepted.",
+    "Original real RGBA is not rekeyed. Banded crop excludes neighboring hats, boots, tether, fall body and kneeling spearhead while preserving selected cloak, weapon and extremities."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Explicit approval for deterministic background and edge cleanup; preserve original paint and poses.",
+  "id": "poses-narrow",
+  "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/poses.png",
+  "source_sha256": "4790e00a57e56237d33988e406bb80dfb92b9f64cdc05f4baca33927b6d9ec2a",
+  "source_rect": [
+    0,
+    0,
+    1223,
+    1286
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/poses-narrow.png",
+  "output_sha256": "832bf6244a0a7b2cf6ce10e2e95f111486a9baed2dac6b411bd2e27ab2dd4b8d",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-cutouts.json",
+  "recipe_sha256": "7f62887079812e3dc278f195c8df98b48c597d2614d057d16123ace886c9c715",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 95,
+    "tolerance": 4,
+    "edge_radius": 1,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 888772,
+    "edge_pixels": 24390,
+    "unchanged_paint_pixels": 659616,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,165 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion",
+  "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/candidate-atlas.png",
+  "sha256": "b035a3aee198b75e7e32b574f2068086ff79d8d833979a98bf5974fdf51e5952",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle",
+      "index": 0,
+      "alpha_bounds": [
+        135,
+        23,
+        370,
+        244
+      ]
+    },
+    {
+      "name": "idle_breath",
+      "index": 1,
+      "alpha_bounds": [
+        133,
+        21,
+        372,
+        240
+      ]
+    },
+    {
+      "name": "step_rear_left",
+      "index": 2,
+      "alpha_bounds": [
+        132,
+        23,
+        371,
+        240
+      ]
+    },
+    {
+      "name": "step_fore_left",
+      "index": 3,
+      "alpha_bounds": [
+        133,
+        22,
+        371,
+        230
+      ]
+    },
+    {
+      "name": "step_rear_middle",
+      "index": 4,
+      "alpha_bounds": [
+        133,
+        23,
+        371,
+        242
+      ]
+    },
+    {
+      "name": "step_fore_right",
+      "index": 5,
+      "alpha_bounds": [
+        133,
+        22,
+        372,
+        239
+      ]
+    },
+    {
+      "name": "ram_windup",
+      "index": 6,
+      "alpha_bounds": [
+        131,
+        24,
+        370,
+        239
+      ]
+    },
+    {
+      "name": "ram_contact",
+      "index": 7,
+      "alpha_bounds": [
+        113,
+        30,
+        389,
+        241
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 8,
+      "alpha_bounds": [
+        133,
+        40,
+        372,
+        238
+      ]
+    },
+    {
+      "name": "guard_breath",
+      "index": 9,
+      "alpha_bounds": [
+        133,
+        40,
+        372,
+        238
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        139,
+        30,
+        372,
+        249
+      ]
+    },
+    {
+      "name": "death_buckle",
+      "index": 11,
+      "alpha_bounds": [
+        136,
+        56,
+        351,
+        240
+      ]
+    },
+    {
+      "name": "death_side",
+      "index": 12,
+      "alpha_bounds": [
+        131,
+        66,
+        352,
+        242
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 13,
+      "alpha_bounds": [
+        132,
+        116,
+        370,
+        240
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_worldroot_bastion/alpha/poses.png": "4bef909567ad717dbfc597c0f8bfce5d0a56a2c4d6cd2e103ed4cedb65bb0bbc",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/idle-breath.png": "e6f3d1eab1daae5e4aa8e514dc86b0a3547d3f36471f220701fb72e3b88c45a3",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-rear-left.png": "a1b6e1c60aad388cfbfa4eae3ae5cf89523edc8d14ad2f0a3c1ca2afd62fa29f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-fore-left.png": "c0d907fb82865434802b7dbc2478a4bb8b5c0c936c3e8c5664852175b8549160",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-rear-middle.png": "68be4d53d62929a4819525f7362b20942d5cd3f738e00a9d78e4e9d218093601",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-fore-right.png": "16f2261bbb356a80e53a009326a860c062fd10e5641f80d58d81510b7d164d6e",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/ram-windup.png": "60e56b8b12848cb30ffeb4bc332ebd2a6b7a702174509b54fb796f0cd79a4eb8",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/ram-contact-complete.png": "e78bc42a0e4ecf9bf9dc1cfc083671fc9dc57672ec0be3b52daeaeb6a07b1fb7",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/guard-brace.png": "c1753c04a221aeb77baa1493768342030bd8980815bf27c415272dab52d458a6",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/guard-breath.png": "f98908a4cfd34ba48f410d35a99697bf5e3ef7895635550e608f98af577c08e7",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/hit-recoil.png": "f2d23a48c4ce08ce1fbabccab20a0843f271191a9dee7be2305c4b16443f9240",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/dead-inert.png": "b50c56bd15f1ac5f2ada3f881f08085e34187ddce7a21f07bffff4a493a2f986"
+  }
+}

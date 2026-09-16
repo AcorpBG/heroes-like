@@ -1,0 +1,163 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_saltwake_eulogists",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "poses-extracted",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/poses-extracted.png",
+      "source_sha256": "056bca4e8c609d94320bf04e849e62a5f6e39702be4246c430df657ba27bfcd3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-623b332e-7bd7-40c0-a14c-d4058456a02c.png",
+      "prompt": "Use case: background-extraction. Edit target: supplied sixteen-pose Saltwake Eulogist sprite sheet. Remove ONLY the gray checkerboard, including enclosed gaps between staff/arms, trailing cloth and magic scroll loops, to genuine transparent RGBA. Preserve all sixteen original paintings exactly, every mask, robe, embroidered ivory panel, navy shadow, cyan veil and spell wisp, all three lantern panels, complete staff, original placement and 1223 by 1286 canvas. Preserve dark final corpse lights. No repainting, no restyling or changing poses, no cropping, no added scene or floor, no replacement solid color, no painted checkerboard or colored matte, no colored spill. Actual transparent alpha around original painted pixels.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/poses.png",
+          "sha256": "4790e00a57e56237d33988e406bb80dfb92b9f64cdc05f4baca33927b6d9ec2a"
+        }
+      ],
+      "selected": false,
+      "selected_cells": [],
+      "notes": "Rejected: repainted original, retained checker and relit corpse."
+    },
+    {
+      "id": "guided-walk-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/guided-walk-and-guards.png",
+      "source_sha256": "fb66d83a246d3152cd68e4399a167ad62a5d0d981232ceaa41900aa686d24050",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a547cde9-340b-4fb3-a528-b8270dba7800.png",
+      "prompt": "Use case: stylized-concept. SIX original Saltwake Eulogist animation cutouts in 3 columns x 2 rows. Images1-4 are the anatomical WALK POSE targets in order, blue denotes near leg and orange far leg; do not render diagrams, labels or colors. Image5 is identity/costume/style reference only. Pose/body orientation faces screen RIGHT, fixed elevated three-quarter camera and constant anatomy/gear size. Ivory full-face mask and branching crown, navy/ivory embroidered robe, torn cyan veil ribbons, belt scrolls and TWO boots. Anatomical RIGHT near-side hand on screen LEFT keeps ONE body-height staff with exactly THREE blue glass lantern panels at head, center higher than sides. LEFT hand empty, no spell effects. Staff carried raised clear of legs, same grip throughout. Top row: 1 near RIGHT leg forward contact, far LEFT leg behind exactly guide1; 2 RIGHT leg supports, LEFT knee bends with far boot lifted BEHIND supporting calf exactly guide2; 3 LEFT far leg steps forward, RIGHT near leg trails back to screen LEFT, reverse overlap and lead exactly guide3, robe opens enough to see both boot/knee chains. Bottom row: 4 LEFT far leg supports, RIGHT near knee passes forward and lifts boot beneath pelvis exactly guide4; 5 defensive crouch, right staff diagonal before torso, empty left forearm raised protecting face; 6 deeper guard same staff grip, shoulder and knees lower. Robe follows each actual leg rather than hiding identical contacts. Whole staff crown, butt and veil inside generously separated cells. Preserve exactly three lantern panels, staff hand and length, mask, crown, scroll count, outfit. Genuine transparent RGBA, no painted checkerboard, ground, scene, text/grid or extra limbs. Original painting only.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/units/source/curated/unit_veilmourn_saltwake_eulogists.png",
+          "sha256": "0b9b571182de7753f09fd97c1ca0853fa32fd36eca3b3776b65143ceed2b20c6"
+        }
+      ],
+      "selected": false,
+      "selected_cells": [],
+      "notes": "Source retained; neutral backing conflicts with pale paint. Green-backed derived version selected instead."
+    },
+    {
+      "id": "equipped-attacks-and-casting",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/equipped-attacks-and-casting.png",
+      "source_sha256": "53053a55b72025166ad8579e5cb43005319e3c0eca36884a289794dae27def9e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a25e807e-45be-4c3b-94c2-6939fed095c7.png",
+      "prompt": "Use case: stylized-concept. Six original Saltwake Eulogist battle animation poses, 3 columns by 2 rows. Input image is exact identity/costume/paint style reference. Same elevated three-quarter camera facing RIGHT, constant adult body, crown and staff dimensions. Preserve ivory mask/branching crown, navy and ivory embroidered robe, cyan torn veil tails, two belt scrolls, charms, boots. One body-height bronze staff with exactly THREE tall blue-glass lantern panels, center higher than sides, held by anatomical RIGHT near hand. LEFT hand normally empty. TOP LEFT physical windup: right elbow draws full staff back diagonally, lantern head upper LEFT and full plain butt extends lower RIGHT, left hand joins lower shaft. TOP MIDDLE physical forward thrust: both hands push complete staff toward RIGHT, lantern head leading, full rear shaft continues LEFT behind grip; no shortened club. TOP RIGHT physical recovery: right arm draws whole staff toward upright, left supporting palm releases. BOTTOM LEFT spell anticipation: right hand keeps complete staff upright to screen LEFT of torso, empty left palm curls near chest with no effect. BOTTOM MIDDLE spell release: right staff remains in same hand, left forearm extends palm toward screen RIGHT with restrained cyan glow confined to palm, no beam/projectile/scroll cloud. BOTTOM RIGHT hit recoil: torso and shoulders lean back, head turns only slightly, right hand keeps full staff and left arm braces before chest. Clear articulated changes in arms/torso/stance. Preserve all equipment, exactly three panels and two belt scrolls, unchanged mask/robes. Entire figures and staff tips contained within generous cell margins, minimum 25px outer breathing room and gaps. Genuine transparent background, no painted checkerboard, floor/scene/grid/text, colored rim, extra gear/limbs or copied art.",
+      "references": [
+        {
+          "path": "art/units/source/curated/unit_veilmourn_saltwake_eulogists.png",
+          "sha256": "0b9b571182de7753f09fd97c1ca0853fa32fd36eca3b3776b65143ceed2b20c6"
+        }
+      ],
+      "selected": false,
+      "selected_cells": [],
+      "notes": "Source retained; neutral backing conflicts with pale paint. Green-backed derived version selected instead."
+    },
+    {
+      "id": "idle-and-equipped-cold-collapse",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/idle-and-equipped-cold-collapse.png",
+      "source_sha256": "1bffe5e299ab1f39841e7bfc73b280ef9457e456f457ed49bf74d64568dd700e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8adc8ff8-6e91-453a-ab53-598cdda42318.png",
+      "prompt": "Use case: stylized-concept. Six original Saltwake Eulogist battle animation poses, 3 columns by 2 rows. Image1 exact identity/costume/style reference. Image2 reference ONLY for final corpse direction: head screen RIGHT, cloth body extends LEFT; preserve identity from image1 rather than copying poses. Fixed elevated three-quarter camera facing RIGHT and constant anatomy/equipment size. Ivory full mask, branching crown, navy/ivory embroidered layered robe, torn cyan veil, exactly two belt scrolls, dangling charms, two boots. One body-height bronze staff with exactly THREE vertical blue-glass panels at head, center higher than sides, held in anatomical RIGHT nearer hand; LEFT hand empty. TOP LEFT quiet idle: full upright staff screen LEFT of torso in right hand, left empty hand relaxed at waist, both feet planted. TOP MIDDLE second breathing idle: shoulders slightly rise, left wrist turns a little, veil gently droops, same grips and stance. TOP RIGHT dying kneel: both knees bend to ground, head bowed, right hand lowers entire staff diagonally forward toward screen RIGHT, left palm begins to support ground; all glass dark cold blue with no luminous center. BOTTOM LEFT connected side-fall: head moving RIGHT and downward, left palm supports ground, right hand still near complete staff now almost horizontal; robe/scrolls/veil settle, no glow. BOTTOM MIDDLE low settling: right shoulder and hip lie on ground, head RIGHT, mask tilts down, staff rests intact beside body with same three panels, hands slack. BOTTOM RIGHT final motionless corpse: whole body prone on side head RIGHT, robes and veil limp on ground, complete staff beside body with all three glass panels dark gray blue, no glow anywhere. Retain mask/crown/scrolls and full staff in every death pose. NO blood/gore. Death changes pose, never shrinks body/weapon. All tips and tails within generous separated cells and 25px outer margins. Genuine transparent RGBA, no checkerboard, scene, ground shadow, labels or grid.",
+      "references": [
+        {
+          "path": "art/units/source/curated/unit_veilmourn_saltwake_eulogists.png",
+          "sha256": "0b9b571182de7753f09fd97c1ca0853fa32fd36eca3b3776b65143ceed2b20c6"
+        },
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/poses.png",
+          "sha256": "4790e00a57e56237d33988e406bb80dfb92b9f64cdc05f4baca33927b6d9ec2a"
+        }
+      ],
+      "selected": false,
+      "selected_cells": [],
+      "notes": "Source retained; neutral backing conflicts with pale paint. Green-backed derived version selected instead."
+    },
+    {
+      "id": "guided-walk-and-guards-green",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/guided-walk-and-guards-green.png",
+      "source_sha256": "43aa56b95c68b9c016cc613547ea6d1db5f1a73244aeeb46a247ec22b2bb1bd4",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-94431af4-a058-4c47-80e4-be4a7f808e17.png",
+      "prompt": "Use case: precise-object-edit. Edit this six-pose original sprite sheet. Keep all six paintings' exact poses, body proportions, two scrolls, three lantern panels, mask, embroidered ivory/navy robes, cyan veil, hands, boots and lighting. Replace ONLY gray checkerboard everywhere, including enclosed ribbon/staff gaps, with perfectly uniform pure green RGB(0,255,0). Green is a compositing matte, no reflected green on the artwork, no green rim or floor/shadow. Add 30 pixels of green breathing room around outside so every staff crown is entirely inside canvas; reconstruct only any tiny cut crown tip at top edge matching the other identical crowns. Keep figures at original scale and relative placement. Do not redraw/restyle/repose, do not add effects/text/grid. Opaque green backing with clean crisp separation is intentional, NOT a landscape.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/guided-walk-and-guards.png",
+          "sha256": "fb66d83a246d3152cd68e4399a167ad62a5d0d981232ceaa41900aa686d24050"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "notes": "Packed production candidate, not connected-motion or gameplay acceptance."
+    },
+    {
+      "id": "equipped-attacks-and-casting-green",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/equipped-attacks-and-casting-green.png",
+      "source_sha256": "482955b05879e3f1b9e2968f41bed21062b957d7b137e37bdfb0b50b717c40ee",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-063dc9cc-a39c-4c9a-842a-20e8a1e247ae.png",
+      "prompt": "Use case: precise-object-edit. Preserve these SIX original sprite paintings exactly: same canvas/layout, full staffs with three blue panels, two scrolls, all masks/hands/pale cloth/cyan ribbons, poses, lighting and colors. Change ONLY checkerboard background, including enclosed gaps in robes/arms/staff, to perfectly uniform pure green RGB(0,255,0) compositing matte. Absolutely no green reflected light or rim contamination on character, no floor/shadow, no restyling or pose/equipment changes. Retain existing cyan palm magic unchanged. All figure pixels and scale intact, no labels or grid. Solid green backing is deliberate and will be removed outside the artwork.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/equipped-attacks-and-casting.png",
+          "sha256": "53053a55b72025166ad8579e5cb43005319e3c0eca36884a289794dae27def9e"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "notes": "Packed production candidate, not connected-motion or gameplay acceptance."
+    },
+    {
+      "id": "idle-and-equipped-cold-collapse-green",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/idle-and-equipped-cold-collapse-green.png",
+      "source_sha256": "bfe948204d82e7b7044c9141c5a70ba3c2e2bbb64ca9812fe92f96d2040ce6a5",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-26c0e794-31cb-4b06-952f-85f2bd0ea9ef.png",
+      "prompt": "Use case: precise-object-edit. Preserve six existing original paintings exactly with same canvas/layout and scale. Replace ONLY checkerboard background (including all enclosed ribbon and arm gaps) with flat pure green RGB(0,255,0) compositing backing; no green reflections/rims/spill on figure. Preserve ivory masks, pale hands, robes, veil tails, two scrolls, full three-panel staffs. Keep ALL FOUR death/corpse poses' lantern glass dark, no glowing corpses. One additional targeted state correction: ONLY the TWO top-left/top-middle standing IDLE figures have luminous cyan interiors in their three lantern glass panels, as live unit does, but keep metal frames/shapes unchanged. No restyling/reposing, no change to grounded corpses, no new gear/text/grid/floor/shadow. Green is matte not landscape.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/idle-and-equipped-cold-collapse.png",
+          "sha256": "1bffe5e299ab1f39841e7bfc73b280ef9457e456f457ed49bf74d64568dd700e"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "notes": "Packed production candidate, not connected-motion or gameplay acceptance."
+    }
+  ]
+}

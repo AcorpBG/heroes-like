@@ -1,0 +1,84 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "unit_id": "unit_veilmourn_wakeglass_navigators",
+  "owner_approval": "Explicit approval for deterministic background and edge cleanup; preserve original paint and poses.",
+  "jobs": [
+    {
+      "id": "full-staff-actions-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/full-staff-actions-and-guards.png",
+      "source_sha256": "b026640771c07aa5e22f81cbb510c9beb5b6dcf1ca79d8836c20bd89de42254a",
+      "output": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/full-staff-actions-and-guards.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            1390,
+            420
+          ],
+          [
+            356,
+            766
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "glide-and-grounded-collapse",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/glide-and-grounded-collapse.png",
+      "source_sha256": "59978364c7058130deb933123a34fbe67366abf0e2f8172cf9022ab3dbcfd719",
+      "output": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/glide-and-grounded-collapse.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            395,
+            461
+          ],
+          [
+            852,
+            466
+          ],
+          [
+            1381,
+            439
+          ],
+          [
+            397,
+            790
+          ],
+          [
+            891,
+            892
+          ],
+          [
+            1078,
+            403
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "cast-with-visible-staff-grip",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/cast-with-visible-staff-grip.png",
+      "source_sha256": "c00f8d7168c6911981c831bb4e9d8b48a87c308a36ccd31f91ae1a472484016e",
+      "output": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/cast-with-visible-staff-grip.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            352,
+            800
+          ]
+        ]
+      }
+    }
+  ]
+}

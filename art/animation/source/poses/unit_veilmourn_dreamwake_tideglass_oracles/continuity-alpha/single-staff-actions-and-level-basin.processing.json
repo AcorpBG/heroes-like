@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint.",
+  "id": "single-staff-actions-and-level-basin",
+  "source": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/single-staff-actions-and-level-basin.png",
+  "source_sha256": "ddce38fe2a9f1f4b72a2123bc02a39e1565062d12053ec3c395c8f299106ba6a",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/continuity-alpha/single-staff-actions-and-level-basin.png",
+  "output_sha256": "5b58f5b2e190ebc02a2dba7af34d0b5ad6818f931c92c30cc1d8c4155fb8c912",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/continuity-cutouts.json",
+  "recipe_sha256": "a3001278d4d62163bc1c13e29572c2df763ff0c5fa5f8b934079a370c4583e26",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1005786,
+    "edge_pixels": 40373,
+    "unchanged_paint_pixels": 526705,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

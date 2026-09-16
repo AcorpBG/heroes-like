@@ -1,0 +1,78 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Explicit approval for deterministic background and edge cleanup; preserve original paint and poses.",
+  "id": "single-quill-glide-and-guards",
+  "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/single-quill-glide-and-guards.png",
+  "source_sha256": "77dd2545fb8b18a8ebb28e4ea30b836ec95963f1122e4d37b3357a018c77c15c",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-glide-and-guards.png",
+  "output_sha256": "c44da01ef61351512d6f2664aa282e194bddc9402cf22aadf6b4e414c03fdbe1",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-cutouts.json",
+  "recipe_sha256": "1df166253a93c906e6ba18cadbf55622b7fdf014797ccb254df0e7877e048eb3",
+  "parameters": {
+    "minimum": 175,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        449,
+        270
+      ],
+      [
+        916,
+        320
+      ],
+      [
+        1442,
+        296
+      ],
+      [
+        418,
+        778
+      ],
+      [
+        1275,
+        58
+      ],
+      [
+        1197,
+        220
+      ],
+      [
+        1194,
+        350
+      ],
+      [
+        775,
+        584
+      ],
+      [
+        902,
+        295
+      ],
+      [
+        1279,
+        635
+      ]
+    ],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 916075,
+    "edge_pixels": 21815,
+    "unchanged_paint_pixels": 634974,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

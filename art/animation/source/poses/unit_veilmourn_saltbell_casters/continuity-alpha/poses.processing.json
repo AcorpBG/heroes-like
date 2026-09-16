@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "poses",
+  "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/poses.png",
+  "source_sha256": "b2b54e1b68fd78d9f1ee4f4feab5eacc50f2b8a4be5ce93ea8e3eb13e13cdd66",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/poses.png",
+  "output_sha256": "27836d03895c51e05a3ff948eaf90324a2017e9b5f6897abb184717cb2465aeb",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-cutouts.json",
+  "recipe_sha256": "9c7e4c3898f2e4f51850efc5a77a8aad52bfed82a390d7ec9f070fa7db3701c7",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1081659,
+    "edge_pixels": 25030,
+    "unchanged_paint_pixels": 466175,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

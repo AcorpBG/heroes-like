@@ -1,0 +1,19 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "guided-opposite-contact-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/guided-opposite-contact-and-guards.png",
+      "source_sha256": "79055e30c337d80a004b15572c680f7317e443de95c0832d6ffda08082824b9d",
+      "output": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/continuity-alpha/guided-opposite-contact-and-guards.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    }
+  ]
+}

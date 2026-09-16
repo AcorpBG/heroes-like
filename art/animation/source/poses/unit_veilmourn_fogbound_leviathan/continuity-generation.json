@@ -1,0 +1,81 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_fogbound_leviathan",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "four-leg-crawl-and-fold",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/four-leg-crawl-and-fold.png",
+      "sha256": "607b2809af830b50afc449e51e6d619e0b64e93b950afa2c202369d4b10bfb56",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-eaa84874-3716-4f49-a8b8-438384036eb3.png",
+      "prompt": "Use case: stylized-concept. SIX original painted tactical beast sprite poses, THREE columns TWO rows, generous gutters and all complete tails/feet inside each cell. Image1 primary existing Fogbound Leviathan identity, scale and elevated three-quarter camera; image2 anatomy detail. Facing SCREEN LEFT throughout. Huge dark-teal scaled amphibian quadruped with ivory ridged faceplate, chin tentacles, exactly FOUR muscular legs and broad webbed claw feet, torn dorsal sail fins, three violet sail lights, long curling finned tail and small attached violet lanterns. Preserve head/body proportions and four-limb attachment roots. TOP LEFT slow crawl: near foreleg reaches screen LEFT while far foreleg planted back; far hind foot advances under belly, near hind foot planted back. TOP MIDDLE weight transfer: all four feet visibly planted spaced beneath shoulder/hips, body lower, tail counterbalances. TOP RIGHT opposite crawl: FAR foreleg reaches LEFT beneath far shoulder and is visible past near wrist, NEAR foreleg bent lifted back beneath near shoulder; NEAR hind foot forward, FAR hind foot back. Do NOT duplicate top-left limb placement. BOTTOM LEFT passing recovery: near forefoot lowering, far hind knee folds to lift its foot clear, other two feet support, no fifth leg. BOTTOM MIDDLE defensive tuck, chin behind flexed near foreleg, belly lowers, tail curves close but intact, all limbs accounted. BOTTOM RIGHT articulated dying side roll, head and chin low LEFT, shoulder on ground, hips rotate partly onto near side, four bent limbs folding with two far feet showing beyond torso, tail drops toward ground; lights dim, no detached parts. Not a scaled or rotated standing image. Preserve original painted palette, fins/lantern attachments. Genuine transparent RGBA background no checkerboard, floor shadow, water scenery, labels or text.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_fogbound_leviathan/poses.png",
+          "sha256": "e625a4ba8781562d5d76209f412cd623bbe49066f57dae0aaa19b84cd6173076"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/units/source/curated/unit_veilmourn_fogbound_leviathan.png",
+          "sha256": "b30e43ca1d825ceedc1dbc407cfc02e217dcaa6ae80abe2e3a16bafce77bf8dd"
+        }
+      ],
+      "selection_notes": "Four weight/support/lift paintings, tucked defense and folded side body; exact diagonal alternation/far limb ownership still requires review.",
+      "selected_frames": [],
+      "selected": false,
+      "role": "retained parent painting for selected green-background derivative"
+    },
+    {
+      "id": "poses-green-background",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/poses-green-background.png",
+      "sha256": "19c179d1b96e3caa3ab6a259144565f1deafc066687b68cf8623dc724310838c",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0774a38a-c7b8-4ab9-9ab6-21b7ab2c953c.png",
+      "prompt": "Use case: precise-object-edit. Image1 is the edit target, twelve original monster sprite paintings. Replace ONLY checkerboard/backdrop with perfectly flat pure GREEN RGB(0,255,0), including enclosed background apertures in curled tails, between feet/body, and torn holes in dorsal fins. Preserve all original paintings exactly: ivory face armor, dark teal scales, gray sail membranes, violet flames/lamps, four legs, chintentacles and full tails. Same four-column three-row layout, no crop, no rescale, no pose or costume changes. Preserve pale materials and fine edges. Final dead creature stays dark with no flame. No green lighting/spill, floor, text, grid or scenery. Background replacement only.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_fogbound_leviathan/poses.png",
+          "sha256": "e625a4ba8781562d5d76209f412cd623bbe49066f57dae0aaa19b84cd6173076"
+        }
+      ],
+      "selection_notes": "Retained original idle pair, bite sequence, tucked guard, rearing hit, buckle and cold corpse; explicit negative-space apertures preserve ivory face and sails.",
+      "selected_frames": [
+        "idle_a",
+        "idle_b",
+        "bite_windup",
+        "bite_closed_release",
+        "guard_tucked",
+        "hit_rear",
+        "death_buckle",
+        "dead_cold"
+      ],
+      "selected": true,
+      "role": "selected source"
+    },
+    {
+      "id": "four-leg-crawl-and-fold-green-background",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/four-leg-crawl-and-fold-green-background.png",
+      "sha256": "3526a084c645457a0c068264cebc6228031484c11b299d2ef25a9c32ef1b338b",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-735cdea8-d4cd-4c4e-93cd-0fa4b106c1ef.png",
+      "prompt": "Use case: precise-object-edit. Image1 is the edit target. Replace ONLY its checkerboard/background with perfectly flat pure GREEN RGB(0,255,0), including negative space through tail curls, torn sail holes, and gaps between legs. Preserve all six monster paintings, exact three-column two-row layout and full canvas framing. Preserve dark teal scales, ivory faceplate, gray sail membranes, four webbed legs, purple lamps/flames and complete tails. Keep each pose and color unchanged; no repaint, redesign, extra detail, floor, text or green spill/reflected light. Retain delicate pale face and sail edges. Background replacement only.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_fogbound_leviathan/four-leg-crawl-and-fold.png",
+          "sha256": "607b2809af830b50afc449e51e6d619e0b64e93b950afa2c202369d4b10bfb56"
+        }
+      ],
+      "selection_notes": "Four new support/lift paintings plus tucked guard and folding intermediate; far/near alternating ownership remains unaccepted.",
+      "selected_frames": [
+        "crawl_far_fore_contact",
+        "crawl_all_planted",
+        "crawl_near_fore_lift",
+        "crawl_hind_lift",
+        "guard_deeper",
+        "death_side_fold"
+      ],
+      "selected": true,
+      "role": "selected source"
+    }
+  ]
+}

@@ -1,0 +1,145 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "unit_id": "unit_veilmourn_obituary_scribes",
+  "owner_approval": "Explicit approval for deterministic background and edge cleanup; preserve original paint and poses.",
+  "jobs": [
+    {
+      "id": "single-quill-glide-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/single-quill-glide-and-guards.png",
+      "source_sha256": "77dd2545fb8b18a8ebb28e4ea30b836ec95963f1122e4d37b3357a018c77c15c",
+      "output": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-glide-and-guards.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            449,
+            270
+          ],
+          [
+            916,
+            320
+          ],
+          [
+            1442,
+            296
+          ],
+          [
+            418,
+            778
+          ],
+          [
+            1275,
+            58
+          ],
+          [
+            1197,
+            220
+          ],
+          [
+            1194,
+            350
+          ],
+          [
+            775,
+            584
+          ],
+          [
+            902,
+            295
+          ],
+          [
+            1279,
+            635
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "single-quill-attack-and-cast",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/single-quill-attack-and-cast.png",
+      "source_sha256": "e9b476a0a85dcd829812bafa7ed04a5aa5b56af570097a69f8871c4d59d619e5",
+      "output": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-attack-and-cast.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            131,
+            209
+          ],
+          [
+            951,
+            184
+          ],
+          [
+            121,
+            875
+          ],
+          [
+            435,
+            947
+          ],
+          [
+            916,
+            353
+          ],
+          [
+            1031,
+            994
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "single-lantern-cold-collapse",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/single-lantern-cold-collapse.png",
+      "source_sha256": "d06c87bf10c4b71ff6eb05c19cb8db806904576e69f87b6b6203f71ca966fa09",
+      "output": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-lantern-cold-collapse.png",
+      "matte": {
+        "minimum": 150,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            231,
+            451
+          ],
+          [
+            1131,
+            263
+          ],
+          [
+            1160,
+            359
+          ],
+          [
+            106,
+            810
+          ],
+          [
+            363,
+            739
+          ],
+          [
+            230,
+            270
+          ],
+          [
+            1228,
+            393
+          ],
+          [
+            557,
+            215
+          ]
+        ],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

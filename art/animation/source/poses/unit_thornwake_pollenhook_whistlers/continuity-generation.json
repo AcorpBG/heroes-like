@@ -1,0 +1,97 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_thornwake_pollenhook_whistlers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "walk-1",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/walk-1.png",
+      "source_sha256": "ff59958273150d60fc3599921d65d81b0d720a01ef8e43cdc2cb7b24a5e206e8",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d3140f86-9342-4844-a580-57629db79365.png",
+      "prompt": "Use case: sketch-to-render. Asset: one original Pollenhook Whistler full-body battle walking pose. Image 1 is the authoritative LEG POSE diagram to render; image 2 is identity/costume/weapon reference, NOT leg pose. Replace the diagram with a detailed hand-painted raster of that exact slim pale-bark elf, green-gold leafy mantle, dark leafy hair/twig crown, olive scarf, rope belt pollen pods, brown trouser shorts and vine-wrapped bare-toed feet. Fixed three-quarter camera facing RIGHT. BLUE diagram leg becomes anatomically near/right leg; ORANGE becomes far/left leg, retain overlaps and bend/ground contact from diagram. Exactly two arms: near/right hand holds the rear thin mouthpiece, far/left hand supports near the SINGLE flared bell of his one long crooked wooden horn carried across waist, bell pointing right, one branch-loop brace, no duplicated horns or tubes. Keep head, torso, arm hold and gear consistent with reference. No blowing/effects. Near foreground RIGHT leg is straight bearing weight under pelvis; far LEFT knee bends forward while its foot is lifted and passes behind near calf, fully off ground. Transparent background real alpha no checker, no floor, no shadow, no text, no guide markings. Complete head-to-toe and entire horn, roomy 7 percent margins.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/identity-reference.png",
+          "sha256": "0fa456377b5d98f840f280f1347a719d430d03f28836009dd99fe7a28d54f6be"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "walk-2",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/walk-2.png",
+      "source_sha256": "9fcbd6aabc1034e0b6b85638835789befa0d735efab8afa6eb249b5a88395c56",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f3309458-aa79-4ad1-beee-374a2f32ebff.png",
+      "prompt": "Use case: sketch-to-render. Asset: one original Pollenhook Whistler full-body battle walking pose. Image 1 is the authoritative LEG POSE diagram to render; image 2 is identity/costume/weapon reference, NOT leg pose. Replace the diagram with a detailed hand-painted raster of that exact slim pale-bark elf, green-gold leafy mantle, dark leafy hair/twig crown, olive scarf, rope belt pollen pods, brown trouser shorts and vine-wrapped bare-toed feet. Fixed three-quarter camera facing RIGHT. BLUE diagram leg becomes anatomically near/right leg; ORANGE becomes far/left leg, retain overlaps and bend/ground contact from diagram. Exactly two arms: near/right hand holds the rear thin mouthpiece, far/left hand supports near the SINGLE flared bell of his one long crooked wooden horn carried across waist, bell pointing right, one branch-loop brace, no duplicated horns or tubes. Keep head, torso, arm hold and gear consistent with reference. No blowing/effects. Foreground RIGHT leg trails BACK toward LEFT with heel up; far LEFT leg reaches FORWARD toward RIGHT, heel contacting ground. Viewer-near calf must be the trailing leg, not the leading one. Transparent background real alpha no checker, no floor, no shadow, no text, no guide markings. Complete head-to-toe and entire horn, roomy 7 percent margins.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/identity-reference.png",
+          "sha256": "0fa456377b5d98f840f280f1347a719d430d03f28836009dd99fe7a28d54f6be"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "walk-3",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/walk-3.png",
+      "source_sha256": "a137863aebcee51ad8b271da18da8ed31762243b2770932eef696a1fdb232219",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7734acea-2851-499d-99ff-a2f54cbdf6b5.png",
+      "prompt": "Use case: sketch-to-render. Asset: one original Pollenhook Whistler full-body battle walking pose. Image 1 is the authoritative LEG POSE diagram to render; image 2 is identity/costume/weapon reference, NOT leg pose. Replace the diagram with a detailed hand-painted raster of that exact slim pale-bark elf, green-gold leafy mantle, dark leafy hair/twig crown, olive scarf, rope belt pollen pods, brown trouser shorts and vine-wrapped bare-toed feet. Fixed three-quarter camera facing RIGHT. BLUE diagram leg becomes anatomically near/right leg; ORANGE becomes far/left leg, retain overlaps and bend/ground contact from diagram. Exactly two arms: near/right hand holds the rear thin mouthpiece, far/left hand supports near the SINGLE flared bell of his one long crooked wooden horn carried across waist, bell pointing right, one branch-loop brace, no duplicated horns or tubes. Keep head, torso, arm hold and gear consistent with reference. No blowing/effects. Far LEFT leg is straight bearing weight beneath pelvis. Foreground near RIGHT knee visibly lifts FORWARD toward RIGHT, its foot fully airborne in FRONT of the standing shin. Render exactly the blue bent foreground leg geometry from the primary diagram. Transparent background real alpha no checker, no floor, no shadow, no text, no guide markings. Complete head-to-toe and entire horn, roomy 7 percent margins.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/identity-reference.png",
+          "sha256": "0fa456377b5d98f840f280f1347a719d430d03f28836009dd99fe7a28d54f6be"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "guard-braced",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/guard-braced.png",
+      "source_sha256": "42a603fa78fb12d0ba15b3b664a0b568c35498c19002c613ef7fd1fd4f558274",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b53c8ca1-5dc8-4c50-ac49-b9e3f1a5a879.png",
+      "prompt": "Use case: identity-preserve. One original full-body battle Pollenhook Whistler GUARD painting. Image 1 is fixed identity reference; image 2 shows existing poses, use its crouched guard at row2 column4 as action reference. Same slim pale bark-skinned elf, brown/olive hair with twig crown, olive scarf, green/gold leafy mantle, pollen beltpods, vine-wrapped bare toes. Same single crooked wooden horn with thin mouthpiece left, branch-loop brace and wide flared green/gold bell right, same length as identity. Braced crouch with both feet firmly on ground, knees bent, torso leaning forward, horn held horizontally across chest in BOTH hands, near RIGHT hand at mouthpiece, far LEFT hand near bell, elbows bent. A slightly higher breathing/recovery variation of original guard; not an attack, horn stays close to torso. Same three-quarter RIGHT facing camera. Full body and instrument, margins, transparent real alpha background, no checkerboard, no effects/text/floor.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/identity-reference.png",
+          "sha256": "0fa456377b5d98f840f280f1347a719d430d03f28836009dd99fe7a28d54f6be"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+          "sha256": "6652e925b46488127c0ee5b2e26cdbc73298ed5240df4747b6a9f88269b2055c"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "near-contact-unfolded",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/near-contact-unfolded.png",
+      "source_sha256": "2a07541daaa00f584175574122b95311e1a90dc0c6523c0ec4db0fa8c7db8e6d",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-eb20b10a-619b-4ff1-966c-8985e07d69eb.png",
+      "prompt": "Use case: precise-object-edit. Edit this exact Pollenhook Whistler painting into the NEXT forward foot contact. Keep the entire head, hair, twig crown, upper body, leafy costume, arms, single horn, belt and camera angle unchanged. ONLY change leg action: the currently raised FOREGROUND knee/leg (right side of image, in front of the straight supporting shin) unfolds down and FORWARD toward RIGHT. That SAME foreground foot lands with heel extended well to the right, toes slightly up, knee softly bent. The currently straight background/support leg moves modestly BACK toward LEFT with rear heel lifted and toes on ground. Exactly two legs, do not exchange ownership or mirror the image. This must be the continuous step after the lifted-knee reference, not another copy of the far-leg contact. Preserve original body proportions, hand-painted colors and costume. Full body/horn with clear margins. Transparent real alpha background no checkerboard, no floor, no text or effects.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/walk-3.png",
+          "sha256": "a137863aebcee51ad8b271da18da8ed31762243b2770932eef696a1fdb232219"
+        }
+      ],
+      "selected": true
+    }
+  ],
+  "selection_note": "Five new single paintings selected: four gait and one guard. Thirteen original real-alpha paintings reused unchanged."
+}

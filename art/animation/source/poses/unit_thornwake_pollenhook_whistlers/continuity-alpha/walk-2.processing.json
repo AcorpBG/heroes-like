@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paint and masters retained.",
+  "id": "walk-2",
+  "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/walk-2.png",
+  "source_sha256": "9fcbd6aabc1034e0b6b85638835789befa0d735efab8afa6eb249b5a88395c56",
+  "source_rect": [
+    0,
+    0,
+    1158,
+    1358
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-2.png",
+  "output_sha256": "92e1fdd7a5a5b0da89adc747581742439ca44fe4402160738341a475b503b21f",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-cutouts.json",
+  "recipe_sha256": "a0ae9f2c7f7aa985ba95f703ed48704b033804fbe94e6dfd4f898ae1d94e7ba5",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 100,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        891,
+        771
+      ],
+      [
+        737,
+        650
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1142143,
+    "edge_pixels": 10495,
+    "unchanged_paint_pixels": 419926,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

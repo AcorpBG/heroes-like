@@ -1,0 +1,155 @@
+{
+  "unit_id": "unit_veilmourn_fogbound_leviathan",
+  "output": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/candidate-atlas.png",
+  "sha256": "3aaef7f81b347e2d1df8c0ee3993e1a57dc795adae467d69fd773d592dc38088",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        136,
+        58,
+        390,
+        244
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        130,
+        51,
+        382,
+        245
+      ]
+    },
+    {
+      "name": "crawl_far_fore_contact",
+      "index": 2,
+      "alpha_bounds": [
+        134,
+        74,
+        390,
+        245
+      ]
+    },
+    {
+      "name": "crawl_all_planted",
+      "index": 3,
+      "alpha_bounds": [
+        138,
+        78,
+        388,
+        244
+      ]
+    },
+    {
+      "name": "crawl_near_fore_lift",
+      "index": 4,
+      "alpha_bounds": [
+        128,
+        81,
+        382,
+        241
+      ]
+    },
+    {
+      "name": "crawl_hind_lift",
+      "index": 5,
+      "alpha_bounds": [
+        147,
+        59,
+        393,
+        244
+      ]
+    },
+    {
+      "name": "bite_windup",
+      "index": 6,
+      "alpha_bounds": [
+        133,
+        66,
+        388,
+        250
+      ]
+    },
+    {
+      "name": "bite_closed_release",
+      "index": 7,
+      "alpha_bounds": [
+        133,
+        64,
+        400,
+        251
+      ]
+    },
+    {
+      "name": "guard_tucked",
+      "index": 8,
+      "alpha_bounds": [
+        152,
+        67,
+        377,
+        249
+      ]
+    },
+    {
+      "name": "guard_deeper",
+      "index": 9,
+      "alpha_bounds": [
+        134,
+        77,
+        368,
+        250
+      ]
+    },
+    {
+      "name": "hit_rear",
+      "index": 10,
+      "alpha_bounds": [
+        140,
+        51,
+        402,
+        246
+      ]
+    },
+    {
+      "name": "death_buckle",
+      "index": 11,
+      "alpha_bounds": [
+        127,
+        65,
+        379,
+        252
+      ]
+    },
+    {
+      "name": "death_side_fold",
+      "index": 12,
+      "alpha_bounds": [
+        115,
+        114,
+        379,
+        241
+      ]
+    },
+    {
+      "name": "dead_cold",
+      "index": 13,
+      "alpha_bounds": [
+        120,
+        123,
+        391,
+        241
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses-green-background.png": "f671569153c1b1946cc251cf66861a0d9ced666064fd8959dace2a90f2f2b292",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/four-leg-crawl-and-fold-green-background.png": "37fd8b1b040d145a27172a6213d4f6506c87a56cc12fdc3c57d54c2a2dad539b"
+  }
+}

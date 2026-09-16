@@ -1,0 +1,86 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "canopy-far-passing-stout",
+  "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/far-passing-stout.png",
+  "source_sha256": "9cf8982052552c1c4e8bf5307e8a69f2ce370e3f482148312b0318ff7a0fd6a3",
+  "source_rect": [
+    0,
+    0,
+    1158,
+    1358
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/far-passing-stout.png",
+  "output_sha256": "d723cc6def75345e843af9f595fa8318e64ed6dcfec73a2ca48cfafeea3fd542",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-cutouts.json",
+  "recipe_sha256": "a54d0f2fd78096bebda556dea59fbdf462be9b5167f357b5dad2ac9d4941a8f4",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        769,
+        228
+      ],
+      [
+        445,
+        247
+      ],
+      [
+        479,
+        221
+      ],
+      [
+        372,
+        651
+      ],
+      [
+        405,
+        206
+      ],
+      [
+        456,
+        230
+      ],
+      [
+        457,
+        600
+      ],
+      [
+        480,
+        206
+      ],
+      [
+        409,
+        835
+      ],
+      [
+        429,
+        192
+      ],
+      [
+        428,
+        175
+      ],
+      [
+        465,
+        192
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 856566,
+    "edge_pixels": 12419,
+    "unchanged_paint_pixels": 703579,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

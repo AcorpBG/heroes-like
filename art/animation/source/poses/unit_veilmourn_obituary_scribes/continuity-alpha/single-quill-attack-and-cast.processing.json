@@ -1,0 +1,62 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Explicit approval for deterministic background and edge cleanup; preserve original paint and poses.",
+  "id": "single-quill-attack-and-cast",
+  "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/single-quill-attack-and-cast.png",
+  "source_sha256": "e9b476a0a85dcd829812bafa7ed04a5aa5b56af570097a69f8871c4d59d619e5",
+  "source_rect": [
+    0,
+    0,
+    1192,
+    1320
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-attack-and-cast.png",
+  "output_sha256": "db3f8e7efd9f12d156d19b1d0abb2119b5829aafa6e7d352a6a9f747655430de",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-cutouts.json",
+  "recipe_sha256": "1df166253a93c906e6ba18cadbf55622b7fdf014797ccb254df0e7877e048eb3",
+  "parameters": {
+    "minimum": 175,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        131,
+        209
+      ],
+      [
+        951,
+        184
+      ],
+      [
+        121,
+        875
+      ],
+      [
+        435,
+        947
+      ],
+      [
+        916,
+        353
+      ],
+      [
+        1031,
+        994
+      ]
+    ],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 985838,
+    "edge_pixels": 20141,
+    "unchanged_paint_pixels": 567461,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

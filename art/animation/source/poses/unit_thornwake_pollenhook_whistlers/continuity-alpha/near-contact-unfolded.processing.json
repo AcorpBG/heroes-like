@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paint and masters retained.",
+  "id": "near-contact-unfolded",
+  "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/near-contact-unfolded.png",
+  "source_sha256": "2a07541daaa00f584175574122b95311e1a90dc0c6523c0ec4db0fa8c7db8e6d",
+  "source_rect": [
+    0,
+    0,
+    1158,
+    1358
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/near-contact-unfolded.png",
+  "output_sha256": "8933d5ccd0737281836cc62886487341a82aa034bf87bda2b6632c946b808f15",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-cutouts.json",
+  "recipe_sha256": "a0ae9f2c7f7aa985ba95f703ed48704b033804fbe94e6dfd4f898ae1d94e7ba5",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        893,
+        764
+      ],
+      [
+        744,
+        645
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1192004,
+    "edge_pixels": 8895,
+    "unchanged_paint_pixels": 371665,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

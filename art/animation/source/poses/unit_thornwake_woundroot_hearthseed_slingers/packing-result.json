@@ -1,0 +1,202 @@
+{
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/candidate-atlas.png",
+  "sha256": "b67c73d272c310b04ce1ff619b5297a33004ae54feab7ca84bd43ef0284aae58",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle",
+      "index": 0,
+      "alpha_bounds": [
+        178,
+        23,
+        314,
+        239
+      ]
+    },
+    {
+      "name": "idle_breath",
+      "index": 1,
+      "alpha_bounds": [
+        176,
+        23,
+        314,
+        239
+      ]
+    },
+    {
+      "name": "near_contact",
+      "index": 2,
+      "alpha_bounds": [
+        174,
+        26,
+        322,
+        239
+      ]
+    },
+    {
+      "name": "far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        174,
+        21,
+        322,
+        239
+      ]
+    },
+    {
+      "name": "far_contact",
+      "index": 4,
+      "alpha_bounds": [
+        172,
+        21,
+        335,
+        240
+      ]
+    },
+    {
+      "name": "near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        175,
+        23,
+        312,
+        240
+      ]
+    },
+    {
+      "name": "shield_bash_windup",
+      "index": 6,
+      "alpha_bounds": [
+        175,
+        33,
+        327,
+        240
+      ]
+    },
+    {
+      "name": "shield_bash_contact",
+      "index": 7,
+      "alpha_bounds": [
+        165,
+        33,
+        343,
+        239
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 8,
+      "alpha_bounds": [
+        170,
+        52,
+        344,
+        239
+      ]
+    },
+    {
+      "name": "guard_breath",
+      "index": 9,
+      "alpha_bounds": [
+        167,
+        51,
+        327,
+        240
+      ]
+    },
+    {
+      "name": "ranged_loaded_windup",
+      "index": 10,
+      "alpha_bounds": [
+        165,
+        23,
+        355,
+        240
+      ]
+    },
+    {
+      "name": "ranged_release_empty",
+      "index": 11,
+      "alpha_bounds": [
+        172,
+        29,
+        374,
+        239
+      ]
+    },
+    {
+      "name": "ranged_reload",
+      "index": 12,
+      "alpha_bounds": [
+        188,
+        25,
+        323,
+        241
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 13,
+      "alpha_bounds": [
+        176,
+        41,
+        340,
+        242
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        183,
+        50,
+        318,
+        242
+      ]
+    },
+    {
+      "name": "death_fall",
+      "index": 15,
+      "alpha_bounds": [
+        141,
+        76,
+        350,
+        240
+      ]
+    },
+    {
+      "name": "death_side",
+      "index": 16,
+      "alpha_bounds": [
+        154,
+        132,
+        352,
+        245
+      ]
+    },
+    {
+      "name": "corpse",
+      "index": 17,
+      "alpha_bounds": [
+        154,
+        139,
+        344,
+        242
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/idle-pair.png": "0a7d37153f27975071834218fd49d665f037a733b7b478a18253064284db7118",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/near-contact-unfolded.png": "3428031e3e63f86bd1cdfded31ba325ed866e0cb51d4dfde1e511bb715efb187",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/walk-1.png": "0f06ff2ce51b93d8e3f5037120c12a88f160e130ec127d7d9b2ce3457dcdd204",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/walk-2.png": "4c9a79ffc0e602c915071a38d2b6441eea32b54a68aec0635ff22df50148339d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/walk-3.png": "880a0114accb4aa378d3161d9f8e3228666f18d3605f95d19697f6afdc1032ad",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/shield-bash-pair.png": "31b9506656a288b92a063f622cd540c74f84329f48e8f57e0bfcff30ef5de118",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/guard-pair.png": "e289d888125d6c3c8018bf78a3156da5d53195a12fd5f4f61aaaf836e3c7635f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/poses.png": "599e93098094bc10103735475ced29cb4110458a15a4a01c20a7c1e919e24f9d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/release-empty.png": "4b42f812d4de8221297a48f70dcb34251d80f569c4efc89ebfe195b746a087da"
+  }
+}

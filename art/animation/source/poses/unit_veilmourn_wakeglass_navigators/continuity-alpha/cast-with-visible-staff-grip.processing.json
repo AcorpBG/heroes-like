@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Explicit approval for deterministic background and edge cleanup; preserve original paint and poses.",
+  "id": "cast-with-visible-staff-grip",
+  "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/cast-with-visible-staff-grip.png",
+  "source_sha256": "c00f8d7168c6911981c831bb4e9d8b48a87c308a36ccd31f91ae1a472484016e",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/cast-with-visible-staff-grip.png",
+  "output_sha256": "5de7afb96fc2e2047ea2328794503769e777525a2db64037dace432c7d3d9826",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-cutouts.json",
+  "recipe_sha256": "3acbc5e5176a464cc095a3383ae489adfb17a46269f0948bbeefd18f9d257dee",
+  "parameters": {
+    "minimum": 175,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        352,
+        800
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 850233,
+    "edge_pixels": 20431,
+    "unchanged_paint_pixels": 702200,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

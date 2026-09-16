@@ -1,0 +1,98 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "graft-guard-breath",
+  "source": "art/animation/source/poses/unit_thornwake_graft_matriarchs/guard-breath.png",
+  "source_sha256": "66caaf9c363f14cda2de24a320c2f4784f92ff1ecaef51e8bdf60d46e185eae6",
+  "source_rect": [
+    0,
+    0,
+    1485,
+    1059
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_graft_matriarchs/continuity-alpha/guard-breath.png",
+  "output_sha256": "e83a072a2c1c577397c0fe9a98e851b6ba0769762194ba214ef6318d0373e34d",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_graft_matriarchs/continuity-cutouts.json",
+  "recipe_sha256": "b655cf33f6f01d3af91e6e357f7ac7dc94fc2a54c2625061cae6760b84ecffce",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        951,
+        336
+      ],
+      [
+        540,
+        330
+      ],
+      [
+        702,
+        346
+      ],
+      [
+        453,
+        373
+      ],
+      [
+        435,
+        405
+      ],
+      [
+        453,
+        424
+      ],
+      [
+        812,
+        499
+      ],
+      [
+        389,
+        480
+      ],
+      [
+        940,
+        564
+      ],
+      [
+        394,
+        536
+      ],
+      [
+        500,
+        549
+      ],
+      [
+        584,
+        550
+      ],
+      [
+        393,
+        555
+      ],
+      [
+        565,
+        629
+      ],
+      [
+        897,
+        644
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1103084,
+    "edge_pixels": 16564,
+    "unchanged_paint_pixels": 452967,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

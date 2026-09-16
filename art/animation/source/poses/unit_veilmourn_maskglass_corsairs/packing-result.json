@@ -1,0 +1,155 @@
+{
+  "unit_id": "unit_veilmourn_maskglass_corsairs",
+  "output": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/candidate-atlas.png",
+  "sha256": "d18b0c8bb1ca53aaacc7f172ea85bf6ef6295162880bfc4d2cada3408751b7ca",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        172,
+        21,
+        326,
+        238
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        174,
+        21,
+        328,
+        238
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        146,
+        24,
+        340,
+        240
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        168,
+        24,
+        327,
+        240
+      ]
+    },
+    {
+      "name": "walk_planted_bridge",
+      "index": 4,
+      "alpha_bounds": [
+        180,
+        26,
+        330,
+        240
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        178,
+        31,
+        325,
+        249
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        174,
+        26,
+        326,
+        243
+      ]
+    },
+    {
+      "name": "melee_release",
+      "index": 7,
+      "alpha_bounds": [
+        176,
+        55,
+        362,
+        244
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        140,
+        35,
+        348,
+        240
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        156,
+        36,
+        352,
+        237
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        172,
+        64,
+        332,
+        254
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 11,
+      "alpha_bounds": [
+        193,
+        73,
+        315,
+        247
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 12,
+      "alpha_bounds": [
+        178,
+        99,
+        334,
+        248
+      ]
+    },
+    {
+      "name": "dead_equipped",
+      "index": 13,
+      "alpha_bounds": [
+        162,
+        160,
+        346,
+        254
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png": "e4333fdcdb5aebf48d55ae3e2a4aaf97a8fe19fd375708cbd62bf984bac29896",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_maskglass_corsairs/continuity-alpha/guided-opposite-contact-and-guards.png": "08f3f1f4fcc1282a2b64065b93a7bc1ade637c27aa3e6773bcd12c592d14a780"
+  }
+}

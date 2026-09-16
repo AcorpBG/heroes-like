@@ -1,0 +1,118 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "jobs": [
+    {
+      "id": "bramble-downstroke",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/flight-downstroke-matched.png",
+      "source_sha256": "dce2044d5b894923713d8aae445f63eb94ea26fdff30fb1f36b22bd86e2f4499",
+      "output": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/flight-downstroke-matched.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            800,
+            699
+          ],
+          [
+            810,
+            783
+          ],
+          [
+            573,
+            567
+          ],
+          [
+            807,
+            664
+          ],
+          [
+            482,
+            745
+          ],
+          [
+            456,
+            883
+          ],
+          [
+            678,
+            808
+          ]
+        ]
+      }
+    },
+    {
+      "id": "bramble-reload-seating",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/reload-seating.png",
+      "source_sha256": "d0de148c71e6149c44b2b5aa964f8462f3a520eb7f6b02b731472eeaafbd6399",
+      "output": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/reload-seating.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 110,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            507,
+            597
+          ],
+          [
+            505,
+            646
+          ],
+          [
+            434,
+            764
+          ],
+          [
+            871,
+            787
+          ]
+        ]
+      }
+    },
+    {
+      "id": "bramble-firing",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/firing-no-projectile.png",
+      "source_sha256": "b5d4d33f832543e136d07710d5eeefad8076da13fa25ba3b24068b57c06db3e7",
+      "output": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/firing-no-projectile.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            523,
+            530
+          ],
+          [
+            474,
+            654
+          ]
+        ]
+      }
+    },
+    {
+      "id": "bramble-guard-breath",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/guard-breath.png",
+      "source_sha256": "0dc3e5249528af0c61939cf00a26d4811e4afefcc7c57549dd913f6c37d18a72",
+      "output": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/guard-breath.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            381,
+            943
+          ]
+        ]
+      }
+    }
+  ]
+}

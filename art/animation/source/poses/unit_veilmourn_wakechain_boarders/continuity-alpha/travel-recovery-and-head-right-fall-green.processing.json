@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup, preserving originals and interior paint.",
+  "id": "travel-recovery-and-head-right-fall-green",
+  "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/travel-recovery-and-head-right-fall-green.png",
+  "source_sha256": "f7e7abe0cd405b74525ac689f5f7d91cd51562829b1729fdc1ded94e9fcd8e09",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-alpha/travel-recovery-and-head-right-fall-green.png",
+  "output_sha256": "87906905fd12312a03726d1c8e975c1215dac1a6295706ab984612d5d2f8f8c4",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-cutouts.json",
+  "recipe_sha256": "7748e1d1e1042adbd4cfc29f09a01cbabb7996e47fc8677537a11d2154ebdb35",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1138700,
+    "edge_pixels": 43310,
+    "unchanged_paint_pixels": 390854,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

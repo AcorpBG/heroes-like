@@ -1,0 +1,74 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "graft-poses-anatomy-death-draft",
+  "source": "art/animation/source/poses/unit_thornwake_graft_matriarchs/poses-anatomy-death-draft.png",
+  "source_sha256": "914bb791d395b4548eb102a64d550a8c18ad9e46795e2c9f02f96e55c3a76a80",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_graft_matriarchs/continuity-alpha/poses-anatomy-death-draft.png",
+  "output_sha256": "da09ceb9b505f1f61c843b70c4ffda459fb02530b0bec55cb3f5e3f89fb6778d",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_graft_matriarchs/continuity-cutouts.json",
+  "recipe_sha256": "b655cf33f6f01d3af91e6e357f7ac7dc94fc2a54c2625061cae6760b84ecffce",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        176,
+        841
+      ],
+      [
+        525,
+        852
+      ],
+      [
+        124,
+        878
+      ],
+      [
+        643,
+        896
+      ],
+      [
+        139,
+        907
+      ],
+      [
+        483,
+        901
+      ],
+      [
+        265,
+        909
+      ],
+      [
+        220,
+        912
+      ],
+      [
+        505,
+        940
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1135185,
+    "edge_pixels": 25737,
+    "unchanged_paint_pixels": 411942,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and narrow edge cleanup. Preserve original paint; no local pose invention or warping.",
+  "id": "dawnWalk2",
+  "source": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-walk-2.png",
+  "source_sha256": "12c72d067364dc923c010c8b3748a750e7ac7e7397c235ebcadd1579c8af0f2e",
+  "source_rect": [
+    0,
+    0,
+    1231,
+    1277
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-alpha/walk-2.png",
+  "output_sha256": "61b8a16b16189d58368c8d65e96bdc1c4be0dbd2ac9b1fd19d5d14986c581c26",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-cutouts.json",
+  "recipe_sha256": "528cf40572e990bc0f80c8eb1571ad7e3daaca10e64b38fe0c55421cbe38afe4",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        831,
+        658
+      ],
+      [
+        915,
+        713
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1005065,
+    "edge_pixels": 9601,
+    "unchanged_paint_pixels": 557321,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

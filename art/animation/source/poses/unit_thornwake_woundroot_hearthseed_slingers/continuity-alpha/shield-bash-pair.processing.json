@@ -1,0 +1,78 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paintings preserved.",
+  "id": "shield-bash-pair",
+  "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/shield-bash-pair.png",
+  "source_sha256": "bb85e4db369c1cb2d6e5999b445c31a3f8f186b98a500774ab32045e00aa486f",
+  "source_rect": [
+    0,
+    0,
+    1619,
+    971
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/shield-bash-pair.png",
+  "output_sha256": "31b9506656a288b92a063f622cd540c74f84329f48e8f57e0bfcff30ef5de118",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-cutouts.json",
+  "recipe_sha256": "ea6d0fa66800477982c01f519ff952059602fd13e8eff563e5dca10a9874fbe0",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        127,
+        510
+      ],
+      [
+        287,
+        440
+      ],
+      [
+        876,
+        503
+      ],
+      [
+        1025,
+        450
+      ],
+      [
+        274,
+        545
+      ],
+      [
+        489,
+        244
+      ],
+      [
+        322,
+        164
+      ],
+      [
+        512,
+        188
+      ],
+      [
+        1176,
+        158
+      ],
+      [
+        1013,
+        564
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1012131,
+    "edge_pixels": 12192,
+    "unchanged_paint_pixels": 547726,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,242 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "idle-and-equipped-collapse",
+  "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-and-equipped-collapse.png",
+  "source_sha256": "092123f7c46f48014bec3fea05604bca9a502667750d61262b9cd0ba8961cecd",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/idle-and-equipped-collapse.png",
+  "output_sha256": "88f972b36afae35b8a0d5429a2d88578538052ad4fe9cf0e8ae7748564ac8eae",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-cutouts.json",
+  "recipe_sha256": "9c7e4c3898f2e4f51850efc5a77a8aad52bfed82a390d7ec9f070fa7db3701c7",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 8,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        152,
+        300
+      ],
+      [
+        166,
+        310
+      ],
+      [
+        150,
+        320
+      ],
+      [
+        178,
+        295
+      ],
+      [
+        184,
+        248
+      ],
+      [
+        642,
+        303
+      ],
+      [
+        626,
+        312
+      ],
+      [
+        655,
+        270
+      ],
+      [
+        674,
+        254
+      ],
+      [
+        1328,
+        508
+      ],
+      [
+        1350,
+        506
+      ],
+      [
+        1380,
+        483
+      ],
+      [
+        1410,
+        477
+      ],
+      [
+        660,
+        706
+      ],
+      [
+        635,
+        718
+      ],
+      [
+        627,
+        738
+      ],
+      [
+        691,
+        730
+      ],
+      [
+        281,
+        925
+      ],
+      [
+        270,
+        937
+      ],
+      [
+        318,
+        950
+      ],
+      [
+        366,
+        943
+      ],
+      [
+        411,
+        945
+      ],
+      [
+        1172,
+        950
+      ],
+      [
+        1189,
+        960
+      ],
+      [
+        1235,
+        955
+      ],
+      [
+        1281,
+        960
+      ],
+      [
+        1325,
+        956
+      ],
+      [
+        1362,
+        968
+      ],
+      [
+        175,
+        278
+      ],
+      [
+        142,
+        307
+      ],
+      [
+        154,
+        303
+      ],
+      [
+        181,
+        280
+      ],
+      [
+        676,
+        711
+      ],
+      [
+        696,
+        713
+      ],
+      [
+        1408,
+        943
+      ],
+      [
+        1421,
+        949
+      ],
+      [
+        164,
+        291
+      ],
+      [
+        166,
+        282
+      ],
+      [
+        153,
+        313
+      ],
+      [
+        140,
+        316
+      ],
+      [
+        676,
+        719
+      ],
+      [
+        688,
+        711
+      ]
+    ],
+    "protected_polygons": [
+      [
+        [
+          266,
+          23
+        ],
+        [
+          280,
+          22
+        ],
+        [
+          298,
+          27
+        ],
+        [
+          306,
+          34
+        ],
+        [
+          289,
+          40
+        ],
+        [
+          275,
+          36
+        ],
+        [
+          268,
+          41
+        ],
+        [
+          263,
+          33
+        ]
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1069578,
+    "edge_pixels": 16515,
+    "unchanged_paint_pixels": 486771,
+    "protected_pixels": 553,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

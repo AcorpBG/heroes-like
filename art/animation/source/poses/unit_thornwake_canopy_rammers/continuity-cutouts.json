@@ -1,0 +1,416 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "jobs": [
+    {
+      "id": "canopy-original",
+      "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/poses.png",
+      "source_sha256": "7a17d2eaa3833fa3ba2b8c7cbbb687ba1bb320f0da0a25e7fa5d2b25a0698cc5",
+      "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/original.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            627,
+            49
+          ],
+          [
+            250,
+            53
+          ],
+          [
+            1022,
+            69
+          ],
+          [
+            684,
+            108
+          ],
+          [
+            296,
+            113
+          ],
+          [
+            1063,
+            140
+          ],
+          [
+            127,
+            176
+          ],
+          [
+            236,
+            201
+          ],
+          [
+            273,
+            399
+          ],
+          [
+            1383,
+            432
+          ],
+          [
+            321,
+            465
+          ],
+          [
+            642,
+            809
+          ],
+          [
+            1033,
+            892
+          ]
+        ]
+      }
+    },
+    {
+      "id": "canopy-opposite-contact",
+      "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/opposite-contact.png",
+      "source_sha256": "d0cf547ab31e16da0419ccf13ccbb7ba6a8d48d01707d6970d14185555e5d925",
+      "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/opposite-contact.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2
+      }
+    },
+    {
+      "id": "canopy-opposite-passing",
+      "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/opposite-passing.png",
+      "source_sha256": "87def324d798fc25415074a35117c1457e4dc297d5ee6d0d31c84b333f7dd913",
+      "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/opposite-passing.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            732,
+            194
+          ],
+          [
+            422,
+            210
+          ],
+          [
+            402,
+            153
+          ],
+          [
+            456,
+            181
+          ]
+        ]
+      }
+    },
+    {
+      "id": "canopy-ram-windup",
+      "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/ram-windup.png",
+      "source_sha256": "8adbf3b90d41a1c390599e76d2e00f0236da3d06bcf25ca8b209867f7e3e3dec",
+      "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/ram-windup.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 24,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            778,
+            216
+          ],
+          [
+            377,
+            567
+          ],
+          [
+            316,
+            550
+          ],
+          [
+            369,
+            170
+          ],
+          [
+            430,
+            195
+          ],
+          [
+            454,
+            181
+          ],
+          [
+            398,
+            140
+          ]
+        ]
+      }
+    },
+    {
+      "id": "canopy-ram-contact",
+      "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/ram-contact.png",
+      "source_sha256": "ce8e3e66578cddc87a5f62ab7774bcda63297dd6aceb18493077a7f64572830e",
+      "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/ram-contact.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            356,
+            601
+          ],
+          [
+            885,
+            386
+          ],
+          [
+            661,
+            729
+          ],
+          [
+            590,
+            297
+          ],
+          [
+            562,
+            250
+          ],
+          [
+            583,
+            241
+          ]
+        ]
+      }
+    },
+    {
+      "id": "canopy-hit-recoil",
+      "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/hit-recoil.png",
+      "source_sha256": "569d2b09a5a3fb6c347dfec04caea2deec334982b8c0da1c3bc513a4c86766d0",
+      "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/hit-recoil.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            600,
+            304
+          ],
+          [
+            193,
+            363
+          ],
+          [
+            624,
+            192
+          ],
+          [
+            167,
+            310
+          ]
+        ]
+      }
+    },
+    {
+      "id": "canopy-guard-breath",
+      "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/guard-breath.png",
+      "source_sha256": "5c80fc4c440731bb819b46c2ecc00fe27ccae5a11390f3a00a847bfa97866080",
+      "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/guard-breath.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 24,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            713,
+            321
+          ],
+          [
+            362,
+            285
+          ],
+          [
+            400,
+            237
+          ],
+          [
+            300,
+            826
+          ],
+          [
+            402,
+            205
+          ],
+          [
+            393,
+            217
+          ],
+          [
+            451,
+            226
+          ],
+          [
+            442,
+            211
+          ],
+          [
+            377,
+            200
+          ]
+        ]
+      }
+    },
+    {
+      "id": "canopy-guided-opposite-contact",
+      "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/guided-opposite-contact.png",
+      "source_sha256": "07aa14ea59bac6dbd15dea79d1a501791f61d3f0db063bd573c2e0cdf4044238",
+      "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/guided-opposite-contact.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            384,
+            610
+          ],
+          [
+            826,
+            167
+          ],
+          [
+            501,
+            196
+          ],
+          [
+            350,
+            785
+          ],
+          [
+            529,
+            169
+          ],
+          [
+            474,
+            140
+          ]
+        ]
+      }
+    },
+    {
+      "id": "canopy-guided-far-passing",
+      "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/guided-far-passing.png",
+      "source_sha256": "8b6416f1e2529b5a57cc0464627ae586f828663697917e03e637b1633e9da81c",
+      "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/guided-far-passing.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            735,
+            182
+          ],
+          [
+            478,
+            156
+          ],
+          [
+            484,
+            178
+          ],
+          [
+            507,
+            151
+          ],
+          [
+            460,
+            126
+          ],
+          [
+            461,
+            140
+          ],
+          [
+            490,
+            141
+          ]
+        ]
+      }
+    },
+    {
+      "id": "canopy-far-passing-stout",
+      "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/far-passing-stout.png",
+      "source_sha256": "9cf8982052552c1c4e8bf5307e8a69f2ce370e3f482148312b0318ff7a0fd6a3",
+      "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/far-passing-stout.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            769,
+            228
+          ],
+          [
+            445,
+            247
+          ],
+          [
+            479,
+            221
+          ],
+          [
+            372,
+            651
+          ],
+          [
+            405,
+            206
+          ],
+          [
+            456,
+            230
+          ],
+          [
+            457,
+            600
+          ],
+          [
+            480,
+            206
+          ],
+          [
+            409,
+            835
+          ],
+          [
+            429,
+            192
+          ],
+          [
+            428,
+            175
+          ],
+          [
+            465,
+            192
+          ]
+        ]
+      }
+    }
+  ]
+}

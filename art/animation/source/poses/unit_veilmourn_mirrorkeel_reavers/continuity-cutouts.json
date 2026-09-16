@@ -1,0 +1,77 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup, preserving originals and interior paint.",
+  "jobs": [
+    {
+      "id": "opposite-passing",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/opposite-passing-guide.png",
+      "source_sha256": "d1ffe7483ae104604b2109a9c3ce7a10c4f938d4d327ac92d205e190b4d75f99",
+      "output": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/opposite-passing-guide.png",
+      "matte": {
+        "minimum": 125,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "recovery-and-braced-guard",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/recovery-and-braced-guard.png",
+      "source_sha256": "31941a510bff92115b3eb4d98d6066e6d8ab97ddfe161bd4a4a56fd033617681",
+      "output": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/recovery-and-braced-guard.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            340,
+            123
+          ],
+          [
+            474,
+            282
+          ],
+          [
+            250,
+            370
+          ],
+          [
+            778,
+            409
+          ],
+          [
+            910,
+            120
+          ],
+          [
+            881,
+            760
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "opposite-passing-green",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/opposite-passing-green.png",
+      "source_sha256": "e078bd2779f92b2b87f5c2784a78f3b89614bd55bd8ee5fe63c14d950ef2056c",
+      "output": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/opposite-passing-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

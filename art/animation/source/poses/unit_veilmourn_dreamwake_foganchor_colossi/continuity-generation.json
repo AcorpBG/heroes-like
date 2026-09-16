@@ -1,0 +1,82 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "gathered-chain-travel-and-guard",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/gathered-chain-travel-and-guard.png",
+      "sha256": "2fd4987adb8ab69f9e63514e4b604b2aa7ae632bd0d96082c3cda1e44b427387",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4768b77c-99f5-4efa-b25b-6ea449d1ddf5.png",
+      "prompt": "Use case: stylized-concept. SIX original painted tactical battle sprites, THREE columns TWO rows with large gutters for the enormous anchor and long cape. Image1 primary body/gear/style reference, image2 identity only. Same Foganchor Colossus huge spectral humanoid TWO arms TWO legs, black/gold/silver ornate armor, narrow tall pointed crown helm and cyan face slit, white scarf torn navy/ivory cloak and subtle cyan edges. Fixed elevated three-quarter view facing screen RIGHT, same anatomical proportions every cell. Exactly ONE enormous dark double-fluked anchor with circular silver boss and ONE continuous heavy linked chain; all excess links gathered at anatomical RIGHT near fist on viewer LEFT, chain runs from that fist to boss, NOT from belt or other hand. LEFT hand normally free. TOP LEFT: controlled travel, near knee softly bent supporting, far boot lifted slightly behind, right arm carries anchor low OUTSIDE near hip at viewer LEFT clear of leg sweep; left hand open for balance. TOP MIDDLE: opposite support, FAR leg planted vertical under hip, NEAR knee raised forward and boot above floor, same right-hand anchor held outside stride. TOP RIGHT: mid-transfer both boots flat separated fore/aft, anchor carried in same close hold, shoulders settle. BOTTOM LEFT: post-lash recovery, right elbow draws chain back, one anchor settling down in front-right close to torso; left hand helps guide the SAME chain without replacing right grip, legs braced. BOTTOM MIDDLE: defensive kneeling brace, ONE anchor upright in front of chest, RIGHT fist holds short chain directly above boss, LEFT palm steadies lower fluke rim; helmet visible above anchor, no second anchor. BOTTOM RIGHT: same guard with shoulders lowered slightly and knees deeper, same hand support and anchor position, cloth settles. Keep complete helmet, boots, chain and anchor within each isolated cell, no trails or giant fog effects. Uniform pure GREEN RGB(0,255,0) backing with no reflected green/spill, no floor, scenery, text or grid. Original painted art, no logos.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-idle-planted.png",
+          "sha256": "ac6493f435ddf966282e9b8e38bccf33f9f8c716dfab67e115757f3accef4455"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/units/source/curated/unit_veilmourn_dreamwake_foganchor_colossi.png",
+          "sha256": "1f76cc5f8c540485ae285b9d6534b7f16bafd0bd2e5f97a2b3211abe86dde905"
+        }
+      ],
+      "selection_notes": "Six new controlled support/lift, gathered-chain recovery and anchor braces; complete anchor/crown visible. Anatomical scale, grip/chain consistency and connected motion remain review.",
+      "selected_frames": [
+        "idle_settled",
+        "passing_far_lift",
+        "passing_near_lift",
+        "chain_recovery",
+        "anchor_brace_a",
+        "anchor_brace_b"
+      ],
+      "selected": true,
+      "role": "selected source"
+    },
+    {
+      "id": "poses-fall-helmet-green-background",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-fall-helmet-green-background.png",
+      "sha256": "c1194f715c1ab8dd6ce06eaa56138ad75901b4a58220de88002757abd0d821cf",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e34cc35b-b05d-4858-b625-9fa8df4bf984.png",
+      "prompt": "Use case: precise-object-edit. Edit Image1 ONLY to replace the checkerboard backdrop with perfectly uniform pure GREEN RGB(0,255,0), including enclosed background gaps through anchor flukes, chain loops and between limbs. Preserve ALL twelve paintings exactly in their four-column three-row layout and framing. Keep their existing body/crown/anchor geometry, ivory scarf and white cloak fragments, blue spectral edges and dead dark final body unchanged. Do not alter any pose or invent lost details. No green spill/reflected lighting, no floor or shadows or text. Pure background replacement, preserving fine pale edges and full equipment.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-fall-helmet-corrected.png",
+          "sha256": "417104c830f2e0511c6249516d107168d5ce17836a86fb59c8a72ff4841ea032"
+        }
+      ],
+      "selection_notes": "Retained idle, original contacts, windup/lash and corrected helmet kneel/fall/corpse. Headless hit excluded.",
+      "selected_frames": [
+        "idle_original",
+        "contact_original",
+        "anchor_windup",
+        "anchor_lash",
+        "death_kneel",
+        "death_fall_helmet",
+        "dead_helmet_cold"
+      ],
+      "selected": true,
+      "role": "selected source"
+    },
+    {
+      "id": "poses-hit-helmet-green-background",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-hit-helmet-green-background.png",
+      "sha256": "af3503b2464791682d4bfcf80d58632b3356124eb05235f5271c28331393c0e0",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-509069ae-dcc0-46a7-9757-aeede2187f4d.png",
+      "prompt": "Use case: precise-object-edit. Edit Image1 ONLY to replace its checkerboard background with flat pure GREEN RGB(0,255,0), also enclosed gaps through chain links, anchor flukes and between limbs. Preserve every existing painted sprite exactly, including the corrected pointed helmet and white scarf on the bottom-left recoiling hit pose. Keep all twelve poses, original four-column three-row arrangement, framing, body/costume colors, ivory cloth, pale cyan edges and equipment unchanged. No redesign, green spill, floor, text or grid. Change background only, retain fine pale cloth.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-hit-helmet-corrected.png",
+          "sha256": "7ef74b5afbaddbbfc5dc65ba462c9504e2a7b0ec6f2f43ffb85bcab3d6ac8a5d"
+        }
+      ],
+      "selection_notes": "Only corrected helmet hit (bottom-left) selected; other states use fall-corrected original/new paintings.",
+      "selected_frames": [
+        "hit_helmet"
+      ],
+      "selected": true,
+      "role": "selected source"
+    }
+  ]
+}

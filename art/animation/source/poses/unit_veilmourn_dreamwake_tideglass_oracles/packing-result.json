@@ -1,0 +1,176 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+  "output": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/candidate-atlas.png",
+  "sha256": "6057f1b240b0a5d570847493ab7c3833dcce664f5c29030df189860aa63f2d18",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        170,
+        23,
+        320,
+        240
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        165,
+        22,
+        322,
+        240
+      ]
+    },
+    {
+      "name": "contact_original",
+      "index": 2,
+      "alpha_bounds": [
+        164,
+        22,
+        315,
+        240
+      ]
+    },
+    {
+      "name": "passing_original",
+      "index": 3,
+      "alpha_bounds": [
+        177,
+        33,
+        339,
+        240
+      ]
+    },
+    {
+      "name": "contact_travel",
+      "index": 4,
+      "alpha_bounds": [
+        156,
+        6,
+        339,
+        240
+      ]
+    },
+    {
+      "name": "passing_near_lift",
+      "index": 5,
+      "alpha_bounds": [
+        168,
+        6,
+        335,
+        242
+      ]
+    },
+    {
+      "name": "staff_butt_windup",
+      "index": 6,
+      "alpha_bounds": [
+        157,
+        16,
+        372,
+        241
+      ]
+    },
+    {
+      "name": "staff_butt_release",
+      "index": 7,
+      "alpha_bounds": [
+        156,
+        50,
+        405,
+        238
+      ]
+    },
+    {
+      "name": "staff_recover",
+      "index": 8,
+      "alpha_bounds": [
+        176,
+        16,
+        336,
+        241
+      ]
+    },
+    {
+      "name": "basin_channel",
+      "index": 9,
+      "alpha_bounds": [
+        158,
+        9,
+        335,
+        242
+      ]
+    },
+    {
+      "name": "basin_release",
+      "index": 10,
+      "alpha_bounds": [
+        150,
+        9,
+        378,
+        243
+      ]
+    },
+    {
+      "name": "guard_level_basin",
+      "index": 11,
+      "alpha_bounds": [
+        158,
+        18,
+        356,
+        243
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 12,
+      "alpha_bounds": [
+        144,
+        20,
+        341,
+        243
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 13,
+      "alpha_bounds": [
+        152,
+        59,
+        351,
+        242
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 14,
+      "alpha_bounds": [
+        131,
+        105,
+        368,
+        254
+      ]
+    },
+    {
+      "name": "dead_cold",
+      "index": 15,
+      "alpha_bounds": [
+        137,
+        136,
+        369,
+        254
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/continuity-alpha/poses-green-background.png": "fea60aac9b11ca6f8969d87b7d50980b2bd5cbee46a2eedb1a2749e7dc574b98",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/continuity-alpha/travel-hit-and-cold-collapse.png": "4c916a677ea43e47d80dbb3ebcd47ecab4609d793f5bb602aae8caafdf247751",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/continuity-alpha/single-staff-actions-and-level-basin.png": "5b58f5b2e190ebc02a2dba7af34d0b5ad6818f931c92c30cc1d8c4155fb8c912"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_tidehook_deckhands",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/poses-no-baked-slash.png",
+      "source_sha256": "edcd7a541f0b41382eab27efc738758ac19a04b18964cb18b767516e5d896067",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-808d589d-3937-444b-a5b0-6b2b1947b0bc.png",
+      "prompt": "Use case: precise-object-edit. Original Tidehook Deckhand sprite sheet, exact twelve figures in four columns three rows. Change ONLY row2 column3 attack contact: erase the detached broad cyan crescent SLASH TRAIL beyond/above the actual hook, leaving the solid curved hook blade and its existing small internal cyan edge glow, connected handle and original hand grip intact. Preserve every body pose, cloak/flame silhouette, blue limbs, dark hood with cyan face, rope harness, LEFT-hand chain/bell and their sizes. Keep all other eleven cells pixel-layout stable including final cold corpse with dark hook/face and extinguished bell. No redesign, no new equipment, no camera/body mirroring. Genuine transparent background in place of checkerboard, no floor, shadows, text or replacement effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_tidehook_deckhands/poses.png",
+          "sha256": "b45330e6b3a2acec7bfbd33b92a72f147ca67200427502712ae761121c5ffd67",
+          "role": "edit_target_or_motion_guide"
+        }
+      ],
+      "selected_cells": [
+        6
+      ],
+      "excluded_cells": {
+        "others": "Only release without baked slash selected; retain original viable paintings."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/guided-gathered-chain-and-guards.png",
+      "source_sha256": "30089cea6c52bb60ed72208f97bf0254ec1e1e8e0c255ebe202db5bc57926c88",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7bd9c063-bb8e-4286-a591-2ea94e82160b.png",
+      "prompt": "Use case: sketch-to-render. SIX original Tidehook Deckhand full-body painted animation poses in 3 columns x 2 rows, same fixed RIGHT-facing three-quarter torso/head and identical body/equipment scale, generous cell gutters. Inputs1-4 are lower-body phase diagrams, input5 is costume/body/equipment ONLY. First FOUR cells follow four diagrams in order: foreground RIGHT foot forward heel contact with LEFT behind; RIGHT foot planted while LEFT foot lifts behind; LEFT foot forward while foreground RIGHT trails behind; LEFT planted while RIGHT knee lifts ahead. Keep two anatomically connected legs/feet with exactly one knee each; diagram blue/orange mark ownership only, actual skin on BOTH legs remains original BLUE with dark leather calf wraps and BARE blue toes. No body or hand mirroring. Travel change: LEFT hand gathers the existing bronze bell's short chain so the same ONE bell hangs beside left hip, clear of thighs/feet; free chain gathered in left fist, no long chain sweeping legs. RIGHT hand retains the same SINGLE curved cyan-edged hook low and forward at viewer LEFT. Keep dark navy hood, cyan shadow-face, spectral blue flame from hood/back, tattered navy/teal skirt, torso rope harness, small belt vial, leather wrists. Last TWO cells matching low braced guards: RIGHT arm raises hook protectively across chest, LEFT hand still holds gathered bell close to left hip, slight knee/torso weight shift. Exactly one hook and one chain/bell in each cell. No detached slash trail, no new armor/props. Genuine transparent background, no checkerboard, floor, shadow, text or diagrams; preserve original painterly style.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716",
+          "role": "edit_target_or_motion_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734",
+          "role": "identity_or_supporting_reference"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d",
+          "role": "identity_or_supporting_reference"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9",
+          "role": "identity_or_supporting_reference"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_tidehook_deckhands/identity-reference-v2.png",
+          "sha256": "c5e1e7b869b542fff2269b482c4d728dbfc76973f7bda4e4f0d224bc73e9858c",
+          "role": "identity_or_supporting_reference"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "excluded_cells": {}
+    }
+  ],
+  "review_notes": [
+    "14-frame candidate: seven original paintings, one edited release and six new walk/guard paintings across two built-in outputs.",
+    "Baked slash trail removed from the release while actual hook edge remains luminous. Short gathered bell-chain travel avoids sweeping through the knees; separate guards lift the hook across the upper body.",
+    "Original collapse and cold corpse preserve hook and bell while face/flames go dark. Near/far passing differ, but repeated leading contacts remain unaccepted planted bridges.",
+    "Approved neutral extraction clears inspected underarm/chain gaps while retaining blue spectral flame, metal, rope and paint. Explicit crop limits exclude neighboring hooks and feet.",
+    "Full-roster limb ownership/support/travel, chain length and attachment, body/gear scale, flame/guard/death transitions and timing remain unaccepted."
+  ]
+}

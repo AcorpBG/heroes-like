@@ -1,0 +1,516 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paintings preserved.",
+  "jobs": [
+    {
+      "id": "poses",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/poses.png",
+      "source_sha256": "e216a556b2a08664fa640c770f6950b6ce384e78611e9956c15cdc02c554f103",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            102,
+            875
+          ],
+          [
+            123,
+            829
+          ],
+          [
+            462,
+            735
+          ],
+          [
+            358,
+            742
+          ],
+          [
+            1053,
+            868
+          ],
+          [
+            61,
+            1118
+          ],
+          [
+            112,
+            1109
+          ],
+          [
+            363,
+            1148
+          ],
+          [
+            747,
+            1234
+          ],
+          [
+            1076,
+            1242
+          ],
+          [
+            104,
+            749
+          ],
+          [
+            60,
+            1144
+          ],
+          [
+            98,
+            1109
+          ],
+          [
+            1055,
+            879
+          ],
+          [
+            358,
+            747
+          ],
+          [
+            1085,
+            801
+          ],
+          [
+            759,
+            1232
+          ],
+          [
+            407,
+            1217
+          ]
+        ]
+      }
+    },
+    {
+      "id": "idle-pair",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/idle-pair.png",
+      "source_sha256": "02bce8ccfc42d7b4141a7aafc9e03ea9d7ca946f10241ecbef8ee740b9d30c02",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/idle-pair.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            153,
+            542
+          ],
+          [
+            330,
+            420
+          ],
+          [
+            890,
+            542
+          ],
+          [
+            1064,
+            420
+          ],
+          [
+            360,
+            183
+          ],
+          [
+            1301,
+            139
+          ],
+          [
+            563,
+            140
+          ],
+          [
+            380,
+            105
+          ],
+          [
+            1118,
+            106
+          ],
+          [
+            360,
+            211
+          ],
+          [
+            1108,
+            144
+          ]
+        ]
+      }
+    },
+    {
+      "id": "shield-bash-pair",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/shield-bash-pair.png",
+      "source_sha256": "bb85e4db369c1cb2d6e5999b445c31a3f8f186b98a500774ab32045e00aa486f",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/shield-bash-pair.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            127,
+            510
+          ],
+          [
+            287,
+            440
+          ],
+          [
+            876,
+            503
+          ],
+          [
+            1025,
+            450
+          ],
+          [
+            274,
+            545
+          ],
+          [
+            489,
+            244
+          ],
+          [
+            322,
+            164
+          ],
+          [
+            512,
+            188
+          ],
+          [
+            1176,
+            158
+          ],
+          [
+            1013,
+            564
+          ]
+        ]
+      }
+    },
+    {
+      "id": "release-empty",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/release-empty.png",
+      "source_sha256": "4ab01656c9638e619b58e4c3219312bba26d449d89dd8a48794884e71fc7b97e",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/release-empty.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            354,
+            500
+          ],
+          [
+            408,
+            532
+          ],
+          [
+            511,
+            259
+          ],
+          [
+            542,
+            385
+          ],
+          [
+            1034,
+            187
+          ],
+          [
+            356,
+            484
+          ],
+          [
+            357,
+            503
+          ],
+          [
+            242,
+            280
+          ],
+          [
+            473,
+            99
+          ],
+          [
+            543,
+            220
+          ],
+          [
+            292,
+            139
+          ],
+          [
+            256,
+            240
+          ],
+          [
+            259,
+            279
+          ],
+          [
+            518,
+            124
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-1",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/walk-1.png",
+      "source_sha256": "c92c7d1c7c724a9e45fc00f3edffcc0bc18ddc07c066a1793e833fd02b83efee",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/walk-1.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            290,
+            724
+          ],
+          [
+            875,
+            185
+          ],
+          [
+            583,
+            213
+          ],
+          [
+            590,
+            194
+          ],
+          [
+            619,
+            133
+          ],
+          [
+            604,
+            282
+          ],
+          [
+            588,
+            290
+          ],
+          [
+            627,
+            108
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-2",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/walk-2.png",
+      "source_sha256": "ee2aa645bc8afbfba003d365e69a104ff8bb94f79d2a8d37114de7538a5f1e4b",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/walk-2.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            290,
+            740
+          ],
+          [
+            530,
+            561
+          ],
+          [
+            514,
+            918
+          ],
+          [
+            631,
+            130
+          ],
+          [
+            895,
+            216
+          ],
+          [
+            609,
+            277
+          ],
+          [
+            894,
+            178
+          ],
+          [
+            596,
+            179
+          ],
+          [
+            590,
+            277
+          ],
+          [
+            644,
+            96
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-3",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/walk-3.png",
+      "source_sha256": "ef1dfe8182531769e7ae0e769e93ed3604f5f41f109b55a4965e11a056b503a3",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/walk-3.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            282,
+            681
+          ],
+          [
+            524,
+            532
+          ],
+          [
+            320,
+            687
+          ],
+          [
+            510,
+            246
+          ],
+          [
+            590,
+            132
+          ],
+          [
+            832,
+            211
+          ],
+          [
+            832,
+            176
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guard-pair",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/guard-pair.png",
+      "source_sha256": "3c14388e90300f54d10ba00738053b81d1ff1fa3b9b4da07c296e1f92786bc49",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/guard-pair.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            193,
+            520
+          ],
+          [
+            353,
+            451
+          ],
+          [
+            1080,
+            520
+          ],
+          [
+            1260,
+            420
+          ],
+          [
+            1083,
+            517
+          ],
+          [
+            1252,
+            642
+          ],
+          [
+            358,
+            290
+          ],
+          [
+            1254,
+            252
+          ],
+          [
+            626,
+            270
+          ],
+          [
+            373,
+            258
+          ],
+          [
+            1270,
+            229
+          ],
+          [
+            1266,
+            281
+          ],
+          [
+            425,
+            235
+          ]
+        ]
+      }
+    },
+    {
+      "id": "near-contact-unfolded",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/near-contact-unfolded.png",
+      "source_sha256": "113a7fa26adb23488a0cfc9ec44d16151b1113f53f976e4e88c8222237a70dd4",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/near-contact-unfolded.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            280,
+            688
+          ],
+          [
+            515,
+            525
+          ],
+          [
+            503,
+            244
+          ],
+          [
+            576,
+            181
+          ],
+          [
+            827,
+            210
+          ]
+        ]
+      }
+    }
+  ]
+}

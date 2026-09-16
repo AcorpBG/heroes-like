@@ -1,0 +1,199 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers",
+  "output": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/candidate-atlas.png",
+  "sha256": "8552995781a553a3d2a2395181e8b60bab19b05050a64fca752496d76660f16b",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle",
+      "index": 0,
+      "alpha_bounds": [
+        210,
+        22,
+        361,
+        238
+      ]
+    },
+    {
+      "name": "idle_breath",
+      "index": 1,
+      "alpha_bounds": [
+        159,
+        22,
+        363,
+        238
+      ]
+    },
+    {
+      "name": "near_contact",
+      "index": 2,
+      "alpha_bounds": [
+        207,
+        26,
+        346,
+        239
+      ]
+    },
+    {
+      "name": "far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        203,
+        17,
+        349,
+        239
+      ]
+    },
+    {
+      "name": "far_contact",
+      "index": 4,
+      "alpha_bounds": [
+        187,
+        22,
+        355,
+        246
+      ]
+    },
+    {
+      "name": "near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        208,
+        23,
+        348,
+        239
+      ]
+    },
+    {
+      "name": "horn_shove_windup",
+      "index": 6,
+      "alpha_bounds": [
+        169,
+        37,
+        358,
+        244
+      ]
+    },
+    {
+      "name": "horn_shove_contact",
+      "index": 7,
+      "alpha_bounds": [
+        153,
+        36,
+        385,
+        243
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 8,
+      "alpha_bounds": [
+        175,
+        38,
+        354,
+        243
+      ]
+    },
+    {
+      "name": "guard_braced",
+      "index": 9,
+      "alpha_bounds": [
+        203,
+        64,
+        339,
+        239
+      ]
+    },
+    {
+      "name": "horn_aim",
+      "index": 10,
+      "alpha_bounds": [
+        158,
+        29,
+        355,
+        242
+      ]
+    },
+    {
+      "name": "pollen_blow",
+      "index": 11,
+      "alpha_bounds": [
+        158,
+        29,
+        394,
+        242
+      ]
+    },
+    {
+      "name": "horn_lower",
+      "index": 12,
+      "alpha_bounds": [
+        182,
+        29,
+        346,
+        243
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 13,
+      "alpha_bounds": [
+        172,
+        33,
+        363,
+        245
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        175,
+        90,
+        363,
+        245
+      ]
+    },
+    {
+      "name": "death_fall",
+      "index": 15,
+      "alpha_bounds": [
+        156,
+        89,
+        361,
+        240
+      ]
+    },
+    {
+      "name": "death_side",
+      "index": 16,
+      "alpha_bounds": [
+        160,
+        84,
+        360,
+        248
+      ]
+    },
+    {
+      "name": "corpse",
+      "index": 17,
+      "alpha_bounds": [
+        160,
+        90,
+        365,
+        248
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png": "6652e925b46488127c0ee5b2e26cdbc73298ed5240df4747b6a9f88269b2055c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/near-contact-unfolded.png": "8933d5ccd0737281836cc62886487341a82aa034bf87bda2b6632c946b808f15",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-1.png": "3ebb654f2f3915eb90bc5b2f9dd4a3384bf83d623e5ec99ab17b01f5c2bc3b0e",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-2.png": "92e1fdd7a5a5b0da89adc747581742439ca44fe4402160738341a475b503b21f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-3.png": "541607920fdba251612a4d5cb5b58cdd72415971bc39ce291cd7c47a97967edf",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/guard-braced.png": "89f0687ba44240d5eb8f17e3b0f4f53a46cea99b7ed53f3f2c605e941b42ffea"
+  }
+}

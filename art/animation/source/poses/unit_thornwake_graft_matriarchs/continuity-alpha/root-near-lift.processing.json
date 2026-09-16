@@ -1,0 +1,94 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "graft-root-near-lift",
+  "source": "art/animation/source/poses/unit_thornwake_graft_matriarchs/root-near-lift.png",
+  "source_sha256": "dfb6d6d6a9b39a4558c4c1a1302985987c023e39e77f1e6c27e7e73b49c06fde",
+  "source_rect": [
+    0,
+    0,
+    1202,
+    1308
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_graft_matriarchs/continuity-alpha/root-near-lift.png",
+  "output_sha256": "33662562a40cbf42de016c8cc5341adae70f77a7d0f508538e1b3a3844e708be",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_graft_matriarchs/continuity-cutouts.json",
+  "recipe_sha256": "b655cf33f6f01d3af91e6e357f7ac7dc94fc2a54c2625061cae6760b84ecffce",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        572,
+        77
+      ],
+      [
+        411,
+        105
+      ],
+      [
+        538,
+        122
+      ],
+      [
+        632,
+        125
+      ],
+      [
+        348,
+        146
+      ],
+      [
+        688,
+        158
+      ],
+      [
+        335,
+        201
+      ],
+      [
+        672,
+        366
+      ],
+      [
+        391,
+        388
+      ],
+      [
+        424,
+        525
+      ],
+      [
+        677,
+        623
+      ],
+      [
+        872,
+        690
+      ],
+      [
+        259,
+        724
+      ],
+      [
+        681,
+        698
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1049873,
+    "edge_pixels": 20311,
+    "unchanged_paint_pixels": 502032,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,82 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paint and masters retained.",
+  "id": "walk-far-contact-draft",
+  "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/walk-far-contact-draft.png",
+  "source_sha256": "8913173815cf366138052128ad272f4efed4afff0db5596ef49cc11c17e6e54c",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-far-contact-draft.png",
+  "output_sha256": "f9424213c2e87dbb1cffa26d415cae0092a50586c935a1db8361c3433123fd37",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-cutouts.json",
+  "recipe_sha256": "64d4aeb4310305decf0620f741fc25810966bea0e2e113f632ef96beb68fd982",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        943,
+        195
+      ],
+      [
+        301,
+        714
+      ],
+      [
+        606,
+        238
+      ],
+      [
+        279,
+        724
+      ],
+      [
+        1079,
+        181
+      ],
+      [
+        934,
+        164
+      ],
+      [
+        961,
+        204
+      ],
+      [
+        1244,
+        283
+      ],
+      [
+        932,
+        183
+      ],
+      [
+        958,
+        212
+      ],
+      [
+        241,
+        636
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 855187,
+    "edge_pixels": 14635,
+    "unchanged_paint_pixels": 702706,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,78 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and narrow edge cleanup. Preserve original paint; no local pose invention or warping.",
+  "id": "seedglassWalk3",
+  "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-walk-3.png",
+  "source_sha256": "afd589cc0f614d6495b4f5fa9493cc89d3cce3cfc6fe43a52584928e8ab019b0",
+  "source_rect": [
+    0,
+    0,
+    1155,
+    1362
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-3.png",
+  "output_sha256": "5efcb82a8180b327d02c976a058d40c6f1c8ac79a96e5ad9317988d25efafddf",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-cutouts.json",
+  "recipe_sha256": "1552e4db4aea76b45ed7b14f6129b7cf444801e5f89b0ddae908b20b7aaf80f6",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        869,
+        559
+      ],
+      [
+        746,
+        760
+      ],
+      [
+        708,
+        663
+      ],
+      [
+        469,
+        526
+      ],
+      [
+        846,
+        767
+      ],
+      [
+        761,
+        899
+      ],
+      [
+        854,
+        387
+      ],
+      [
+        873,
+        327
+      ],
+      [
+        905,
+        392
+      ],
+      [
+        930,
+        448
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1157067,
+    "edge_pixels": 7409,
+    "unchanged_paint_pixels": 408634,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

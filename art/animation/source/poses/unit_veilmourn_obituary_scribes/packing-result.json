@@ -1,0 +1,187 @@
+{
+  "unit_id": "unit_veilmourn_obituary_scribes",
+  "output": "art/animation/source/poses/unit_veilmourn_obituary_scribes/candidate-atlas.png",
+  "sha256": "779155edcfbc165be97ebc445e32a212cea9d67c267b5c5819559b03fd05489d",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        179,
+        23,
+        351,
+        245
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        157,
+        34,
+        346,
+        245
+      ]
+    },
+    {
+      "name": "glide_lean",
+      "index": 2,
+      "alpha_bounds": [
+        110,
+        22,
+        362,
+        240
+      ]
+    },
+    {
+      "name": "glide_gather",
+      "index": 3,
+      "alpha_bounds": [
+        169,
+        23,
+        342,
+        241
+      ]
+    },
+    {
+      "name": "glide_spread",
+      "index": 4,
+      "alpha_bounds": [
+        142,
+        19,
+        344,
+        239
+      ]
+    },
+    {
+      "name": "glide_recover",
+      "index": 5,
+      "alpha_bounds": [
+        133,
+        33,
+        357,
+        245
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        156,
+        21,
+        326,
+        243
+      ]
+    },
+    {
+      "name": "melee_thrust",
+      "index": 7,
+      "alpha_bounds": [
+        146,
+        28,
+        372,
+        243
+      ]
+    },
+    {
+      "name": "action_recover",
+      "index": 8,
+      "alpha_bounds": [
+        169,
+        12,
+        330,
+        242
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 9,
+      "alpha_bounds": [
+        166,
+        34,
+        340,
+        245
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 10,
+      "alpha_bounds": [
+        155,
+        45,
+        343,
+        244
+      ]
+    },
+    {
+      "name": "cast_release",
+      "index": 11,
+      "alpha_bounds": [
+        158,
+        2,
+        342,
+        242
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 12,
+      "alpha_bounds": [
+        146,
+        33,
+        334,
+        246
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 13,
+      "alpha_bounds": [
+        135,
+        57,
+        359,
+        246
+      ]
+    },
+    {
+      "name": "death_fall_left",
+      "index": 14,
+      "alpha_bounds": [
+        118,
+        88,
+        386,
+        254
+      ]
+    },
+    {
+      "name": "death_settle_left",
+      "index": 15,
+      "alpha_bounds": [
+        132,
+        143,
+        383,
+        248
+      ]
+    },
+    {
+      "name": "dead_equipped_left",
+      "index": 16,
+      "alpha_bounds": [
+        125,
+        154,
+        389,
+        246
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_obituary_scribes/alpha/poses.png": "f4f9654ebbd220bfee52a59cc31532df69ccc6f3f42fa1b763eaa4ca3825435f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-glide-and-guards.png": "c44da01ef61351512d6f2664aa282e194bddc9402cf22aadf6b4e414c03fdbe1",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-attack-and-cast.png": "db3f8e7efd9f12d156d19b1d0abb2119b5829aafa6e7d352a6a9f747655430de",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-lantern-cold-collapse.png": "c6faba5ba2b158f067645ff0e4dc0a5d2afd2290b059703e66f20399d0f3302b"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "unit_id": "unit_veilmourn_wakechain_boarders",
+  "output": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/candidate-atlas.png",
+  "sha256": "035ef1e95175410f037e90be0357051e5c05b1ef895d1a4e0678feaa6feb35a3",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        159,
+        21,
+        375,
+        244
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        127,
+        22,
+        363,
+        246
+      ]
+    },
+    {
+      "name": "contact_original",
+      "index": 2,
+      "alpha_bounds": [
+        134,
+        29,
+        355,
+        244
+      ]
+    },
+    {
+      "name": "passing_original",
+      "index": 3,
+      "alpha_bounds": [
+        141,
+        55,
+        366,
+        244
+      ]
+    },
+    {
+      "name": "contact_gathered",
+      "index": 4,
+      "alpha_bounds": [
+        128,
+        26,
+        333,
+        242
+      ]
+    },
+    {
+      "name": "passing_near_lift",
+      "index": 5,
+      "alpha_bounds": [
+        156,
+        24,
+        311,
+        241
+      ]
+    },
+    {
+      "name": "attack_windup",
+      "index": 6,
+      "alpha_bounds": [
+        139,
+        50,
+        369,
+        244
+      ]
+    },
+    {
+      "name": "attack_chain_lash",
+      "index": 7,
+      "alpha_bounds": [
+        141,
+        59,
+        470,
+        251
+      ]
+    },
+    {
+      "name": "attack_recover",
+      "index": 8,
+      "alpha_bounds": [
+        144,
+        26,
+        320,
+        242
+      ]
+    },
+    {
+      "name": "defend_original",
+      "index": 9,
+      "alpha_bounds": [
+        115,
+        79,
+        360,
+        249
+      ]
+    },
+    {
+      "name": "defend_gathered",
+      "index": 10,
+      "alpha_bounds": [
+        153,
+        76,
+        354,
+        247
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 11,
+      "alpha_bounds": [
+        145,
+        70,
+        374,
+        254
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 12,
+      "alpha_bounds": [
+        141,
+        66,
+        370,
+        251
+      ]
+    },
+    {
+      "name": "death_head_right_lower",
+      "index": 13,
+      "alpha_bounds": [
+        134,
+        124,
+        360,
+        256
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 14,
+      "alpha_bounds": [
+        132,
+        141,
+        363,
+        254
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png": "2600066c7437ddb9a11bf5f4683a115d1d8a2090c5c46b69b53af6f09d90c19f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-alpha/travel-recovery-and-head-right-fall-green.png": "87906905fd12312a03726d1c8e975c1215dac1a6295706ab984612d5d2f8f8c4"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and narrow edge cleanup. Preserve original paint; no local pose invention or warping.",
+  "id": "dawnDead",
+  "source": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-death-inert-pair.png",
+  "source_sha256": "d44378751d9928e98b03b8771125b06c3b2dc46236ee8a7e7e436a06106f82a9",
+  "source_rect": [
+    0,
+    0,
+    2170,
+    725
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-alpha/death-inert-pair.png",
+  "output_sha256": "865fae209e217e71b845d1adb3ab341fde68339b49404750f8eba9034e1534c9",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-cutouts.json",
+  "recipe_sha256": "528cf40572e990bc0f80c8eb1571ad7e3daaca10e64b38fe0c55421cbe38afe4",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 150,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        574,
+        462
+      ],
+      [
+        664,
+        474
+      ],
+      [
+        423,
+        478
+      ],
+      [
+        824,
+        468
+      ],
+      [
+        1401,
+        522
+      ],
+      [
+        1553,
+        540
+      ],
+      [
+        1995,
+        484
+      ],
+      [
+        1624,
+        504
+      ],
+      [
+        1531,
+        534
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 973191,
+    "edge_pixels": 8672,
+    "unchanged_paint_pixels": 591387,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

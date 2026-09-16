@@ -1,0 +1,89 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and exact recipes, no invented or warped poses.",
+  "jobs": [
+    {
+      "id": "stag-right-normalized",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-magenta.png",
+      "source_sha256": "05ec0f5b105baac8bf1f4f18d5a0b7521c6fdcfad60aadddc6a7ea9f9bda2828",
+      "output": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-alpha/poses-facing-right.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "stag-fore-contact",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/gallop-fore-contact.png",
+      "source_sha256": "4bd99ba70b3139bdc835edd91b10430e285caac46ed50683dbe23d14e330c23d",
+      "output": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-alpha/gallop-fore-contact.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            1045,
+            158
+          ],
+          [
+            803,
+            232
+          ]
+        ]
+      }
+    },
+    {
+      "id": "stag-hind-contact",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/gallop-hind-contact.png",
+      "source_sha256": "0c3958c22f960c42795da76a1db3eb969b81b78b460beebfb2e16906505baee0",
+      "output": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-alpha/gallop-hind-contact.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 115,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            978,
+            208
+          ],
+          [
+            741,
+            278
+          ]
+        ]
+      }
+    },
+    {
+      "id": "stag-guard-breath",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/guard-breath.png",
+      "source_sha256": "85fea1a58552b179c704ce06c97e60ca49ea7f77cbb4f48112ef19a84b52ac66",
+      "output": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-alpha/guard-breath.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            916,
+            298
+          ],
+          [
+            1154,
+            370
+          ]
+        ]
+      }
+    }
+  ]
+}

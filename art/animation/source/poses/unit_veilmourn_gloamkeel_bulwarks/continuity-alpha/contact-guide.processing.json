@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic original-raster matte and bounded edge cleanup; preserve original sources and interior paint.",
+  "id": "contact-guide",
+  "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/contact-guide.png",
+  "source_sha256": "160f00c7a1ba633bd52f998e9bbfb3c4374976127e37266220ddf58a07be501f",
+  "source_rect": [
+    0,
+    0,
+    1206,
+    1304
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/contact-guide.png",
+  "output_sha256": "f45d0f9c614e5551951616d1996a6989a64a4876051364a005b2cbf3eca6a2e3",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-cutouts.json",
+  "recipe_sha256": "67fc68b99734b0b85232715fd59d8ae3934f16f558f2f86ed09c0c762a3a2fa8",
+  "parameters": {
+    "minimum": 175,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 936006,
+    "edge_pixels": 12337,
+    "unchanged_paint_pixels": 624281,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

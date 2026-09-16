@@ -1,0 +1,77 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_wakeglass_navigators",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "full-staff-actions-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/full-staff-actions-and-guards.png",
+      "source_sha256": "b026640771c07aa5e22f81cbb510c9beb5b6dcf1ca79d8836c20bd89de42254a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-728453ef-9794-49f9-8157-0fdf8e333c8a.png",
+      "prompt": "Use case: stylized-concept. SIX original painted battle poses in 3 columns x 2 rows of the EXACT Wakeglass Navigator in image 1. Identity/style reference only; green is inspection backing, not scene. Fixed elevated three-quarter view facing screen RIGHT, same body scale. Preserve ivory full mask, navy hood, ragged layered teal/ivory robe, rope-net shoulders, blue glass charms, belt hourglass. The tall dark twisted wooden staff remains in anatomical LEFT hand, the FAR arm on screen RIGHT. Same staff length as entire body, forked branch crown surrounding cyan compass orb, dangling drops and streamer. Anatomical RIGHT nearer hand is on screen LEFT, normally empty. Top row: 1 physical attack anticipation: LEFT hand draws the FULL staff diagonally back and RIGHT hand joins the lower shaft for support, head elevated upper left and COMPLETE long plain butt extends down-right, torso coils without changing facing; 2 physical contact: both hands push the complete staff horizontally forward to screen RIGHT, compass head leading, full shaft continues behind the rear grip toward LEFT; 3 spell anticipation LEFT still holds planted upright complete staff on screen RIGHT, empty RIGHT hand folds toward sternum. Bottom row: 4 spell release LEFT still visibly grips upright staff on screen RIGHT, RIGHT empty palm reaches across front of body toward screen RIGHT, two separate complete arms, no hand swap, no beam or baked effect; 5 guard LEFT hand at upper-mid shaft and RIGHT hand at lower-mid shaft, complete staff angled before torso, robe lowered; 6 deeper guard, same full staff diagonal and hand ownership, shoulders dip and robe folds gather. Show complete staff from crown to butt in EVERY cell; generous gutters with nothing clipped or overlapping another figure. Preserve compass size, mask, charms, costume and lighting. Genuine transparent RGBA, no checkerboard/scene/floor/text/grid. No duplicate staffs, orb fragments, extra limbs or copyrighted art.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/identity-reference.png",
+          "sha256": "e8cb72be0234dd44220ddb1d4315291383831abbb0c110737f2a102e1e06cf57"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        4,
+        5
+      ],
+      "notes": "Packed production candidate, not connected-motion or gameplay acceptance."
+    },
+    {
+      "id": "glide-and-grounded-collapse",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/glide-and-grounded-collapse.png",
+      "source_sha256": "59978364c7058130deb933123a34fbe67366abf0e2f8172cf9022ab3dbcfd719",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-fd01877f-770c-4327-aff6-362daae88f1e.png",
+      "prompt": "Use case: stylized-concept. SIX original Wakeglass Navigator animation poses in 3 columns x 2 rows with generous gutters, same elevated three-quarter camera and body scale, face toward screen RIGHT. Image1 is exact identity/style/equipment reference; Image2 shows existing sheet and bottom-right HEAD-RIGHT final corpse orientation, not a request to copy other poses. Green in image1 is inspection backing only. Preserve ivory mask, navy hood and layered teal/ivory robes, rope-net shoulders, charms and belt hourglass. ONE body-height twisted dark staff with forked compass orb head, always held by anatomical LEFT hand on screen RIGHT; RIGHT hand is empty. Top row: 1 spectral glide forward torso leans slightly, robe hem and ribbons trail LEFT, staff lifted just clear of ground upright; 2 glide midphase torso rises gently, robe hem gathers under pelvis, empty right arm swings slightly rearward; 3 glide settling, torso eases down, hem spreads backward and ribbons curl; Bottom row: 4 glide recovery toward first pose, shoulders relax, hem narrows and right hand swings slightly forward; 5 death kneel head bowed, LEFT hand still holds COMPLETE staff lowered diagonally onto ground to screen RIGHT, RIGHT palm supports ground, orb and belt lights dim/dark; 6 connected side-fall toward HEAD-RIGHT final corpse in image2: bent hips and shoulders near ground, head on RIGHT, cloth and complete staff settle on ground beside, LEFT hand loosens near shaft, all lights dark. Genuine articulated torso/arms/robe movement, no translated idle cutouts and no new boots. Staff length, mask, compass and attachments stay identical; include all ribbons and whole staff in each cell. Genuine transparent RGBA, no painted checker/background/ground/labels/grid, no extra limbs or equipment.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/identity-reference.png",
+          "sha256": "e8cb72be0234dd44220ddb1d4315291383831abbb0c110737f2a102e1e06cf57"
+        },
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/alpha/poses.png",
+          "sha256": "040d54a3bcaa2dffe245ff21b3f57875aa8821ad95efdb7d1cb36e1a382a5486"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "notes": "Packed production candidate, not connected-motion or gameplay acceptance."
+    },
+    {
+      "id": "cast-with-visible-staff-grip",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/cast-with-visible-staff-grip.png",
+      "source_sha256": "c00f8d7168c6911981c831bb4e9d8b48a87c308a36ccd31f91ae1a472484016e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-71d9a91a-e58a-4170-97ad-1697a9205d57.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY the BOTTOM-LEFT figure in supplied six-pose Wakeglass Navigator sheet. Fix arm ownership visibly: anatomical LEFT FAR hand on screen RIGHT visibly wraps the upright staff shaft at waist/chest height with bent elbow; the staff stays on RIGHT side of torso. Anatomical RIGHT NEAR arm is on screen LEFT and raises its EMPTY palm beside the LEFT edge of the hood, forearm angled upward, an invocation gesture, NOT reaching across the staff. Exactly two arms/two hands, no crossed/merged arms, no beam/effect. Keep this figure's mask, hood, body height, net shoulders, hourglass, robes, complete compass staff and all other equipment exactly unchanged. All FIVE OTHER figures unchanged in pose, style, placement and size. Same 1536x1024 canvas. Preserve original painting; genuine transparent background, no new backdrop/text/grid, no restyle or additional objects.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/full-staff-actions-and-guards.png",
+          "sha256": "b026640771c07aa5e22f81cbb510c9beb5b6dcf1ca79d8836c20bd89de42254a"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        3
+      ],
+      "notes": "Packed production candidate, not connected-motion or gameplay acceptance."
+    }
+  ]
+}

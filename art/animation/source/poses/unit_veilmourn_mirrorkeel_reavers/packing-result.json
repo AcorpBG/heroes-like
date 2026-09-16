@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers",
+  "output": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/candidate-atlas.png",
+  "sha256": "4c0e58b8ad724181ae72f16cce6cdf3f63d8f4558adfec3c6ad07c338720f0f6",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        145,
+        27,
+        350,
+        244
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        135,
+        27,
+        353,
+        244
+      ]
+    },
+    {
+      "name": "contact_retained",
+      "index": 2,
+      "alpha_bounds": [
+        133,
+        29,
+        346,
+        245
+      ]
+    },
+    {
+      "name": "passing_rear_lift",
+      "index": 3,
+      "alpha_bounds": [
+        115,
+        22,
+        324,
+        242
+      ]
+    },
+    {
+      "name": "contact_settle",
+      "index": 4,
+      "alpha_bounds": [
+        136,
+        31,
+        333,
+        241
+      ]
+    },
+    {
+      "name": "passing_crossed_near",
+      "index": 5,
+      "alpha_bounds": [
+        142,
+        21,
+        323,
+        242
+      ]
+    },
+    {
+      "name": "attack_windup",
+      "index": 6,
+      "alpha_bounds": [
+        137,
+        31,
+        353,
+        245
+      ]
+    },
+    {
+      "name": "attack_sweep",
+      "index": 7,
+      "alpha_bounds": [
+        141,
+        33,
+        395,
+        246
+      ]
+    },
+    {
+      "name": "defend_a",
+      "index": 8,
+      "alpha_bounds": [
+        142,
+        44,
+        338,
+        242
+      ]
+    },
+    {
+      "name": "defend_b",
+      "index": 9,
+      "alpha_bounds": [
+        142,
+        40,
+        334,
+        242
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        126,
+        44,
+        347,
+        242
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 11,
+      "alpha_bounds": [
+        156,
+        62,
+        357,
+        254
+      ]
+    },
+    {
+      "name": "death_sidefall",
+      "index": 12,
+      "alpha_bounds": [
+        157,
+        99,
+        363,
+        238
+      ]
+    },
+    {
+      "name": "dead_equipped",
+      "index": 13,
+      "alpha_bounds": [
+        150,
+        99,
+        383,
+        253
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png": "dd9c71a7fea7048fa7c71db5af0090e9c1bb933d7ebb5089a0c7b36a0b3b902e",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/recovery-and-braced-guard.png": "04750267926b5e79604552104edb3a5750bcf606c737604d0c8a68f06c615d92",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/opposite-passing-green.png": "5afb1f16124fb7e2aab4c5ed59eb4388928d7da2cbe3cacd01865ea83fc3dd48"
+  }
+}

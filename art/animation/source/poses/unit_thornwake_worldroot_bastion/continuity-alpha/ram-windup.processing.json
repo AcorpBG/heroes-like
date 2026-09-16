@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "worldroot-ram-windup",
+  "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/ram-windup.png",
+  "source_sha256": "e63325f97b0e38676163d45304747e47484ad167074149ffd0658a747902819b",
+  "source_rect": [
+    0,
+    0,
+    1293,
+    1216
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/ram-windup.png",
+  "output_sha256": "60e56b8b12848cb30ffeb4bc332ebd2a6b7a702174509b54fb796f0cd79a4eb8",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-cutouts.json",
+  "recipe_sha256": "8e2e9e2f0e2264781cc7e9326cbc44786442a7f185a2e44373c15a2e8895ef49",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 160,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        346,
+        360
+      ],
+      [
+        723,
+        874
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 708928,
+    "edge_pixels": 10374,
+    "unchanged_paint_pixels": 852986,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

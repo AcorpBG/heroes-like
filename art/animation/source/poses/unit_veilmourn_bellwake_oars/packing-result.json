@@ -1,0 +1,167 @@
+{
+  "unit_id": "unit_veilmourn_bellwake_oars",
+  "output": "art/animation/source/poses/unit_veilmourn_bellwake_oars/candidate-atlas.png",
+  "sha256": "7572d7d310d3a6a9bce1ef7b1d77b23234fbdc3630ac8e9e7873e636f82c30e7",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_right_corrected",
+      "index": 0,
+      "alpha_bounds": [
+        177,
+        15,
+        356,
+        240
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        178,
+        16,
+        362,
+        242
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        175,
+        9,
+        371,
+        239
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        177,
+        9,
+        366,
+        240
+      ]
+    },
+    {
+      "name": "walk_planted_bridge",
+      "index": 4,
+      "alpha_bounds": [
+        162,
+        9,
+        358,
+        240
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        173,
+        15,
+        371,
+        241
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        162,
+        42,
+        352,
+        241
+      ]
+    },
+    {
+      "name": "melee_release",
+      "index": 7,
+      "alpha_bounds": [
+        156,
+        71,
+        457,
+        239
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        160,
+        37,
+        376,
+        242
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        145,
+        31,
+        360,
+        241
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        158,
+        60,
+        361,
+        240
+      ]
+    },
+    {
+      "name": "death_kneel_one_shaft",
+      "index": 11,
+      "alpha_bounds": [
+        149,
+        78,
+        388,
+        256
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 12,
+      "alpha_bounds": [
+        129,
+        123,
+        385,
+        253
+      ]
+    },
+    {
+      "name": "death_settle",
+      "index": 13,
+      "alpha_bounds": [
+        134,
+        139,
+        379,
+        254
+      ]
+    },
+    {
+      "name": "dead_cold_lantern",
+      "index": 14,
+      "alpha_bounds": [
+        136,
+        139,
+        380,
+        254
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/poses-shaft-and-gaze-corrected.png": "e8c14215119a1a13de9673e4d96f2ba5a06304fb2afacefa91e63bcf8f1dd9e6",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/poses.png": "5b148e052540660e5e380758ce509ae2c82d448d3608a1f2ca12765e6a5ffab7",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/guided-walk-and-guards.png": "5068da069b48649f9c3df6c74225adea321dc0193f9b776a3856ee3677113be5",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/connected-kneel-fall-corpse.png": "d6ce6d543a6b9517cdbf7df25b76b0c47a00f21b96b3bfdaf353c06dec6ffdd8"
+  }
+}

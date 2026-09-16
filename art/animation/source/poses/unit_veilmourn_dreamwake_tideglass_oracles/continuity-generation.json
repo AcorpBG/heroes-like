@@ -1,0 +1,92 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "single-staff-actions-and-level-basin",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/single-staff-actions-and-level-basin.png",
+      "sha256": "ddce38fe2a9f1f4b72a2123bc02a39e1565062d12053ec3c395c8f299106ba6a",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ebca393f-27a0-4f7d-80ac-bcfa1523217a.png",
+      "prompt": "Use case: stylized-concept. SIX original painted tactical battle sprite poses, THREE columns TWO rows, ample gutters for full tall staff and all robe hems. Image1 style/anatomy/camera reference but DO NOT copy its duplicated staff or textlike water effects. Image2 identity reference. Fixed elevated three-quarter battle camera, facing RIGHT, identical adult woman proportions in all cells. Tideglass Oracle: pale woman dark braided hair, embroidered ivory/navy layered robe aqua ribbons, pearlescent blue shoulder plate black boots, blue glass belt charms and bells. EXACTLY ONE full-length dark staff with silver crescent containing ONE blue glass orb in anatomical RIGHT near hand; LEFT far hand supports ONE shallow silver water basin by its underside, held LEVEL, no vertical water shield. Top left melee anticipation: right elbow draws full staff diagonally back, crescent behind/above right shoulder, butt points forward screen RIGHT, left basin steady beside torso. Top middle melee contact: right hand thrusts plain staff BUTT toward RIGHT, crescent/orb remains behind her at LEFT end, full continuous shaft, left basin level and clear, bent forward knee. Top right recovery: right hand brings same full staff upright, basin stable, feet return balanced. Bottom left channel anticipation: right staff upright, LEFT basin rises chest height; clean small concentric water ripples only. Bottom middle release: LEFT arm extends level basin toward RIGHT, a small simple arcing water curl lifts from rim, right staff retained upright; no runes symbols dots letters or floating glyphs. Bottom right defense: low bent-knee brace, staff diagonal before shoulder, basin kept level close to sternum, both grips correct. Background perfectly flat pure GREEN RGB(0,255,0), no green reflected light/spill on pale cloth, no gradients scenery shadow text grid or labels. Preserve both props and same size in every cell, no extra hands or detached parts, no giant magic effect.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/poses.png",
+          "sha256": "59ee079218b4f3ce2fe03b11af790de5e655d5a6c49a695a2690ec9bfdf666b3"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/units/source/curated/unit_veilmourn_dreamwake_tideglass_oracles.png",
+          "sha256": "7755b100722b1f1b6f34113f1294c111dffabb3681d235d7e09912abe060a63f"
+        }
+      ],
+      "selection_notes": "Six action/channel/guard poses with one full staff, butt-first contact and supported level basin; casting uses water curl rather than textlike source glyphs.",
+      "selected_frames": [
+        "staff_butt_windup",
+        "staff_butt_release",
+        "staff_recover",
+        "basin_channel",
+        "basin_release",
+        "guard_level_basin"
+      ],
+      "selected": true,
+      "role": "selected source"
+    },
+    {
+      "id": "travel-hit-and-cold-collapse",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/travel-hit-and-cold-collapse.png",
+      "sha256": "aeadcf8e6677806fdb8c4145cd6f5d8cdfa61167a51c88efd0b6d8569f7b8b8b",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-17c8b5c1-cc9b-44e7-8e2c-cebaacc6c7dc.png",
+      "prompt": "Use case: stylized-concept. SIX original tactical battle sprites, THREE columns TWO rows generous gutters full tall staff and every hem inside own cell. Image1 authoritative TOP LEFT LEG POSE only: orange FAR leg forward screen RIGHT, blue NEAR leg back screen LEFT. Image2 authoritative costume/scale/prop style reference; image3 identity. Same adult pale dark-braided Oracle in ivory/navy layered embroidered robe aqua ribbons blue shoulder plate black boots and glass/bell charms. Right near hand ONE full dark staff topped by silver crescent/blue orb, left far hand ONE shallow silver basin water held level. Fixed elevated three-quarter facing RIGHT, same body size, two arms two legs. TOP LEFT: guide's far-forward contact, robes part to show FAR forward knee/boot and NEAR back leg, staff carried upright clear of stride. TOP MIDDLE: passing with FAR leg planted beneath pelvis, NEAR knee raised forward boot clear of ground, basin level and staff upright. TOP RIGHT: hit recoil shoulders lean back knees bend but equipment remains held and basin level, NO splash/glyphs/runes. BOTTOM LEFT: dying knees buckle onto ground, body leaning toward screen LEFT, staff lowered diagonally by right hand, basin lowered by left; dim blue orb and still water. BOTTOM MIDDLE: continuing fall HEAD LEFT FEET RIGHT, left hip/shoulder descending, bent knees same scale, complete staff landing beside with crescent at LEFT and plain butt at RIGHT, basin placed/resting in front, orb nearly dark. BOTTOM RIGHT: dead side-lying HEAD LEFT FEET RIGHT, eyes CLOSED, both arms relaxed, same entire staff on ground and ONE basin beside, orb cold dark gray-blue glass and basin ordinary dark still reflective water WITHOUT luminous rings/light/ripples, ribbons limp. No gore, no missing limbs or props. All six on perfectly uniform pure GREEN RGB(0,255,0), no reflected green spill, floor shadows, text, grid or scenery.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/single-staff-actions-and-level-basin.png",
+          "sha256": "ddce38fe2a9f1f4b72a2123bc02a39e1565062d12053ec3c395c8f299106ba6a"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/units/source/curated/unit_veilmourn_dreamwake_tideglass_oracles.png",
+          "sha256": "7755b100722b1f1b6f34113f1294c111dffabb3681d235d7e09912abe060a63f"
+        }
+      ],
+      "selection_notes": "Six travel/hit/head-left collapse paintings keep one whole staff and basin; dark-blue final orb/water, eyes closed. Cloth-hidden contact ownership and residual rings remain review.",
+      "selected_frames": [
+        "contact_travel",
+        "passing_near_lift",
+        "hit_recoil",
+        "death_kneel",
+        "death_side_fall",
+        "dead_cold"
+      ],
+      "selected": true,
+      "role": "selected source"
+    },
+    {
+      "id": "poses-green-background",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/poses-green-background.png",
+      "sha256": "e479bee2ad0b1e24bbdfb6a3f81f7ef80b102b91080ad608b5e1df6c959d9675",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4e908794-7e68-4d63-9302-692f0ed48e8c.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target: original painted game sprite sheet. Change ONLY all checkerboard/background to perfectly uniform pure GREEN RGB(0,255,0), including enclosed negative spaces between arms, robes, staff, basin and ribbons. Keep every original character painting, pose, costume, face, scale, exact sixteen-cell layout, ivory cloth and delicate white ribbons unchanged. Keep all staff and basin edges, black boots and blue water as painted; do not remove pale materials or repaint poses. No green reflected lighting/spill, no shadow floor, no grid, text or scenery. Preserve original framing and complete equipment. This is a background replacement only, not a redesign.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/poses.png",
+          "sha256": "59ee079218b4f3ce2fe03b11af790de5e655d5a6c49a695a2690ec9bfdf666b3"
+        }
+      ],
+      "selection_notes": "Select original idle pair, contact and passing only; duplicate staff, tipped basin and old glyph/death cells excluded.",
+      "selected_frames": [
+        "idle_a",
+        "idle_b",
+        "contact_original",
+        "passing_original"
+      ],
+      "selected": true,
+      "role": "selected source"
+    }
+  ]
+}

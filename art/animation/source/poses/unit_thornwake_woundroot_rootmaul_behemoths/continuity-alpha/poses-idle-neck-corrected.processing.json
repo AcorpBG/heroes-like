@@ -1,0 +1,58 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paint and masters retained.",
+  "id": "poses-idle-neck-corrected",
+  "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/poses-idle-neck-corrected.png",
+  "source_sha256": "af7f76300e9ceb726276820bfaf7b25daef9452092bf16d109d99b10b38d601e",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses-idle-neck-corrected.png",
+  "output_sha256": "1c49785ba2f78924c251a743d51cc63d204c16ffea3bc12fa3d648541029945f",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-cutouts.json",
+  "recipe_sha256": "64d4aeb4310305decf0620f741fc25810966bea0e2e113f632ef96beb68fd982",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        466,
+        256
+      ],
+      [
+        583,
+        129
+      ],
+      [
+        604,
+        145
+      ],
+      [
+        542,
+        317
+      ],
+      [
+        448,
+        269
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 878068,
+    "edge_pixels": 33886,
+    "unchanged_paint_pixels": 660574,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

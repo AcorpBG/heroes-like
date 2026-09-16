@@ -1,0 +1,57 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "jobs": [
+    {
+      "id": "seedcutter-walk-guide-strip-green",
+      "source": "art/animation/source/poses/unit_thornwake_seedcutters/walk-guide-strip-green.png",
+      "source_sha256": "3dae225fe5736789b0dfa9550762c0f650bb5a8af7dbb47664cf84363d414e71",
+      "output": "art/animation/source/poses/unit_thornwake_seedcutters/continuity-alpha/walk-guide-strip-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "seedcutter-walk-near-contact-guide-green",
+      "source": "art/animation/source/poses/unit_thornwake_seedcutters/walk-near-contact-guide-green.png",
+      "source_sha256": "141734464140deddeae76ca5258f693377f636144520a4df1a8a282b331a440b",
+      "output": "art/animation/source/poses/unit_thornwake_seedcutters/continuity-alpha/walk-near-contact-guide-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "seedcutter-walk-far-passing-guide-green",
+      "source": "art/animation/source/poses/unit_thornwake_seedcutters/walk-far-passing-guide-green.png",
+      "source_sha256": "2dbea73a5ba5eedc238b9ec204d9a6ca0d1da8341b5a387177549f64808aedbd",
+      "output": "art/animation/source/poses/unit_thornwake_seedcutters/continuity-alpha/walk-far-passing-guide-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

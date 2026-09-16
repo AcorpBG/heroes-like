@@ -1,0 +1,216 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_thornwake_worldroot_bastion",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "sources": [
+    {
+      "source": "step-rear-left.png",
+      "sha256": "7be24b3aeaa9a076749ddc98552c2c994e1be139c6cf6e37b0807780086d9aa2",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1f71073b-1daf-4fea-ae85-5594c20dd455.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit.\nAsset type: original Worldroot Bastion battle-animation frame.\nInput image: fixed all-planted identity and pose reference, not a moving-frame reference.\nPrimary request: change ONLY one identified root LEG into a lifted stepping pose. This creature is the same living wood fortress: mossy broad trunk, ivory arch ribs, emerald lattice door, red vine bindings, amber resin lamps, three mushroom-cap turrets and small cream pennants. Preserve exactly FOUR thick load-bearing root legs, plus TWO much smaller hooked claws hanging beside the bottom of the door. The thick plated limbs ending in the FOUR ground feet are legs; never turn a root leg into an extra arm. Keep the two small door-side claws unchanged and suspended. Keep fortress/parapet/door size, top ornaments and camera unchanged.\nComposition: whole original creature, fixed three-quarter facing screen RIGHT, full roots and parapet inside frame with clear margins. Hand-painted original fantasy game raster; no floor, shadow, text, scene, VFX, new limbs or separate objects. Genuinely transparent PNG alpha background including all gaps between legs.\nExact moving leg: the SCREEN-LEFTMOST root leg, whose broad foot in the reference sits around x135,y1160 on the 1360x1280 reference. Lift ONLY this root foot off the ground and reach it slightly forward toward screen RIGHT. Bend its same woody knee, show a visible gap below the complete clawed root-foot, preserve its small ivory armor plate and red vines. The larger foreground plated leg at x450, the narrow middle leg below door at x870 and rightmost plated leg at x1200 remain planted and unchanged. The fortress stays level on those THREE ground contacts. Do not lift the big foreground leg instead.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_worldroot_bastion/standing-reference-light.png",
+          "sha256": "3ae99dfb06bc1ad5ee28dc6065595ecc6c5c8397f048a3b392b3ddaeac56832b"
+        }
+      ],
+      "review": "Rear/left load-bearing root foot lifted, other three thick legs planted; two small claws retained."
+    },
+    {
+      "source": "step-fore-left.png",
+      "sha256": "fcd805b8c821c5d95d2aabbeb3787e8a9813cc320e2fcb82887a575a95d05ea0",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1ee3142f-130c-46fa-a6aa-ddd3d4eea0ef.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit.\nAsset type: original Worldroot Bastion battle-animation frame.\nInput image: fixed all-planted identity and pose reference, not a moving-frame reference.\nPrimary request: change ONLY one identified root LEG into a lifted stepping pose. This creature is the same living wood fortress: mossy broad trunk, ivory arch ribs, emerald lattice door, red vine bindings, amber resin lamps, three mushroom-cap turrets and small cream pennants. Preserve exactly FOUR thick load-bearing root legs, plus TWO much smaller hooked claws hanging beside the bottom of the door. The thick plated limbs ending in the FOUR ground feet are legs; never turn a root leg into an extra arm. Keep the two small door-side claws unchanged and suspended. Keep fortress/parapet/door size, top ornaments and camera unchanged.\nComposition: whole original creature, fixed three-quarter facing screen RIGHT, full roots and parapet inside frame with clear margins. Hand-painted original fantasy game raster; no floor, shadow, text, scene, VFX, new limbs or separate objects. Genuinely transparent PNG alpha background including all gaps between legs.\nExact moving leg: the LARGE FOREGROUND plated leg at SCREEN-LEFT-CENTER, whose broad foot in the reference sits around x450,y1220 on the 1360x1280 reference. Lift ONLY this root foot off the ground, bend its knee so the foot curls forward toward screen RIGHT beneath its amber-and-ivory plate. Keep a visible empty gap beneath the complete lifted foot. The far leftmost leg at x135, narrow middle leg below the door at x870 and rightmost plated leg at x1200 stay planted. No hand-like raised arm; keep this root foot low, below the door. Fortress stays level on three contacts.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_worldroot_bastion/standing-reference-light.png",
+          "sha256": "3ae99dfb06bc1ad5ee28dc6065595ecc6c5c8397f048a3b392b3ddaeac56832b"
+        }
+      ],
+      "review": "Foreground/left thick leg flexes and root toes lift; remaining legs support the fortress."
+    },
+    {
+      "source": "step-rear-middle.png",
+      "sha256": "5579ac483cf5efd00eae61527f5832dd10af6abc871b2fd84154dfd7938a31cc",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-18b95a6c-9625-43e3-849b-9da8295a1f34.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit.\nAsset type: original Worldroot Bastion battle-animation frame.\nInput image: fixed all-planted identity and pose reference, not a moving-frame reference.\nPrimary request: change ONLY one identified root LEG into a lifted stepping pose. This creature is the same living wood fortress: mossy broad trunk, ivory arch ribs, emerald lattice door, red vine bindings, amber resin lamps, three mushroom-cap turrets and small cream pennants. Preserve exactly FOUR thick load-bearing root legs, plus TWO much smaller hooked claws hanging beside the bottom of the door. The thick plated limbs ending in the FOUR ground feet are legs; never turn a root leg into an extra arm. Keep the two small door-side claws unchanged and suspended. Keep fortress/parapet/door size, top ornaments and camera unchanged.\nComposition: whole original creature, fixed three-quarter facing screen RIGHT, full roots and parapet inside frame with clear margins. Hand-painted original fantasy game raster; no floor, shadow, text, scene, VFX, new limbs or separate objects. Genuinely transparent PNG alpha background including all gaps between legs.\nExact moving leg: the NARROW BACK LEG directly UNDER THE DOOR, with its broad root foot around x870,y1150 on the 1360x1280 reference. It is the third ground foot reading left-to-right, BEHIND the two small dangling claws. Lift ONLY that back foot off the ground and curl its root toes forward screen RIGHT, visibly bend its woody knee. Keep it attached behind the door to the same root hip. The two small door-side claws are NOT this leg and must remain unchanged. The far leftmost root foot at x135, big foreground plated foot at x450 and rightmost plated foot at x1200 stay planted. Fortress stays level on those THREE contacts.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_worldroot_bastion/standing-reference-light.png",
+          "sha256": "3ae99dfb06bc1ad5ee28dc6065595ecc6c5c8397f048a3b392b3ddaeac56832b"
+        }
+      ],
+      "review": "Narrow rear-middle foot lifts beneath door while the three other thick legs remain planted."
+    },
+    {
+      "source": "step-fore-right.png",
+      "sha256": "2663a4912f729921d713f5d23e47343c0be91a768f3b52b25bf18f90c93810a0",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d396b68e-c892-47c0-bf14-ee7acf35ded1.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit.\nAsset type: original Worldroot Bastion battle-animation frame.\nInput image: fixed all-planted identity and pose reference, not a moving-frame reference.\nPrimary request: change ONLY one identified root LEG into a lifted stepping pose. This creature is the same living wood fortress: mossy broad trunk, ivory arch ribs, emerald lattice door, red vine bindings, amber resin lamps, three mushroom-cap turrets and small cream pennants. Preserve exactly FOUR thick load-bearing root legs, plus TWO much smaller hooked claws hanging beside the bottom of the door. The thick plated limbs ending in the FOUR ground feet are legs; never turn a root leg into an extra arm. Keep the two small door-side claws unchanged and suspended. Keep fortress/parapet/door size, top ornaments and camera unchanged.\nComposition: whole original creature, fixed three-quarter facing screen RIGHT, full roots and parapet inside frame with clear margins. Hand-painted original fantasy game raster; no floor, shadow, text, scene, VFX, new limbs or separate objects. Genuinely transparent PNG alpha background including all gaps between legs.\nExact moving leg: the SCREEN-RIGHTMOST large plated root leg, whose foot sits around x1200,y1160 on the 1360x1280 reference. Lift ONLY that foot off the ground and reach it forward toward screen RIGHT, with its same knee bent and complete splayed root toes visibly suspended below its amber-and-ivory plate. Keep the root foot below door height, not raised like a fist. The far leftmost root foot at x135, large foreground plated foot at x450 and narrow back foot below the door at x870 remain planted. Keep the door-side TWO small hooked claws suspended and unchanged; no extra limbs. Fortress stays level on THREE contacts.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_worldroot_bastion/standing-reference-light.png",
+          "sha256": "3ae99dfb06bc1ad5ee28dc6065595ecc6c5c8397f048a3b392b3ddaeac56832b"
+        }
+      ],
+      "review": "Far-right thick root leg lifts with intact foot and supporting other legs."
+    },
+    {
+      "source": "idle-breath.png",
+      "sha256": "c8d3baa201dd28eeab61929ce88fb321079ec1fe6e7d7b6acceeea81a8292835",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-321b27b4-d94d-4ef7-bca1-b98d02e55989.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit. Original Worldroot Bastion game animation. Image1 is the fixed all-planted creature identity reference. Preserve mossy fortress trunk, exact three mushroom-cap turrets/pennants and top resin crown, green lattice door, ivory arch ribs and plate armor, amber lamps and red vine bindings. Exactly FOUR load-bearing root legs, with feet at leftmost, foreground left-center, narrow center below door, and rightmost. TWO much smaller hooked claws beside the door are separate from legs. No face, rider or equipment additions. Same three-quarter battle camera facing screen RIGHT, whole creature uncropped with margins. Original painted fantasy strategy raster, genuine transparent PNG alpha background including enclosed holes; no checker texture, floor, shadows, text, effects or extra limbs. Paint the next quiet IDLE BREATH frame. Keep all FOUR root feet PLANTED exactly as reference. Very slight articulated flex in root knees and trunk raises the fortress subtly; the TWO SMALL door-side claws flex their fingers and cream pennants sway slightly. Never lift a root foot or turn a thick leg into an arm. Same body/door/parapet proportions; not a whole-image translation or new design.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_worldroot_bastion/standing-reference-light.png",
+          "sha256": "3ae99dfb06bc1ad5ee28dc6065595ecc6c5c8397f048a3b392b3ddaeac56832b"
+        }
+      ],
+      "review": "All-planted idle settling with small claw/pennant variation."
+    },
+    {
+      "source": "ram-windup.png",
+      "sha256": "e63325f97b0e38676163d45304747e47484ad167074149ffd0658a747902819b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-48acf2b0-0973-40f9-a726-4cfd90765315.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit. Original Worldroot Bastion game animation. Image1 is the fixed all-planted creature identity reference. Preserve mossy fortress trunk, exact three mushroom-cap turrets/pennants and top resin crown, green lattice door, ivory arch ribs and plate armor, amber lamps and red vine bindings. Exactly FOUR load-bearing root legs, with feet at leftmost, foreground left-center, narrow center below door, and rightmost. TWO much smaller hooked claws beside the door are separate from legs. No face, rider or equipment additions. Same three-quarter battle camera facing screen RIGHT, whole creature uncropped with margins. Original painted fantasy strategy raster, genuine transparent PNG alpha background including enclosed holes; no checker texture, floor, shadows, text, effects or extra limbs. MELEE ANTICIPATION for a heavy BODY RAM toward screen RIGHT. All FOUR root feet remain planted, root knees compress, fortress torso leans slightly BACK toward screen LEFT loading its weight. The two SMALL claws tuck close against the door. The right-facing ivory door arch/shoulder will lead the ram, NOT a detached fist. No root leg leaves the ground, no giant raised limb. Make weight-loading posture visibly distinct through joint bends and torso lean, while preserving body dimensions and root attachments.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_worldroot_bastion/standing-reference-light.png",
+          "sha256": "3ae99dfb06bc1ad5ee28dc6065595ecc6c5c8397f048a3b392b3ddaeac56832b"
+        }
+      ],
+      "review": "Braced gathering of body for short fortress-body ram, no load-bearing leg repurposed as arm."
+    },
+    {
+      "source": "ram-contact.png",
+      "sha256": "1df00e75a4710b85a41f1b9672b194f9b0170b5ee262c4937e20504aea719bad",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f347ce8f-56fc-495d-b59b-f7bd8b2520bc.png",
+      "selected": false,
+      "selected_source_indices": [],
+      "prompt": "Use case: precise-object-edit. Original Worldroot Bastion game animation. Image1 is the fixed all-planted creature identity reference. Preserve mossy fortress trunk, exact three mushroom-cap turrets/pennants and top resin crown, green lattice door, ivory arch ribs and plate armor, amber lamps and red vine bindings. Exactly FOUR load-bearing root legs, with feet at leftmost, foreground left-center, narrow center below door, and rightmost. TWO much smaller hooked claws beside the door are separate from legs. No face, rider or equipment additions. Same three-quarter battle camera facing screen RIGHT, whole creature uncropped with margins. Original painted fantasy strategy raster, genuine transparent PNG alpha background including enclosed holes; no checker texture, floor, shadows, text, effects or extra limbs. MELEE BODY-RAM CONTACT toward screen RIGHT. Keep all FOUR root feet planted and correctly attached. Rear/root legs extend while front knees bend, driving the entire fortress TRUNK/door arch/shoulder forward toward screen RIGHT on its joints. Torso leans noticeably forward, its rightmost ivory arch/shoulder leading the physical impact. The TWO SMALL claws remain tucked against the lower door, not punching. No root leg lifted into an arm, no fist, no detached pieces. Preserve exact structure and mass. Clear articulated forward lunge rather than simple image translation. No enemy or impact effects.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_worldroot_bastion/standing-reference-light.png",
+          "sha256": "3ae99dfb06bc1ad5ee28dc6065595ecc6c5c8397f048a3b392b3ddaeac56832b"
+        }
+      ],
+      "review": "Unselected tight-border contact precursor clips extremities; roomier derived contact selected instead."
+    },
+    {
+      "source": "guard-brace.png",
+      "sha256": "fa3828fa852f1a2e30d95cdc4818e748a6647d0da3e80cedef567990d9d42434",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-95a29d07-6501-4386-9861-a0893ad3fc57.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit. Original Worldroot Bastion game animation. Image1 is the fixed all-planted creature identity reference. Preserve mossy fortress trunk, exact three mushroom-cap turrets/pennants and top resin crown, green lattice door, ivory arch ribs and plate armor, amber lamps and red vine bindings. Exactly FOUR load-bearing root legs, with feet at leftmost, foreground left-center, narrow center below door, and rightmost. TWO much smaller hooked claws beside the door are separate from legs. No face, rider or equipment additions. Same three-quarter battle camera facing screen RIGHT, whole creature uncropped with margins. Original painted fantasy strategy raster, genuine transparent PNG alpha background including enclosed holes; no checker texture, floor, shadows, text, effects or extra limbs. DEFENSIVE BRACE: all FOUR thick root legs spread slightly and bend their knees, LOWERING the same fortress mass into a low planted crouch. All FOUR root feet remain flat on the ground. The TWO SMALL hooked claws beside the door fold inward across the LOWER door as protection. Big armored legs stay supporting the body, never cross above the door like arms. Preserve door height/fortress dimensions; lower the body by bending roots, do not squash the artwork. Clear sturdy low defensive silhouette, no foot lift.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_worldroot_bastion/standing-reference-light.png",
+          "sha256": "3ae99dfb06bc1ad5ee28dc6065595ecc6c5c8397f048a3b392b3ddaeac56832b"
+        }
+      ],
+      "review": "Low four-root brace; two small claws protect the central door."
+    },
+    {
+      "source": "ram-contact-complete.png",
+      "sha256": "3e55d2afe54c79b29d3b69c246cf7fe989dc6fbf1820d5c4eef6fff6a417e0c5",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-708af645-1169-4645-8e19-42f51040a08d.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit. This original Worldroot Bastion BODY-RAM contact pose is correct but touches the image borders. Reframe it on a ROOMIER LANDSCAPE canvas with at least 8 percent EMPTY margin on EVERY side. Keep the same exact leaning fortress, emerald door, three turrets, pennants, lamps, armor, FOUR root legs and TWO small door-side claws. Reconstruct only the few clipped far-right armor/vine/root tips and far-left root tip so ALL extremities are complete. Do not change the forward articulated body-ram pose or add limbs. Do not turn a planted leg into a raised fist. Same painting and camera; make the creature smaller within the canvas to provide room, not smaller anatomically. Genuine transparent raster PNG alpha background including enclosed gaps, no checker texture, floor, shadows, text, effects or new equipment.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_worldroot_bastion/ram-contact.png",
+          "sha256": "1df00e75a4710b85a41f1b9672b194f9b0170b5ee262c4937e20504aea719bad"
+        }
+      ],
+      "review": "Roomier derived contact restores extreme root/vine tips, preserving the body-ram pose."
+    },
+    {
+      "source": "guard-breath.png",
+      "sha256": "509da21dd307ab04ad4576b028a55000794f25270ed8d6b5e30821679bf4a448",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ad3c69a9-fb40-4821-822f-9605621c7c18.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit. Paint the adjacent quiet DEFENSE BREATH frame of this exact original Worldroot Bastion low guard pose. Keep FOUR root feet planted in the SAME positions, two small door-side claws folded inward across lower door, all turrets/parapet/pennants/amber lamps, emerald lattice door, ivory ribs and red vine bindings. Very slight articulated settling in knees and trunk, small finger curl and pennant sway, not a new stance or squeezed body. Keep exactly four supporting roots and two small claws; thick plated legs are NOT arms. Same camera/body dimensions and detailed painterly style. Whole creature with clear margins around all tips. Genuinely transparent PNG alpha with clear enclosed gaps; no painted checker, floor, shadows, effects, text or extra limbs.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_worldroot_bastion/guard-brace.png",
+          "sha256": "fa3828fa852f1a2e30d95cdc4818e748a6647d0da3e80cedef567990d9d42434"
+        }
+      ],
+      "review": "Adjacent low brace settling; small claw/pennant change, not a different support stance."
+    },
+    {
+      "source": "dead-inert.png",
+      "sha256": "01052689f7e41b6f0f157232c57b2b80f61a58728e37628d5bd93cb54b013202",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d527a4a3-7ee4-457e-98fa-93d6f9893741.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit. Original Worldroot Bastion persistent DEAD sprite.\nImage1 is the existing animation sheet: use ONLY its LAST sprite at BOTTOM RIGHT as the fallen body-pose reference. Image2 is the standing identity reference, to preserve the original fortress construction and complete any occluded/cropped extremities; do NOT use its standing pose.\nProduce ONE isolated complete fallen fortress, lying inert on its right side in the same low diagonal collapse as the last sprite. Keep the recognizable connected mossy trunk, green lattice door, ivory ribs, red bindings, three mushroom-cap turrets, cream pennants, FOUR attached folded root legs and TWO small limp hooked door-side claws. Do not turn it into a loose pile or separate castle. Full connected roots and all turrets inside the canvas with generous margins.\nCRITICAL: ALL amber lamps and resin nodes, including tall crown node and every leg/door/turret lamp, are DARK opaque brown amber with NO yellow/orange emission. Door is dark desaturated emerald, unlit. No upright stance, no active gesture, no glow or particles. Preserve paint colors except extinguished lights. Detailed hand-painted original game raster matching references. Genuine transparent alpha background, including holes. No green backdrop from reference composite, checker texture, floor, shadows, text or other sprites.",
+      "references": [
+        {
+          "path": ".artifacts/battle-unit-animation-size-20260913/worldroot-continuity-20260915/original-alpha/unit_thornwake_worldroot_bastion-poses-green.png",
+          "sha256": "808eeab7210b2cdd92f9ac3b253f79809e7d766b2937e5d807edf215000a67d9"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_worldroot_bastion/standing-reference-light.png",
+          "sha256": "3ae99dfb06bc1ad5ee28dc6065595ecc6c5c8397f048a3b392b3ddaeac56832b"
+        }
+      ],
+      "review": "Low fallen fortress retains connected roots and parapet; door dark and resin lamps unlit. Pale right lamp core is painted material, not background."
+    },
+    {
+      "source": "hit-recoil.png",
+      "sha256": "59c321f1a9517205c284e3b67bcf87ba30e156b88d7805c5008958828fc40045",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cbea7585-4222-47ef-bb72-2212a1f6163a.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit. Image1 is the fixed original Worldroot Bastion all-planted reference. Paint ONE HIT-RECOIL pose. All FOUR root feet remain planted; rear knees bend to absorb a blow, front roots extend, and the connected fortress torso recoils BACK toward screen LEFT by about15 degrees. Its two SMALL hooked claws beside the lower door splay open reflexively. These small claws are the only arms. Keep thick plated root legs supporting the body, never lifted as giant hands. Retain exactly three mushroom-cap turrets, pennants, top resin crown, emerald lattice door, ivory ribs, red bindings and amber lamps. Same fortress body mass and proportions, no shrinking or whole-image translation; genuine articulated root joints and backward torso lean. Fixed three-quarter battle camera facing RIGHT. Whole creature with generous empty margins on every side. Original painted fantasy strategy raster on genuine transparent PNG alpha, no checker, floor, shadow, text, enemy, effect or new limb.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_worldroot_bastion/standing-reference-light.png",
+          "sha256": "3ae99dfb06bc1ad5ee28dc6065595ecc6c5c8397f048a3b392b3ddaeac56832b"
+        }
+      ],
+      "review": "Four planted load-bearing legs and two small claws retained through backward body recoil."
+    }
+  ]
+}

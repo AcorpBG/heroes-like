@@ -1,0 +1,90 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "graft-root-far-lift",
+  "source": "art/animation/source/poses/unit_thornwake_graft_matriarchs/root-far-lift.png",
+  "source_sha256": "499d2edf07761d52fad4a7d4724986c05deee897f5d0aff4dbcca642770b3ceb",
+  "source_rect": [
+    0,
+    0,
+    1202,
+    1308
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_graft_matriarchs/continuity-alpha/root-far-lift.png",
+  "output_sha256": "33a02d316ff2acb1043cf6b6db33bdfca11828e7a871b4e381b5bdd8b6e881a3",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_graft_matriarchs/continuity-cutouts.json",
+  "recipe_sha256": "b655cf33f6f01d3af91e6e357f7ac7dc94fc2a54c2625061cae6760b84ecffce",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        416,
+        100
+      ],
+      [
+        606,
+        130
+      ],
+      [
+        560,
+        123
+      ],
+      [
+        689,
+        162
+      ],
+      [
+        341,
+        158
+      ],
+      [
+        286,
+        200
+      ],
+      [
+        686,
+        370
+      ],
+      [
+        411,
+        390
+      ],
+      [
+        397,
+        520
+      ],
+      [
+        625,
+        630
+      ],
+      [
+        797,
+        693
+      ],
+      [
+        251,
+        737
+      ],
+      [
+        644,
+        699
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1020999,
+    "edge_pixels": 16463,
+    "unchanged_paint_pixels": 534754,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

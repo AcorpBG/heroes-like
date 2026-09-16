@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_veilmourn_tidehook_deckhands",
+  "output": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/candidate-atlas.png",
+  "sha256": "7d378286d4f0d424061b84a534878f3f431b2a8a79169e16b5437036f3e3577b",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        131,
+        28,
+        346,
+        241
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        141,
+        27,
+        351,
+        241
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        141,
+        23,
+        320,
+        240
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        145,
+        24,
+        309,
+        240
+      ]
+    },
+    {
+      "name": "walk_planted_bridge",
+      "index": 4,
+      "alpha_bounds": [
+        137,
+        24,
+        326,
+        239
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        153,
+        25,
+        328,
+        240
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        142,
+        28,
+        360,
+        240
+      ]
+    },
+    {
+      "name": "melee_release_no_trail",
+      "index": 7,
+      "alpha_bounds": [
+        156,
+        34,
+        407,
+        238
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        168,
+        27,
+        343,
+        240
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        152,
+        36,
+        354,
+        239
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        135,
+        54,
+        365,
+        240
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 11,
+      "alpha_bounds": [
+        145,
+        63,
+        342,
+        243
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 12,
+      "alpha_bounds": [
+        145,
+        105,
+        371,
+        237
+      ]
+    },
+    {
+      "name": "dead_cold_hook_and_bell",
+      "index": 13,
+      "alpha_bounds": [
+        144,
+        131,
+        367,
+        238
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-alpha/poses.png": "5a0a7d4ffbb034d7f8ac47ad609a6368ad2ac594826893dd13655e74c55cc118",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-alpha/guided-gathered-chain-and-guards.png": "7890710e1fe20f7e28046eedb2409aa87e1a4a91331a2673c43d8f9468be0538",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-alpha/poses-no-baked-slash.png": "82b56e48e92358f6ecbd6a3684f9e3026d3452ac9c65de823195d419f2addf0d"
+  }
+}

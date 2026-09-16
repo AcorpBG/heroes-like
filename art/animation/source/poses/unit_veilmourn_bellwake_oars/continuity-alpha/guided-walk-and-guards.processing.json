@@ -1,0 +1,50 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "guided-walk-and-guards",
+  "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/guided-walk-and-guards.png",
+  "source_sha256": "ffc5e306abf900eddc054b3eb7bd11ee2a31776a23cb5618e42e43462d6af287",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/guided-walk-and-guards.png",
+  "output_sha256": "5068da069b48649f9c3df6c74225adea321dc0193f9b776a3856ee3677113be5",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-cutouts.json",
+  "recipe_sha256": "94730b816b771e2e08bcb87e7daeddb08f2628f41f0252fb8d4f7773b469a42f",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        670,
+        110
+      ],
+      [
+        1136,
+        107
+      ],
+      [
+        147,
+        610
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1070540,
+    "edge_pixels": 19654,
+    "unchanged_paint_pixels": 482670,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

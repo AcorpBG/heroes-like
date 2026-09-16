@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and exact recipes, no invented or warped poses.",
+  "id": "stag-right-normalized",
+  "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-magenta.png",
+  "source_sha256": "05ec0f5b105baac8bf1f4f18d5a0b7521c6fdcfad60aadddc6a7ea9f9bda2828",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-alpha/poses-facing-right.png",
+  "output_sha256": "266939cb8197a79707373be3f43124aebdef1d85c889499ac7c471e6f8d26461",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-cutouts.json",
+  "recipe_sha256": "cb51bae95d10d82ad805a620a160dddaca8cea591fcc72fa469c60d50809403b",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1144400,
+    "edge_pixels": 42544,
+    "unchanged_paint_pixels": 385920,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

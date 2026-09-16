@@ -1,0 +1,580 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative raster matte and narrow edge cleanup. Preserve original paint; no local pose invention or warping.",
+  "jobs": [
+    {
+      "id": "seedglass-original",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/poses.png",
+      "source_sha256": "e244d76b27966d36621407aa267013886f6c5561d1a6822ee7bf746aa03c0fd1",
+      "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/original.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            482,
+            707
+          ],
+          [
+            484,
+            778
+          ],
+          [
+            1129,
+            524
+          ],
+          [
+            796,
+            804
+          ],
+          [
+            824,
+            148
+          ],
+          [
+            234,
+            463
+          ],
+          [
+            1160,
+            776
+          ],
+          [
+            213,
+            145
+          ],
+          [
+            751,
+            790
+          ],
+          [
+            553,
+            455
+          ],
+          [
+            532,
+            151
+          ],
+          [
+            1142,
+            149
+          ],
+          [
+            520,
+            494
+          ],
+          [
+            221,
+            733
+          ],
+          [
+            542,
+            525
+          ],
+          [
+            1156,
+            454
+          ],
+          [
+            799,
+            721
+          ],
+          [
+            215,
+            1098
+          ],
+          [
+            1122,
+            212
+          ],
+          [
+            576,
+            1120
+          ],
+          [
+            222,
+            1157
+          ],
+          [
+            802,
+            206
+          ],
+          [
+            202,
+            530
+          ],
+          [
+            530,
+            793
+          ],
+          [
+            178,
+            483
+          ],
+          [
+            509,
+            211
+          ],
+          [
+            1128,
+            835
+          ],
+          [
+            221,
+            802
+          ],
+          [
+            197,
+            786
+          ],
+          [
+            206,
+            198
+          ],
+          [
+            741,
+            1188
+          ],
+          [
+            1047,
+            1186
+          ],
+          [
+            794,
+            188
+          ],
+          [
+            529,
+            729
+          ],
+          [
+            794,
+            753
+          ],
+          [
+            1117,
+            817
+          ],
+          [
+            1145,
+            540
+          ],
+          [
+            483,
+            746
+          ],
+          [
+            769,
+            749
+          ],
+          [
+            1098,
+            437
+          ],
+          [
+            1082,
+            552
+          ],
+          [
+            1146,
+            512
+          ],
+          [
+            203,
+            1166
+          ]
+        ]
+      }
+    },
+    {
+      "id": "seedglassWalk0",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-walk-0.png",
+      "source_sha256": "2cd19af82c998f3fa3d928032f7e4061f8297ba694d26395c01ea4190fb21e85",
+      "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-0.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            927,
+            553
+          ],
+          [
+            769,
+            770
+          ],
+          [
+            764,
+            663
+          ],
+          [
+            514,
+            536
+          ],
+          [
+            859,
+            769
+          ],
+          [
+            779,
+            901
+          ],
+          [
+            918,
+            330
+          ],
+          [
+            966,
+            450
+          ]
+        ]
+      }
+    },
+    {
+      "id": "seedglassWalk1",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-walk-1.png",
+      "source_sha256": "194b43b6aed9981cd92282999078affa9a669597dcd7774cd3b09c28037dd11e",
+      "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-1.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            852,
+            515
+          ],
+          [
+            759,
+            752
+          ],
+          [
+            750,
+            645
+          ],
+          [
+            518,
+            506
+          ],
+          [
+            847,
+            758
+          ],
+          [
+            766,
+            884
+          ],
+          [
+            923,
+            358
+          ],
+          [
+            950,
+            409
+          ]
+        ]
+      }
+    },
+    {
+      "id": "seedglassWalk2",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-walk-2.png",
+      "source_sha256": "b7f3bb3e99d8e1e8c92ae872867ce7100b25e826e2f60791ef618573644dd954",
+      "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-2.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            919,
+            593
+          ],
+          [
+            815,
+            830
+          ],
+          [
+            751,
+            685
+          ],
+          [
+            512,
+            538
+          ],
+          [
+            792,
+            955
+          ],
+          [
+            878,
+            806
+          ],
+          [
+            948,
+            340
+          ],
+          [
+            999,
+            470
+          ]
+        ]
+      }
+    },
+    {
+      "id": "seedglassWalk3",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-walk-3.png",
+      "source_sha256": "afd589cc0f614d6495b4f5fa9493cc89d3cce3cfc6fe43a52584928e8ab019b0",
+      "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-3.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            869,
+            559
+          ],
+          [
+            746,
+            760
+          ],
+          [
+            708,
+            663
+          ],
+          [
+            469,
+            526
+          ],
+          [
+            846,
+            767
+          ],
+          [
+            761,
+            899
+          ],
+          [
+            854,
+            387
+          ],
+          [
+            873,
+            327
+          ],
+          [
+            905,
+            392
+          ],
+          [
+            930,
+            448
+          ]
+        ]
+      }
+    },
+    {
+      "id": "seedglassPunch",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-punch-contact.png",
+      "source_sha256": "214568df477b54234d64f16c46fde37d9d6a3dfa44acc5224179219a30390b60",
+      "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/punch-contact.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            705,
+            480
+          ],
+          [
+            744,
+            530
+          ],
+          [
+            735,
+            759
+          ],
+          [
+            790,
+            328
+          ],
+          [
+            675,
+            682
+          ],
+          [
+            738,
+            941
+          ],
+          [
+            769,
+            928
+          ],
+          [
+            794,
+            752
+          ],
+          [
+            784,
+            818
+          ],
+          [
+            333,
+            990
+          ],
+          [
+            812,
+            253
+          ]
+        ]
+      }
+    },
+    {
+      "id": "seedglassGuard",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-guard-braced.png",
+      "source_sha256": "4a2a9e6c896dc70d5f6a394eec8b92c9a634a76f253f42173d0c221e605538a1",
+      "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/guard-braced.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            825,
+            823
+          ],
+          [
+            867,
+            539
+          ],
+          [
+            879,
+            837
+          ],
+          [
+            880,
+            982
+          ],
+          [
+            942,
+            806
+          ],
+          [
+            912,
+            287
+          ],
+          [
+            867,
+            226
+          ],
+          [
+            826,
+            1095
+          ],
+          [
+            978,
+            439
+          ]
+        ]
+      }
+    },
+    {
+      "id": "seedglassRelease",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-ranged-release-clear.png",
+      "source_sha256": "9d54d4c7d2a04dedfce076c23a588e21ebc44d65da1ff806b0eb9192cb43ea54",
+      "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/ranged-release-clear.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            625,
+            490
+          ],
+          [
+            674,
+            627
+          ],
+          [
+            695,
+            333
+          ],
+          [
+            647,
+            789
+          ],
+          [
+            693,
+            180
+          ],
+          [
+            736,
+            578
+          ]
+        ]
+      }
+    },
+    {
+      "id": "seedglassNearContactFixed",
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-near-contact-unfolded.png",
+      "source_sha256": "268b2a5b7a8cc68fc7f27a16785e230dcef32ab7b2d4d8b3dabbbd13644969b4",
+      "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/near-contact-unfolded.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            884,
+            544
+          ],
+          [
+            794,
+            740
+          ],
+          [
+            702,
+            672
+          ],
+          [
+            464,
+            543
+          ],
+          [
+            763,
+            906
+          ],
+          [
+            832,
+            774
+          ],
+          [
+            858,
+            368
+          ],
+          [
+            899,
+            393
+          ],
+          [
+            926,
+            451
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "poses",
+      "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/poses.png",
+      "source_sha256": "343406009c5be4de718b1a0d76c6d3c1ee1a9d4e45325abf61ed491d65b79445",
+      "output": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            526,
+            151
+          ],
+          [
+            92,
+            458
+          ],
+          [
+            436,
+            804
+          ],
+          [
+            515,
+            431
+          ],
+          [
+            810,
+            470
+          ],
+          [
+            785,
+            492
+          ],
+          [
+            942,
+            534
+          ]
+        ]
+      }
+    },
+    {
+      "id": "poses-shaft-and-gaze-corrected",
+      "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/poses-shaft-and-gaze-corrected.png",
+      "source_sha256": "e25c033bde37401d0af7d0057dc0639c5cd61ab3ee96e9a4f766e01ae3e4a964",
+      "output": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/poses-shaft-and-gaze-corrected.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            139,
+            107
+          ],
+          [
+            69,
+            100
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guided-walk-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/guided-walk-and-guards.png",
+      "source_sha256": "ffc5e306abf900eddc054b3eb7bd11ee2a31776a23cb5618e42e43462d6af287",
+      "output": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/guided-walk-and-guards.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            670,
+            110
+          ],
+          [
+            1136,
+            107
+          ],
+          [
+            147,
+            610
+          ]
+        ]
+      }
+    },
+    {
+      "id": "connected-kneel-fall-corpse",
+      "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/connected-kneel-fall-corpse.png",
+      "source_sha256": "7fb90e3fa85a4cf6b1c11eb4523801bce9a4b082ec4643a714373c1ed1d641ff",
+      "output": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/connected-kneel-fall-corpse.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            265,
+            304
+          ],
+          [
+            968,
+            436
+          ],
+          [
+            240,
+            175
+          ],
+          [
+            236,
+            196
+          ],
+          [
+            893,
+            435
+          ],
+          [
+            270,
+            118
+          ],
+          [
+            347,
+            106
+          ],
+          [
+            972,
+            429
+          ],
+          [
+            870,
+            355
+          ]
+        ]
+      }
+    }
+  ]
+}

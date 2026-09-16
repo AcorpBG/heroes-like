@@ -1,0 +1,177 @@
+{
+  "unit_id": "unit_veilmourn_wakeglass_navigators",
+  "output": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/candidate-atlas.png",
+  "sha256": "678bfc4afa44da26cfc2f3dcf2cf846e1e7e88ab8aa48d8731e167937335a9bd",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        152,
+        21,
+        342,
+        243
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        165,
+        21,
+        348,
+        243
+      ]
+    },
+    {
+      "name": "glide_lean",
+      "index": 2,
+      "alpha_bounds": [
+        104,
+        26,
+        346,
+        245
+      ]
+    },
+    {
+      "name": "glide_gather",
+      "index": 3,
+      "alpha_bounds": [
+        158,
+        19,
+        348,
+        244
+      ]
+    },
+    {
+      "name": "glide_settle",
+      "index": 4,
+      "alpha_bounds": [
+        135,
+        21,
+        356,
+        246
+      ]
+    },
+    {
+      "name": "glide_recover",
+      "index": 5,
+      "alpha_bounds": [
+        125,
+        36,
+        349,
+        244
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        152,
+        27,
+        357,
+        242
+      ]
+    },
+    {
+      "name": "melee_thrust",
+      "index": 7,
+      "alpha_bounds": [
+        132,
+        72,
+        410,
+        245
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        123,
+        35,
+        356,
+        245
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        130,
+        48,
+        345,
+        246
+      ]
+    },
+    {
+      "name": "cast_anticipate",
+      "index": 10,
+      "alpha_bounds": [
+        161,
+        21,
+        352,
+        244
+      ]
+    },
+    {
+      "name": "cast_visible_grip",
+      "index": 11,
+      "alpha_bounds": [
+        146,
+        26,
+        354,
+        246
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 12,
+      "alpha_bounds": [
+        159,
+        36,
+        336,
+        247
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 13,
+      "alpha_bounds": [
+        121,
+        97,
+        356,
+        243
+      ]
+    },
+    {
+      "name": "death_fall",
+      "index": 14,
+      "alpha_bounds": [
+        139,
+        170,
+        372,
+        244
+      ]
+    },
+    {
+      "name": "dead_equipped",
+      "index": 15,
+      "alpha_bounds": [
+        137,
+        137,
+        346,
+        248
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakeglass_navigators/alpha/poses.png": "040d54a3bcaa2dffe245ff21b3f57875aa8821ad95efdb7d1cb36e1a382a5486",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/glide-and-grounded-collapse.png": "b8a9920f769dfd707bf548e689622f4d75c4b09ffeabc41f5d3bc8dab1d16844",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/full-staff-actions-and-guards.png": "7e6da8a89d6590afbe1b2762f7523ba88fc6ac7bf45eef8357723feb12a21eae",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/cast-with-visible-staff-grip.png": "5de7afb96fc2e2047ea2328794503769e777525a2db64037dace432c7d3d9826"
+  }
+}

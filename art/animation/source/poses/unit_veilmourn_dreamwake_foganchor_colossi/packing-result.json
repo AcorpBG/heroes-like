@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+  "output": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/candidate-atlas.png",
+  "sha256": "893c6507a2c0dbfb52d6b9632b56233e12e91b25c89a32ca16b65199a5c8f387",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_original",
+      "index": 0,
+      "alpha_bounds": [
+        127,
+        26,
+        319,
+        245
+      ]
+    },
+    {
+      "name": "idle_settled",
+      "index": 1,
+      "alpha_bounds": [
+        123,
+        26,
+        338,
+        243
+      ]
+    },
+    {
+      "name": "contact_original",
+      "index": 2,
+      "alpha_bounds": [
+        129,
+        28,
+        342,
+        245
+      ]
+    },
+    {
+      "name": "passing_far_lift",
+      "index": 3,
+      "alpha_bounds": [
+        126,
+        26,
+        336,
+        240
+      ]
+    },
+    {
+      "name": "passing_near_lift",
+      "index": 4,
+      "alpha_bounds": [
+        126,
+        21,
+        337,
+        242
+      ]
+    },
+    {
+      "name": "anchor_windup",
+      "index": 5,
+      "alpha_bounds": [
+        126,
+        44,
+        352,
+        245
+      ]
+    },
+    {
+      "name": "anchor_lash",
+      "index": 6,
+      "alpha_bounds": [
+        119,
+        54,
+        435,
+        241
+      ]
+    },
+    {
+      "name": "chain_recovery",
+      "index": 7,
+      "alpha_bounds": [
+        147,
+        31,
+        372,
+        245
+      ]
+    },
+    {
+      "name": "anchor_brace_a",
+      "index": 8,
+      "alpha_bounds": [
+        150,
+        33,
+        359,
+        243
+      ]
+    },
+    {
+      "name": "anchor_brace_b",
+      "index": 9,
+      "alpha_bounds": [
+        141,
+        46,
+        357,
+        245
+      ]
+    },
+    {
+      "name": "hit_helmet",
+      "index": 10,
+      "alpha_bounds": [
+        144,
+        40,
+        337,
+        252
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 11,
+      "alpha_bounds": [
+        137,
+        79,
+        349,
+        245
+      ]
+    },
+    {
+      "name": "death_fall_helmet",
+      "index": 12,
+      "alpha_bounds": [
+        131,
+        106,
+        381,
+        249
+      ]
+    },
+    {
+      "name": "dead_helmet_cold",
+      "index": 13,
+      "alpha_bounds": [
+        132,
+        159,
+        364,
+        250
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses-fall-helmet-green-background.png": "61834d6dc46de3afb3436012398cb2d8694ca27f68a5b95156211a325bbab8af",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/gathered-chain-travel-and-guard.png": "1998384d53135422580b87d31c272cb132e61f5bdc839ba4044a7436fc93f6b3",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses-hit-helmet-green-background.png": "3fc04077366a55a5c0a4f7da2018d167f4e7187f59dfda71d7f6d2b4f03e1119"
+  }
+}
