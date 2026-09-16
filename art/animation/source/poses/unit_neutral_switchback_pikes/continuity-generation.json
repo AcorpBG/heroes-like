@@ -1,0 +1,30 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_switchback_pikes",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "full-pike-thrust-recovery-and-rest",
+      "source": "art/animation/source/poses/unit_neutral_switchback_pikes/full-pike-thrust-recovery-and-rest.png",
+      "sha256": "518dfb1067704882743e4380cf6b33463c0752fdcc4ed37ca0765f4be2467104",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5b06fb96-2e7d-4693-8933-2d01f96a571f.png",
+      "prompt": "Use case: stylized-concept. Four original Switchback Pike battle animation paintings TWO columns TWO rows. Input is identity/costume/camera reference. Preserve bearded mountain guide, green feathered brim hat, green scarf, gray wool mantle with green edge, gray tunic/trousers, brown leather gloves and crampon boots, shoulder rope coil, backpack/bedroll/metal cup. One full-length rigid wooden pike with hooked steel spearhead and butt spike. Elevated three-quarter camera facing RIGHT, original painterly raster, same anatomy and body scale. TOP LEFT: full two-handed forward pike thrust RIGHT, front knee bends, torso leans forward, hands widely spaced on shaft; importantly long REAR shaft and butt spike remain visible extending LEFT behind rear hand, never end pole at palm. TOP RIGHT: withdraw pike to horizontal ready position, two elbows bent and two hands spaced; entire same-length shaft/head/butt visible. BOTTOM LEFT: softer upright defensive guard, diagonal pike across chest in BOTH hands, knees flexed, feet grounded, all backpack/rope retained. BOTTOM RIGHT: fully dead relaxed horizontal side body with HEAD RIGHT and boots LEFT, eyes closed mouth relaxed, cheek rests on loose forearm, hat/pack/bedroll retained. Complete pike lies horizontally beside hands, spearhead RIGHT, butt spike LEFT, not piercing body. Entire head-to-butt weapon fits in each cell with ample gutters/margins. No shield, extra limb, missing pack/rope, exaggerated weapon size, text, grid, effects, blood or shadows. Flat pure BLUE #0000FF backdrop for approved extraction, no blue spill, no copied game art.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/switchback-continuity-20260916/idle-reference/unit_neutral_switchback_pikes-poses-rect-0-0-312-401-light.png",
+          "sha256": "f892d5f5433c8a270d431122963c3a43ef5706e05668b954e025997321ce561d"
+        }
+      ],
+      "selection_notes": "13 packed frames retain nine original paintings and select four new full-pike thrust, recovery, ready guard and closed-eye head-right corpse paintings. New thrust keeps the rear shaft and butt spike previously missing from the original thrust. Clean original RGBA is reused; new blue-backed painting uses approved bounded preparation. Source scales 0.58/0.44 remain uniform per source. The thrust ground anchor is 350,471 so its full forward pike fits the 512-wide frame without clipping or shrinking the body. Banded crops exclude neighboring guard-tip, boot and fallen-pike fragments. Old/new and within-source weapon lengths still vary; walking leg support/hand grip, pike/body/palette/edge consistency and connected action/death timing need refinement. Candidate integration is not final motion/gameplay acceptance.",
+      "selected_frames": [
+        "full_pike_thrust",
+        "pike_recovery",
+        "guard_ready",
+        "dead_head_right"
+      ]
+    }
+  ]
+}

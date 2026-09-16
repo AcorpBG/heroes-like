@@ -1,0 +1,49 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "prism-adept-walk-contact-b",
+  "source": "art/animation/source/poses/unit_sunvault_prism_adepts/walk-contact-b.png",
+  "source_sha256": "5e4538b669c19ed267432f38a9e05517b7bd02e60f4252e323f3d7d2a7f0678e",
+  "source_rect": [
+    0,
+    0,
+    1243,
+    1266
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-alpha/walk-contact-b.png",
+  "output_sha256": "2dd24d0e18476810e6949cbfeadc36daa133c657f88e597200c646c02a604bb0",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-cutouts.json",
+  "recipe_sha256": "dd170735d522387c7d73c09928debb47f7bfe7e77a2a8b3ffe36ddf50d60367c",
+  "parameters": {
+    "minimum": 100,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        622,
+        55
+      ],
+      [
+        527,
+        236
+      ],
+      [
+        706,
+        234
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1205811,
+    "edge_pixels": 7308,
+    "unchanged_paint_pixels": 360519,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

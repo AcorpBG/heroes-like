@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "short-spear-actions-and-passing-step",
+  "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/short-spear-actions-and-passing-step.png",
+  "source_sha256": "1b1967763c7cd95327ef251afad14dee97a53fc1fc9215fcaa2647b25ec7dfc0",
+  "source_rect": [
+    0,
+    0,
+    1086,
+    1448
+  ],
+  "output": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-alpha/short-spear-actions-and-passing-step.png",
+  "output_sha256": "2754769e4322cc800c15d98cb2bd1df19d1a27520444f7f656f369173e840662",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-cutouts.json",
+  "recipe_sha256": "fb2040b46238cf4e65f98833d7403685980388d97abaa3a3fa7fa6e656f06aa6",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 947618,
+    "edge_pixels": 20087,
+    "unchanged_paint_pixels": 604823,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

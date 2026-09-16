@@ -1,0 +1,43 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "daybreak-death-hit-green",
+  "source": "art/animation/source/poses/unit_sunvault_daybreak_colossus/death-hit-green.png",
+  "source_sha256": "7d451dccec1e5dcd59cc15684cb4a02b530b9f0a6ca116453abcbb2b4389ee6f",
+  "source_rect": [
+    0,
+    0,
+    1402,
+    1122
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_daybreak_colossus/continuity-alpha/death-hit-green.png",
+  "output_sha256": "3745608d1b609128863d8ad73d950ba6fe96118737c3ab119b2332684e8189d5",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_sunvault_daybreak_colossus/continuity-cutouts.json",
+  "recipe_sha256": "e8224878a793e2dbc0c5b16ec027f66adcb8abf181375218da9bbb3a00143c64",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "background_seeds": [],
+    "all_keyed_is_background": true,
+    "inspection_note": "Vivid green appears only as backing through crown, cannon cage and leg apertures; original ivory/gold/violet surfaces inspected before global matching-color removal."
+  },
+  "measurements": {
+    "removed_background_pixels": 1001692,
+    "edge_pixels": 12218,
+    "unchanged_paint_pixels": 559134,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

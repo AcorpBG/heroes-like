@@ -1,0 +1,109 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "source": "crown-recovery-brace-and-knee-collapse.png",
+      "source_sha256": "0db89563eef54561e3b0d8b2533fcdd494a2e5d2fc0d6d05276b13a97d6d554b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d10d8796-bba0-4b15-a53a-4da0a3c80204.png",
+      "prompt": "Use case: stylized-concept. Original Rootcrown Knotstag battle animation additions. Image1 fixed original creature identity. Paint THREE full-body poses in ONE wide horizontal row, same anatomical proportions and fixed elevated three-quarter camera facing RIGHT, big clear gutters. Living bark STAG with FOUR connected legs: two huge root-forefeet and two smaller hind hooves, moss/fern mane, bark plates, mushroom details, branch tail, enormous paired interlocking crown antlers. Exactly THREE hanging amber seed lanterns: one high central, two outer lower; keep all branches/leaves/lanterns complete. LEFT: recover from antler ram, neck retracts and crown lifts from low forward attack angle toward half-upright, both root forefeet planted with knees flexed, hind feet grounded, not an unchanged neutral pose. MIDDLE: shallow defensive brace, head slightly lowered to shield chest with crown angled forward, FOUR feet widened and knees flexed, alert eyes; between upright idle and deep lowered-antler defense. RIGHT: genuine first collapse phase, BOTH FRONT KNEES buckle all the way onto the ground, root forefeet folded forward with shoulder/chest lowered near ground, hind knees bending and hindquarters sinking, neck and heavy antler crown droop forward but do not clip ground; exactly four connected limbs, no added roots acting as legs. Lanterns beginning to dim, no burst or gore. Clearly kneeling/sinking rather than standing with bowed head. Do not shrink antlers/body for this pose. Richly painted original raster matching reference, generous full-figure margins. Flat opaque pure magenta RGB255,0,255 backing with no reflected pink, no floor shadow, labels, grid, scenery or effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/rootcrown-continuity-20260916/idle-reference/unit_neutral_rootcrown_knotstags-poses-rect-0-0-373-354-light.png",
+          "sha256": "f6cc5d049cfcdfbae54a8528aafd8dfac1b9e4507cbc6dcfa5b840677c9cab1d"
+        }
+      ],
+      "selection_note": "Unselected magenta precursor: prepared composites expose pink contamination around antlers and lantern foliage. Preserve as evidence; use gray derivative."
+    },
+    {
+      "source": "crown-recovery-brace-and-knee-collapse-gray.png",
+      "source_sha256": "2cafebf2ca05a80aa66b051e79b108df178e9ae75fc7bc5652490864c955a8a7",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-379ff3f0-5430-4541-9c33-e8bbc78d7a81.png",
+      "prompt": "Use case: precise-object-edit. Image1 EXACT edit target, three Rootcrown Knotstag poses. Change ONLY magenta background to perfectly flat opaque neutral mid-gray RGB170,170,170 (#AAAAAA), including all gaps between branches/lanterns/leaves/legs. Remove magenta/pink reflected contamination at fine antler/leaf edges and around glowing lanterns, restoring natural brown bark/green leaf/amber seed colors. Preserve the EXACT three poses/layout/canvas/framing/proportions and ALL FOUR connected legs, full branching crown, THREE seed lanterns, mane, mushrooms and tail in EACH pose. Do not change anatomy, shorten branches, add/remove leaves, enlarge crown, lighten interior bark or redraw stances. No checker pattern, no request for transparency, no gradients/clouds/glow halos or floor shadows. Background everywhere outside actual painted silhouettes must be solid mid-gray; no bright pink remnants. Keep fine edge detail and all original interior texture, no text/effects/scenery.",
+      "references": [
+        {
+          "path": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d10d8796-bba0-4b15-a53a-4da0a3c80204.png",
+          "sha256": "0db89563eef54561e3b0d8b2533fcdd494a2e5d2fc0d6d05276b13a97d6d554b"
+        }
+      ],
+      "selection_note": "Selected gray derivative removes visible magenta spill. Original poses/layout retained but generative detail changes are not unchanged-source pixel reuse. Preparation and full motion review pending."
+    }
+  ],
+  "selected_frames": [
+    {
+      "index": 0,
+      "name": "idle_a",
+      "source": "local-alpha/poses.png"
+    },
+    {
+      "index": 1,
+      "name": "idle_b",
+      "source": "local-alpha/poses.png"
+    },
+    {
+      "index": 2,
+      "name": "guided_contact",
+      "source": "local-alpha/walk-contact-guided.png"
+    },
+    {
+      "index": 3,
+      "name": "guided_passing",
+      "source": "local-alpha/walk-passing-guided.png"
+    },
+    {
+      "index": 4,
+      "name": "crown_windup",
+      "source": "local-alpha/poses.png"
+    },
+    {
+      "index": 5,
+      "name": "crown_forward_strike",
+      "source": "local-alpha/poses.png"
+    },
+    {
+      "index": 6,
+      "name": "crown_recovery",
+      "source": "continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png"
+    },
+    {
+      "index": 7,
+      "name": "crown_shallow_brace",
+      "source": "continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png"
+    },
+    {
+      "index": 8,
+      "name": "crown_deep_brace",
+      "source": "local-alpha/poses.png"
+    },
+    {
+      "index": 9,
+      "name": "hit_recoil",
+      "source": "local-alpha/poses.png"
+    },
+    {
+      "index": 10,
+      "name": "death_knees_buckle",
+      "source": "continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png"
+    },
+    {
+      "index": 11,
+      "name": "death_side_fall",
+      "source": "local-alpha/poses.png"
+    },
+    {
+      "index": 12,
+      "name": "dead_head_right_dark_lanterns",
+      "source": "local-alpha/poses.png"
+    }
+  ],
+  "review_notes": [
+    "13 frames retain eight original sheet paintings and two previously generated guided gait paintings, selecting three new paintings for antler recovery, shallow brace and front-knee collapse. Complete crown, three lanterns, four limbs and head-right dark-lantern corpse remain.",
+    "New magenta strip left visible pink contamination around antlers/lantern foliage after bounded preparation and is unselected. Built-in gray derivative and inspected neutral preparation remove that contamination; small generative detail changes are not unchanged-original pixel reuse. Existing approved local-alpha sources are reused without rekeying.",
+    "Uniform original/guided/new scales 0.62/0.18/0.30 and inspected crop bands preserve full root feet, crown and corpse while excluding neighboring branches. Final whole atlas inspected.",
+    "Candidate only: guided contact/passing are distinct but do not prove complete opposing near/far gait. Body/crown/lantern topology, foot ownership, knee-collapse continuity, palette/edges and connected timing need full-roster refinement. No automated/import/gameplay/platform acceptance."
+  ]
+}

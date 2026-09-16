@@ -1,0 +1,57 @@
+{
+  "schema_id": "original_unit_pose_refinement_v1",
+  "unit_id": "unit_neutral_kitehook_runners",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "reference": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/kitehook-equipment-refinement-20260916/clean-identity/poses-candidate-atlas-rect-0-0-512-256-light.png",
+  "jobs": [
+    {
+      "id": "compact-hook-actions",
+      "source": "compact-hook-actions.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical battle sprite sheet. The reference is the fixed character AND compact weapon identity: Kitehook Runner woman brown ponytail, teal headband, cream sleeves, fitted brown leather armor, steel left shoulder/knee guards, teal-and-gold tabard/cape, brown boots with yellow ties, belt rope coil. One COMPACT double-hook staff, not a pike: straight wooden shaft is about 60 percent of her standing height from butt to hook socket; two curved steel hooks at screen RIGHT, teal/gold streamers below hooks, one short slack rope loop on LEFT butt. Preserve that fixed length in every pose; do not extend the shaft to reach the opponent. Right hand is rear/left-screen grip and left hand forward/right-screen grip. Whole body/equipment, consistent camera slightly above three-quarter facing RIGHT and identical anatomical scale, painterly style and palette. Opaque perfectly flat vivid magenta RGB255,0,255 backdrop with no spill, no shadows/floor/text/grid/panels. Broad empty gutters and generous outer margins; entire boots, ponytail, compact hook and rope remain within each cell. No gore or extra equipment. Four equal cells TWO columns TWO rows. TOP LEFT: anticipation, torso drawn back, elbows bent, compact staff horizontal against chest, both hands together near the middle of the short shaft. TOP RIGHT: committed short forward thrust, right foot forward knee bent, left leg braces, torso leans right, both hands extend the SAME short staff toward RIGHT; do not lengthen it. BOTTOM LEFT: recover after thrust, body rises, elbows pull same weapon back to waist. BOTTOM RIGHT: defensive-ready, knees softly bent, compact staff held horizontally across chest with same two hand positions. Preserve reference head/body proportions and equipment. Each complete figure should have same implied standing height. Make actions distinct without changing weapon scale.",
+      "sha256": "b2932ae014687fd7694da37196f1ff5fddfa4746508bbb9e475df489f810a66b",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-efc3199a-0ab6-47fb-878f-a5e254220d10.png",
+      "selection": "Unselected magenta precursor: source silhouette retained through built-in gray edit; edge/hair/glove spill was visible in prepared composite.",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/kitehook-equipment-refinement-20260916/clean-identity/poses-candidate-atlas-rect-0-0-512-256-light.png"
+      ]
+    },
+    {
+      "id": "compact-hook-collapse",
+      "source": "compact-hook-collapse.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical battle sprite sheet. The reference is the fixed character AND compact weapon identity: Kitehook Runner woman brown ponytail, teal headband, cream sleeves, fitted brown leather armor, steel left shoulder/knee guards, teal-and-gold tabard/cape, brown boots with yellow ties, belt rope coil. One COMPACT double-hook staff, not a pike: straight wooden shaft is about 60 percent of her standing height from butt to hook socket; two curved steel hooks at screen RIGHT, teal/gold streamers below hooks, one short slack rope loop on LEFT butt. Preserve that fixed length in every pose; do not extend the shaft to reach the opponent. Right hand is rear/left-screen grip and left hand forward/right-screen grip. Whole body/equipment, consistent camera slightly above three-quarter facing RIGHT and identical anatomical scale, painterly style and palette. Opaque perfectly flat vivid magenta RGB255,0,255 backdrop with no spill, no shadows/floor/text/grid/panels. Broad empty gutters and generous outer margins; entire boots, ponytail, compact hook and rope remain within each cell. No gore or extra equipment. Two separate paintings TWO columns ONE row. LEFT: intermediate side-collapse, body feet toward LEFT and head toward RIGHT, knees loosely bent, hips on ground, torso still raised on one buckling elbow, pained face. Her complete COMPACT hook-staff lies just in front of her, rope butt LEFT, double hook RIGHT; nearer hand rests on the shaft, no second weapon. RIGHT: final dead sprite, the SAME body has settled flat on right side, head remains toward RIGHT resting near forearm, legs toward LEFT, eyes closed, no breathing pose. Same compact shaft rests beside forearms, same right-facing hook; limbs and cape settle, no equipment disappearance. Weapon wooden section is only about three HEAD lengths, not longer than her whole prone body. Keep body/head and weapon scales matched across the pair and to the reference.",
+      "sha256": "76d16db629ff8c36a3b7eb735b5e0b71ca193d500e14b8cf2d487b561af79e12",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a6cafec8-7c7d-4c81-a09d-fcd2a953381c.png",
+      "selection": "Unselected magenta precursor: source silhouette retained through built-in gray edit; edge/hair/glove spill was visible in prepared composite.",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/kitehook-equipment-refinement-20260916/clean-identity/poses-candidate-atlas-rect-0-0-512-256-light.png"
+      ]
+    },
+    {
+      "id": "compact-hook-actions-gray",
+      "source": "compact-hook-actions-gray.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/compact-hook-actions.png"
+      ],
+      "prompt": "Use case: precise-object-edit. Edit this exact existing sprite sheet; preserve every pose, layout, framing, body proportion, compact staff length, grip, face, clothing, fold and all painted details. Change ONLY the backdrop and unwanted magenta contamination. Replace all magenta backing, including gaps between hair, rope loops, hands and equipment, with perfectly flat opaque neutral gray RGB170,170,170. Remove reflected pink/magenta contamination from hair edges, gloves and staff/metal edges, restoring their original brown leather/hair or neutral steel hues. Keep cream cloth and steel highlights intact and solid. Do not make transparency/checkers, redesign or reposition anything, crop any extremity, add a floor/shadow or alter the number of poses. Original painterly sprites, same exact grid.",
+      "sha256": "350998ac5b59bbd691e3d15b54dbe9f8434a335b3b6ccfa0bfde995f1c2c1ff1",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-832f4ac8-73e9-489d-bce6-ad97f4ebdfc1.png",
+      "selection": "Selected after approved neutral matte preparation and explicit enclosed-background seeds; see packing.json for source bands, anchors and uniform anatomy scales."
+    },
+    {
+      "id": "compact-hook-collapse-gray",
+      "source": "compact-hook-collapse-gray.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/compact-hook-collapse.png"
+      ],
+      "prompt": "Use case: precise-object-edit. Edit this exact existing sprite sheet; preserve every pose, layout, framing, body proportion, compact staff length, grip, face, clothing, fold and all painted details. Change ONLY the backdrop and unwanted magenta contamination. Replace all magenta backing, including gaps between hair, rope loops, hands and equipment, with perfectly flat opaque neutral gray RGB170,170,170. Remove reflected pink/magenta contamination from hair edges, gloves and staff/metal edges, restoring their original brown leather/hair or neutral steel hues. Keep cream cloth and steel highlights intact and solid. Do not make transparency/checkers, redesign or reposition anything, crop any extremity, add a floor/shadow or alter the number of poses. Original painterly sprites, same exact grid.",
+      "sha256": "5e458e6fee767abbc4700133e0db734f22b642e0f0d9d7d650f2bd58ca03aafa",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-02168e23-7858-47ea-afdb-032f00d171ed.png",
+      "selection": "Selected after approved neutral matte preparation and explicit enclosed-background seeds; see packing.json for source bands, anchors and uniform anatomy scales."
+    }
+  ],
+  "preserved_reference": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/identity-reference.png",
+  "reference_sha256": "6574e937ebb693184d8dffba8d55edf9361c59248478fdeaa82789d7a19ba135"
+}

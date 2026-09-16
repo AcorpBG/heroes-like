@@ -1,0 +1,88 @@
+{
+  "workflow": "original built-in planted anchor then individual hoof selection crops; four-leg weight-bearing steps",
+  "status": "selected_frames_registered_pending_playback_acceptance",
+  "jobs": [
+    {
+      "key": "rootcrown_step_planted",
+      "prefix": "rootcrown",
+      "unit_id": "unit_neutral_rootcrown_knotstags",
+      "base": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916",
+      "source": "planted.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/identity-planted-reference.png"
+      ],
+      "status": "visually_reviewed_four_planted_anchor",
+      "prompt": "Use case: identity-preserve. Make one clean high-resolution original painted tactical game sprite matching this exact woodland Rootcrown Knotstag. Preserve the entire silhouette, pose, original perspective facing RIGHT, proportions, four complete legs and ALL FOUR planted root-hooves, bark plates, leafy tail, ivory beard, and branching antler crown with exactly THREE amber hanging lanterns. This is a fixed four-feet-planted anchor for a slow deliberate walking animation. Do not redesign or reposition feet. Paint crisp original detail at 1536 square, full body with 10 percent padding, uniform flat neutral gray RGB(170,170,170) background in all gaps. No floor/shadows/checkers/text or extra creatures. Ignore the tiny cropped neighboring brown pixel fragment at the very bottom of the reference; it is not part of the animal. No changes to leg ownership, crown shape or lantern count.",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-16a645d8-c0ea-4395-94ba-e35e01088fc3.png",
+      "sha256": "f69c2a5324a18ee231e0e6686130bbe52af943454c571613255ec9b599360edc"
+    },
+    {
+      "key": "rootcrown_step_near-hind",
+      "prefix": "rootcrown",
+      "unit_id": "unit_neutral_rootcrown_knotstags",
+      "base": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916",
+      "source": "near-hind-lift.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/planted.png",
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/near-hind-selection.png"
+      ],
+      "prompt": "Use case: precise-object-edit. IMAGE 1 is the complete Rootcrown Knotstag sprite to edit. IMAGE 2 is a crop identifying exactly ONE leg/hoof in image 1: the LEFTMOST rear hoof. Change ONLY this selected leg into its walking lift: bend that same leg's joints naturally, lift its hoof about 100 pixels, and bring it slightly forward toward screen RIGHT. The other THREE hooves stay planted at their exact original positions. Four legs total, no new leg, no root trails. Keep the selected leg attached to its original hip or shoulder and preserve correct overlap behind/in front of the other legs. Keep torso, head, three amber lanterns, antler branches, bark plates, leafy tail, original lighting, painterly style, anatomical scale and canvas exactly unchanged. One complete animal only, no inset, separate leg, arrows, marks, shadow, floor, particles or text. Preserve the uniform neutral gray RGB(170,170,170) background and entire silhouette inside canvas. Final full-body sprite with only the LEFTMOST rear hoof lifted.",
+      "status": "visually_reviewed_individual_hoof_lift",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-29dc60fe-638a-43a5-be8c-063e7002eeab.png",
+      "sha256": "a0dba0722d90f01937cf7becd9a96a04f54ed4591fc2647ae36c79503af2301b"
+    },
+    {
+      "key": "rootcrown_step_near-fore",
+      "prefix": "rootcrown",
+      "unit_id": "unit_neutral_rootcrown_knotstags",
+      "base": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916",
+      "source": "near-fore-lift.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/planted.png",
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/near-fore-selection.png"
+      ],
+      "prompt": "Use case: precise-object-edit. IMAGE 1 is the complete Rootcrown Knotstag sprite to edit. IMAGE 2 is a crop identifying exactly ONE leg/hoof in image 1: the LARGEST front hoof near the middle, in front of the chest. Change ONLY this selected leg into its walking lift: bend that same leg's joints naturally, lift its hoof about 100 pixels, and bring it slightly forward toward screen RIGHT. The other THREE hooves stay planted at their exact original positions. Four legs total, no new leg, no root trails. Keep the selected leg attached to its original hip or shoulder and preserve correct overlap behind/in front of the other legs. Keep torso, head, three amber lanterns, antler branches, bark plates, leafy tail, original lighting, painterly style, anatomical scale and canvas exactly unchanged. One complete animal only, no inset, separate leg, arrows, marks, shadow, floor, particles or text. Preserve the uniform neutral gray RGB(170,170,170) background and entire silhouette inside canvas. Final full-body sprite with only the LARGEST front hoof near the middle, in front of the chest lifted.",
+      "status": "visually_reviewed_individual_hoof_lift",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1758e936-f0cf-46e8-8134-c6a569208b6e.png",
+      "sha256": "133f60d9946d8319dd2cd0f4ec446ba66b3ea3563d0a9b34dd9ef572d3f9026b"
+    },
+    {
+      "key": "rootcrown_step_far-hind",
+      "prefix": "rootcrown",
+      "unit_id": "unit_neutral_rootcrown_knotstags",
+      "base": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916",
+      "source": "far-hind-lift.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/planted.png",
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/far-hind-selection.png"
+      ],
+      "prompt": "Use case: precise-object-edit. IMAGE 1 is the complete Rootcrown Knotstag sprite to edit. IMAGE 2 is a crop identifying exactly ONE leg/hoof in image 1: the SMALL rear hoof under the belly, second from screen left. Change ONLY this selected leg into its walking lift: bend that same leg's joints naturally, lift its hoof about 100 pixels, and bring it slightly forward toward screen RIGHT. The other THREE hooves stay planted at their exact original positions. Four legs total, no new leg, no root trails. Keep the selected leg attached to its original hip or shoulder and preserve correct overlap behind/in front of the other legs. Keep torso, head, three amber lanterns, antler branches, bark plates, leafy tail, original lighting, painterly style, anatomical scale and canvas exactly unchanged. One complete animal only, no inset, separate leg, arrows, marks, shadow, floor, particles or text. Preserve the uniform neutral gray RGB(170,170,170) background and entire silhouette inside canvas. Final full-body sprite with only the SMALL rear hoof under the belly, second from screen left lifted.",
+      "status": "visually_reviewed_individual_hoof_lift",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-28271d29-2000-4ec3-a6b6-44b3fcfb1e10.png",
+      "sha256": "29407fea6fd50544363584e4e72d3952fb14f8db93d1ac224dbbc3e21f5d114c"
+    },
+    {
+      "key": "rootcrown_step_far-fore",
+      "prefix": "rootcrown",
+      "unit_id": "unit_neutral_rootcrown_knotstags",
+      "base": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916",
+      "source": "far-fore-lift.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/planted.png",
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/far-fore-selection.png"
+      ],
+      "prompt": "Use case: precise-object-edit. IMAGE 1 is the complete Rootcrown Knotstag sprite to edit. IMAGE 2 is a crop identifying exactly ONE leg/hoof in image 1: the RIGHTMOST front hoof. Change ONLY this selected leg into its walking lift: bend that same leg's joints naturally, lift its hoof about 100 pixels, and bring it slightly forward toward screen RIGHT. The other THREE hooves stay planted at their exact original positions. Four legs total, no new leg, no root trails. Keep the selected leg attached to its original hip or shoulder and preserve correct overlap behind/in front of the other legs. Keep torso, head, three amber lanterns, antler branches, bark plates, leafy tail, original lighting, painterly style, anatomical scale and canvas exactly unchanged. One complete animal only, no inset, separate leg, arrows, marks, shadow, floor, particles or text. Preserve the uniform neutral gray RGB(170,170,170) background and entire silhouette inside canvas. Final full-body sprite with only the RIGHTMOST front hoof lifted.",
+      "status": "visually_reviewed_individual_hoof_lift",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b0b1508e-533c-4edc-9f88-177b609de6a2.png",
+      "sha256": "a60e0e040414659da22e298b8f90044e2605a6228110a0becd09a73a562d767b"
+    }
+  ],
+  "selected_sources": [
+    "planted.png",
+    "near-hind-lift.png",
+    "near-fore-lift.png",
+    "far-hind-lift.png",
+    "far-fore-lift.png"
+  ],
+  "runtime_sha256": "a3fee96a035786f243cedb3443af26d9c036e927bc3c595f2253630d10b4deab"
+}

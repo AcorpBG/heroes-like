@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "id": "supported-travel-hook-forward-and-left-corpse",
+  "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/supported-travel-hook-forward-and-left-corpse.png",
+  "source_sha256": "578292a512edf6a27d23dafbce276646a23ebc6a08720ff1b1ba9ea860f3f6fe",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/supported-travel-hook-forward-and-left-corpse.png",
+  "output_sha256": "6b236da79671f0e695f725529eb662b2298cfcb00ae2654cdaebcd86b3b178ce",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-cutouts.json",
+  "recipe_sha256": "12975368e189716d4be5b320d1be1bf1d67540bd7436b414d60e52a578a0f3db",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1129585,
+    "edge_pixels": 32420,
+    "unchanged_paint_pixels": 410859,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

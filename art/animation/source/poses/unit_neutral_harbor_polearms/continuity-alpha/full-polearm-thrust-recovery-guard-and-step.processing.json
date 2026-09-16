@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "full-polearm-thrust-recovery-guard-and-step",
+  "source": "art/animation/source/poses/unit_neutral_harbor_polearms/full-polearm-thrust-recovery-guard-and-step.png",
+  "source_sha256": "170cd5701c750971caeb1673762ee9113c2ad8c17f89adaf40390ccab602d12b",
+  "source_rect": [
+    0,
+    0,
+    1224,
+    1285
+  ],
+  "output": "art/animation/source/poses/unit_neutral_harbor_polearms/continuity-alpha/full-polearm-thrust-recovery-guard-and-step.png",
+  "output_sha256": "97532ca2452b96bdfb879d77a465b69c209f49bc8fe741bdd6eccf2992173ebc",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_harbor_polearms/continuity-cutouts.json",
+  "recipe_sha256": "84fc4c87733464e934562b8e1e533b7268d3a6c6045be4ac88967c8416ef8c1b",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1100959,
+    "edge_pixels": 24014,
+    "unchanged_paint_pixels": 447867,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

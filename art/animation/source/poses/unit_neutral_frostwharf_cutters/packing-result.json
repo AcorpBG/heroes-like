@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_frostwharf_cutters",
+  "output": "art/animation/source/poses/unit_neutral_frostwharf_cutters/candidate-atlas.png",
+  "sha256": "dff9d2997509729ce410e03f0c5effde13bc8f7715103526fe6553590c03bdae",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        149,
+        19,
+        351,
+        241
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        153,
+        19,
+        352,
+        241
+      ]
+    },
+    {
+      "name": "run_contact",
+      "index": 2,
+      "alpha_bounds": [
+        129,
+        51,
+        352,
+        241
+      ]
+    },
+    {
+      "name": "run_passing",
+      "index": 3,
+      "alpha_bounds": [
+        139,
+        17,
+        363,
+        241
+      ]
+    },
+    {
+      "name": "right_hook_windup",
+      "index": 4,
+      "alpha_bounds": [
+        165,
+        12,
+        373,
+        241
+      ]
+    },
+    {
+      "name": "right_hook_slash_left_guard",
+      "index": 5,
+      "alpha_bounds": [
+        153,
+        48,
+        361,
+        240
+      ]
+    },
+    {
+      "name": "two_hook_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        160,
+        22,
+        367,
+        241
+      ]
+    },
+    {
+      "name": "crossed_blades_ready",
+      "index": 7,
+      "alpha_bounds": [
+        179,
+        16,
+        338,
+        240
+      ]
+    },
+    {
+      "name": "crossed_blades_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        173,
+        55,
+        345,
+        239
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        156,
+        36,
+        367,
+        239
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        159,
+        77,
+        346,
+        238
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 11,
+      "alpha_bounds": [
+        150,
+        104,
+        369,
+        243
+      ]
+    },
+    {
+      "name": "dead_head_left_two_blades",
+      "index": 12,
+      "alpha_bounds": [
+        148,
+        128,
+        376,
+        242
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_frostwharf_cutters/alpha/poses.png": "b738300f2ce86b7cc8e60cbab932040cf21ac3b4edfb4a26d08039be65699746",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_frostwharf_cutters/continuity-alpha/two-hook-recovery-ready-and-passing-gray.png": "983f7a5a2d4edfaae076b2dd5f1f2cd897075eb29634a6cbdbd1761860d11278"
+  }
+}

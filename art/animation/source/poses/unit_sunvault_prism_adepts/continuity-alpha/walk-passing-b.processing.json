@@ -1,0 +1,49 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "prism-adept-walk-passing-b",
+  "source": "art/animation/source/poses/unit_sunvault_prism_adepts/walk-passing-b.png",
+  "source_sha256": "28ca2eb217ba0fdc225f1c7603aadc79b6444659031fdcd80413dc5ddc2632f3",
+  "source_rect": [
+    0,
+    0,
+    1024,
+    1536
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-alpha/walk-passing-b.png",
+  "output_sha256": "8d923d381b10c9a179e312b166b3949e9d211a47f2c9ff6ad35c8f486b735bfc",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-cutouts.json",
+  "recipe_sha256": "dd170735d522387c7d73c09928debb47f7bfe7e77a2a8b3ffe36ddf50d60367c",
+  "parameters": {
+    "minimum": 100,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        415,
+        51
+      ],
+      [
+        390,
+        226
+      ],
+      [
+        592,
+        241
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1104981,
+    "edge_pixels": 4898,
+    "unchanged_paint_pixels": 462985,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_kitehook_runners",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "complete-pole-thrust-recovery-and-brace",
+      "file": "complete-pole-thrust-recovery-and-brace.png",
+      "sha256": "7d5d2b877d31bdba61e5ac47c81cfe3cfddd22116c8d239b2abcd9d10545f3a0",
+      "tool": "built_in_image_gen",
+      "model": "not_exposed_by_tool",
+      "prompt": "Use case: stylized-concept. THREE full-body original battle-animation paintings, THREE columns ONE row wide with especially generous empty gutters for long pole and trailing cloth. Image 1 is sole character/equipment reference: Kitehook Runner woman brown ponytail teal headband, cream sleeves, brown leather fitted armor, steel shoulder/knee plates, teal-and-gold cape/tabard ribbons, brown boots with yellow ties, waist rope coil. ONE long straight wooden pole with DOUBLE curved steel hook at screen RIGHT, teal/gold streamers below hook, slack rope loop tied to butt at screen LEFT. Same elevated three-quarter camera/body faces RIGHT, same body and pole dimensions. LEFT panel: strong TWO-HANDED thrust toward RIGHT, left hand forward, right hand rear spaced apart on shaft, forward knee bends, rear leg braces. Full rear shaft extends BEHIND rear hand toward LEFT ending in rope loop; full double hook at RIGHT, no shaft truncation, no single-hand stabbing. CENTER panel: recovery after thrust, elbows draw complete horizontal pole halfway toward waist, torso rises, both grips maintained. RIGHT panel: upright defensive-ready brace, knees softly bent, full pole horizontal across chest supported by BOTH hands, no equipment changes. Preserve all clothing, head, hair, whole weapon/rope and boots within broad margins; same identity/painterly rendering. Flat pure GREEN #00FF00 without spill; no shadows, background scenery, grid, text, blood, effects, extra limbs or equipment.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/kitehook-continuity-20260916/extra-original-alpha/unit_neutral_kitehook_runners-windup-light.png",
+          "sha256": "02e6613c07a559a0a6f6e867f2a9121cb92b32a26551d306510a8755a1636f7f"
+        }
+      ],
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0d493fda-7aec-456e-91c7-da231f474be1.png",
+      "selection": "All three source paintings selected; exact source rectangles/scales/anchors are in packing.json. Static composites inspected; connected-motion acceptance remains open.",
+      "selected_frames": [
+        "complete_pole_thrust",
+        "complete_pole_recovery",
+        "pole_ready_brace"
+      ]
+    }
+  ],
+  "review_notes": [
+    "13 packed frames retain ten earlier paintings, including the complete-pole single windup and independent side-fall replacements. Three new built-in paintings supply two-handed thrust, recovery and ready brace with both shaft ends, double hook and butt rope visible.",
+    "Original genuine alpha remains unchanged. Approved green preparation and anatomy-based scales preserve pixels; explicit crop bands separate adjacent ribbons, hooks, boots and the corpse's long pole/rope. Actual fall and final rest both point head-right.",
+    "All-state candidate only. Two run poses do not prove a full alternating gait. The replacement/new attack pole is visibly longer relative to the body than the original idle/move pole; this equipment-length mismatch must be corrected before acceptance. Body/gear/grip/cape/palette/edge continuity, thrust extension and connected timing remain unaccepted. No automated suites/imports/gameplay/platform exports in this increment."
+  ]
+}

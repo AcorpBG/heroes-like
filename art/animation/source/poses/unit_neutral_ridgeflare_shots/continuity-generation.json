@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_ridgeflare_shots",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "loaded-melee-empty-ranged-and-guard-recoveries",
+      "file": "loaded-melee-empty-ranged-and-guard-recoveries.png",
+      "sha256": "6702fb7a4dc1b7adb03826d1e9f46ddd8e7e44c343e2b2713522bdd49f6b8682",
+      "tool": "built_in_image_gen",
+      "model": "not_exposed_by_tool",
+      "prompt": "Use case: stylized-concept. THREE full-body original Ridgeflare Shot battle animation poses, THREE columns ONE row with generous gutters. Image 1 is identity/equipment reference: red-haired woman ponytail and brass goggles, red long coat with gold triangular trim, white fur collar/cuffs and boots, dark leather torso, gray trousers, brass knee pads, back quiver of red/brass flare bolts, belt cartridges and rolled blanket. Fixed elevated three-quarter view, body faces RIGHT, unchanged figure/head/equipment scale. LEFT: melee recovery after RIGHT fist punch; RIGHT elbow retracts fist halfway across chest toward right ribs, LEFT arm cradles complete LOADED wood/brass compact crossbow pointing diagonally down-RIGHT against left ribs. Keep hand ownership, same right arm that punches. CENTER: ranged recovery after firing: EMPTY crossbow rail/string at rest with NO bolt, RIGHT hand trigger LEFT hand barrel support, weapon lowered halfway from shoulder toward waist pointing RIGHT, body rising. RIGHT: ready defense, knees braced and chin tucked, LOADED crossbow held close across chest with both hands; full weapon intact, muzzle RIGHT. One crossbow and quiver each, preserve fur, bolts, string, head and costume, no arrow appearing in empty post-shot weapon. Original painterly raster on flat pure GREEN #00FF00, no spill/shadow/scenery/grid/text/effects/blood. Entire figures, boots and crossbows visible with margins.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/ridgeflare-continuity-20260916/idle-reference/unit_neutral_ridgeflare_shots-poses-rect-0-0-295-318-light.png",
+          "sha256": "a6b585406ce2e164df45e2db9ddd9dbc427e334aa3b4aeced7c83c5684777988"
+        }
+      ],
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d36b43a1-b9b5-4cd2-be93-cdc34a9b6eb2.png",
+      "selection": "All three source paintings selected; exact source rectangles/scales/anchors are in packing.json. Static composites inspected; connected-motion acceptance remains open.",
+      "selected_frames": [
+        "right_fist_recovery",
+        "loaded_guard_ready",
+        "ranged_empty_recovery"
+      ]
+    }
+  ],
+  "review_notes": [
+    "17 packed frames retain fourteen earlier paintings, including corrected loaded idle and right-arm punch. Three new built-in paintings add right-fist recovery while the left arm retains the loaded crossbow, empty-rail post-shot recovery and loaded ready defense.",
+    "Original genuine alpha is reused unchanged; approved green preparation preserves fur/coat paint. Uniform anatomy-based old/new scales and crop bands keep neighboring hair out of the recoil frame. Collapse and persistent corpse stay head-left with the crossbow present.",
+    "All-state candidate only. Extended/gathered running does not prove an alternating support cycle. Crossbow size/string/grip and bolt identity, body/palette/edge continuity and connected motion remain unaccepted. No automated suites/imports/gameplay/platform exports in this increment."
+  ]
+}

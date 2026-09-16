@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "walk-passing-b",
+  "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/walk-passing-b.png",
+  "source_sha256": "1abed97f1c3819e5338ed4b3d7a481ac15f30c267d582b3420245124e98059d9",
+  "source_rect": [
+    0,
+    0,
+    1237,
+    1272
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/continuity-alpha/walk-passing-b.png",
+  "output_sha256": "967069c61f9a0f4c6eb3f6705495566797abec5fc1a741f76d0babe22b845fb4",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ff1f73325fca7f721787f27ed5462948ed77f856c70303e0e28f53c5b06bab14",
+  "recipe": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/continuity-cutouts.json",
+  "recipe_sha256": "c8a5713f7d938391a6e3c0e221c11bc159e4c24ab5daff1a2c240c77d981fcd3",
+  "parameters": {
+    "minimum": 100,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1148517,
+    "edge_pixels": 6770,
+    "unchanged_paint_pixels": 418177,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

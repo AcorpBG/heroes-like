@@ -1,0 +1,18 @@
+{
+  "schema_id": "original_battle_pose_generation_v1",
+  "unit_id": "unit_sunvault_resonant_choristers",
+  "backend": "built-in image_gen",
+  "date": "2026-09-16",
+  "reference": "identity-reference.png",
+  "reference_sha256": "f4fe0a05b2056fa1fb230c1b544f17dfad88533d05b4bf4598c096fbc911448c",
+  "outputs": [
+    {
+      "source": "ranged-source.png",
+      "source_sha256": "13f53edba940d384710e630d4adb879ae89382281ade929272c479100d869823",
+      "tool_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f9218a9a-5da7-432c-a2aa-3af057a81e0f.png",
+      "prompt": "Use case: stylized-concept. Asset type: original painted fantasy game sprite strip. Image 1 is the exact THREE-person identity reference, not the pose. Create one wide 3-column sheet, exactly one complete three-person group in each column, THREE consecutive RANGED SPELLCAST poses: LEFT preparation, MIDDLE release, RIGHT recovery. The same compact triangular group in ALL columns: central tall fair adult woman gold circlet and long white/royal-blue/gold robes holding her full-length gold staff with large circular orrery and blue-purple crystals; behind screen-LEFT brown-haired adult man holding his open blue-gold book; behind screen-RIGHT dark-skinned braided adult woman holding her small circular gold crystal lyre. All three sing/cast together facing three-quarter SCREEN-RIGHT at fixed elevated game camera. A casting gesture, NEVER a thrust or melee swing. LEFT: planted feet unchanged, center brings staff upright in front of chest, companions raise book and lyre toward the staff, heads slightly bowed concentrating. MIDDLE: center extends staff slightly toward screen-right but keeps it nearly upright, crystal bright INSIDE ornament only, book and lyre held forward, heads lifted and mouths open on the released note; planted feet/body centers stay fixed. RIGHT: staff returns toward shoulder, heads relaxed, book and lyre lower to chest, all remain standing. Three visually distinct articulated arm/shoulder/head poses; same faces, body size, instrument count/geometry, costume, light and brush detail. Full bodies, staff finial and feet all uncropped, at least 40px empty margin around every group; ample separation between columns; same ground baseline and anatomical scale across poses. Uniform flat neutral gray #808080 background, no reflected background tint, no floor or shadow. No text, labels, border, grid, checkerboard, projectile, external spell clouds, new props, extra figures or limbs. Keep original painted rendering, do not redesign or photorealize.",
+      "selection": "all three casting phases selected"
+    }
+  ],
+  "status": "integrated_reproducible_pending_final_playback_acceptance"
+}

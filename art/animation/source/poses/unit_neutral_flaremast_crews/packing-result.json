@@ -1,0 +1,199 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "output": "art/animation/source/poses/unit_neutral_flaremast_crews/candidate-atlas.png",
+  "sha256": "6b5183ed707cfa77eb016b1ceacea1af702c16a42b253c5d3fc5f7a7774f5899",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        161,
+        24,
+        326,
+        244
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        130,
+        15,
+        340,
+        243
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        200,
+        14,
+        317,
+        244
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        200,
+        14,
+        317,
+        245
+      ]
+    },
+    {
+      "name": "launcher_anticipation",
+      "index": 4,
+      "alpha_bounds": [
+        142,
+        59,
+        323,
+        247
+      ]
+    },
+    {
+      "name": "launcher_shove",
+      "index": 5,
+      "alpha_bounds": [
+        151,
+        60,
+        342,
+        247
+      ]
+    },
+    {
+      "name": "launcher_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        127,
+        11,
+        337,
+        244
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        124,
+        11,
+        340,
+        245
+      ]
+    },
+    {
+      "name": "guard_kneel",
+      "index": 8,
+      "alpha_bounds": [
+        160,
+        59,
+        348,
+        243
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        145,
+        57,
+        331,
+        251
+      ]
+    },
+    {
+      "name": "ranged_reload",
+      "index": 10,
+      "alpha_bounds": [
+        168,
+        60,
+        337,
+        244
+      ]
+    },
+    {
+      "name": "ranged_aim",
+      "index": 11,
+      "alpha_bounds": [
+        153,
+        55,
+        324,
+        247
+      ]
+    },
+    {
+      "name": "ranged_release",
+      "index": 12,
+      "alpha_bounds": [
+        136,
+        55,
+        321,
+        246
+      ]
+    },
+    {
+      "name": "ranged_empty_recovery",
+      "index": 13,
+      "alpha_bounds": [
+        126,
+        11,
+        336,
+        245
+      ]
+    },
+    {
+      "name": "death_cap_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        159,
+        68,
+        351,
+        252
+      ]
+    },
+    {
+      "name": "death_tip_head_left",
+      "index": 15,
+      "alpha_bounds": [
+        145,
+        90,
+        365,
+        253
+      ]
+    },
+    {
+      "name": "death_land_head_left",
+      "index": 16,
+      "alpha_bounds": [
+        156,
+        117,
+        362,
+        233
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 17,
+      "alpha_bounds": [
+        116,
+        156,
+        383,
+        255
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_flaremast_crews/alpha/poses.png": "49c68ccebbbdb30c0e6ac71c0b5c1b8017e95639856fee5285a9389457cf4b9c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_flaremast_crews/idle-breath-draft.png": "b945de4062f2805c3783b79137d5749db865958c55cbb7effe215a435b5ababb",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/walk-contact.png": "7f8b5b16bd30ad8e93e6dae8e12cb1131e22fb753a0cf3a0c4181c555242608c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/walk-passing.png": "149551dc1c879038750a544a43bdfaf5b73f9b31018f7bb93ed74c82478a6ff6",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/deployed-mast-action-recoveries-and-defense.png": "7de8a5ec4cb13b3eb93d15cc04e2cf7223bdf4c15c83850553f798a71a79cbfc",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/cap-corrected-kneel.png": "c46aaa3e002180d37d92bc859f8470410e2195749dc1f93c408a000a6eb971bc"
+  }
+}

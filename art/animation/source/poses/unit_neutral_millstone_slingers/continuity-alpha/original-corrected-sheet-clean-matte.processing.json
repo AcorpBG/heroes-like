@@ -1,0 +1,93 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "id": "original-corrected-sheet-clean-matte",
+  "source": "art/animation/source/poses/unit_neutral_millstone_slingers/poses-cord-corrected.png",
+  "source_sha256": "704667a069993bb2ec1a30305c7ae6fdb628794e59fdeda82859f972df4ce32a",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+  "output_sha256": "de5fb84613c0cd48a16a76190fa1d8338cf11143272ca7157bcba4969040e7fa",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-cutouts.json",
+  "recipe_sha256": "280f2728df5c84353eaaf7e56891d76fb85e6f6c07ff315a4878e5147599f57d",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      210,
+      211,
+      212
+    ],
+    "distance": 32,
+    "edge_radius": 3,
+    "max_edge_residual": 60,
+    "all_keyed_is_background": false,
+    "background_seeds": [
+      [
+        85,
+        229
+      ],
+      [
+        409,
+        164
+      ],
+      [
+        659,
+        180
+      ],
+      [
+        1033,
+        178
+      ],
+      [
+        48,
+        474
+      ],
+      [
+        371,
+        403
+      ],
+      [
+        482,
+        665
+      ],
+      [
+        91,
+        848
+      ],
+      [
+        113,
+        1132
+      ],
+      [
+        370,
+        1167
+      ],
+      [
+        756,
+        1172
+      ],
+      [
+        1101,
+        1188
+      ]
+    ],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1110461,
+    "edge_pixels": 39413,
+    "unchanged_paint_pixels": 422642,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

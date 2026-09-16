@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "fist-recovery-ready-and-passing-step",
+  "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/fist-recovery-ready-and-passing-step.png",
+  "source_sha256": "ee04e121212adcea8e35e79b12178704881ef7d79b71ab31452ae47c8c61a564",
+  "source_rect": [
+    0,
+    0,
+    1983,
+    793
+  ],
+  "output": "art/animation/source/poses/unit_neutral_peatflare_jarriers/continuity-alpha/fist-recovery-ready-and-passing-step.png",
+  "output_sha256": "3a649e00fa9817b93355c8d6c450aa7ca7cb81f966ccecdf556bdc5e461f2a24",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_peatflare_jarriers/continuity-cutouts.json",
+  "recipe_sha256": "7e94377176067b4633ca2b4e05fb5aca70083e7521a82494a3107b82de85a68f",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 4,
+    "max_edge_residual": 100,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1065006,
+    "edge_pixels": 22934,
+    "unchanged_paint_pixels": 484579,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,138 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. No local pose or equipment synthesis.",
+  "id": "compact-hook-actions-gray",
+  "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/compact-hook-actions-gray.png",
+  "source_sha256": "350998ac5b59bbd691e3d15b54dbe9f8434a335b3b6ccfa0bfde995f1c2c1ff1",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-actions-gray.png",
+  "output_sha256": "85950120fcf78979806b3dabb29f4d379a794482f1d92c3d4ae9ce4843b859cc",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/cutouts-gray.json",
+  "recipe_sha256": "b3657f85e1183b77b1bd59dccfc065d283a2b9efffe292a21a09b789789b151c",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 145,
+    "maximum": 190,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "max_edge_residual": 40,
+    "all_neutral_is_background": false,
+    "background_seeds": [
+      [
+        280,
+        220
+      ],
+      [
+        290,
+        735
+      ],
+      [
+        970,
+        700
+      ],
+      [
+        488,
+        67
+      ],
+      [
+        360,
+        86
+      ],
+      [
+        1127,
+        92
+      ],
+      [
+        1123,
+        103
+      ],
+      [
+        296,
+        181
+      ],
+      [
+        917,
+        228
+      ],
+      [
+        929,
+        259
+      ],
+      [
+        308,
+        253
+      ],
+      [
+        484,
+        538
+      ],
+      [
+        359,
+        558
+      ],
+      [
+        1144,
+        556
+      ],
+      [
+        1137,
+        565
+      ],
+      [
+        971,
+        661
+      ],
+      [
+        471,
+        673
+      ],
+      [
+        309,
+        701
+      ],
+      [
+        295,
+        699
+      ],
+      [
+        971,
+        748
+      ],
+      [
+        306,
+        744
+      ],
+      [
+        271,
+        214
+      ],
+      [
+        925,
+        680
+      ],
+      [
+        270,
+        721
+      ]
+    ],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1269307,
+    "edge_pixels": 16766,
+    "unchanged_paint_pixels": 286791,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

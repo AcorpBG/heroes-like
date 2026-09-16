@@ -1,0 +1,177 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "output": "art/animation/runtime/poses/unit_neutral_prismwake_raylings.png",
+  "sha256": "fc925d311561ec4f42eb3b2742ea6c251a395904af08114988fc190db2ff4f71",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        105,
+        45,
+        299,
+        205
+      ]
+    },
+    {
+      "name": "idle_1",
+      "index": 1,
+      "alpha_bounds": [
+        111,
+        42,
+        285,
+        202
+      ]
+    },
+    {
+      "name": "flight_up",
+      "index": 2,
+      "alpha_bounds": [
+        117,
+        5,
+        277,
+        197
+      ]
+    },
+    {
+      "name": "flight_down",
+      "index": 3,
+      "alpha_bounds": [
+        100,
+        61,
+        302,
+        210
+      ]
+    },
+    {
+      "name": "flight_level",
+      "index": 4,
+      "alpha_bounds": [
+        105,
+        48,
+        298,
+        202
+      ]
+    },
+    {
+      "name": "attack_windup",
+      "index": 5,
+      "alpha_bounds": [
+        118,
+        45,
+        289,
+        180
+      ]
+    },
+    {
+      "name": "attack_contact",
+      "index": 6,
+      "alpha_bounds": [
+        78,
+        64,
+        344,
+        191
+      ]
+    },
+    {
+      "name": "defend_curl",
+      "index": 7,
+      "alpha_bounds": [
+        159,
+        63,
+        288,
+        218
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 8,
+      "alpha_bounds": [
+        139,
+        29,
+        304,
+        220
+      ]
+    },
+    {
+      "name": "death_droop",
+      "index": 9,
+      "alpha_bounds": [
+        150,
+        79,
+        290,
+        244
+      ]
+    },
+    {
+      "name": "death_fall",
+      "index": 10,
+      "alpha_bounds": [
+        93,
+        139,
+        314,
+        246
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 11,
+      "alpha_bounds": [
+        92,
+        179,
+        313,
+        250
+      ]
+    },
+    {
+      "name": "defend_breath",
+      "index": 12,
+      "alpha_bounds": [
+        164,
+        61,
+        294,
+        212
+      ]
+    },
+    {
+      "name": "ranged_lens_charge",
+      "index": 13,
+      "alpha_bounds": [
+        153,
+        43,
+        294,
+        232
+      ]
+    },
+    {
+      "name": "ranged_lens_release",
+      "index": 14,
+      "alpha_bounds": [
+        104,
+        70,
+        313,
+        249
+      ]
+    },
+    {
+      "name": "ranged_lens_recover",
+      "index": 15,
+      "alpha_bounds": [
+        111,
+        65,
+        298,
+        240
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png": "8898a70d074be7a0188b38cb15f2684e5a59d6aec26e8483b715dd88e2ee6c51",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/defend-breath.png": "4f227c70ee74a56fce13d7e3a9714921e3b09b9be284b678bd78334ae9c25d39",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/alpha/ranged-tail-corrected.png": "6e8454a1f6b10eb5ae0f6f986128106902886e50511ceb096e7aca40d9442a97",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/alpha/ranged-source.png": "ac065f7efac0f8139ab92c15161cb5b6b963213ffac97f527c91b7029b861666"
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "jobs": [
+    {
+      "id": "chorister-source",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/poses.png",
+      "source_sha256": "96491c3ebde3b7e613f865eeaf2c00ff4cb83bc8cc27412f77e46eea48060cea",
+      "output": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/poses.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "walk-contact-a",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/walk-contact-a.png",
+      "source_sha256": "62c9c210ea83a6335836736a59d3c23d8024eab939bd8e9699692877437cabcd",
+      "output": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-contact-a.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "maximum": 185
+      }
+    },
+    {
+      "id": "walk-passing-a",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/walk-passing-a.png",
+      "source_sha256": "4896329174ac0e907bbb2815976f7ccda68607b01cb9007b56f58cf44472452d",
+      "output": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-passing-a.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "maximum": 185
+      }
+    },
+    {
+      "id": "walk-contact-b",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/walk-contact-b.png",
+      "source_sha256": "ec55357f4d1943b5148ebafc8582e05536915d7d1dc649fe7f84164caeaa1deb",
+      "output": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-contact-b.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            799,
+            170
+          ],
+          [
+            878,
+            189
+          ]
+        ],
+        "maximum": 185
+      }
+    },
+    {
+      "id": "walk-passing-b",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/walk-passing-b.png",
+      "source_sha256": "c60315ec66bee2b64e881336a396bb33dbfdf88f2098fe2603311fcd651c824d",
+      "output": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-passing-b.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            486,
+            401
+          ],
+          [
+            513,
+            365
+          ],
+          [
+            529,
+            325
+          ]
+        ],
+        "maximum": 185
+      }
+    },
+    {
+      "id": "attack-pair",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/attack-pair.png",
+      "source_sha256": "c306bf403214a35563fd63d32433be6dd4f419ef28b1a406c956af4bad8f00a8",
+      "output": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/attack-pair.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "maximum": 185
+      }
+    },
+    {
+      "id": "defense-breath",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/defense-breath.png",
+      "source_sha256": "2f3d33104286910ffe7e536c47f2d5fbdb039675103fb420b4b9f6e462969d1c",
+      "output": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/defense-breath.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "maximum": 185
+      }
+    },
+    {
+      "id": "death-pair",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/death-pair.png",
+      "source_sha256": "d201e2797305ae9e9307258075ad0b6bf1f45e406b8076e825d984c212de63ea",
+      "output": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/death-pair.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            650,
+            320
+          ]
+        ],
+        "maximum": 185
+      }
+    },
+    {
+      "id": "death-low-fall",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/death-low-fall.png",
+      "source_sha256": "77c8166c0eb53265fb769d520a3244696157f0c4264178c44f0b0cf0c34597a7",
+      "output": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/death-low-fall.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "maximum": 185
+      }
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_glowcap_bulwarks",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "four-phase-step-and-spear-recovery",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/four-phase-step-and-spear-recovery.png",
+      "sha256": "84721682556a7d6a973b55296ef84075799c4d4da8139c4da1089fa82a0ab0c6",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2a5fcb32-ede0-43cd-87e7-f67ad187be65.png",
+      "prompt": "Use case: stylized-concept. SIX original Glowcap Bulwark full-body sprites in THREE columns TWO rows, generous clear gutters and complete spear/shield/boots. Image1 is a FOUR-phase leg-ownership guide, not character anatomy: use its near/far overlap and planted/lifted soles for the FIRST FOUR paintings in reading order (top left A contact, top middle A passing, top right B contact, bottom left B passing). Shorten the step lengths to this character's own proportions. Near leg means viewer-facing hip; it stays in front of the far thigh when it extends BACK in B contact. Never mirror torso or swap equipment. The two passing poses must visibly exchange which boot is planted and which knee/sole is lifted. Fixed elevated three-quarter camera and body facing RIGHT. Image2 is fixed identity/style reference; ignore the tiny stray spear fragment at its lower edge. Preserve short stocky gray-bearded dwarf, layered fungus helmet/shoulders with small cyan mushrooms, green scarf/rune tabard, brown leather straps, short wrapped boots; one large shelf-fungus shield on anatomical LEFT (screen right), one short dark-shaft leaf-point spear held RIGHT (screen left). In all FOUR travel frames hold shield guarding torso and spear upright, same head/body/gear sizes. BOTTOM MIDDLE: after spear thrust recover right elbow back beside ribs, spear horizontal point RIGHT, shaft and arm stay on near side of chest, shield remains LEFT in front, two boots planted. BOTTOM RIGHT: brace with shield forward, slightly bent knees, spear upright close alongside body; not a new weapon or turning back. Preserve original painterly material and colors. Pure MAGENTA RGB(255,0,255) backing absent from character, no reflected magenta/fringe. No text, guides, geometry marks, labels, floor/shadows, clouds, effects, extra limbs or scenery. Cyan light confined to original small mushroom caps.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-guide.png",
+          "sha256": "e82785b7504af90c20176fb202c4c869376233f7311cb3694e71b9284ce2fa7b"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/glowcap-continuity-20260916/idle-reference/unit_neutral_glowcap_bulwarks-poses-rect-0-0-360-357-green.png",
+          "sha256": "a789281d1d9b286586a5dfc36a03fa0ebe5c9721677be89c82e0f83fcc386e3d"
+        }
+      ],
+      "selection_notes": "Four-phase sheet still repeats leading-leg and passing support geometry; do not claim alternating gait. Preserve original identity and choose useful supported poses/recovery. Spear recovery and relaxed shield brace selected.",
+      "selected_frames": [
+        "contact_attempt",
+        "passing_a",
+        "passing_b_attempt",
+        "spear_recovery",
+        "guard_ready"
+      ]
+    }
+  ]
+}

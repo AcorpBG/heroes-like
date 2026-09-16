@@ -1,0 +1,91 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "aurora-ranged-shoulder-pair",
+  "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/ranged-shoulder-pair.png",
+  "source_sha256": "5a1877fe16d1142c2b6d740704ba5553d9b6269a139aa973a8279fd1a422e881",
+  "source_rect": [
+    0,
+    0,
+    1774,
+    887
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/ranged-shoulder-pair.png",
+  "output_sha256": "59f4b141f40a087d3206ab807a8dc9d1411627b94cbec7e80ecf6db5ad9e3878",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "97f7e2833d4cbed6db4e986dddebdfd79825b532dc47a326b82c75cb1749e907",
+  "recipe": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-cutouts.json",
+  "recipe_sha256": "afbdc6087cf69114e6886e9bd89d9f59740fad13ca3ed53e08b913beea72411c",
+  "parameters": {
+    "minimum": 100,
+    "maximum": 185,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [],
+    "protected_polygons": [
+      [
+        [
+          256,
+          562
+        ],
+        [
+          278,
+          579
+        ],
+        [
+          312,
+          651
+        ],
+        [
+          286,
+          684
+        ],
+        [
+          274,
+          651
+        ],
+        [
+          259,
+          603
+        ]
+      ],
+      [
+        [
+          1142,
+          568
+        ],
+        [
+          1164,
+          585
+        ],
+        [
+          1198,
+          657
+        ],
+        [
+          1172,
+          690
+        ],
+        [
+          1160,
+          657
+        ],
+        [
+          1145,
+          609
+        ]
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 895927,
+    "edge_pixels": 13265,
+    "unchanged_paint_pixels": 664346,
+    "protected_pixels": 6354,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

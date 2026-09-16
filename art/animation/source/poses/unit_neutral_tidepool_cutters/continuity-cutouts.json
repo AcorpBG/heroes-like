@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing clean genuine alpha is reused without rekeying.",
+  "jobs": [
+    {
+      "id": "twin-blade-recovery-and-directional-corpse",
+      "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/twin-blade-recovery-and-directional-corpse.png",
+      "source_sha256": "fa654d6b36dafe056da5d3d9a91c627e2e92fba27dccdbe883fd9433030bb404",
+      "output": "art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-alpha/twin-blade-recovery-and-directional-corpse.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "deployed-mast-action-recoveries-and-defense",
+  "source": "art/animation/source/poses/unit_neutral_flaremast_crews/deployed-mast-action-recoveries-and-defense.png",
+  "source_sha256": "fb9cd0b213cb2c25055693f30102e3a4a7a7ce2630259ecde2cb85f5b775140d",
+  "source_rect": [
+    0,
+    0,
+    2172,
+    724
+  ],
+  "output": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/deployed-mast-action-recoveries-and-defense.png",
+  "output_sha256": "7de8a5ec4cb13b3eb93d15cc04e2cf7223bdf4c15c83850553f798a71a79cbfc",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-cutouts.json",
+  "recipe_sha256": "29fd781637ff25e2bbdceb0cb59658fdcb26dff866a8642a9804360dd8485249",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1114399,
+    "edge_pixels": 32730,
+    "unchanged_paint_pixels": 425399,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "parallax-defense-hit",
+  "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/defense-hit.png",
+  "source_sha256": "68f72211edf12905e3d5f90afde35866f07e49bad8ce54962ee55339019cc7b7",
+  "source_rect": [
+    0,
+    0,
+    2036,
+    772
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/defense-hit.png",
+  "output_sha256": "2e38c22b091a5a09762c925754d33085a8ca2ad13759c05bfc33aa5809cdd589",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "732acb7b8f20636e57c5a5479a01928c28f52c8eaf068c4b28f1baee0b970be4",
+  "recipe": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-cutouts.json",
+  "recipe_sha256": "43d3384f7c2a970ca66d163dcbea8bb6323840f8c90f4b26d7310c9d4a4c6bee",
+  "parameters": {
+    "minimum": 100,
+    "maximum": 185,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1186590,
+    "edge_pixels": 13043,
+    "unchanged_paint_pixels": 372159,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

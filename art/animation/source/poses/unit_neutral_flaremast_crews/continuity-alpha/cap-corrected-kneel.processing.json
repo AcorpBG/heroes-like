@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "prepared-cap-corrected-kneel",
+  "source": "art/animation/source/poses/unit_neutral_flaremast_crews/poses-cap-corrected.png",
+  "source_sha256": "b8ebc8af85c93917d075a829cad3d94a23c020465cea18989fafedad09861221",
+  "source_rect": [
+    927,
+    655,
+    1254,
+    978
+  ],
+  "output": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/cap-corrected-kneel.png",
+  "output_sha256": "c46aaa3e002180d37d92bc859f8470410e2195749dc1f93c408a000a6eb971bc",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-cutouts.json",
+  "recipe_sha256": "29fd781637ff25e2bbdceb0cb59658fdcb26dff866a8642a9804360dd8485249",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 165,
+    "tolerance": 18,
+    "maximum": 255,
+    "edge_radius": 3,
+    "max_edge_residual": 60,
+    "all_neutral_is_background": false,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 75870,
+    "edge_pixels": 3546,
+    "unchanged_paint_pixels": 26205,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

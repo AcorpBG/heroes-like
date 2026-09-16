@@ -1,0 +1,29 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_harbor_polearms",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "full-polearm-thrust-recovery-guard-and-step",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/full-polearm-thrust-recovery-guard-and-step.png",
+      "sha256": "170cd5701c750971caeb1673762ee9113c2ad8c17f89adaf40390ccab602d12b",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-269c2ad3-7373-4484-be73-835612620507.png",
+      "prompt": "Use case: stylized-concept. Asset type: FOUR original battle-animation raster poses TWO columns TWO rows with generous spacing for the LONG polearm. Image 1 is sole identity authority: bearded Harbor Polearm sailor, navy brimmed hat with ochre feather and brass badge, navy/ochre long coat, steel fishscale vest, cream scarf/trousers, brown gloves/tall boots, rope coil, anchor charm and small amber lantern at waist. LEFT forearm small navy/ochre round buckler strapped on so BOTH hands grip ONE long brown boarding polearm, steel crescent hook with triangular upper spike and lower barb. Same elevated three-quarter camera/body faces RIGHT and same head/body scale. Top-left: strong two-handed horizontal thrust RIGHT, left hand forward and right hand rear, leading knee bent. CRITICAL full rear shaft and silver butt cap extend FAR behind the rear hand toward screen LEFT; the pole does not end at a fist, and both hands visibly grip it with spaced positions. Full hook and butt visible. Top-right: recovery, both elbows pull the full-length horizontal pole halfway back toward waist and torso rises. Bottom-left: upright defensive-ready brace, pole diagonal across chest with hook upper RIGHT and butt lower LEFT, left forearm shield protects ribs while both hands grip shaft. Bottom-right: grounded passing walk, near RIGHT boot flat directly beneath hip, far LEFT knee swings forward and boot lifted slightly, both hands hold pole in the same diagonal carry. Whole shafts, hands, hook, buckler, feather, rope, lantern and boots visible with margins. Match original painterly style/costume/weapon dimensions. Uniform pure green #00FF00 without spill, no shadows/text/grid/scenery/effects/blood or extra equipment.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/units/source/curated/unit_neutral_harbor_polearms.png",
+          "sha256": "34c08101e5264935c71230fc4efef3f0974b2f060e126b500e4bdd3b75f5bc0e"
+        }
+      ],
+      "selection_notes": "13 frames retain ten original paintings and select three new full-polearm thrust, recovery and ready brace paintings. New thrust keeps the rear shaft and butt cap missing from the original thrust. Actual original fall and corpse both face head-right and are reused; the historical orientation warning did not match the inspected paintings. Original clean alpha is reused; new green paintings use approved bounded preparation. Original scale 0.60, new top actions 0.40 and larger lower-row brace 0.35 preserve comparable anatomy. Banded crops retain full own shafts/hooks while excluding neighboring hooks, butt caps, boots and fallen-body fragments. Ground anchors avoid cutting lowered weapon ends. Original two-pose contact/passing remains pending alternating-gait refinement; the new passing attempt repeats an extended contact and is unselected. Polearm length, hook shape, grip, buckler/rope/lantern/body/palette/edge consistency and connected transitions remain unaccepted. Static visual review is not gameplay acceptance.",
+      "selected_frames": [
+        "full_polearm_thrust",
+        "polearm_recovery",
+        "guard_ready"
+      ]
+    }
+  ]
+}

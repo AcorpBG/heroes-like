@@ -1,0 +1,35 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit permission for local raster background removal and edge cleanup; preserve original paintings; no paid APIs",
+  "id": "prismwake-defend-breath",
+  "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/defend-breath.png",
+  "source_sha256": "d946f5097373aa774d884885bd8eae4bfe693332e57616e61ea37b66b7d74253",
+  "source_rect": [
+    0,
+    0,
+    1154,
+    1363
+  ],
+  "output": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/defend-breath.png",
+  "output_sha256": "4f227c70ee74a56fce13d7e3a9714921e3b09b9be284b678bd78334ae9c25d39",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/cutout-recovery-20260915/recipes.json",
+  "recipe_sha256": "9da53b1bc7c1369623ceee66004193b5fb1ad5fd485de3eb6153e63f3b03fd2e",
+  "parameters": {
+    "minimum": 170,
+    "tolerance": 12,
+    "edge_radius": 1
+  },
+  "measurements": {
+    "removed_background_pixels": 1024002,
+    "edge_pixels": 7064,
+    "unchanged_paint_pixels": 541836,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

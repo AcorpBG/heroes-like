@@ -1,0 +1,76 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "loaded-pipe-melee-defense-and-empty-recovery",
+      "file": "loaded-pipe-melee-defense-and-empty-recovery.png",
+      "sha256": "632a6cfafb1b960a89125955122dcff2631e0891fe45494c8062d80ed4916e95",
+      "tool": "built_in_image_gen",
+      "model": "not_exposed_by_tool",
+      "prompt": "Use case: stylized-concept. SIX full-body original battle-animation poses arranged THREE columns TWO rows, equal anatomical scale and ample clear gutters. Image 1 is sole identity/equipment reference: lean pale young adult dark hair teal hood with small ivory mushroom shelves, charcoal leather armor, olive wraps, teal tabard gold seams, brown boots/belts, cyan glass spore flasks and back quiver crystalline needles. ONE brass/wood straight blowpipe, NOT rifle, no trigger/crossbow, length about shoulder-to-knee distance. RIGHT hand holds rear half, LEFT hand holds front half; during all two-hand actions spare needles stay in waist sheath. Same elevated three-quarter camera, facing RIGHT. TOP LEFT: melee anticipation, both elbows bent, loaded blowpipe horizontal pulled close to chest, CYAN needle tip at muzzle RIGHT. TOP CENTER: two-handed forward shove RIGHT, arms extend, front knee bent, SAME cyan-tipped muzzle RIGHT. TOP RIGHT: recovery after shove, arms retract halfway toward ribs, loaded pipe still points RIGHT, same grip positions. BOTTOM LEFT: ready defense, pipe close across upper chest with same loaded tip RIGHT, knees softly bent. BOTTOM CENTER: deeper defensive crouch, knees deeply bend and shoulders hunch behind horizontal loaded pipe, tip RIGHT. BOTTOM RIGHT: after-shot recovery, pipe lowered from mouth toward chest, RIGHT hand rear LEFT forward, EMPTY open brass muzzle at RIGHT with NO protruding cyan needle; no spare needle in either hand. Keep same face clothing mushroom count/body and full pipe dimensions, no grip swaps, boots and gear fully visible. Original painterly raster on flat pure MAGENTA #FF00FF without spill. No shadow, scenery, grid, text, blood, effects or extra equipment.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/glimmercap-continuity-20260916/idle-reference/unit_neutral_glimmercap_needlers-poses-rect-0-0-290-336-light.png",
+          "sha256": "10484a70e3df25355646200459ef5136a0a696c0b51f30038661f82c6b1a3cbf"
+        }
+      ],
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5a14a140-51cf-4025-bf92-aa79917d65b8.png",
+      "selection": "Five paintings selected; top-center thrust crowds the grips and is unselected, replaced by the dedicated separated-grip edit.",
+      "selected_frames": [
+        "loaded_pipe_anticipation",
+        "loaded_pipe_recovery",
+        "loaded_guard_ready",
+        "loaded_guard_crouch",
+        "ranged_empty_recovery"
+      ]
+    },
+    {
+      "id": "two-spaced-grips-loaded-pipe-shove",
+      "file": "two-spaced-grips-loaded-pipe-shove.png",
+      "sha256": "9bda84c1ed5fda23ee8b7de1a17a6d38807ee4d90dce441e85f82a56d5fa168f",
+      "tool": "built_in_image_gen",
+      "model": "not_exposed_by_tool",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target, a complete original Glimmercap Needler with two correctly separated hands on a short loaded blowpipe. Change ONLY body pose to the impact of a two-handed straight shove toward screen RIGHT. Preserve both hands clearly SEPARATED by the same long bare section of pipe between them: RIGHT fist rear grip remains on viewer LEFT near ribs, LEFT fist forward grip on viewer RIGHT farther from chest, with a visible forearm-length span of shaft BETWEEN the two fists. Both elbows extend forward but hands MUST NOT merge, touch or overlap; keep two separately visible fists and the full pipe butt to LEFT and cyan needle tip at RIGHT. Front knee bends, weight leans forward, rear boot braces. Do not turn it into one-handed fencing. Keep the exact existing face, hood/mushrooms, armor, teal/gold cloth, cyan flasks/quiver, pipe length/diameter, camera and painterly identity. One full-body figure only, generous margins all limbs/boots/weapon. Flat pure MAGENTA #FF00FF background no spill, no shadow, text, scenery, effects or extra equipment.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/glimmercap-continuity-20260916/grip-reference/unit_neutral_glimmercap_needlers-loaded-pipe-melee-defense-and-empty-recovery-rect-0-0-410-584-light.png",
+          "sha256": "17a02da01f521c974e55ba0f5af60015e3086e5f23a6e2958a3a2984118a0ad8"
+        }
+      ],
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f2d7fd12-aee6-467e-a9cc-10a8ba2a39ee.png",
+      "selection": "Selected; exact crops/scales/anchors in packing.json. Static composites inspected, not final connected-motion acceptance.",
+      "selected_frames": [
+        "loaded_pipe_two_grip_shove"
+      ]
+    },
+    {
+      "id": "side-fall-pipe-point-right",
+      "file": "side-fall-pipe-point-right.png",
+      "sha256": "4dba7e8be41b54ab4e3c0f1fb744528ebfa379312c2a77933539688da5dba06d",
+      "tool": "built_in_image_gen",
+      "model": "not_exposed_by_tool",
+      "prompt": "Use case: precise-object-edit. Image 1 is the edit target. Change ONLY the horizontal blowpipe lying in the foreground: its CYAN needle tip and brass muzzle must be at the screen RIGHT end, plain open brass butt at screen LEFT. Keep same pipe length, same placement/diagonal axis on the ground and wooden/brass design. This direction must continue into the head-right final corpse pose. Preserve EVERY other feature exactly: same full body mid-collapse with head RIGHT feet LEFT, torso partly raised, head/face/eyes expression, hands resting near ground, loose spare needles at right hand, hood mushrooms/quiver/cyan flasks/leather/teal tabard/boots and body proportions. Do not reverse/mirror the body or rearrange hands/equipment. One figure only with all feet and pipe ends inside margin, same elevated three-quarter camera and painterly style. Use flat pure MAGENTA #FF00FF background without spill/shadows, no text/grid/blood/effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/glimmercap-continuity-20260916/fall-reference/unit_neutral_glimmercap_needlers-poses-rect-557-1010-890-1205-light.png",
+          "sha256": "3a51bfaa2f58cdb6321cfbb2aef9e835e23a59aafa371e79da185eae309ffce9"
+        }
+      ],
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1a9175a1-5e4e-48e8-9c29-71b66740e51f.png",
+      "selection": "Selected; exact crops/scales/anchors in packing.json. Static composites inspected, not final connected-motion acceptance.",
+      "selected_frames": [
+        "death_side_pipe_point_right"
+      ]
+    }
+  ],
+  "review_notes": [
+    "17 packed frames retain ten original paintings and select seven new paintings from three built-in outputs. Corrected loaded melee keeps the cyan tip right, two guard poses remain loaded and post-shot recovery retains an empty muzzle.",
+    "The first new sheet's crowded one-visible-grip thrust is preserved unselected. Editing the separated-grip anticipation reference produced a replacement with two distinct fists and bare shaft between them. A focused side-fall edit turns only the grounded pipe's point right to agree with the retained head-right corpse; the old reversed-pipe fall is unselected.",
+    "Approved magenta preparation preserves the original teal/cyan/ivory paint. Uniform body scales and explicit source bands exclude adjacent feet from aim/kneel. Full alternating gait, pipe length/stringless design and needle scale, spare-needle handling, body/grip/palette/edge continuity and connected transitions remain unaccepted. No automated tests/imports/gameplay/platform validation in this increment."
+  ]
+}

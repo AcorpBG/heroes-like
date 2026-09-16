@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_sumpstone_guards",
+  "output": "art/animation/source/poses/unit_neutral_sumpstone_guards/candidate-atlas.png",
+  "sha256": "70bb92ebd0f474a9f5639e6b53c5c1954c38f283807f2474058ca3dee6cd8e41",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        144,
+        39,
+        362,
+        244
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        146,
+        34,
+        355,
+        243
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        142,
+        35,
+        358,
+        244
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        171,
+        31,
+        368,
+        243
+      ]
+    },
+    {
+      "name": "pick_windup",
+      "index": 4,
+      "alpha_bounds": [
+        172,
+        33,
+        361,
+        248
+      ]
+    },
+    {
+      "name": "pick_contact",
+      "index": 5,
+      "alpha_bounds": [
+        145,
+        61,
+        390,
+        251
+      ]
+    },
+    {
+      "name": "pick_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        166,
+        44,
+        364,
+        243
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        166,
+        35,
+        351,
+        244
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        151,
+        69,
+        351,
+        248
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        134,
+        61,
+        366,
+        247
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        158,
+        82,
+        353,
+        252
+      ]
+    },
+    {
+      "name": "death_low_fall",
+      "index": 11,
+      "alpha_bounds": [
+        132,
+        91,
+        379,
+        250
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 12,
+      "alpha_bounds": [
+        127,
+        127,
+        382,
+        239
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sumpstone_guards/alpha/poses-unaccepted.png": "99f098db5065f21c44f2600a257550044d0d4253073714384961b5c61f80a632",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sumpstone_guards/continuity-alpha/pick-recovery-guard-and-grounded-travel.png": "dfb870897ed133e6d77256edbcdb1cb3dd167b8cdb462dd5474d1398fcf8a554"
+  }
+}

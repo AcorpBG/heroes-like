@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "roadwarden-walk-contact-b-green",
+  "source": "art/animation/source/poses/unit_neutral_roadwardens/walk-contact-b-green.png",
+  "source_sha256": "4a9d3fc4d4781ddab5e35b691726734a8c0984216e4ddfd54f3a9b9e3fd6f0d4",
+  "source_rect": [
+    0,
+    0,
+    1158,
+    1358
+  ],
+  "output": "art/animation/source/poses/unit_neutral_roadwardens/continuity-alpha/walk-contact-b-green.png",
+  "output_sha256": "d1dd1cd02e043f8260a202ff9be858529c62b918ff7384128e6a0128a51e8c84",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_roadwardens/continuity-cutouts.json",
+  "recipe_sha256": "cf59ca0fd17541208bca19563a9c76be1cb8f1018eb4b9fb3d3c1655ff4327a8",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true,
+    "inspection_note": "Vivid green is backing only; muted olive trousers are not the chroma color. No original garment pixels repainted."
+  },
+  "measurements": {
+    "removed_background_pixels": 1204392,
+    "edge_pixels": 6694,
+    "unchanged_paint_pixels": 361478,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

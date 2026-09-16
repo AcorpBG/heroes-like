@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "cudgel-recovery-ready-step-and-directional-rest",
+  "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/cudgel-recovery-ready-step-and-directional-rest.png",
+  "source_sha256": "1c675f9cf0eed51205b7b2c0849fb4c5d23bb649a05eba365978cc3d59900ed7",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/continuity-alpha/cudgel-recovery-ready-step-and-directional-rest.png",
+  "output_sha256": "15924844e7cb4450a2a0b2913bd3154d5fe4ed3017c4051ca6fb3a5b7b4ff8c6",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/continuity-cutouts.json",
+  "recipe_sha256": "78bc4e417b516604a18c1381be59d4a898466126a23bbb17394ffbd34a4155f8",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1202150,
+    "edge_pixels": 18800,
+    "unchanged_paint_pixels": 351914,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "cudgel-recovery-ready-step-and-directional-rest",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/cudgel-recovery-ready-step-and-directional-rest.png",
+      "source_sha256": "1c675f9cf0eed51205b7b2c0849fb4c5d23bb649a05eba365978cc3d59900ed7",
+      "output": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/continuity-alpha/cudgel-recovery-ready-step-and-directional-rest.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

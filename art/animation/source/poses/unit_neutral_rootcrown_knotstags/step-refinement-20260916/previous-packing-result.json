@@ -1,0 +1,147 @@
+{
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "output": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/candidate-atlas.png",
+  "sha256": "e9079f10430f78b4c7319fe4fc40dd84e1f953783e6f0add923a2455ca3b370c",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        154,
+        24,
+        349,
+        240
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        168,
+        22,
+        337,
+        239
+      ]
+    },
+    {
+      "name": "guided_contact",
+      "index": 2,
+      "alpha_bounds": [
+        156,
+        21,
+        354,
+        239
+      ]
+    },
+    {
+      "name": "guided_passing",
+      "index": 3,
+      "alpha_bounds": [
+        161,
+        21,
+        348,
+        239
+      ]
+    },
+    {
+      "name": "crown_windup",
+      "index": 4,
+      "alpha_bounds": [
+        153,
+        57,
+        372,
+        240
+      ]
+    },
+    {
+      "name": "crown_forward_strike",
+      "index": 5,
+      "alpha_bounds": [
+        121,
+        86,
+        386,
+        239
+      ]
+    },
+    {
+      "name": "crown_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        157,
+        23,
+        349,
+        240
+      ]
+    },
+    {
+      "name": "crown_shallow_brace",
+      "index": 7,
+      "alpha_bounds": [
+        146,
+        57,
+        359,
+        240
+      ]
+    },
+    {
+      "name": "crown_deep_brace",
+      "index": 8,
+      "alpha_bounds": [
+        150,
+        68,
+        361,
+        240
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        149,
+        42,
+        352,
+        240
+      ]
+    },
+    {
+      "name": "death_knees_buckle",
+      "index": 10,
+      "alpha_bounds": [
+        155,
+        77,
+        360,
+        239
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 11,
+      "alpha_bounds": [
+        145,
+        94,
+        391,
+        238
+      ]
+    },
+    {
+      "name": "dead_head_right_dark_lanterns",
+      "index": 12,
+      "alpha_bounds": [
+        138,
+        141,
+        391,
+        239
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/poses.png": "ab7fc17c15ca0d02dbd0c6ed37881dcf943ed7ccf55105dabc2251e3e9d63a21",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/walk-contact-guided.png": "3c9ecb24fbdda99648e22bc620f29d7430805a130ec8fecda0fbef3af8b3f7de",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/walk-passing-guided.png": "939c822609939ca8a38f2ed6edc8272e0c290e10879d2d98a6d432787ae1f8fc",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png": "c8e1140944a002074fd2dddd07cb38dcb5d192b4586d59f64a667cd72dc3f31b"
+  }
+}

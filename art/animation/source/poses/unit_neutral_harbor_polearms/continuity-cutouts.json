@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "full-polearm-thrust-recovery-guard-and-step",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/full-polearm-thrust-recovery-guard-and-step.png",
+      "source_sha256": "170cd5701c750971caeb1673762ee9113c2ad8c17f89adaf40390ccab602d12b",
+      "output": "art/animation/source/poses/unit_neutral_harbor_polearms/continuity-alpha/full-polearm-thrust-recovery-guard-and-step.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

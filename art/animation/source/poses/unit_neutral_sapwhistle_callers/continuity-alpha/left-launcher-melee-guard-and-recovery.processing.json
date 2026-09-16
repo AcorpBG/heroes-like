@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "left-launcher-melee-guard-and-recovery",
+  "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/left-launcher-melee-guard-and-recovery.png",
+  "source_sha256": "edc710284b9d99d8ef2751b165e293acc1150ce6c5419961a305625ce232c67e",
+  "source_rect": [
+    0,
+    0,
+    1122,
+    1402
+  ],
+  "output": "art/animation/source/poses/unit_neutral_sapwhistle_callers/continuity-alpha/left-launcher-melee-guard-and-recovery.png",
+  "output_sha256": "d221a44bcdd6c006876ec745f680f799a6174154feb267199df63746cab796ce",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_sapwhistle_callers/continuity-cutouts.json",
+  "recipe_sha256": "64a147c8c8d1366861d56f0c36eb57e68b9f4e6f478f806bbc564b07486f7a5b",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1169817,
+    "edge_pixels": 19309,
+    "unchanged_paint_pixels": 383918,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

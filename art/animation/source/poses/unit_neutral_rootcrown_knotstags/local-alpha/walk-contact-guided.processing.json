@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit permission for local raster background removal and edge cleanup; preserve original paintings; no paid APIs",
+  "id": "rootcrown-contact-guided",
+  "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/walk-contact-guided.png",
+  "source_sha256": "eb52db6824c870dd2283c4a1018ce5e01ab829e57b4087cd1c291d2ec6224527",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/walk-contact-guided.png",
+  "output_sha256": "3c9ecb24fbdda99648e22bc620f29d7430805a130ec8fecda0fbef3af8b3f7de",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/cutout-recovery-20260915/recipes.json",
+  "recipe_sha256": "9da53b1bc7c1369623ceee66004193b5fb1ad5fd485de3eb6153e63f3b03fd2e",
+  "parameters": {
+    "minimum": 230,
+    "tolerance": 15,
+    "edge_radius": 2,
+    "all_neutral_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 969475,
+    "edge_pixels": 20553,
+    "unchanged_paint_pixels": 582488,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

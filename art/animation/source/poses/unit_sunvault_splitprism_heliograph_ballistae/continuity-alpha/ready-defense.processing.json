@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "heliograph-ready-defense",
+  "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/ready-defense.png",
+  "source_sha256": "10b236f922fb1dc0225fa39cd05b2eb5a5731b86b1614f1cc38d67b590581255",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-alpha/ready-defense.png",
+  "output_sha256": "4ae09c9762e03dfd7f79a87a699fc5a7afa176c64c353aee1b6add93c37265fe",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "732acb7b8f20636e57c5a5479a01928c28f52c8eaf068c4b28f1baee0b970be4",
+  "recipe": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/continuity-cutouts.json",
+  "recipe_sha256": "5822a11798bf2dffa946483d84dfc29d15bc8d6a7169ac24e27e67d798a158d1",
+  "parameters": {
+    "minimum": 100,
+    "maximum": 185,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1146944,
+    "edge_pixels": 9277,
+    "unchanged_paint_pixels": 416295,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

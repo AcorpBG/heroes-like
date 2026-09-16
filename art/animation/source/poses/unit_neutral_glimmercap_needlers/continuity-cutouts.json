@@ -1,0 +1,66 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "loaded-pipe-melee-defense-and-empty-recovery",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/loaded-pipe-melee-defense-and-empty-recovery.png",
+      "source_sha256": "632a6cfafb1b960a89125955122dcff2631e0891fe45494c8062d80ed4916e95",
+      "output": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/loaded-pipe-melee-defense-and-empty-recovery.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "two-spaced-grips-loaded-pipe-shove",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/two-spaced-grips-loaded-pipe-shove.png",
+      "source_sha256": "9bda84c1ed5fda23ee8b7de1a17a6d38807ee4d90dce441e85f82a56d5fa168f",
+      "output": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/two-spaced-grips-loaded-pipe-shove.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "side-fall-pipe-point-right",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/side-fall-pipe-point-right.png",
+      "source_sha256": "4dba7e8be41b54ab4e3c0f1fb744528ebfa379312c2a77933539688da5dba06d",
+      "output": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/side-fall-pipe-point-right.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

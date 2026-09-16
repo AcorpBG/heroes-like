@@ -1,0 +1,29 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_saltpan_bucklers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "club-recovery-guard-and-directional-rest",
+      "source": "art/animation/source/poses/unit_neutral_saltpan_bucklers/club-recovery-guard-and-directional-rest.png",
+      "sha256": "39f7a1543e4678be4ee3043dc991c82e7d560d5f7bbb3756abbf07fe6610753c",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-226292c0-eb55-4f72-9f14-ebba0d5c3ecc.png",
+      "prompt": "Use case: stylized-concept. Asset type: three original battle-animation raster poses, THREE rows ONE column with generous empty gutters. Input image is sole identity reference. Same bearded Saltpan Buckler man with cream headwrap/red band/forehead disc, cream and rust scarf, salt-stained cream tunic/rust split apron, brown leather gear/wrapped boots, round metal LEFT knee guard. LEFT arm retains ONE round salt-hide buckler with radial wood braces and metal boss; RIGHT hand retains ONE plain wooden truncheon. Same elevated three-quarter camera facing RIGHT. Top: recovering from downward right-handed club strike, club crosses low in front of waist as right elbow bends toward ribs; shield remains in front of left ribs; both feet grounded. Middle: upright guard-ready, left shield high at chest, right club vertical close to right shoulder, shoulders braced before crouching, both feet planted. Bottom: completely resting closed-eye SIDE corpse with HEAD at screen LEFT and boots at RIGHT, matching a head-left fall; cheek rests on relaxed forearm, left shield lies flat just in front of chest, right hand lies beside wooden club. No supporting elbow or raised head. Same costume, body scale, equipment count and hand ownership throughout. Full hands/shield/club/boots with ample margins. Original painterly raster, uniform pure green #00FF00 background no spill, no shadows, scenery, effects, blood, labels, grid or copied game art.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saltpan-continuity-20260916/idle-reference/unit_neutral_saltpan_bucklers-poses-rect-0-0-352-375-light.png",
+          "sha256": "d2f47482da4c43cd137ddcbc82eb888c5a5160d39c43bf02078aaead8f1d586d"
+        }
+      ],
+      "selection_notes": "13 frames retain ten original paintings and select three new right-club recovery, upright guard and closed-eye head-left corpse paintings. Corpse now follows the side-fall direction instead of reversing to head-right; club and left-arm hide buckler remain. Reuse inspected clean original alpha; new green-backed art uses approved bounded preparation. Original source scale 0.60, new standing scale 0.40 and enlarged source corpse 0.26 are explicit anatomical normalization without warping or per-frame silhouette-box fitting. Banded crops exclude a neighboring club tip/boot. Guard anchor retains head and soles in the frame. Original opposite contact remains repeated; full alternating gait, shield/club/grip, body/palette/edge consistency and connected timing still need refinement. Static production review is not motion/gameplay acceptance.",
+      "selected_frames": [
+        "club_recovery",
+        "guard_ready",
+        "dead_head_left"
+      ]
+    }
+  ]
+}

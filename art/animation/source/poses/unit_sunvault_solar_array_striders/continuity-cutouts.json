@@ -1,0 +1,216 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "jobs": [
+    {
+      "id": "solar-walk-contact-a",
+      "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/walk-contact-a.png",
+      "source_sha256": "4217488ebd1b0438f8b5dc6a9d39e01f5f180bf05410b8e8d3e0a54eb77c27e4",
+      "output": "art/animation/source/poses/unit_sunvault_solar_array_striders/continuity-alpha/walk-contact-a.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            926,
+            438
+          ],
+          [
+            1103,
+            515
+          ]
+        ]
+      }
+    },
+    {
+      "id": "solar-walk-passing-a",
+      "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/walk-passing-a.png",
+      "source_sha256": "a70ea1fbb413f812b8911839b180aa34684a0d76dc7566183b26efa6a75441bb",
+      "output": "art/animation/source/poses/unit_sunvault_solar_array_striders/continuity-alpha/walk-passing-a.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            926,
+            425
+          ],
+          [
+            1120,
+            500
+          ],
+          [
+            497,
+            340
+          ],
+          [
+            1020,
+            668
+          ]
+        ]
+      }
+    },
+    {
+      "id": "solar-walk-contact-b",
+      "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/walk-contact-b.png",
+      "source_sha256": "99992ed5d4e959b3f0bf37c551bec53c2a0246f5893db2cf316be6683a30956d",
+      "output": "art/animation/source/poses/unit_sunvault_solar_array_striders/continuity-alpha/walk-contact-b.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            926,
+            410
+          ],
+          [
+            493,
+            363
+          ],
+          [
+            801,
+            480
+          ],
+          [
+            700,
+            740
+          ],
+          [
+            1010,
+            655
+          ],
+          [
+            1090,
+            510
+          ],
+          [
+            620,
+            828
+          ]
+        ]
+      }
+    },
+    {
+      "id": "solar-walk-passing-b",
+      "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/walk-passing-b.png",
+      "source_sha256": "a0707bd40c5db8d286d9e0572bda389aeeb0d3121a8ef27192eb02016251f146",
+      "output": "art/animation/source/poses/unit_sunvault_solar_array_striders/continuity-alpha/walk-passing-b.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            905,
+            400
+          ],
+          [
+            1110,
+            460
+          ],
+          [
+            595,
+            692
+          ],
+          [
+            756,
+            773
+          ],
+          [
+            477,
+            320
+          ],
+          [
+            1000,
+            630
+          ]
+        ]
+      }
+    },
+    {
+      "id": "solar-attack-pair",
+      "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/attack-pair.png",
+      "source_sha256": "4220fa3848be3bfe15e1daa1ef4664531b6f3da784d6834736483e07932b2abd",
+      "output": "art/animation/source/poses/unit_sunvault_solar_array_striders/continuity-alpha/attack-pair.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            570,
+            350
+          ],
+          [
+            1535,
+            290
+          ],
+          [
+            1650,
+            350
+          ]
+        ]
+      }
+    },
+    {
+      "id": "solar-defense-pair",
+      "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/defense-pair.png",
+      "source_sha256": "fd7e2e1011a87921936e3ed2c590a5dcdfdbb2fa8c273be9f2997e05ee3832cb",
+      "output": "art/animation/source/poses/unit_sunvault_solar_array_striders/continuity-alpha/defense-pair.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            650,
+            356
+          ],
+          [
+            788,
+            411
+          ],
+          [
+            1550,
+            377
+          ],
+          [
+            1570,
+            543
+          ]
+        ]
+      }
+    },
+    {
+      "id": "solar-death-sequence",
+      "source": "art/animation/source/poses/unit_sunvault_solar_array_striders/death-sequence.png",
+      "source_sha256": "94667b9ab3148215758d777d14216885cfb07896c8e8005d45e20403a2002659",
+      "output": "art/animation/source/poses/unit_sunvault_solar_array_striders/continuity-alpha/death-sequence.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            500,
+            300
+          ],
+          [
+            1195,
+            426
+          ]
+        ]
+      }
+    }
+  ]
+}

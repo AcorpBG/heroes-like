@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "jobs": [
+    {
+      "id": "supported-stride-and-front-shield-actions",
+      "source": "art/animation/source/poses/unit_neutral_mossglass_sentinels/supported-stride-and-front-shield-actions.png",
+      "source_sha256": "d5d746b69246f76b6b3bf632915d60c448e0fb96430728059a66d3da97ad8649",
+      "output": "art/animation/source/poses/unit_neutral_mossglass_sentinels/continuity-alpha/supported-stride-and-front-shield-actions.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "right-fist-strike-recovery-and-ready",
+  "source": "art/animation/source/poses/unit_neutral_lanternskate_throwers/right-fist-strike-recovery-and-ready.png",
+  "source_sha256": "98ba0702aaaca55951f2dabff492f0ecd4cc9bbc5854a051c4d83c049807feed",
+  "source_rect": [
+    0,
+    0,
+    2046,
+    768
+  ],
+  "output": "art/animation/source/poses/unit_neutral_lanternskate_throwers/continuity-alpha/right-fist-strike-recovery-and-ready.png",
+  "output_sha256": "8c18462db5f3fad4e54d1e167c6f8847462b2125d1e44cc32b706b41adc2b760",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_lanternskate_throwers/continuity-cutouts.json",
+  "recipe_sha256": "422f0e329fd849e03703cd2d86178f335b7ae605aca2c7c95c9ae9d5ce542ff1",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "distance": 128,
+    "edge_radius": 4,
+    "max_edge_residual": 100,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1048512,
+    "edge_pixels": 27586,
+    "unchanged_paint_pixels": 495230,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

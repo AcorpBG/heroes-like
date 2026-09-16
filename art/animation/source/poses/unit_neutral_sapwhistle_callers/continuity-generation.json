@@ -1,0 +1,62 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_sapwhistle_callers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "left-launcher-melee-guard-and-recovery",
+      "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/left-launcher-melee-guard-and-recovery.png",
+      "sha256": "edc710284b9d99d8ef2751b165e293acc1150ce6c5419961a305625ce232c67e",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-fc751d72-bedf-45ee-9a37-a39bbe1276ae.png",
+      "prompt": "Use case: stylized-concept. Asset type: SIX original battle animation poses, TWO columns THREE rows, generous empty gutters. Image 1 is identity reference only. Sapwhistle Caller: young brown-haired woman with side braid, leaf-green hood and amber feather, layered leaf mantle/cape, cream bark bodice, leaf skirt over brown trousers, paired pale knee plates and laced leather boots; amber dart holder at belt. Always LEFT hand grips her ONE small birch-and-brass short-barrel sap launcher with dangling leaf; RIGHT hand is empty or holds her whistle at chest. Fixed elevated three-quarter camera, faces screen RIGHT. New melee is a LEFT-hand launcher shove, NOT a punch that swaps hands. Row1 left: anticipation, left elbow bent and launcher drawn to left ribs, muzzle RIGHT; right hand stays near chest with whistle cord. Row1 right: melee contact, left arm forcefully shoves the launcher forward toward RIGHT at chest height, both feet grounded and forward knee bends; right hand remains near chest. Row2 left: melee recovery, left elbow retracts launcher halfway toward left hip, body rises. Row2 right: defense, near RIGHT forearm across face/chest, LEFT launcher held low and safely near left hip pointing RIGHT; no weapon hand switch. Row3 left: post-shot recovery, LEFT launcher lowered halfway from aiming level, right hand releases whistle from mouth toward chest. Row3 right: grounded walking passing pose, near RIGHT boot flat beneath hip supporting body, far LEFT knee advances with boot just off ground; same left-hand low launcher and right hand at whistle as reference. Preserve launcher length, grip, leaf attachment, hood, face, costume, body size and original painted style. Uniform pure BLUE #0000FF without spill. Full body/equipment visible, no shadow/scenery/grid/text/effects/blood or extra limbs. All six figures at identical anatomical scale.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/sapwhistle-continuity-20260916/idle-reference/unit_neutral_sapwhistle_callers-poses-rect-0-0-283-354-light.png",
+          "sha256": "0c1738dd5162060ce31b887e8bcb36dec0395726ba3f7d42874933665f2d61f1"
+        }
+      ],
+      "selection_notes": "17 frames retain twelve original paintings and select five new left-launcher anticipation/shove/recovery, post-shot recovery and crouched defense paintings. Replaces the original weapon-swapping punch and guard; reload/aim/fire remain separate from melee and all four original head-right death/rest poses remain. The first new defense and a two-hand guard retry still switch launcher grip ownership and remain unselected. A constrained lower-body edit of the correct anticipation retains LEFT launcher grip and RIGHT whistle hand while crouching. This mechanism fixes that concrete ownership issue; it does not establish final attack/defense readability or palette/body continuity. Original clean alpha is reused; new blue paintings use approved bounded preparation. Original/new action scales 0.64/0.50; enlarged single crouch 0.20 uses anatomical size rather than fitting its silhouette. Banded crops remove adjacent boots above aim/fire. Original airborne extension/gather and new duplicated walking contact are not a grounded alternating gait; new contact is unselected. Launcher/whistle details, body/cape/palette/edge consistency and connected event timing remain unaccepted.",
+      "selected_frames": [
+        "left_launcher_anticipation",
+        "left_launcher_shove",
+        "left_launcher_recovery",
+        "ranged_recovery"
+      ]
+    },
+    {
+      "id": "two-hand-launcher-guard",
+      "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/two-hand-launcher-guard.png",
+      "sha256": "5f95313b6191711820f7780217c4b6dfd0dfa4fb68f15a9888b0562cb7b399cd",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-aa54ac44-4a9c-4f0d-bf50-ff0ff0f64ccf.png",
+      "prompt": "Use case: stylized-concept. ONE full-body original Sapwhistle Caller DEFENSE pose. Image 1 is exact identity authority: brown-haired woman, green leaf hood and amber feather, leafy mantle/cape, cream bark bodice and leaf skirt, paired pale knee plates, brown leather boots, amber dart belt. Same elevated three-quarter view facing RIGHT and original painted rendering. She crouches with knees bent and shoulders hunched, BOTH hands brace her ONE small birch-and-brass sap launcher close at upper chest. Her anatomical LEFT hand, on viewer-right in the reference, REMAINS around the rear grip exactly as in the reference; her RIGHT hand, on viewer-left, reaches across to support the short barrel from below. The launcher's muzzle points RIGHT, dangling leaf beneath; retain short weapon length, no extra guns, no hand swap, no detached hand. Whistle hangs from neck cord while both hands brace. Chin tucked behind forearms, defensive protective silhouette, entire body and boots visible with generous margins. Uniform pure BLUE #0000FF no spill, no shadows, no scenery, no text, no blood or effects. Do not redesign costume or body proportions.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/sapwhistle-continuity-20260916/idle-reference/unit_neutral_sapwhistle_callers-poses-rect-0-0-283-354-light.png",
+          "sha256": "0c1738dd5162060ce31b887e8bcb36dec0395726ba3f7d42874933665f2d61f1"
+        }
+      ],
+      "selected_frames": [],
+      "selection_notes": "Unselected: both-hand guard still reverses launcher grip ownership and reads as aiming rather than protective crouch. Use a constrained lower-body edit of the correct left-grip anticipation instead."
+    },
+    {
+      "id": "left-grip-crouched-defense",
+      "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/left-grip-crouched-defense.png",
+      "sha256": "666e383487aef43ab0d328aebd7e25e228af6e7d08a440d60c816e3e3682ded8",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-46ca7568-b2d4-435d-9162-50d6d42671de.png",
+      "prompt": "Use case: precise-object-edit. Edit this SAME full-body Sapwhistle Caller into a deep defensive crouch. Change ONLY her knees/hips/torso height and chin angle: bend both knees deeply, lower hips, hunch shoulders slightly and tuck chin. CRITICAL lock BOTH arms and BOTH hands exactly as in the input: viewer-right LEFT hand keeps its short birch/brass sap launcher against left ribs with muzzle pointing RIGHT; viewer-left RIGHT fist stays at collar holding whistle. Do not cross/swap/repose the arms, do not change launcher hand, do not add a second hand to the launcher. Same face/hood/feather, leaf cape, cream bodice, belt/darts, pale knee plates, boots, scale and painterly rendering. Full figure and all gear visible with margins; no new equipment. Replace plain backing with flat pure BLUE #0000FF without spill. No shadows/scenery/text/effects/blood. Output one isolated crouched defense figure only.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/sapwhistle-continuity-20260916/guard-edit-reference/unit_neutral_sapwhistle_callers-left-launcher-melee-guard-and-recovery-rect-0-0-554-459-light.png",
+          "sha256": "d80d2782def0c6b01591fae349cffe55582d1a2110108304d9ca23742800e0fe"
+        }
+      ],
+      "selected_frames": [
+        "left_grip_defense"
+      ],
+      "selection_notes": "The first new defense and a two-hand guard retry still switch launcher grip ownership and remain unselected. A constrained lower-body edit of the correct anticipation retains LEFT launcher grip and RIGHT whistle hand while crouching. This mechanism fixes that concrete ownership issue; it does not establish final attack/defense readability or palette/body continuity."
+    }
+  ]
+}

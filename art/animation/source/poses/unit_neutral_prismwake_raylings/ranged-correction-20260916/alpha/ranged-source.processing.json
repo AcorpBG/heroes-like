@@ -1,0 +1,47 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner-approved deterministic background/edge cleanup only; preserve all original interior costume, glass and anatomy. No pose synthesis.",
+  "id": "unit_neutral_prismwake_raylings-ranged-source",
+  "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/ranged-source.png",
+  "source_sha256": "fc17b251c202e5d4228887bf39909559a54a74ce7232c198cbe9fbea14dee839",
+  "source_rect": [
+    0,
+    0,
+    1954,
+    805
+  ],
+  "output": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/alpha/ranged-source.png",
+  "output_sha256": "ac065f7efac0f8139ab92c15161cb5b6b963213ffac97f527c91b7029b861666",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/cutouts.json",
+  "recipe_sha256": "6c671dbda964dfa5b8d1656aaaf97da9e81bc5bce402928cc6ddadd325ccc834",
+  "parameters": {
+    "minimum": 95,
+    "maximum": 170,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "max_edge_residual": 40,
+    "background_seeds": [
+      [
+        279,
+        484
+      ],
+      [
+        298,
+        500
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1245720,
+    "edge_pixels": 14612,
+    "unchanged_paint_pixels": 312638,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

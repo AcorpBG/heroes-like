@@ -1,0 +1,30 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_hedgehook_watch",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "hook-recovery-and-grounded-travel",
+      "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/hook-recovery-and-grounded-travel.png",
+      "sha256": "f243fd5b8f2dbc02088ff246bba1d6e8b1ce457063a3744217df5c7f2624496b",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-496aaa0f-8fda-4ec9-b32c-07aecbc3bc6b.png",
+      "prompt": "Use case: stylized-concept. Asset type: four original battle-animation raster poses TWO columns TWO rows. Input image is sole identity/style reference. Keep exact Hedgehook Watch woman, green hood/scarf, brown leaf-leather shoulders, split green tabard, trousers, knee guards and boots; RIGHT hand owns the short hooked steel blade, LEFT forearm owns thorn-rim round wooden buckler. Same elevated three-quarter camera facing RIGHT, same head/body size. Top-left: recover from forward hook slash, right elbow bending back with blade held low across waist, left shield remains forward, both feet planted. Top-right: soften out of deep defense into upright ready guard, shield at chest, right hook below shield, both feet grounded. Bottom-left: walking passing stance, near/right boot firmly planted directly under hip; far/left knee swings forward slightly and its boot is just above ground. Bottom-right: opposite walking passing stance, far/left boot firmly planted directly under hip, near/right knee swings slightly forward, lifted near boot; show the changed overlapping knee/boot order, not a repeat or mirror. No airborne jump, no lifted support boot, no running split. Carry blade clear of knees, shield and handedness never switch. Full bodies, complete hook/shield, ample empty gutters and outer margin. Painterly raster exactly matching original gear/palette. Solid pure blue #0000FF backdrop, no blue spill, shadows, floor, text, effects, opponent, extra equipment or limb.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/hedgehook-continuity-20260916/idle-reference/unit_neutral_hedgehook_watch-poses-rect-0-0-363-375-light.png",
+          "sha256": "67d8adb30fc38a050067c7b49cd00a74071da5aa57ae10c1f66002ff3588c88a"
+        }
+      ],
+      "selection_notes": "14 packed frames retain ten original paintings and select four new hook-recovery/ready-guard/grounded-travel paintings. Hook and buckler ownership remain consistent through the added recovery; original crouch/recoil/kneel/side fall and head-right corpse remain. Duplicate original running extension and airborne gathered pose are excluded. Existing original alpha composites are clean and reused. New blue-backed source uses approved bounded matte/edge preparation. Uniform source scales 0.58/0.35 and anatomical anchors preserve body scale. Banded second-idle and windup crops separate the neighboring boot from the raised hook. New passing attempts show support contact but knee-pad/near-far limb continuity is ambiguous; the mixed contact/passing clip is not an accepted full alternating gait. Hook size/rotation, grip, shield/body/palette/edges and connected action/death timing remain whole-roster refinement. Static review is not gameplay acceptance.",
+      "selected_frames": [
+        "walk_near_support_attempt",
+        "walk_far_support_attempt",
+        "hook_recovery",
+        "guard_ready"
+      ]
+    }
+  ]
+}

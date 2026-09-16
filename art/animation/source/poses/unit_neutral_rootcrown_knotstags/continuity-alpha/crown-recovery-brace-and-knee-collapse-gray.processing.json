@@ -1,0 +1,40 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "crown-recovery-brace-and-knee-collapse-gray",
+  "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/crown-recovery-brace-and-knee-collapse-gray.png",
+  "source_sha256": "2cafebf2ca05a80aa66b051e79b108df178e9ae75fc7bc5652490864c955a8a7",
+  "source_rect": [
+    0,
+    0,
+    2060,
+    763
+  ],
+  "output": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png",
+  "output_sha256": "c8e1140944a002074fd2dddd07cb38dcb5d192b4586d59f64a667cd72dc3f31b",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/continuity-cutouts.json",
+  "recipe_sha256": "6562c42e4653627a23a55f94aeaf6438c737d4a616805413aa43fda9093115d1",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 145,
+    "maximum": 190,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "max_edge_residual": 40,
+    "all_neutral_is_background": true,
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 935370,
+    "edge_pixels": 22904,
+    "unchanged_paint_pixels": 613506,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

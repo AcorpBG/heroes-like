@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "jobs": [
+    {
+      "id": "connected-full-pike-thrust",
+      "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/connected-full-pike-thrust.png",
+      "source_sha256": "3b2ee6f543c1908756287060e5bd396ff54a8d1be2dba71e8706d4fe91d6fd33",
+      "output": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/continuity-alpha/connected-full-pike-thrust.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

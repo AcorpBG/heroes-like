@@ -1,0 +1,166 @@
+{
+  "unit_id": "unit_neutral_reedbarge_poles",
+  "output": "art/animation/source/poses/unit_neutral_reedbarge_poles/candidate-atlas.png",
+  "sha256": "76fbfd75ec61df63c9f8000888ff80150a513b36a9d163cdb2d6add1ad0a6ca8",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        168,
+        22,
+        348,
+        241
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        164,
+        27,
+        356,
+        241
+      ]
+    },
+    {
+      "name": "contact_original",
+      "index": 2,
+      "alpha_bounds": [
+        150,
+        26,
+        350,
+        241
+      ]
+    },
+    {
+      "name": "passing_original",
+      "index": 3,
+      "alpha_bounds": [
+        166,
+        49,
+        340,
+        243
+      ]
+    },
+    {
+      "name": "contact_front_camera",
+      "index": 4,
+      "alpha_bounds": [
+        150,
+        21,
+        359,
+        243
+      ]
+    },
+    {
+      "name": "passing_knee_lift",
+      "index": 5,
+      "alpha_bounds": [
+        186,
+        27,
+        387,
+        243
+      ]
+    },
+    {
+      "name": "passing_rear_lift",
+      "index": 6,
+      "alpha_bounds": [
+        150,
+        25,
+        356,
+        243
+      ]
+    },
+    {
+      "name": "hook_forward_windup",
+      "index": 7,
+      "alpha_bounds": [
+        147,
+        62,
+        378,
+        243
+      ]
+    },
+    {
+      "name": "pole_thrust",
+      "index": 8,
+      "alpha_bounds": [
+        166,
+        65,
+        453,
+        245
+      ]
+    },
+    {
+      "name": "hook_forward_recovery",
+      "index": 9,
+      "alpha_bounds": [
+        174,
+        62,
+        376,
+        243
+      ]
+    },
+    {
+      "name": "guard_crosswise",
+      "index": 10,
+      "alpha_bounds": [
+        172,
+        62,
+        368,
+        245
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 11,
+      "alpha_bounds": [
+        166,
+        65,
+        338,
+        244
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 12,
+      "alpha_bounds": [
+        163,
+        68,
+        365,
+        246
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 13,
+      "alpha_bounds": [
+        142,
+        104,
+        365,
+        251
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 14,
+      "alpha_bounds": [
+        142,
+        156,
+        360,
+        254
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png": "0adae13fbad3c9a3393d43b733fbed99be3fa707fe4b273fcf15675901110fe9",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/supported-travel-hook-forward-and-left-corpse.png": "6b236da79671f0e695f725529eb662b2298cfcb00ae2654cdaebcd86b3b178ce",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/dead-head-left-cheek-on-arm.png": "c38effba0328238ecc2d9fa09d478bc08f2bf63d95e7892acbd16c30aab54573"
+  }
+}

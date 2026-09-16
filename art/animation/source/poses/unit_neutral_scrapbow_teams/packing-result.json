@@ -1,0 +1,185 @@
+{
+  "unit_id": "unit_neutral_scrapbow_teams",
+  "output": "art/animation/source/poses/unit_neutral_scrapbow_teams/candidate-atlas.png",
+  "sha256": "f57e0c6024d15c67c42154bc703e6dd79730f626a07e00c174f2b55892ec20ca",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        130,
+        39,
+        405,
+        242
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        107,
+        34,
+        423,
+        242
+      ]
+    },
+    {
+      "name": "crew_step",
+      "index": 2,
+      "alpha_bounds": [
+        134,
+        27,
+        395,
+        239
+      ]
+    },
+    {
+      "name": "crew_lift",
+      "index": 3,
+      "alpha_bounds": [
+        139,
+        29,
+        391,
+        239
+      ]
+    },
+    {
+      "name": "crew_settle",
+      "index": 4,
+      "alpha_bounds": [
+        118,
+        31,
+        392,
+        241
+      ]
+    },
+    {
+      "name": "stock_windup",
+      "index": 5,
+      "alpha_bounds": [
+        112,
+        41,
+        404,
+        244
+      ]
+    },
+    {
+      "name": "stock_shove",
+      "index": 6,
+      "alpha_bounds": [
+        109,
+        46,
+        418,
+        243
+      ]
+    },
+    {
+      "name": "stock_recovery",
+      "index": 7,
+      "alpha_bounds": [
+        130,
+        30,
+        396,
+        240
+      ]
+    },
+    {
+      "name": "crouch_guard",
+      "index": 8,
+      "alpha_bounds": [
+        101,
+        33,
+        413,
+        243
+      ]
+    },
+    {
+      "name": "load_bolt",
+      "index": 9,
+      "alpha_bounds": [
+        141,
+        40,
+        415,
+        248
+      ]
+    },
+    {
+      "name": "aim",
+      "index": 10,
+      "alpha_bounds": [
+        123,
+        36,
+        415,
+        244
+      ]
+    },
+    {
+      "name": "fire",
+      "index": 11,
+      "alpha_bounds": [
+        96,
+        36,
+        418,
+        240
+      ]
+    },
+    {
+      "name": "fire_recovery",
+      "index": 12,
+      "alpha_bounds": [
+        126,
+        25,
+        392,
+        243
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 13,
+      "alpha_bounds": [
+        113,
+        46,
+        413,
+        247
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        117,
+        82,
+        413,
+        244
+      ]
+    },
+    {
+      "name": "death_lower",
+      "index": 15,
+      "alpha_bounds": [
+        111,
+        89,
+        392,
+        243
+      ]
+    },
+    {
+      "name": "dead_pair",
+      "index": 16,
+      "alpha_bounds": [
+        96,
+        119,
+        425,
+        245
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png": "c335a3722174624880afbd9d58d20e4cbb0a6bbb0798dbe30d506dede47820ec",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png": "6c0f5486d9e2befe0a29735009563b1fbf8bf1f112046bf55891e64c2d97e117"
+  }
+}

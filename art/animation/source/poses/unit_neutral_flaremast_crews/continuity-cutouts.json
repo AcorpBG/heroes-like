@@ -1,0 +1,88 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "prepared-walk-contact",
+      "source": "art/animation/source/poses/unit_neutral_flaremast_crews/walk-contact-draft.png",
+      "source_sha256": "fbc533e96ac41b8f61b5552ff621affa25d0db76597cedcaea709c8c30e28df0",
+      "output": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/walk-contact.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 105,
+        "tolerance": 18,
+        "maximum": 255,
+        "edge_radius": 3,
+        "max_edge_residual": 60,
+        "all_neutral_is_background": false,
+        "background_seeds": [
+          [
+            711,
+            1135
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "prepared-walk-passing",
+      "source": "art/animation/source/poses/unit_neutral_flaremast_crews/walk-passing-draft.png",
+      "source_sha256": "75b455448c11db9afc52fa3ecd4fc879a540048da81186becf3a0bf6cfda3364",
+      "output": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/walk-passing.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 105,
+        "tolerance": 18,
+        "maximum": 255,
+        "edge_radius": 3,
+        "max_edge_residual": 60,
+        "all_neutral_is_background": false,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "prepared-cap-corrected-kneel",
+      "source": "art/animation/source/poses/unit_neutral_flaremast_crews/poses-cap-corrected.png",
+      "source_sha256": "b8ebc8af85c93917d075a829cad3d94a23c020465cea18989fafedad09861221",
+      "source_rect": [
+        927,
+        655,
+        1254,
+        978
+      ],
+      "output": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/cap-corrected-kneel.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 165,
+        "tolerance": 18,
+        "maximum": 255,
+        "edge_radius": 3,
+        "max_edge_residual": 60,
+        "all_neutral_is_background": false,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "deployed-mast-action-recoveries-and-defense",
+      "source": "art/animation/source/poses/unit_neutral_flaremast_crews/deployed-mast-action-recoveries-and-defense.png",
+      "source_sha256": "fb9cd0b213cb2c25055693f30102e3a4a7a7ce2630259ecde2cb85f5b775140d",
+      "output": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/deployed-mast-action-recoveries-and-defense.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

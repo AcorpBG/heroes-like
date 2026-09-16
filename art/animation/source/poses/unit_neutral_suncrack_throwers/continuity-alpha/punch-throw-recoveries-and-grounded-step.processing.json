@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "punch-throw-recoveries-and-grounded-step",
+  "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/punch-throw-recoveries-and-grounded-step.png",
+  "source_sha256": "79f781209f983512708d8233bfb5c94b4898947e423c725f1a57858a1ed64c63",
+  "source_rect": [
+    0,
+    0,
+    1232,
+    1277
+  ],
+  "output": "art/animation/source/poses/unit_neutral_suncrack_throwers/continuity-alpha/punch-throw-recoveries-and-grounded-step.png",
+  "output_sha256": "4ac5fbede78edb1aa21c2c4db2791b36ab1910072ff73e04e98d020587fb2bc5",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_suncrack_throwers/continuity-cutouts.json",
+  "recipe_sha256": "2c7fcf4578a156d0cdb41905df8ad66a85cad13fb3f0b07a89ad1ec5d7156c0d",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1099856,
+    "edge_pixels": 29569,
+    "unchanged_paint_pixels": 443839,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,185 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "output": "art/animation/source/poses/unit_neutral_peatflare_jarriers/candidate-atlas.png",
+  "sha256": "1d4ef77f6503cac1d897e7e74f442043ca19645772db1c5ffa36530550d3fab3",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        173,
+        20,
+        371,
+        242
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        156,
+        27,
+        359,
+        242
+      ]
+    },
+    {
+      "name": "run_contact",
+      "index": 2,
+      "alpha_bounds": [
+        164,
+        31,
+        374,
+        244
+      ]
+    },
+    {
+      "name": "run_passing",
+      "index": 3,
+      "alpha_bounds": [
+        162,
+        19,
+        336,
+        240
+      ]
+    },
+    {
+      "name": "right_fist_windup",
+      "index": 4,
+      "alpha_bounds": [
+        159,
+        25,
+        359,
+        240
+      ]
+    },
+    {
+      "name": "right_fist_strike",
+      "index": 5,
+      "alpha_bounds": [
+        151,
+        28,
+        376,
+        240
+      ]
+    },
+    {
+      "name": "right_fist_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        158,
+        21,
+        335,
+        240
+      ]
+    },
+    {
+      "name": "empty_fists_ready",
+      "index": 7,
+      "alpha_bounds": [
+        167,
+        21,
+        337,
+        240
+      ]
+    },
+    {
+      "name": "empty_fists_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        154,
+        48,
+        350,
+        255
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        155,
+        20,
+        340,
+        238
+      ]
+    },
+    {
+      "name": "draw_jar",
+      "index": 10,
+      "alpha_bounds": [
+        150,
+        21,
+        357,
+        239
+      ]
+    },
+    {
+      "name": "throw_jar_aim",
+      "index": 11,
+      "alpha_bounds": [
+        154,
+        20,
+        384,
+        240
+      ]
+    },
+    {
+      "name": "throw_empty_release",
+      "index": 12,
+      "alpha_bounds": [
+        159,
+        25,
+        371,
+        242
+      ]
+    },
+    {
+      "name": "empty_hand_recovery",
+      "index": 13,
+      "alpha_bounds": [
+        170,
+        25,
+        332,
+        237
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        168,
+        61,
+        342,
+        241
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 15,
+      "alpha_bounds": [
+        152,
+        113,
+        355,
+        239
+      ]
+    },
+    {
+      "name": "dead_head_right_dark_jars",
+      "index": 16,
+      "alpha_bounds": [
+        126,
+        133,
+        397,
+        251
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_peatflare_jarriers/continuity-alpha/fist-recovery-ready-and-passing-step.png": "3a649e00fa9817b93355c8d6c450aa7ca7cb81f966ccecdf556bdc5e461f2a24"
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "unit_id": "unit_neutral_reefbolt_crews",
+  "output": "art/animation/source/poses/unit_neutral_reefbolt_crews/candidate-atlas.png",
+  "sha256": "eb20f14a549c314cba538c9c977f098606530d69e31cccd533263ff57c65b682",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        138,
+        15,
+        371,
+        244
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        138,
+        2,
+        375,
+        243
+      ]
+    },
+    {
+      "name": "crew_carry_passing",
+      "index": 2,
+      "alpha_bounds": [
+        135,
+        27,
+        384,
+        239
+      ]
+    },
+    {
+      "name": "crew_carry_opposite_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        135,
+        32,
+        384,
+        240
+      ]
+    },
+    {
+      "name": "rig_shove_windup",
+      "index": 4,
+      "alpha_bounds": [
+        140,
+        26,
+        369,
+        244
+      ]
+    },
+    {
+      "name": "rig_shove_contact",
+      "index": 5,
+      "alpha_bounds": [
+        130,
+        32,
+        382,
+        244
+      ]
+    },
+    {
+      "name": "rig_shove_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        104,
+        26,
+        423,
+        241
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 7,
+      "alpha_bounds": [
+        140,
+        57,
+        372,
+        246
+      ]
+    },
+    {
+      "name": "bolt_load",
+      "index": 8,
+      "alpha_bounds": [
+        141,
+        17,
+        377,
+        243
+      ]
+    },
+    {
+      "name": "bolt_aim",
+      "index": 9,
+      "alpha_bounds": [
+        144,
+        18,
+        372,
+        241
+      ]
+    },
+    {
+      "name": "bolt_release",
+      "index": 10,
+      "alpha_bounds": [
+        142,
+        33,
+        365,
+        240
+      ]
+    },
+    {
+      "name": "empty_winch_reset",
+      "index": 11,
+      "alpha_bounds": [
+        140,
+        31,
+        353,
+        243
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 12,
+      "alpha_bounds": [
+        141,
+        30,
+        378,
+        243
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 13,
+      "alpha_bounds": [
+        138,
+        43,
+        387,
+        239
+      ]
+    },
+    {
+      "name": "death_team_fall",
+      "index": 14,
+      "alpha_bounds": [
+        133,
+        63,
+        396,
+        245
+      ]
+    },
+    {
+      "name": "dead_both_heads_right",
+      "index": 15,
+      "alpha_bounds": [
+        78,
+        107,
+        433,
+        239
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses.png": "0891117eb188006373148c49bf07e69146101b4c74578aa4878c1522760649fc",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/carry-passing-tripod.png": "ca5517f467834c8a93d1766ff057f2ca60314d5b819cbab4eb27b3463d4038c4",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/carry-opposite-lowered-draft.png": "e87961d0b20c0f6f32388f446eadc84f59ad10873a582e601fb8155d744e05ab",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/crew-recovery-and-directional-rest.png": "d5defbc82b42745519f45d53baca7c3e3e6a35bcd98e19810dda291e39c1da2a",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/poses-released-string-draft.png": "569b278649ed21a4c7b590991953187610f46dcc8df576289dc7b6580342e42c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/poses-empty-reset.png": "e2cd877b1ba25debbf8faff3bde9c3ab296badd4e8eecd7bc807e119a102bda2",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses-hit-death-basket.png": "e3ed85340937bea7373ace8c38a36e5edb0ebe2b0f4e88063f8338327333cc1c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/crew-recovery-and-directional-rest-corrected.png": "ef5feba686a35fa2fe852deb090474e51dc8cf9f2e49cc2fd503cf058059aaac"
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "schema_id": "original_unit_pose_refinement_v1",
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "reviewed_gait_incomplete_runtime_unchanged",
+  "jobs": [
+    {
+      "key": "rootcrown_phase_0",
+      "unit_id": "unit_neutral_rootcrown_knotstags",
+      "prefix": "rootcrown",
+      "phase": 0,
+      "source": "walk-phase-0.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/gait-refinement-20260916/quadruped-walk-phase-0.png",
+        "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/rootcrown-gait-refinement-20260916/upper-body-reference/unit_neutral_rootcrown_knotstags-poses-rect-30-3-374-215-light.png"
+      ],
+      "prompt": "Use case: sketch-to-render. Asset type: original painted tactical battle animation sprite. Image 1 is the PRIMARY leg-pose guide; image 2 is a cropped HEAD/TORSO identity reference with no leg-pose information. Reconstruct complete legs ONLY from Image 1's four articulated chains. Do not invent a neutral standing lower body. Paint ONE complete full-body character in the exact leg phase below, not a strip. Rootcrown Knotstag: exact original wooden stag identity in image 2, compact powerful quadruped body with shingled brown bark plates, green leafy mane/tail, cream chin/chest tufts, orange shelf fungi, dark cloven root hooves, gold eye. Preserve enormous interwoven branching crown and EXACTLY THREE hanging amber honeycomb lanterns: one high center and two lower sides. Same crown topology and head-to-body proportions, unchanged lantern attachments. Do not add mushrooms/lanterns/legs or turn it into a biological reindeer. Neck upright, face points RIGHT, same slightly elevated three-quarter tactical camera. CONTACT A. Follow blue-near foreleg forward DOWN-RIGHT from near shoulder to the front-most hoof; the orange-far foreleg extends backward DOWN-LEFT beneath chest. Blue-near hind leg reaches BACK DOWN-LEFT, orange-far hind leg reaches forward under belly. Forelegs and hindlegs must clearly oppose each other, not repeat the reference idle stance. Four connected legs, no extra feet. Match the reference painterly game style, stable torso size and equipment. Retain near/far limb ownership: blue guide = foreground limbs, orange = far limbs behind. Remove all guide lines/colors/text, leaving real painted anatomy. Square 1536x1536 composition with entire creature, crown/weapons, hair and feet at least 100px inside every edge. Perfectly uniform opaque neutral gray RGB(170,170,170) everywhere behind and through silhouette gaps; no shadows, gradients, pattern or glow on background. No floor, cast shadow, grid, labels, motion trail, scene, border or second character. This is a new original raster pose, never a rotated or mirrored standing cutout.",
+      "sha256": "27d72675c7889f4f778180fa7d11007b4f1d8944d1bc8c125f15a182ccd38771",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0248359e-caa3-448f-9e05-5fa16e0d9e2d.png",
+      "review": "Unselected: passing A and B both show same-side support/lift instead of diagonal alternation; contact B reverses forelegs but not hindlegs. Cropped upper-body identity did not resolve gait. Preserve sources; no runtime replacement."
+    },
+    {
+      "key": "rootcrown_phase_1",
+      "unit_id": "unit_neutral_rootcrown_knotstags",
+      "prefix": "rootcrown",
+      "phase": 1,
+      "source": "walk-phase-1.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/gait-refinement-20260916/quadruped-walk-phase-1.png",
+        "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/rootcrown-gait-refinement-20260916/upper-body-reference/unit_neutral_rootcrown_knotstags-poses-rect-30-3-374-215-light.png"
+      ],
+      "prompt": "Use case: sketch-to-render. Asset type: original painted tactical battle animation sprite. Image 1 is the PRIMARY leg-pose guide; image 2 is a cropped HEAD/TORSO identity reference with no leg-pose information. Reconstruct complete legs ONLY from Image 1's four articulated chains. Do not invent a neutral standing lower body. Paint ONE complete full-body character in the exact leg phase below, not a strip. Rootcrown Knotstag: exact original wooden stag identity in image 2, compact powerful quadruped body with shingled brown bark plates, green leafy mane/tail, cream chin/chest tufts, orange shelf fungi, dark cloven root hooves, gold eye. Preserve enormous interwoven branching crown and EXACTLY THREE hanging amber honeycomb lanterns: one high center and two lower sides. Same crown topology and head-to-body proportions, unchanged lantern attachments. Do not add mushrooms/lanterns/legs or turn it into a biological reindeer. Neck upright, face points RIGHT, same slightly elevated three-quarter tactical camera. PASSING A. Blue-near foreleg is straight and planted below near shoulder; orange-far foreleg is bent and its hoof lifted well clear of the ground. Orange-far hind leg is straight/planted; blue-near hind leg bends forward with its hoof lifted. This is DIAGONAL support: near front plus far rear. Do not plant both near legs or raise both far legs. Match the reference painterly game style, stable torso size and equipment. Retain near/far limb ownership: blue guide = foreground limbs, orange = far limbs behind. Remove all guide lines/colors/text, leaving real painted anatomy. Square 1536x1536 composition with entire creature, crown/weapons, hair and feet at least 100px inside every edge. Perfectly uniform opaque neutral gray RGB(170,170,170) everywhere behind and through silhouette gaps; no shadows, gradients, pattern or glow on background. No floor, cast shadow, grid, labels, motion trail, scene, border or second character. This is a new original raster pose, never a rotated or mirrored standing cutout.",
+      "sha256": "5790763ddaf0ee978a810dc2eb417b68da5225dddcf7a4619135c26d564b552a",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-93dc8113-7d87-4c53-bf95-d814a72bb122.png",
+      "review": "Unselected: passing A and B both show same-side support/lift instead of diagonal alternation; contact B reverses forelegs but not hindlegs. Cropped upper-body identity did not resolve gait. Preserve sources; no runtime replacement."
+    },
+    {
+      "key": "rootcrown_phase_2",
+      "unit_id": "unit_neutral_rootcrown_knotstags",
+      "prefix": "rootcrown",
+      "phase": 2,
+      "source": "walk-phase-2.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/gait-refinement-20260916/quadruped-walk-phase-2.png",
+        "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/rootcrown-gait-refinement-20260916/upper-body-reference/unit_neutral_rootcrown_knotstags-poses-rect-30-3-374-215-light.png"
+      ],
+      "prompt": "Use case: sketch-to-render. Asset type: original painted tactical battle animation sprite. Image 1 is the PRIMARY leg-pose guide; image 2 is a cropped HEAD/TORSO identity reference with no leg-pose information. Reconstruct complete legs ONLY from Image 1's four articulated chains. Do not invent a neutral standing lower body. Paint ONE complete full-body character in the exact leg phase below, not a strip. Rootcrown Knotstag: exact original wooden stag identity in image 2, compact powerful quadruped body with shingled brown bark plates, green leafy mane/tail, cream chin/chest tufts, orange shelf fungi, dark cloven root hooves, gold eye. Preserve enormous interwoven branching crown and EXACTLY THREE hanging amber honeycomb lanterns: one high center and two lower sides. Same crown topology and head-to-body proportions, unchanged lantern attachments. Do not add mushrooms/lanterns/legs or turn it into a biological reindeer. Neck upright, face points RIGHT, same slightly elevated three-quarter tactical camera. CONTACT B. Blue-near foreleg slopes BACK DOWN-LEFT from near shoulder toward hoof under belly. Orange-far foreleg extends FORWARD DOWN-RIGHT to front-most hoof. Blue-near hind leg swings FORWARD under belly; orange-far hind leg reaches BACK DOWN-LEFT. Foreground legs overlap the far limbs at their crossings. Reverse CONTACT A leg ownership, not the camera or entire animal. Match the reference painterly game style, stable torso size and equipment. Retain near/far limb ownership: blue guide = foreground limbs, orange = far limbs behind. Remove all guide lines/colors/text, leaving real painted anatomy. Square 1536x1536 composition with entire creature, crown/weapons, hair and feet at least 100px inside every edge. Perfectly uniform opaque neutral gray RGB(170,170,170) everywhere behind and through silhouette gaps; no shadows, gradients, pattern or glow on background. No floor, cast shadow, grid, labels, motion trail, scene, border or second character. This is a new original raster pose, never a rotated or mirrored standing cutout.",
+      "sha256": "a565a2bee05fb15b2228fdaa19396249cb509867ac40aa17478e8e03cd2a3aaf",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2862bd64-6b1d-4e9b-9720-205be25b5eed.png",
+      "review": "Unselected: passing A and B both show same-side support/lift instead of diagonal alternation; contact B reverses forelegs but not hindlegs. Cropped upper-body identity did not resolve gait. Preserve sources; no runtime replacement."
+    },
+    {
+      "key": "rootcrown_phase_3",
+      "unit_id": "unit_neutral_rootcrown_knotstags",
+      "prefix": "rootcrown",
+      "phase": 3,
+      "source": "walk-phase-3.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/gait-refinement-20260916/quadruped-walk-phase-3.png",
+        "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/rootcrown-gait-refinement-20260916/upper-body-reference/unit_neutral_rootcrown_knotstags-poses-rect-30-3-374-215-light.png"
+      ],
+      "prompt": "Use case: sketch-to-render. Asset type: original painted tactical battle animation sprite. Image 1 is the PRIMARY leg-pose guide; image 2 is a cropped HEAD/TORSO identity reference with no leg-pose information. Reconstruct complete legs ONLY from Image 1's four articulated chains. Do not invent a neutral standing lower body. Paint ONE complete full-body character in the exact leg phase below, not a strip. Rootcrown Knotstag: exact original wooden stag identity in image 2, compact powerful quadruped body with shingled brown bark plates, green leafy mane/tail, cream chin/chest tufts, orange shelf fungi, dark cloven root hooves, gold eye. Preserve enormous interwoven branching crown and EXACTLY THREE hanging amber honeycomb lanterns: one high center and two lower sides. Same crown topology and head-to-body proportions, unchanged lantern attachments. Do not add mushrooms/lanterns/legs or turn it into a biological reindeer. Neck upright, face points RIGHT, same slightly elevated three-quarter tactical camera. PASSING B. Orange-far foreleg is straight/planted under chest; blue-near foreleg bends forward at knee and lifts hoof off ground. Blue-near hind leg is straight/planted; orange-far hind leg bends forward and lifts its hoof. DIAGONAL support is far front plus near rear, opposite passing A. Do not plant the near foreleg or lift both far legs. Match the reference painterly game style, stable torso size and equipment. Retain near/far limb ownership: blue guide = foreground limbs, orange = far limbs behind. Remove all guide lines/colors/text, leaving real painted anatomy. Square 1536x1536 composition with entire creature, crown/weapons, hair and feet at least 100px inside every edge. Perfectly uniform opaque neutral gray RGB(170,170,170) everywhere behind and through silhouette gaps; no shadows, gradients, pattern or glow on background. No floor, cast shadow, grid, labels, motion trail, scene, border or second character. This is a new original raster pose, never a rotated or mirrored standing cutout.",
+      "sha256": "3f265322c81e37bf109713571280f5e5de3290eb81928248a213d91bd88641e3",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f178a145-0942-4ebe-8f29-44c7eb866663.png",
+      "review": "Unselected: passing A and B both show same-side support/lift instead of diagonal alternation; contact B reverses forelegs but not hindlegs. Cropped upper-body identity did not resolve gait. Preserve sources; no runtime replacement."
+    }
+  ],
+  "next_action": "No wording-only retries. Preserve viable passing poses for later connected-cycle assembly; opposite contact and Rootcrown near/far hind-leg ownership remain unresolved. Continue independent equipment/body refinement."
+}

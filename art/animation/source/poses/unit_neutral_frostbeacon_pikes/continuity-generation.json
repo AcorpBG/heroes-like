@@ -1,0 +1,34 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_frostbeacon_pikes",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "connected-full-pike-thrust",
+      "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/connected-full-pike-thrust.png",
+      "sha256": "3b2ee6f543c1908756287060e5bd396ff54a8d1be2dba71e8706d4fe91d6fd33",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a6858d79-8374-4288-8d11-d36052ad535c.png",
+      "prompt": "Use case: stylized-concept. FOUR full-body original Frostbeacon Pike battle paintings in a TWO by TWO sheet. Image 1 is authoritative identity and FULL pike proportions. Image 2 shows the forward lunge action but its shaft is incomplete: restore the long rear shaft and small butt spike, ignore neighboring stray blade fragments at top corners. Same original human face, blue fur-lined hood and quilted long coat, silver breastplate/shoulders/front strip, small amber chest badge, brown gloves/boots. Fixed elevated 3/4 camera facing RIGHT. Exactly one long rigid brown wooden pike with broad steel spearhead and SMALL steel butt spike, held with TWO well-separated hands. Full pike length approximately 1.3 times standing head-to-sole height; identical in all four poses, both tips fully inside generous cell margins.\nTop-left: horizontal chest-height thrust WINDUP: pike tip points RIGHT, both elbows bent drawing grip rearward toward ribs, near hand rearward at right hip, far hand forward on shaft, weight back, no overhead pose.\nTop-right: forward two-hand THRUST: front knee bends, rear leg extends, arms push toward right; retain LONG visible shaft behind rear hand continuing left to butt spike, spear point extends right. Full intact weapon, not short spear or shaft ending in palm.\nBottom-left: RECOVERY: elbows bend pulling same horizontal pike back toward waist, front knee straightens slightly, torso returns upright, both hands never release.\nBottom-right: ready guard: both feet planted and knees soft, pike angled head upper RIGHT and butt lower LEFT, both hands separated across torso. This is a softer ready pose before a crouching brace.\nOriginal painterly tactical game art; same anatomical and equipment scale throughout. Flat vivid green #00ff00 with no reflected green; no floor shadow, arrows, effects, labels, borders, extra weapons or background scenery.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/frostbeacon-continuity-20260916/idle-reference/unit_neutral_frostbeacon_pikes-poses-rect-0-0-314-420-green.png",
+          "sha256": "76bf1a08c9b4f7e5dfc51311abd3923b0d5804158b69f40f560312080605cf5e"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/frostbeacon-continuity-20260916/thrust-reference/unit_neutral_frostbeacon_pikes-poses-rect-586-540-991-803-green.png",
+          "sha256": "001efcbbd6a6f43c405d40daafd5e56820c3e4031680de3f47748f0825d7fae9"
+        }
+      ],
+      "selection_notes": "13 packed frames retain nine original RGBA paintings and select four new full-pike paintings. Horizontal two-hand anticipation, thrust with intact rear shaft/butt spike, withdrawal and ready guard replace the disconnected overhead windup and truncated-shaft thrust. Original brace, recoil, kneel, side fall and head-right corpse remain. Original alpha reused; new green-backed sheet prepared with owner-approved bounded matte/edge cleanup. Uniform per-source scales 0.62/0.36 and anatomical anchors; banded cuts retain full new guard tip without neighboring thrust boots and exclude original neighboring spear tip from brace. Only original contact/passing are retained for travel; a full alternating gait remains missing. Pike orientation between idle/travel/guard, projection/length through fall, body/hand proportions, edges/palette and connected event timing remain refinement. Packed and inspected, not final motion acceptance.",
+      "selected_frames": [
+        "pike_windup",
+        "pike_thrust",
+        "pike_recovery",
+        "guard_ready"
+      ]
+    }
+  ]
+}

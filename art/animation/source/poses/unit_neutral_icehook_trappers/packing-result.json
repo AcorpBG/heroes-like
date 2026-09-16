@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_icehook_trappers",
+  "output": "art/animation/source/poses/unit_neutral_icehook_trappers/candidate-atlas.png",
+  "sha256": "fc72e32fa9931e509bf8e6bc77731124aa53a55454aa6d89f4aabdeb3d692c09",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        169,
+        40,
+        338,
+        245
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        157,
+        38,
+        337,
+        246
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        164,
+        30,
+        342,
+        244
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        194,
+        30,
+        329,
+        245
+      ]
+    },
+    {
+      "name": "hook_windup",
+      "index": 4,
+      "alpha_bounds": [
+        171,
+        40,
+        351,
+        243
+      ]
+    },
+    {
+      "name": "hook_contact",
+      "index": 5,
+      "alpha_bounds": [
+        155,
+        55,
+        359,
+        244
+      ]
+    },
+    {
+      "name": "hook_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        166,
+        34,
+        349,
+        245
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        173,
+        34,
+        341,
+        243
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        157,
+        68,
+        349,
+        248
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        145,
+        44,
+        344,
+        247
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        155,
+        79,
+        350,
+        246
+      ]
+    },
+    {
+      "name": "death_low_fall",
+      "index": 11,
+      "alpha_bounds": [
+        146,
+        98,
+        366,
+        256
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 12,
+      "alpha_bounds": [
+        117,
+        140,
+        399,
+        255
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_icehook_trappers/alpha/poses-unaccepted.png": "975df507fb4254fc338ba5613778989fb60f0928b3bcfd8f6763e939f76fc844",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_icehook_trappers/continuity-alpha/matched-icehook-strike-guard-and-travel.png": "3aee9302e05eb5f7b4ade2363affe38a95c629a9e99499b8afd693a7f111cbc7"
+  }
+}

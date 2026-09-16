@@ -1,0 +1,25 @@
+{
+  "schema_id": "original_battle_pose_generation_v1",
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "backend": "built-in image_gen",
+  "date": "2026-09-16",
+  "reference": "identity-reference.png",
+  "reference_sha256": "e38a0f5026f58d68df4ab6a447159793e02de76177f8fc101a3b4dd8e87e9400",
+  "outputs": [
+    {
+      "source": "ranged-source.png",
+      "source_sha256": "fc17b251c202e5d4228887bf39909559a54a74ce7232c198cbe9fbea14dee839",
+      "tool_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ad721571-b523-4742-9356-38a57b176f52.png",
+      "prompt": "Use case: stylized-concept. Asset type: original painted fantasy battle sprite strip. Image1 is exact identity and style reference. Create a wide THREE-column animation sheet of this SAME hovering Prismwake Rayling performing stationary RANGED discharge, not melee charge. Each column one complete creature, all face screen-right in fixed elevated three-quarter camera, same head/body center and scale, zero forward travel. Anatomy stays identical: one large blue lens-eye in ivory/gold shell, long narrow beak-like ivory projection, TWO broad iridescent membranous wings with gold rims, small paired dorsal fins, THREE trailing tendrils ending in leaf tips. LEFT preparation: wings lift/cup behind the head, three tails gather loosely, lens brightens internally; beak angled gently down-right like reference. MIDDLE release: wings open wide to the sides, chest/head tilt very slightly back from recoil, lens core bright turquoise-white contained strictly within its blue lens, beak unchanged length; tails splay slightly from recoil. RIGHT recovery: wings settle to original spread, tails relax downward/back, lens returns to blue with dark pupil. Actual articulated wing/root and tail changes, not transformed copies or stretched bodies. Match original painterly silhouette, anatomy, gold/ivory palette and multicolor glass wing material precisely in all three. NO laser beams, projectiles, halos, clouds, detached effects, legs, arms, teeth, added eyes, extra wings or duplicate tails. Separate clean complete silhouettes in three equal columns with generous margins, nothing clipped or touching neighbor; shared virtual hovering baseline. Uniform flat neutral gray #808080 background, no shadows/floor, checker, labels, text or grid. This is a game sprite sheet, no scene.",
+      "selection": "release and recovery selected; first preparation excluded for missing third tail"
+    },
+    {
+      "source": "ranged-tail-corrected.png",
+      "source_sha256": "671ffbbc66e04cbe00073e35589cd05157459ffd44ec868ed2718d6f6ad18ad4",
+      "tool_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1362841d-a93b-4f02-8ad9-5b4529ab61af.png",
+      "prompt": "Use case: precise-object-edit. Image 1 is EDIT TARGET. Correct anatomy ONLY in the LEFTMOST creature of this three-pose sprite strip: it currently has just TWO trailing leaf-tipped tendrils visible, but must have THREE. Add its missing third distinct slim ivory/blue tendril from the underside behind the shell, curving downward between the existing two tails and ending with one matching small iridescent leaf tip. Keep a visible gray gap around the new leaf so all three attachments/tips read separately. Preserve BOTH existing tendrils. Do not add a fourth tail. Keep the exact existing wings, dorsal fins, eye, long beak, gold/ivory/rainbow paint, canvas size, pose scale, placement, lighting and neutral gray background. The entire MIDDLE and RIGHT creatures must be unchanged. No other edits, no text, labels, effects or shadows.",
+      "selection": "first preparation only; retain original release/recovery"
+    }
+  ],
+  "status": "integrated_reproducible_pending_final_playback_acceptance"
+}

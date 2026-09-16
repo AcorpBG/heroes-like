@@ -1,0 +1,139 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "jobs": [
+    {
+      "id": "zenith-source",
+      "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/poses.png",
+      "source_sha256": "d0a94bf7bb10095d78613b07818a21dd47cd10e641ac64285680cceef7255247",
+      "output": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/continuity-alpha/poses.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "melee-pair",
+      "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/melee-pair.png",
+      "source_sha256": "c1c0913921dc5bfcf5b58c3af2972454bd5c857020ed77900560dfee744c2434",
+      "output": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/continuity-alpha/melee-pair.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "walk-contact-a",
+      "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/walk-contact-a.png",
+      "source_sha256": "dac517882dc45bf1d5c9b6fce2c0ae881533b95d1b50f7ab36127710082be643",
+      "output": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/continuity-alpha/walk-contact-a.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            414,
+            330
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-passing-a",
+      "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/walk-passing-a.png",
+      "source_sha256": "d153b07375dea5af43b8dfc7c2c79c6b0d28620c4648eda5340328c6e9e52a93",
+      "output": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/continuity-alpha/walk-passing-a.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "walk-contact-b",
+      "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/walk-contact-b.png",
+      "source_sha256": "2be19f2b320a57236bd875a2f55283040e27671897cd2e0ea83f77b297455722",
+      "output": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/continuity-alpha/walk-contact-b.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "walk-passing-b",
+      "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/walk-passing-b.png",
+      "source_sha256": "1abed97f1c3819e5338ed4b3d7a481ac15f30c267d582b3420245124e98059d9",
+      "output": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/continuity-alpha/walk-passing-b.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "defense-breath",
+      "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/defense-breath.png",
+      "source_sha256": "cb77fba262265df3ff41743d700a67341cc86686637955e51085bbb4d26ddcb4",
+      "output": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/continuity-alpha/defense-breath.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "ranged-recoil",
+      "source": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/ranged-recoil.png",
+      "source_sha256": "718d67397f3b63dbbeac26999b17355e57124f071d1f3e9f6163de79c890e629",
+      "output": "art/animation/source/poses/unit_sunvault_zenith_lensbearers/continuity-alpha/ranged-recoil.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "background_regions": [
+          {
+            "polygon": [
+              [
+                284,
+                151
+              ],
+              [
+                357,
+                153
+              ],
+              [
+                376,
+                278
+              ],
+              [
+                314,
+                291
+              ],
+              [
+                277,
+                203
+              ]
+            ],
+            "minimum": 90,
+            "tolerance": 42,
+            "seed": [
+              321,
+              209
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

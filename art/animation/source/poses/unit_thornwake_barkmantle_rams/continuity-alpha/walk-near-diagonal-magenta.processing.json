@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "barkram-walk-near-diagonal-magenta",
+  "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/walk-near-diagonal-magenta.png",
+  "source_sha256": "0075f2ee724b94bc11153ab94a670cc738856dd5790aaea8561cbc6ef08c4707",
+  "source_rect": [
+    0,
+    0,
+    1501,
+    1047
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/walk-near-diagonal-magenta.png",
+  "output_sha256": "8a84a1dcb1dca1605757692faef34f4b62eb44855746591d0242a2a1f631186c",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-cutouts.json",
+  "recipe_sha256": "f678085f2a94bb0396ae1b52989967c25cdc90a9e2662ecc178e05acc69fed5f",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 811118,
+    "edge_pixels": 9158,
+    "unchanged_paint_pixels": 751271,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

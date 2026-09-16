@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "output": "art/animation/source/poses/unit_neutral_scarshield_veterans/candidate-atlas.png",
+  "sha256": "5bb7a55ac3d33c36ccbf8afb115b8ec51f303ec40791bc5e7871f8cedd5d943c",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        174,
+        38,
+        335,
+        241
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        176,
+        37,
+        338,
+        240
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        174,
+        34,
+        333,
+        242
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        183,
+        30,
+        332,
+        243
+      ]
+    },
+    {
+      "name": "hammer_windup",
+      "index": 4,
+      "alpha_bounds": [
+        181,
+        29,
+        332,
+        244
+      ]
+    },
+    {
+      "name": "hammer_contact",
+      "index": 5,
+      "alpha_bounds": [
+        168,
+        65,
+        351,
+        247
+      ]
+    },
+    {
+      "name": "hammer_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        167,
+        45,
+        335,
+        243
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        187,
+        33,
+        324,
+        242
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        180,
+        83,
+        326,
+        248
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        181,
+        54,
+        332,
+        248
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        169,
+        100,
+        338,
+        251
+      ]
+    },
+    {
+      "name": "death_low_fall",
+      "index": 11,
+      "alpha_bounds": [
+        151,
+        130,
+        360,
+        243
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 12,
+      "alpha_bounds": [
+        126,
+        142,
+        383,
+        244
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png": "ed0c188d198b24448a70e02232c326fa6b233e1a3610d177a8b0b9fe1eb42b1c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_scarshield_veterans/continuity-alpha/hammer-recovery-shield-brace-and-travel.png": "ca85940c4db5f5f6dace1a991515188b536feb5a580709987f5b9219e1674cf8"
+  }
+}

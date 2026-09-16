@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "id": "club-recovery-guard-and-directional-rest",
+  "source": "art/animation/source/poses/unit_neutral_saltpan_bucklers/club-recovery-guard-and-directional-rest.png",
+  "source_sha256": "39f7a1543e4678be4ee3043dc991c82e7d560d5f7bbb3756abbf07fe6610753c",
+  "source_rect": [
+    0,
+    0,
+    1024,
+    1536
+  ],
+  "output": "art/animation/source/poses/unit_neutral_saltpan_bucklers/continuity-alpha/club-recovery-guard-and-directional-rest.png",
+  "output_sha256": "e1999f9a02402cef2c7f5351d7c8cc4de28c893c039d612e2ffb2cc3294dec22",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_saltpan_bucklers/continuity-cutouts.json",
+  "recipe_sha256": "d6cd44f34f0c6c057b845c09518f491869b450cf62a40b4eb32e9a7ff8134e67",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1220481,
+    "edge_pixels": 11356,
+    "unchanged_paint_pixels": 341027,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

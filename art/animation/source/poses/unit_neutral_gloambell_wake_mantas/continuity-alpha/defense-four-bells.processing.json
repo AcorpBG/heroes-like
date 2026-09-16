@@ -1,0 +1,45 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "gloambell-defense-four-bells",
+  "source": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/defense-four-bells.png",
+  "source_sha256": "19537988e58e5471aa98764f31e95b94c641095677cc87d7e77f1feeb41a9125",
+  "source_rect": [
+    0,
+    0,
+    1774,
+    887
+  ],
+  "output": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-alpha/defense-four-bells.png",
+  "output_sha256": "07617510f57401bd00318e4007ae85e362acf5e4bee295eddca8171eded6babb",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-cutouts.json",
+  "recipe_sha256": "6ba5aac35b5897163f76d11d24c6e9f0f81bab827b98b40d92feb76e49da5d0f",
+  "parameters": {
+    "minimum": 135,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        1397,
+        532
+      ],
+      [
+        1230,
+        507
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1070511,
+    "edge_pixels": 4425,
+    "unchanged_paint_pixels": 498602,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

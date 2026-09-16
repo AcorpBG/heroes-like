@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "output": "art/animation/source/poses/unit_neutral_harbor_polearms/candidate-atlas.png",
+  "sha256": "0040e35128c99a3cf3558aecda3950e4964ccc3bce046cd6b709c1ce5daf1086",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        159,
+        28,
+        382,
+        249
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        161,
+        28,
+        392,
+        247
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        172,
+        34,
+        404,
+        252
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        148,
+        27,
+        380,
+        250
+      ]
+    },
+    {
+      "name": "polearm_windup",
+      "index": 4,
+      "alpha_bounds": [
+        155,
+        41,
+        366,
+        254
+      ]
+    },
+    {
+      "name": "full_polearm_thrust",
+      "index": 5,
+      "alpha_bounds": [
+        127,
+        28,
+        407,
+        244
+      ]
+    },
+    {
+      "name": "polearm_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        123,
+        11,
+        373,
+        244
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        154,
+        23,
+        360,
+        246
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        157,
+        88,
+        374,
+        251
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        158,
+        55,
+        370,
+        254
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        137,
+        83,
+        366,
+        250
+      ]
+    },
+    {
+      "name": "death_fall_head_right",
+      "index": 11,
+      "alpha_bounds": [
+        122,
+        128,
+        370,
+        252
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 12,
+      "alpha_bounds": [
+        123,
+        162,
+        375,
+        253
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png": "2a6e22ece71b5a5e105411d0bf98a02d9e2683ee13d72e89d08132f1f9f7337d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_harbor_polearms/continuity-alpha/full-polearm-thrust-recovery-guard-and-step.png": "97532ca2452b96bdfb879d77a465b69c209f49bc8fe741bdd6eccf2992173ebc"
+  }
+}

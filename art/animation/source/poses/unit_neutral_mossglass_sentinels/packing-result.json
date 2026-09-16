@@ -1,0 +1,175 @@
+{
+  "unit_id": "unit_neutral_mossglass_sentinels",
+  "output": "art/animation/source/poses/unit_neutral_mossglass_sentinels/candidate-atlas.png",
+  "sha256": "a82c18ebd7f99d2b5142aa7dd05f3cdfe121a53d19f1fe18c4879ce6adff5e3f",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        153,
+        22,
+        335,
+        244
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        151,
+        23,
+        340,
+        244
+      ]
+    },
+    {
+      "name": "contact_original",
+      "index": 2,
+      "alpha_bounds": [
+        137,
+        17,
+        374,
+        243
+      ]
+    },
+    {
+      "name": "passing_original",
+      "index": 3,
+      "alpha_bounds": [
+        177,
+        33,
+        331,
+        244
+      ]
+    },
+    {
+      "name": "transfer_planted",
+      "index": 4,
+      "alpha_bounds": [
+        175,
+        29,
+        330,
+        239
+      ]
+    },
+    {
+      "name": "passing_knee_lift",
+      "index": 5,
+      "alpha_bounds": [
+        180,
+        28,
+        314,
+        242
+      ]
+    },
+    {
+      "name": "passing_rear_lift",
+      "index": 6,
+      "alpha_bounds": [
+        187,
+        29,
+        320,
+        241
+      ]
+    },
+    {
+      "name": "mace_windup",
+      "index": 7,
+      "alpha_bounds": [
+        156,
+        36,
+        348,
+        245
+      ]
+    },
+    {
+      "name": "mace_front_shield_contact",
+      "index": 8,
+      "alpha_bounds": [
+        153,
+        38,
+        369,
+        244
+      ]
+    },
+    {
+      "name": "mace_recovery",
+      "index": 9,
+      "alpha_bounds": [
+        162,
+        34,
+        337,
+        243
+      ]
+    },
+    {
+      "name": "guard_original",
+      "index": 10,
+      "alpha_bounds": [
+        158,
+        65,
+        349,
+        244
+      ]
+    },
+    {
+      "name": "guard_deep",
+      "index": 11,
+      "alpha_bounds": [
+        147,
+        54,
+        342,
+        240
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 12,
+      "alpha_bounds": [
+        137,
+        44,
+        372,
+        241
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 13,
+      "alpha_bounds": [
+        144,
+        69,
+        352,
+        244
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 14,
+      "alpha_bounds": [
+        140,
+        80,
+        370,
+        241
+      ]
+    },
+    {
+      "name": "dead_cold",
+      "index": 15,
+      "alpha_bounds": [
+        131,
+        100,
+        394,
+        246
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_mossglass_sentinels/alpha/poses.png": "09f6012abebe70f2b8ff51fb2d31bec83fd152f4140a4c3e25e6d2b2e9617b4d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_mossglass_sentinels/continuity-alpha/supported-stride-and-front-shield-actions.png": "403c2b3cf60910722d71e5f47652833d28e78ed4204d9c848788e313c4460188"
+  }
+}

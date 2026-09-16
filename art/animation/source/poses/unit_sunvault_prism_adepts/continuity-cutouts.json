@@ -1,0 +1,119 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "jobs": [
+    {
+      "id": "prism-adept-walk-contact-a",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/walk-contact-a.png",
+      "source_sha256": "10f16093ff3a5add3d53c73f686b7947832ce20a972a47ac91663f4881da867e",
+      "output": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-alpha/walk-contact-a.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            506,
+            96
+          ]
+        ]
+      }
+    },
+    {
+      "id": "prism-adept-walk-passing-a",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/walk-passing-a.png",
+      "source_sha256": "e5fe1c3c06bb4dc95a1c9454b1839c524049885d5b48414df80d8df34198a1d5",
+      "output": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-alpha/walk-passing-a.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            391,
+            44
+          ],
+          [
+            372,
+            154
+          ],
+          [
+            382,
+            206
+          ],
+          [
+            598,
+            223
+          ]
+        ]
+      }
+    },
+    {
+      "id": "prism-adept-walk-contact-b",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/walk-contact-b.png",
+      "source_sha256": "5e4538b669c19ed267432f38a9e05517b7bd02e60f4252e323f3d7d2a7f0678e",
+      "output": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-alpha/walk-contact-b.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            622,
+            55
+          ],
+          [
+            527,
+            236
+          ],
+          [
+            706,
+            234
+          ]
+        ]
+      }
+    },
+    {
+      "id": "prism-adept-walk-passing-b",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/walk-passing-b.png",
+      "source_sha256": "28ca2eb217ba0fdc225f1c7603aadc79b6444659031fdcd80413dc5ddc2632f3",
+      "output": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-alpha/walk-passing-b.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            415,
+            51
+          ],
+          [
+            390,
+            226
+          ],
+          [
+            592,
+            241
+          ]
+        ]
+      }
+    },
+    {
+      "id": "prism-adept-defend-breath",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/defend-breath.png",
+      "source_sha256": "801ea9d92b63635c310b87265caf6defc1ff3dde6c7e24580cf0ba94251be104",
+      "output": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-alpha/defend-breath.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            569,
+            111
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_sporelamp_tossers",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "four-phase-step-left-lamp-and-left-corpse",
+      "source": "art/animation/source/poses/unit_neutral_sporelamp_tossers/four-phase-step-left-lamp-and-left-corpse.png",
+      "sha256": "3968bfb5725f04d162cfcba11747ecd054e366103208d88ece4320bf4685140b",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7b313421-9b1b-4d4a-bbca-c179c4b6ecb4.png",
+      "prompt": "Use case: stylized-concept. SIX original Sporelamp Tosser full-body sprites in THREE columns TWO rows, generous clear gutters around every boot/lamp. Image1 is a FOUR-phase leg-ownership guide, not character anatomy: use its near/far overlap and planted/lifted soles for the FIRST FOUR paintings in reading order (top left A contact, top middle A passing, top right B contact, bottom left B passing). Shorten the step lengths to this character's own proportions. Near leg means viewer-facing hip; it stays in front of the far thigh when it extends BACK in B contact. Never mirror torso or swap equipment. The two passing poses must visibly exchange which boot is planted and which knee/sole is lifted. Fixed elevated three-quarter camera and body facing RIGHT. Image2 is fixed identity/style: short wiry blue-green goblin adult, pale green eyes, tan spotted mushroom hood/ragged mantle, olive face wrap/trousers, brown crossed straps and satchel at viewer LEFT hip with teal and amber corked glass lamps; wrapped curled boots. LEFT hand at viewer RIGHT retains one short strap amber lamp; RIGHT hand at viewer LEFT empty while travelling. Never move lamp to other hand or duplicate it. BOTTOM MIDDLE: melee recovery after left-lamp swing, left hand draws amber strap lamp back low beside screen RIGHT hip, right empty fist near chest, satchel stays screen LEFT, two boots planted, hood facing RIGHT. BOTTOM RIGHT: final DEAD pose continuing Image3's exact HEAD LEFT / BOOTS RIGHT side-fall: lower cheek onto limp forearm, eyes fully shut, horizontal torso fully resting, loose bent legs, complete satchel and held lamp resting dark beside hands. Preserve head-left orientation, do not mirror or reverse corpse. All lamps dark in corpse. Same original painterly character/body/hood scale. Pure BLUE RGB(0,0,255) backing absent from paint, no blue spill. No guide marks, text/grid, scenery/floor/shadows, trails/projectiles, blood or effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-guide.png",
+          "sha256": "e82785b7504af90c20176fb202c4c869376233f7311cb3694e71b9284ce2fa7b"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/sporelamp-continuity-20260916/idle-reference/unit_neutral_sporelamp_tossers-poses-rect-0-0-300-323-green.png",
+          "sha256": "731b45c7c4db1d1458ebc3f55343b538a3ec2027296784c023a3e9d4d6d8f897"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/sporelamp-continuity-20260916/fall-reference/unit_neutral_sporelamp_tossers-poses-rect-584-1036-905-1235-green.png",
+          "sha256": "763d379a97d36a25f846070827217d1a620c1fbb834efccee69cf0708a5f3f59"
+        }
+      ],
+      "selection_notes": "Four-phase sheet still repeats leading-leg and passing support geometry; do not claim alternating gait. Preserve original identity and choose useful supported poses/recovery. Head-left closed-eye corpse retains dark lamps. Initial output ignored requested blue backing; selected blue derivative preserves olive cloth.",
+      "selected_frames": []
+    },
+    {
+      "id": "four-phase-step-left-lamp-and-left-corpse-blue",
+      "source": "art/animation/source/poses/unit_neutral_sporelamp_tossers/four-phase-step-left-lamp-and-left-corpse-blue.png",
+      "sha256": "cacd76113aa04c1341ed4cfa67c43a38b852c417d6884371f26ba6f8889d6a2a",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ca9b185b-0004-455d-b76d-b8655b8334f0.png",
+      "prompt": "Use case: background-extraction. Change ONLY the dark green backdrop of this exact six-sprite Sporelamp sheet to perfectly uniform vivid BLUE RGB(0,0,255), including all gaps between arms, boots, lamp straps and around the corpse. Preserve the six original paintings' exact pixel-layout intent, scale, anatomy, poses, faces, tan spotted hood, blue-green skin, olive fabrics, left-hand amber lamp, satchel bottles and closed-eye head-left corpse with dark lamps. Do not redraw or alter character colors, contours, details, lighting or equipment. No floor/shadows, blue reflected spill, halo, transparency checker, text or new elements. Same 1536x1024 three-column two-row composition. Only background replacement; keep all six paintings intact.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sporelamp_tossers/four-phase-step-left-lamp-and-left-corpse.png",
+          "sha256": "3968bfb5725f04d162cfcba11747ecd054e366103208d88ece4320bf4685140b"
+        }
+      ],
+      "selection_notes": "Four-phase sheet still repeats leading-leg and passing support geometry; do not claim alternating gait. Preserve original identity and choose useful supported poses/recovery. Head-left closed-eye corpse retains dark lamps. Initial output ignored requested blue backing; selected blue derivative preserves olive cloth.",
+      "selected_frames": [
+        "contact_attempt",
+        "passing_a",
+        "passing_b_attempt",
+        "lamp_melee_recovery",
+        "dead_head_left"
+      ]
+    }
+  ]
+}

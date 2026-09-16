@@ -1,0 +1,395 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          332,
+          236
+        ],
+        [
+          0,
+          236,
+          309,
+          447
+        ]
+      ],
+      "anchor": [
+        157,
+        429
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          337,
+          0,
+          590,
+          237
+        ],
+        [
+          337,
+          237,
+          607,
+          266
+        ],
+        [
+          309,
+          266,
+          607,
+          447
+        ]
+      ],
+      "anchor": [
+        453,
+        429
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "run_extension_attempt",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          592,
+          0,
+          966,
+          258
+        ],
+        [
+          605,
+          258,
+          958,
+          447
+        ]
+      ],
+      "anchor": [
+        824,
+        418
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "run_gather_attempt",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          966,
+          0,
+          1254,
+          447
+        ]
+      ],
+      "anchor": [
+        1110,
+        419
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "complete_pole_windup",
+      "source": "alpha/windup.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        570,
+        1100
+      ],
+      "scale": 0.23
+    },
+    {
+      "name": "complete_pole_thrust",
+      "source": "continuity-alpha/complete-pole-thrust-recovery-and-brace.png",
+      "rects": [
+        [
+          0,
+          0,
+          860,
+          274
+        ],
+        [
+          0,
+          274,
+          797,
+          724
+        ]
+      ],
+      "anchor": [
+        390,
+        637
+      ],
+      "scale": 0.37
+    },
+    {
+      "name": "complete_pole_recovery",
+      "source": "continuity-alpha/complete-pole-thrust-recovery-and-brace.png",
+      "rects": [
+        [
+          861,
+          0,
+          1450,
+          274
+        ],
+        [
+          798,
+          274,
+          1450,
+          724
+        ]
+      ],
+      "anchor": [
+        1145,
+        639
+      ],
+      "scale": 0.37
+    },
+    {
+      "name": "pole_ready_brace",
+      "source": "continuity-alpha/complete-pole-thrust-recovery-and-brace.png",
+      "rects": [
+        [
+          1450,
+          0,
+          2172,
+          724
+        ]
+      ],
+      "anchor": [
+        1830,
+        639
+      ],
+      "scale": 0.37
+    },
+    {
+      "name": "guard_deep",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          971,
+          460,
+          1254,
+          722
+        ],
+        [
+          953,
+          722,
+          1254,
+          840
+        ]
+      ],
+      "anchor": [
+        1105,
+        808
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          846,
+          340,
+          1022
+        ],
+        [
+          0,
+          1022,
+          318,
+          1075
+        ],
+        [
+          0,
+          1075,
+          270,
+          1208
+        ]
+      ],
+      "anchor": [
+        152,
+        1170
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          340,
+          897,
+          538,
+          1060
+        ],
+        [
+          340,
+          1060,
+          520,
+          1095
+        ],
+        [
+          265,
+          1095,
+          536,
+          1118
+        ],
+        [
+          265,
+          1118,
+          637,
+          1208
+        ]
+      ],
+      "anchor": [
+        433,
+        1180
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "death_side_complete_pole",
+      "source": "alpha/side-fall.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        650,
+        995
+      ],
+      "scale": 0.2
+    },
+    {
+      "name": "dead_head_right",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          839,
+          996,
+          1254,
+          1130
+        ],
+        [
+          773,
+          1130,
+          1254,
+          1153
+        ],
+        [
+          674,
+          1153,
+          1254,
+          1220
+        ]
+      ],
+      "anchor": [
+        1060,
+        1180
+      ],
+      "scale": 0.5
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

@@ -1,0 +1,268 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "jobs": [
+    {
+      "id": "parallax-poses",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/poses.png",
+      "source_sha256": "fcc8bddae27d4801970c886669e7c298fa16830ed746643e1cd674c4fec655c9",
+      "output": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/poses.png",
+      "matte": {
+        "minimum": 100,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "parallax-walk-contact-a",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/walk-contact-a.png",
+      "source_sha256": "0fa5358b691e5f57d28daea86ac252aec819cb3122dd17bff6439a91cbeb4a5c",
+      "output": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/walk-contact-a.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            364,
+            105
+          ],
+          [
+            361,
+            139
+          ],
+          [
+            590,
+            156
+          ],
+          [
+            581,
+            209
+          ],
+          [
+            431,
+            200
+          ]
+        ]
+      }
+    },
+    {
+      "id": "parallax-walk-passing-a",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/walk-passing-a.png",
+      "source_sha256": "f407eeb6c2ece5f8a26384a9b8d282b08d676301b5a5c1f80edce170461b7e4b",
+      "output": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/walk-passing-a.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            672,
+            201
+          ],
+          [
+            503,
+            197
+          ]
+        ]
+      }
+    },
+    {
+      "id": "parallax-walk-contact-b",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/walk-contact-b.png",
+      "source_sha256": "d443b6af3274af6417828599fe935344fa646942754f6a62b21ccefce2c7df34",
+      "output": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/walk-contact-b.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            460,
+            168
+          ]
+        ],
+        "background_regions": [
+          {
+            "polygon": [
+              [
+                666,
+                194
+              ],
+              [
+                698,
+                194
+              ],
+              [
+                698,
+                231
+              ],
+              [
+                666,
+                231
+              ]
+            ],
+            "minimum": 100,
+            "tolerance": 12,
+            "seed": [
+              680,
+              215
+            ]
+          },
+          {
+            "polygon": [
+              [
+                447,
+                186
+              ],
+              [
+                466,
+                186
+              ],
+              [
+                466,
+                215
+              ],
+              [
+                447,
+                215
+              ]
+            ],
+            "minimum": 100,
+            "tolerance": 12,
+            "seed": [
+              455,
+              201
+            ]
+          },
+          {
+            "polygon": [
+              [
+                483,
+                239
+              ],
+              [
+                505,
+                239
+              ],
+              [
+                505,
+                260
+              ],
+              [
+                483,
+                260
+              ]
+            ],
+            "minimum": 100,
+            "tolerance": 12,
+            "seed": [
+              494,
+              249
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "parallax-walk-passing-b",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/walk-passing-b.png",
+      "source_sha256": "137b367a865296571f0a300f0732a88037f4461596cb693392443f2eba515a7d",
+      "output": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/walk-passing-b.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            427,
+            102
+          ],
+          [
+            667,
+            149
+          ]
+        ]
+      }
+    },
+    {
+      "id": "parallax-idle-pair",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/idle-pair.png",
+      "source_sha256": "b9e37c78322e8da773b7d78b94fc81b702580e2f380e3b8032ccc26aef149edb",
+      "output": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/idle-pair.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            489,
+            112
+          ],
+          [
+            345,
+            154
+          ],
+          [
+            1190,
+            144
+          ]
+        ]
+      }
+    },
+    {
+      "id": "parallax-attack-pair",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/attack-pair.png",
+      "source_sha256": "9cde9cb48c91c899ffe6fd9e98d3e30b6ce82944d1fb53dddbd1f0c57bdd7bf9",
+      "output": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/attack-pair.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            268,
+            145
+          ],
+          [
+            1080,
+            175
+          ]
+        ]
+      }
+    },
+    {
+      "id": "parallax-defense-hit",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/defense-hit.png",
+      "source_sha256": "68f72211edf12905e3d5f90afde35866f07e49bad8ce54962ee55339019cc7b7",
+      "output": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/defense-hit.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "parallax-death-sequence",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/death-sequence.png",
+      "source_sha256": "8a2e78e6423f05402bfc9485ac11611bdc8ffeaa1d9e69b63759a0abea8281ff",
+      "output": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/death-sequence.png",
+      "matte": {
+        "minimum": 100,
+        "maximum": 185,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    }
+  ]
+}

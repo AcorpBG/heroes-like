@@ -1,0 +1,26 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "full-pike-thrust-recovery-brace-and-step",
+      "source": "art/animation/source/poses/unit_neutral_whitepike_keepers/full-pike-thrust-recovery-brace-and-step.png",
+      "source_sha256": "c080fedbfd53e80e298a6c1e9e84471d1616096202fe17ea02292703d37e090b",
+      "output": "art/animation/source/poses/unit_neutral_whitepike_keepers/continuity-alpha/full-pike-thrust-recovery-brace-and-step.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

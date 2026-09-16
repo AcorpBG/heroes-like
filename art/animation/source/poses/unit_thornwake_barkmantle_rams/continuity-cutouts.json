@@ -1,0 +1,78 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "jobs": [
+    {
+      "id": "barkram-original-checker",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/alpha/poses.png",
+      "source_sha256": "a31148c9c83d48ce849968da8d82354f6e7677fd6e31ba8cd51cf92cadc2d5b9",
+      "output": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 185,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            564,
+            276
+          ],
+          [
+            941,
+            284
+          ],
+          [
+            1268,
+            278
+          ],
+          [
+            247,
+            265
+          ],
+          [
+            168,
+            277
+          ],
+          [
+            184,
+            581
+          ]
+        ]
+      }
+    },
+    {
+      "id": "barkram-walk-near-diagonal-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/walk-near-diagonal-magenta.png",
+      "source_sha256": "0075f2ee724b94bc11153ab94a670cc738856dd5790aaea8561cbc6ef08c4707",
+      "output": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/walk-near-diagonal-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "barkram-walk-far-diagonal-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/walk-far-diagonal-magenta.png",
+      "source_sha256": "522e5d661281bc804f8e9a889eb53912c64da366144c53d5cee8545f1ae8ca2e",
+      "output": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/walk-far-diagonal-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+{
+  "unit_id": "unit_neutral_suncrack_throwers",
+  "output": "art/animation/source/poses/unit_neutral_suncrack_throwers/candidate-atlas.png",
+  "sha256": "a0769e90ac4b835d4417a474d6ebe8338ea1e19b34fa078cbfc388e4a28cec03",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        195,
+        36,
+        351,
+        243
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        175,
+        34,
+        351,
+        241
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        164,
+        39,
+        343,
+        242
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        165,
+        31,
+        327,
+        240
+      ]
+    },
+    {
+      "name": "punch_windup",
+      "index": 4,
+      "alpha_bounds": [
+        165,
+        41,
+        341,
+        240
+      ]
+    },
+    {
+      "name": "punch_contact",
+      "index": 5,
+      "alpha_bounds": [
+        144,
+        42,
+        372,
+        245
+      ]
+    },
+    {
+      "name": "punch_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        183,
+        40,
+        362,
+        240
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        189,
+        31,
+        358,
+        241
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        163,
+        76,
+        331,
+        243
+      ]
+    },
+    {
+      "name": "flask_prepare",
+      "index": 9,
+      "alpha_bounds": [
+        164,
+        35,
+        333,
+        237
+      ]
+    },
+    {
+      "name": "flask_windup",
+      "index": 10,
+      "alpha_bounds": [
+        159,
+        35,
+        348,
+        244
+      ]
+    },
+    {
+      "name": "flask_release",
+      "index": 11,
+      "alpha_bounds": [
+        143,
+        53,
+        369,
+        244
+      ]
+    },
+    {
+      "name": "flask_recovery",
+      "index": 12,
+      "alpha_bounds": [
+        184,
+        39,
+        354,
+        240
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 13,
+      "alpha_bounds": [
+        164,
+        40,
+        338,
+        245
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        176,
+        55,
+        347,
+        242
+      ]
+    },
+    {
+      "name": "death_tipping",
+      "index": 15,
+      "alpha_bounds": [
+        155,
+        110,
+        357,
+        246
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 16,
+      "alpha_bounds": [
+        143,
+        137,
+        367,
+        241
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 17,
+      "alpha_bounds": [
+        143,
+        162,
+        359,
+        240
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png": "3538f09100a8b2c2801479b30acd27f09fee333a4fadcc82b5d6f5b2ab24471d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_suncrack_throwers/continuity-alpha/punch-throw-recoveries-and-grounded-step.png": "4ac5fbede78edb1aa21c2c4db2791b36ab1910072ff73e04e98d020587fb2bc5"
+  }
+}

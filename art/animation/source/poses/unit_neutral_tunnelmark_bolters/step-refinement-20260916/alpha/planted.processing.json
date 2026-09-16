@@ -1,0 +1,59 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte extraction and narrow edge cleanup; retain original paints.",
+  "id": "tunnelmark_step_planted",
+  "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/planted.png",
+  "source_sha256": "9016cff9c3260c50010a3e6d537de8da50fd874ff1bb0dca8d3efe7f62272b9c",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/planted.png",
+  "output_sha256": "82c45ecb1b2a38ecca771c28a3fc002504d66426a11487fc188c2545c46819d0",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/cutouts.json",
+  "recipe_sha256": "97d86ba50c3c722488c4d12fcb08fc7d1e81eced0ee81fff1370f9849dc62f4e",
+  "parameters": {
+    "minimum": 145,
+    "maximum": 190,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "max_edge_residual": 40,
+    "background_seeds": [
+      [
+        855,
+        509
+      ],
+      [
+        891,
+        593
+      ],
+      [
+        974,
+        635
+      ],
+      [
+        885,
+        539
+      ],
+      [
+        885,
+        534
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1224798,
+    "edge_pixels": 6180,
+    "unchanged_paint_pixels": 341538,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

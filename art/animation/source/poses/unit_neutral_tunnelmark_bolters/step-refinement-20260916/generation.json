@@ -1,0 +1,69 @@
+{
+  "workflow": "built-in original-art deliberate foot-lift sequence from fixed planted travel anchor; not long-stride guide",
+  "status": "selected_frames_registered_pending_playback_acceptance",
+  "jobs": [
+    {
+      "key": "tunnelmark_step_planted",
+      "prefix": "tunnelmark",
+      "unit_id": "unit_neutral_tunnelmark_bolters",
+      "base": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916",
+      "source": "planted.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/identity-travel-reference.png"
+      ],
+      "prompt": "Use case: precise-object-edit. Edit target: the provided original battle character. Make ONE complete full-body stable travel stance to anchor a deliberate stepping animation. Change ONLY legs from the raised-knee pose to BOTH FEET PLANTED directly beneath hips, modest shoulder-width apart, knees relaxed. Not a stride, no leg crossing. Near RIGHT boot is screen LEFT, far LEFT boot screen RIGHT, both soles on ground. Preserve exact original head/face, torso, lean, colors, proportions, costume, equipment, hands and camera angle. Keep ONE LOADED crossbow held diagonally DOWN-RIGHT in both hands, near RIGHT rear grip and far LEFT fore-end support, original silver-stitched hood, ochre scarf, ONE near hip bolt quiver, fitted dark trousers and original boot/knee details.\nFull-body three-quarter view facing right. Same painterly original game style. Clean uniform neutral gray RGB(170,170,170) background in all gaps, no floor, shadows, gradients, magenta spill, checkers or text. Square 1536x1536, entire character and gear inside a generous margin. Preserve torso scale. No other character or reference-unit equipment.",
+      "status": "visually_reviewed_planted_anchor",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a6006c37-3c05-4d76-b80c-6ed93870cd20.png",
+      "sha256": "9016cff9c3260c50010a3e6d537de8da50fd874ff1bb0dca8d3efe7f62272b9c"
+    },
+    {
+      "key": "tunnelmark_step_near",
+      "prefix": "tunnelmark",
+      "unit_id": "unit_neutral_tunnelmark_bolters",
+      "base": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916",
+      "source": "near-lift.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/planted.png"
+      ],
+      "prompt": "Use case: precise-object-edit. Edit this original battle sprite into ONE next footstep frame. Keep the image canvas, camera, torso, head, hands, weapon, all equipment, scale and uniform gray background exactly the same. Change ONLY SCREEN-LEFT leg (camera-near RIGHT leg), the boot below the quiver/sling. Bend this selected knee a little forward and raise its boot from the floor by about half a shin (120 to 160 pixels in this 1254-square reference). Keep that raised boot on its original side of the body, heel just behind its knee; the foot advances only a little. The OTHER SCREEN-RIGHT far/left boot stays exactly planted in its ORIGINAL position and supports weight. Two legs total. No crossed legs, no kick, no jump, no two-foot lift. This is one cautious natural walking step while carrying equipment. Keep hip position almost fixed and preserve clear leg ownership. Preserve original steel knee caps, boot buckles, single near-hip quiver and LOADED crossbow held in both hands with unchanged string/bolt. Entire original character visible, same original painterly game style, uniform RGB(170,170,170) background including gaps. No shadows, floor, text, arrows, guides or extra limbs.",
+      "status": "unselected_wrong_leg_lifted",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c50a3d02-af4d-49b1-a259-56b8c188f991.png",
+      "sha256": "213fdc74d847f01f2d11d41d0c6cd58f1883b135d9b7bb9438e685b563b72797"
+    },
+    {
+      "key": "tunnelmark_step_far",
+      "prefix": "tunnelmark",
+      "unit_id": "unit_neutral_tunnelmark_bolters",
+      "base": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916",
+      "source": "far-lift.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/planted.png"
+      ],
+      "prompt": "Use case: precise-object-edit. Edit this original battle sprite into ONE next footstep frame. Keep the image canvas, camera, torso, head, hands, weapon, all equipment, scale and uniform gray background exactly the same. Change ONLY SCREEN-RIGHT leg (distant LEFT leg), opposite the quiver/sling. Bend this selected knee a little forward and raise its boot from the floor by about half a shin (120 to 160 pixels in this 1254-square reference). Keep that raised boot on its original side of the body, heel just behind its knee; the foot advances only a little. The OTHER SCREEN-LEFT near/right boot stays exactly planted in its ORIGINAL position and supports weight. Two legs total. No crossed legs, no kick, no jump, no two-foot lift. This is one cautious natural walking step while carrying equipment. Keep hip position almost fixed and preserve clear leg ownership. Preserve original steel knee caps, boot buckles, single near-hip quiver and LOADED crossbow held in both hands with unchanged string/bolt. Entire original character visible, same original painterly game style, uniform RGB(170,170,170) background including gaps. No shadows, floor, text, arrows, guides or extra limbs.",
+      "status": "visually_reviewed_step_candidate",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5ba90cf8-6055-4fbf-9d7c-3257ea344aa1.png",
+      "sha256": "0401035fe94b85038fefa9fd2c83ff752bbe7367354783e6d6d984c2988ba51f"
+    },
+    {
+      "key": "tunnelmark_step_near_selected",
+      "prefix": "tunnelmark",
+      "unit_id": "unit_neutral_tunnelmark_bolters",
+      "base": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916",
+      "source": "near-lift-selected.png",
+      "reference_image_paths": [
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/planted.png",
+        "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/selected-near-leg-reference.png"
+      ],
+      "status": "visually_reviewed_step_candidate",
+      "prompt": "Use case: precise-object-edit. Image 1 is the complete sprite edit target. Image 2 is a crop IDENTIFYING THE ONE LEG TO CHANGE, not a second character: the leftmost boot and knee below the quiver. In IMAGE 1, bend and lift ONLY the leg identified in IMAGE 2, with its boot raised 130 pixels off the floor. Its knee advances slightly right while boot stays on left side of body. Keep the OTHER boot on screen RIGHT planted EXACTLY as image 1. Do not lift the rightmost boot. Everything else stays exactly unchanged: torso, face, loaded crossbow, string, hands, quiver, gray cloth, steel kneecaps, scale and camera. Preserve same full-body canvas and uniform RGB(170,170,170) background. One figure only; no inset, cropped separate leg, labels, arrows, shadow, floor or diagram. The final full-body character has screen LEFT boot lifted, screen RIGHT boot planted. Retain both complete hip-knee-ankle chains and all original equipment.",
+      "generated_master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2c6bd00c-472c-46d6-86a8-261e8b4ea472.png",
+      "sha256": "84e13be4e17e70c17693727396e8e90d555273b0a3433eeb73ec1c575b6ed5df"
+    }
+  ],
+  "selected_sources": [
+    "planted.png",
+    "near-lift-selected.png",
+    "far-lift.png"
+  ],
+  "runtime_sha256": "50d52c33b78d2121fa8fd62b336a20b7da619cac322cf28f8b7d1ccbb007d1b2"
+}

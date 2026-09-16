@@ -1,0 +1,196 @@
+{
+  "unit_id": "unit_neutral_sporelamp_tossers",
+  "output": "art/animation/source/poses/unit_neutral_sporelamp_tossers/candidate-atlas.png",
+  "sha256": "44b7d2a8f625bd30d2e6e960ee58267df48bfe635d1d91ac909df7c8d84bfdfb",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        178,
+        24,
+        360,
+        242
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        173,
+        22,
+        347,
+        240
+      ]
+    },
+    {
+      "name": "contact_original",
+      "index": 2,
+      "alpha_bounds": [
+        172,
+        21,
+        351,
+        244
+      ]
+    },
+    {
+      "name": "passing_original",
+      "index": 3,
+      "alpha_bounds": [
+        159,
+        36,
+        348,
+        252
+      ]
+    },
+    {
+      "name": "contact_attempt",
+      "index": 4,
+      "alpha_bounds": [
+        171,
+        29,
+        332,
+        248
+      ]
+    },
+    {
+      "name": "passing_a",
+      "index": 5,
+      "alpha_bounds": [
+        216,
+        28,
+        341,
+        244
+      ]
+    },
+    {
+      "name": "passing_b_attempt",
+      "index": 6,
+      "alpha_bounds": [
+        223,
+        22,
+        358,
+        244
+      ]
+    },
+    {
+      "name": "melee_windup_corrected",
+      "index": 7,
+      "alpha_bounds": [
+        164,
+        25,
+        354,
+        242
+      ]
+    },
+    {
+      "name": "lamp_melee_contact",
+      "index": 8,
+      "alpha_bounds": [
+        170,
+        34,
+        394,
+        245
+      ]
+    },
+    {
+      "name": "lamp_melee_recovery",
+      "index": 9,
+      "alpha_bounds": [
+        173,
+        20,
+        356,
+        246
+      ]
+    },
+    {
+      "name": "guard_hood",
+      "index": 10,
+      "alpha_bounds": [
+        175,
+        43,
+        343,
+        238
+      ]
+    },
+    {
+      "name": "lamp_gather",
+      "index": 11,
+      "alpha_bounds": [
+        174,
+        36,
+        367,
+        246
+      ]
+    },
+    {
+      "name": "lamp_windup",
+      "index": 12,
+      "alpha_bounds": [
+        159,
+        27,
+        349,
+        244
+      ]
+    },
+    {
+      "name": "lamp_release",
+      "index": 13,
+      "alpha_bounds": [
+        156,
+        38,
+        372,
+        247
+      ]
+    },
+    {
+      "name": "lamp_reload",
+      "index": 14,
+      "alpha_bounds": [
+        169,
+        32,
+        331,
+        244
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 15,
+      "alpha_bounds": [
+        164,
+        72,
+        346,
+        250
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 16,
+      "alpha_bounds": [
+        145,
+        132,
+        370,
+        251
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 17,
+      "alpha_bounds": [
+        146,
+        150,
+        388,
+        251
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sporelamp_tossers/alpha/poses.png": "b723c1a3c78002a1b8dc4803ffcf7228dfe5ce14ad0e9a9f687a730b7880e6c8",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sporelamp_tossers/continuity-alpha/four-phase-step-left-lamp-and-left-corpse-blue.png": "3aa74c16fdb96fcb46c4705051085255eefcdd86366c9d1237f5de67ebaf421b",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sporelamp_tossers/alpha/melee-windup.png": "fa8ea36079ad7cc8799af7701739e317f6b82074a54a5a8145a6a36be2057dea"
+  }
+}

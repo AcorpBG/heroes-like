@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "id": "connected-full-pike-thrust",
+  "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/connected-full-pike-thrust.png",
+  "source_sha256": "3b2ee6f543c1908756287060e5bd396ff54a8d1be2dba71e8706d4fe91d6fd33",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/continuity-alpha/connected-full-pike-thrust.png",
+  "output_sha256": "c4de29f7df042f15a2697b01dfe50bdd74debffc0a350978c2cec61fd46c7ee4",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/continuity-cutouts.json",
+  "recipe_sha256": "c465c7051555cb2ddf95b933186da9e155b86c98d948d700464cd6f237c77c85",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1231875,
+    "edge_pixels": 16289,
+    "unchanged_paint_pixels": 324364,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

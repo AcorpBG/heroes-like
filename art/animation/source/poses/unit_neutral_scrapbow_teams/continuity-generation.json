@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_scrapbow_teams",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "paired-travel-recovery-and-collapse",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/paired-travel-recovery-and-collapse.png",
+      "sha256": "24ea128ac6cd0fcc5f3759ca457445a8db3ca005fdc635112d7b1b742948c2a5",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-631b20f7-ca21-46b5-9bcf-6a3ab42b0722.png",
+      "prompt": "Use case: stylized-concept. Original painted battle animation continuation, SIX separate full crew poses in THREE columns TWO rows on perfectly flat vivid chroma green #00ff00 with no reflected green. Image 1 is the exact original crew identity/equipment reference; Image 2 fixes the direction and arrangement of their final fallen bodies. Keep the same elevated 3/4 battle camera facing RIGHT, realistic stout anatomy, brown riveted leather and blue wraps. EVERY cell contains exactly TWO humans: tall masked operator holding ONE complete huge wood-and-iron crank CROSSBOW, and the shorter goggled masked bolt loader behind at viewer LEFT with his quiver. Both must travel, not leave the loader frozen crouching. Preserve the whole crossbow transverse steel bow arms, string and wooden stock; it must never become a rifle or acquire a second bow.\nTop-left: deliberate heavy traveling step, operator near boot supports under hip and far knee raised forward; loader rises into a small supported step alongside, quiver attached.\nTop-middle: opposite traveling step, operator FAR boot supports under hip, NEAR thigh and boot raised forward visibly in front of far leg; loader also switches supporting leg. Same torso view, same hands, no mirroring.\nTop-right: settled contact after that opposite step, near boot forward on ground and far heel raised behind, loader with staggered feet.\nBottom-left: recovery after a STOCK-FIRST crossbow butt shove to the RIGHT, operator twists back toward his idle view and brings stock toward chest, complete transverse bow at left; loader ducks safely behind.\nBottom-middle: true intermediate collapse BEFORE image 2, both on knees sinking toward RIGHT, operator torso diagonal with head still above ground and right forearm breaking fall, crossbow lowered toward ground on right, loader kneeling folded behind on left. Neither body already horizontal; no blood.\nBottom-right: ranged recovery after firing to the RIGHT, operator lowers complete crossbow slightly with both hands, relaxed released string still visibly joins bow tips, loader reaches toward his own back quiver. No projectile/effects.\nUse original painterly game-sprite rendering and exactly these identities, gear count and colors, not new designs. Equal body scale, full extremities/weapon, generous blank gutters, separate cells, no touching neighbors. No titles, labels, guides, borders, shadows, scenery, smoke or watermark.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/scrapbow-continuity-20260916/idle-reference/unit_neutral_scrapbow_teams-poses-rect-0-0-380-260-green.png",
+          "sha256": "c20176642350cb49c8c8b1658d8226c6a2fe904bc92677963fb81609c9d260a5"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/scrapbow-continuity-20260916/corpse-reference/unit_neutral_scrapbow_teams-poses-rect-748-830-1144-1005-green.png",
+          "sha256": "69f5368b8cd1f79fd07f1a72a16860c6cc904f157f6bec54a44f4705caa0cac2"
+        }
+      ],
+      "selection_notes": "17 packed frames select 11 original RGBA paintings and six new crew paintings. Both operator and loader travel; complete crossbow is retained for melee, firing and recovery. The new kneeling/lowering pose sits between original kneel and head-right paired corpse; redundant original already-horizontal fall and frozen-loader walking attempts are unselected. Original alpha is reused. New green-backed source uses owner-approved bounded edge preparation. Uniform per-source scales 0.85/0.54 and anatomical anchors preserve whole crew/weapon; kneel crop excludes only surplus below the intended bodies. Opposite support remains unproven: new travel poses repeat leading geometry. Loader/operator proportions, bowstring release mechanics, stock-first shove-to-recovery rotation, grip/body/palette/edge continuity and connected action/death timing remain refinement. Static art inspection is not final motion acceptance.",
+      "selected_frames": [
+        "crew_step",
+        "crew_lift",
+        "crew_settle",
+        "stock_recovery",
+        "fire_recovery",
+        "death_lower"
+      ]
+    }
+  ]
+}

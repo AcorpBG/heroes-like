@@ -1,0 +1,113 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "jobs": [
+    {
+      "id": "gloambell-flight-four-bells",
+      "source": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/flight-four-bells.png",
+      "source_sha256": "b5c8e0148041aedf30a947b54950530bdecaac0f4a18aea9152788920cd8d1ff",
+      "output": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-alpha/flight-four-bells.png",
+      "matte": {
+        "minimum": 110,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            347,
+            429
+          ],
+          [
+            1813,
+            430
+          ],
+          [
+            1963,
+            449
+          ],
+          [
+            1138,
+            523
+          ],
+          [
+            1970,
+            466
+          ]
+        ]
+      }
+    },
+    {
+      "id": "gloambell-actions-four-bells",
+      "source": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/actions-four-bells.png",
+      "source_sha256": "e29ccb4f12e76ef90ed1ef6f1d055f732650860fae3186697d4805360d6a05f6",
+      "output": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-alpha/actions-four-bells.png",
+      "matte": {
+        "minimum": 135,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "gloambell-defense-four-bells",
+      "source": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/defense-four-bells.png",
+      "source_sha256": "19537988e58e5471aa98764f31e95b94c641095677cc87d7e77f1feeb41a9125",
+      "output": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-alpha/defense-four-bells.png",
+      "matte": {
+        "minimum": 135,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            1397,
+            532
+          ],
+          [
+            1230,
+            507
+          ]
+        ]
+      }
+    },
+    {
+      "id": "gloambell-defense-hit-draft",
+      "source": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/defense-hit-draft.png",
+      "source_sha256": "88f9f2657e27243f3cdaf8a4564b1cf30942c33da54ba0ec5fafc5d7d82f37fe",
+      "output": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-alpha/defense-hit-draft.png",
+      "matte": {
+        "minimum": 135,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "gloambell-death-four-bells-draft",
+      "source": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/death-four-bells-draft.png",
+      "source_sha256": "7d4c0c17aa6fae7a569ff2073f849e0b11ce9aadf31697c22b4db8ebcad3338a",
+      "output": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-alpha/death-four-bells-draft.png",
+      "matte": {
+        "minimum": 135,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "gloambell-grounded-four-bells",
+      "source": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/grounded-four-bells.png",
+      "source_sha256": "84d21bb87a5e64b0c768961be7b7a8c959c09fe7df3aa763d9228a5fa746ca47",
+      "output": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-alpha/grounded-four-bells.png",
+      "matte": {
+        "minimum": 110,
+        "tolerance": 4,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            345,
+            425
+          ]
+        ]
+      }
+    }
+  ]
+}

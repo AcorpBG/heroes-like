@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_switchback_pikes",
+  "output": "art/animation/source/poses/unit_neutral_switchback_pikes/candidate-atlas.png",
+  "sha256": "2034d5737bc0ae9e451916ac3302e0a2c8810c2d947f710a2e5c59495161ea17",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        154,
+        15,
+        331,
+        240
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        171,
+        13,
+        314,
+        240
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        179,
+        19,
+        328,
+        240
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        174,
+        24,
+        323,
+        241
+      ]
+    },
+    {
+      "name": "pike_windup",
+      "index": 4,
+      "alpha_bounds": [
+        145,
+        58,
+        409,
+        242
+      ]
+    },
+    {
+      "name": "full_pike_thrust",
+      "index": 5,
+      "alpha_bounds": [
+        112,
+        45,
+        505,
+        241
+      ]
+    },
+    {
+      "name": "pike_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        117,
+        30,
+        436,
+        240
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        130,
+        8,
+        391,
+        241
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        160,
+        50,
+        330,
+        241
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        153,
+        61,
+        334,
+        243
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        163,
+        83,
+        334,
+        253
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 11,
+      "alpha_bounds": [
+        135,
+        136,
+        397,
+        248
+      ]
+    },
+    {
+      "name": "dead_head_right",
+      "index": 12,
+      "alpha_bounds": [
+        63,
+        125,
+        442,
+        232
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_switchback_pikes/alpha/poses.png": "36a5a787ef43c9e02e51d831a4af0a0fac7e1057851c3ba6c5ffd7584045093d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_switchback_pikes/continuity-alpha/full-pike-thrust-recovery-and-rest.png": "156eb0aa73882af7ac63c769db6aecdaad69e0005ab901ddebc8b13e567cd8b1"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. Reuse existing clean genuine RGBA without rekeying.",
+  "jobs": [
+    {
+      "id": "crown-recovery-brace-and-knee-collapse",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/crown-recovery-brace-and-knee-collapse.png",
+      "source_sha256": "0db89563eef54561e3b0d8b2533fcdd494a2e5d2fc0d6d05276b13a97d6d554b",
+      "output": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/continuity-alpha/crown-recovery-brace-and-knee-collapse.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "crown-recovery-brace-and-knee-collapse-gray",
+      "source": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/crown-recovery-brace-and-knee-collapse-gray.png",
+      "source_sha256": "2cafebf2ca05a80aa66b051e79b108df178e9ae75fc7bc5652490864c955a8a7",
+      "output": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 145,
+        "maximum": 190,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "max_edge_residual": 40,
+        "all_neutral_is_background": true,
+        "protected_polygons": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,203 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers",
+  "output": "art/animation/runtime/poses/unit_sunvault_resonant_choristers.png",
+  "sha256": "7a755377af8da83e52f0bdd26580d1444e6aa2430872e1c2e22df5eae55f9f09",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        175,
+        26,
+        339,
+        249
+      ]
+    },
+    {
+      "name": "idle_1",
+      "index": 1,
+      "alpha_bounds": [
+        167,
+        25,
+        342,
+        249
+      ]
+    },
+    {
+      "name": "walk_contact_a",
+      "index": 2,
+      "alpha_bounds": [
+        158,
+        24,
+        344,
+        251
+      ]
+    },
+    {
+      "name": "walk_passing_a",
+      "index": 3,
+      "alpha_bounds": [
+        149,
+        24,
+        357,
+        252
+      ]
+    },
+    {
+      "name": "walk_contact_b",
+      "index": 4,
+      "alpha_bounds": [
+        145,
+        27,
+        365,
+        250
+      ]
+    },
+    {
+      "name": "walk_passing_b",
+      "index": 5,
+      "alpha_bounds": [
+        161,
+        24,
+        347,
+        251
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        142,
+        16,
+        351,
+        252
+      ]
+    },
+    {
+      "name": "melee_release",
+      "index": 7,
+      "alpha_bounds": [
+        139,
+        12,
+        415,
+        251
+      ]
+    },
+    {
+      "name": "defend_0",
+      "index": 8,
+      "alpha_bounds": [
+        154,
+        85,
+        357,
+        248
+      ]
+    },
+    {
+      "name": "defend_1",
+      "index": 9,
+      "alpha_bounds": [
+        148,
+        87,
+        359,
+        250
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        152,
+        70,
+        363,
+        250
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 11,
+      "alpha_bounds": [
+        157,
+        107,
+        356,
+        250
+      ]
+    },
+    {
+      "name": "death_low_fall",
+      "index": 12,
+      "alpha_bounds": [
+        144,
+        162,
+        368,
+        251
+      ]
+    },
+    {
+      "name": "death_prone",
+      "index": 13,
+      "alpha_bounds": [
+        144,
+        174,
+        373,
+        251
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 14,
+      "alpha_bounds": [
+        133,
+        168,
+        381,
+        246
+      ]
+    },
+    {
+      "name": "ranged_gather_harmony",
+      "index": 15,
+      "alpha_bounds": [
+        174,
+        38,
+        333,
+        251
+      ]
+    },
+    {
+      "name": "ranged_release_harmony",
+      "index": 16,
+      "alpha_bounds": [
+        164,
+        30,
+        349,
+        251
+      ]
+    },
+    {
+      "name": "ranged_recover_harmony",
+      "index": 17,
+      "alpha_bounds": [
+        168,
+        39,
+        330,
+        251
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/poses.png": "c8c99903546467a5f733b4f8351cae6383db25460b7918a5df899efd79f35639",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-contact-a.png": "03b9760fc1512d8536589845d36e2bb44e8aa8f3319527163012f285e591b84b",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-passing-a.png": "54c56ed4a9459b8f6805f893ae7aba473d4aad6ba0b1ca2cffd4d2cf36b8207f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-contact-b.png": "fd55fdf97ad8ad173c41fa924588c57aba9430eb6253a6675fd5efb42e4d1d80",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-passing-b.png": "e027f36c2e490055f12258649cc6a9980e45e784a4f6f171ee06fa0ed59d7834",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/attack-pair.png": "74c462a59d971de627a530c410fb668046144a31351673a8c3f560e0704cec8c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/defense-breath.png": "a7e6dca7e038aee1925ea62f3120345adf40f38dee85a3fa63b6c1fafa4a7ba0",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/death-pair.png": "ddebde5ac3245206d0c1395c2766f3c136e4c1c341730a2507b5bf64a244cb4d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/death-low-fall.png": "27ec6087ee928c65e07cabb08a3cd9936ac347180c70b88fa4ea31add8e7eb9c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_sunvault_resonant_choristers/ranged-correction-20260916/alpha/ranged-source.png": "00ed4eb3206bbae3a892370a9aeb5bc52018578061bf3923b94a1a768b0c2900"
+  }
+}

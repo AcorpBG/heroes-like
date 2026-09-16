@@ -1,0 +1,242 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing clean genuine alpha is reused without rekeying.",
+  "jobs": [
+    {
+      "id": "crew-recovery-and-directional-rest",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/crew-recovery-and-directional-rest.png",
+      "source_sha256": "9425dc3cc1ea2b234450bc4e97cf05fb70bc818e8da35ea12d70352de5529a50",
+      "output": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/crew-recovery-and-directional-rest.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "carry-passing-tripod",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/carry-passing-tripod.png",
+      "source_sha256": "487f93a28541c48a255000e9c107605bcd49dc3421527ea4dfd1fd5840b53da2",
+      "output": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/carry-passing-tripod.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          210,
+          211,
+          212
+        ],
+        "distance": 32,
+        "edge_radius": 3,
+        "max_edge_residual": 60,
+        "all_keyed_is_background": false,
+        "background_seeds": [
+          [
+            780,
+            365
+          ],
+          [
+            866,
+            415
+          ],
+          [
+            890,
+            645
+          ],
+          [
+            585,
+            925
+          ],
+          [
+            515,
+            450
+          ],
+          [
+            870,
+            365
+          ],
+          [
+            900,
+            375
+          ],
+          [
+            877,
+            473
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "carry-opposite-lowered-draft",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/carry-opposite-lowered-draft.png",
+      "source_sha256": "67b295cb8cd312dccd03fe772c0639bbcf17d0cad180f613e29c833e5f52b956",
+      "output": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/carry-opposite-lowered-draft.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          210,
+          211,
+          212
+        ],
+        "distance": 32,
+        "edge_radius": 3,
+        "max_edge_residual": 60,
+        "all_keyed_is_background": false,
+        "background_seeds": [
+          [
+            780,
+            365
+          ],
+          [
+            866,
+            415
+          ],
+          [
+            890,
+            645
+          ],
+          [
+            585,
+            925
+          ],
+          [
+            515,
+            450
+          ],
+          [
+            870,
+            365
+          ],
+          [
+            900,
+            375
+          ],
+          [
+            877,
+            473
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "poses-released-string-draft",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/poses-released-string-draft.png",
+      "source_sha256": "3da16192e86c06aa7a9a67800428e7797c6ba68070df72c3bbcf35a794245c1d",
+      "output": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/poses-released-string-draft.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          210,
+          211,
+          212
+        ],
+        "distance": 32,
+        "edge_radius": 3,
+        "max_edge_residual": 60,
+        "all_keyed_is_background": false,
+        "background_seeds": [
+          [
+            868,
+            717
+          ],
+          [
+            1192,
+            722
+          ],
+          [
+            771,
+            864
+          ],
+          [
+            1103,
+            858
+          ],
+          [
+            740,
+            711
+          ],
+          [
+            1080,
+            711
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "poses-empty-reset",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/poses-empty-reset.png",
+      "source_sha256": "85b0e7f342d693a5890badaabdef291d53f420579f4bced8406970d48b38d0d3",
+      "output": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/poses-empty-reset.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          210,
+          211,
+          212
+        ],
+        "distance": 32,
+        "edge_radius": 3,
+        "max_edge_residual": 60,
+        "all_keyed_is_background": false,
+        "background_seeds": [
+          [
+            868,
+            717
+          ],
+          [
+            1192,
+            722
+          ],
+          [
+            771,
+            864
+          ],
+          [
+            1103,
+            858
+          ],
+          [
+            740,
+            711
+          ],
+          [
+            1080,
+            711
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "crew-recovery-and-directional-rest-corrected",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/crew-recovery-and-directional-rest-corrected.png",
+      "source_sha256": "6ee536844bb02cc87a79f5e2b73e675716b5b190befef950df1634c1fdf45eed",
+      "output": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/crew-recovery-and-directional-rest-corrected.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

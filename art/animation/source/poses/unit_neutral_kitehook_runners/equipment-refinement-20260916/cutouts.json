@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve originals and interior paint. No local pose or equipment synthesis.",
+  "jobs": [
+    {
+      "id": "compact-hook-actions",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/compact-hook-actions.png",
+      "source_sha256": "b2932ae014687fd7694da37196f1ff5fddfa4746508bbb9e475df489f810a66b",
+      "output": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-actions.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "compact-hook-collapse",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/compact-hook-collapse.png",
+      "source_sha256": "76d16db629ff8c36a3b7eb735b5e0b71ca193d500e14b8cf2d487b561af79e12",
+      "output": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-collapse.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "max_edge_residual": 100,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

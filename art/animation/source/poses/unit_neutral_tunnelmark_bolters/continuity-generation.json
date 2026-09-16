@@ -1,0 +1,137 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "source": "right-cross-recovery-and-loaded-passing.png",
+      "source_sha256": "0e7db33a918126baba3312264bf8bea8bf67d7175a7a2dd1f46171c55dd6f560",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1b5ceb97-8ba4-4b7d-9a75-ab2324527b03.png",
+      "prompt": "Use case: precise-object-edit. Original Tunnelmark Bolter battle animation. Image1 exact WINDUP reference and fixed identity. Paint THREE full-body follow-on poses in ONE horizontal row at same anatomical size and fixed elevated three-quarter RIGHT-facing view. Preserve charcoal hood/silver stitching, ochre scarf, dark leather armor, cross-mark sleeves, gray tabard/trousers, leather knees/wrapped boots, quiver at near hip and ONE compact wood/iron crossbow with bow limbs/string/stirrup. LEFT: same RIGHT fist raised beside screen-LEFT shoulder in reference punches ACROSS chest toward screen RIGHT; extended sleeve visibly originates from NEAR SCREEN-LEFT shoulder and crosses OVER scarf/chest. LEFT arm remains cradling complete crossbow horizontally low at ribs with fore-end toward RIGHT exactly as reference. DO NOT instead extend the far/screen-RIGHT shoulder arm or swap crossbow to right hand. MIDDLE: right-cross recovery, same RIGHT elbow bends to draw empty fist back toward sternum, LEFT arm still cradles complete crossbow low, same leg stance. RIGHT: loaded two-handed crossbow travel passing, right hand back on trigger grip, left supports fore-end, bow carried low clear of knees; one boot flat directly under pelvis, other knee bent boot lifted behind/under body. Not another split stride. Entire weapon, quiver, hood and boots retained with clear gutters. Match reference painterly original raster style/colors, no anatomy resizing or weapon redesign. Flat pure magenta RGB255,0,255 backdrop with no reflected spill, ground shadow, grid, text or effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/tunnelmark-continuity-20260916/windup-clean-reference/unit_neutral_tunnelmark_bolters-poses-rect-353-325-582-624-light.png",
+          "sha256": "b6912cb72c0158a958328fc0059483770d4b5fc46ad79e147ee7493d846bfa24"
+        }
+      ],
+      "selection_note": "Three poses visually inspected as source candidates; prepared-alpha composites, crop assembly and motion continuity still pending."
+    },
+    {
+      "source": "fired-string-release-and-empty-recovery.png",
+      "source_sha256": "351433cc80f85c7feb6d0269f997428cb1f8fd4823da30af881950bca11b6749",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3c37134c-8c30-4c06-8c43-c859e1ba4c03.png",
+      "prompt": "Use case: precise-object-edit. Image1 is fixed Tunnelmark Bolter character/crossbow reference. Create TWO full-body poses side by side, generous gutters, identical body/weapon proportions and elevated three-quarter RIGHT-facing camera. Preserve hood/silver seam, ochre scarf, cross-mark dark armor, tabard, full quiver, both hands/boots and complete compact wood/iron crossbow. LEFT: just-fired shoulder-level shot, torso recoils slightly back; RIGHT hand on trigger/rear grip LEFT supports fore-end; rail is completely EMPTY, no bolt or metal arrow tip above it. Most important: bowstring has actually RELEASED. Remove ALL diagonal cords running backward from the front bow tips to the rear latch. Replace those drawn-back strings with ONE slack-neutral straight string spanning DIRECTLY between the TWO front bow-tip nocks across the front of the stock. It must NOT form a V back toward the trigger. The short line between front nocks may be diagonal in perspective but stays at FRONT, never reaches rear latch. Keep original wooden stock/iron bow limbs/stirrup shape, do not turn weapon into a hollow rectangular frame. RIGHT pose: empty-shot recovery, lower same complete crossbow to waist with both hands still supporting, rail still EMPTY, string still FORWARD joining front nocks, NO reloaded bolt. Match exact face/body mass/gear and painterly original raster. Full figure/head/quiver/stirrup/boots with margins, same anatomical scale in both. Flat opaque pure magenta RGB255,0,255 backing with no reflected spill, no floor shadow, no projectile, glow, text, grid, effects or scenery.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/tunnelmark-continuity-20260916/fired-reference/unit_neutral_tunnelmark_bolters-poses-rect-950-624-1220-940-light.png",
+          "sha256": "edebf33b8155a33477915bef9057992a1d93f99a47581644102cac5c797d167f"
+        }
+      ],
+      "selection_note": "Unselected: empty rail but long rearward string retained. Requires targeted front-nock correction."
+    },
+    {
+      "source": "fired-front-nocks-corrected.png",
+      "source_sha256": "3b30410eadbc0f5379fabba8b93ace9dc5e0f2ab1c973ab4b98286588153b3dd",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d23f5ebd-5a60-40a8-a74c-bf57126e03ea.png",
+      "prompt": "Use case: precise-object-edit. Image1 edit target, a 1536x1024 sheet with TWO complete Tunnelmark Bolter figures. Correct ONLY bowstrings on both crossbows; preserve every character pixel, pose, size, colors, stock, iron bow limbs, stirrup, hands, magenta background and full canvas. Both weapons have fired and EMPTY rails. The long thin brown diagonal lines now running backwards over each rail are WRONG: erase the entire thin brown line from the LEFT weapon's upper forward nock around (675,147) backward to (474,174), and the RIGHT weapon's forward nock around (1431,420) backward toward (1250,392). Remove their false rear string attachment knobs too. Do not erase the thick curved iron bow arms, wooden stock, stirrup or hands. Paint ONE thin taut string across the FRONT bow of each weapon from its far upper nock directly to its near lower nock, roughly left (675,147) to (742,226), right (1431,420) to (1422,498). These strings are nearly vertical/short diagonal in perspective and stay next to the front stirrup; neither reaches back along the long stock. Result MUST show empty rail with no long cord/rod above it, no triangle pulled back toward trigger, no bolt. This is the released string configuration. Do not add extra bow limbs or other parts. Preserve all other artwork exactly; no scenery/text/effects.",
+      "references": [
+        {
+          "path": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3c37134c-8c30-4c06-8c43-c859e1ba4c03.png",
+          "sha256": "351433cc80f85c7feb6d0269f997428cb1f8fd4823da30af881950bca11b6749"
+        }
+      ],
+      "selection_note": "Selected targeted correction removes long rearward strings and adds short front-nock strings; empty rail retained in release/recovery. Bow-tip geometry and original/new gear continuity remain refinement."
+    }
+  ],
+  "selected_frames": [
+    {
+      "index": 0,
+      "name": "idle_loaded_a",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 1,
+      "name": "idle_loaded_b",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 2,
+      "name": "run_loaded_contact",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 3,
+      "name": "loaded_passing",
+      "source": "continuity-alpha/right-cross-recovery-and-loaded-passing.png"
+    },
+    {
+      "index": 4,
+      "name": "right_fist_windup",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 5,
+      "name": "right_cross_left_cradled_bow",
+      "source": "continuity-alpha/right-cross-recovery-and-loaded-passing.png"
+    },
+    {
+      "index": 6,
+      "name": "right_cross_recovery_left_cradled_bow",
+      "source": "continuity-alpha/right-cross-recovery-and-loaded-passing.png"
+    },
+    {
+      "index": 7,
+      "name": "deep_guard",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 8,
+      "name": "hit_retained_bow",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 9,
+      "name": "reload",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 10,
+      "name": "loaded_aim",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 11,
+      "name": "empty_release_front_string",
+      "source": "continuity-alpha/fired-front-nocks-corrected.png"
+    },
+    {
+      "index": 12,
+      "name": "empty_recovery_front_string",
+      "source": "continuity-alpha/fired-front-nocks-corrected.png"
+    },
+    {
+      "index": 13,
+      "name": "death_kneel",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 14,
+      "name": "death_side_fall",
+      "source": "alpha/poses.png"
+    },
+    {
+      "index": 15,
+      "name": "dead_head_right_bow_retained",
+      "source": "alpha/poses.png"
+    }
+  ],
+  "review_notes": [
+    "16 frames retain eleven original paintings and select five new paintings. New right cross/recovery match the original near-shoulder windup while left arm cradles crossbow; loaded passing is distinct. Loaded melee/travel and empty firing/recovery clips stay separate.",
+    "First new fired sheet left rearward strings despite empty rail; retained unselected. Targeted image edit removes those long cords and paints short strings between front nocks in both release and recovery. Bow-tip geometry changed and remains a named gear-continuity refinement, not an unchanged original weapon claim.",
+    "Approved bounded magenta preparation and source bands preserve hood, quiver, full crossbow and head-right equipped corpse while excluding neighboring hood/runner fragments. Final whole atlas inspected.",
+    "Candidate only: full alternating gait, body/crossbow dimensions and string/bow-tip geometry, grip/palette/edge continuity, reload and connected timing need full-roster refinement. No automated/import/gameplay/platform acceptance."
+  ]
+}

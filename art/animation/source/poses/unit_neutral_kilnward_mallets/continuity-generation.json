@@ -1,0 +1,38 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_neutral_kilnward_mallets",
+  "date": "2026-09-16",
+  "tool": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "outputs": [
+    {
+      "id": "guided-passing-and-mallet-recovery",
+      "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/guided-passing-and-mallet-recovery.png",
+      "sha256": "b1284d3a23221b4d75b6f5f283ff4a2b31fbaf5b777e0dc9d6fd47915eda17ed",
+      "master": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-97a6e175-6518-42a8-9e0f-c239e22fd599.png",
+      "prompt": "Use case: stylized-concept. Produce FOUR full-body original painted Kilnward Mallet battle sprites in a TWO by TWO sheet on flat vivid chroma green #00ff00, no green spill or floor shadows. Images 1 and 2 are motion guides ONLY for the top-left and top-right figures respectively; Image 3 is authoritative character, materials, gear, camera and rendering reference. Do not reproduce the diagrams, colors or text. Preserve broad muscular middle-aged bearded smith, tied dark hair and headband, black rolled sleeves, brown riveted leather apron/pauldrons/bracers, red brick kiln-arch motif, dark reinforced boots. Exactly ONE rectangular iron mallet on a long wooden handle, exactly TWO natural hands gripping its shaft in every pose.\nTOP LEFT: use Image 1 leg geometry: NEAR leg straight planted under hip, FAR knee swings forward with far boot lifted behind near shin; hips above planted near boot. Both hands carry mallet across waist, head to RIGHT.\nTOP RIGHT: use Image 2 leg geometry, not Image 1: FAR leg straight planted, NEAR thigh raised diagonally forward to RIGHT and NEAR knee bent, near boot suspended in front of far shin; hips above far support foot. Raised near thigh visibly overlaps far thigh. Same face/camera/torso/weapon, do not mirror torso. This must be an opposite support phase, not a copy or different camera.\nBOTTOM LEFT: recovery after downward forward mallet slam, feet grounded, torso still forward while both hands draw low mallet upward toward waist, head low on RIGHT. Elbows bent and shaft continuous.\nBOTTOM RIGHT: guard release, planted feet, torso straightening, mallet held diagonal across chest with both hands, less compressed than a deep block.\nMatch reference painterly small-scale game art, body/head/hammer size across all four frames. Full soles, hair and mallet tip within each cell and generous gutters. No effects, motion streaks, new gear, text, checkerboard or background.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/kilnward-continuity-20260916/idle-reference/unit_neutral_kilnward_mallets-poses-rect-0-0-360-382-green.png",
+          "sha256": "8942b345f15a7557472d048ca2879c1ffe128f91f9024f98ac6b8a01ab40f629"
+        }
+      ],
+      "selection_notes": "15 packed frames select 11 original RGBA paintings and four new supported passing, low two-handed mallet recovery and guard-release paintings. Original overhead windup, low strike, crouched guard, recoil, buckle, side fall and head-right resting corpse remain; duplicate original contact is unselected. Original genuine alpha reused; new green-backed source prepared with approved bounded edge cleanup. Uniform per-source scales 0.60/0.36, support anchors and inspected banded boundaries preserve the mallet and falling boot without the neighboring hammer fragment. Separate passing guides do not establish alternating near/far support: the generated poses still appear to lift the same leg through backward/forward positions. Full gait, hammer/hand/shoulder continuity, palette/edges, grounding and connected recovery/death timing remain refinement; not final accepted animation.",
+      "selected_frames": [
+        "passing_back",
+        "passing_forward",
+        "mallet_recovery",
+        "guard_ready"
+      ]
+    }
+  ]
+}

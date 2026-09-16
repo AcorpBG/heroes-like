@@ -1,0 +1,122 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "parallax-walk-contact-b",
+  "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/walk-contact-b.png",
+  "source_sha256": "d443b6af3274af6417828599fe935344fa646942754f6a62b21ccefce2c7df34",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/walk-contact-b.png",
+  "output_sha256": "9d62e9dabe32d8d9a374862c9cd50aea868b08a3d4e213cc16e9f5e1bb6a140f",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "732acb7b8f20636e57c5a5479a01928c28f52c8eaf068c4b28f1baee0b970be4",
+  "recipe": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-cutouts.json",
+  "recipe_sha256": "43d3384f7c2a970ca66d163dcbea8bb6323840f8c90f4b26d7310c9d4a4c6bee",
+  "parameters": {
+    "minimum": 100,
+    "maximum": 185,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        460,
+        168
+      ]
+    ],
+    "background_regions": [
+      {
+        "polygon": [
+          [
+            666,
+            194
+          ],
+          [
+            698,
+            194
+          ],
+          [
+            698,
+            231
+          ],
+          [
+            666,
+            231
+          ]
+        ],
+        "minimum": 100,
+        "tolerance": 12,
+        "seed": [
+          680,
+          215
+        ]
+      },
+      {
+        "polygon": [
+          [
+            447,
+            186
+          ],
+          [
+            466,
+            186
+          ],
+          [
+            466,
+            215
+          ],
+          [
+            447,
+            215
+          ]
+        ],
+        "minimum": 100,
+        "tolerance": 12,
+        "seed": [
+          455,
+          201
+        ]
+      },
+      {
+        "polygon": [
+          [
+            483,
+            239
+          ],
+          [
+            505,
+            239
+          ],
+          [
+            505,
+            260
+          ],
+          [
+            483,
+            260
+          ]
+        ],
+        "minimum": 100,
+        "tolerance": 12,
+        "seed": [
+          494,
+          249
+        ]
+      }
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1250979,
+    "edge_pixels": 7425,
+    "unchanged_paint_pixels": 314112,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

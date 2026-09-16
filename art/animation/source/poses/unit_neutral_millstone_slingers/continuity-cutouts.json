@@ -1,0 +1,95 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint. Existing genuine alpha is reused without rekeying.",
+  "jobs": [
+    {
+      "id": "same-hand-punch-and-recovery",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/same-hand-punch-and-recovery.png",
+      "source_sha256": "5fa0217dd2995ba1d0b9f5f729ffb55ba99f5ede9e6bad3fb2e214db951681c7",
+      "output": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/same-hand-punch-and-recovery.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          0,
+          255
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "original-corrected-sheet-clean-matte",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/poses-cord-corrected.png",
+      "source_sha256": "704667a069993bb2ec1a30305c7ae6fdb628794e59fdeda82859f972df4ce32a",
+      "output": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          210,
+          211,
+          212
+        ],
+        "distance": 32,
+        "edge_radius": 3,
+        "max_edge_residual": 60,
+        "all_keyed_is_background": false,
+        "background_seeds": [
+          [
+            85,
+            229
+          ],
+          [
+            409,
+            164
+          ],
+          [
+            659,
+            180
+          ],
+          [
+            1033,
+            178
+          ],
+          [
+            48,
+            474
+          ],
+          [
+            371,
+            403
+          ],
+          [
+            482,
+            665
+          ],
+          [
+            91,
+            848
+          ],
+          [
+            113,
+            1132
+          ],
+          [
+            370,
+            1167
+          ],
+          [
+            756,
+            1172
+          ],
+          [
+            1101,
+            1188
+          ]
+        ],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

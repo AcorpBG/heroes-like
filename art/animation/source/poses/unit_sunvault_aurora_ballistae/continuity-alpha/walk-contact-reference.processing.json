@@ -1,0 +1,69 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "aurora-walk-contact-reference",
+  "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/walk-contact-reference.png",
+  "source_sha256": "069f371b8dc441de3e756844dc2292c7edfa0dc6ad538d339448520a6064cc45",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/walk-contact-reference.png",
+  "output_sha256": "aee3fa0d56bb460e3a54428c23324680277e1612309d182b6322d2c18ef0b3c4",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "97f7e2833d4cbed6db4e986dddebdfd79825b532dc47a326b82c75cb1749e907",
+  "recipe": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-cutouts.json",
+  "recipe_sha256": "afbdc6087cf69114e6886e9bd89d9f59740fad13ca3ed53e08b913beea72411c",
+  "parameters": {
+    "minimum": 100,
+    "maximum": 185,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [],
+    "protected_polygons": [
+      [
+        [
+          406,
+          748
+        ],
+        [
+          428,
+          756
+        ],
+        [
+          470,
+          873
+        ],
+        [
+          454,
+          915
+        ],
+        [
+          443,
+          894
+        ],
+        [
+          422,
+          838
+        ],
+        [
+          405,
+          791
+        ]
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 933516,
+    "edge_pixels": 10291,
+    "unchanged_paint_pixels": 628709,
+    "protected_pixels": 4927,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

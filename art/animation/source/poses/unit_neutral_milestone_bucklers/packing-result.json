@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_neutral_milestone_bucklers",
+  "output": "art/animation/source/poses/unit_neutral_milestone_bucklers/candidate-atlas.png",
+  "sha256": "109ae5a9edd765a21e3172e6d7b6b899638b0c46e7ca901a480fc97f7a997a88",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        152,
+        21,
+        343,
+        239
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        160,
+        23,
+        346,
+        241
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        149,
+        23,
+        345,
+        241
+      ]
+    },
+    {
+      "name": "walk_passing",
+      "index": 3,
+      "alpha_bounds": [
+        138,
+        6,
+        333,
+        239
+      ]
+    },
+    {
+      "name": "short_spear_windup",
+      "index": 4,
+      "alpha_bounds": [
+        175,
+        28,
+        362,
+        240
+      ]
+    },
+    {
+      "name": "short_spear_thrust",
+      "index": 5,
+      "alpha_bounds": [
+        173,
+        24,
+        387,
+        239
+      ]
+    },
+    {
+      "name": "short_spear_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        176,
+        16,
+        364,
+        239
+      ]
+    },
+    {
+      "name": "shield_guard",
+      "index": 7,
+      "alpha_bounds": [
+        160,
+        64,
+        349,
+        243
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 8,
+      "alpha_bounds": [
+        163,
+        39,
+        346,
+        237
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 9,
+      "alpha_bounds": [
+        170,
+        61,
+        346,
+        238
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 10,
+      "alpha_bounds": [
+        143,
+        87,
+        366,
+        240
+      ]
+    },
+    {
+      "name": "dead_head_right_spear_point_right",
+      "index": 11,
+      "alpha_bounds": [
+        133,
+        146,
+        378,
+        253
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_milestone_bucklers/alpha/poses.png": "cfa8e91eb6558e1ca47a7c6a83bbb6945fcd35b7da3642e3b111f4a1c7f4d560",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_milestone_bucklers/continuity-alpha/short-spear-actions-and-passing-step.png": "d2d2fe3a6e7143a2bef53ec384e06f6e256bde249cf429dc6f0fdad1e95ca952"
+  }
+}

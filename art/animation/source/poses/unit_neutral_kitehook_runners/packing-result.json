@@ -1,0 +1,146 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "output": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/candidate-atlas.png",
+  "sha256": "417fe08cf958b2612da0e03a33cdd65c9c9d8bc4b032943eaac449bebca4482e",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        178,
+        38,
+        344,
+        246
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        184,
+        42,
+        332,
+        246
+      ]
+    },
+    {
+      "name": "run_extension_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        140,
+        46,
+        327,
+        246
+      ]
+    },
+    {
+      "name": "run_gather_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        184,
+        54,
+        328,
+        250
+      ]
+    },
+    {
+      "name": "compact_hook_windup",
+      "index": 4,
+      "alpha_bounds": [
+        169,
+        32,
+        343,
+        242
+      ]
+    },
+    {
+      "name": "compact_hook_thrust",
+      "index": 5,
+      "alpha_bounds": [
+        163,
+        42,
+        399,
+        241
+      ]
+    },
+    {
+      "name": "compact_hook_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        176,
+        20,
+        340,
+        242
+      ]
+    },
+    {
+      "name": "compact_hook_ready",
+      "index": 7,
+      "alpha_bounds": [
+        172,
+        33,
+        350,
+        243
+      ]
+    },
+    {
+      "name": "guard_deep",
+      "index": 8,
+      "alpha_bounds": [
+        180,
+        122,
+        330,
+        252
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        186,
+        77,
+        350,
+        248
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        172,
+        94,
+        358,
+        250
+      ]
+    },
+    {
+      "name": "compact_hook_side_collapse",
+      "index": 11,
+      "alpha_bounds": [
+        160,
+        139,
+        350,
+        245
+      ]
+    },
+    {
+      "name": "dead_head_right_compact_hook",
+      "index": 12,
+      "alpha_bounds": [
+        156,
+        168,
+        350,
+        242
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png": "9da3a14da4ec16f15a9346b163183151f83f0f399323e1b1fe23e5a5dc8f85d3",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-actions-gray.png": "85950120fcf78979806b3dabb29f4d379a794482f1d92c3d4ae9ce4843b859cc",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-collapse-gray.png": "134838684172720ecd271dc29487182095f498085de33348355ccfa1e34961fe"
+  }
+}

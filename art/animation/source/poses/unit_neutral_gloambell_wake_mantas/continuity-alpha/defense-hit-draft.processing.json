@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "2026-09-15 explicit owner permission for local non-generative raster background and edge cleanup",
+  "id": "gloambell-defense-hit-draft",
+  "source": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/defense-hit-draft.png",
+  "source_sha256": "88f9f2657e27243f3cdaf8a4564b1cf30942c33da54ba0ec5fafc5d7d82f37fe",
+  "source_rect": [
+    0,
+    0,
+    2172,
+    724
+  ],
+  "output": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-alpha/defense-hit-draft.png",
+  "output_sha256": "35710586d799dab446e61369975acd3a8874052a58c13b21a762d76aab40d8fd",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "ec99e4dc7cb10f9b320ae5f38fb47a05522f69cb5dc2b06ef2bde0623d895650",
+  "recipe": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/continuity-cutouts.json",
+  "recipe_sha256": "6ba5aac35b5897163f76d11d24c6e9f0f81bab827b98b40d92feb76e49da5d0f",
+  "parameters": {
+    "minimum": 135,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1080990,
+    "edge_pixels": 6003,
+    "unchanged_paint_pixels": 485535,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

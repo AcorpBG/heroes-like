@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "output": "art/animation/source/poses/unit_neutral_tidepool_cutters/candidate-atlas.png",
+  "sha256": "0633641dc8fe75c92adc58b07f0ffa9cf6cf41ec5ee02dd262681c073dba78e8",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        177,
+        31,
+        338,
+        240
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        180,
+        31,
+        333,
+        239
+      ]
+    },
+    {
+      "name": "walk_contact_attempt",
+      "index": 2,
+      "alpha_bounds": [
+        164,
+        44,
+        353,
+        239
+      ]
+    },
+    {
+      "name": "walk_passing_attempt",
+      "index": 3,
+      "alpha_bounds": [
+        184,
+        25,
+        331,
+        239
+      ]
+    },
+    {
+      "name": "right_blade_windup",
+      "index": 4,
+      "alpha_bounds": [
+        188,
+        26,
+        348,
+        242
+      ]
+    },
+    {
+      "name": "right_blade_slash",
+      "index": 5,
+      "alpha_bounds": [
+        170,
+        36,
+        342,
+        241
+      ]
+    },
+    {
+      "name": "blade_recovery",
+      "index": 6,
+      "alpha_bounds": [
+        190,
+        34,
+        322,
+        237
+      ]
+    },
+    {
+      "name": "guard_ready",
+      "index": 7,
+      "alpha_bounds": [
+        187,
+        33,
+        324,
+        237
+      ]
+    },
+    {
+      "name": "guard_crouch",
+      "index": 8,
+      "alpha_bounds": [
+        189,
+        67,
+        320,
+        244
+      ]
+    },
+    {
+      "name": "hit_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        169,
+        41,
+        336,
+        242
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 10,
+      "alpha_bounds": [
+        176,
+        81,
+        319,
+        239
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 11,
+      "alpha_bounds": [
+        182,
+        130,
+        333,
+        242
+      ]
+    },
+    {
+      "name": "dead_head_left",
+      "index": 12,
+      "alpha_bounds": [
+        165,
+        130,
+        344,
+        241
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tidepool_cutters/alpha/poses.png": "64ff14e014fdca2fccb7073c164a9faecae8989524a8c73b2d77bbdae3bb61d3",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-alpha/twin-blade-recovery-and-directional-corpse.png": "24d3948a8e03b7f237303c469c843a3458b324e5f7f6c59c923044818b1a7fa9"
+  }
+}
