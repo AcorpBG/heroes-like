@@ -1,0 +1,48 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_hedgehook_watch",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_hedgehook_watch.png",
+  "reference_sha256": "eeba20f16ce80b0c33522d4bd7eaa562695104c02343f532087a3bea2735efbf",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "a1c09bfd3d2991d08d12dba33823c7a706ed33a02cb00eab36f613da64ae020f",
+      "source_output": "exec-a74cfa28-57c9-4270-9249-0236d168142c.png",
+      "prompt": "Use case: stylized-concept. Original Hedgehook Watch twelve-pose battle animation sheet matching reference woman: moss green stitched hood and scarf, layered brown leaf-like leather shoulder armor, fitted dark leather vest, green split tabard, olive trousers brown bracers knee guards and boots. RIGHT hand short-handled hooked crescent steel blade; LEFT arm round wooden thorn-rim buckler iron boss. FOUR columns THREE rows, consistent elevated three-quarter camera facing RIGHT, consistent full-body scale, generous clear gutters. Row1 idle low blade shield forward; alert subtle hood/shoulder breath; running extended near leg forward far back; running gathered BOTH knees bent feet close beneath hips. Row2 opposite running extension near leg BACK far leg forward without mirroring equipment; attack windup right blade raised behind right shoulder shield forward; right arm crosses chest making low hooked slash RIGHT while left shield stays raised; deep crouched shield defense. Row3 hit recoil; dying knees buckle; low SIDE fall with hooked blade and shield retained; final dead horizontal SIDE body eyes closed hood slumped, buckler beside left arm and hook relaxed by right hand. Real articulated body motion, maintain one blade and one shield, no polearm, no missing equipment, no duplicated running poses or rotated upright corpse. Original painterly raster like reference. Plain pale gray no cast shadows, text, grid, effects, blood, trails or scenery.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "d0f0e666f435734b891bc855d72cf1717a0284aecbc64711732f5f8e12ed2673",
+      "alpha_output": "exec-f96564c5-19c4-494b-98f3-8302f830aa9b.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only pale gray background from twelve-pose Hedgehook Watch sheet onto genuinely transparent RGBA. Preserve exact layout/body scale, hood/leather leaf edges, hooked blades, wooden thorn shields, all limb gaps and side corpse. No checkerboard, matte, shadow, effects, text, redraw or reframing."
+    }
+  ],
+  "review_notes": [
+    "Twelve original poses and extraction visually inspected: extended/gathered running silhouettes, right-hand hook sweep, crouched shield guard and own side-collapse corpse retaining both equipment pieces. Opposite leg alternation, blade size/rotation continuity and full-motion/compositing review remain pending. Source-only, not packed/enabled. No automated tests/exports or disposable test intermediates created.",
+    "14 packed frames retain ten original paintings and select four new hook-recovery/ready-guard/grounded-travel paintings. Hook and buckler ownership remain consistent through the added recovery; original crouch/recoil/kneel/side fall and head-right corpse remain. Duplicate original running extension and airborne gathered pose are excluded.",
+    "Existing original alpha composites are clean and reused. New blue-backed source uses approved bounded matte/edge preparation. Uniform source scales 0.58/0.35 and anatomical anchors preserve body scale. Banded second-idle and windup crops separate the neighboring boot from the raised hook.",
+    "New passing attempts show support contact but knee-pad/near-far limb continuity is ambiguous; the mixed contact/passing clip is not an accepted full alternating gait. Hook size/rotation, grip, shield/body/palette/edges and connected action/death timing remain whole-roster refinement. Static review is not gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_hedgehook_watch/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_hedgehook_watch/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_hedgehook_watch/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_hedgehook_watch/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_hedgehook_watch.png",
+    "runtime_sha256": "c9635ed31c434f110e610e98922aa3361674738df924cdf8728aaaa3467d90ca",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png": "d0f0e666f435734b891bc855d72cf1717a0284aecbc64711732f5f8e12ed2673",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_hedgehook_watch/continuity-alpha/hook-recovery-and-grounded-travel.png": "f5a5f6e839871ceb599717dfac73c1a856174d7fdf0fdb27109415f0dc6c9734"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/hedgehook-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

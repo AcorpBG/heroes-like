@@ -1,0 +1,80 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_emberpack_lobbers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
+  "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "6e4e7b3660419cad644abe96821464bca0c0e6aca28bebd20e5aa2d93cf45ac9",
+      "source_output": "exec-71da07c7-8cf9-42da-9c64-018e637823ad.png",
+      "prompt": "Use case: stylized-concept. Original Emberpack Lobber battle sprite sheet reference identity: lean young man charcoal hood brass perforated brow plate, soot leather armor orange scarf ragged orange tabard, black trousers wrapped boots belt tools/brass canister, large wicker BACKPACK full coals strapped over both shoulders. RIGHT hand double-cord sling with stone pouch LEFT balancing. Sixteen full body poses FOUR columns FOUR rows same scale elevated three-quarter camera facing RIGHT generous gutters full sling loops and backpack all frames. Row1 idle sling hangs right loaded pouch; breath alert shoulders head shift; run near leg forward far back sling gathered; passing legs under body. Row2 opposite contact far leg forward near back same torso; melee right fist pulled back sling gathered belt; right punch across chest toward RIGHT left guards ribs; crouched defense forearms up backpack retained. Row3 hit recoil; left loads ember stone into sling pouch held right; right sling arm pulled back taut two cords and loaded pouch behind; completed right-arm sling release toward RIGHT one cord held one trailing loose empty pouch, no airborne stone. Row4 recovery gathers sling; knees buckle; side fall torso raised backpack on back own sling slack beside hands; relaxed horizontal side corpse eyes closed backpack rests behind shoulders coals dark sling slack nearby. One backpack always never disappears, no detached limbs or repeated static cutouts. Painterly original raster pale gray background no shadow grid text blood particles smoke fire trails scenery."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "5a1a3d3c2d13e01096b86d5d4eac4c37e8ca9bca4f9407d907e4e58cd383b963",
+      "source_output": "exec-8d67759d-c6d5-4854-b790-a8c47ad0d6fb.png",
+      "prompt": "Use case: precise-object-edit. Correct ONLY second-row columns2/3 and third-row column4 of 4x4 sheet. Second-row col2 melee anticipation: stow entire sling at belt; RIGHT fist pulled back beside right shoulder at screen LEFT, LEFT fist guards ribs, no raised sling. Second-row col3 melee contact: RIGHT arm from screen LEFT shoulder punches across chest toward RIGHT fully extended; LEFT fist ribs, sling remains belt. Third-row col4 sling release: right hand retains ONE cord, other cord free end released trailing toward screen RIGHT from empty pouch; no closed two-cord loop held by fist. Keep all other body/gear, backpack, scale layout gray background exactly unchanged.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "aaec28781c46518f0b948fc90356e6a99610b8d363d100266d1fe58e2bf567a8",
+      "alpha_output": "exec-16a4ce0b-c35a-4747-b536-e939fdc11d89.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all sixteen Emberpack Lobber figures onto genuine transparent RGBA keeping exact layout scale anatomy backpacks wicker coal baskets sling cords pouches tools hood orange cloth fine edges and corpse. Remove gray background and floor shadows only. No checkerboard cloudy matte halos redraw reframing text or effects."
+    }
+  ],
+  "review_notes": [
+    "Sixteen poses/extraction visually inspected. Corrected melee pair now same-arm right punch; backpack retained through equipped corpse. Sling release correction leaves retained cord/pouch but omits free cord; still unfinished. Carrying hand switches in first running contact, gait repeats opposite contact and backpack size varies. Sling cord/hand continuity, gait, scale and alpha-edge/full-motion review pending. Source-only not packed/enabled; no tests/exports.",
+    "16 frames retain thirteen original paintings and select three new paintings. Sling release now has retention cord, one empty pouch and a separate freely trailing knotted release cord; empty recovery gathers that same sling. Melee recovery stows sling at belt and preserves right-fist ownership. Original wrong-handed travel contact is unselected; retained travel uses right-hand coil.",
+    "Approved bounded magenta preparation and inspected crop bands retain both cord ends, full coal backpack, limbs and head-left dark-coal corpse. Original genuine alpha is reused. Final whole atlas inspected.",
+    "Candidate only: full alternating gait, sling continuity between loaded/empty/stowed states, backpack/body/hand proportions, palette/edge continuity and connected timing need full-roster refinement. No automated/import/gameplay/platform acceptance.",
+    "2026-09-16: Replaced the repeated/ambiguous two-frame stride with a deliberately paced four-phase foot-lift loop from one fixed travel anchor. Both feet have distinct lifts with unchanged upper-body equipment, 0.185 uniform scale and one shared ground anchor. Fourteen earlier non-movement frames preserved byte-for-byte after index shift. Rejected painted-guide and wrong-leg drafts retained but unselected. Final in-game movement/transition quality is not yet accepted."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 13,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_emberpack_lobbers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_emberpack_lobbers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_emberpack_lobbers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_emberpack_lobbers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_emberpack_lobbers.png",
+    "runtime_sha256": "4592adc4a6c3404fe6eb0749a1e4234e004ee18bf00b696492edd92cbace2f7d",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/alpha/poses.png": "aaec28781c46518f0b948fc90356e6a99610b8d363d100266d1fe58e2bf567a8",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/continuity-alpha/sling-release-gather-and-melee-recovery.png": "a8bdde13f3ea599c1e609ad27c9e2c5f39a1fdce551d76cc864047ecd2cda7d9"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/emberpack-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  },
+  "packing": {
+    "recipe": "art/animation/source/poses/unit_neutral_emberpack_lobbers/packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_emberpack_lobbers.png",
+    "runtime_sha256": "f3930e1575335983f70687c8efdc2c3f83b12c9f73f16126c50eccaa18e57336"
+  },
+  "step_refinement": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "generation": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/cutouts.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/packing-result.json",
+    "previous_recipe": "art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/previous-packing.json",
+    "retained_paintings": 14,
+    "new_selected_paintings": 3,
+    "clip": "move: planted, near-foot lift, planted, far-foot lift; 160 ms per phase",
+    "sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/alpha/poses.png": "aaec28781c46518f0b948fc90356e6a99610b8d363d100266d1fe58e2bf567a8",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/alpha/planted.png": "f5d9a627ed4bd30203bb189fa90ed2e3895bcb9e7fd079ca7b2d1e45b4983829",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/alpha/near-lift.png": "69eb1e99171c3d4daab0e99ead53790ffc37419cc4b3ccff27031b5151fe6934",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/step-refinement-20260916/alpha/far-lift.png": "d272019498c30bea44eb5376561e02791b570efe18abc38b2d02b8d282514d96",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_emberpack_lobbers/continuity-alpha/sling-release-gather-and-melee-recovery.png": "a8bdde13f3ea599c1e609ad27c9e2c5f39a1fdce551d76cc864047ecd2cda7d9"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/emberpack-step-refinement-20260916",
+    "validation": "Sources, prepared composites and full atlas visually reviewed; automated gameplay/repository/platform validation deferred until roster refinement ends."
+  }
+}

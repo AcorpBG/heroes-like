@@ -1,314 +1,159 @@
 # Complete Battle Unit Animation and Size
 
 Owner goal, Phase 6: `combat-unit-animation-and-size-20260913`.
-
-Current state: twenty-eight original-art candidates enabled and platform-validated, zero of 160 final animation acceptances. Gallowshell corrected source is prepared but not enabled. Size/footprint implementation remains validated. Built-in generation only; earlier increment sections are historical, not current coverage claims.
-
-## Twenty-eight-unit batch validation
-
-`twentyeight-pose-repository-20260914.log` reports VALIDATION PASSED. Official `twentyeight-pose-linux-20260914` and `twentyeight-pose-windows-20260914` exports pass. Packaged actions pass 4,136 Linux rendered checks at 1920x1080 and 4,108 Windows headless reduced-motion checks. Both final packaged reports pass, their processes are terminal, and all five compiled combat owner hashes match. Wide Barkhulk melee and Censerwing death captures were inspected alongside the four units' previously inspected small source/battle/alpha captures. These event stills do not establish continuous-motion acceptance; Windows headless Wine is not GPU certification.
-
-`twentyeight-pose-parity-20260914.json` passes at 538,611,864 bytes / 8,582 members per platform, only `project.binary` differs. Eight packing/provenance tests pass across twenty-eight recipes. This four-unit content batch changes original raster art and pose metadata only, not stats, rules, footprint profiles or saves. Final acceptance remains 0/160 and the full goal stays active.
-
-Fenmirror Gallowshell's original sheet had missing walking pincers and a third recoil pincer. Two targeted built-in art edits restore the walking pincers and remove the extra recoil pincer. Original attempts, corrected source, actual RGBA extraction and exact prompts/hashes are retained under `art/animation/source/poses/unit_neutral_fenmirror_gallowshells/`. `gallow-fixed-source-alpha-20260914` passes seven checks and its 1280x720 light/dark capture was inspected cleanly. This source is not packed or enabled; gait contacts and continuous action/death quality still require review.
-
-Cleanup verified six twenty-four-unit export/action/driver reports and no active references before deleting six obsolete twenty-unit executable/PCK/native-library payloads (1,248,032,384 rebuildable bytes). Twenty-unit reports/screenshots remain, alongside twenty-four-unit rollback and twenty-eight-unit current packages, original art/provenance, caches, Wine user data and unrelated retention files. No additional source or evidence deletion is authorized by size alone.
-
-## Cindervane Censerwing candidate
-
-Sixteen original built-in poses provide breathing, upstroke/downstroke/passing flight, beak/talon melee, folded-wing guard, distinct censer charge/fanned release/recoil/recovery, impact, loss of lift, side fall and a dimmed persistent corpse. Original RGB checkerboard, neutral-gray edit and real RGBA extraction remain with exact prompts/hashes under `art/animation/source/poses/unit_neutral_cindervane_censerwings/`. Uniform 0.70 downsampling and segmented wing/beak/tail rectangles preserve original raster articulation without painting or warping.
-
-Clean import and eight packing/provenance tests across twenty-eight recipes pass. `censer-actions-20260914` passes 169 battle checks and `censer-packed-alpha-20260914` passes seven; actual 1280x720 firing and source/packed light/dark captures were inspected. Continuous wingbeat/action/death motion acceptance remains outstanding. No stats, footprints, rules, balance or save changes. This four-unit increment remains uncommitted for consolidated repository/Linux/Windows validation. Cleanup retains required original art/provenance and focused evidence; no newly obsolete export exists, and caches/unrelated retention files remain untouched.
-
-## Saltwake Bellwhale candidate
-
-Sixteen original built-in poses supply breathing, raised/lowered/passing swimming strokes, head/flipper melee, folded-fin guard, separate swollen-throat/open-mouth sonar release/recoil/recovery, impact, loss of lift, side collapse and a dimmed grounded corpse. Original RGB checkerboard, neutral-gray edit and true RGBA extraction remain with exact prompts/hashes under `art/animation/source/poses/unit_neutral_saltwake_bellwhales/`. Uniform 0.80 downsampling preserves original fins, bells and body articulation without painting or warping replacement poses.
-
-Clean import and eight packing/provenance tests across twenty-seven recipes pass. `whale-actions-20260914` passes 175 battle checks; `whale-packed-alpha-20260914` passes seven. Actual 1280x720 sonar and source/packed light/dark captures were inspected. Continuous swimming/action/death motion acceptance remains outstanding. No stats, footprints, rules, balance or save changes. This three-unit increment remains uncommitted for the next consolidated repository/Linux/Windows content batch. Cleanup found no surviving temporary pose-test directories; required sources/provenance and focused evidence remain. No newly obsolete exports were created or deleted; caches and unrelated retention files remain untouched.
-
-## Barkhulk and Ironback candidates
-
-Rootvault Barkhulk now uses twelve original poses for breathing, root-knuckle steps, raised fist/slam, heartwood brace, recoil, knees buckling, side fall and its own dimmed corpse. Quenchbell Ironback has twelve for breathing, heavy steps, raised-horn anticipation/forward ram, low-horn brace, recoil and dimmed side collapse/corpse. Uniform 0.64 and 0.72 downsampling respectively and segmented source rectangles preserve original anatomy without painting or warping replacement poses. Both use the previously reviewed original RGBA sources; recipes and runtime hashes are recorded in their provenance.
-
-Clean imports and eight packing/provenance tests across twenty-six recipes pass. `bark-actions-20260914` passes 132 battle checks and `ironback-actions-20260914` passes 124; both packed-alpha reports pass seven. Actual 1280x720 attack and light/dark captures were inspected. Continuous gait contacts, attack weight and full brace/death motion acceptance remain outstanding. No stats, footprint profiles, rules, balance or save changes. This two-unit increment remains uncommitted for the next consolidated repository/Linux/Windows content batch. Cleanup found no surviving temporary pose-test directories; required original art/provenance, runtime atlases and focused captures remain. No newly obsolete exports were created or deleted; caches and unrelated retention files remain untouched.
-
-## Twenty-four-unit batch validation
-
-`twentyfour-pose-repository-20260914.log` reports VALIDATION PASSED. Both official `twentyfour-pose-linux-20260914` and `twentyfour-pose-windows-20260914` exports pass, including Windows generated-map/Town entry and managed Wine cleanup. `twentyfour-pose-linux-actions-20260914` passes 3,544 rendered battle checks at 1920x1080; `twentyfour-pose-windows-actions-20260914` passes 3,520 headless reduced-motion checks. Both final packaged driver reports pass and all driver processes are terminal. The five compiled combat owner hashes match exactly across platforms. Wide Prism Kite firing and Crownmaw death captures were inspected alongside the four units' small source/alpha captures. Event stills do not establish continuous-motion acceptance; Windows headless Wine is not GPU certification.
-
-`twentyfour-pose-parity-20260914.json` passes: 534,777,376 bytes and 8,574 members per package, with only `project.binary` different. Eight packing/provenance tests cover twenty-four recipes. The four-unit increment changes only original raster assets/pose metadata, not combat rules, stats, footprint profiles or saves. Final motion acceptance remains 0/160 and the full goal stays active.
-
-Rootvault Barkhulk and Quenchbell Ironback twelve-pose sources are prepared, not packed or registered. Their seven-check `bark-source-alpha-20260914` and `ironback-source-alpha-20260914` reports pass; actual 1280x720 light/dark captures were inspected. Barkhulk uses the neutral-gray extraction. Ironback's original output already has RGBA 0..254 and composites cleanly despite the brown raw preview; redundant extraction attempts are unselected alternatives, not proven alpha failures. Original sources and exact built-in prompts/hashes are retained under their respective `art/animation/source/poses/` directories. Both need packing and continuous gait/action/death review.
-
-Cleanup verified six twenty-unit export/action/driver reports pass and no active references before deleting exactly six obsolete sixteen-unit executable/PCK/native-library payloads (1,241,318,192 rebuildable bytes). Sixteen-unit reports/screenshots remain, as do twenty-unit rollback and twenty-four-unit current packages, original art/provenance, caches, Wine user data and unrelated retention files.
-
-## Noonshard Prism Kite candidate
-
-Sixteen original built-in poses provide hover, raised/lowered/recovery flight, beak-jab melee, glass-wing guard, distinct four-frame ranged aiming/release/recoil/recovery, impact, loss of lift, collapse and a persistent prone corpse. Original RGB checkerboard, neutral-gray edit and actual RGBA extraction remain with exact prompts/hashes under `art/animation/source/poses/unit_neutral_noonshard_prism_kites/`. The builtin backend model is not exposed; no paid API fallback was used. Uniform 0.70 downsampling and segmented rectangles preserve the original wings/tail without painting or warping; atlas frame order groups firing before recoil/death with the corpse last.
-
-Clean import and eight packing/provenance tests across twenty-four recipes pass. `kite-final-actions-20260914` passes 169 battle checks, including ranged/melee separation and corpse/save routing; `kite-final-packed-alpha-20260914` passes seven checks. Actual 1280x720 firing and final light/dark captures were inspected. Raw preview colored fringes do not appear in the Godot composite. Full continuous flight/action acceptance remains outstanding. No gameplay, footprint, balance or save change. This four-unit increment remains uncommitted pending consolidated repository/Linux/Windows validation. Original art, provenance and focused evidence remain retained; caches and unrelated retention files are untouched.
-
-## Miremoon Crownmaw candidate
-
-Twelve original built-in poses supply heavy steps, raised open-jaw windup, forward bite, low crown brace, recoil, knees buckling, side collapse and a dedicated dimmed corpse. The RGB checkerboard original, neutral-gray edit and true RGBA extraction remain with exact prompts/hashes under `art/animation/source/poses/unit_neutral_miremoon_crownmaws/`. Uniform 0.65 downsampling and segmented lower-row crops preserve the original antlers/tail/limbs without neighboring moss fragments, painting or affine replacement poses.
-
-Import and eight packing/provenance tests across twenty-three recipes pass; `crownmaw-actions-20260914` passes 132 battle checks and `crownmaw-packed-alpha-20260914` passes seven compositing checks. Actual 1280x720 bite and light/dark captures were inspected. Gait contacts and continuous bite/brace/death motion review remain outstanding. No gameplay, footprint, balance or save change. This three-unit increment remains uncommitted for the next consolidated content/platform batch; twenty-unit `a4780716` remains the validated baseline. Cleanup retains needed source/runtime art and focused evidence; no newly obsolete export payload exists. Caches and unrelated retention files remain untouched.
-
-## Ashcrown Kilnelk candidate
-
-Twelve original poses supply breathing/gait, lowered crown anticipation, forward antler sweep, rack guard, recoil, buckling knees, side fall and a dedicated dimmed corpse. Exact built-in prompts and all original/green/gray/extraction hashes remain under `art/animation/source/poses/unit_neutral_ashcrown_kilnelk/`. Initial green-source extraction and packed capture exposed orange speckles and a neighboring guard fragment despite passing numeric alpha checks. A neutral-gray edit/extraction produced a cleaner actual Godot capture; it is the selected packing source. Raw image previews are not compositing proof. Rejected attempts remain explicitly marked, not silently accepted.
-
-Uniform 0.59 downsampling and segmented antler/body rectangles preserve the generated anatomy. `kilnelk-gray-alpha-20260914` and `kilnelk-clean-packed-alpha-20260914` captures were inspected at 1280x720. Import and eight packing/provenance tests across twenty-two recipes pass; `kilnelk-actions-20260914` passes 124 battle checks and its 1280x720 crown-attack capture was inspected. Both selected alpha reports pass seven checks. Full gait/crown/death motion review remains outstanding. No stats, footprint, rule or save changes. This increment remains uncommitted for the next consolidated content/platform batch, with twenty-unit `a4780716` the validated baseline. Cleanup retains needed original attempts/provenance and small diagnostic captures; no newly obsolete export payload is deleted. Caches and unrelated retention files remain untouched.
-
-## Rimebell Skyraker candidate
-
-Twelve original poses now supply idle, raised/lowered/passing feather-fin flight, talon windup/rake, folded-fin guard, recoil and a collapsed unlit persistent body. Uniform 0.57 downsampling and segmented rectangles keep wing tips, the long tail and extended talons while excluding neighboring pose fragments. Sources, exact built-in prompts/hashes and reproducible packing remain under `art/animation/source/poses/unit_neutral_rimebell_skyrakers/`. No procedural or affine replacement poses were authored.
-
-Import and eight packing/provenance tests across twenty-one recipes pass. `rime-actions-20260914` passes 124 battle checks and `rime-packed-alpha-20260914` passes seven compositing checks. Actual 1280x720 talon-rake and light/dark captures were inspected without visible matte or neighboring fragments. Continuous flight/rake/death acceptance remains outstanding; this is a candidate, not final quality approval. No gameplay, footprint, save or balance changes. This increment remains uncommitted for the next consolidated content/platform batch. Cleanup retains required sources/runtime/evidence; no newly obsolete exports exist. Caches and unrelated retention files remain untouched.
-
-## Twenty-unit batch validation
-
-`twenty-pose-repository-20260914.log` reports VALIDATION PASSED. Both official `twenty-pose-linux-20260914` and `twenty-pose-windows-20260914` exports pass, including Windows generated-map/Town entry and managed Wine cleanup. `twenty-pose-linux-actions-20260914` passes 3,003 rendered battle checks at 1920x1080; `twenty-pose-windows-actions-20260914` passes 2,983 headless reduced-motion checks. Both final packaged driver reports pass and their processes are terminal. The five compiled combat owner hashes match exactly. Wide Knucklebear swipe and Lanternmoth firing captures were inspected alongside all four units' 1280x720 source/alpha captures; event stills do not establish continuous-motion acceptance.
-
-`twenty-pose-parity-20260914.json` passes at 531,879,844 bytes / 8,566 members per platform, with only `project.binary` different. Eight packing/provenance tests cover twenty recipes. This batch changes only four identities' pose metadata and original raster assets, not combat stats, rules, footprint profiles or saves. Final animation acceptance remains 0/160. Windows headless Wine evidence is not Windows GPU certification.
-
-## Sunscale Lanternmoth and twenty-unit batch
-
-Sixteen original Sunscale Lanternmoth poses now supply wing upstroke/downstroke/passing, distinct leg-rake melee versus four-stage abdomen/fan firing, folded-wing guard, recoil and a collapsed unlit corpse. Built-in generation, green-background edit and true RGBA extraction are preserved with exact prompts/hashes under `art/animation/source/poses/unit_neutral_sunscale_lanternmoths/`. Uniform 0.69 packing uses segmented rectangles to retain wing tips without adjacent pose fragments. No procedural or affine substitute poses were authored.
-
-`moth-actions-20260914` passes 175 actual battle checks, including separate ranged/melee and own-corpse/save routing. `moth-packed-alpha-20260914` passes seven compositing checks; actual 1280x720 firing and light/dark captures were inspected. Eight packing/provenance tests cover twenty reproducible recipes. Repository, official exports and packaged battle validation pass as recorded below. Continuous flight/action acceptance remains outstanding, and the full goal stays active.
-
-Rimebell Skyraker original/RGBA sources are prepared, not registered. The seven-check `rime-source-alpha-20260914` report passes and its actual Godot light/dark capture was inspected. Twelve poses retain the feather fins, blue keel and rake talons; full packing/motion review remains pending. Exact built-in prompts/hashes remain under its source directory, excluded from enabled counts.
-
-Cleanup verified all six sixteen-unit export/action/driver reports pass and no file references before deleting exactly six obsolete fourteen-unit executable/PCK/native-library payloads (1,238,476,680 rebuildable bytes). Fourteen-unit reports/screenshots remain, as do sixteen-unit rollback and twenty-unit current payloads, all original art/provenance, caches, user data and unrelated retention files.
-
-## Galehorn Strider candidate
-
-Sixteen original built-in generated poses are registered for idle, four movement phases, horn anticipation/thrust/recovery, brace/impact, recoil and four collapse/dead states. The first RGB checkerboard output is retained as a rejected runtime source; a built-in green-background edit and alpha extraction produced real RGBA 0..254. Individual crop boundaries exclude neighboring tails/hooves; uniform 0.78 downsampling preserves original anatomy without painting or affine replacement poses. Exact prompts, hashes and reproducible packing are under `art/animation/source/poses/unit_neutral_galehorn_striders/`.
-
-`galehorn-actions-20260914` passes 124 battle checks and `galehorn-packed-alpha-20260914` passes seven compositing checks. Their actual 1280x720 horn-attack and light/dark captures were inspected. Godot import is clean; eight packing/provenance tests pass across nineteen recipes, and `git diff --check` plus tracker sync dry-run pass. Walking contacts and continuous-motion acceptance remain outstanding. This three-unit increment remains uncommitted for the next consolidated repository/Linux/Windows batch; sixteen-unit packages are the validated platform baseline. No simulation, footprint, save or balance change. Cleanup review retains required originals, provenance and small focused evidence; no newly obsolete export payload exists. Caches and unrelated retention files remain untouched.
-
-## Knucklebear and Belltoad candidates
-
-Brambleback Knucklebear now has twelve packed poses for idle, knuckle steps, raised-arm swipe, forearm guard, recoil, collapse and its own prone corpse. Mireglass Belltoad has sixteen including compressed/airborne/landing hop phases and distinct melee bite versus inflated/contracted-throat ranged croak. Uniform scales are 0.60 and 0.70 respectively. Segmented crops preserve long claws and airborne webbed feet while separating neighboring poses. Original raster sources, exact built-in prompts/hashes and reproducible recipes remain in their source directories; no procedural or affine replacement poses were authored.
-
-Import and eight packing/provenance tests across eighteen recipes pass; `knucklebear-actions-20260914` and `belltoad-actions-20260914` pass 136 and 183 checks; packed-alpha reports pass seven each. Actual 1280x720 swipe/croak and light/dark captures were inspected without visible matte or neighboring fragments. No gameplay, save schema, footprint or balance changes. This content increment remains uncommitted; consolidate next full exports across a larger art batch. Full walking/hopping/attack/death motion acceptance remains outstanding. Cleanup review retains needed new source/runtime atlases and evidence; no newly obsolete export files are deleted, and temporary probes use lifecycle-owned folders. Unrelated retention files and caches remain untouched.
-
-## Sixteen-unit batch validation
-
-`sixteen-pose-repository-20260914.log` reports VALIDATION PASSED. Both official exports pass, including Windows generated-map/Town entry and managed Wine cleanup. `sixteen-pose-linux-actions-20260914` passes 2,393 rendered battle assertions at 1920x1080; `sixteen-pose-windows-actions-20260914` passes 2,377 headless reduced-motion assertions. Both final packaged driver reports pass and their processes are terminal. All five compiled combat owner hashes match across platforms. Wide Skyray firing and Aurochs death captures were inspected alongside their 1280x720 source captures; these remain event stills, not final continuous-motion acceptance.
-
-Package parity passes at 528,522,748 bytes / 8,558 entries each, only `project.binary` differs. Eight packing/provenance tests cover sixteen recipes and require distinct firing/melee frame lists for every enabled ranged unit. No gameplay, footprint, save schema or balance changes in this content batch. All 160 final motion acceptances remain outstanding.
-
-Brambleback Knucklebear and Mireglass Belltoad original/RGBA sources are prepared, not registered. Their seven-check source-alpha reports pass and actual light/dark Godot captures were inspected. Sources and exact built-in generation/extraction prompts are preserved under their `art/animation/source/poses/` directories. Belltoad includes sixteen source poses with separate hop, bite, throat-charge/croak and deflated dead body; Knucklebear includes twelve with raised-arm swipe, forearm guard and prone corpse. Packing and full motion review remain pending for both.
-
-## Cinderwake Aurochs candidate
-
-Both `sixteen-pose-linux-20260914` and `sixteen-pose-windows-20260914` official exports pass, including Windows generated-map/Town startup. `sixteen-pose-parity-20260914.json` passes at 528,522,748 bytes / 8,558 entries per platform, only `project.binary` differs. Packaged battle probes remain running; export success is not their completion. Brambleback Knucklebear source/RGBA is prepared but unregistered; its seven-check `knucklebear-source-alpha-20260914` contrast capture was inspected. Exact built-in prompts/hashes are retained under its source directory.
-
-Cleanup verified the fourteen-unit export/action reports and no active references before deleting exactly six twelve-unit executable/PCK/native-library files (1,235,706,072 rebuildable bytes). Twelve-unit reports/screenshots remain, as do fourteen-unit rollback and sixteen-unit current payloads, all original art/provenance, caches, user data and unrelated files.
-
-Twelve original poses are packed at uniform 0.66 scale: idle/breath, hoof contact/passing, lowered-horn anticipation and thrust, crouched guard, recoil, buckling knees, side fall and dedicated corpse. Segmented crops remove neighboring horn/tail fragments caught in the first atlas inspection while retaining the generated anatomy. Exact source/extraction prompts and hashes, rejected checkerboard attempts and reproducible packing are in `art/animation/source/poses/unit_neutral_cinderwake_aurochs/`.
-
-`aurochs-actions-20260914` passes 136 actual battle checks, including own death/corpse/save routing; its 1280x720 horn attack was inspected. `aurochs-packed-alpha-20260914` passes seven checks and its light/dark capture was inspected. Import and eight packing/provenance tests across sixteen recipes pass. Repository validation and Linux export are running; Windows/package checks remain pending. No new gameplay, footprint, save or balance changes. Clearer walking contacts and full continuous-motion review remain required; this is not final art acceptance.
-
-## Tideglass Skyray candidate
-
-Sixteen packed original poses now cover hover, raised/downstroke fins, glide, ram, defensive curl, recoil, collapse and a dedicated flat corpse. Content inspection found this is a ranged unit, so four additional original Glasswing Broadside poses were generated rather than aliasing Shoot to ram. Built-in generation/extraction prompts, exact hashes and the reproducible packing recipe are in `art/animation/source/poses/unit_neutral_tideglass_skyrays/`. The atlas uses 0.62 base-sheet and 0.36 higher-resolution ranged-sheet downsampling; segmented crops preserve extended fins without neighboring fragments.
-
-`skyray-actions-20260914` passes 175 actual battle assertions, including distinct ranged/melee routing and its own death/corpse/save identity. Its 1280x720 firing capture was visually inspected. Both `skyray-ranged-alpha-rendered-20260914` and `skyray-packed-alpha-20260914` pass seven compositing checks; light/dark Godot captures were inspected. The first source-alpha invocation omitted rendering and returned no report; it is not passing evidence. Import and eight packing/provenance tests across fifteen recipes pass. The packing suite now requires every enabled ranged unit to have a firing clip with indices distinct from melee. No simulation, footprint, save or balance change.
-
-This content increment remains uncommitted pending the next consolidated art/platform batch; prior fourteen-unit packages do not contain Skyray. Continuous motion acceptance remains outstanding. Cinderwake Aurochs original source and true RGBA retry are prepared but unregistered; rejected RGB checkerboard attempts and exact built-in provenance are retained. Cleanup review retains these needed sources and evidence; probe-owned temporary folders are lifecycle-cleaned, and no additional obsolete export payloads are removed. Caches and unrelated untracked retention files remain untouched.
-
-The next Aurochs source-alpha probe, `aurochs-source-alpha-20260914`, passes seven checks. Its actual Godot light/dark capture was visually inspected without checkerboard or green backdrop. This is source compositing evidence only; Aurochs is still not enabled.
-
-## Fourteen-unit batch validation
-
-`fourteen-pose-repository-20260914.log` reports VALIDATION PASSED. Both official `fourteen-pose-linux-20260914` and `fourteen-pose-windows-20260914` exports pass, including Windows generated-map/Town entry and managed Wine cleanup. Packaged real-action reports pass 2,086 Linux rendered checks and 2,072 Windows headless reduced-motion checks; body/footprint reports pass 971 Linux and 968 Windows checks. The five compiled action-render owner hashes match across platforms. Eight packing/provenance tests cover fourteen reproducible recipes.
-
-Focused Fast Orewyrm probes pass 156 source, 156 Linux packaged and 131 Windows headless checks (`event-clock-fast-orewyrm-20260914`, `fourteen-pose-linux-fast-20260914`, `fourteen-pose-windows-fast-20260914`). These exercise actual 294ms actions and original/scaled duration retention, not only synthetic clock arithmetic. The Windows driver exits zero. Source 1280x720 attack and packaged 1920x1080 corpse-context captures were visually inspected: the creature is readable; living units can obscure a corpse underneath, so these stills alone do not establish full death-motion readability or final acceptance.
-
-`fourteen-pose-parity-20260914.json` passes: 527,101,992 bytes / 8,554 members per platform, only `project.binary` differs. Cleanup removed exactly six obsolete ten-unit executable/PCK/native-library payloads, recovering 1,232,054,296 rebuildable bytes after checking active references. Reports, screenshots, originals/provenance, caches, user data and twelve-/fourteen-unit packages remain. Unrelated untracked retention files remain untouched.
-
-Tideglass Skyray original/RGBA sources are prepared under `art/animation/source/poses/unit_neutral_tideglass_skyrays/`, with exact built-in prompts and hashes. Its seven-check source-alpha capture was inspected; packing and live animation remain pending. It is not registered or counted among the fourteen candidates. All 160 final motion acceptances remain outstanding.
-
-## Event-relative pose playback clock
-
-Source inspection found that Board passed application uptime into authored loop clips. Movement could therefore begin at an arbitrary stride, queued reactions could advance before their start, and Fast travel did not accelerate the leg cycle. `BattleUnitPose.elapsed_msec` now derives event time from the presentation record's start and original/scaled durations. Idle retains wall time; reduced motion retains static poses. Original duration is presentation-only metadata, not save or simulation state.
-
-`event-clock-bodies-20260914` passes 967 checks; the strengthened `event-clock-accessible-bodies-20260914` passes 968, including delay/start behavior, legacy records, equivalent Normal/Fast phase, two live same-unit actors with different event phases, and the same pair frozen under reduced motion. The action report now samples loop regions using actual event times instead of repeating a fixed 300ms sample. `event-clock-orewyrm-20260914` passes 132 Normal real-action checks. Consolidated platform and Fast-speed results are recorded above.
-
-## Deepforge Vaultwyrms and Gaugecoil Orewyrms
-
-Both neutral creatures now resolve to twelve original articulated poses covering idle, alternating contacts/passing, mouth windup/attack, guard/recoil and collapsed persistent bodies. Vaultwyrm semantic order is restored from the built-in right-facing reflection. Per-pose crop boundaries exclude neighboring tails/claws and align the low corpse without rotating a standing sprite. Orewyrm's generated art retains its pressure gauges, segmented armor, tail valve and drill-petal mouth. Exact prompts, original/RGBA hashes and reproducible packing recipes are preserved in their source directories. Gameplay stats, footprints and save rules are unchanged.
-
-`vaultwyrm-actions-20260914` and `orewyrm-actions-20260914` each pass 132 actual battle assertions, including own-corpse/save identity; their 1280x720 bite captures were inspected. Both seven-check packed-alpha captures were visually inspected in Godot. Eight packing/provenance tests cover fourteen recipes; import and `git diff --check` pass. These are enabled candidates, not final motion acceptance. Consolidated platform validation and cleanup are recorded above.
-
-## Twelve-unit batch validation
-
-`twelve-pose-repository-20260914.log` reports VALIDATION PASSED. Both official `twelve-pose-linux-20260914` and `twelve-pose-windows-20260914` exports pass, including Windows generated-map entry and managed Wine cleanup. `twelve-pose-linux-actions-20260914` passes 1,826 assertions with 1920x1080 rendering; `twelve-pose-windows-actions-20260914` passes 1,814 headless reduced-motion assertions and exits zero. The five compiled combat owner hashes match across platforms. Wide Prism firing and Mirror corpse captures were visually inspected alongside source 1280x720 captures. The corpse stays beneath living units without its own readout; this does not claim continuous-motion acceptance.
-
-`twelve-pose-parity-20260914.json` passes: 525,716,688 bytes / 8,550 members each, only `project.binary` differs. Eight packing/provenance tests cover twelve reproducible recipes. No gameplay, footprint, save schema or simulation changes are part of this content increment. All 160 final animation acceptances remain outstanding.
-
-## Prism Harrier and Mirror Skirmisher candidates
-
-`unit_prism_adept` now uses sixteen original poses with separate crossbow aim/release/reload and melee bash, crouch/recoil, collapse and a persistent horizontal corpse. The packing recipe preserves the extended crossbow and restores the guard hood that the first crop clipped. `prism-actions-20260914` passes 183 actual action assertions, including the candidate's own corpse and save/resume. Its 1280x720 firing capture and `prism-packed-alpha-20260914` light/dark rendering were visually inspected; the latter passes seven checks.
-
-`unit_mirror_duelist` now has sixteen original staff, buckler, movement and death poses. Two RGB checkerboard attempts are rejected as transparent assets and retained with exact prompts/hashes. A built-in green-background edit followed by extraction produced real RGBA; the seven-check `mirror-source-alpha-20260914` Godot capture was visually inspected. Segmented packing keeps the long blocking staff out of the recoil frame and separates adjacent fallen bodies; low corpse anchors keep the body grounded. No local painted stand-in or paid API was used. Both units remain candidates: clearer alternating walking contacts and continuous playback review are still required. Consolidated current-content validation follows this two-unit batch.
-
-Mirror's packed-alpha probe passes seven checks and its actual Godot rendering was visually inspected. `mirror-actions-20260914` passes 124 battle checks; its 1280x720 staff attack was inspected. Eight packing/provenance tests cover all twelve recipes. A separate four-frame walk refinement is rejected for camera mismatch and repeated leading leg; exact prompt and image hash remain under `refinement-drafts/`.
-
-Cleanup removed six obsolete eight-unit export payloads (1,227,904,472 bytes), after checking no active process/file references and verifying all four ten-unit export/action reports pass. Eight-unit reports/captures and ten-/twelve-unit payloads remain. Original art, caches, Wine user data and pre-existing unrelated files were preserved.
-
-Deepforge Vaultwyrms source and RGBA extraction are prepared, not registered. A built-in whole-sheet reflection supplies a right-facing version with reversed columns; semantic frame order must be restored during packing. Both seven-check source-alpha captures pass. No extra enabled/accepted identity is claimed.
-
-## Ten-unit batch validation
-
-`ten-pose-repository-20260914.log` reports VALIDATION PASSED. Both official `ten-pose-linux-20260914` and `ten-pose-windows-20260914` exports pass, including the Windows generated-map/Town flow and managed Wine cleanup. `ten-pose-linux-actions-20260914` passes 1,523 rendered assertions at 1920x1080; `ten-pose-windows-actions-20260914` passes 1,513 headless reduced-motion assertions and its driver exits zero after cleanup. Both probes retain all assertions and record matching hashes for the five compiled combat owners. Packaged Aurora firing and Shard persistent-corpse scenes were visually inspected alongside their source 1280x720 captures. Living units can overlap corpses, which correctly draw underneath and have no readouts of their own.
-
-`ten-pose-parity-20260914.json` passes: 523,890,800 bytes / 8,546 members each, with only `project.binary` different. Eight reproducible packing/provenance tests cover all ten recipes; `git diff --check` passes. This validates the candidate runtime/platform increment, not final continuous animation quality or complete roster coverage. Prism Harrier remains source-only and is excluded from enabled counts.
-
-## Tenth candidate: Shard Pavise Guard
-
-Cleanup removed the six superseded seven-unit export payload files (1,225,771,584 bytes) after verifying no active process referenced them and both eight-unit replacement probes passed. Only reproducible executables, PCKs and native libraries were removed. Seven-unit reports/captures, original art, caches, Wine user data and unrelated untracked retention files remain; the validated eight-unit and current ten-unit payloads remain available.
-
-`unit_shard_guard` now has sixteen original generated poses: idle, four movement phases, blade windup/thrust/recovery, shield brace/block, hit, kneel/fall/landing and a dedicated horizontal corpse. Its original faceted pavise, blade, closed visor and gold/ivory armor are retained. Built-in source/alpha prompts and hashes are saved with the reproducible 0.72-scale packing recipe; separate ground anchors align the low death poses. The packed atlas and actual Godot light/dark contrast rendering were inspected. The visible shield and prone-body poses are distinct; clearer alternating walk contacts and full continuous-motion acceptance remain open. No paid API or local painted approximation was used.
-
-`shard-actions-20260914` passes 154 actual battle assertions, including its own death/corpse and save identity. The 1280x720 attack scene was inspected. `shard-packed-alpha-20260914` passes seven compositing assertions; all eight packing/provenance tests pass across ten recipes. Import and `git diff --check` pass. Ten-unit Linux export passes at `ten-pose-linux-20260914`; repository validation, Windows export and packaged action checks are running. A wrapper exit 143 does not invalidate or restart the confirmed-live repository/Linux probe children; collect their final reports before claiming completion.
-
-Prism Harrier (`unit_prism_adept`) has a sixteen-pose source and real RGBA retry prepared, but no runtime registration. Its first alpha edit was RGB with baked checkerboard and is explicitly rejected. Source, attempts and exact prompts/hashes are retained under its source directory. `prism-source-alpha-20260914` passes seven compositing assertions and its clean light/dark rendering was inspected. Packing and motion review are next; no enabled/accepted count is assigned to this source-only work.
-
-The ten-unit repository log subsequently reported VALIDATION PASSED and `ten-pose-windows-20260914` official export completed with `ok: true`. `ten-pose-parity-20260914.json` passes at 523,890,800 bytes / 8,546 members per platform, with only `project.binary` differing. Packaged action-result collection remains in progress; no completed ten-unit batch claim yet.
-
-## Ninth candidate: Aurora Ballista
-
-`unit_aurora_ballista` now uses sixteen original generated poses for idle lens changes, movement, distinct firing/ram attacks, defensive brace/recoil, destruction and a persistent wreck. Existing two-hex footprint and 1.25 visual scale are unchanged. `packing.json` preserves generated alpha and uniform 0.72 source scale, with segmented crops retaining the extended stabilizer while excluding neighboring pose fragments. Provenance records the exact runtime hash and unchanged source lineage. The packed atlas and actual Godot light/dark contrast render were inspected; colored tool-preview edges do not appear as a replacement background in the rendered capture.
-
-`aurora-actions-20260914` passes 183 real-action assertions, including distinct Shoot/Strike clips, its own death/corpse identity, save/resume and unchanged simulation. Its 1280x720 firing capture was inspected. `aurora-alpha-20260914` and `aurora-packed-alpha-20260914` each pass seven compositing checks. The latter preserves atlas aspect ratio; the alpha driver now accepts an explicit source resource instead of requiring a separate hardcoded script for each unit. All eight packing/provenance tests pass across nine recipes; import and `git diff --check` pass. These are focused source results, not nine-unit Windows/Linux export acceptance. Wheel/stabilizer continuity and continuous-motion review remain open; final accepted count stays zero. Platform/repository reruns are grouped with the next content batch, not repeated after every individual asset.
-
-## Latest validated batch, 2026-09-14
-
-Eight enabled identities: River Guard, Sluicefire Lindworms, Ember Archer, Bog Brute, Citadel Pikeward, Blackbranch Cutthroat, Mire Slinger and Gorefen Ripper. `eight-pose-repository-20260914.log` reports VALIDATION PASSED. `eight-pose-linux-20260914` and `eight-pose-windows-serial-20260914` official exports pass (Windows generated-map/Town flow and managed Wine cleanup included). The first concurrent Windows attempt refused the Linux import lock; serial execution passed without overriding the guard.
-
-`eight-pose-linux-actions-20260914` passes 1,190 rendered assertions at 1920x1080; `eight-pose-windows-actions-20260914` passes 1,182 headless reduced-motion assertions. Both retain the probe assertions and hash the same five compiled combat owners. Gorefen's packaged attack capture was visually inspected alongside the source 1280x720 view; these are fixture/action evidence, not a continuous-motion or all-roster acceptance claim. `eight-pose-parity-20260914.json` proves 521,815,888 bytes and 8,542 members per platform; only `project.binary` differs. Eight packing/provenance tests and the 959-check current body regression pass. `git diff --check` passes.
-
-River Guard refinement produced three further built-in drafts with low-knee steps, but none clearly reverses its leading leg; the sheet also bakes checkerboard into RGB. They are rejected and not registered. Full prompts/hashes are retained in `art/animation/source/poses/unit_river_guard/refinement-drafts/provenance.json`. The original working candidate is unchanged. Aurora Ballista now has a generated sixteen-pose source and RGBA edit under its source directory: wheel/stabilizer phases, loaded/released rail, brace, damage and inert wreck. Its edge colors still require actual-renderer contrast review before packing or registration. This source preparation does not increase enabled or accepted counts. Both used built-in image generation, never a paid API.
-
-## Acceptance
-
-All 160 current authored units, including neutral and alternate roster identities, need readable idle, move, attack, defend and death clips plus a persistent dead pose. Missing identities/states fail focused coverage. New units inherit this requirement. Pose changes must articulate the creature/weapon, not merely rotate or resize one standing cutout. Keep original identity, transparent raster provenance, grounded alignment and readable silhouettes. Ranged attacks and retaliation retain appropriate routing; accessibility can suppress motion without suppressing state information.
-
-Dead sprites remain on the battlefield until battle exit, including save/resume, below living units and without health bars, targeting or live occupancy. Revival removes the corpse presentation. Do not fade casualties out and call that a dead sprite.
-
-Large units have explicitly authored visual scale and true two-adjacent-hex horizontal footprints, not inferred from tier or display names. Facing determines the rear cell. Placement, movement/path preview, melee/reach/retaliation distances, AI, spell targeting, pointer/controller hit testing and collision must use both cells. Dead units free both. Existing saves require explicit backward compatibility; no silent overlapping deployment or unrelated stat tuning.
-
-## Sequence and boundaries
-
-1. Replace pose ownership/playback with a per-unit clip-aware original-raster pipeline, persistent corpses and a visually reviewed infantry/large-unit vertical slice. Existing low-resolution affine sheets are migration fallbacks, not completed new pose coverage.
-2. Integrate shared footprint geometry into battle rules/AI/presentation and explicitly classify large bodies from content/art. Validate edges, crowded deployment, traversal, near/far-cell attacks, AI, death/revival and saves before rollout.
-3. Generate/review/register the remaining unit-specific pose sheets in manageable faction/neutral batches. Maintain exact pending/accepted identity lists; a manifest row or a few animated samples does not complete this goal.
-4. Consolidated roster playback, real battles, small/wide captures, accessibility, deterministic simulation, save/load, repository validation and Linux/Windows package acceptance; inspect final visuals, clean task-owned temporary artifacts, commit/push coherent validated increments.
-
-Targets: `content/unit_animation_manifest.json`, unit art/size metadata, `scenes/battle/BattleBoardView.gd`, shared runtime clip/footprint helpers, `scripts/core/BattleRules.gd`, `scripts/core/BattleAiRules.gd`, relevant ContentService/save boundaries, Python-owned asset packaging and focused regression tests. Use `python3 tests/validate_repo.py`, both official export smokes and packaged battle probes, plus `git diff --check`.
-
-Non-goals: native RMG/overworld footprints, town/UI rework, copied Heroes art, unrelated balance changes, generic procedural replacement sprites, or claiming all units complete from transform-only legacy sheets. Original raster generation follows the imagegen workflow; source masters/provenance stay separate from runtime packaging. No fixed package-size ceiling; preserve Linux/Windows completeness/parity.
-
-## Current evidence
-
-Started from `32e617e0`: 160 unit definitions, 160 animation mappings. Inspected River Guard's 64px/four-frame legacy sheet and its generator: poses are rotations/scales of one cutout with procedural accents. This is not accepted articulated animation coverage.
-
-### Implemented runtime increment
-
-All 160 shipped battle standees were visually inspected against their manifest identities. `unit_battle_size_manifest.json` explicitly covers the entire roster: 37 long beasts/extended engines occupy two horizontal cells. Nine tall upright identities receive larger visual scale while retaining one ground cell; compact flyers and infantry are classified separately. A name or tier does not determine size (Bog Brute is a human fighter; Aurora Ballista is a wheeled engine). Missing/new identities fail repository size coverage.
-
-`BattleFootprint.gd` owns occupied cells, whole-body bounds/collision and minimum body-to-body distance. Battle deployment, reachable destinations, actual/presented paths, melee approaches, pulls, support adjacency and AI distance use this geometry. UI outlines and cell lookup include the rear cell; sprites center over the body. New stack saves persist footprint/scale. Existing battle saves without these fields keep one-cell occupancy to avoid expanding into neighbors mid-battle.
-
-`BattleUnitPose.gd` accepts explicit per-unit clip layouts, loops and reduced-motion static frames. Board corpse ownership derives from saved dead stacks, excludes living hit targets/occupancy and disappears on revival. River Guard now has a candidate original-art set enabled, including a dedicated prone dead sprite; its final visual acceptance remains pending. Other identities still reject legacy affine corpses. Runtime ownership tests do not count as final art acceptance.
-
-### Art dependency and rejected attempts
-
-Built-in image generation produced two River Guard 4-column/6-row drafts under `/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/` (`exec-4faa609b-99cd-4889-8605-dd18e9c63184.png` and `exec-879c505a-78d9-462f-aef2-db3cf7981a9d.png`). Both were visually inspected and rejected: baked checkerboard instead of alpha, weapon crossing cell boundaries and insufficient walking articulation. No draft was registered or copied into shipped content. Reusing the old rotated death frame also looked wrong in a runtime capture and was rejected, not enabled as a corpse fallback.
-
-Accepted new pose identities: **0/160**. Pending final acceptance: exactly every `unit_id` in `content/unit_animation_manifest.json`. Built-in generation now successfully supplies actual RGBA cutouts using a generated flat-green source followed by a simple built-in background-extraction edit. No CLI/API workflow is needed or used. River Guard has one enabled candidate set; this does not complete the roster goal.
-
-### Built-in pose integration, 2026-09-14
-
-River Guard's 14 original generated poses now supply idle, move, attack, defense, death and a persistent prone body. Source masters, alpha edits, exact prompts and hashes live under `art/animation/source/poses/unit_river_guard/`; `packing.json` drives `tools/pack_unit_pose_art.py`. The packer copies reviewed source regions, uniformly downsamples and aligns anatomical ground anchors; it never paints, rotates standing cutouts, removes backgrounds or registers runtime assets implicitly. It rejects opaque source backdrops, invalid regions and canvas clipping. The source directory is excluded from Godot scanning and packaging.
-
-Runtime supports rectangular pose frames without stretching and explicit frame-index sequences across atlas rows. The candidate atlas is `art/animation/runtime/poses/unit_river_guard.png`. Reduced-motion frame selection and rules/save ownership remain separate. This candidate still needs better alternating walk contacts and full action playback review; it is not final art acceptance. Sluicefire Lindworm's first generated alpha idle/slither source is preserved separately and not registered yet.
-
-`python3 -B tests/test_pack_unit_pose_art.py` passed seven packing, registered-clip and provenance checks. Source Godot import passed. `river-pose-candidate-20260914/report.json` and `river-pose-wide-20260914/report.json` each passed 962 runtime checks, with one enabled original pose set and 159 legacy corpses rejected. The 1280x720 idle/dead and 1920x1080 dead captures were inspected: the unit remains upright at its cell and the prone corpse remains beneath living units without its own readout. These are board-presentation fixture captures, not a full match or all-state motion acceptance. Full repository and both-platform validation of this new candidate increment remain pending; earlier export results below cover the preceding runtime/size commit only.
-
-A targeted lower-row walk edit (`exec-dd5f8a5c-dbba-4619-a803-4d7fbc75ec8b.png`, built-in output directory above) was visually rejected: it still did not clearly alternate contacts and changed the rendering style. It is not registered. Cleanup removed only the redundant 716,179-byte candidate atlas; the byte-identical runtime atlas, original sources/provenance, generated drafts and validation evidence remain. Worktree changes are not committed pending consolidated candidate validation.
-
-### Three-candidate continuation, 2026-09-14
-
-The River-only status above is historical. Sluicefire Lindworms now has 11 packed original poses, including coiled guard, extended lunge, collapse and a flattened persistent corpse. Ember Archer now has 14 packed poses with distinct melee and bow-draw/release clips, articulated passing steps and a prone corpse. Sources, extraction prompts, SHA-256 lineage and reviewed packing recipes are stored in each unit's `art/animation/source/poses/` directory. Bog Brute sources are prepared but not yet registered. Final accepted coverage remains **0/160**; registration is candidate playback, not acceptance.
-
-The three-candidate atlas/provenance suite passes seven tests (including every registered optional clip), and `archer-pose-candidate-20260914/report.json` passes 962 runtime assertions with three enabled corpses and 157 legacy rejections. Archer's packed atlas and 1280x720 melee/ranged captures were visually inspected. `archer-actions-shoot-20260914/report.json` passes 447 real-action assertions, including distinct ranged/melee routing. The stronger assertion first caught a fixture mistake: its ranged case issued Strike rather than Shoot. The corrected fixture exercises the authoritative Shoot intent; no gameplay rule was changed. Consolidated latest-content platform validation remains pending.
-
-The preceding two-candidate increment passed full repository validation (`two-pose-repository-isolated.log`), source action playback (264 checks), Linux packaged bodies/actions (962/264) and Windows headless bodies/actions (959/209). These package results predate the newest archer asset and must not be presented as current three-candidate acceptance. The real reduced-motion probe exposed a nested SettingsService lookup bug: Board now normalizes animation/accessibility preferences before selecting pose frames. The strengthened source reduced-motion probe passed 262 checks; final current-content Windows/Linux exports remain pending. No paid image API was used.
-
-### Fourth candidate: Bog Brute
-
-Bog Brute now has a 12-pose runtime candidate with idle, stride/passing steps, overhead mace windup and forward strike, guard/recoil, collapse and a persistent prone body. Explicit segmented source crops retain the extended mace without capturing its neighboring guard, and separate adjacent collapse/corpse artwork. The packed atlas was visually inspected after removing neighboring fragments through crop boundaries; original source pixels/provenance remain intact. Seven packing/provenance tests pass across all four sets. `four-pose-bodies-20260914` passes 959 headless body checks (four enabled, 156 legacy corpses rejected); `four-pose-actions-20260914` passes 601 rendered action checks at 1920x1080. The Bog Brute melee capture was inspected: the articulated body is grounded but the existing sweep effect partially obscures the strike, so this is not final animation-readability acceptance. `four-pose-linux-20260914` export/startup passes. Current packaged reduced-motion and Windows export checks are running. This supersedes the preceding prepared-only Bog Brute status; final accepted roster remains 0/160.
-
-### Platform continuation and next source batch
-
-After the four-candidate Linux export and packaged accessibility probe passed, cleanup removed only the six superseded executable/PCK/native-library files in `pose-linux-20260914/export` and `pose-linux-accessible-20260914/export` (1,186,891,488 bytes). No processes referenced those payloads. They are rebuildable; reports, captures, current exports, originals/provenance, caches and user data remain.
-
-`four-pose-linux-reduced-20260914` passed 721 packaged action/accessibility assertions with unchanged export inventory and compiled-owner proof. The first four-candidate Windows export terminated with signal 15 before producing a final report; the exact cause is not established. Its cleanup report passes and preserves Wine user data. An isolated-process rerun is underway; Windows acceptance remains pending.
-
-Citadel Pikeward's twelve-pose original source and built-in transparency edit are saved under `art/animation/source/poses/unit_citadel_pikeward/` with full prompts and hashes. The actual 1448x1086 RGBA alpha was verified, and the draft was visually inspected for identity, thrust, shield brace and prone corpse. Long-weapon cropping, packing and playback remain; it is not registered or counted among the four enabled candidates. Built-in generation only, no paid API. Full roster acceptance remains 0/160.
-
-The isolated Windows rerun subsequently completed successfully: `four-pose-windows-isolated-20260914/report.json` reports `ok: true`, including generated-map/Town flow and Wine cleanup. `four-pose-windows-reduced-20260914` passes 154 packaged headless assertions for Bog Brute with actual static-frame checks, retained assertions and unchanged export proof. These validate the four-candidate content batch, not the newer Pikeward asset; the Windows focused probe is not all-roster playback coverage.
-
-### Fifth runtime candidate: Citadel Pikeward
-
-Pikeward now has twelve packed poses and registered idle, move, thrust, brace/recoil, death and persistent dead clips. All frames use the same 0.60 source scale and anatomical ground anchors. Segmented crops preserve the polearm tip and thrust extension while excluding neighboring boots that appeared in the initial packing preview. The corrected atlas was visually inspected. Seven packing/provenance tests pass across all five candidates; `--unit <exact_id>` now permits focused real-action playback without rerunning every candidate after each art addition. Pikeward's focused playback is underway. Four-candidate exports remain evidence for the preceding content batch, not five-candidate platform acceptance. Final accepted roster remains 0/160.
-
-Pikeward's isolated focused run, `pikeward-actions-isolated-20260914`, passes 137 assertions; its 1280x720 thrust capture was inspected. The initial wrapper terminated after the engine emitted its passing report, so only the isolated rerun is accepted as a complete driver result. The sweep effect still partly obscures the thrust; final readability review remains open. Four-candidate package parity passes at 519,145,180 bytes and 8,534 members per platform, with only `project.binary` differing (`four-pose-package-parity-20260914.json`). Pikeward is not included in that earlier export batch.
-
-### Attack-pose readability correction
-
-The original sweep cue obscured the new articulated attacker in inspected captures. `CombatVfxMotion.gd` now anchors slash/retaliation sweeps at 86% of the attacker-to-defender path, caps their extent at 1.15 hex radii and attenuates opacity. The same contact placement/size applies in reduced motion; other effect families and gameplay state are unchanged. Pikeward's refreshed 1280x720 capture shows its body and polearm more clearly; `pikeward-contact-readable-20260914` passes 137 action checks. Focused geometry coverage checks both facings, diagonal neighbors, multiple radii, large manifest scales and accessibility preferences. Its first test-only parse error (untyped vector expression) was corrected; the rerun is in progress. Latest runtime changes still require consolidated repository/platform validation. No final roster-animation acceptance claim.
-
-The corrected geometry/real-action VFX rerun, `pose-contact-readable-fixed-20260914`, passes 1,333 checks including accessibility and layer-budget stress. It preserves projectile, spell and impact roles. This is source-runtime evidence; earlier package reports do not include this latest readability correction.
-
-### Sixth candidate: Blackbranch Cutthroat
-
-Built-in imagegen produced twelve original hood/buckler/sickle poses and a real 1448x1086 RGBA transparency edit, saved with exact prompts and source/reference hashes under `art/animation/source/poses/unit_blackbranch_cutthroat/`. The runtime atlas uses uniform 0.60 downsampling, anatomical ground anchors and reviewed crops; neighboring pose fragments found in the initial preview were excluded. Idle, movement, sickle windup/lunge, guard/recoil, collapse and prone-body clips are registered as a candidate. Seven packing/provenance tests pass across all six sets. Focused actual-action playback is underway; full visual and latest-platform acceptance remain pending. Original sources are retained; no paid API or procedural pose generation was used.
-
-`cutthroat-actions-20260914` subsequently passed 133 focused action assertions. Its 1280x720 attack capture was visually inspected with the smaller contact effect. This validates action routing and unchanged simulation for the fixture, not final walking/death playback acceptance for the full roster.
-
-### Seventh candidate: Mire Slinger
-
-Sixteen original poses now provide idle, four walking frames, sling windup/release/recovery, separate melee punches, guard/recoil and collapse/prone body. Built-in generation, a targeted release/recovery edit and true RGBA extraction are saved under `art/animation/source/poses/unit_mire_slinger/` with full draft/edit/alpha prompts and hashes. Uniform 0.70 source scale and reviewed segmented crops preserve ground alignment while excluding neighboring pose fragments. The packed atlas was inspected; sling mechanics and walk contacts still require final motion review. Seven packing/provenance tests pass across all seven enabled candidates. Focused ranged/melee battle routing is underway; no final acceptance or latest-platform claim. Source masters and correction history remain; no paid API was used.
-
-`slinger-actions-20260914` passed 212 focused action assertions, including distinct ranged/melee routing and unchanged simulation. Its 1280x720 ranged capture was visually inspected. This is candidate fixture evidence, not final animation acceptance for the complete roster.
-
-### Seven-unit death coverage and next creature source
-
-`seven-pose-own-deaths-20260914` passes 1,067 rendered assertions at 1920x1080. Each lethal fixture now kills the candidate identity itself and verifies its own death event, exact texture/dead-frame region, enemy facing and same casualty after save/resume. Earlier lethal probes mostly killed River Guard and were weaker evidence. The driver now discovers enabled candidates from the authoritative animation manifest rather than a manual list. `seven-pose-linux-20260914` export/startup passes; full repository validation and Windows export are running. No full-goal acceptance claim.
-
-Original Gorefen Ripper twelve-pose sources and two built-in alpha attempts are preserved with prompts/hashes under `art/animation/source/poses/unit_gorefen_ripper/`. They are not runtime registered. The previews showed colored backdrops, but pixel inspection found substantial genuine zero-alpha area and maximum alpha 254; rendered verification is needed before accepting or rejecting these cutouts, and the packer's exact-255 assumption must not be treated as visual proof. No pixel approximation or paid API was used.
-
-### Eighth candidate and consolidated seven-unit results
-
-Gorefen Ripper now resolves twelve original generated poses: two idle poses, four crawling phases, claw/bite windup and lunge, guard, recoil, collapse and persistent prone body. `art/animation/source/poses/unit_gorefen_ripper/packing.json` uses uniform 0.72 downsampling and segmented crops to retain long claws while excluding neighboring pose fragments. Built-in source/edit prompts and hashes are retained; no paid API or painted pose approximation was used. It remains a candidate, not final motion acceptance.
-
-`gorefen-alpha-fullsheet-20260914/alpha-contrast.png` was visually inspected in Godot: both generated alpha edits really are transparent. The colored image preview was misleading. Their strongest alpha is 254, not 255; the packer now accepts 254/255 ink while still requiring zero-alpha background. A real-source regression proves byte-for-byte RGBA preservation at native scale without normalizing alpha. The selected cutout moved from its provisional rejection folder to `alpha/poses.png`; the other is retained under `alternatives/`. All eight packing/provenance tests pass. `gorefen-actions-20260914` passes 124 actual-action assertions; its 1280x720 scene/corpse capture was inspected. `eight-pose-body-20260914` passes 959 assertions, reporting eight enabled candidates and zero accepted units.
-
-Consolidated **seven-candidate** evidence is complete: `seven-pose-repository-20260914.log` reports VALIDATION PASSED; both `seven-pose-linux-20260914` and `seven-pose-windows-20260914` official exports pass, including Windows generated-map/Town flow and Wine cleanup. `seven-pose-packaged-accessible-20260914` passes 1,261 rendered Linux assertions and `seven-pose-win-actions-fixed-20260914` passes 1,061 headless Windows assertions. `seven-pose-parity-20260914.json` proves 520,749,444 bytes / 8,540 members each, with only `project.binary` different. These packages predate Gorefen registration; they do not certify the eighth candidate. The first Windows action launch had a test-output/prefix directory collision; a separate prefix and fresh label passed. Eight-candidate repository/export validation is underway; its initial concurrent Windows export correctly refused the active Linux lossless-import lock and must be rerun serially, without stealing that lock.
-
-Cleanup after seven-unit replacement validation removed only the nine superseded executable/PCK/native-library files under `four-pose-linux-20260914/export`, `four-pose-windows-20260914/export` and `four-pose-windows-isolated-20260914/export`: 1,850,665,932 bytes of reproducible payloads. Reports, captures, original sources, caches and Wine user data remain. Pre-existing unrelated untracked retention files/reports were not modified.
-
-### Validation scope
-
-Focused driver: `python3 -B tests/battle_unit_body_runtime_regression.py --label <unique> --render --resolution 1280x720`. It checks all size profiles, both side orientations/board edges, crowded deployment, movement paths, near-body melee/AI distance, a real large-enemy AI turn, hookline pull, invalid relocation, saved/legacy state and coordinate forms, pose indexing/reduced motion, corpse ownership/save/revival and rejection of all 160 unapproved legacy corpses. Packaged mode reuses the same assertions through the release bootstrap and hashes compiled owners. Source `enemy-body-final` and Linux `linux-complete-runtime` passed 951 assertions; Windows `windows-complete-runtime` passed 950 (headless skips the capture-size assertion). This is runtime coverage, not roster-animation completion.
-
-Evidence root: `.artifacts/battle-unit-animation-size-20260913/`. Source `enemy-body-final/large-body.png` at 1280x720 and packaged `linux-complete-runtime/large-body.png` at 1920x1080 were visually inspected: the larger body is centered over its two outlined cells. Initial fast packaged probes failed shutdown error checks despite passing assertions: verbose Windows output identified still-playing battle-entry audio. Test teardown now explicitly stops music/stingers and lets the mixer release playbacks; error scanning remains enabled and both final probes pass without errors. This is not a general game-audio shutdown fix.
-
-Official `final-linux/report.json` and `final-windows/report.json` exports pass, including Windows generated-map/Town/build gameplay and managed Wine cleanup. `package-parity.json` passes: 516,867,256 bytes and 8,526 members per platform; only `project.binary` differs. Windows is headless Wine coverage, not Windows GPU certification. The first refreshed launch failed because its systemd environment lacked the user template path; normal-shell re-exports passed. The stray editor settings produced by that launch were removed and are absent from the final packages.
-
-Existing battle readability (39 headless assertions) and combat VFX (1,081 headless assertions) pass at their `full-body-roster-final` evidence labels. Repository acceptance is recorded in `accepted-repository-validation.log`; the initial source check for a single-cell active outline was updated to the whole-body outline without weakening draw-order assertions. Superseded initial export binaries (about 1.16 GiB) and the task-created stray editor-settings directory were removed. Final packages, visual/rejection evidence, Wine user data, caches, original generated drafts and pre-existing unrelated untracked files remain.
+Requirements derive from `project.md`; execution is tracked in `PLAN.md` and
+`ops/progress.json`.
+
+## Current implementation
+
+All 160 authored units (90 faction, 70 neutral) have original articulated raster
+idle, move, attack, defend and death clips plus a persistent dead pose. Ranged
+units have distinct firing/casting routing. All 160 have explicit size profiles;
+37 use true two-adjacent-hex bodies. Implementation and visual acceptance are
+complete as of 2026-09-16; final Linux/Windows packages and repository closure pass.
+
+`battle-unit-animation-acceptance.json` records every reviewed identity, atlas
+hash, pose-metadata hash, actual action contact sheet and small-screen resting
+sheet. Manifest review status is not an automatic test result: it was assigned
+only after inspecting all 160 identities. The packing test rejects a stale
+review after changes to pixels, clips, grounding or facing.
+
+## Acceptance requirements
+
+- Every current unit, including neutrals and alternate identities, needs readable
+  idle, movement, attack, defense and death animation plus a persistent dead
+  sprite. New units inherit this requirement. Animated clips contain genuinely
+  different painted poses, not duplicates or transforms of a standing cutout.
+- Preserve identity, equipment, transparent original-raster provenance,
+  anatomical grounding and readable silhouettes. Ranged and retaliation events
+  retain their appropriate poses; accessibility may suppress movement without
+  suppressing state information.
+- Dead sprites persist until battle exit, survive save/resume, remain below
+  living units and have no health readout, targeting or live occupancy. Revival
+  removes the corpse presentation. A living unit may stand over a freed casualty
+  cell; this is not resurrection or a missing corpse.
+- Large bodies have explicitly authored scale and two horizontally adjacent
+  cells. Facing determines the rear cell. Deployment, paths, movement preview,
+  melee/reach/retaliation, AI, spells, pointer/controller targeting and collisions
+  use the full body. Death releases both cells.
+- Legacy battles without footprint metadata keep one-cell occupancy rather than
+  silently expanding into overlaps. New body fields survive save/resume.
+  Presentation clocks, art and settings must not alter simulation RNG or rules.
+- Validate actual battle flow, all-unit playback, small/wide visuals,
+  accessibility, deterministic simulation, save/load, repository consistency and
+  Linux/Windows packaging. Keep source art out of runtime packages.
+- No native RMG, overworld footprints, Town/UI redesign, copied Heroes art,
+  balance tuning or procedural replacement sprites. No fixed package-size
+  ceiling; measure sizes and preserve platform parity.
+
+## Runtime ownership and corrections
+
+`BattleFootprint.gd` owns shared body geometry for `BattleRules.gd`,
+`BattleAiRules.gd` and `BattleBoardView.gd`.
+`content/unit_battle_size_manifest.json` supplies scale/footprints, not unit
+names or tiers. Battle saves store these body fields; pose data remains
+presentation-only.
+
+`BattleUnitPose.gd` resolves manifest clips, explicit aliases, source facing,
+event-relative frame clocks and anatomical ground margins. Board owns drawing,
+not combat decisions. Corpses use the same authored ground/facing metadata as
+living sprites and draw below living actors.
+
+Queued hit/death/retaliation no longer displays before its scheduled start.
+The actor keeps idle or its held guard; displacement, casualty drawing and VFX
+wait for contact. Delayed movement remains at its source cell. Fast clocks scale
+pose cadence with movement; reduced motion holds the authored informative frame.
+
+Whole-roster review corrected 29 static guards into non-looping ready-to-brace
+transitions using distinct existing original paintings. Six explicit cast aliases
+now receive their ranged checks. Resonant Choristers and Prismwake Raylings have
+dedicated newly painted ranged poses; Raylings retain all three tails. Sources,
+rejected drafts, exact prompts and hashes remain under each unit directory.
+
+## Consolidated evidence (2026-09-16)
+
+Local evidence root:
+`.artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/`.
+Packages, raw captures and runtime reports:
+`/tmp/heroes-battle-roster-validation-20260916-RbzwGc/`.
+
+| Requirement | Current evidence |
+| --- | --- |
+| All 160 required states, original source lineage, reproducible packing | Nine packing/provenance/review tests plus nine cutout and seven report-recovery tests pass (25 total). Every registered atlas repacks byte-exactly; animated clips contain distinct pixels; death settles in its dedicated dead frame. |
+| All 160 source and Windows action/ranged/death/save routes, Fast/reduced motion | `source-fast-reduced-controlled-r3` and `packaged-poses-fast-reduced-controlled-r3`: 32,507 checks each, all 160 checkpoints, clean exit. These are explicitly controlled-headless clocks, not GPU visual certification. |
+| Normal real-time all-roster playback | `packaged-poses-wide-r3`: all 160 completed, 27,107 checks, one late-capture assertion. Original report remains failed. Unchanged focused `packaged-capture-followup-unit_neutral_milestone_bucklers`: 311 checks passed. All 160 final action contact sheets inspected. |
+| Small-screen idle and unobscured corpse art | `source-resting-roster-small-r2`: 2,153 checks, 160 distinct real-time idle pairs, 480 images at 1280x720; all inspected. |
+| Body geometry, both facings/edges, crowded deployment, paths, near-body attacks, AI, pull/relocation, legacy saves and revival | Source wide/small: 1,033 checks; Windows headless: 1,030. `packaged-bodies-small-final`: 1,033 checks and inspected 1280x720 captures. Three omitted Windows checks require rendered image dimensions, not gameplay. |
+| Actual board select/confirm, enemy queue, input locking, focus restoration and Instant setting | `packaged-shell-input-small-r2`: 64 checks, nine rendered event frames including six enemy frames, actual 1280x720 resolution; inspected. |
+| VFX and deterministic battle flow | `consolidated-vfx`: 1,333 checks; `consolidated-readable-actions`: 39 headless checks. |
+| Repository and package completeness | `repository-closure.log`: VALIDATION PASSED, clean exit at 18:42 UTC. Final official exports pass, including Windows generated-map/Town/build and managed Wine cleanup. |
+| Final exports and cross-platform payload parity | `accepted-r2-linux` and `accepted-r2-windows` pass; final packages have 8,846 members / 638,705,108 bytes each, with only `project.binary` differing. Fresh packaged body checks pass 1,033/1,030 and each reads 160 accepted units. `accepted-r2-payload-equivalence.json` proves every art/compiled-owner/other payload identical to the full-roster-tested packages; only review metadata in the animation manifest changed. |
+
+The small and wide captures are battle fixtures using actual game rules and
+rendering, not an entire-match playthrough or a whole-game release claim.
+Windows runs use headless Wine and validate packaged code/content/rules;
+native Windows GPU presentation still requires owner hardware observation.
+
+## Failures retained and explained
+
+- The sole final wide-run failure sampled Milestone movement at 767ms after a
+  700ms event (earlier samples: 109/275/454/653ms). Returning idle after expiry
+  was correct. The focused unchanged replay passed and its replacement images
+  were inspected. No relaxed deadline or art substitution was used.
+- Earlier Fast Windows headless wall-clock captures failed 69 timing assertions
+  after their 109ms event lifetime. Headless tests now sample actual event records
+  with controlled clocks; rendered tests retain real clocks and strict expiry.
+  Clock mode is explicit in each report.
+- An initial resting capture failed 32 assertions because PNG work and nominal
+  timers did not guarantee distinct displayed idle phases. The corrected probe
+  observes real frame regions away from boundaries before copying images; it
+  never rebases the idle clock. Its pixel ROI is explicitly limited to 1280x720.
+- Earlier partial/time-limited/interrupted jobs remain incomplete, not green.
+  Finished-unit checkpoints preserve diagnostics but cannot replace a final
+  report and clean exit.
+- A small-shell launcher initially moved its temporary res:// probe outside the
+  repository while selecting an external evidence folder. The wrapper now
+  selects only the report destination; probe scripts remain inside res://.
+  The corrected packaged shell run passed. Production game code was unaffected.
+- The first accepted-metadata export lacked the transient service's user template
+  search path and produced no binary. Explicit XDG paths fixed the launcher;
+  both final exports pass. Its failed report remains, and its task-created stray
+  editor settings file (3,280 bytes) was removed after handle/ownership checks.
+
+## Reproduction and maintenance
+
+Run generation/refinement as complete batches before one consolidated acceptance
+pass, per owner sequencing. Do not resume per-pose test/export loops.
+
+Commands:
+```sh
+python3 -B tests/test_pack_unit_pose_art.py
+python3 -B tests/test_battle_pose_cutout_preparation.py
+python3 -B tests/test_battle_pose_report_recovery.py
+python3 tests/validate_repo.py
+python3 -B tests/battle_pose_playback_regression.py --label roster --render --resolution 1920x1080 --motion-samples --timeout-seconds 7000
+python3 -B tests/battle_unit_body_runtime_regression.py --label resting --render --resolution 1280x720 --roster-resting-samples --timeout-seconds 2400
+python3 -B tests/packaging_linux_export_smoke.py
+python3 -B tests/packaging_windows_export_smoke.py
+git diff --check
+```
+
+Use unique task-owned labels. Package drivers accept `--platform`, `--binary`
+and `--pack`; Windows also requires a fresh managed `--wine-prefix`.
+`HEROES_BATTLE_READABILITY_ARTIFACT_DIR` redirects bulky evidence, not res://
+scripts. Official exports accept platform-specific artifact-directory variables.
+Linux probes sharing an export directory must run serially because the strict
+bootstrap rejects concurrent loose probe files.
+
+## Retention
+
+Original/generated sources, selected alpha, recipes, provenance, caches, saves,
+native reverse-engineering material and final validation evidence are retained.
+Four verified rounds removed only superseded export binaries, recovering
+7,085,194,272 bytes (about 6.60 GiB); their reports/screenshots remain. Final
+packages are in the `accepted-r2-linux/export` and `accepted-r2-windows/export`
+directories above. Disposable Wine system
+files were cleaned through the managed lifecycle, preserving user data.
+Historical production notes were moved to the same evidence root as
+`production-notes-before-closure.md` and `workflow-notes-before-closure.md`;
+per-unit source records remain the provenance authority.

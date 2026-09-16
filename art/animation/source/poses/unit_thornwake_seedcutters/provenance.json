@@ -1,0 +1,135 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_thornwake_seedcutters",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_thornwake_seedcutters.png",
+  "reference_sha256": "360f2ec2f9baeab2d9243911abbbae9c4a5ce3e9cbc66fa3211f6264dcf20ace",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_thornwake_seedcutters/poses.png",
+      "source_sha256": "ddd4f7180a21a49b39639b9198d60218c36c9a1ef16098aa086911ebadf39161",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5f5613f5-b1fc-44cf-a9e9-87e035040629.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle sprite animation sheet. Reference Thornwake Seedcutter: young brown-haired woman with bun, green headband and neck scarf, leather and dark green cloth armor, pale seed-shell shoulder/knee plates, wrapped brown boots, wicker backpack full of saplings and cut wood, rope coil and small amber bottles at belt. RIGHT hand crescent iron sickle with short brown handle; LEFT hand bound bundle of thin leafy cuttings. Exactly twelve full-body articulated poses in FOUR columns THREE rows with ample gutters, consistent body/weapon/backpack scale, fixed three-quarter side view facing right. Transparent RGBA background. Reading order: 1 relaxed idle sickle low bundle upright; 2 inhaling idle chest raised bundle tilts slightly; 3 walk RIGHT foot forward LEFT back; 4 passing RIGHT foot planted LEFT knee advancing feet close; 5 opposite contact LEFT foot forward RIGHT back torso unchanged; 6 attack windup RIGHT sickle raised behind shoulder LEFT bundle held away; 7 attack contact RIGHT sickle slices forward arm extended LEFT bundle retained close to chest; 8 defensive crouch sickle diagonal bundle protected; 9 hit recoil torso leans back both objects retained; 10 death knees buckle head bows; 11 collapse onto side backpack tilts with torso; 12 dead side-lying eyes closed, wicker pack still strapped, sickle and bundle resting beside correct hands. Keep same hand ownership, sickle blade shape/length, cuttings, backpack contents and outfit throughout; no missing equipment or extra arms. True anatomical motion not translated copies. Original detailed painted game art matching reference. No labels, shadows, scenery, effects or gore. Actual transparent empty space.",
+      "alpha_source": "art/animation/source/poses/unit_thornwake_seedcutters/alpha/poses.png",
+      "alpha_sha256": "add4e04619a11fc61d4befbbd1f3d141efe6c4c043ec54528c15c1464725b7bf",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4a725153-3d19-4518-96e5-0a2609b222d0.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only checkerboard background from supplied twelve-pose Seedcutter sheet into genuine transparent RGBA alpha. Preserve every painted figure, sickle, bundle of cuttings, wicker backpack, opaque cloth/armor and exact positions and scale. Clear gaps between branches, arms, legs and rope. No backdrop, matte, shadows, colored fringe, painted checkerboard or redraw. Entire sheet preserved, transparent empty space."
+    }
+  ],
+  "review_notes": [
+    "13 packed candidate frames: nine retained original real-alpha poses plus four selected new walking paintings from three built-in masters. Preserve original attack, guard, recoil, kneel/side-fall/closed-eye persistent corpse unchanged before uniform packing.",
+    "Existing alpha/poses.png is genuine RGBA0..255 and composites clean on light despite raw red/brown transparent RGB preview. Reuse it without rekeying or generative extraction.",
+    "Four-panel gait guide output repeats contact lead and support instead of following all four phases. Select only strip columns0 and3; other two columns and original repeated walking paintings remain unselected. Guide labels alone do not establish limb ownership.",
+    "Separate single-phase guide inputs supply a near-contact candidate and an opposite knee-lift candidate. Passing support is visibly differentiated; contact thigh/hip overlap remains subtle and uncertain in the combined atlas. Do not claim an accepted opposite-contact cycle from source names. Full translated motion review/refinement is still required.",
+    "Original right-hand sickle, left-hand leafy bundle, wicker pack, seed-shell armor, rope and bottles remain. Identity crop contains a tiny next-pose twig below the boot; prompts explicitly omit it. Banded idle crop excludes that neighbor while preserving owned boot pixels.",
+    "Only new green paintings use approved distance75/edge2 preparation. Fixed anatomical anchors and uniform scales match originals; no limb warping, frame mirroring or generated stand-in geometry.",
+    "Head/body/pack and sickle/bundle/rope scale, leg depth/support/travel, hand attachment across strike/guard, fine edges and actual action/death timing remain for full-roster refinement and consolidated acceptance. Production atlas/art desk is not in-game or platform validation; no tests/imports/exports or gameplay/save/footprint changes."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses inspected; sickle, cuttings and wicker backpack retained through attack/defense/collapse and closed-eye corpse.",
+    "All three walking poses repeat lead; passing and opposite contact must be refined.",
+    "Sickle blade curvature/orientation, grip continuity, bundle attachment in attack and backpack scale pending.",
+    "Extraction edge colors/fringes need in-context compositing review. Source-only, not packed or enabled.",
+    "No tests/exports or disposable test intermediates created; 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "reference_crops": [
+      {
+        "path": "art/animation/source/poses/unit_thornwake_seedcutters/standing-reference-light.png",
+        "sha256": "c252152494463adcc81b0f988fd18efd8f3d111b321ec8766850c9f704823b3b",
+        "source": "alpha/poses.png",
+        "source_sha256": "add4e04619a11fc61d4befbbd1f3d141efe6c4c043ec54528c15c1464725b7bf",
+        "rect": [
+          52,
+          0,
+          327,
+          377
+        ],
+        "method": "Original real alpha composited on light and nearest4x, no repaint. Tiny neighboring twig at bottom excluded explicitly from generation."
+      }
+    ],
+    "sources": [
+      {
+        "source": "walk-guide-strip-green.png",
+        "sha256": "3dae225fe5736789b0dfa9550762c0f650bb5a8af7dbb47664cf84363d414e71",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cbd6738c-27e6-4b2d-92dc-f44cc3e37d7a.png",
+        "selected": true,
+        "prompt": "Use case: stylized-concept. Original tactical game walking sprite strip, EXACTLY FOUR full-body poses in ONE HORIZONTAL ROW. Image1 is the authoritative leg-articulation guide, NOT a character design: its four blue/orange skeleton phases specify the different near/far legs. Image2 is the sole identity, equipment, style and color reference. Render this SAME Seedcutter woman over each of the four guide poses, keeping torso/head facing screen RIGHT at fixed three-quarter camera, steady body height and equal scale. Convert blue near leg and orange far leg into her SAME original wrapped brown trouser legs, pale seed-shell kneepads and boots; do not retain diagram colors.\nLEFT TO RIGHT: 1 near leg leads forward to screen-right, far leg trails left, both boots contact; 2 near leg supports under hip, far knee bends and boot lifts passing beneath body; 3 FAR leg now leads to screen-right while NEAR leg trails screen-left, both boots contact; 4 FAR leg supports under hip while NEAR knee bends and boot lifts. Different anatomical leg ownership, not repeated lead and not whole-body mirroring.\nIdentity invariant: young brown-haired woman with bun, green headband/scarf, leather/dark-olive armor and pale seed-shell shoulder/chest/knee plates, wicker backpack full of saplings and cut wood, belt rope coil and amber bottles. Anatomical RIGHT hand keeps the short brown-handled CRESCENT IRON SICKLE lowered at her side, LEFT hand keeps the same red-bound upright leafy cuttings. No swapped hands, weapons or limbs, no disappearing backpack, exactly two complete legs per pose. Preserve original quiet soft painted texture and proportions, not brighter/glossier or caricatured. Tiny stray brown fragment below image2 is NOT part of the character; omit it.\nWide single-row sheet, four equal cells and generous gaps, all sickle tips, backpack twigs and boots inside each cell, no overlap or crop. Pure flat vivid green RGB0,255,0 removable backdrop, including every gap; no green spill, floor/shadow, checkerboard, text, guide skeleton/lines, labels or effects. All four frames form one articulated walking cycle, not four standing copies.",
+        "references": [
+          {
+            "path": "art/animation/source/workflow_20260915/biped-walk-guide.png",
+            "sha256": "e82785b7504af90c20176fb202c4c869376233f7311cb3694e71b9284ce2fa7b"
+          },
+          {
+            "path": "art/animation/source/poses/unit_thornwake_seedcutters/standing-reference-light.png",
+            "sha256": "c252152494463adcc81b0f988fd18efd8f3d111b321ec8766850c9f704823b3b"
+          }
+        ],
+        "selected_source_indices": [
+          0,
+          3
+        ],
+        "unselected_source_indices": [
+          1,
+          2
+        ],
+        "reason": "Other columns repeat lead/support; separate phase guides refine missing phases."
+      },
+      {
+        "source": "walk-near-contact-guide-green.png",
+        "sha256": "141734464140deddeae76ca5258f693377f636144520a4df1a8a282b331a440b",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cff4bf8e-6265-4bac-b6a9-d510e5f1b50c.png",
+        "selected": true,
+        "prompt": "Use case: stylized-concept. Paint ONE complete original Seedcutter battle walking pose. Image1 is the authoritative skeletal LEG POSE; image2 is the exact character identity, equipment, camera and painterly style. Do not copy image2's standing legs. Replace the guide's blue/orange limbs with the character's natural brown trousers, wrapped boots and pale seed-shell kneepads; the diagram colors/lines must not appear in the final art. Fixed three-quarter torso and head facing RIGHT, same body proportions and soft dark olive/brown painting. Young brown-haired woman with bun, green headband/scarf, leather armor, pale shoulder/chest/knee shells, full wicker backpack with saplings and cut wood, waist rope and amber bottles. Exactly two arms: anatomical RIGHT hand carries lowered crescent iron sickle at her right side (screen-left), LEFT hand carries upright red-bound leafy cuttings at screen-right. Keep this hand ownership, backpack and equipment scale. Ignore the tiny brown fragment below image2's boots; not part of character.\nCritical leg pose: BLUE leg is the NEAR anatomical RIGHT leg starting at the hip on the LEFT side of the image. It swings FORWARD across the front of the other thigh toward screen RIGHT; its pale kneepad is in FRONT of the far thigh, and its boot plants far to the RIGHT. ORANGE is the FAR anatomical LEFT leg, which trails diagonally toward screen LEFT BEHIND the crossing near thigh, boot contacting at far LEFT. Follow the guide's visible OVERLAP and crossing at the hips, not just two spread boots. Near thigh overlays the far thigh; do NOT repeat a far-leg lead. Both soles contact the same ground level; torso stays upright, no crouch or leap. Preserve sickle/bundle hands, no mirroring. ONE pose centered with wide complete-silhouette margins. Flat pure vivid green RGB0,255,0 removable backdrop including apertures, no floor/shadow, checker, labels, colored bones or effects.",
+        "references": [
+          {
+            "path": "art/animation/source/workflow_20260915/biped-walk-phase-0.png",
+            "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+          },
+          {
+            "path": "art/animation/source/poses/unit_thornwake_seedcutters/standing-reference-light.png",
+            "sha256": "c252152494463adcc81b0f988fd18efd8f3d111b321ec8766850c9f704823b3b"
+          }
+        ],
+        "remaining_issue": "Contact thigh/hip overlap remains subtle; opposing anatomical lead not finally accepted."
+      },
+      {
+        "source": "walk-far-passing-guide-green.png",
+        "sha256": "2dbea73a5ba5eedc238b9ec204d9a6ca0d1da8341b5a387177549f64808aedbd",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8c37f38d-76fb-4942-9f4e-e5dde7890ff3.png",
+        "selected": true,
+        "prompt": "Use case: stylized-concept. Paint ONE complete original Seedcutter battle walking pose. Image1 is the authoritative skeletal LEG POSE; image2 is the exact character identity, equipment, camera and painterly style. Do not copy image2's standing legs. Replace the guide's blue/orange limbs with the character's natural brown trousers, wrapped boots and pale seed-shell kneepads; the diagram colors/lines must not appear in the final art. Fixed three-quarter torso and head facing RIGHT, same body proportions and soft dark olive/brown painting. Young brown-haired woman with bun, green headband/scarf, leather armor, pale shoulder/chest/knee shells, full wicker backpack with saplings and cut wood, waist rope and amber bottles. Exactly two arms: anatomical RIGHT hand carries lowered crescent iron sickle at her right side (screen-left), LEFT hand carries upright red-bound leafy cuttings at screen-right. Keep this hand ownership, backpack and equipment scale. Ignore the tiny brown fragment below image2's boots; not part of character.\nCritical leg pose: BLUE is the NEAR anatomical RIGHT leg, beginning at the hip on screen LEFT. Lift this near knee FORWARD across the FRONT of the other thigh toward screen RIGHT. Bend its shin backward so its boot is raised in FRONT of the far shin, clearly off the floor. Its large pale kneepad must be visibly elevated and IN FRONT, matching the diagram. ORANGE is the FAR anatomical LEFT leg, straight down supporting the body with its boot PLANTED beneath the hip; it remains behind the lifted near leg. One supporting boot and one raised boot, exactly two legs. No far-knee lift, no jump, no mirror and no changes to upper body or hand ownership. ONE pose centered with wide complete-silhouette margins. Flat pure vivid green RGB0,255,0 removable backdrop including apertures, no floor/shadow, checker, labels, colored bones or effects.",
+        "references": [
+          {
+            "path": "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+            "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+          },
+          {
+            "path": "art/animation/source/poses/unit_thornwake_seedcutters/standing-reference-light.png",
+            "sha256": "c252152494463adcc81b0f988fd18efd8f3d111b321ec8766850c9f704823b3b"
+          }
+        ]
+      }
+    ],
+    "preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "packed_frames": 13,
+    "reused_pose_count": 9,
+    "new_selected_pose_count": 4,
+    "runtime_candidate": "art/animation/runtime/poses/unit_thornwake_seedcutters.png",
+    "runtime_sha256": "d1f32349eff3d80e56e5ef63820a6e0b335974cc321bc15172c944a43729656e",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/seedcutter-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted",
+    "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/seedcutter-continuity-20260915/art-desk-registered.html",
+    "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/seedcutter-continuity-20260915/art-desk-registered.png",
+    "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/seedcutter-continuity-20260915/packed-initial/poses-candidate-atlas-green.png"
+  }
+}

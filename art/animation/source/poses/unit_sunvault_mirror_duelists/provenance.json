@@ -1,0 +1,123 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_sunvault_mirror_duelists",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "runtime_candidate_pending_consolidated_validation",
+  "reference": "art/units/source/curated/unit_sunvault_mirror_duelists.png",
+  "reference_sha256": "3419a5ba83826bb78f37b2950d95302f9f575a1e276b24aacdbe48a727078a06",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/poses.png",
+      "source_sha256": "833ecbb3582fab87b683b4de8398b4113e9051e88ce8802f904573551b6e9747",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-47aa0b2e-4eca-4a83-8219-9d141d237a14.png",
+      "prompt": "Use case: stylized-concept. Original battle sprite animation sheet. Reference identity Mirror Duelist: young woman dark high bun and loose side locks, ivory/gold fitted armor with blue sash and long split white-blue embroidered skirt panels, thigh-high dark leggings and ivory gold boots. RIGHT hand long slightly curved mirrored silver sword gold guard and blue crystal edge, LEFT hand small triangular silver mirror buckler with gold rim. Twelve full-body painted poses arranged exactly FOUR columns THREE rows with generous gutters and full swords inside each cell. Fixed three-quarter side view facing screen right, consistent scale and anatomy. Reading order: 1 alert idle sword low buckler raised; 2 breathing idle shoulders lifted fabric gently displaced; 3 walk RIGHT foot forward LEFT back; 4 passing RIGHT foot planted LEFT knee advances feet near together; 5 opposite contact LEFT foot forward RIGHT back without torso mirroring; 6 attack windup RIGHT sword drawn back above shoulder LEFT buckler forward; 7 lunge slash RIGHT sword extends across front towards screen right LEFT buckler guarding shoulder; 8 defensive crouch buckler forward sword held diagonally as parry; 9 hit torso recoils sword and buckler retained; 10 death knees buckle head bows; 11 side fall skirt settles both weapons falling with correct hands; 12 dead side-lying body eyes closed sword and buckler beside hands. Same sword length, triangular shield, face, costume and body throughout; never swap weapon hands. Distinct articulated motion not translated standing duplicates. True transparent RGBA background, no text, no effect streaks or glow, no ground shadows, no scenery or gore. Original detailed painted fantasy game art matching reference.",
+      "alpha_source": "art/animation/source/poses/unit_sunvault_mirror_duelists/alpha/poses.png",
+      "alpha_sha256": "9578e8445696592ed8ead7cb03d16be69aa7e2dee48e1fd677f80f03493a1de1",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-219dd874-05ea-4a09-b488-146ccf09fcd3.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only checkerboard background of supplied twelve-pose Mirror Duelist sheet into real transparent RGBA alpha. Preserve every painted sprite exactly, positions and proportions, ivory/blue/gold cloth and armor, sword blades, triangular mirror bucklers and opaque interiors. Clear gaps between hair, swords, arms and cloth. Do not add background, matte, shadows, effects, painted checkerboard, colored fringes or new poses. Same full sheet composition."
+    }
+  ],
+  "review_notes": [
+    "Four guided walking contacts/passing phases visibly alternate support without mirroring torso or swapping right sword/left buckler.",
+    "Existing alpha retains idle, full lunge strike, parry, recoil and three collapse/corpse stages; repeated original walking poses and shortened windup excluded.",
+    "New full-blade overhead windup and second crouched parry painting complete fourteen-frame candidate. Explicit crop pieces keep long strike intact and exclude neighboring blade from parry.",
+    "Candidate atlas visually inspected on landscape green; body/ground anchors use uniform resampling only. Final connected-motion and equipment/cloth edge acceptance remains open."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses inspected, including sword lunge, defensive crouch, kneeling collapse and equipped closed-eye corpse. Not packed or enabled.",
+    "Walking needs distinct alternating contact/passing refinement. Idle differentiation remains subtle.",
+    "Sword length shortens in overhead windup and changes across attacks; grip, buckler attachment/scale and cloth continuity need refinement.",
+    "Wide lunge/corpse shapes need explicit crops. Extraction fringes visible in preview; in-context compositing and clean alpha acceptance pending.",
+    "No tests/exports or disposable test intermediates created; 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "sources": [
+      {
+        "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/walk-contact-a.png",
+        "source_sha256": "2e2142d491efaf04b777b7f51829ce049b40d2418ec3e3ae43c5ddaef2176c75",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e8bc54ad-03f5-4b32-8422-bd5979f87f9c.png",
+        "prompt": "Use case: sketch-to-render. Original fantasy strategy battle sprite, ONE complete full-body Mirror Duelist walking pose. IMAGE 1 is authoritative body/leg pose guide; replace guide with painted character, preserve its near/far leg geometry. IMAGE 2 is costume/face/equipment identity only, NOT leg pose. Near RIGHT leg corresponds to BLUE guide leg: swing forward across front of far leg, knee and boot at screen-right, heel landing. Far LEFT leg corresponds to ORANGE guide leg: extend behind to screen-left, toe planted. Torso and head face screen-right three-quarter view without mirroring. Slim dark-haired young woman, high bun with small gold circlet, ivory/gold fitted plate, blue sash and long split ivory-blue gold-embroidered skirt panels, dark leggings, pointed ivory-gold boots. ONE long silver slightly curved sword in her RIGHT near hand held low diagonally towards screen-left, blade length roughly hip-to-ground; gold guard and blue crystal edge. ONE small triangular silver mirror buckler gold-rimmed with blue corner gems attached to LEFT far forearm near chest at screen-right. Preserve identity design and equipment, not guide colors. Cloth opens enough to see which leg crosses in front, no extra legs. Crisp painterly raster game art matching reference. Plain uniform neutral gray background #808080 for later deterministic cutout, no checkerboard or ground/shadow, no labels, lines, motion effects or decorations. Generous margin around full sword, bun, buckler and feet; one figure only."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/walk-passing-a.png",
+        "source_sha256": "f448e22c8ec51d593277795fe3f1ce37f75ee3cb6bd5bc1e0c40ee8eefa84c8e",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-948e3ac4-e122-49cd-bffc-93d83ca84c0e.png",
+        "prompt": "Use case: sketch-to-render. Original fantasy strategy battle sprite, ONE complete full-body Mirror Duelist mid-walk passing pose. IMAGE 1 is authoritative body/leg pose guide; replace guide with painted character and preserve its near/far leg geometry. IMAGE 2 is costume/face/equipment identity only, NOT leg pose. Near RIGHT leg corresponds to BLUE guide leg: straight support leg planted under hip. Far LEFT leg corresponds to ORANGE guide leg: knee bends forward toward screen-right, boot lifted behind the planted calf, sole visibly off the ground. Legs close together, not a wide contact stride. Torso and head face screen-right three-quarter view without mirroring. Slim dark-haired young woman, high bun with small gold circlet, ivory/gold fitted plate, blue sash and long split ivory-blue gold-embroidered skirt panels, dark leggings, pointed ivory-gold boots. ONE long silver slightly curved sword in her RIGHT near hand held low diagonally towards screen-left, blade length roughly hip-to-ground; gold guard and blue crystal edge. ONE small triangular silver mirror buckler gold-rimmed with blue corner gems attached to LEFT far forearm near chest at screen-right. Preserve identity design and equipment, not guide colors. Cloth opens enough to reveal bent far knee and both ankles, no extra legs. Crisp painterly raster game art matching reference. Plain uniform neutral gray background #808080 for later deterministic cutout, no checkerboard or ground/shadow, no labels, lines, motion effects or decorations. Generous margin around full sword, bun, buckler and feet; one figure only."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/walk-contact-b.png",
+        "source_sha256": "8af89c5d184c21234b4f34d3652d250e061dbecc96aa1d30e257b3ff36fcb10e",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-63b04e0f-54e6-4431-aea8-fe1deb890ab2.png",
+        "prompt": "Use case: sketch-to-render. Original fantasy strategy battle sprite, ONE complete full-body Mirror Duelist walking contact B. IMAGE 1 is authoritative body/leg pose guide; replace guide with painted character and preserve near/far leg geometry. IMAGE 2 is costume/face/equipment identity only, NOT leg pose. BLUE guide leg = near RIGHT leg and must extend BEHIND to screen-LEFT from near hip, knee left of belt, toe pushing at far LEFT. ORANGE guide leg = far LEFT leg extends FORWARD to screen-RIGHT, knee right of belt, heel landing at far RIGHT. Open uncrossed A-shaped stride, knees visibly on opposite sides of belt center. This is NOT near-right-leg-forward. Do not change camera or mirror torso. Head/torso face screen-right three-quarter. Slim dark-haired woman, high bun small gold circlet, ivory/gold fitted plate, blue sash and long split ivory-blue gold-embroidered skirt panels, dark leggings, pointed ivory-gold boots. ONE long silver slightly curved sword in RIGHT near hand held low diagonally toward screen-left, blade length hip-to-ground, gold guard blue crystal edge. ONE small triangular silver mirror buckler gold-rimmed with blue corner gems on LEFT far forearm near chest at screen-right. Preserve identity/equipment, not guide colors. Cloth parts to reveal leg ownership and both knees/ankles, no extra legs. Crisp painterly raster art matching reference. Plain uniform neutral gray #808080 for local cutout; no checkerboard, ground/shadow, text, guide lines, effects or extra figures. Generous margin for full sword, hair, shield and boots."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/walk-passing-b.png",
+        "source_sha256": "fa3705f87d4f159deaf6ed2a4568d8aae7423047ebcd672f6ece22e87146230b",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f5c0a5ab-354f-45df-b18f-a85de5613db3.png",
+        "prompt": "Use case: sketch-to-render. Original fantasy strategy battle sprite, ONE complete full-body Mirror Duelist mid-walk passing B. IMAGE 1 is authoritative body/leg pose guide; paint character replacing guide, preserve its near/far leg geometry. IMAGE 2 is costume/face/equipment identity only, NOT leg pose. BLUE guide leg = near RIGHT leg lifted: near thigh swings diagonally forward to screen-right crossing in front of far thigh, knee bent forward, shin folds backward, boot clearly suspended above ground in front of far calf. ORANGE guide leg = far LEFT leg straight and planted under hip, sole touches ground. Legs close together with one bent raised near knee, NOT a broad contact stride. No mirror camera/torso. Slim dark-haired woman three-quarter facing screen-right, high bun small gold circlet, ivory/gold fitted armor, blue sash and long split ivory-blue gold-embroidered skirt panels, dark leggings, pointed ivory-gold boots. ONE long silver slightly curved sword RIGHT near hand low diagonally toward screen-left, blade roughly hip-to-ground length, gold guard blue crystal edge. ONE small triangular silver mirror buckler gold rim blue corner gems attached LEFT far forearm near chest at screen-right. Keep equipment on correct sides. Cloth opens to reveal raised near knee and grounded far shin. Crisp original painterly game art matching identity. Plain uniform neutral gray #808080 background for local cutout; no checkerboard, ground or shadow, labels, motion trails, colored guide marks or extra characters. Generous margins around entire sword, hair, buckler and boots."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/windup-full-blade.png",
+        "source_sha256": "b2a159215aab455c2825de6191b42407c419d526276cbd09f6de125be3fafcc2",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6820d967-2280-4d0b-8fcc-47e64f210090.png",
+        "prompt": "Use case: precise-object-edit. Original fantasy strategy battle sprite, ONE complete Mirror Duelist sword windup pose. IMAGE 1 establishes target windup anatomy: bent wide combat stance facing right, RIGHT near arm raised above and behind head holding sword overhead, LEFT far arm triangular buckler in front of chest. Preserve that pose and hand ownership. IMAGE 2 establishes exact identity and FULL sword proportions. Correct the short sword in Image1: paint ONE full-length silver curved sword, blue crystal inset and gold filigree guard, its blade from guard to tip equal to the woman's hip-to-ground distance. Orient blade extending diagonally toward upper-right across empty space above head, seen broadside so blade is not foreshortened. Preserve grip, no duplicate blade, right hand raised over shoulder gripping gold hilt, left arm continues holding triangular silver mirror buckler. Same dark bun gold circlet, face, ivory-gold armor, dark leggings, split ivory-blue gold-embroidered cloth, pointed ivory-gold boots. Full articulated figure at fixed three-quarter right-facing camera. Crisp painterly raster style matching references. Uniform neutral gray #808080 background for later cutout, no checkerboard or shadows, ground, labels, trails or other figures. Generous margin around entire extended sword, hair, shield and feet. Only one warrior and her two pieces of equipment."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/defend-breath.png",
+        "source_sha256": "540bb85a3ad204ec489f13f7c39caf8fed1fb4c86c36f8dc71833166575326d0",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-940cc1e4-11be-4d3e-8891-99635ddc93ca.png",
+        "prompt": "Use case: precise-object-edit. ONE original Mirror Duelist defensive parry sprite, a small second breath motion of IMAGE 1's crouched defense pose. Image1 is target body pose; ignore the unrelated floating sword fragment at its upper-left outside the character, do not reproduce it. Image2 provides clean identity and equipment proportions. Keep low crouch, RIGHT near hand grips ONE long silver sword with gold guard and blue inlay held low across front pointing toward screen-right; LEFT far forearm bears ONE triangular silver mirror buckler gold-rimmed with blue corner gems guarding face. Gently lift head/shoulders with an inhalation, turn buckler a few degrees inward while retaining forearm attachment, slightly flex knees. Do not relocate arms, extend or shorten blade, change stance width, or change costume. Full blade guard-to-tip about hip-to-ground standing length, broadside visible. Slim dark-haired woman high bun small gold circlet, ivory gold armor, split ivory-blue gold-embroidered cloth, dark leggings, pointed ivory gold boots, fixed three-quarter camera facing right. Full figure including blade point, buckler corners, hair and both feet with generous margins. Crisp painterly original raster art matching reference; plain uniform neutral gray #808080 for local cutout, no checkerboard, floor, shadow, text, effect trail, extra weapon or character."
+      }
+    ],
+    "reference_roles": {
+      "walking": "Authoring-only near/far-limb guide first, original idle crop second for identity; all four phases painted separately.",
+      "windup": "Original windup crop for target anatomy, idle crop for full sword design/length.",
+      "defense": "Original parry crop for pose, idle crop for identity. Ignore unrelated strike-blade fragment at reference upper-left; runtime uses disjoint source rectangles to exclude it."
+    },
+    "reference_crops": [
+      {
+        "source": "alpha/poses.png",
+        "rect": [
+          0,
+          0,
+          357,
+          371
+        ],
+        "output": "identity-reference.png"
+      },
+      {
+        "source": "alpha/poses.png",
+        "rect": [
+          361,
+          366,
+          728,
+          732
+        ],
+        "output": "windup-reference.png"
+      },
+      {
+        "source": "alpha/poses.png",
+        "rect": [
+          1126,
+          427,
+          1448,
+          729
+        ],
+        "output": "defense-reference.png"
+      }
+    ],
+    "original_alpha_sha256": "9578e8445696592ed8ead7cb03d16be69aa7e2dee48e1fd677f80f03493a1de1",
+    "preparation": "Owner-approved local non-generative neutral fill with inspected hair/guard/scarf pocket seeds; continuity-cutouts.json pins originals and .processing.json records source/output/tool/recipe hashes. Pale armor, mirror and cloth interiors preserved. Existing original alpha is reused without re-keying.",
+    "packing": "packing.json",
+    "runtime_sheet": "art/animation/runtime/poses/unit_sunvault_mirror_duelists.png",
+    "runtime_sha256": "82b08fdd47fbb52b08acd93d4cabd78bf9dc11e9a3ebccd6b156072baac46ddd",
+    "frames": 14,
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/mirror-duelist-continuity-20260915/",
+    "validation": "Production assembly and actual alpha-composite inspection only. No Godot/tests/imports/exports; connected battle timing, cloth/equipment continuity and final acceptance deferred."
+  }
+}

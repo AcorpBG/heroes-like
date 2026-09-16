@@ -1,0 +1,388 @@
+{
+  "unit_id": "unit_brasshollow_whitegauge_datum_breach_cannons",
+  "status": "candidate_pending_playback_acceptance",
+  "pose_source_facing": "left",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          0,
+          50,
+          373,
+          371
+        ]
+      ],
+      "anchor": [
+        191,
+        359
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "idle_b",
+      "source": "continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          374,
+          49,
+          735,
+          372
+        ]
+      ],
+      "anchor": [
+        556,
+        359
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "creep_front_lift",
+      "source": "continuity-alpha/supported-creep-melee-recoil.png",
+      "rects": [
+        [
+          0,
+          0,
+          520,
+          510
+        ]
+      ],
+      "anchor": [
+        261,
+        487
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "creep_middle_lift",
+      "source": "continuity-alpha/supported-creep-melee-recoil.png",
+      "rects": [
+        [
+          522,
+          0,
+          1027,
+          510
+        ]
+      ],
+      "anchor": [
+        777,
+        480
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "creep_rear_lift",
+      "source": "continuity-alpha/supported-creep-melee-recoil.png",
+      "rects": [
+        [
+          1029,
+          0,
+          1536,
+          515
+        ]
+      ],
+      "anchor": [
+        1297,
+        493
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "attack_windup",
+      "source": "continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          371,
+          411,
+          735,
+          707
+        ],
+        [
+          366,
+          633,
+          371,
+          707
+        ]
+      ],
+      "anchor": [
+        553,
+        696
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "melee_shove",
+      "source": "continuity-alpha/supported-creep-melee-recoil.png",
+      "rects": [
+        [
+          0,
+          535,
+          537,
+          925
+        ],
+        [
+          0,
+          925,
+          504,
+          1024
+        ],
+        [
+          504,
+          925,
+          537,
+          937
+        ]
+      ],
+      "anchor": [
+        266,
+        978
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "ranged_telescoped_recoil",
+      "source": "continuity-alpha/supported-creep-melee-recoil.png",
+      "rects": [
+        [
+          536,
+          535,
+          1018,
+          1024
+        ],
+        [
+          506,
+          936,
+          536,
+          980
+        ],
+        [
+          1018,
+          889,
+          1035,
+          1000
+        ]
+      ],
+      "anchor": [
+        775,
+        978
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "guard_a",
+      "source": "continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          1098,
+          413,
+          1448,
+          716
+        ]
+      ],
+      "anchor": [
+        1270,
+        700
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "guard_b",
+      "source": "continuity-alpha/supported-creep-melee-recoil.png",
+      "rects": [
+        [
+          1038,
+          543,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1290,
+        975
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "hit",
+      "source": "continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          0,
+          738,
+          373,
+          1044
+        ]
+      ],
+      "anchor": [
+        190,
+        1026
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "death_buckle",
+      "source": "continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          372,
+          753,
+          735,
+          970
+        ],
+        [
+          372,
+          970,
+          720,
+          1047
+        ]
+      ],
+      "anchor": [
+        555,
+        1030
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "death_settle",
+      "source": "continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          742,
+          831,
+          1091,
+          1051
+        ],
+        [
+          722,
+          934,
+          742,
+          1051
+        ]
+      ],
+      "anchor": [
+        913,
+        1031
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "dead_operator_and_wreck",
+      "source": "continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          1093,
+          824,
+          1448,
+          1048
+        ]
+      ],
+      "anchor": [
+        1270,
+        1026
+      ],
+      "scale": 0.72
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 6,
+      "indices": [
+        0,
+        2,
+        0,
+        3,
+        0,
+        4
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        5,
+        6,
+        5,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        5,
+        7,
+        5,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  }
+}

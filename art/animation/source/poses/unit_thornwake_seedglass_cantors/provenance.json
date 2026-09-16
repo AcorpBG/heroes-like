@@ -1,0 +1,235 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_thornwake_seedglass_cantors",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_thornwake_seedglass_cantors.png",
+  "reference_sha256": "8681a55c2a69ea56fc3c5210e13fa594aec2ce15e9fdb4378e0503c1448e4cce",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/poses-draft.png",
+      "source_sha256": "4c07a7fa4958a9df4888deb5d0d78666011d6b28502b1cbd030dd0af95aa1574",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-91382d6b-5554-4215-85ae-622a6eac12b1.png",
+      "prompt": "Use case: stylized-concept. Original fantasy tactical battle animation sprite sheet, using the attached original Seedglass Cantor only as character identity/style reference. Create exactly 16 separated full-body poses in a regular 4 columns by 4 rows sheet. True transparent RGBA background, no painted checkerboard, no ground/background, no labels. Same scale, fixed three-quarter camera facing right, generous gutters and no clipping. Character is a slender bark-and-leaf humanoid archer with ivory wooden antler mask, leafy crown, root feet, flowing green leaf skirt, amber seedglass pendants, one tall twisted living-wood bow held always in anatomical LEFT hand, anatomical RIGHT hand draws string. Preserve bow proportions and pendant attachments consistently. Clearly articulated animation, not copies shifted or rotated. Row1: relaxed idle bow lowered; inhaling idle shoulders lift leaves sway; walking left foot forward right back; walking right foot forward left back. Row2: passing walk bent lifted knee; melee wind-up pulling RIGHT empty fist back while LEFT holds bow safely aside; melee RIGHT fist punch extended towards right with LEFT bow aside; guard crouch LEFT bow angled beside torso RIGHT arm protects face. Row3: hit recoil bent backward with both hands and bow retained; ranged aim LEFT arm extends bow RIGHT draws amber arrow at cheek; ranged release RIGHT fingers open at cheek string forward arrow leaving right; ranged recovery RIGHT hand lowers, bow held LEFT. Row4: mortally wounded knees buckle holding bow; falling sideways releasing bow; fully dead lying on side bow on ground beside body; same persistent dead pose leaves settled no glowing eyes, arrow or magical effects. Draw every pose with coherent anatomy and continuous equipment, distinct gait contacts, visibly changing joints, no extra limbs/weapons. Painterly original game cutouts matching reference, clean crisp alpha edges, readable at small combat scale."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/poses.png",
+      "source_sha256": "e244d76b27966d36621407aa267013886f6c5561d1a6822ee7bf746aa03c0fd1",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4f130bda-03ce-4faf-a1c6-31a60203dd83.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY row TWO column THREE (the seventh sprite) of this 4x4 sprite sheet. Replace that single pose with a clear close-range BOW SHOVE: both hands grasp the SAME existing wooden bow at its middle, bow rotated HORIZONTAL across body at chest height, arms extended toward the right to strike an adjacent enemy with the curved wooden bow limb. Bent front knee and forward torso. No drawn arrow, no shooting pose, no second bow, no fist punch. Retain exact character ivory wood mask, crown, amber pendants, leaf skirt, root feet, scale, painterly style and cell location. Every other sprite and sheet dimensions unchanged. Actual transparent RGBA background, no painted checkerboard."
+    }
+  ],
+  "review_notes": [
+    "18 candidate frames: eleven retained original paintings at indices0,1,5,7,8,9,11,12,13,14,15 plus seven selected new paintings among eight built-in outputs. Source drafts and unselected repeated-contact precursor preserved.",
+    "Initial contact0 repeated leg lead despite the guide. Near contact now unfolds the explicitly raised foreground thigh from passing3; both passing poses and far contact retain a common fixed identity. Occlusion, foot support and continuous translated gait remain unaccepted.",
+    "Original near RIGHT-arm windup is paired with a guide-first near-arm punch, not the old shortened horizontal bow shove. FAR LEFT hand retains one complete tall bow. New guard compression is anatomically scaled to the retained kneeling guard.",
+    "Built-in release edit removes the baked projectile trail and particles without local repainting. The empty bow/string and released hand remain; original loaded aim and recovery are separate. Original collapse and two connected prone body/bow poses are retained; final mask orange paint is not a newly animated emission.",
+    "RGB originals/new masters use approved neutral175/tolerance16/edge2 and individually inspected bow/string/arm/cloth gaps, preserving ivory mask/skirt. Banded guard crop excludes the neighboring bow fragment; no other figure pixels are adopted.",
+    "Explicit uniform per-source anatomical scales and ground anchors assemble512x256 four-column atlas. New gait/melee, guard and release scales adjusted against original body/bow proportions. Actual-alpha atlas and candidate offline art-desk screenshot visually inspected, not timed acceptance.",
+    "Full160 refinement still includes mask/antler/leaf/pendant/palette consistency, bow length/string mechanics and support/travel/event timing. No tests/imports/exports, paid API, runtime/tool-code, gameplay, save or footprint changes."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses; row2 column3 now two-handed horizontal bow strike instead of second shooting pose.",
+    "Bow strike shortens bow and obscures rear limb/string; preceding right-fist wind-up must be replaced with matching two-hand preparation.",
+    "Walk contacts appear to repeat lead; need anatomically opposite contact and continuous passing transition.",
+    "Bow/string shape, seedglass pendant counts and mask/leaf continuity need refinement. Ranged release includes baked arrow requiring event-synchronized crop handling.",
+    "Two prone corpse poses present, but final eye emissive state and fallen bow continuity require close review.",
+    "Checker pattern visible; transparency/compositing unaccepted. No runtime packing, integration or tests this batch."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "references": [
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+        "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_seedglass_cantors/standing-reference-light.png",
+        "sha256": "5b9e62cd8102e927bb67ee36ff6cdc90b6c07c6a9d24743163e968230637a5c9"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+        "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+        "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+        "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-near-arm-punch.png",
+        "sha256": "4caaf54d3a8c423b70b462eafe8c12c91970ab5ff66d2883b5fae171182190a3"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_seedglass_cantors/guard-reference-isolated-light.png",
+        "sha256": "a65edaf3be160140d3ee7fb2641d535fb8e04d483db82dc99d0e081c6e098243"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_seedglass_cantors/release-reference-full-light.png",
+        "sha256": "dc7a6e84d35b7a9697b559ceb90588b70f6ae02873df83e15110528774736daa"
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-walk-3.png",
+        "sha256": "afd589cc0f614d6495b4f5fa9493cc89d3cce3cfc6fe43a52584928e8ab019b0"
+      }
+    ],
+    "reference_crops": {
+      "0": [
+        "standing",
+        [
+          0,
+          0,
+          285,
+          336
+        ]
+      ],
+      "1": [
+        "guard",
+        [
+          932,
+          335,
+          1223,
+          641
+        ]
+      ],
+      "guard-reference-isolated": [
+        956,
+        335,
+        1223,
+        641
+      ],
+      "release-reference-full": [
+        612,
+        635,
+        980,
+        965
+      ]
+    },
+    "guide_source": "tools/battle_pose_guide.py; authoring-only diagrams, never runtime pixels",
+    "retained_source": "poses.png",
+    "retained_source_sha256": "e244d76b27966d36621407aa267013886f6c5561d1a6822ee7bf746aa03c0fd1",
+    "retained_original_indices": [
+      0,
+      1,
+      5,
+      7,
+      8,
+      9,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "retained_original_paintings": 11,
+    "new_selected_paintings": 7,
+    "builtin_outputs": 8,
+    "total_candidate_frames": 18,
+    "preparation_recipe": "continuity-cutouts.json",
+    "preparation_proofs": [
+      "continuity-alpha/original.processing.json",
+      "continuity-alpha/walk-0.processing.json",
+      "continuity-alpha/walk-1.processing.json",
+      "continuity-alpha/walk-2.processing.json",
+      "continuity-alpha/walk-3.processing.json",
+      "continuity-alpha/punch-contact.processing.json",
+      "continuity-alpha/guard-braced.processing.json",
+      "continuity-alpha/ranged-release-clear.processing.json",
+      "continuity-alpha/near-contact-unfolded.processing.json"
+    ],
+    "packing_recipe": "packing.json",
+    "packing_result": "packing-result.json",
+    "candidate_atlas": "candidate-atlas.png",
+    "runtime_atlas": "art/animation/runtime/poses/unit_thornwake_seedglass_cantors.png",
+    "runtime_sha256": "26b8d1b2bcc3b5432c6d765c5475aaae49432438732c6926108c609fd7d60b30",
+    "evidence_root": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915",
+    "evidence": [
+      "packed-initial/poses-candidate-atlas-green.png",
+      "art-desk-candidate.html",
+      "art-desk-candidate.png",
+      "art-desk-registered.html",
+      "art-desk-registered.png",
+      "packed-final/poses-candidate-atlas-green.png"
+    ],
+    "status": "candidate_registered_not_final_accepted",
+    "cleanup": {
+      "date": "2026-09-16",
+      "removed_duplicate_preview_files": 9,
+      "removed_bytes": 6175360,
+      "policy": "Only hash-verified byte-identical task preview copies removed after no-live-art-process and no-open-handle checks. Sources, exact prompts, rejected variants, unique previews, proofs, caches and unrelated files retained.",
+      "pairs": [
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/guard-reference-clean/unit_thornwake_seedglass_cantors-original-rect-932-335-1223-641-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_seedglass_cantors/guard-reference-light.png",
+          "sha256": "c2472b1177514f82135df14617d32bce40abd814a15d6d258f528dfe1691da8b",
+          "identical": true,
+          "bytes": 132994
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/new-prepared-initial/seedglass-original-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/new-prepared-gaps/seedglass-original-light.png",
+          "sha256": "e52bc23638d19a01c99b52268bd4bfc69438bd291cd982d4ba91bf7e7e0178b0",
+          "identical": true,
+          "bytes": 1365397
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/prepared-gaps/seedglass-original-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/new-prepared-gaps/seedglass-original-light.png",
+          "sha256": "e52bc23638d19a01c99b52268bd4bfc69438bd291cd982d4ba91bf7e7e0178b0",
+          "identical": true,
+          "bytes": 1365397
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/new-prepared-initial/seedglass-original-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/new-prepared-gaps/seedglass-original-green.png",
+          "sha256": "605792e43d4bd3150b213de9af6eb34de91d96dbe8b7a89049ee026774018a6b",
+          "identical": true,
+          "bytes": 1353335
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/prepared-gaps/seedglass-original-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/new-prepared-gaps/seedglass-original-green.png",
+          "sha256": "605792e43d4bd3150b213de9af6eb34de91d96dbe8b7a89049ee026774018a6b",
+          "identical": true,
+          "bytes": 1353335
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/guard-reference-isolated/unit_thornwake_seedglass_cantors-original-rect-956-335-1223-641-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_seedglass_cantors/guard-reference-isolated-light.png",
+          "sha256": "a65edaf3be160140d3ee7fb2641d535fb8e04d483db82dc99d0e081c6e098243",
+          "identical": true,
+          "bytes": 130885
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/release-reference/unit_thornwake_seedglass_cantors-original-rect-626-647-975-965-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_seedglass_cantors/release-reference-light.png",
+          "sha256": "2014dc9de8105a9b83e6a8e2d6542e202241bec050cbca53d37261bf49777a58",
+          "identical": true,
+          "bytes": 165918
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/standing-reference-clean/unit_thornwake_seedglass_cantors-original-rect-0-0-285-336-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_seedglass_cantors/standing-reference-light.png",
+          "sha256": "5b9e62cd8102e927bb67ee36ff6cdc90b6c07c6a9d24743163e968230637a5c9",
+          "identical": true,
+          "bytes": 140579
+        },
+        {
+          "delete": ".artifacts/battle-unit-animation-size-20260913/seedglass-continuity-20260915/release-reference-full/unit_thornwake_seedglass_cantors-original-rect-612-635-980-965-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_seedglass_cantors/release-reference-full-light.png",
+          "sha256": "dc7a6e84d35b7a9697b559ceb90588b70f6ae02873df83e15110528774736daa",
+          "identical": true,
+          "bytes": 167520
+        }
+      ]
+    }
+  }
+}

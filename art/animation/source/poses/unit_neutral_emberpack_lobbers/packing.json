@@ -1,0 +1,413 @@
+{
+  "unit_id": "unit_neutral_emberpack_lobbers",
+  "frames": [
+    {
+      "name": "idle_loaded_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          69,
+          9,
+          234,
+          320
+        ]
+      ],
+      "anchor": [
+        151,
+        314
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "idle_loaded_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          335,
+          9,
+          522,
+          320
+        ]
+      ],
+      "anchor": [
+        442,
+        314
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "travel_planted",
+      "source": "step-refinement-20260916/alpha/planted.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        655,
+        1196
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "travel_near_foot_lift",
+      "source": "step-refinement-20260916/alpha/near-lift.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        655,
+        1196
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "travel_far_foot_lift",
+      "source": "step-refinement-20260916/alpha/far-lift.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        655,
+        1196
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "right_fist_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          328,
+          324,
+          588,
+          629
+        ]
+      ],
+      "anchor": [
+        460,
+        623
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "right_fist_cross",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          630,
+          325,
+          903,
+          630
+        ]
+      ],
+      "anchor": [
+        773,
+        624
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "melee_recovery_sling_stowed",
+      "source": "continuity-alpha/sling-release-gather-and-melee-recovery.png",
+      "rects": [
+        [
+          1300,
+          0,
+          1866,
+          843
+        ]
+      ],
+      "anchor": [
+        1580,
+        783
+      ],
+      "scale": 0.285
+    },
+    {
+      "name": "crouched_guard",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          980,
+          351,
+          1187,
+          629
+        ]
+      ],
+      "anchor": [
+        1081,
+        621
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          46,
+          612,
+          170,
+          643
+        ],
+        [
+          46,
+          643,
+          273,
+          921
+        ]
+      ],
+      "anchor": [
+        155,
+        917
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "load_ember_sling",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          344,
+          640,
+          555,
+          918
+        ]
+      ],
+      "anchor": [
+        445,
+        910
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "loaded_sling_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          601,
+          636,
+          950,
+          836
+        ],
+        [
+          601,
+          836,
+          930,
+          920
+        ]
+      ],
+      "anchor": [
+        767,
+        912
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "released_two_cord_open_sling",
+      "source": "continuity-alpha/sling-release-gather-and-melee-recovery.png",
+      "rects": [
+        [
+          0,
+          0,
+          782,
+          500
+        ],
+        [
+          0,
+          500,
+          700,
+          843
+        ]
+      ],
+      "anchor": [
+        260,
+        783
+      ],
+      "scale": 0.285
+    },
+    {
+      "name": "empty_sling_gather",
+      "source": "continuity-alpha/sling-release-gather-and-melee-recovery.png",
+      "rects": [
+        [
+          785,
+          0,
+          1300,
+          700
+        ],
+        [
+          700,
+          700,
+          1300,
+          843
+        ]
+      ],
+      "anchor": [
+        985,
+        783
+      ],
+      "scale": 0.285
+    },
+    {
+      "name": "death_knees",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          294,
+          976,
+          519,
+          1216
+        ]
+      ],
+      "anchor": [
+        408,
+        1207
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_side_fall",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          543,
+          1005,
+          914,
+          1200
+        ]
+      ],
+      "anchor": [
+        726,
+        1190
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "dead_head_left_dark_coals",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          914,
+          1060,
+          1244,
+          1210
+        ]
+      ],
+      "anchor": [
+        1088,
+        1202
+      ],
+      "scale": 0.7
+    }
+  ],
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        2,
+        4
+      ],
+      "loop": true,
+      "frame_msec": 160
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        5,
+        6,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 270,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  }
+}

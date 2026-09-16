@@ -1,0 +1,290 @@
+{
+  "unit_id": "unit_mireclaw_gorefen_rippers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "poses.png",
+      "rects": [
+        [
+          0,
+          66,
+          394,
+          361
+        ]
+      ],
+      "anchor": [
+        210,
+        350
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "idle_1",
+      "source": "poses.png",
+      "rects": [
+        [
+          394,
+          70,
+          729,
+          361
+        ]
+      ],
+      "anchor": [
+        560,
+        348
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "step_diagonal_a",
+      "source": "continuity-alpha/step-diagonal-a-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1447,
+          1087
+        ]
+      ],
+      "anchor": [
+        780,
+        1050
+      ],
+      "scale": 0.205
+    },
+    {
+      "name": "step_diagonal_b",
+      "source": "continuity-alpha/step-diagonal-b-margin-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1446,
+          1087
+        ]
+      ],
+      "anchor": [
+        790,
+        1030
+      ],
+      "scale": 0.205
+    },
+    {
+      "name": "bite_windup",
+      "source": "poses.png",
+      "rects": [
+        [
+          400,
+          400,
+          732,
+          674
+        ]
+      ],
+      "anchor": [
+        562,
+        645
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "bite_contact",
+      "source": "poses.png",
+      "rects": [
+        [
+          735,
+          409,
+          1174,
+          674
+        ]
+      ],
+      "anchor": [
+        927,
+        645
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "guard",
+      "source": "poses.png",
+      "rects": [
+        [
+          1188,
+          390,
+          1536,
+          675
+        ]
+      ],
+      "anchor": [
+        1370,
+        650
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "hit",
+      "source": "poses.png",
+      "rects": [
+        [
+          0,
+          704,
+          365,
+          775
+        ],
+        [
+          0,
+          775,
+          341,
+          892
+        ],
+        [
+          0,
+          892,
+          365,
+          976
+        ]
+      ],
+      "anchor": [
+        188,
+        949
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "chest_collapse",
+      "source": "continuity-alpha/chest-collapse-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1447,
+          1087
+        ]
+      ],
+      "anchor": [
+        790,
+        885
+      ],
+      "scale": 0.205
+    },
+    {
+      "name": "side_fall",
+      "source": "poses.png",
+      "rects": [
+        [
+          731,
+          789,
+          1107,
+          979
+        ]
+      ],
+      "anchor": [
+        899,
+        944
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "dead_closed_eye",
+      "source": "continuity-alpha/dead-eye-closed-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1987,
+          791
+        ]
+      ],
+      "anchor": [
+        1080,
+        640
+      ],
+      "scale": 0.165
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        0,
+        2,
+        0,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        4,
+        5,
+        4,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        6
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        7,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        8,
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        10
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

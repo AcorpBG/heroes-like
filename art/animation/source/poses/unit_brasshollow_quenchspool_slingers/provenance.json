@@ -1,0 +1,173 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_quenchspool_slingers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_brasshollow_quenchspool_slingers.png",
+  "reference_sha256": "613765314d1a256a1503a0371da838f10f4ce8be62a0c0154cb3ff8cef34d05d",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/walk-contact-passing-alpha.png",
+      "source_sha256": "53c83e7a8c9ad4faaba3386f2f074a82b5df96ac3c298387e11ec87b534771f1",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-54c3333c-a935-42bf-9d80-06d518674d49.png",
+      "prompt": "Use case: stylized-concept. Original Quenchspool Slinger reference identity. Make a 2x2 sheet of FOUR sequential walking animation poses, full bodies with generous separated gutters, identical scale and fixed camera facing RIGHT. Same woman bun, goggles, scarf, brass armor, red sash, two hands holding one reel, one cable to one caged orange weight. Four anatomically distinct phases: upper-left right leg strides forward and left leg back; upper-right right foot supports directly under hips while left knee swings forward lifted; lower-left LEFT leg strides forward and right leg back, thighs visibly reverse their front/back overlap relative to upper-left; lower-right LEFT foot supports under hips while right knee swings forward lifted. Keep near/far hip ownership and equipment sides fixed; do NOT mirror the whole woman. The two contacts must differ, not be duplicates. Same foot ground line per row, same body height except tiny natural gait bob. Weight safely close, never intersects leg, always connected. Match painterly reference not photorealism. Genuine transparent RGBA background, no checkerboard, numbers, labels, shadows or effects.",
+      "review": "1305x1206 non-opaque RGBA. Retain upper pair as contact/passing source candidates only; lower pair repeats same leg phase and is not an opposite half-cycle. Top hair near canvas edge, colored fringe and body/gear continuity unresolved. No four-frame cycle acceptance, packing or runtime registration. Tests deferred."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/walk-passing.png",
+      "source_sha256": "96510e8efe2bd96053fd63d0f1d90277c168e7cbae9828493db8b8c9264f2a73",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3a62024a-809f-43a6-9bd8-8c094a54ce3c.png",
+      "prompt": "Use case: precise-object-edit. Use the provided Quenchspool woman as identity reference. Create ONE full-body walking PASSING pose, NOT the wide stride in reference. BOTH KNEES CLOSE TOGETHER below pelvis. One leg nearly straight directly under body, boot flat planted; the other knee bent with its boot raised behind the calf, heel near opposite knee. Narrow silhouette below hips, unmistakable single-foot support; do not repeat two spread legs. Character faces RIGHT with original bun, goggles, scarf, brass armor, red sash and backpack gauge. Both hands steady one cable reel at waist. One continuous cable to one orange caged weight hanging just ahead, clear of feet. No additional arms/legs/weights, no mirrored torso. Same painted style. Full subject with generous margin on genuine transparent RGBA; no checkerboard or shadow.",
+      "review": "Distinct narrow single-support passing pose: supporting boot under body, other boot raised behind calf, both hands on reel and one tethered weight. Retained as source only. Body/gear proportions differ from original sheet, knee/hip ownership partially occluded, background is opaque RGB checkerboard. Opposite contact, alpha preparation, scale/continuity and packing still needed. No runtime registration/tests/exports."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/poses-defense-weight.png",
+      "source_sha256": "e0016b8f098635e17fd2929dec16b6ebeaae0b20c946d0744387d0f9fdd48a9c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-051f5f72-8f48-4fe5-bdd1-b24c8b6a2c61.png",
+      "prompt": "Use case: precise-object-edit. Edit target is original Quenchspool Slinger 4x4 battle pose sheet. Change ONLY defense pose row2 column4, eighth sprite. Restore its missing ONE orange-glowing brass-caged cylindrical tether weight, resting safely on ground just screen-left of her planted boot. A short flexible black cable connects the weight's top attachment continuously to the cable reel held at chest. Match weight size and construction to idle first sprite. Preserve exact crouching woman's pose, two arms, two legs, reel, bun, goggles, armor and backpack gauge. Keep entire weight within its own cell, no overlap neighboring sprites. Other fifteen poses unchanged, same layout camera scale background. No extra objects, text or effects.",
+      "review": "Select defense frame8 only. One caged orange weight is visible beside planted boot, attached to reel by black cable; crouch and equipment retained. Weight hangs close to ground rather than clearly resting. Reel/cable transitions, gait and alpha remain unfinished; not packed/enabled. Other frames not selected."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/poses.png",
+      "source_sha256": "8f6ff46ae1c91908536a87c07ac893bba0d05c73b0ae0513c2b856b530578067",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-fa6d744c-4406-410a-9612-ce9a85d6b817.png",
+      "prompt": "Use case: stylized-concept. Original tactical combat sprite sheet matching supplied Quenchspool Slinger reference character. 16 separated full body poses regular 4 columns 4 rows. Fixed 3/4 view facing RIGHT, same scale with wide clear gutters. True transparent RGBA background no painted checkerboard no ground no text. Human woman brown hair bun amber goggles forehead dark scarf black leather brass shoulder/knee armor leather boots red sash. ONE large brass cable reel held LEFT hand at abdomen, RIGHT hand operates top crank, small backpack furnace/red pressure gauge. ONE continuous flexible cable from reel to ONE orange-glowing caged cylindrical weight. This is a tethered swinging weapon, not a gun: keep cable connected and weight count one throughout. Row1 idle weight hangs safely reel held both hands; breathing idle shoulders lift weight swings slightly; walking left leg forward right back weight gathered close; walking right leg forward left back anatomically opposite contact without mirroring equipment. Row2 passing lifted knee; melee wind-up drawing reel and weight close chest; melee contact both hands shove reel body toward right while tethered weight hangs safe; defense crouch reel protects chest cable weight gathered. Row3 hit recoil retaining reel cable weight; ranged anticipation RIGHT hand turns crank LEFT supports reel cable begins outward loop; ranged lash extension ONE tethered weight swings far right cable taut connected to reel; recovery RIGHT crank reels cable in weight halfway back. Row4 knees buckle wounded reel held; collapse sideways reel falls beside hands weight settles; prone dead reel/cable/weight all on ground beside body dim furnace; same persistent corpse eyes closed furnace and weight cold dark no glow. All equipment continuous no duplicate weights cables or arms. Show genuine articulated elbow knee shoulder poses not shifted duplicates. Painterly original game art matching reference, crisp small-scale readability. Fully contain extended cable and weight inside own roomy cell, no clipping/overlap, no enormous glow hiding anatomy."
+    }
+  ],
+  "review_notes": "18-frame candidate: eight original paintings plus ten selected new paintings from five built-in outputs. Gathered travel weight stays clear of legs; two guards, reel-attached windup/release/rewind and corpse-directed forward collapse are newly painted. Wrong head/backpack cable poses and original reverse-direction side-fall excluded. Single opposite-contact guide still repeats leading leg; used only as planted bridge, not accepted opposite contact. Original cold equipped corpse retained. Full-roster leg ownership/support/travel, reel-axis/cable trajectory, body/gear scale, transitions and event timing remain unaccepted.",
+  "prior_review_notes": [
+    "Sixteen source poses: extended tether attack, two-handed reel shove and cold final corpse present.",
+    "Walking contacts repeat same lead; opposite contact/passing transition needed. Idle subtle.",
+    "Defense hides cable weight entirely; restore visible safely gathered weight. Cable exit side/reel geometry/crank hand/gauge backpack orientation vary between poses.",
+    "Attack cable reads rigid rather than swinging; anticipation-to-extension trajectory requires refinement. Extended weight crosses nominal equal-cell boundary and needs explicit crop.",
+    "Falling/prone orientation changes abruptly. Final eyes appear closed and weight cold; body/gear dimensions need small-scale continuity review.",
+    "Checker pattern visible; transparency/compositing unresolved. Source-only not packed or enabled, no tests/exports."
+  ],
+  "status": "candidate_pending_playback_acceptance",
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 8,
+    "new_selected_paintings": 10,
+    "generated_outputs": 5,
+    "generation": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_quenchspool_slingers.png",
+    "runtime_sha256": "99a800351f0a68ae348275c7e59524887d44f636ebcbcd53ac396e42e6d1f700",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/original-poses.png": "457b2ef7ae36fbe9a27ff2f749abda0f02d16e343f325a2aaddf128380b8ba31",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guided-carry-and-cable-arcs.png": "acd150890bff5ede6098daa907d12ed651d2b4e27be4be765970058af3d5e7c1",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guided-opposite-gathered-contact.png": "1284900a2bff5ed20823f429fdd45dc71370ab88670d52536a5bfe19a4274c76",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guard-weight-clear.png": "7765aeab89d7ad66483cf4b7870713dd13e11cdbc9888e338895d0f2e8c897bf",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/reel-attached-cast-cycle.png": "c85f69ec761606d377f319553f256b5ee1be38ea9b60de14f6f715760358940b",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/corpse-directed-collapse.png": "92b8661dab38a3e1495c266e2bda2b7c11337c907fc894c53d92bd2e7a929e4f"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Static source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "date": "2026-09-16",
+      "policy": "Only task-owned byte-identical preview duplicates; exact SHA-256 rechecked and fuser found no open handles. All original/rejected paintings, unique evidence, processing proofs and caches retained.",
+      "removed_files": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/guard-reference/unit_brasshollow_quenchspool_slingers-original-poses-rect-960-370-1226-660-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/guard-reference.png",
+          "sha256": "16a5fdfafcd7ad64a9b98158f513d7b3bb3494c0adeb384541f5ba4d764c52d1",
+          "bytes": 107815
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/ranged-reference/unit_brasshollow_quenchspool_slingers-original-poses-rect-635-663-1015-970-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/ranged-release-reference.png",
+          "sha256": "f09b1a232695bd25e77145f7fafa0e26b4510a31d966cc7195b8c2ff3b5e39a3",
+          "bytes": 132328
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/identity-second/unit_brasshollow_quenchspool_slingers-original-poses-rect-15-0-290-335-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/identity-reference.png",
+          "sha256": "1dcd7984dfe6960bb5f1ce722fcc22a4aadd2e55462ae5415a03950c14314331",
+          "bytes": 112677
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/supplements/guided-carry-and-cable-arcs-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/actions/guided-carry-and-cable-arcs-light.png",
+          "sha256": "8f28dc9d5a96f350179bbf068dd9f0a1f7f5fe934030e6e1819618416d189665",
+          "bytes": 856696
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/supplements/guided-carry-and-cable-arcs-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/actions/guided-carry-and-cable-arcs-green.png",
+          "sha256": "3db385d6f5fc631e3ef5c0cb971efe8b8857828d6eca53f355f13b4bf698cbe0",
+          "bytes": 833366
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/supplements/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/actions/original-poses-green.png",
+          "sha256": "edb090ed9f8e3625eadc228d7a7f615676cfc0a36ad447e91833e9d3d3cfa34c",
+          "bytes": 1042178
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/third/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/actions/original-poses-green.png",
+          "sha256": "edb090ed9f8e3625eadc228d7a7f615676cfc0a36ad447e91833e9d3d3cfa34c",
+          "bytes": 1042178
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/supplements/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/actions/original-poses-light.png",
+          "sha256": "6a611b5de454d42ea8ecd39b55cd83876695c4e1db2e84b0470322534031c080",
+          "bytes": 1093686
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/third/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/actions/original-poses-light.png",
+          "sha256": "6a611b5de454d42ea8ecd39b55cd83876695c4e1db2e84b0470322534031c080",
+          "bytes": 1093686
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/identity-third/unit_brasshollow_quenchspool_slingers-original-poses-rect-15-0-290-333-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/identity-reference-v2.png",
+          "sha256": "2ca4cb23a4eee9bed333e063b38de535a1b6b1746cb8d6db59d81e95eae6e1e6",
+          "bytes": 111355
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/prepared/guard-weight-clear-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/prepared-final/guard-weight-clear-green.png",
+          "sha256": "aafeadd3a4a962471a54f7b0d3891ea62b3cf7fe2f98ce18144c266a7ca2269a",
+          "bytes": 910361
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/prepared/guard-weight-clear-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/prepared-final/guard-weight-clear-light.png",
+          "sha256": "23264f1c851ee7d71af1ad925bcc5d102f6dbe6994d2dd6033f2fb5c5d0d7b79",
+          "bytes": 936451
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/slinger-continuity-20260916/corpse-reference/unit_brasshollow_quenchspool_slingers-original-poses-rect-911-1080-1226-1254-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_quenchspool_slingers/corpse-direction-reference.png",
+          "sha256": "815895b233bca21cb4599606213355f6aa8dbe0da476eb6b795cc067e3628dc1",
+          "bytes": 88682
+        }
+      ],
+      "removed_bytes": 8361459
+    }
+  },
+  "historical_non_source_records": [
+    {
+      "status": "rejected_repeated_leading_leg",
+      "outputs": [
+        "exec-42168baf-ccb6-4194-b2f7-5e91454c604f.png",
+        "exec-f21c8df1-d6c2-43bc-a6f9-7159c1896285.png"
+      ],
+      "output_directory": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc",
+      "prompts": [
+        "Use case: precise-object-edit. Original Quenchspool Slinger battle sheet is reference for character identity. Create ONE standalone full-body OPPOSITE walking-contact sprite facing RIGHT. The current top-row walking poses repeat their leading leg: change to anatomically opposite contact, woman's near/right leg extends BACK toward screen-left with toe touching ground, far/left leg reaches FORWARD screen-right with heel touching ground. Keep hips attached to these correct legs, two legs only. Torso faces same direction, never mirror whole character. Same brown bun, amber goggles, scarf, brass shoulder/knee plates, red sash, boots, backpack gauge. Both hands steady ONE brass cable reel at waist, ONE caged glowing orange weight hangs on ONE continuous cable beside forward leg. Preserve equipment sides and original painted style, full figure and weight contained. Genuine transparent RGBA background, no checkerboard, text, shadow, effects or extra gear.",
+        "Use case: precise-object-edit. Edit this walking woman's LEGS ONLY to reverse the walking phase without mirroring the character. Her NEAR leg attached to the hip on viewer LEFT must CROSS IN FRONT of the other thigh and reach diagonally to lower RIGHT, heel leading. Her FAR leg attached to hip on viewer RIGHT must pass BEHIND and trail to lower LEFT, toe on ground. This visible crossing of thighs is essential; current uncrossed stride is wrong. Preserve torso, head, two hands, reel, cable and single orange weight exactly, all face RIGHT. Same two legs/boots/armor and original proportions. Entire sprite contained. Genuine transparent background, no new effects/text."
+      ],
+      "review": "Standalone opposite contact and targeted crossed-thigh correction both repeat original lead, despite changed knee flexion. Both opaque RGB checkerboard. Neither copied, packed or registered; no animation progress claimed. Need materially different pose reference or production method, not identical retry. Existing sources unchanged, tests deferred."
+    }
+  ]
+}

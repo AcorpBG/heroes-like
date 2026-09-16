@@ -1,0 +1,87 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_flaremast_crews",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_flaremast_crews.png",
+  "reference_sha256": "23e7a25a6d651c1b4f3a56b588c5586689462f8a9d720ba82fb0b3c2c1935af7",
+  "outputs": [
+    {
+      "source": "walk-contact-draft.png",
+      "source_sha256": "fbc533e96ac41b8f61b5552ff621affa25d0db76597cedcaea709c8c30e28df0",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b7e2c7ea-ec47-4382-98be-cf75f8cc8ed8.png",
+      "prompt": "Use case: precise-object-edit. Advance attached passing pose to next walking CONTACT. Change legs only and slight natural sash shift. The currently lifted rear boot swings forward to image RIGHT: its thigh originates at near hip under red sash on image LEFT and crosses visibly IN FRONT of the other thigh, heel down toes slightly lifted. The previously planted leg moves BACK toward image LEFT behind advancing thigh, toe contacting with heel raised. Natural opposite stride, not a mirrored body. Preserve exact head torso arms launcher mast camera proportions. ONE woman and ONE folded strapped mast with three canisters RED ORANGE BLUE and folded tripod legs; keep all equipment unchanged. Full sprite in roomy margins, genuine transparent RGBA background no drawn checkerboard, ground or shadows. No extra limbs.",
+      "review": "Advancing near thigh crosses in front; all three canisters retained. Contact source draft only, not accepted as finished opposite contact: foot support, stride continuity, folded tripod and scale/camera matching pending. Checker pattern visible; alpha unfinished.",
+      "unselected_alpha_attempt": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5447b124-8c1e-45e7-9469-842fc28edb87.png",
+        "prompt": "Use case: background-extraction. Remove the entire checker-pattern background from this sprite and return ACTUAL transparent RGBA pixels outside the woman and her equipment, including all gaps between legs, straps, hair and mast. Do NOT draw a checkerboard to symbolize transparency. Preserve exactly the character, pose, three colored mast canisters, folded tripod, launcher, hair, fingers, scarf edges and dimensions. No gray matte, colored fringe, black background, ground shadow or redraw. The deliverable is a real alpha-channel cutout of this existing sprite.",
+        "reason": "Checker pattern persists and details redraw; not selected or copied as alpha asset."
+      }
+    },
+    {
+      "source": "walk-passing-draft.png",
+      "source_sha256": "75b455448c11db9afc52fa3ecd4fc879a540048da81186becf3a0bf6cfda3364",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-72cb240f-bebe-4456-a949-34a77a6c473a.png",
+      "prompt": "Use case: precise-object-edit. Edit this passing-pose sprite only by restoring the missing ORANGE signal canister on the carried mast. There must be THREE separate colored canisters: existing upper red and lower blue on image-left side of pole unchanged, plus one brass-framed orange glass cylinder attached on image-right side of mast slightly below red and above blue, visible behind shoulder and left of head. Match original apparatus construction, cylindrical shape brass end caps/clamps, natural occlusion by backpack/shoulder. Keep exact character face body pose clothes gun hands legs camera and all other mast pieces unchanged. Real transparent alpha background no painted checkerboard. No extra weapons, no extra character.",
+      "initial_source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3c61a61d-46dc-49f8-a5a0-e6c5ffd01962.png",
+      "initial_prompt": "Use case: stylized-concept. ONE isolated original Flaremast operator sprite based exactly on TOP ROW walking characters in reference. Missing walking PASSING pose: left leg straight planted beneath pelvis, right knee bent with right boot lifted behind toward image LEFT, narrow leg silhouette rather than wide stride. Upright torso three-quarter facing RIGHT, same elevated camera. ONE woman brown wavy hair blue cap amber goggles teal jacket cream cuffs/lapels brown quilted vest cream trousers tall boots red scarf and sash. BOTH hands hold single brass flared-barrel launcher red chamber low across waist, RIGHT trigger LEFT support, muzzle down-right. Signal mast folded and strapped diagonally on back, three folded tripod legs visible bound alongside lower pole, red/orange/blue canisters retained. No deployed mast or extra mast. Match proportions and gear of top-row source, cap remains on head, natural restrained step not running. Real transparent alpha background no ground shadow/checkerboard drawing. Whole body and tall mast inside roomy margins, painterly crisp battle cutout.",
+      "review": "Distinct passing silhouette with raised rear boot. Initial output lacked orange canister; correction restores red/orange/blue mast canisters. Folded leg count/attachments, equipment scale/camera and opposite contact remain unfinished. Checker background visible; alpha/compositing not accepted. Source-only not packed/enabled."
+    },
+    {
+      "source": "poses-cap-corrected.png",
+      "source_sha256": "b8ebc8af85c93917d075a829cad3d94a23c020465cea18989fafedad09861221",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6769d69c-2247-4841-8c2b-19579ac48f2d.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY row THREE column FOUR, the kneeling woman at right edge of third row of this fifteen-pose sheet. Restore her blue cap with amber goggles on top, matching the cap in every other pose. Fit cap naturally to her downward tilted head, preserving brown hair underneath. Do not change her face expression, pose, hands, flare launcher, tipping signal mast, clothing or body. Leave all fourteen other sprites unchanged. Same canvas size and positions and pale-gray background. No additional people or equipment. This is a targeted equipment continuity repair.",
+      "review": "Cap and goggles restored to twelfth kneeling pose. Select that frame only; whole-sheet incidental changes not selected. Transparency, gait and equipment transitions still unfinished."
+    },
+    {
+      "source": "idle-breath-draft.png",
+      "source_sha256": "b945de4062f2805c3783b79137d5749db865958c55cbb7effe215a435b5ababb",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2545ff16-cee2-4a68-8064-3c496d618993.png",
+      "prompt": "Use case: precise-object-edit. Input is identity/pose reference. Produce ONE isolated Flaremast operator plus her deployed signal mast, matching TOP LEFT idle sprite of reference sheet, same elevated three-quarter camera facing right. Missing second breathing idle: same feet planted in exactly same stance, shoulders and chest slightly raised by inhalation, elbows flex a little lifting brass flare launcher a few centimeters; red scarf/sash softly settle. ONE woman only, brown wavy hair blue cap amber goggles, teal jacket cream cuffs/lapels brown vest cream trousers tall dark boots. RIGHT trigger hand LEFT barrel-support hand. ONE brass long flared launcher red chamber, muzzle diagonally down-right. ONE narrow tall brass/wood signal mast with red/orange/blue canisters and three deployed tripod feet stands separately on image LEFT beside her. Preserve equipment proportions and mast orientation from first sprite, no folded backpack mast, no walking or attack. Full body and entire mast inside generous margins. Original painterly game raster, genuine transparent RGBA background, no ground shadow, no gray or checkerboard drawing, no text.",
+      "review": "Single operator with deployed mast and low launcher retained. Second-idle source draft; foot/shoulder and mast alignment must match first idle in assembly. Red/yellow edge fringe visible; alpha/compositing not accepted. Not packed/enabled."
+    },
+    {
+      "source": "poses.png",
+      "source_sha256": "46f901f8a9904356f6b3a25ed1f0e76b6260c9292ac08fdcc7961340166cf928",
+      "source_output": "exec-0fff0ad4-e11d-478c-a00a-47ddc85327c5.png",
+      "prompt": "Use case: stylized-concept. Original Flaremast Crew battle sheet faithful reference: ONE human woman wavy brown hair blue cap amber goggles, weathered teal jacket cream lapels/cuffs over quilted brown vest, red neckscarf long red sash, cream trousers dark brown tall boots/gloves, belt red brass flare cartridges. BOTH hands brass flare launcher with long flared barrel red chamber RIGHT trigger grip LEFT barrel support. Separate narrow tall brass/wood tripod SIGNAL MAST with red/orange/blue canisters stands at her rear LEFT; mast is owned equipment and retained through all poses. SIXTEEN full-body poses FOUR columns FOUR rows consistent elevated three-quarter camera facing RIGHT same character/equipment scale with ample gutters for whole mast. Row1 idle launcher low mast deployed; breath shoulders scarf; walking contact carrying folded mast on back strap launcher low; passing step folded mast on back. Row2 opposite walking contact folded mast on back; melee windup launcher held across chest mast deployed rear; two-hand launcher shove RIGHT mast deployed; crouched guard behind launcher mast deployed. Row3 reload red cartridge with LEFT hand RIGHT holds launcher mast deployed; aim level launcher mast deployed; firing recoil weapon raised slightly NO projectile/flash mast deployed; hit recoil mast deployed. Row4 knees buckle mast tipping; side fall body low mast tips; side landing mast lying beside body; final relaxed horizontal SIDE corpse eyes closed launcher beside hands full collapsed mast beside body NOT standing through corpse. Preserve one launcher one mast and physical hand/strap support, no duplicates/extra people. Actual joint articulation not standing cutout rotation. Original painterly raster flat pale gray background no shadows/text/grid/blood/scenery/effects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "49c68ccebbbdb30c0e6ac71c0b5c1b8017e95639856fee5285a9389457cf4b9c",
+      "alpha_output": "exec-70f91903-05cc-4fee-a725-fcc1648d600e.png",
+      "alpha_prompt": "Use case: background-extraction. Extract these fifteen Flaremast Crew poses onto true transparent RGBA. Preserve exact layout/body scale, full signal masts/tripods/canisters and launchers, clothing/hair/caps, fingers/limb gaps and corpse. Remove gray background and ground shadows only. No cloudy matte/checkerboard, redraw/reframing/text/effects."
+    }
+  ],
+  "review_notes": [
+    "Fifteen actual poses rather than sixteen; missing distinct second idle. Walking contacts repeat with no true passing. Mast retained including collapsed corpse, but carried/deployed transitions abrupt and dimensions vary. First kneeling death loses cap while later poses regain it. Need cap/equipment/grip continuity, gait/idle refinement and corpse-expression review. Final compositing unaccepted; source-only not packed/enabled, no tests/exports.",
+    "18 packed frames retain fifteen earlier paintings, including genuine-alpha idle breath, prepared contact/passing drafts and cap-corrected kneel; three new built-in paintings add deployed-mast melee recovery, crouched ready defense and post-shot recovery. The old repeated walking contacts and capless kneel are not selected.",
+    "Original alpha and approved neutral/green preparation preserve painted interiors. Explicit crop bands exclude adjacent-row boots and neighboring collapse pixels. Old/new body scales are anatomical and uniform, with a smaller corpse scale to avoid inflating the extended body; no mirroring, pose synthesis or warping.",
+    "All-state candidate only. Walking still lacks a proven alternating four-phase support cycle; carried/deployed mast transition is abrupt. Mast/launcher/body proportions, grip and cap/palette/edge consistency, fall expression and connected timing remain unaccepted. No automated suites/imports/gameplay/platform exports in this increment."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 15,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_flaremast_crews/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_flaremast_crews/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_flaremast_crews.png",
+    "runtime_sha256": "6b5183ed707cfa77eb016b1ceacea1af702c16a42b253c5d3fc5f7a7774f5899",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_flaremast_crews/alpha/poses.png": "49c68ccebbbdb30c0e6ac71c0b5c1b8017e95639856fee5285a9389457cf4b9c",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_flaremast_crews/idle-breath-draft.png": "b945de4062f2805c3783b79137d5749db865958c55cbb7effe215a435b5ababb",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/walk-contact.png": "7f8b5b16bd30ad8e93e6dae8e12cb1131e22fb753a0cf3a0c4181c555242608c",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/walk-passing.png": "149551dc1c879038750a544a43bdfaf5b73f9b31018f7bb93ed74c82478a6ff6",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/deployed-mast-action-recoveries-and-defense.png": "7de8a5ec4cb13b3eb93d15cc04e2cf7223bdf4c15c83850553f798a71a79cbfc",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/cap-corrected-kneel.png": "c46aaa3e002180d37d92bc859f8470410e2195749dc1f93c408a000a6eb971bc"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/flaremast-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

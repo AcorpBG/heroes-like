@@ -1,0 +1,112 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_rootcrown_knotstags.png",
+  "reference_sha256": "21ff0d25b8ad81da756a7da78f1c2fa2ed7df3873c13a93059d929bcd01ccbd0",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "ce72f91681aec53511d05fc5951667fc180411aa1776e807ff4942d570302979",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5207afa5-d53c-4243-96c5-663aa89e02e7.png",
+      "prompt": "Use case: stylized-concept. Image1 identity reference only. Original Rootcrown Knotstag battle animation sheet, FOUR columns THREE rows TWELVE full-body poses same body scale generous gutters fixed elevated three-quarter camera facing RIGHT. Creature exact reference: living bark stag with moss fern mane, broad root-like forefeet, FOUR articulated legs, two hind hooves, branch tail, enormous paired interlocking crown antlers with leaves and THREE amber hanging seed lanterns (one central high two outer low). Never add extra legs. Row1 idle standing; alert breath head lifts chest expands; walking near foreleg and far hindleg forward opposite pair back; passing legs gathered beneath torso. Row2 opposite contact far foreleg near hindleg forward other pair back no mirrored torso; attack windup neck tucked crown angled slightly back forelegs braced; antler charge head lowers crown forward neck extends hindlegs drive; defending head low crown shields chest four feet spread. Row3 hit recoil head/neck pulled back knees flex; dying foreknees buckle crown lowers; side collapse torso tilted supported on bent foreleg hindlegs fold; dead relaxed on side muzzle grounded FOUR legs folded/slack antlers complete resting along ground eyes CLOSED THREE lanterns dark amber. Painterly original raster retains bark armor mushrooms moss root anatomy. Distinct joint poses not rotation of standing image. Pale gray background no scenery ground shadows detached leaves text grid effects or gore. Antlers fit fully within each cell."
+    },
+    {
+      "source": "walk-contact-guided.png",
+      "source_sha256": "eb52db6824c870dd2283c4a1018ce5e01ab829e57b4087cd1c291d2ec6224527",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-17a8b6d9-452a-47f1-aa25-7d4f937222ba.png",
+      "prompt": "Use case: sketch-to-render. Original game animation pose. Image 1 is the authoritative leg-phase guide ONLY; image 2 is the exact Rootcrown Knotstag identity, proportions, materials and elevated three-quarter RIGHT-facing camera. Paint ONE complete Rootcrown, not the diagram. Follow the guide's opposing-contact mechanics: near FRONT root-leg trails backwards under the chest toward screen left, far FRONT root-leg reaches forward to screen right; near HIND hoof steps forward under belly, far HIND hoof trails back. Four legs total, distinct fore/hind attachments; do not copy the neutral reference's two forelegs reaching forward. Preserve the reference's enormous paired branching crown, three hanging amber seed lanterns (one high central, two low outer), fern mane, bark plates, branch tail, broad root forefeet and small hind hooves. Body and crown stay upright, same proportions/camera, no mirrored torso, no lunging attack. Same richly painted original sprite style. Full figure with generous margins on pure flat white, no shadows or effects, no labels/guide colors/shapes/text. This is a walking contact pose with actual joint articulation.",
+      "tool_mode": "built_in_image_gen",
+      "review": "Distinct guided gait candidates; exact near/far phase and continuity remain for assembled review. Local extraction avoids redraw."
+    },
+    {
+      "source": "walk-passing-guided.png",
+      "source_sha256": "ee56603c41c1eb84e6595d5c4e88bbe6c63913e4800122258a8095ffedc9c1ab",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-48d6f0d0-934f-41e0-a176-0a39340ccc2c.png",
+      "prompt": "Use case: sketch-to-render. Original game animation pose. Image 1 supplies ONLY the four-legged passing gait mechanics; image 2 supplies the exact Rootcrown Knotstag identity, proportions, materials and elevated three-quarter RIGHT-facing camera. Paint ONE complete creature in the guide's passing phase: far FRONT root-foot is planted vertically beneath shoulder, near HIND hoof planted beneath hip; near FRONT root-leg is bent with toes lifted beneath chest, far HIND hoof is lifted and passing underneath belly. Exactly four anatomically connected limbs. Do not copy the original two front feet planted pose. Preserve huge paired branching crown, three amber hanging seed lanterns (one high central and two low outer), fern mane, bark plates, branch tail, large root forefeet and small hind hooves. Body/crown upright, constant head/torso proportions, no mirrored torso, no attack leap. Same richly painted original sprite. Full figure with generous margins on plain flat white with NO ground shadow, scenery, effects, diagram colors/shapes or text. Distinct raised and supporting limbs, not a rotated/translated neutral stance.",
+      "tool_mode": "built_in_image_gen",
+      "review": "Distinct guided gait candidates; exact near/far phase and continuity remain for assembled review. Local extraction avoids redraw."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-21caca4e-7918-4717-934c-dca1f8970b3d.png",
+      "prompt": "Use case: background-extraction. Image1 edit target. Extract all twelve painted root-stag poses onto genuine transparent RGBA background. Preserve exact original canvas size layout positions scale bark moss leaves all branching antlers and seed lanterns, each foot and tail. Remove only pale gray backdrop including holes between antler branches and legs. Keep dark corpse eyes and dim lanterns. Clean antialias edges without gray/color halos. No painted checker, scenery, shadows, changed poses or text.",
+      "reason": "Brown backdrop added instead of clean transparent cutout."
+    },
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3252b3d3-2c70-4a80-bb55-1b90b2993245.png",
+      "prompt": "Use case: background-extraction. Extract image1 twelve stag sprites as transparent PNG cutouts. Background must be empty alpha zero, NOT brown/gray scenery and NOT a painted checkerboard. Preserve original pale-gray-source characters exactly, no recoloring. Remove every background pixel around/between antlers legs leaves. Maintain twelve positions same sheet size. This is asset extraction, not presentation on a backdrop. No shadows or glow added.",
+      "reason": "Brown backdrop again; not selected or registered for packing."
+    }
+  ],
+  "review_notes": [
+    "Twelve original poses with lowered-antler strike, defensive brace and side corpse with dimmed lanterns.",
+    "Walking contacts/passing need continuity refinement; first death pose remains largely standing rather than buckled.",
+    "Antler/lantern count and occlusion, root-foot anatomy, body scale and corpse transitions need full-motion review.",
+    "No accepted alpha source, packing or runtime enablement. No tests/exports; generation-first sequencing remains active.",
+    "13 frames retain eight original sheet paintings and two previously generated guided gait paintings, selecting three new paintings for antler recovery, shallow brace and front-knee collapse. Complete crown, three lanterns, four limbs and head-right dark-lantern corpse remain.",
+    "New magenta strip left visible pink contamination around antlers/lantern foliage after bounded preparation and is unselected. Built-in gray derivative and inspected neutral preparation remove that contamination; small generative detail changes are not unchanged-original pixel reuse. Existing approved local-alpha sources are reused without rekeying.",
+    "Uniform original/guided/new scales 0.62/0.18/0.30 and inspected crop bands preserve full root feet, crown and corpse while excluding neighboring branches. Final whole atlas inspected.",
+    "Candidate only: guided contact/passing are distinct but do not prove complete opposing near/far gait. Body/crown/lantern topology, foot ownership, knee-collapse continuity, palette/edges and connected timing need full-roster refinement. No automated/import/gameplay/platform acceptance.",
+    "2026-09-16: Replaced ambiguous repeated-limb stride with four independently painted hoof lifts from one fixed planted anchor. Cropped source selections identify each near/far fore/hind leg. Three support hooves remain planted; source positions, torso/crown/three-lantern identity remain stable. Eleven non-movement packing selections retained, indices shifted by three; original/rejected drafts preserved. Uniform 0.18 scale and common [620,1205] anchor. Final continuous gameplay and platform acceptance remain pending."
+  ],
+  "local_processing_review": {
+    "owner_approval": "2026-09-15 explicit local raster permission",
+    "recipe": "art/animation/source/cutout-recovery-20260915/recipes.json",
+    "status": "source_cutout_prepared_continuity_pending",
+    "notes": "Original gray sheet and guided gait candidates extracted without repainting; near/far phase, body/crown alignment and full motion review still pending."
+  },
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 2,
+    "generation": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_rootcrown_knotstags.png",
+    "runtime_sha256": "e9079f10430f78b4c7319fe4fc40dd84e1f953783e6f0add923a2455ca3b370c",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/poses.png": "ab7fc17c15ca0d02dbd0c6ed37881dcf943ed7ccf55105dabc2251e3e9d63a21",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/walk-contact-guided.png": "3c9ecb24fbdda99648e22bc620f29d7430805a130ec8fecda0fbef3af8b3f7de",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/walk-passing-guided.png": "939c822609939ca8a38f2ed6edc8272e0c290e10879d2d98a6d432787ae1f8fc",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png": "c8e1140944a002074fd2dddd07cb38dcb5d192b4586d59f64a667cd72dc3f31b"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/rootcrown-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  },
+  "packing": {
+    "recipe": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_rootcrown_knotstags.png",
+    "runtime_sha256": "a3fee96a035786f243cedb3443af26d9c036e927bc3c595f2253630d10b4deab"
+  },
+  "step_refinement": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "generation": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/cutouts.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/packing-result.json",
+    "previous_recipe": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/previous-packing.json",
+    "retained_paintings": 11,
+    "new_selected_paintings": 5,
+    "clip": "move: planted, near hind, planted, near fore, planted, far hind, planted, far fore; 80 ms per phase, 640 ms cycle",
+    "sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/local-alpha/poses.png": "ab7fc17c15ca0d02dbd0c6ed37881dcf943ed7ccf55105dabc2251e3e9d63a21",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/planted.png": "572475c88a916718672f32d8f5a66d6ac90215e7dc84cda27e0572e1e3e9ffc2",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/near-hind-lift.png": "3e603e14f3c074ee31325cea8b52c612e2936b364a505395d178a6048b2fe89e",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/near-fore-lift.png": "5808f2d7cad8c56c96649544232d9b586cad693192bc91e007fc85609741d540",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/far-hind-lift.png": "b56493403b63dd2a07f44bbfeed50e51b7d6326504413edd37adf00a949d6836",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/step-refinement-20260916/alpha/far-fore-lift.png": "a62ba1a8ce2aebe4d7b276584330ef0cda7caed18c2480f973e37382ed524641",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_rootcrown_knotstags/continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png": "c8e1140944a002074fd2dddd07cb38dcb5d192b4586d59f64a667cd72dc3f31b"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/rootcrown-step-refinement-20260916",
+    "validation": "Source frames, prepared composites and full atlas visually reviewed. Automated/gameplay/platform acceptance deferred until production refinement finishes."
+  }
+}

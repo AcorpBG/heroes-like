@@ -1,0 +1,94 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_tunnelmark_bolters.png",
+  "reference_sha256": "376c11173412cf401b9177089d7a106281b5dd8c62d59ad563d1e89881aedc73",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "1248d369c87b01be27d41003b22b6fba4321d44a018a7d95180466d8b4c39c15",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a10fdb2a-6463-41eb-814d-57fe9fbd725f.png",
+      "prompt": "Use case: stylized-concept. Original Tunnelmark Bolter battle animation sheet using reference identity: lean young man dark hair charcoal hood silver stitched edge, ochre neck scarf dark leather armor brown belts/quiver steel bolts at right hip, gray split tabard trousers leather knee pads wrapped boots. Compact wood/iron CROSSBOW right trigger hand left supports fore-end. SIXTEEN articulated full body poses FOUR columns FOUR rows same scale elevated three-quarter camera facing RIGHT generous gutters. Row1 idle crossbow lowered two hands; breathing alert head/shoulders shift; running near leg forward far back crossbow low two hands; passing knees under hips. Row2 opposite run far leg forward near back no torso mirror; melee anticipation tuck crossbow LEFT arm right fist cocked at screen LEFT shoulder; right punch extends across chest toward RIGHT left cradles full crossbow; crouched defense two hands crossbow brace. Row3 hit recoil full crossbow retained; reload left hand places steel bolt while right holds stock; aim loaded crossbow shoulder; released shot recoil empty rail and string forward no projectile. Row4 recovery lower crossbow; knees buckle; side fall torso raised own full crossbow near hands; relaxed horizontal side corpse eyes CLOSED hood on full crossbow beside hands quiver retained. No missing gear/switching hands extra arms or rotated standing corpse, genuinely articulated joints. Painterly original raster pale gray background no shadow grid text effects blood scenery."
+    },
+    {
+      "source": "poses.png",
+      "source_sha256": "b6911f070bcf9a5a5965ac57927dd4983306704fbaa60c74436bc07978aa6f24",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1cd54fb2-38ad-410c-946b-bcf6409ff562.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY SECOND ROW THIRD figure. Correct melee punch to RIGHT arm emerging from screen LEFT shoulder extending ACROSS chest toward screen RIGHT, same arm as second-row second fist windup. LEFT arm cradles entire crossbow horizontally low against ribs with fore-end toward RIGHT; do not exchange weapon/arms. Full crossbow bow limbs stock string retained. Keep legs torso hood quiver scale and every other pose/layout/gray background unchanged.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "777d3d698814327944e1dbfbf29c02f7a1c4121062dcc5d062678b2d0912a62a",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d7c9b552-2180-4d73-ad48-37f1d0da381e.png",
+      "alpha_prompt": "Use case: background-extraction. Image 1 edit target. Extract all sixteen painted character poses onto genuine transparent RGBA background, clean fine silhouette edges and transparent gaps inside crossbows and between limbs. Preserve exact original canvas layout, positions, dimensions, gear, colors, all poses and closed corpse eyes. Remove only gray background and ground shadows. No checker pattern painted into pixels, no halos, no restyling, no added text."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b9f3a308-8c99-47a3-bc4d-93944242065a.png",
+      "prompt": "Use case: precise-object-edit. Image 1 edit target. Change ONLY row TWO column TWO windup figure: his RIGHT arm on screen LEFT cradles the complete crossbow at waist, exactly matching row TWO column THREE weapon grip. His LEFT arm on screen RIGHT bends elbow with clenched fist beside his screen RIGHT shoulder, preparing to extend that same fist as in next frame. Do not change the next frame. Preserve all other fifteen poses, hood, gear, face, scale, legs, layout, background. No new weapons. This fixes an animation arm swap by correcting windup not contact.",
+      "reason": "Windup still raises opposite arm from contact; not selected."
+    }
+  ],
+  "review_notes": [
+    "Sixteen poses retain complete crossbow, hood and quiver through hit, collapse and horizontal corpse.",
+    "Melee correction did not resolve arm swap. Refine paired anticipation/contact before enabling.",
+    "Three running poses repeat lead; passing and opposite contact missing.",
+    "Crossbow bolt/string release state, grip continuity, idle differentiation and extracted edge colors need refinement and in-context review.",
+    "Source only; not packed or runtime-enabled. No tests/exports run; consolidated validation deferred until generation and integration finish.",
+    "16 frames retain eleven original paintings and select five new paintings. New right cross/recovery match the original near-shoulder windup while left arm cradles crossbow; loaded passing is distinct. Loaded melee/travel and empty firing/recovery clips stay separate.",
+    "First new fired sheet left rearward strings despite empty rail; retained unselected. Targeted image edit removes those long cords and paints short strings between front nocks in both release and recovery. Bow-tip geometry changed and remains a named gear-continuity refinement, not an unchanged original weapon claim.",
+    "Approved bounded magenta preparation and source bands preserve hood, quiver, full crossbow and head-right equipped corpse while excluding neighboring hood/runner fragments. Final whole atlas inspected.",
+    "Candidate only: full alternating gait, body/crossbow dimensions and string/bow-tip geometry, grip/palette/edge continuity, reload and connected timing need full-roster refinement. No automated/import/gameplay/platform acceptance.",
+    "2026-09-16: Replaced the repeated/ambiguous two-frame stride with a deliberately paced four-phase foot-lift loop from one fixed travel anchor. Both feet have distinct lifts with unchanged upper-body equipment, 0.185 uniform scale and one shared ground anchor. Fourteen earlier non-movement frames preserved byte-for-byte after index shift. Rejected painted-guide and wrong-leg drafts retained but unselected. Final in-game movement/transition quality is not yet accepted."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 11,
+    "new_or_corrected_selected_paintings": 5,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_tunnelmark_bolters.png",
+    "runtime_sha256": "21c04900dfb7da6dc01d952e8740f19a8d00deb86dbff2376239d84ab12a4135",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png": "777d3d698814327944e1dbfbf29c02f7a1c4121062dcc5d062678b2d0912a62a",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/right-cross-recovery-and-loaded-passing.png": "bf99bcc7b91d25add608eaae5a324ad3cbc5d54679abb7b10cdebbb535976202",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/fired-front-nocks-corrected.png": "9cb156b7560bbd1f836255037ddc51951cded6e402b9d311b2500ac948e2cd24"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/tunnelmark-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  },
+  "packing": {
+    "recipe": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_tunnelmark_bolters.png",
+    "runtime_sha256": "50d52c33b78d2121fa8fd62b336a20b7da619cac322cf28f8b7d1ccbb007d1b2"
+  },
+  "step_refinement": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "generation": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/cutouts.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/packing-result.json",
+    "previous_recipe": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/previous-packing.json",
+    "retained_paintings": 14,
+    "new_selected_paintings": 3,
+    "clip": "move: planted, near-foot lift, planted, far-foot lift; 160 ms per phase",
+    "sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png": "777d3d698814327944e1dbfbf29c02f7a1c4121062dcc5d062678b2d0912a62a",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/planted.png": "82c45ecb1b2a38ecca771c28a3fc002504d66426a11487fc188c2545c46819d0",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/near-lift-selected.png": "39f82849ef7f555cf05dc3fc1609e87f3b2c3db0304d01e539ff8f219e76791e",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/far-lift.png": "2e2fb442340c7bdcadb3309405d561928c3210871c05db3fbe994409c9ef2ad4",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/right-cross-recovery-and-loaded-passing.png": "bf99bcc7b91d25add608eaae5a324ad3cbc5d54679abb7b10cdebbb535976202",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/fired-front-nocks-corrected.png": "9cb156b7560bbd1f836255037ddc51951cded6e402b9d311b2500ac948e2cd24"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/tunnelmark-step-refinement-20260916",
+    "validation": "Sources, prepared composites and full atlas visually reviewed; automated gameplay/repository/platform validation deferred until roster refinement ends."
+  }
+}

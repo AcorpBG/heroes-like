@@ -1,0 +1,402 @@
+{
+  "unit_id": "unit_neutral_mossglass_sentinels",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          383,
+          350
+        ],
+        [
+          248,
+          350,
+          330,
+          364
+        ]
+      ],
+      "anchor": [
+        226,
+        352
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          384,
+          0,
+          765,
+          350
+        ],
+        [
+          635,
+          350,
+          710,
+          364
+        ]
+      ],
+      "anchor": [
+        606,
+        352
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "contact_original",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          766,
+          0,
+          1157,
+          369
+        ]
+      ],
+      "anchor": [
+        963,
+        353
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "passing_original",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          150,
+          350,
+          246,
+          390
+        ],
+        [
+          70,
+          390,
+          342,
+          673
+        ],
+        [
+          155,
+          673,
+          260,
+          693
+        ]
+      ],
+      "anchor": [
+        214,
+        678
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "transfer_planted",
+      "source": "continuity-alpha/supported-stride-and-front-shield-actions.png",
+      "rects": [
+        [
+          0,
+          0,
+          511,
+          504
+        ]
+      ],
+      "anchor": [
+        256,
+        470
+      ],
+      "scale": 0.455
+    },
+    {
+      "name": "passing_knee_lift",
+      "source": "continuity-alpha/supported-stride-and-front-shield-actions.png",
+      "rects": [
+        [
+          512,
+          0,
+          1023,
+          504
+        ]
+      ],
+      "anchor": [
+        777,
+        470
+      ],
+      "scale": 0.455
+    },
+    {
+      "name": "passing_rear_lift",
+      "source": "continuity-alpha/supported-stride-and-front-shield-actions.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          504
+        ]
+      ],
+      "anchor": [
+        1290,
+        470
+      ],
+      "scale": 0.455
+    },
+    {
+      "name": "mace_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          474,
+          352,
+          563,
+          377
+        ],
+        [
+          398,
+          377,
+          729,
+          705
+        ]
+      ],
+      "anchor": [
+        569,
+        675
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "mace_front_shield_contact",
+      "source": "continuity-alpha/supported-stride-and-front-shield-actions.png",
+      "rects": [
+        [
+          0,
+          505,
+          527,
+          1010
+        ]
+      ],
+      "anchor": [
+        277,
+        953
+      ],
+      "scale": 0.455
+    },
+    {
+      "name": "mace_recovery",
+      "source": "continuity-alpha/supported-stride-and-front-shield-actions.png",
+      "rects": [
+        [
+          528,
+          505,
+          1023,
+          1010
+        ]
+      ],
+      "anchor": [
+        778,
+        950
+      ],
+      "scale": 0.455
+    },
+    {
+      "name": "guard_original",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1158,
+          390,
+          1536,
+          701
+        ]
+      ],
+      "anchor": [
+        1320,
+        676
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "guard_deep",
+      "source": "continuity-alpha/supported-stride-and-front-shield-actions.png",
+      "rects": [
+        [
+          1024,
+          505,
+          1536,
+          1010
+        ]
+      ],
+      "anchor": [
+        1300,
+        947
+      ],
+      "scale": 0.455
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          678,
+          177,
+          714
+        ],
+        [
+          0,
+          714,
+          380,
+          1024
+        ]
+      ],
+      "anchor": [
+        192,
+        988
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          384,
+          708,
+          731,
+          1024
+        ]
+      ],
+      "anchor": [
+        566,
+        980
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "death_side_fall",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          732,
+          740,
+          1105,
+          1024
+        ]
+      ],
+      "anchor": [
+        921,
+        992
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "dead_cold",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1106,
+          778,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1308,
+        997
+      ],
+      "scale": 0.62
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 460,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 6,
+      "indices": [
+        2,
+        3,
+        4,
+        5,
+        4,
+        6
+      ],
+      "loop": true,
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        7,
+        8,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 185,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        10,
+        11
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        12,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 185,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        13,
+        14,
+        15
+      ],
+      "loop": false,
+      "frame_msec": 265,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        15
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

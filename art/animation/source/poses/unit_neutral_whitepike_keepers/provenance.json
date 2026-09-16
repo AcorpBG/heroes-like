@@ -1,0 +1,48 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_whitepike_keepers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_whitepike_keepers.png",
+  "reference_sha256": "6a5a5384435894f3be29b2f771dd93bb72d63842a62caa336f584749f3fdf7e8",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "5ef6d111fc239c2be7d534b489e75e72f54c51cdf6ed9455d45883462f4bf2cc",
+      "source_output": "exec-0f15d0f6-d29e-4537-bdc7-101c47c5dd44.png",
+      "prompt": "Use case: stylized-concept. Original Whitepike Keeper battle animation sheet faithful to reference: middle-aged bearded man blue knit cap white fur rim, white fur mantle and cream quilted long winter coat over gray lamellar chest/hip plates, blue scarf/tabard, brown leather gloves/belt/boots, gray trousers. BOTH hands long pale wooden pike with long narrow silver spearpoint and metal butt spike. Twelve full-body articulated poses FOUR columns THREE rows, same elevated three-quarter camera facing RIGHT, consistent scale. Very wide gutters and ample margins for full-length pike in each pose no overlapping neighboring frames. Row1 idle pike diagonal upright; breathing shoulders/cap tilt; walking contact near leg forward far leg behind pike diagonally held; passing foot beneath pelvis other knee rises. Row2 opposite walking contact near thigh back far leg forward same torso no mirroring; attack windup two hands pull level pike back tip aims RIGHT; full two-hand horizontal thrust to RIGHT hips forward knees flex, same weapon length and hand spacing; crouched brace pike angled across front. Row3 hit recoil; knees buckle pike lowers; side fall low torso pike tips alongside body; final dead relaxed horizontal SIDE eyes fully closed with entire pike flat beside hands and fur mantle spread. Actual articulated knees hips elbows, consistent grips and whole spear both ends all frames, no shields/swords, no duplicate standing cutouts or rotated upright corpse. Original painterly raster pale gray flat background no shadows/scenery/effects/blood/text/grid.",
+      "alpha_source": "alpha/poses-unaccepted.png",
+      "alpha_sha256": "952f5c630809810a93d5b223fa6c6b21351e10bdda972a26ac5c969f8c2da321",
+      "alpha_output": "exec-525fad0b-f633-44d9-98cc-6bc65e3027e8.png",
+      "alpha_prompt": "Use case: background-extraction. Extract twelve Whitepike Keeper poses as true transparent RGBA. Preserve exact pose layout/body scale, both complete pike ends and shafts, fur/cream clothing, boots, hands, limb gaps and corpse. Only remove gray background and ground shadows. No matte, cloudy background, checkerboard, redraw, reframing, effects or text."
+    }
+  ],
+  "review_notes": [
+    "Twelve original poses visually inspected: two-hand thrust, low brace and equipped side corpse. Walking contacts/passing need refinement; pike length and grip continuity require correction/review. Long weapon extends across regular grid boundaries: explicit per-frame crops needed. Extraction preview shows cloudy background and remains unaccepted pending compositing inspection or re-extraction. Source-only, not enabled; no tests or exports.",
+    "13 frames retain nine original paintings and select four new full-pike thrust, recovery, ready brace and passing-step paintings. The new thrust preserves the rear shaft and butt spike missing from the old thrust. Original equipped kneel, low fall and head-right corpse remain.",
+    "Actual original alpha composites are clean and reused unchanged despite historical raw-preview rejection. New green source uses approved bounded preparation. Original scale 0.59; new horizontal attack/recovery 0.42 and enlarged lower-row guard/step 0.36, based on head/body anatomy rather than bounding-box fitting. Banded source selections preserve full pike ends while excluding neighboring leg, spearpoint and lower fragments.",
+    "New travel carry points the spear opposite to the old contact carry; consistent carry/grip and a full alternating gait remain refinement, not an accepted walk. Pike length, body/palette/edge consistency and connected action/death timing remain unaccepted. Static production review is not gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_whitepike_keepers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_whitepike_keepers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_whitepike_keepers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_whitepike_keepers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_whitepike_keepers.png",
+    "runtime_sha256": "03aee1d3f6056bcd1fc30e96035a828ee9bdf943380c05411885af6ad03577de",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_whitepike_keepers/alpha/poses-unaccepted.png": "952f5c630809810a93d5b223fa6c6b21351e10bdda972a26ac5c969f8c2da321",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_whitepike_keepers/continuity-alpha/full-pike-thrust-recovery-brace-and-step.png": "4c7e2f4a7f5d020dd033dab4bd82bdc92cb5b588f1a1c92745f636462ce5e638"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/whitepike-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

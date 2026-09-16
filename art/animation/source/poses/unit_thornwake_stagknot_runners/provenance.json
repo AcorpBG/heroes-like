@@ -1,0 +1,226 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_thornwake_stagknot_runners",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_thornwake_stagknot_runners.png",
+  "reference_sha256": "78c5788c806a5f9f02e6518feb66a111946db0300dba218472f30a03a002585f",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-fall-gem-dim.png",
+      "source_sha256": "3a00bf06182da33a0b0281730df92769c5bf0e8441a547926e8419ee89b60149",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-04d85699-1896-46ab-b0b5-a6d599555605.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY bottom row column3 side-fall sprite of original Stagknot Runner 4x3 sheet. Extinguish bright eye: dark brown bark socket and closed eyelid, no yellow point. Extinguish oval chest gem: dull dark brown amber with ordinary reflection, no bright orange white center. Match inactive eye/gem of corpse immediately to its right. Preserve EXACT side-fall body, bent root limbs, antlers, skull, saddle bindings ribbons tail and brown background. Other eleven sprites unchanged. No text, effects or whole-body darkening.",
+      "review": "Select side-fall frame11 only. Chest gem darkened and eye substantially subdued; small warm eye detail remains, so fully closed-eye continuity not yet accepted. Pose/equipment retained. Brown-background extraction, gait and assembly pending; other sprites unselected."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-front-buckle.png",
+      "source_sha256": "088c60573c5ff391fcedb307519132c1d747fd68023af3436333afa4e2fe9a84",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5c562210-b22a-4c58-935e-6b54cd5828c9.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY bottom row column2, death frame10 of original 4x3 Stagknot Runner sheet. Show front legs buckling: BOTH front root legs bent deeply with knees near ground, chest drops low between them, rear legs still partly supporting higher hips, head droops muzzle toward ground. Four complete legs and root feet retained; not standing stride, not attack crouch. Eye and chest gem dim dark amber. Keep same pale birch body, paired branch antlers, saddle, red bindings, ribbons and root tail, body size, facing LEFT and elevated camera. Other eleven sprites unchanged including dark-eyed final corpse. Same grid brown background no text.",
+      "review": "Select frame10 only. Front knees bend with chest/head lowered and rear hips raised, four root feet visible. Eye/chest dimmed. Antler orientation and torso compression differ and require matching into side fall; source brown background extraction/gait pending. Other poses not selected, not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-corpse-eye-dark.png",
+      "source_sha256": "f5b79bdf0c16f91c957b477eb8695c1e6711562b354d50ad92e46dd9473ce776",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c13ea562-0ca9-4638-9dc7-9a46b11754cb.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY visible eye of final bottom-right dead Stagknot Runner in this original 4x3 sprite sheet. Replace bright yellow pupil and orange eye socket glow with opaque dark brown bark and a thin closed eyelid crease. No luminous dot or pale reflective pupil. Preserve entire skull muzzle antlers and side-lying body, dark chest gem, root legs saddle straps ribbons and brown background. Other eleven sprites unchanged. Exact same layout scale camera. No new effects or text.",
+      "review": "Select final frame12 only. Yellow eye point replaced by dark brown crease/socket, chest gem remains dark. Corpse equipment/body retained; exact skull/antler and falling transition matching pending. Brown background still requires extraction; gait unresolved. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-draft.png",
+      "source_sha256": "f3b3e4c2204a351651c5b7ef2ff0ef9bab08833193022cfde3176fdf114aacb1",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3d5ada27-9af4-41ad-a1fc-69035c75eeb2.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle animation sprite sheet. Reference Stagknot Runner is a lean FOUR-legged living-wood stag, pale birch bark over dark branching root muscles, red vine bindings, paired huge twisted branch antlers, amber eyes and large oval amber chest gem, small brown saddle with no rider, long trailing root tail and tan ribbon strips. Feet are branched roots, not hooves. Twelve full-body articulated poses in FOUR columns THREE rows, fixed three-quarter side view facing screen right, constant body/antler scale with generous gutters around antlers, tail and roots. True transparent RGBA background. Reading order: 1 standing idle all four root feet planted; 2 breathing alert head raises ribbons sway; 3 gallop extended near foreleg forward near hind back; 4 gathered suspension all four knees flex under body; 5 opposite diagonal stride far foreleg forward near foreleg back; 6 attack anticipation hindquarters crouch antlers draw back; 7 antler ram lowered head crown forward hindlegs driving; 8 defensive planted stance crown lowered; 9 hit recoil neck turns aside; 10 dying front knees buckle chest drops; 11 collapse onto side root legs fold; 12 dead side-lying all four limbs and antlers retained eyes and chest gem dark amber no emission, saddle/ribbons/tail attached. Same antler branches, two antlers, four legs and bindings in all poses. No rider, humanoid parts, extra legs or missing antlers. No ground shadows, effects, scenery, text or gore. Original detailed painted game art matching reference, clear joint articulation not translated duplicates. Full figure uncropped in every cell."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses.png",
+      "source_sha256": "8f26d2a58cf12e8afbcfb445d7d40adf4079077fcdf2db190da11b3493803c25",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-10784bf1-7364-4ba5-9ff5-1fce114e9984.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY bottom-right corpse pose row three column four in Stagknot Runner sheet. Close its visible eye into an unlit dark eyelid and extinguish its chest gem to dark brown amber with no yellow/orange emitted light. Preserve corpse anatomy, antlers, saddle, ribbons and every other pose unchanged. Same layout, size and background. No other edits."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-110069c8-3995-4c38-8ba2-cbb6c7cea500.png",
+      "prompt": "Use case: background-extraction. Remove brown backdrop of twelve-pose Stagknot Runner sheet to actual transparent RGBA. Preserve painted figures, root limbs, antlers, ribbons, saddle and exact positions/scale. Also close the still-bright visible eye of ONLY final bottom-right corpse: dark unlit eyelid, no amber pupil. Keep its chest gem dark. All other eyes unchanged. No replacement background, matte, shadows, painted checkerboard or added effects; opaque creatures and transparent empty gaps.",
+      "reason": "Brown background retained and final eye still bright; not accepted as alpha."
+    }
+  ],
+  "review_notes": [
+    "14 packed candidate frames: eleven selected cells from new right-facing extracted sheet, two new gallop contact phases and one new defensive-breath painting. Five built-in masters generated; four directly supply selected frames. No original draft pixels counted as unchanged reuse.",
+    "Original poses-draft.png has clean real alpha despite brown RGB preview. Later death corrections have opaque brown backing. The original whole-body facing is LEFT while battle sprites require RIGHT. Built-in whole-sheet facing/death correction preserves identity and action order; no runtime code or software pose mirroring used.",
+    "Magenta-normalized precursor and its local distance75/edge2 cutout remain as rejected edge-spill evidence. A separate built-in extraction supplies genuine RGBA0..254, visually clean on actual green composite. It changes small details and contrast; preserve every predecessor and exact prompt.",
+    "Gallop uses hind-root push-off, retained airborne extension, fore-root landing and retained gathered suspension. New contact paintings show four connected legs with distinct grounded/lifted pairs. Repeated earlier diagonal-contact cell4 is excluded. Camera, body scale, limb travel and connected gallop timing remain unaccepted.",
+    "Dark-eye/gem front-knee buckle, side fall and persistent equipped corpse remain. Explicit anatomical anchors and a larger death ground allowance avoid the initial side-fall cell boundary. Defensive breathing retains low crown and all equipment.",
+    "Selected opaque checker masters use connected neutral preparation with inspected antler-gap seeds (contact minima160/115 and guard160, tolerance16, edge2). Actual-alpha sheet is not rekeyed. Antler shape, root/foot counts and occlusion, saddle/ribbon continuity, large recoil head turn, fine edges and actual event timing need full-roster refinement. No tests/imports/exports, paid API or gameplay/save/footprint changes."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses inspected with gathered stride, antler attack and fallen body. Corpse chest gem darkened but eye closure/unlit eye unresolved.",
+    "Facing follows reference left despite requested right; normalize intended facing at packing consistently, not by changing gameplay.",
+    "Opposite gait contact differs in pace from gallop; four-limb sequence and root attachments require refinement. First death remains largely standing.",
+    "Antler branch shape, saddle/ribbon/tail continuity and corpse anatomy need full-motion review. Clean extraction required.",
+    "Source-only not enabled; no tests/exports or disposable test intermediates created. 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "reference_crops": [
+      {
+        "path": "art/animation/source/poses/unit_thornwake_stagknot_runners/original-alpha-reference-green.png",
+        "sha256": "3a672338d78af3bf539d17069b8bdf8bdf5fa30f53f13fe3c23d6a981cc7769f",
+        "source": "poses-draft.png",
+        "source_sha256": "f3b3e4c2204a351651c5b7ef2ff0ef9bab08833193022cfde3176fdf114aacb1",
+        "rect": [
+          0,
+          0,
+          1536,
+          1024
+        ],
+        "method": "Actual unchanged original alpha composited on green; full-sheet editing reference."
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_stagknot_runners/standing-reference-light.png",
+        "sha256": "13952607c9ca820d620754b52bc4e38811171d86e988e148741efd888e9870ea",
+        "source": "poses-facing-right-extracted.png",
+        "source_sha256": "9cf534f293817b7c24006f1e8ae65341ea78152fdaad1503de2eaa8890e84d15",
+        "rect": [
+          0,
+          0,
+          331,
+          343
+        ],
+        "method": "Actual alpha cropped and enlarged nearest4x on light; fixed identity reference."
+      },
+      {
+        "path": "art/animation/source/poses/unit_thornwake_stagknot_runners/guard-reference-light.png",
+        "sha256": "9bf5473b31d3683497e6e63515b2d57c84ba034a2bfa85e180fecc10f7d393db",
+        "source": "poses-facing-right-extracted.png",
+        "source_sha256": "9cf534f293817b7c24006f1e8ae65341ea78152fdaad1503de2eaa8890e84d15",
+        "rect": [
+          1117,
+          344,
+          1536,
+          660
+        ],
+        "method": "Actual alpha cropped and enlarged nearest4x on light; guard edit target."
+      }
+    ],
+    "sources": [
+      {
+        "source": "poses-facing-right-magenta.png",
+        "sha256": "05ec0f5b105baac8bf1f4f18d5a0b7521c6fdcfad60aadddc6a7ea9f9bda2828",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1c48a3ac-7f6a-4a36-b06b-129bc0c9cdd7.png",
+        "selected": false,
+        "prompt": "Use case: precise-object-edit.\nAsset type: original game battle animation sheet.\nImage 1 is the edit target: the original Stag-Knot Runner 4-column by 3-row sheet with clean alpha. Image 2 is a supporting reference ONLY for the front-knee-buckling death pose in bottom row column2.\nPrimary request: return the SAME TWELVE poses in the SAME 4x3 layout, but make EVERY whole stag face screen RIGHT instead of LEFT. Preserve each original action, body scale, four connected root legs, paired branch antlers, pale birch bark, dark green root muscles, red vine bindings, small empty saddle, amber oval chest gem, long trailing root tail and tan ribbons. No rider. Do not merely rotate heads; the whole anatomical body must face right. Keep each pose within its own original cell, no reordering or overlapping neighbors.\nChange bottom row column2 to the corrected death buckle from Image2: both front knees bend deeply to ground and chest/head drop, rear hips remain raised, all four feet visible. Bottom row column3 is side fall; bottom row column4 is fully prone settled corpse. In all three bottom-row death cells columns2-4, eye and chest gem are completely unlit dark brown amber; final corpse has a closed dark eyelid, no bright eye dot or emitted light. Keep equipment and antlers throughout.\nOther pose actions unchanged: idle, alert breath, extended gallop, gathered gallop, diagonal contact, crouched anticipation, low antler ram, defensive brace, hit recoil.\nBackground: flat pure MAGENTA RGB255,0,255 in every empty space and aperture, no checkerboard, gradient, ground, shadow or reflected magenta. Preserve original warm muted painterly texture and constant anatomical scale. Full entire 4x3 sheet with generous margins around antlers, toes, tail and corpse; no text, grid lines, extra limbs, detached roots, spell effects or glow clouds. Original game art, no copyrighted characters.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_stagknot_runners/original-alpha-reference-green.png",
+            "sha256": "3a672338d78af3bf539d17069b8bdf8bdf5fa30f53f13fe3c23d6a981cc7769f"
+          },
+          {
+            "path": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-front-buckle.png",
+            "sha256": "088c60573c5ff391fcedb307519132c1d747fd68023af3436333afa4e2fe9a84"
+          }
+        ],
+        "selected_source_indices": [],
+        "review": "Required right-facing precursor, not packed: local magenta extraction retained visible pink edge spill. The separate built-in extraction is selected after actual-alpha compositing."
+      },
+      {
+        "source": "poses-facing-right-extracted.png",
+        "sha256": "9cf534f293817b7c24006f1e8ae65341ea78152fdaad1503de2eaa8890e84d15",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-eecfb829-aacf-4b52-8b30-12df5fd12f11.png",
+        "selected": true,
+        "prompt": "Use case: background-extraction. Image1 is the exact original 12-pose Stag-Knot Runner 4x3 sprite sheet to extract. Remove ONLY the pure magenta background and its pink edge spill, replacing every outside pixel and enclosed empty aperture with genuinely transparent alpha. Preserve all twelve right-facing character paintings, exact positions, pale birch bark, brown root antlers and feet, red bindings, saddle, tan ribbons, tail and amber gems. Magenta/pink is NOT a character material: remove pink contamination from thin antler/root outlines while retaining original brown wood and red bindings. Do not repaint or redesign bodies, alter poses, change eyes/gems or add/drop branches. Keep dark dead-eye/gem states in bottom row columns2-4. All extremities stay complete inside canvas. Output actual RGBA transparency, not a painted checker pattern, green backdrop, brown backdrop, floor, shadow or glow. Same canvas and sprite scale; no text or grid.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-magenta.png",
+            "sha256": "05ec0f5b105baac8bf1f4f18d5a0b7521c6fdcfad60aadddc6a7ea9f9bda2828"
+          }
+        ],
+        "selected_source_indices": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "unselected_source_indices": [
+          4
+        ],
+        "review": "Genuine RGBA0..254, clean on green. Eleven selected cells including dark-eye/gem deaths. Generative extraction changes detail/contrast, so these are not unchanged original-draft pixels."
+      },
+      {
+        "source": "gallop-fore-contact.png",
+        "sha256": "4bd99ba70b3139bdc835edd91b10430e285caac46ed50683dbe23d14e330c23d",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-af0474d1-27e3-49ab-a78d-8e12f03dddd9.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Original Stag-Knot Runner animation. Image1 fixed identity reference, nearest-neighbor enlarged original standing painting. Create ONE gallop phase: Forefoot landing of running gallop: both front root feet reach down-forward at screen RIGHT to take body weight, forelegs slightly flexed at contact; BOTH hind legs are lifted and folded toward belly behind the body, not planted. Head upright, chest slightly forward, back level. FOUR attached legs and complete separate root feet.\nPreserve the exact right-facing three-quarter camera, lean birch/root stag proportions and body length, both branching antlers and red bindings, small empty red-brown saddle, amber oval chest gem/eyes, tan ribbons and long root tail flowing behind toward LEFT. No rider. Keep body/head/antler scale the same as reference. This is a running gait, not head-down ram or death buckle. Four articulated legs, no added roots disguised as limbs, no whole-body mirroring. Original warm muted painted tactical sprite texture.\nFull isolated sprite, generous 8 percent margin including every horn/tail/root toe. Genuinely transparent RGBA background, no painted checkerboard, colored matte, ground, shadow, dust, effects or text.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_stagknot_runners/standing-reference-light.png",
+            "sha256": "13952607c9ca820d620754b52bc4e38811171d86e988e148741efd888e9870ea"
+          }
+        ],
+        "selected_source_indices": [
+          0
+        ]
+      },
+      {
+        "source": "gallop-hind-contact.png",
+        "sha256": "0c3958c22f960c42795da76a1db3eb969b81b78b460beebfb2e16906505baee0",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6231b73f-9560-4038-bac9-d6c9e3de501c.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Original Stag-Knot Runner animation. Image1 fixed identity reference, nearest-neighbor enlarged original standing painting. Create ONE gallop phase: Hindfoot push-off of running gallop: BOTH rear root feet at screen LEFT press the ground under/behind raised hips; BOTH front root legs are bent and lifted forward at screen RIGHT, no forefoot touches ground. Chest rises gently before extension. FOUR attached legs and complete separate root feet.\nPreserve the exact right-facing three-quarter camera, lean birch/root stag proportions and body length, both branching antlers and red bindings, small empty red-brown saddle, amber oval chest gem/eyes, tan ribbons and long root tail flowing behind toward LEFT. No rider. Keep body/head/antler scale the same as reference. This is a running gait, not head-down ram or death buckle. Four articulated legs, no added roots disguised as limbs, no whole-body mirroring. Original warm muted painted tactical sprite texture.\nFull isolated sprite, generous 8 percent margin including every horn/tail/root toe. Genuinely transparent RGBA background, no painted checkerboard, colored matte, ground, shadow, dust, effects or text.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_stagknot_runners/standing-reference-light.png",
+            "sha256": "13952607c9ca820d620754b52bc4e38811171d86e988e148741efd888e9870ea"
+          }
+        ],
+        "selected_source_indices": [
+          0
+        ]
+      },
+      {
+        "source": "guard-breath.png",
+        "sha256": "85fea1a58552b179c704ce06c97e60ca49ea7f77cbb4f48112ef19a84b52ac66",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9c746a29-60f1-4e0c-a6b0-84738bee2cbd.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Image1 is an original Stag-Knot Runner defensive-brace sprite, fixed identity and camera. Create ONE adjacent breathing frame of this SAME brace: shoulders/chest inhale slightly, head and both attached antlers lift by only a small natural amount, tan ribbons settle a little; all root-foot contacts and splayed defensive legs stay planted at exactly their original positions. Keep head low protecting chest, not upright idle, attack or death. Preserve four attached legs (far limbs may overlap naturally), paired branched antlers, lean birch/root body, red bindings, small saddle, amber eye/chest gem, trailing root tail, same size and warm muted painting. No anatomy redesign, horn changes or enlarged feet. Full isolated sprite with generous margins. Genuinely transparent RGBA background, no checkerboard, colored matte, ground, shadow, effects or text.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_stagknot_runners/guard-reference-light.png",
+            "sha256": "9bf5473b31d3683497e6e63515b2d57c84ba034a2bfa85e180fecc10f7d393db"
+          }
+        ],
+        "selected_source_indices": [
+          0
+        ]
+      }
+    ],
+    "preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "packed_frames": 14,
+    "reused_pose_count": 0,
+    "new_selected_pose_count": 14,
+    "runtime_candidate": "art/animation/runtime/poses/unit_thornwake_stagknot_runners.png",
+    "runtime_sha256": "21edfdfacd91b6fbabff97d2a9982acd60ed0407c0c0e7b0198e6fd55317dae4",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/stagknot-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted",
+    "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/stagknot-continuity-20260915/art-desk-registered.html",
+    "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/stagknot-continuity-20260915/art-desk-registered.png",
+    "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/stagknot-continuity-20260915/packed-guard-final/poses-candidate-atlas-green.png"
+  }
+}

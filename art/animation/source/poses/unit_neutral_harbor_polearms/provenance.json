@@ -1,0 +1,48 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_harbor_polearms",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_harbor_polearms.png",
+  "reference_sha256": "34c08101e5264935c71230fc4efef3f0974b2f060e126b500e4bdd3b75f5bc0e",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "28b98ebee9f3e751a179787bdbecbd54d627e64fbb4ee8346fab54e8f2945a1c",
+      "source_output": "exec-a45fd881-2229-40be-aa3e-c989247aacf4.png",
+      "prompt": "Use case: stylized-concept. Original Harbor Polearm battle sheet matching reference: sturdy bearded human sailor dark blue brimmed hat brass badge tan feather, navy long coat ochre trim and cuffs over steel fishscale vest, cream scarf/trousers, brown gloves tall boots belts, rope coil anchor charm small amber lantern at waist. Two-handed long brown boarding polearm with curved steel hook and triangular lower barb; small round navy/ochre wood buckler strapped LEFT forearm so BOTH hands can grip shaft. TWELVE full-body articulated poses in FOUR columns THREE rows consistent elevated three-quarter camera facing RIGHT same body scale generous gutters full long weapon and coat visible. Row1 idle pole diagonal; breath shoulders/coat shift; walking contact near foot forward far leg back; passing support foot under hip other knee raised. Row2 opposite contact far leg forward near leg back no torso mirroring; two-hand attack windup pole drawn back hook points RIGHT; strong two-hand horizontal thrust RIGHT hips forward leading knee bends shield strapped left arm; crouched defense pole across front buckler covers chest. Row3 hit recoil; dying knees buckle pole lowers; sideways fall torso low weapon beside body; final relaxed horizontal SIDE corpse eyes closed entire pole flat beside hands buckler still strapped and rope/lantern retained. Keep whole shaft and hook identical length/head shape no extra weapon no grip swapping, actual knees hips elbows not duplicate standing cutouts or rotated upright corpse. Original painterly raster pale gray background no shadows/text/grid/blood/scenery/effects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "2a6e22ece71b5a5e105411d0bf98a02d9e2683ee13d72e89d08132f1f9f7337d",
+      "alpha_output": "exec-bcf236f9-d780-4e3a-a2b1-a22bad21120f.png",
+      "alpha_prompt": "Use case: background-extraction. Extract twelve Harbor Polearm poses to genuine transparent RGBA. Preserve exact layout/body scale, complete weapon shafts/hooks, bucklers, hat feathers, rope/lantern, coat hems, hands/limb gaps and corpse. Remove only pale gray background and cast shadows. No colored matte/clouds/checkerboard, redraw/reframing/text/effects."
+    }
+  ],
+  "review_notes": [
+    "Twelve poses/extraction visually inspected: thrust, buckler guard and equipped corpse. Walking contact repeats; thrust rear shaft shortened/missing and two-hand spacing/weapon length require refinement. Corpse changes orientation from preceding side fall; review transition/expression. Long shafts require explicit crops with margins; some approach canvas edges. Final alpha compositing unaccepted. Source-only not packed/enabled; no tests/exports.",
+    "13 frames retain ten original paintings and select three new full-polearm thrust, recovery and ready brace paintings. New thrust keeps the rear shaft and butt cap missing from the original thrust. Actual original fall and corpse both face head-right and are reused; the historical orientation warning did not match the inspected paintings.",
+    "Original clean alpha is reused; new green paintings use approved bounded preparation. Original scale 0.60, new top actions 0.40 and larger lower-row brace 0.35 preserve comparable anatomy. Banded crops retain full own shafts/hooks while excluding neighboring hooks, butt caps, boots and fallen-body fragments. Ground anchors avoid cutting lowered weapon ends.",
+    "Original two-pose contact/passing remains pending alternating-gait refinement; the new passing attempt repeats an extended contact and is unselected. Polearm length, hook shape, grip, buckler/rope/lantern/body/palette/edge consistency and connected transitions remain unaccepted. Static visual review is not gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_harbor_polearms/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_harbor_polearms/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_harbor_polearms/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_harbor_polearms/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_harbor_polearms.png",
+    "runtime_sha256": "0040e35128c99a3cf3558aecda3950e4964ccc3bce046cd6b709c1ce5daf1086",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png": "2a6e22ece71b5a5e105411d0bf98a02d9e2683ee13d72e89d08132f1f9f7337d",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_harbor_polearms/continuity-alpha/full-polearm-thrust-recovery-guard-and-step.png": "97532ca2452b96bdfb879d77a465b69c209f49bc8fe741bdd6eccf2992173ebc"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/harbor-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

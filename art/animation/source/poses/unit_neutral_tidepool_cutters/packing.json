@@ -1,0 +1,383 @@
+{
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          312,
+          414
+        ]
+      ],
+      "anchor": [
+        151,
+        405
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          315,
+          0,
+          614,
+          413
+        ]
+      ],
+      "anchor": [
+        462,
+        405
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          620,
+          0,
+          978,
+          308
+        ],
+        [
+          620,
+          308,
+          989,
+          412
+        ]
+      ],
+      "anchor": [
+        798,
+        400
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "walk_passing_attempt",
+      "source": "continuity-alpha/twin-blade-recovery-and-directional-corpse.png",
+      "rects": [
+        [
+          0,
+          705,
+          505,
+          1190
+        ],
+        [
+          0,
+          1190,
+          470,
+          1441
+        ]
+      ],
+      "anchor": [
+        258,
+        1408
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "right_blade_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          344,
+          414,
+          613,
+          536
+        ],
+        [
+          370,
+          536,
+          655,
+          640
+        ],
+        [
+          370,
+          640,
+          614,
+          665
+        ],
+        [
+          344,
+          665,
+          614,
+          829
+        ]
+      ],
+      "anchor": [
+        478,
+        818
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "right_blade_slash",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          655,
+          430,
+          968,
+          662
+        ],
+        [
+          630,
+          662,
+          968,
+          824
+        ]
+      ],
+      "anchor": [
+        796,
+        815
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "blade_recovery",
+      "source": "continuity-alpha/twin-blade-recovery-and-directional-corpse.png",
+      "rects": [
+        [
+          0,
+          0,
+          540,
+          704
+        ]
+      ],
+      "anchor": [
+        275,
+        700
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "guard_ready",
+      "source": "continuity-alpha/twin-blade-recovery-and-directional-corpse.png",
+      "rects": [
+        [
+          540,
+          0,
+          1092,
+          704
+        ]
+      ],
+      "anchor": [
+        817,
+        700
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "guard_crouch",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          974,
+          462,
+          1234,
+          805
+        ]
+      ],
+      "anchor": [
+        1103,
+        789
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          830,
+          321,
+          1216
+        ]
+      ],
+      "anchor": [
+        168,
+        1205
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          322,
+          858,
+          590,
+          1040
+        ],
+        [
+          322,
+          1040,
+          577,
+          1083
+        ],
+        [
+          322,
+          1083,
+          584,
+          1111
+        ],
+        [
+          322,
+          1111,
+          601,
+          1168
+        ]
+      ],
+      "anchor": [
+        475,
+        1158
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "death_side_fall",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          604,
+          981,
+          890,
+          1094
+        ],
+        [
+          602,
+          1094,
+          859,
+          1160
+        ],
+        [
+          600,
+          1160,
+          775,
+          1204
+        ]
+      ],
+      "anchor": [
+        742,
+        1185
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "dead_head_left",
+      "source": "continuity-alpha/twin-blade-recovery-and-directional-corpse.png",
+      "rects": [
+        [
+          510,
+          1055,
+          1092,
+          1200
+        ],
+        [
+          487,
+          1200,
+          1092,
+          1441
+        ]
+      ],
+      "anchor": [
+        791,
+        1408
+      ],
+      "scale": 0.3
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 280,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

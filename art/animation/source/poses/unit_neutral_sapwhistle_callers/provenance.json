@@ -1,0 +1,55 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_sapwhistle_callers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_sapwhistle_callers.png",
+  "reference_sha256": "45186f7199089c91b9e225d80e0581fdebf280f250c5221d41e1290f923b1fff",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "19cd80ac2bea75136628ebf6fa3091ed47adb49c417e206f16d5fdbb01866781",
+      "source_output": "exec-633257c8-9ecd-4249-83bd-ada1805c7d1f.png",
+      "prompt": "Use case: stylized-concept. Original Sapwhistle Caller battle animation sheet matching reference identity: young woman brown side braid, green leaf hood amber feather, leafy shoulder mantle and long green cape, cream bark-weave bodice, leaf skirt over brown trousers, pale bark knee guards leather bracers/laced boots, waist holder amber sap darts. LEFT hand compact branch-and-birch sap dart launcher with short hollow barrel and pistol grip, amber fittings and dangling leaf; RIGHT hand small carved whistle on neck cord. SIXTEEN full-body articulated poses FOUR columns FOUR rows elevated three-quarter camera facing RIGHT, consistent scale generous gutters. Row1 relaxed idle launcher low whistle near chest; alert inhale cloak shifts; extended running stride launcher low; gathered running knees under hips. Row2 opposite running contact far leg forward near leg back without torso mirror; melee windup RIGHT empty fist at ribs LEFT launcher held low; RIGHT punch toward RIGHT LEFT launcher close hip; crouched forearm defense launcher safely close. Row3 RIGHT hand inserts amber dart into LEFT launcher; LEFT arm aims launcher RIGHT hand holds whistle near lips; LEFT arm firing recoil wrist raised slightly right whistle at mouth no projectile/effects; hit recoil launcher retained. Row4 knees buckle; sideways fall torso low launcher lowered; side landing body curved; final relaxed horizontal SIDE corpse eyes closed entire launcher beside LEFT hand whistle hangs neck cord amber dart holder retained. Same launcher silhouette hand ownership throughout no generic gun substitution, no extra limbs. Actual joints not duplicate standing cutouts or rotated upright corpse. Original painterly raster flat pale gray background no shadow/scenery/grid/text/blood/effects."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "a1bf9ad6f820bcc699405166b382dbd8ae2f9c1ae720f176213996f6182140f5",
+      "source_output": "exec-b4bfcff4-f40b-46a2-9661-e32097db32fb.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY bottom row first figure in this sixteen-pose Sapwhistle Caller sheet: restore her small birch-and-brass sap launcher in her LEFT hand (the hand on viewer RIGHT reaching toward ground). Hand relaxed gripping pistol grip, whole short barrel pointing diagonally down/right and small leaf hanging from barrel, identical launcher to the other frames. Preserve exact kneeling pose, both arms, body/costume/scale and every other figure unchanged; no duplicate weapon or detached hand. Pale gray background unchanged.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "c2ddbf74381e5b523a8aee7222722c768052d1fc6c151de193b48bc35ca673af",
+      "alpha_output": "exec-f9445986-1366-4ca9-a986-51ac6dbcfeab.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all sixteen Sapwhistle Caller poses onto genuine transparent RGBA. Preserve exact arrangement/body scale, leaf cape/hood/feather, complete launcher and whistle cord, dart holder, fine hair, limb gaps and corpse. Remove gray background and shadows only. No matte/clouds/checkerboard, redraw, reframing, text or effects."
+    }
+  ],
+  "review_notes": [
+    "Sixteen poses and extraction visually inspected. Correction restores missing launcher in first death pose. Reload/aim/recoil, crouched defense and equipped side corpse present. Running contact repeats; launcher swaps hands in movement/melee/defense and punch arm changes from anticipation, requiring refinement. Whistle/cord detail and final alpha compositing/full-motion review pending. Source only not packed/enabled; no tests or exports.",
+    "17 frames retain twelve original paintings and select five new left-launcher anticipation/shove/recovery, post-shot recovery and crouched defense paintings. Replaces the original weapon-swapping punch and guard; reload/aim/fire remain separate from melee and all four original head-right death/rest poses remain.",
+    "The first new defense and a two-hand guard retry still switch launcher grip ownership and remain unselected. A constrained lower-body edit of the correct anticipation retains LEFT launcher grip and RIGHT whistle hand while crouching. This mechanism fixes that concrete ownership issue; it does not establish final attack/defense readability or palette/body continuity.",
+    "Original clean alpha is reused; new blue paintings use approved bounded preparation. Original/new action scales 0.64/0.50; enlarged single crouch 0.20 uses anatomical size rather than fitting its silhouette. Banded crops remove adjacent boots above aim/fire. Original airborne extension/gather and new duplicated walking contact are not a grounded alternating gait; new contact is unselected. Launcher/whistle details, body/cape/palette/edge consistency and connected event timing remain unaccepted."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 12,
+    "new_or_corrected_selected_paintings": 5,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_neutral_sapwhistle_callers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_sapwhistle_callers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_sapwhistle_callers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_sapwhistle_callers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_sapwhistle_callers.png",
+    "runtime_sha256": "6fb819b17bddb3a73e4be5e05efbbcb18716cd9f9fc0a20a72a47693b9d6612b",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sapwhistle_callers/alpha/poses.png": "c2ddbf74381e5b523a8aee7222722c768052d1fc6c151de193b48bc35ca673af",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sapwhistle_callers/continuity-alpha/left-launcher-melee-guard-and-recovery.png": "d221a44bcdd6c006876ec745f680f799a6174154feb267199df63746cab796ce",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_sapwhistle_callers/continuity-alpha/left-grip-crouched-defense.png": "af0f0c8904c7103cc49d23c7f1fbd4b40398264c47977d36295a95aa1e1f0c4c"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/sapwhistle-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

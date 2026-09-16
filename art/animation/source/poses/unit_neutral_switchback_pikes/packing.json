@@ -1,0 +1,359 @@
+{
+  "unit_id": "unit_neutral_switchback_pikes",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          312,
+          399
+        ]
+      ],
+      "anchor": [
+        175,
+        391
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          367,
+          0,
+          623,
+          402
+        ]
+      ],
+      "anchor": [
+        518,
+        395
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          724,
+          0,
+          985,
+          400
+        ]
+      ],
+      "anchor": [
+        860,
+        390
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "walk_passing_attempt",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1070,
+          0,
+          1333,
+          400
+        ]
+      ],
+      "anchor": [
+        1219,
+        385
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "pike_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          301,
+          422,
+          756,
+          520
+        ],
+        [
+          301,
+          520,
+          632,
+          740
+        ]
+      ],
+      "anchor": [
+        493,
+        729
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "full_pike_thrust",
+      "source": "continuity-alpha/full-pike-thrust-recovery-and-rest.png",
+      "rects": [
+        [
+          0,
+          0,
+          920,
+          200
+        ],
+        [
+          0,
+          200,
+          759,
+          430
+        ],
+        [
+          0,
+          430,
+          600,
+          491
+        ]
+      ],
+      "anchor": [
+        350,
+        471
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "pike_recovery",
+      "source": "continuity-alpha/full-pike-thrust-recovery-and-rest.png",
+      "rects": [
+        [
+          955,
+          0,
+          1536,
+          190
+        ],
+        [
+          789,
+          190,
+          1536,
+          490
+        ]
+      ],
+      "anchor": [
+        1108,
+        481
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "guard_ready",
+      "source": "continuity-alpha/full-pike-thrust-recovery-and-rest.png",
+      "rects": [
+        [
+          527,
+          466,
+          654,
+          508
+        ],
+        [
+          0,
+          508,
+          654,
+          1024
+        ]
+      ],
+      "anchor": [
+        347,
+        984
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "guard_crouch",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1111,
+          402,
+          1448,
+          492
+        ],
+        [
+          1180,
+          492,
+          1448,
+          735
+        ]
+      ],
+      "anchor": [
+        1294,
+        723
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          737,
+          312,
+          1055
+        ]
+      ],
+      "anchor": [
+        177,
+        1038
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          311,
+          758,
+          605,
+          1056
+        ]
+      ],
+      "anchor": [
+        472,
+        1025
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "death_side_fall",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          605,
+          852,
+          965,
+          984
+        ],
+        [
+          605,
+          984,
+          970,
+          1011
+        ],
+        [
+          605,
+          1011,
+          1058,
+          1050
+        ]
+      ],
+      "anchor": [
+        814,
+        1025
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "dead_head_right",
+      "source": "continuity-alpha/full-pike-thrust-recovery-and-rest.png",
+      "rects": [
+        [
+          655,
+          716,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1094,
+        977
+      ],
+      "scale": 0.44
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 285,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

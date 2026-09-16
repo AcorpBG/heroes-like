@@ -1,0 +1,486 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          298,
+          354
+        ],
+        [
+          80,
+          354,
+          145,
+          360
+        ],
+        [
+          238,
+          354,
+          270,
+          367
+        ]
+      ],
+      "anchor": [
+        175,
+        354
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_b",
+      "source": "idle-breath-draft.png",
+      "rects": [
+        [
+          0,
+          0,
+          1214,
+          1295
+        ]
+      ],
+      "anchor": [
+        745,
+        1210
+      ],
+      "scale": 0.19
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "continuity-alpha/walk-contact.png",
+      "rects": [
+        [
+          0,
+          0,
+          1024,
+          1536
+        ]
+      ],
+      "anchor": [
+        565,
+        1355
+      ],
+      "scale": 0.164
+    },
+    {
+      "name": "walk_passing_attempt",
+      "source": "continuity-alpha/walk-passing.png",
+      "rects": [
+        [
+          0,
+          0,
+          1024,
+          1536
+        ]
+      ],
+      "anchor": [
+        565,
+        1355
+      ],
+      "scale": 0.164
+    },
+    {
+      "name": "launcher_anticipation",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          350,
+          80,
+          650
+        ],
+        [
+          80,
+          358,
+          220,
+          650
+        ],
+        [
+          220,
+          369,
+          302,
+          663
+        ]
+      ],
+      "anchor": [
+        190,
+        645
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "launcher_shove",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          318,
+          352,
+          374,
+          650
+        ],
+        [
+          374,
+          374,
+          637,
+          663
+        ]
+      ],
+      "anchor": [
+        493,
+        645
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "launcher_recovery",
+      "source": "continuity-alpha/deployed-mast-action-recoveries-and-defense.png",
+      "rects": [
+        [
+          0,
+          0,
+          724,
+          724
+        ]
+      ],
+      "anchor": [
+        462,
+        680
+      ],
+      "scale": 0.34
+    },
+    {
+      "name": "guard_ready",
+      "source": "continuity-alpha/deployed-mast-action-recoveries-and-defense.png",
+      "rects": [
+        [
+          1448,
+          0,
+          2172,
+          724
+        ]
+      ],
+      "anchor": [
+        1890,
+        680
+      ],
+      "scale": 0.34
+    },
+    {
+      "name": "guard_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          640,
+          350,
+          704,
+          650
+        ],
+        [
+          704,
+          440,
+          953,
+          657
+        ]
+      ],
+      "anchor": [
+        800,
+        645
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          628,
+          653,
+          706,
+          950
+        ],
+        [
+          706,
+          664,
+          938,
+          780
+        ],
+        [
+          706,
+          780,
+          911,
+          977
+        ]
+      ],
+      "anchor": [
+        813,
+        952
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "ranged_reload",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          960,
+          350,
+          1044,
+          647
+        ],
+        [
+          1044,
+          380,
+          1254,
+          656
+        ]
+      ],
+      "anchor": [
+        1110,
+        644
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "ranged_aim",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          654,
+          80,
+          950
+        ],
+        [
+          80,
+          662,
+          302,
+          977
+        ]
+      ],
+      "anchor": [
+        186,
+        955
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "ranged_release",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          310,
+          654,
+          374,
+          663
+        ],
+        [
+          310,
+          663,
+          391,
+          950
+        ],
+        [
+          391,
+          663,
+          620,
+          977
+        ]
+      ],
+      "anchor": [
+        510,
+        955
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "ranged_empty_recovery",
+      "source": "continuity-alpha/deployed-mast-action-recoveries-and-defense.png",
+      "rects": [
+        [
+          724,
+          0,
+          1448,
+          724
+        ]
+      ],
+      "anchor": [
+        1175,
+        680
+      ],
+      "scale": 0.34
+    },
+    {
+      "name": "death_cap_kneel",
+      "source": "continuity-alpha/cap-corrected-kneel.png",
+      "rects": [
+        [
+          10,
+          0,
+          327,
+          120
+        ],
+        [
+          0,
+          120,
+          327,
+          323
+        ]
+      ],
+      "anchor": [
+        164,
+        291
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_tip_head_left",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          983,
+          366,
+          1254
+        ]
+      ],
+      "anchor": [
+        185,
+        1227
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_land_head_left",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          368,
+          998,
+          711,
+          1230
+        ]
+      ],
+      "anchor": [
+        535,
+        1210
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "dead_head_left",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          711,
+          1030,
+          1254,
+          1230
+        ]
+      ],
+      "anchor": [
+        990,
+        1190
+      ],
+      "scale": 0.5
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 195,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        14,
+        15,
+        16,
+        17
+      ],
+      "loop": false,
+      "frame_msec": 250,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        17
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

@@ -1,0 +1,54 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_ridgeflare_shots",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_ridgeflare_shots.png",
+  "reference_sha256": "277dd758df76c45f3c63a88ecb80ab261729231254ff12be6dc343b872f404ba",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "620a04c03437f6b9ec1586b6c07525d78717872f3680dcfae70ef7a56d55a5da",
+      "source_output": "exec-c432a877-e5e6-4bbd-b36f-8761241f8eda.png",
+      "prompt": "Use case: stylized-concept. Original game battle animation sheet. Reference image identity ONLY: Ridgeflare Shot woman red ponytail brass goggles, red long coat gold triangular edging white fur collar/cuffs, dark leather chest armor gray trousers brass knee pads brown fur boots, back quiver red brass flare bolts belt cartridges rolled blanket. Wooden/brass compact crossbow RIGHT hand trigger LEFT support. SIXTEEN fully articulated full-body poses FOUR columns FOUR rows with generous gutters same scale elevated three-quarter camera facing RIGHT. Row1: idle crossbow lowered; breathing alert shoulders head coat shift; running near leg forward far back; gathered passing legs under torso. Row2: running FAR leg forward NEAR leg back, no torso mirroring; melee anticipation crossbow tucked left arm right fist drawn back; melee right punch extended crossbow stays tucked left; defensive crouch weapon both hands across torso. Row3: hit recoil; reload LEFT hand seats red bolt right on trigger; aimed loaded crossbow shoulder both hands; shot recoil empty rail NO projectile or effects. Row4: weapon lowered recovery; knees buckling; side fall torso still raised own crossbow beside hands; relaxed horizontal dead body eyes closed full crossbow beside hands quiver retained. Every figure has own full unchanged weapon clothing equipment. Clear joints, genuinely varied limb articulation, corpse not rotated upright. Original painted raster light gray empty background no shadow grid text scenery blood glow or muzzle flame."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "8977e563ab5591dd942b7b867766eebc7380544a374e90cb51d136fec62d155a",
+      "source_output": "exec-fe76b9fb-4e67-460b-868d-5c6d7508d3c6.png",
+      "prompt": "Use case: precise-object-edit. Edit target whole 4x4 Ridgeflare sheet. Change ONLY TWO poses, all other pixels/layout/scale unchanged. TOP ROW SECOND: restore own full wooden/brass crossbow hanging downward from her LEFT hand at screen RIGHT of body, like top-row first pose; retain slightly different breathing shoulders/cloak. SECOND ROW THIRD: punch with her RIGHT arm (arm emerging at screen LEFT shoulder), reaching across in front of chest toward screen RIGHT, so it follows second-row second's right-fist windup. LEFT arm must cradle full crossbow low against ribs pointing down-right, exactly as windup. Do not exchange weapon/fist between arms. Keep same identity outfit quiver and full weapon. No new effects/text/grid. Gray background unchanged.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "962f7cac21bf12839c5524c88243f011dec20d7f0b3db3208340fb937df465b5",
+      "alpha_output": "exec-c0314d92-d465-447c-9614-cba81e2468ec.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all sixteen Ridgeflare Shot figures and their complete equipment onto genuine transparent RGBA. Preserve exact sheet layout scale identity limb poses weapon pixels fur hair fine crossbow strings empty gaps and final corpse. Remove gray background and floor shadows only. No checkerboard, cloudy matte, colored fringe, redraw, new effects or reframing."
+    }
+  ],
+  "review_notes": [
+    "Sixteen poses visually inspected. Corrected second idle missing crossbow and right-arm punch continuity. Loaded/released weapon, defense, staged collapse and horizontal equipped corpse present. Running contact repeats; distinct opposite lead/passing refinement remains. Crossbow grip/string and alpha edge compositing/full motion require review. Source only, not packed/enabled; no tests/exports.",
+    "17 packed frames retain fourteen earlier paintings, including corrected loaded idle and right-arm punch. Three new built-in paintings add right-fist recovery while the left arm retains the loaded crossbow, empty-rail post-shot recovery and loaded ready defense.",
+    "Original genuine alpha is reused unchanged; approved green preparation preserves fur/coat paint. Uniform anatomy-based old/new scales and crop bands keep neighboring hair out of the recoil frame. Collapse and persistent corpse stay head-left with the crossbow present.",
+    "All-state candidate only. Extended/gathered running does not prove an alternating support cycle. Crossbow size/string/grip and bolt identity, body/palette/edge continuity and connected motion remain unaccepted. No automated suites/imports/gameplay/platform exports in this increment."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 14,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_ridgeflare_shots/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_ridgeflare_shots/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_ridgeflare_shots/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_ridgeflare_shots/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_ridgeflare_shots.png",
+    "runtime_sha256": "614562adb9f4e7c95085151b902611172263b50775697659f546aab59ea28642",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png": "962f7cac21bf12839c5524c88243f011dec20d7f0b3db3208340fb937df465b5",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_ridgeflare_shots/continuity-alpha/loaded-melee-empty-ranged-and-guard-recoveries.png": "4d3ec004b0448d05e5786306875d679a501b7018e35017a5449ee18158552071"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/ridgeflare-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

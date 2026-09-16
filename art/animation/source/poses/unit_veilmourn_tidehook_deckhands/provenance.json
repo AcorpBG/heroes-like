@@ -1,0 +1,122 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_tidehook_deckhands",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_tidehook_deckhands.png",
+  "reference_sha256": "e48a0ec6607f7c20d9cf2b8e6803d78df2e6c8afd9bd4245f65b14e7c7ccffba",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/poses-draft.png",
+      "source_sha256": "55543133de4dcaabd5142d97532b8446039a854baa1e83c1f7654083722dc6c1",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5a301448-5140-4bc8-bd9a-72ad21dc3f17.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle animation sheet. Reference defines ONE Tidehook Deckhand spectral muscular blue-skinned sailor, dark navy hood, cyan glowing skull-like face, ragged teal skirt/cloak, rope harness and belt, wrapped forearms/shins, bare clawed feet, small blue belt vial. Anatomical RIGHT hand holds large crescent steel hook with cyan inner glow (viewer left). LEFT hand holds chain ending in brass diving bell with small cyan ghost flame beneath (viewer right). Faint cyan trailing shoulder wisps, keep compact not opaque backdrop. Preserve both weapons, rope, hood and blue anatomy. Exactly TWELVE fully articulated poses FOUR columns THREE rows, fixed elevated three-quarter view facing screen-right, constant body size and generous gutters for hook/chain/bell. Genuine transparent RGBA no painted checkerboard, scenery/floor/grid/text. Row1 idle ready; idle breathing shoulders shift chain swings slightly; walk right foot forward left back; opposite walk LEFT foot forward RIGHT behind truly swap leg lead. Row2 passing foot lifted beneath pelvis; wind-up RIGHT hook lifted back LEFT chain/bell low; attack RIGHT hook slashes forward toward screen-right LEFT chain/bell retained aside; defend hook guards hood LEFT chain gathered bell close torso. Row3 hit recoil torso back knees bend; death kneeling head bowed spectral lights dim; falling sideways hips knees bent both tools landing nearby; fully dead side-lying persistent solid blue body with hood/rope intact, dark face and hook/bell, no cyan flame or wisps, hook chain bell all retained beside body. Exactly two arms two legs one hook one bell, consistent chain length and grips. Actual joint articulation not rotated standing cutouts. Original art only no copyrighted franchise assets."
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/poses.png",
+      "source_sha256": "b45330e6b3a2acec7bfbd33b92a72f147ca67200427502712ae761121c5ffd67",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-71072890-030d-4a91-8447-dd39caca7fac.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY bottom-right final corpse in this twelve-pose Tidehook Deckhand sheet. Remove all cyan glow from crescent hook, making blade dark dull steel. Keep dark face and extinguished bell unchanged. Retain exact body pose, hook shape, chain and bell, scale, layout, canvas and all eleven other poses. No other changes."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c7716312-8996-49ff-b6c9-f919e3adaa82.png",
+      "prompt": "Use case: background-extraction. Remove ONLY checkerboard from this twelve-pose Tidehook Deckhand sheet to actual transparent RGBA. Preserve all figures, hook/bell/chain, wisps and slash effect, colors, positions, sizes and canvas exactly. Keep final corpse dark hook and no glow. No repainting, no replacement backdrop, no painted checkerboard, no colored matte.",
+      "reason": "Blue background instead of transparency; not selected."
+    }
+  ],
+  "review_notes": [
+    "14-frame candidate: seven original paintings, one edited release and six new walk/guard paintings across two built-in outputs.",
+    "Baked slash trail removed from the release while actual hook edge remains luminous. Short gathered bell-chain travel avoids sweeping through the knees; separate guards lift the hook across the upper body.",
+    "Original collapse and cold corpse preserve hook and bell while face/flames go dark. Near/far passing differ, but repeated leading contacts remain unaccepted planted bridges.",
+    "Approved neutral extraction clears inspected underarm/chain gaps while retaining blue spectral flame, metal, rope and paint. Explicit crop limits exclude neighboring hooks and feet.",
+    "Full-roster limb ownership/support/travel, chain length and attachment, body/gear scale, flame/guard/death transitions and timing remain unaccepted."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses; final hook glow removed while face/bell remain dark and body persists.",
+    "Walking contacts repeat lead; idle near-static. Proper alternating gait and body motion needed.",
+    "Chain length, hand attachment, bell/hook scale and rope harness continuity require refinement, especially gathered defense and corpse chain.",
+    "Slash effect is baked into contact pose; keep event synchronization and footprint readable on integration.",
+    "Side fall mostly prone with raised arm; refine transition, maintain two legs under skirt and inactive final belt vial.",
+    "Transparency/compositing unresolved. Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 7,
+    "edited_retained_paintings": 1,
+    "new_selected_paintings": 6,
+    "generated_outputs": 2,
+    "generation": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
+    "runtime_sha256": "7d378286d4f0d424061b84a534878f3f431b2a8a79169e16b5437036f3e3577b",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-alpha/poses.png": "5a0a7d4ffbb034d7f8ac47ad609a6368ad2ac594826893dd13655e74c55cc118",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-alpha/guided-gathered-chain-and-guards.png": "7890710e1fe20f7e28046eedb2409aa87e1a4a91331a2673c43d8f9468be0538",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-alpha/poses-no-baked-slash.png": "82b56e48e92358f6ecbd6a3684f9e3026d3452ac9c65de823195d419f2addf0d"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "policy": "Removed only exact byte-identical task preview copies after SHA-256 and no-live-handle checks. Identical retained copies permit restoration. Used generation references, original/rejected masters, unique evidence, processing proofs, caches and unrelated artifacts remain.",
+      "duplicates_removed": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/second/poses-no-baked-slash-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/prepared/poses-no-baked-slash-green.png",
+          "sha256": "7f625f3d2fe80a5abf7abe2b53e1daa6edc27a7048bbdc98a5614b0e991d04eb",
+          "bytes": 1363495
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/second/poses-no-baked-slash-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/prepared/poses-no-baked-slash-light.png",
+          "sha256": "f893bae45bdce49b1ec51336d3400be75a2dfa32e391cdbbcbddedb2fb4818c1",
+          "bytes": 1391142
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/atlas-first/poses-candidate-atlas-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/current-atlas/poses-candidate-atlas-light.png",
+          "sha256": "ce67cb2a18f6cb9b83cc4a337fc869a8de54f58310c08aff8facef2762a7fba4",
+          "bytes": 516787
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/atlas-first/poses-candidate-atlas-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/current-atlas/poses-candidate-atlas-green.png",
+          "sha256": "a498bb3002ba4fad94d91dfcf997db17c857343a89efdfd740b14c50cf1b05bb",
+          "bytes": 496247
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/identity/unit_veilmourn_tidehook_deckhands-poses-no-baked-slash-rect-0-0-369-358-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_tidehook_deckhands/identity-reference.png",
+          "sha256": "c833f26d417fa3f3721a337db708b3e7c7111afbdd656a825e14b5b48668f333",
+          "bytes": 880445
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/prepared/guided-gathered-chain-and-guards-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/cleaned/guided-gathered-chain-and-guards-green.png",
+          "sha256": "0d2fc0daa98a2ba28c4ac95ab55975a0fd55df268ae89fbea1923191c558fe99",
+          "bytes": 1291935
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/prepared/guided-gathered-chain-and-guards-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/cleaned/guided-gathered-chain-and-guards-light.png",
+          "sha256": "23201701b7e6d61b3cfb9f6758bb16e3bb4c3c100c1447bfe8b9c7370a3cae0d",
+          "bytes": 1307133
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/deckhand-continuity-20260916/identity-clean/unit_veilmourn_tidehook_deckhands-poses-no-baked-slash-rect-0-0-369-358-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_tidehook_deckhands/identity-reference-v2.png",
+          "sha256": "c5e1e7b869b542fff2269b482c4d728dbfc76973f7bda4e4f0d224bc73e9858c",
+          "bytes": 870094
+        }
+      ],
+      "removed_bytes": 8117278
+    }
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_embercourt_cinderseal_bombardiers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_embercourt_cinderseal_bombardiers.png",
+  "reference_sha256": "a9b10cbe0ba037147d2c5a565f0aed7804eb95c8b12264ebd3178083ed58c375",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/poses-draft.png",
+      "source_sha256": "2e292d05594613b9f30dd1154f8a52bb75cc9da8cf9276fb65882f009140986b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-28c20e65-1c94-44a1-babb-e9b3dd5001c8.png",
+      "prompt": "Use case: stylized-concept. Original painted fantasy tactical battle sprite sheet. Reference defines ONE Cinderseal Bombardier, red hood concealing face with angular gold trim, black/red leather armor, red-gold tabard and long sash, brass shoulder/arm plates, brown boots, belt canisters and round gold medallions. Carries ONE huge brass dark-leather shoulder bombard on anatomical RIGHT shoulder, RIGHT hand supporting it at shoulder grip. LEFT hand holds short brass ignition wand with glowing red tube. Preserve both separate devices, costume and identity. Create SIXTEEN fully articulated poses in four columns x four rows, fixed elevated three-quarter view facing screen right, constant body/cannon size, generous gutters containing full cannon and sash. True transparent RGBA background, no painted checkerboard, scenery, floor, grid or captions. Row1: idle shouldered; idle breathing shoulders shift and sash moves; walk right leg forward left behind; opposite walk LEFT leg forward RIGHT behind visibly reverse lead. Row2: passing lifted foot beneath pelvis; melee wind-up LEFT wand hand pulls back while RIGHT supports shouldered cannon; melee shove LEFT brass wand/gauntlet forward screen-right, cannon remains supported RIGHT; defend crouch left gauntlet before hood cannon safe upward. Row3: aim shoulder cannon screen-right LEFT ignition wand approaches breech vent, RIGHT retains grip; fire cannon short orange muzzle burst shoulder recoil wand held clear; recovery shoulders settle cannon angle lowers; hit recoil torso bends back both devices retained. Row4: dying knee buckles cannon starts lowering supported right arm; kneeling hood bowed cannon resting beside right leg wand lowered left; falling onto side hips knees bent cannon and wand landing next to body; dead side-lying limp figure with both cannon and wand beside, all ignition glow extinguished, no flames. Exactly two arms two hands, one cannon one wand throughout, consistent scale and attachment. Original art only no copyrighted franchise assets; real articulation not translated standing cutouts."
+    },
+    {
+      "source": "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/poses.png",
+      "source_sha256": "c07d9058f954824284a13a12527161a0e1c16aa2246e6087eaf42c4e9ffbaae8",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2d62cb16-5822-4373-beb4-6eae2c26fc72.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY the bottom-right final dead pose in this sixteen-pose Cinderseal Bombardier sheet. Extinguish the red-orange glowing tube of the handheld ignition wand beside its left hand; make that tube dark dull glass with brass fittings unchanged. Preserve every other part of that corpse and all fifteen other poses exactly, same canvas/layout/colors/equipment. No other changes.",
+      "alpha_source": "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/alpha/poses.png",
+      "alpha_sha256": "dcceabf2db3b94ecec2544914d870d4a6a9cec199b17f1e30b1a212310645137",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-635eab1f-e356-4f8c-b003-fd4f23209602.png",
+      "alpha_prompt": "Use case: background-extraction. Remove ONLY checkerboard from this sixteen-pose Cinderseal Bombardier sheet to actual transparent RGBA. Preserve all figures, both devices, muzzle flame, costume, positions, canvas and colors exactly, especially dark wand in final corpse. No replacement backdrop, no painted checkerboard, no repainting, no colored matte."
+    }
+  ],
+  "review_notes": [
+    "Fifteen packed candidate frames: thirteen original real-alpha poses plus a new far-foot lift and corrected breech ignition. Separate melee wand shove and shoulder-cannon firing clips; equipped persistent corpse keeps its wand extinguished.",
+    "Heavy-load short-step march uses planted idle0, new far-foot lift, planted idle1 and original near-foot lift. This is deliberately not a full opposite-stride gait; two failed contact-generation drafts are preserved unselected, not disguised as new movement phases.",
+    "Targeted ignition reaches the rear breech with the wand-bearing hand while the other hand supports the shouldered cannon. Original wrong muzzle-ignition aim is excluded. Original firing flame retained.",
+    "Inspected real-alpha composites rather than raw RGB noise; existing alpha reused unchanged. Explicit source row bands exclude adjacent boot and cannon fragments from near-foot and firing cells. Two selected green sources prepared deterministically with exact hashes.",
+    "Candidate atlas and offline art-desk reviewed as production evidence only. Full timed gait/step translation, shoulder/hand and cannon scale continuity, fire/recovery pacing, grounded death progression and alpha edges remain pending consolidated acceptance.",
+    "No tests/imports/exports or gameplay/save/footprint changes in this production batch. Full160 generation/refinement and Linux/Windows acceptance remain open."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses; final wand extinguished in targeted edit, cannon and wand retained beside corpse.",
+    "Walking contacts repeat lead; idle near-static and passing needs proper alternating cycle.",
+    "Aim places ignition wand near muzzle rather than breech; shoulder/right-hand support and cannon length need correction.",
+    "Firing recoil is subtle and no reload exists; return-to-ready motion requires refinement. Melee wand contact should remain readable.",
+    "Fall resembles corpse with head raised; improve transition. Extraction has substantial colored fringes and changed muzzle effect; not runtime-ready.",
+    "Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "reference_composites": {
+      "source": "alpha/poses.png",
+      "source_sha256": "dcceabf2db3b94ecec2544914d870d4a6a9cec199b17f1e30b1a212310645137",
+      "method": "prepare_battle_pose_cutouts.py --inspect-source --inspect-rect; read-only light composite and nearest enlargement",
+      "outputs": [
+        {
+          "file": "walk-reference-light.png",
+          "rect": [
+            740,
+            0,
+            1015,
+            278
+          ],
+          "sha256": "d7aff0bb2c8d9873aaaa0db7dd25772bffcc4e3f4f33d2a77257277277205454"
+        }
+      ]
+    },
+    "additional_pose_reference": {
+      "source": "art/animation/source/poses/unit_river_guard/alpha/opposite-contact.png",
+      "sha256": "71221ad8e36ee3c0451154528a0e6e85a4e5e51e14260563c9e4a3ad4161700c",
+      "result": "Transfer failed to preserve near-back/far-forward hip overlap; excluded."
+    },
+    "sources": [
+      {
+        "file": "walk-far-passing-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8d3a094a-81b2-48b3-958d-665eb26f6a29.png",
+        "prompt": "Use case: precise-object-edit. ONE original Cinderseal Bombardier WALKING PASSING sprite, using this exact identity and camera. Keep red gold-trimmed hood fully concealing face, dark/red leather armor, red/gold tabard/sash, brass plates/medallions/canisters, brown boots. RIGHT hand screen LEFT supports the huge shouldered brass/black-leather bombard; LEFT hand screen RIGHT holds separate short brass ignition wand glowing red. Both devices unchanged and complete, same shoulder grip, no hand swap. Change human legs: foreground NEAR leg currently extended to screen RIGHT becomes straight and PLANTED directly beneath pelvis. FAR leg currently behind on screen LEFT bends at knee, foot raised just behind/alongside the supporting shin as it passes forward; clearly one supported leg and one lifted boot, not the original extended contact. Moderate natural step, two correctly attached legs, original body proportions, elevated three-quarter RIGHT-facing view. Cloth parts around knees but outfit not redesigned, no mirrored torso. Original painterly game raster matching source. Whole figure and cannon/wand inside generous empty margins. Flat vivid GREEN #00ff00 backing only, neutral light no green spill/reflections, no floor/shadow/text/scenery/firing effects.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/walk-reference-light.png"
+        ],
+        "selected": true,
+        "selection": "Select raised far/left boot with near/right leg planted; used in alternating loaded march with original opposite-foot lift.",
+        "sha256": "52e29cb934c028b2af33edccf50a703184beb22389d3330852d3bae67b0ab77d"
+      },
+      {
+        "file": "walk-far-landing-draft-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-98bea53e-b3a4-4b1e-bfc1-74bd00df845d.png",
+        "prompt": "Use case: precise-object-edit. Next FAR-FOOT FORWARD LANDING walking pose of this exact original Cinderseal Bombardier. Preserve exact head/hood torso, shoulder cannon/RIGHT supporting hand, separate ignition wand/LEFT hand, outfit, body proportions, camera and upper-body screen positions. Change legs and nearby cloth only. FAR leg that currently bends behind on screen LEFT swings FORWARD toward RIGHT: its boot plants around x950,y1190, toes right, far thigh stays anatomically behind foreground thigh. The NEAR leg, identified by broad red rectangular knee plate currently at screen RIGHT, now trails BACK LEFT, its boot around x410,y1220, heel slightly raised. Preserve this near red-knee-plate leg in foreground; do not simply move its foot forward again or mirror torso. Two connected legs, moderate natural stride and stable weight. Exactly one complete cannon and one wand unchanged. Keep ample margins around boots and gear. Original painterly tactical raster, flat vivid GREEN #00ff00 backdrop, neutral light without green spill/reflections; no floor/shadow/text/effects/scenery.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/walk-far-passing-green.png"
+        ],
+        "selected": false,
+        "selection": "Rejected repeated near/right leading contact despite requested far-leg landing.",
+        "sha256": "53ee09f326542cf21a2d6d1b9a2ffc2ca9388c8e66bda5a84031af08c510a432"
+      },
+      {
+        "file": "ranged-breech-ignition-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-efe94b6f-c865-48a0-8e2e-5cac124d3e8c.png",
+        "prompt": "Use case: precise-object-edit. Original Cinderseal Bombardier aiming/ignition anticipation sprite. Use attached image as exact identity/camera/equipment reference. Keep red/gold hood face concealed, leather armor tabard canisters medallions boots, RIGHT hand screen LEFT gripping the shoulder-cannon support beside hood. Cannon remains firmly on RIGHT shoulder, brass/black-leather full barrel with muzzle aimed screen RIGHT. Change LEFT arm and its separate short brass red-glass ignition wand: bend LEFT elbow across chest so LEFT hand is in front of breastplate and wand tip points diagonally UP LEFT toward the cannon's REAR brass breech cap behind right shoulder on screen LEFT. The red hot tip touches small rear ignition vent beside rear cap, well BEHIND hood. It must NOT touch the open front muzzle at screen RIGHT. Keep right hand gripping/supporting cannon unchanged, exactly TWO separate hands attached to correct shoulders. Feet in wide planted firing stance, knees lightly bent. Full cannon/one complete wand stay original length and proportions; wand not fused into barrel. No shot or flames yet. Fixed elevated three-quarter RIGHT-facing tactical view, original detailed painterly raster. Whole figure and gear inside generous margins, flat vivid GREEN #00ff00 backing, neutral light without green spill/reflections; no floor/shadow/text/scenery/effects.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/walk-reference-light.png"
+        ],
+        "selected": true,
+        "selection": "Select left wand tip at rear breech while right shoulder/grip supports cannon; replaces unsupported muzzle-side ignition pose.",
+        "sha256": "c93a7cff361707bf01cdcc9fcebea462545d6298e6f2e743ca77ef32f2ebe6e7"
+      },
+      {
+        "file": "walk-contact-transfer-draft-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f9bc007e-cb2f-459a-b599-041a210c1db1.png",
+        "prompt": "Use case: sketch-to-render. ONE Cinderseal Bombardier walking sprite. Image1 supplies ONLY the exact HIP/KNEE/FOOT articulation and overlap: NEAR foreground thigh crosses in FRONT of far thigh and runs backward/down LEFT to back boot; FAR thigh emerges BEHIND it and runs forward/down RIGHT to forward heel. Copy this specific leg crossing and opposite-contact stance, not a generic wide stance. Image2 supplies ALL identity, upper-body pose, style and equipment: red gold-edged hood hiding face, red/black armor and sash, brass plates/medallions/canisters, brown armored boots. ONE massive brass/black-leather bombard on RIGHT shoulder with RIGHT hand screen LEFT at support grip. LEFT hand screen RIGHT holds short separate red-glass brass ignition wand lowered. Never import Image1's face, spear, shield, tunic or boots; use only its anatomy as guide. Adapt red trimmed split sash around crossed thighs so the near-back leg overlap remains visible. Preserve elevated three-quarter RIGHT-facing camera, exact body/cannon/wand proportions and two correctly attached legs/arms. Full figure and complete devices inside generous margins. Original detailed painterly raster matching Image2, flat vivid GREEN #00ff00 background, neutral light no green spill; no floor/shadow/text/scenery/effects.",
+        "references": [
+          "art/animation/source/poses/unit_river_guard/alpha/opposite-contact.png",
+          "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/walk-reference-light.png"
+        ],
+        "selected": false,
+        "selection": "Painted pose-reference transfer also repeats lead; not used. Alternate planted-step march uses real left/right lifts rather than claiming this is opposite contact.",
+        "sha256": "875fad1a025b880be220913a4aa7c6414abb26973b3f26bc39b2594d923ae5fb"
+      }
+    ],
+    "generation": "continuity-generation.json",
+    "reused_source": {
+      "source": "alpha/poses.png",
+      "sha256": "dcceabf2db3b94ecec2544914d870d4a6a9cec199b17f1e30b1a212310645137",
+      "selection": "Thirteen original real-alpha poses; exclude both same-lead walking contacts and wrong muzzle-ignition aim."
+    },
+    "preparation": "continuity-cutouts.json; explicit green color_distance radius75, all_keyed_is_background true, edge_radius2; source/tool/recipe/output hashes in processing proofs.",
+    "packing": "packing.json",
+    "packed_frames": 15,
+    "runtime_candidate": "art/animation/runtime/poses/unit_embercourt_cinderseal_bombardiers.png",
+    "runtime_sha256": "52fe22b22e045bd443c8d76595027d3d2be3c99a7face4048502e8778d69f44b",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/cinderseal-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted"
+  }
+}

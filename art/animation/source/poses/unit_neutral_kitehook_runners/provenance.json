@@ -1,0 +1,110 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_kitehook_runners",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_kitehook_runners.png",
+  "reference_sha256": "6da31ee07d76905c4f9f2885ab4c3218f266192a283b35c6a557fed4a0c2c921",
+  "outputs": [
+    {
+      "source": "side-fall.png",
+      "source_sha256": "bf83c8cb63a201d195c549fc2e37b4bb0f4f70d4a1b7b9c72c4284977a3995d7",
+      "source_output": "exec-49c91fab-c89b-4327-bc28-c57f46aca7fb.png",
+      "prompt": "Use case: precise-object-edit. ONE replacement animation frame for Kitehook Runner, reference sheet character identity. Match bottom-row THIRD figure's SIDE FALL: feet to screen LEFT head toward RIGHT, hips on ground knees bent loosely, torso still slightly raised, one palm bracing ground as elbow buckles, face pained eyes nearly closed. Preserve same teal headband brown ponytail teal/gold cape, cream sleeves leather armor steel shoulder/knee guards yellow boot ties waist rope coil. CORRECTION: she must have her OWN entire wooden pole lying horizontally across foreground in front of both arms. Rear butt and attached slack rope loop at screen LEFT, shaft continuous under resting gloved hand, full double curved steel hook at screen RIGHT with teal/gold streamers resting on ground. One pole one body only. Full body and weapon with generous margins; original painterly raster pale gray background no shadows/blood/scenery/text/grid. This is an intermediate collapse not a sleeping fully flat corpse.",
+      "alpha_source": "alpha/side-fall.png",
+      "alpha_sha256": "551906c17d3bb273f3ef64281d2ae640808157abf6f42caddc3bec7884698564",
+      "alpha_output": "exec-54d91d30-e5fb-4278-944e-b67d180258dd.png",
+      "alpha_prompt": "Use case: background-extraction. Extract this single Kitehook Runner side-fall pose onto true transparent RGBA. Preserve exact framing/body scale, anatomy and expression, full wooden pole double-hook head slack rope, fingers, ribbons/cape/hair and boots. Remove all gray background and ground shadows only. No checkerboard/cloudy matte/redraw/reframing/text/effects.",
+      "review": "Visually inspected independent complete pole, hook and slack rope with raised torso. Replacement for zero-based frame 10; normalize scale/anchor before packing. Alpha edge compositing and motion unaccepted."
+    },
+    {
+      "source": "windup.png",
+      "source_sha256": "df33e863f1483ee0a5278286234b4b482492e3531f314555d5b4a161c1cefd1d",
+      "source_output": "exec-9189acfb-a4ff-4e84-9863-a8be041b9fad.png",
+      "prompt": "Use case: precise-object-edit. Create ONE replacement animation frame, using the attached sheet as character/style reference. Kitehook Runner ATTACK ANTICIPATION before a straight thrust toward screen RIGHT: full body three-quarter view facing RIGHT, torso pulled back with rear knee bent, BOTH hands hold one COMPLETE straight wooden pole horizontally across upper chest, RIGHT hand rear grip by right shoulder, LEFT hand forward grip in front of sternum. Pole extends past LEFT hand toward screen RIGHT to its full DOUBLE curved steel hook head with teal/gold streamers. Rear butt extends toward screen LEFT with rope loop attached. Keep weapon about her standing height, do not hide its head behind her. Same brown ponytail teal headband, teal/gold cape, cream sleeves leather armor and steel shoulder/knees, yellow boot ties, waist rope coil. One pose only with generous margins entire weapon and body visible. Original painterly raster plain pale gray background no shadows/grid/text/effects, no other figures.",
+      "alpha_source": "alpha/windup.png",
+      "alpha_sha256": "1e90e3877b16a0e9c0ddce960cbc0464c1341b79c256087b23e2c09468f67d12",
+      "alpha_output": "exec-6da14ce3-d0f2-49e5-9bed-0dffd7141862.png",
+      "alpha_prompt": "Use case: background-extraction. Extract this single Kitehook Runner windup pose onto true transparent RGBA. Keep exact full body anatomy, both hand grips, entire pole and double hook, rope loop, fine hair/cape/ribbon edges, clothing and boots, same framing/scale. Remove gray background/shadows only. No matte/cloudy backdrop/checkerboard or redraw.",
+      "review": "Replacement for original sheet frame 4 (zero-based): complete shaft, double hook and rope with both grips. Normalize body scale/anchor before packing; extraction slightly reframes boots. Full-motion and alpha compositing unaccepted."
+    },
+    {
+      "source": "poses.png",
+      "source_sha256": "079cea8f200a8adee3154d2b843cacddf05978a96a95f17e7a16812078614553",
+      "source_output": "exec-6036bee0-0005-45e8-bb3c-6c4f95b42397.png",
+      "prompt": "Use case: stylized-concept. Original Kitehook Runner battle sheet reference identity: athletic woman brown ponytail teal headband, teal/ochre long ribbon cape and split tabard, cream sleeves leather brown fitted armor, single steel shoulder plate and round knee guards, wrapped brown boots yellow ties, rope coil at waist. BOTH hands long wooden hooked pole with DOUBLE curved steel grappling prongs at front and teal/gold streamers, rope tied to butt with loose loop. Twelve full-body articulated poses FOUR columns THREE rows elevated three-quarter camera facing RIGHT consistent scale generous gutters including full pole/ribbons/rope. Row1 idle pole low diagonal cloak hangs; alert breath head/shoulders ribbons shift; extended running stride pole both hands low; gathered running stride knees under torso. Row2 opposite contact far leg forward near leg back no torso mirroring; windup draw hooked pole back across chest tip points RIGHT; strong two-hand forward hooked thrust RIGHT leading knee lunges; crouched two-hand shaft brace. Row3 hit recoil; knees buckle; side fall torso low pole goes to ground; final relaxed horizontal SIDE corpse eyes closed entire pole and slack rope beside hands streamers/cape rest flat. One unchanged double-hook head and complete shaft all frames, no random sword/pistol, actual articulated hips/knees/elbows not repeated upright cutouts or rotated standing corpse. Original painterly raster plain pale gray background no shadow/grid/text/scenery/blood/effects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "9da3a14da4ec16f15a9346b163183151f83f0f399323e1b1fe23e5a5dc8f85d3",
+      "alpha_output": "exec-0028bb9a-e76a-4f00-888a-77976f040727.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all twelve Kitehook Runner poses onto genuine transparent RGBA. Preserve exact layout/scale, all existing pole/hook/rope pixels, teal/gold ribbons, hair, boots, limb gaps and corpse. Remove gray background and ground shadows only. No colored matte/clouds/checkerboard, redraw/reframing/text/effects."
+    }
+  ],
+  "unselected_generation_attempts": [
+    {
+      "source_output": "exec-adc2a087-306e-4382-bea8-df32ad85ddc3.png",
+      "prompt": "Use case: stylized-concept. Input sheet is character reference. Produce ONE missing Kitehook Runner running contact animation frame, facing screen RIGHT, same three-quarter camera and painterly game style. Far leg extends forward toward screen RIGHT heel landing, NEAR leg extends backward toward LEFT toe pushing off. This must be opposite leg lead to top-row third reference figure. Do not mirror torso or weapon. Lean torso forward, BOTH gloved hands hold entire wooden double-hook pole low horizontal: right hand rear grip left side of picture, left hand forward grip right side. Entire double curved steel hook screen RIGHT, butt rope loop screen LEFT, teal/gold streamers trail. Brown ponytail teal headband, cream sleeves leather armor steel shoulder and knee guards yellow boot ties waist rope teal/gold cape. Full body all equipment generous clear margins, original raster on genuine transparent background, no text, shadow, grid, effects, ground or other poses.",
+      "review": "Unselected: repeated near-leg-forward contact; not opposite contact."
+    },
+    {
+      "source_output": "exec-37218925-75d7-4d9c-a1cc-336fe119541f.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY legs below hip and small overlapping tabard area. Keep entire upper body, face, pole, arms, cape, rope, framing identical. Reverse the stride legs anatomically, NOT mirror image. The leg currently extending forward to lower RIGHT must swing BACK toward lower LEFT: its thigh/large near kneecap bend backward with boot trailing left. The leg currently bent back to lower LEFT must instead extend FORWARD behind the other thigh, emerge to RIGHT with straighter knee and heel touching ground far right. At hip crossing, backward-moving near thigh OCCLUDES forward-moving far thigh. Keep same armor knees and yellow boot ties. Need alternate leg lead for animation not same running pose. True transparent RGBA no background or shadow.",
+      "review": "Unselected: still repeats same leg lead and rendered checker backdrop. Not copied or enabled."
+    }
+  ],
+  "review_notes": [
+    "Twelve poses/extraction visually inspected. Distinct extended/gathered run, attack, guards and corpse, but opposite running contact omitted in favor of extra guard. Windup loses hook/shaft and side-fall holds rope without own pole; corpse pole crosses into side-fall cell. Need independent complete equipment for each frame, consistent two-hand thrust/grips, gait and edge margins before packing. Final compositing/full-motion unaccepted; source-only not enabled; no tests/exports.",
+    "13 packed frames retain ten earlier paintings, including the complete-pole single windup and independent side-fall replacements. Three new built-in paintings supply two-handed thrust, recovery and ready brace with both shaft ends, double hook and butt rope visible.",
+    "Original genuine alpha remains unchanged. Approved green preparation and anatomy-based scales preserve pixels; explicit crop bands separate adjacent ribbons, hooks, boots and the corpse's long pole/rope. Actual fall and final rest both point head-right.",
+    "All-state candidate only. Two run poses do not prove a full alternating gait. The replacement/new attack pole is visibly longer relative to the body than the original idle/move pole; this equipment-length mismatch must be corrected before acceptance. Body/gear/grip/cape/palette/edge continuity, thrust extension and connected timing remain unaccepted. No automated suites/imports/gameplay/platform exports in this increment.",
+    "2026-09-16 equipment refinement: six replacement paintings keep the original compact double-hook staff through anticipation, short thrust, recovery, ready brace, side-collapse and final head-right corpse. Seven original frames, clip indices/timing and anatomical scales are retained; no gameplay/body/save change. Neutral-background derivatives remove chroma spill; explicit aperture seeds preserve steel and pale cloth. Full sheet inspected; complete gait, fine edge/palette and connected-motion/platform acceptance remain open."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_kitehook_runners/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_kitehook_runners/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_kitehook_runners/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_kitehook_runners/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_kitehook_runners.png",
+    "runtime_sha256": "b51ea050982057a27fbd8dbfc1e2752c7e3d2bde38dc39d14980a17162975dc4",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png": "9da3a14da4ec16f15a9346b163183151f83f0f399323e1b1fe23e5a5dc8f85d3",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/alpha/windup.png": "1e90e3877b16a0e9c0ddce960cbc0464c1341b79c256087b23e2c09468f67d12",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/continuity-alpha/complete-pole-thrust-recovery-and-brace.png": "6a30a019869ed0bacabc6d8645af3e281da29f2547c13f733fce17c67ca921b8",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/alpha/side-fall.png": "551906c17d3bb273f3ef64281d2ae640808157abf6f42caddc3bec7884698564"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/kitehook-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  },
+  "packing": {
+    "recipe": "art/animation/source/poses/unit_neutral_kitehook_runners/packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_kitehook_runners.png",
+    "runtime_sha256": "417fe08cf958b2612da0e03a33cdd65c9c9d8bc4b032943eaac449bebca4482e"
+  },
+  "equipment_refinement": {
+    "date": "2026-09-16",
+    "status": "candidate_pending_playback_acceptance",
+    "generation": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/cutouts-gray.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/packing-result.json",
+    "previous_recipe": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/packing-before-refinement.json",
+    "previous_runtime_sha256": "b51ea050982057a27fbd8dbfc1e2752c7e3d2bde38dc39d14980a17162975dc4",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_kitehook_runners.png",
+    "runtime_sha256": "417fe08cf958b2612da0e03a33cdd65c9c9d8bc4b032943eaac449bebca4482e",
+    "retained_paintings": 7,
+    "replaced_paintings": 6,
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png": "9da3a14da4ec16f15a9346b163183151f83f0f399323e1b1fe23e5a5dc8f85d3",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-actions-gray.png": "85950120fcf78979806b3dabb29f4d379a794482f1d92c3d4ae9ce4843b859cc",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-collapse-gray.png": "134838684172720ecd271dc29487182095f498085de33348355ccfa1e34961fe"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/kitehook-equipment-refinement-20260916",
+    "review": "Compact weapon matched by head/torso scale rather than shrinking complete long-pole poses. Full original and replacement states inspected together. Near/far gait, fine edge detail and continuous motion are not accepted by this static production review."
+  }
+}

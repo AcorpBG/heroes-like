@@ -1,0 +1,274 @@
+{
+  "unit_id": "unit_neutral_frostwharf_cutters",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          348,
+          383
+        ]
+      ],
+      "anchor": [
+        185,
+        374
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          348,
+          0,
+          694,
+          344
+        ],
+        [
+          348,
+          344,
+          459,
+          366
+        ],
+        [
+          588,
+          344,
+          694,
+          382
+        ]
+      ],
+      "anchor": [
+        528,
+        375
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "run_contact",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          695,
+          24,
+          1082,
+          358
+        ]
+      ],
+      "anchor": [
+        916,
+        349
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "run_passing",
+      "source": "continuity-alpha/two-hook-recovery-ready-and-passing-gray.png",
+      "rects": [
+        [
+          1310,
+          0,
+          2069,
+          760
+        ]
+      ],
+      "anchor": [
+        1712,
+        724
+      ],
+      "scale": 0.31
+    },
+    {
+      "name": "right_hook_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          467,
+          344,
+          579,
+          377
+        ],
+        [
+          400,
+          377,
+          585,
+          398
+        ],
+        [
+          374,
+          398,
+          732,
+          738
+        ]
+      ],
+      "anchor": [
+        531,
+        731
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "right_hook_slash_left_guard",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          730,
+          391,
+          1088,
+          725
+        ]
+      ],
+      "anchor": [
+        908,
+        719
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "two_hook_recovery",
+      "source": "continuity-alpha/two-hook-recovery-ready-and-passing-gray.png",
+      "rects": [
+        [
+          0,
+          0,
+          714,
+          760
+        ]
+      ],
+      "anchor": [
+        344,
+        711
+      ],
+      "scale": 0.31
+    },
+    {
+      "name": "crossed_blades_ready",
+      "source": "continuity-alpha/two-hook-recovery-ready-and-passing-gray.png",
+      "rects": [
+        [
+          714,
+          0,
+          1310,
+          760
+        ]
+      ],
+      "anchor": [
+        1044,
+        725
+      ],
+      "scale": 0.31
+    },
+    {
+      "name": "crossed_blades_crouch",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1112,
+          403,
+          1420,
+          727
+        ]
+      ],
+      "anchor": [
+        1257,
+        717
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          709,
+          196,
+          749
+        ],
+        [
+          0,
+          749,
+          372,
+          900
+        ],
+        [
+          0,
+          900,
+          338,
+          1066
+        ]
+      ],
+      "anchor": [
+        173,
+        1058
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          386,
+          755,
+          674,
+          939
+        ],
+        [
+          348,
+          939,
+          674,
+          1044
+        ]
+      ],
+      "anchor": [
+        519,
+        1034
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "death_side_fall",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          672,
+          793,
+          1050,
+          1040
+        ]
+      ],
+      "anchor": [
+        855,
+        1028
+      ],
+      "scale": 0.58
+    },
+    {
+      "name": "dead_head_left_two_blades",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1050,
+          835,
+          1448,
+          1036
+        ]
+      ],
+      "anchor": [
+        1241,
+        1026
+      ],
+      "scale": 0.58
+    }
+  ],
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20
+}

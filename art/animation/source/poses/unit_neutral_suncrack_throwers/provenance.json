@@ -1,0 +1,48 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_suncrack_throwers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_suncrack_throwers.png",
+  "reference_sha256": "8e10024c7edc44b9a25f55d3315f8544a219e6576a34ee441c2b7f6839899562",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "48952fd39728c93dcd20dc5bdf2a9e4bfb11644cbcea6e68fc6d6d127c3e1362",
+      "source_output": "exec-705b3d8b-de68-4121-83f1-d1503ae203dc.png",
+      "prompt": "Use case: stylized-concept. Reference image supplies original Suncrack Thrower identity: athletic woman dark hair high bun, cream headband brass goggles forehead, turquoise scarf trailing behind, cream wrapped sleeveless top and split skirt/trousers ochre trim, brown leather sandals calf ties, leather belts holding glass/clay round throwing flasks in rope sleeves. RIGHT hand throws one flask, LEFT balances. Create SIXTEEN full-body articulated animation poses in FOUR columns FOUR rows, consistent scale elevated three-quarter camera facing RIGHT. Row1 relaxed idle flask at hip; alert breathing scarf shifts; running extended stride; running gathered knees under hips. Row2 opposite contact with near leg behind and far leg forward without mirroring torso; melee windup RIGHT empty fist tucked by ribs; RIGHT fist straight punch toward RIGHT with torso lean, LEFT guards; crouched crossed-forearm defense protecting head. Row3 RIGHT hand takes flask from belt; RIGHT elbow lifted flask behind ear windup; RIGHT overarm release hand open toward RIGHT no flask in hand; hit recoil. Row4 knees buckle; torso tipping sideways with hands toward ground; body lands on SIDE knees loose; final relaxed horizontal SIDE corpse eyes closed arms resting, flasks remain attached belt, goggles/scarf retained. Every pose actual articulated limbs, left/right hand continuity, same face clothing and flask belt. Generous gutters no overlaps, all feet and scarf complete. Original painterly raster, pale gray flat background, NO checkerboard, text, shadows, blood, effects or scenery. No copied standing poses or merely rotated upright corpse.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "3538f09100a8b2c2801479b30acd27f09fee333a4fadcc82b5d6f5b2ab24471d",
+      "alpha_output": "exec-08e76f99-120d-4923-9da2-efeb777b75bd.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all sixteen Suncrack Thrower poses onto true transparent RGBA. Preserve exact character anatomy, pose arrangement, scale, costume, flask belt, fine hair and turquoise scarf edges, limb gaps and closed-eye corpse. Remove only gray background and any ground shadows. No checkerboard, colored matte, reframing, redraw, effects, text or added objects."
+    }
+  ],
+  "review_notes": [
+    "Sixteen original poses and extraction visually inspected: flask preparation/windup/release, punch, crouched defense and progressive collapse to closed-eye side corpse. Running opposite leg contact remains unclear/repeated and requires refinement; arm/torso continuity and flask count require full-motion review. Colored edge fringe visible in raw extraction preview; in-context alpha compositing not accepted. Source only, not packed or enabled. No tests or exports run.",
+    "18 frames retain fourteen original paintings and select four new near-right punch recovery, empty-hand throwing recovery, upright guard and supported passing-step paintings. Distinct flask preparation/windup/release remains separate from empty-fist melee; four original collapse/rest paintings retain goggles/scarf/flask belt.",
+    "Reuse inspected clean original alpha; new green-backed source uses approved bounded preparation. Uniform original/new scales are 0.64/0.335. Banded crops exclude adjacent heads, hands, scarf fragments and the neighboring corpse's boot while retaining own fall toes, fingers and cloth.",
+    "Original airborne travel variants are excluded; retained contact and new passing still do not establish full alternating gait. Arm/grip ownership, flask count, asymmetric trousers, body/palette/edges and connected event timing remain refinement. Static production review is not motion/gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 14,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_suncrack_throwers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_suncrack_throwers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_suncrack_throwers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_suncrack_throwers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_suncrack_throwers.png",
+    "runtime_sha256": "a0769e90ac4b835d4417a474d6ebe8338ea1e19b34fa078cbfc388e4a28cec03",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png": "3538f09100a8b2c2801479b30acd27f09fee333a4fadcc82b5d6f5b2ab24471d",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_suncrack_throwers/continuity-alpha/punch-throw-recoveries-and-grounded-step.png": "4ac5fbede78edb1aa21c2c4db2791b36ab1910072ff73e04e98d020587fb2bc5"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/suncrack-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

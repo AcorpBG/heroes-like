@@ -1,0 +1,146 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_thornwake_woundroot_rootmaul_behemoths.png",
+  "reference_sha256": "d45bdb1d8b076f51752c837e0cb7e02cd26927440c14002afc3d658fb6468b4c",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/walk-near-passing-diagonal.png",
+      "source_sha256": "e9c758d59fa3ba3e5e9dc12ebc6147f72e1d9e54d77ab62f74a5c3e2ec0cc0fc",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-24329fb8-9391-4e7b-bb84-607dd0219b9d.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY the FAR HINDLEG visible under belly in center-left of this Rootmaul passing sprite, between far-left planted hind foot and lifted near forepaw. Bend that far hind knee more and lift its stone-clawed foot upward toward belly, toes pointing down with clear empty gap below. Keep it connected to far hip behind near thigh, no extra leg. NEAR hindleg at far left stays planted; FAR foreleg at right stays planted; NEAR forepaw remains raised. This gives two diagonal limbs lifted and two supporting. Preserve every other pixel-level detail as closely as possible: head crown torso tail stone plates leaves proportions camera, full sprite framing. True transparent RGBA background no drawn checkerboard or ground shadow.",
+      "review": "Far hindpaw now raised alongside near forepaw; opposing diagonal supports retained. Prefer this over walk-passing-draft for intended first passing phase. Forepaw margin tight, silhouette/material scale drift and alpha unfinished; no packed/runtime acceptance."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/walk-far-passing-draft.png",
+      "source_sha256": "3223247ef2d4bdd6b5af375b341b7d9af34f6e53bbebb3c0e93077b04e9ab0e3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bfe8bc8c-c287-449b-8dd4-fe98065cff29.png",
+      "prompt": "Use case: precise-object-edit. This is a walking animation edit, change legs only. Keep NEAR foreleg with visible stone shoulder plate planted vertically beneath shoulder. Lift FAR forepaw currently extended to image RIGHT: bend its elbow and bring paw BACK toward chest, clearly raised off ground behind near foreleg but with its stone claws visible separately to right of near elbow. Near hindleg now flexes knee with paw slightly lifted under belly; far hindleg supports body beneath hip. Four connected limbs exactly, natural heavy quadruped mid-step, no jumping or attack. Preserve head/crown/torso tail leaves stone plates colors camera proportions and full-body scale. One isolated original sprite, roomy margins, true transparent RGBA background no checkerboard drawing or ground shadow.",
+      "review": "Far forepaw and near hindpaw now lifted; near foreleg/far hindleg support. Distinct second passing pose obtained. Hind hip/plate proportions, lifted paw size, timing/scale across four gait sources and alpha remain unfinished. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/walk-far-contact-draft.png",
+      "source_sha256": "8913173815cf366138052128ad272f4efed4afff0db5596ef49cc11c17e6e54c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0e876541-816b-41ab-b8a5-de11fa779a01.png",
+      "prompt": "Use case: precise-object-edit. Opposite walking CONTACT for this exact quadruped. Change four legs only. NEAR forelimb attached to visible large stone shoulder bends BACK under chest, near paw on ground directly below shoulder at image center. FAR forelimb stretches forward to image RIGHT beyond head and plants; show its complete lower arm emerging from far side of chest. NEAR hindleg with visible stone hip plate swings FORWARD beneath belly to image center with toes planted; FAR hindleg extends BACK toward image LEFT, visible behind near thigh. Exactly four connected limbs no extra paws. Preserve torso head crown tail leaf mantle camera scale and colors. Do not mirror body or repeat present near-arm-leading pose. Grounded heavy walking not attacking or leaping. Complete sprite generous margins, true transparent background no checkerboard drawing or shadow.",
+      "review": "Far forelimb now extends forward, near forepaw under shoulder, near hindleg forward and far hindleg back. Distinct complementary contact obtained. Hind hip/stone-plate shape changes, limbs lengthen and paw margins tight; scale/anatomy matching, passing counterpart and alpha still unfinished. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/walk-near-contact-draft.png",
+      "source_sha256": "d2160e25d8283d3ccdb235d4eaa9e3647e894a8228ad26da9ba092519226d7f3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ca10287a-9628-47c2-9554-184f6ec21647.png",
+      "prompt": "Use case: precise-object-edit. Advance this quadruped one half-step. Its currently lifted NEAR forepaw (attached to large visible stone shoulder plate) reaches diagonally FORWARD toward image RIGHT and DOWN, landing farther right than the far forepaw. Extend near elbow naturally. The currently planted FAR forepaw moves BACK under chest toward image LEFT and becomes partly occluded behind advancing near arm, still show its toes. Near hindleg shifts back toward image LEFT heel lifted, far hindleg forward under belly. Four limbs only. Keep exact compact head/crown, torso shoulders, tail foliage, amber core, camera and proportions. Do not mirror or rotate body, no extra paws. Natural walking contact not attack. One full-body sprite generous margins, genuinely transparent background no ground shadows/checkerboard drawing.",
+      "review": "Near forelimb now reaches forward and plants, far forepaw behind it. Forelimb phase distinct from passing source. Hindleg support/diagonal timing, limb overlaps, crown/scale and alpha remain unaccepted. Source-only not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/walk-passing-draft.png",
+      "source_sha256": "e293ebc984b7f4228bbe6dc3dfc088d55ede68bf8f1b01e54441bb82836b2342",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ae084d88-721b-466f-b079-1c9fd5dfc8dc.png",
+      "prompt": "Use case: stylized-concept. ONE isolated original Rootmaul Behemoth walking PASSING sprite, matching first top-left character in reference. Near forelimb with large visible stone shoulder plate is BENT at elbow and pulled back under chest, its massive root/stone paw lifted CLEARLY OFF GROUND near belly, toes pointing down. Far forelimb reaches forward toward image RIGHT and is planted. Near hindleg steps forward under hip, far hindleg stretches back left; reveal four separate connected limbs. This is a heavy quadruped walking, not standing or attacking. Preserve compact low branch-crown head, amber core/eyes, stone shoulder plates, leaf mantle and curled tail, same three-quarter camera facing right and proportions. Whole creature within generous margin, one sprite only, real transparent RGBA background no ground shadow/checkerboard/text, crisp painterly raster.",
+      "review": "Near forepaw lifted clearly with four limbs visible. Source passing draft, not accepted diagonal gait: hindleg phases still repeat, opposite contact absent, scale/crown and colored edge fringe unresolved. Not packed/enabled.",
+      "unselected_contact_pair": {
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-76d321c6-8da1-4d45-8332-6e82b493855b.png",
+        "prompt": "Use case: stylized-concept. TWO full-body Rootmaul Behemoth walking contact sprites side by side, same size fixed elevated three-quarter view facing RIGHT, based exactly on first idle in reference. Original quadrupedal bark beast with massive stone-armored forelimbs, two rear legs, compact branch-crown head nestled shoulders, amber heart/eyes, leafy back and curled tail. Exactly FOUR limbs in each sprite. LEFT sprite: NEAR forelimb reaches forward to image right, FAR forelimb extends back under chest; NEAR hindleg extends back to image left, FAR hindleg steps forward under belly. RIGHT sprite: reverse all four leg phases, NEAR forelimb back under chest, FAR forelimb reaches forward right; NEAR hindleg forward under belly, FAR hindleg back left. Clearly expose each paw and its connection with generous leg separation. Never mirror torso/head or change camera. Same head/crown/shoulder stones/tail, natural grounded weight transfer not leaping or attacking. Wide clear gap between two full sprites and generous outer margins. True transparent RGBA background no drawn checkerboard/ground/shadow/text. Crisp original painterly game cutouts.",
+        "reason": "Both contact poses repeat leading forelimb; not selected or copied."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/poses-hit-neck-draft.png",
+      "source_sha256": "a092c24bfb368314ec41824f5d9c1456268a278e6aa980881a434ccd152b8841",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7823d43c-6a48-4283-bcda-f130421e31b7.png",
+      "prompt": "Use case: precise-object-edit. Repair ONLY bottom-left ninth hit-recoil sprite in this 4x3 Rootmaul Behemoth sheet. Replace stretched long neck and flattened changed head with the SAME compact bark face and forked branch crown as FIRST standing sprite. Head tilted slightly backward with shoulders recoiling but short neck stays nestled between massive stone shoulder plates. Preserve amber eyes and core, four-limb body anatomy, raised front fist, planted other limbs, tail foliage and recoil lean. Same branch count and head proportions, no new antlers or long snout. All other eleven sprites unchanged. Same canvas frame positions camera scale, genuine transparent RGBA background no drawn checkerboard.",
+      "review": "Ninth recoil neck shortened and branch crown more recognizable; head still too horizontal/elongated relative to idle, not accepted anatomy match. Retain as draft only. Select no other frames from whole-sheet redraw; separate idle correction retained. Gait/attack/alpha unfinished, not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/poses-idle-neck-corrected.png",
+      "source_sha256": "af7f76300e9ceb726276820bfaf7b25daef9452092bf16d109d99b10b38d601e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7d3ee0ec-3a2a-455f-b7d0-d02a04d27436.png",
+      "prompt": "Use case: precise-object-edit. Correct ONLY top row SECOND sprite in this 4x3 Rootmaul Behemoth sheet. Its neck stretches and branch-crown changes drastically. Restore compact low head tucked between shoulders, same short neck and forked tree-crown silhouette as FIRST top-left idle. Keep same four planted limbs, stone shoulder armor, root fists, tail and foliage. Breathing variation only slight chest expansion and shoulder lift with softly swaying leaves; no elongated neck or new antler branches. Match original first-frame head size/branch count and amber eye/core. All other eleven poses unchanged, same sheet framing scale and positions, real transparent RGBA background no painted checkerboard. Original bark creature anatomy, not human or animal replacement.",
+      "review": "Second idle compact head/neck and forked crown restored to first-frame silhouette. Select second frame only; incidental other-frame redraws not selected. Breathing motion subtle, crown/leaf/limb alignment, gait, attack/recoil anatomy and alpha still unfinished. Not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/poses.png",
+      "source_sha256": "9aa0a3f5457b620c3d1e9d8374c6fee8930ed7b3bd029f708683905217dd6467",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-56f11c0a-03d2-4a1c-8b75-714cc5a56492.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle animation sheet matching supplied Woundroot Rootmaul Behemoth reference. Exactly 12 full creature isolated poses FOUR columns THREE rows fixed three-quarter camera facing RIGHT same scale spacious gutters. True transparent RGBA background no painted checkerboard ground text. Huge quadrupedal living-tree beast FOUR stout root limbs with stone-tipped claw feet, heavy forelimbs, bark torso, branching antler-like crown rising from wooden face with amber eyes and large amber heart-core below face, moss green hanging willow foliage across back with small amber seed lights, long curved wooden tail with leafy tip, gray mossy stone shoulder/forearm plates. No rider. Preserve anatomy four legs one tail crown branch pattern and core location. Row1 idle planted; breathing idle chest bark expands head raises leaves gently sway; walking front-left/rear-right diagonal pair advanced other pair supports; walking front-right/rear-left advanced opposite diagonal supports no whole-body mirror. Row2 passing bent lifted foreleg opposite hind pushes; attack windup both heavy forearms lift torso arches back preparing slam hind legs support; attack contact both foreclaws slam forward ground torso low head forward stone claws spread no rocks ground effects; defense crouch head tucked stone shoulders forward; Row3 hit recoil head/torso back forelegs brace; death front knees buckle core fades; collapse body tips on side all four legs visible or anatomically accounted tail grounded; persistent dead fallen treebeast on side all limbs limp eyes/core/seed lights completely dark stone plates intact no floating leaves. Genuine articulated root joints shoulders neck tail not shifted copies. Painterly original game art matching reference crisp readable silhouette. Fully contain crown tail claws within each cell no clipping overlap extra branches acting as limbs."
+    }
+  ],
+  "review_notes": [
+    "14 candidate frames: six original paintings (sheet indices0,6,7,9,10,11), previously generated compact idle1 and four gait paintings, plus three new paintings for compact-head slam windup, hit and braced guard.",
+    "Original and hit-draft stretched-neck poses remain unselected; new slam keeps crown/head between shoulders with two forepaws raised and two hind paws supporting. New hit and guard have compact necks; occluded far-hind ownership, body mass/crown/armor and gait proportions still require translated motion review.",
+    "Selected earlier gait sources are near-contact-draft, far-passing-draft, far-contact-draft and near-passing-diagonal. The older non-diagonal passing and repeated-contact pair remain unselected. Existing death buckle/collapse and inert dark corpse preserved.",
+    "Owner-approved connected neutral175/tolerance16/edge2 clears inspected crown/tail/foliage gaps while retaining warm-gray stone armor. Original sources/masters and prior prompts are preserved. Banded sheet crops exclude neighboring tail, crown and paw fragments without procedural replacement.",
+    "Uniform per-source scale and anatomical ground anchors pack512x256 cells, four columns. Final actual-alpha atlas and candidate/registered offline art-desk screenshots visually inspected; static evidence does not prove smooth movement, support/contact, brace size, subtle loops or event/death timing.",
+    "Final roster acceptance remains0/160. No automated tests/imports/exports, paid API, runtime/tool-code, gameplay/save/footprint changes or unvalidated commit/push."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses include raised-arm slam preparation, low contact and dark-core corpse.",
+    "Walk contacts repeat leading forelimb; opposing diagonal quadruped gait needed. Passing repeats contact closely.",
+    "Idle/hit neck extends and face crown changes shape; preserve wooden head/branch anatomy and core proportions.",
+    "Slam contact similar to defense crouch; forelimb impact and shoulder path need continuity. Stone plates and claw counts vary.",
+    "Tail/crown foliage change through collapse; final tail is obscured/missing-looking and four legs need accounting. Final core/eyes dark but residual foliage seed light needs review.",
+    "Checker background visible; transparency/compositing unresolved. Source-only no packing/enabling/tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "candidate_frames": 14,
+    "retained_paintings": 11,
+    "new_paintings": 3,
+    "new_outputs": 3,
+    "source_preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_thornwake_woundroot_rootmaul_behemoths.png",
+    "runtime_atlas_sha256": "df4d9c3e75c295ebc2633f6a3337a075bc0ea84d3feb77b8d8febb8625bfada8",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png": "9fb6b2e8a89382f4b15e9f0fcdeec5552417be2c8a21575d6bf5e03a10f6c934",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses-idle-neck-corrected.png": "1c49785ba2f78924c251a743d51cc63d204c16ffea3bc12fa3d648541029945f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-near-contact-draft.png": "214308ff9c09664f5f0c67e682ff0e95bfe97cc2726f9cf4e3dd27d4244800bd",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-far-passing-draft.png": "4772c2d13ea69bd0116bd38307d1f9099d9cd1d654eea173d6c974a7e5e9026f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-far-contact-draft.png": "f9424213c2e87dbb1cffa26d415cae0092a50586c935a1db8361c3433123fd37",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-near-passing-diagonal.png": "3561b4190d9396dbac937d769778a7ce37d0ed97aebad20be9432a8f40d14268",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/slam-windup.png": "75907be7c3ecc867cfe272bacd49721817542b1e98c7908d3aa35e292d11cacd",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/guard-braced.png": "b94d300295c0db2164d128f785617da9ea2e3ca544af4f5dc58f1bab3154ee7c",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/hit-recoil.png": "ead232a9c54605e973c4fd6d9b020c7394a3fc2c1b592760c7efa868c0617b6d"
+    },
+    "reference_crop": {
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/poses.png",
+      "rect": [
+        0,
+        0,
+        365,
+        401
+      ],
+      "reference": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/identity-reference.png",
+      "purpose": "Inspection composite and fixed identity input only, not a runtime pose."
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/rootmaul-continuity-20260916",
+    "status": "candidate_registered_not_final_accepted",
+    "cleanup": {
+      "status": "byte_identical_preview_cleanup_completed",
+      "pairs": [
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/rootmaul-continuity-20260916/identity/poses-poses-rect-0-0-365-401-green.png",
+          "retain": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/identity-reference.png",
+          "sha256": "d392a349e8f75454a20c39cef17957e9a394bfbe8774a2fff58fb47c67843037",
+          "bytes": 1710907
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/rootmaul-continuity-20260916/identity/poses-poses-rect-0-0-365-401-light.png",
+          "retain": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/identity-reference.png",
+          "sha256": "d392a349e8f75454a20c39cef17957e9a394bfbe8774a2fff58fb47c67843037",
+          "bytes": 1710907
+        }
+      ],
+      "preserved": "Original/new/rejected masters, exact prompts/reference hashes, all unique before/final evidence, cutout recipes/proofs, source/runtime atlases, caches and unrelated files.",
+      "removed_bytes": 3421814
+    }
+  }
+}

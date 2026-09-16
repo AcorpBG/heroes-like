@@ -1,0 +1,106 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_debt_engine_exactors",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_pending_refinement_and_packing",
+  "reference": "art/units/source/curated/unit_brasshollow_debt_engine_exactors.png",
+  "reference_sha256": "b12d450fa159032b87b9a1d3c24b43b08bf840881b76c0a17998bd46cb1861b7",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/poses-draft.png",
+      "source_sha256": "906a26f3c2bf4809331a6acba5e7a40cd36030e916c7918e3b2dc3b5b38fcbbf",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c5a2d963-1561-4a7d-9908-0d59eb021116.png",
+      "prompt": "Use case: stylized-concept. Asset type: original painted fantasy tactical battle animation sprite sheet. Input image is character identity reference, not a pose to repeat. Create exactly TWELVE full-body articulated poses of this same Debt Engine Exactor: massive biped black iron/brass furnace automaton, barred orange furnace chest, crowned slit furnace face, paired smoking shoulder exhausts, dangling chains, parchment debt seals with red wax, brown ledger pouch at hip, huge piston hammer gauntlet on its RIGHT arm and smaller articulated clamp LEFT hand, broad segmented feet. Preserve all equipment, scale, silhouette and painterly reference style. Fixed elevated three-quarter camera facing screen right. Transparent RGBA background, no painted checkerboard, no floor, no labels, no grid lines, no effects obscuring joints. Four equal columns by three equal rows, each figure fully inside its own cell with generous margins. Constant body size and ground baseline except falling poses. Row 1 left to right: idle settled; idle boiler inhale with visibly shifted shoulders/chains; walking right with anatomical right foot reaching forward left foot behind; walking right with LEFT foot forward RIGHT behind, genuinely opposite step not same silhouette. Row 2: passing stride with rear foot lifted under pelvis; hammer wind-up right elbow flexed shoulder back; forward hammer punch right arm extended at enemy chest height, left clamp guarding, feet braced; defensive crossed gauntlet/clamp in front of furnace. Row 3: recoil from hit with torso back knees bent; dying kneeling one knee with furnace fading; falling sideways with limbs folding and chains falling; fully dead inert collapsed side-lying wreck, chest and eyes dark, no steam, same intact recognizable head/hands/boots/ledger. Articulate the actual limbs and body, never just translate or rotate the entire source. Two arms two legs every pose, no duplicate limbs, no added weapons. No copyrighted franchise assets."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/poses.png",
+      "source_sha256": "a34cb154024ce19fd199bcdd8ec33497861e51cc84a8b7c20e4275b977e5fcf7",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-64f3eae0-3fcf-4975-a97d-1349bf114ad5.png",
+      "prompt": "Use case: precise-object-edit. Edit target is the supplied twelve-pose Debt Engine Exactor sheet. Change ONLY row 2 column 3 (the extended punch). That pose mistakenly has two giant hammer fists. Redraw that pose so its anatomical RIGHT arm, originating at the shoulder on the viewer LEFT near the ledger pouch, reaches across in front of its chest to punch screen-right with its one huge hammer gauntlet. Its anatomical LEFT arm, originating on viewer RIGHT, must be bent tucked close to its ribs with its original SMALL clamp hand. Exactly two arms, ONE large hammer and ONE small clamp, no third arm or fist. Preserve the other eleven poses unchanged, grid layout, scale, identity, all equipment and dead wreck. Transparent RGBA background, no checkerboard painted in.",
+      "alpha_source": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/alpha/poses.png",
+      "alpha_sha256": "b9aee0c3d7e5815222d6ae1b130acaf64a6be6f0df1de784349d2df569c111d3",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-97204a91-ae6f-4156-b9e5-2a2ecdf7b933.png",
+      "alpha_prompt": "Use case: background-extraction. Remove ONLY the checkerboard background from this twelve-pose robot sprite sheet and return actual transparent RGBA pixels around and between every figure. Preserve all twelve painted figures exactly: locations, size, limbs, colors, equipment, smoke and dark inactive corpse. No repainting, no replacement backdrop, no visible checkerboard, no colored matte or halo. Keep the same canvas and layout."
+    }
+  ],
+  "review_notes": "13-frame candidate reuses9 original RGBA paintings and4 new quiet-vent paintings. All-planted pose alternates with distinct near/far foot lifts as slow mechanical creep; repeated-leading-leg contact drafts are not selected. New second hammer guard retains near huge right gauntlet and far small left clamp. Original idle steam, corrected strike and cold corpse retained. Neutral-steam key produced jagged cloud edges; magenta matte edit contaminated steam pink and is excluded. Built-in quiet-vent interval removes only airborne plumes while retaining physical outlets; original clean steam stays in idle. Continuous translated support/travel, vent transitions, torso/arm/body scale and timing still require full-roster review.",
+  "prior_review_notes": [
+    "Twelve source poses; initial duplicate hammer punch corrected to right hammer crossing chest with smaller left clamp.",
+    "Opposite contact repeats leading leg; passing step and idle motion need refinement.",
+    "Hammer/clamp proportions, chain and parchment continuity, furnace fading and smoke must be reviewed across frames.",
+    "Extraction visibly changes smoke and has colored edge fringes; transparency and in-context compositing unaccepted.",
+    "Source only, not packed or enabled. Runtime candidates remain 29; final acceptance 0/160. No tests or exports run per owner sequencing."
+  ],
+  "status": "candidate_pending_playback_acceptance",
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "new_selected_paintings": 4,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/packing.json",
+    "packing_result": "art/animation/source/poses/unit_brasshollow_debt_engine_exactors/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_debt_engine_exactors.png",
+    "runtime_sha256": "b3c167d024367d33985028435848d3819e3ba7136fab206dc28e2ddb65776550",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_debt_engine_exactors/alpha/poses.png": "b9aee0c3d7e5815222d6ae1b130acaf64a6be6f0df1de784349d2df569c111d3",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_debt_engine_exactors/continuity-alpha/creep-and-guard-clear-vents.png": "8cb050676874f976a2097ea416059dca55a61922de910fdf3e3190d0199f32c5"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Static source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "date": "2026-09-16",
+      "policy": "Only task-owned byte-identical preview duplicates; exact SHA-256 rechecked and fuser found no open handles. All original/rejected paintings, unique evidence, processing proofs and caches retained.",
+      "removed_files": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/identity/unit_brasshollow_debt_engine_exactors-poses-rect-25-0-342-365-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_debt_engine_exactors/identity-reference.png",
+          "sha256": "49efbbfeb2d51a4ff83637777d1a955997e6a4cdad41270033f1c2e30b9f3a95",
+          "bytes": 906755
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/second/creep-and-guard-chroma-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/final/creep-and-guard-chroma-light.png",
+          "sha256": "2057c253f4b441a1e23727752bab720cff4b96f2b242eae45884e790db24b3bc",
+          "bytes": 1573580
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/second/creep-and-guard-chroma-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/final/creep-and-guard-chroma-green.png",
+          "sha256": "f72ae53019d954137dceb0a7cc7ca238369115831d00c7374217def0e7774cdb",
+          "bytes": 1555994
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/first/creep-and-guard-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/final/creep-and-guard-light.png",
+          "sha256": "e13838a44d8457c3f0c88d00bdfca99bd3852f1e13f22f3af7015b4b3cb87548",
+          "bytes": 1588601
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/second/creep-and-guard-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/final/creep-and-guard-light.png",
+          "sha256": "e13838a44d8457c3f0c88d00bdfca99bd3852f1e13f22f3af7015b4b3cb87548",
+          "bytes": 1588601
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/first/creep-and-guard-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/final/creep-and-guard-green.png",
+          "sha256": "ef10f772268527bff0ea7553751ce4c65bed7a3f63bb424a2baa7ef141e09b7f",
+          "bytes": 1569189
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/second/creep-and-guard-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/debt-continuity-20260916/final/creep-and-guard-green.png",
+          "sha256": "ef10f772268527bff0ea7553751ce4c65bed7a3f63bb424a2baa7ef141e09b7f",
+          "bytes": 1569189
+        }
+      ],
+      "removed_bytes": 10351909
+    }
+  }
+}

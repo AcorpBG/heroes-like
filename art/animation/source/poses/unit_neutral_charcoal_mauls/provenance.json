@@ -1,0 +1,50 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_charcoal_mauls",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_charcoal_mauls.png",
+  "reference_sha256": "9219441a5b3d133aace3b9e5126a61ca156c596e827d5c0295da98a43b604ddd",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "554563daebe0ca8a3b07098888c1205d88a607ab8b7fe0505f116b841b44d490",
+      "source_output": "exec-ffb4be38-a1a0-4fe2-a639-908f43d833dc.png",
+      "prompt": "Use case: stylized-concept. Original Charcoal Maul battle animation sheet reference identity: broad dark-bearded man black headband red rune dark riveted iron armor red scarf/wrists/shin wraps ash-beige long forge apron dark geometric markings heavy iron boots belt basket charcoal. BOTH hands long dark metal maul shaft red grip wraps ring butt; large double block dark stone/iron head split by dim ember seam. Twelve full-body articulated poses FOUR columns THREE rows consistent scale elevated three-quarter facing RIGHT generous gutters. Row1 idle maul low diagonal; breathing alert shoulders beard shift; walk near leg forward far back maul low; passing knees beneath hips. Row2 opposite contact FAR leg forward NEAR back no torso mirroring; two-hand overhead windup bends knees head back overhead; strong downward strike completed maul head low screen RIGHT torso leans forward; defensive crouch shaft across chest. Row3 hit recoil; knees buckle maul lowers; side fall torso raised own full maul beside hands basket attached; final relaxed fully horizontal side corpse eyes CLOSED entire maul rests alongside body apron charcoal basket retained ember seams dark. Constant full shaft/head basket all frames actual articulated joints not repeated static poses or rotated upright corpse. Original painterly raster pale gray backdrop no shadows text grid particles smoke fire blood scenery.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "2405ed14950563ebc07a14baf83e30f239ef306d2f023ede3a7de7ff68a77114",
+      "alpha_output": "exec-b4912455-f462-42e7-b9a6-5d9e9b88edf3.png",
+      "alpha_prompt": "Use case: background-extraction. Extract twelve Charcoal Maul poses onto genuine transparent RGBA preserving exact layout scale full maul shafts heads ring butts charcoal baskets limbs armor apron and corpse. Remove pale gray backdrop and shadows only. One state correction bottom-right final corpse: extinguish bright orange maul seam and charcoal basket embers to dark dull material; eyes closed relaxed. No other redraw/no checkerboard cloudy matte halos reframing text effects."
+    }
+  ],
+  "review_notes": [
+    "Twelve poses/extraction visually inspected. Overhead windup/downward strike, guard and equipped collapse/corpse; corpse maul seam extinguished in extraction. Repeated walking contact/no passing; gait and two-hand grip/shaft/head-size continuity remain pending. Basket placement varies, including less-visible basket in some movement/hit poses; review occlusion and retain equipment. Final alpha-edge/full-motion review unaccepted; source only not packed/enabled. No tests/exports.",
+    "13 packed frames retain ten original paintings and select three new paintings: two-hand maul recovery, readiness and a guided planted passing step. Original overhead/downward strike, deep guard, hit and three head-left collapse/corpse states remain; final maul seam is dark.",
+    "The first three-pose output repeated a contact/unclear support instead of passing in its third pose, retained unselected. The subsequent passing output used a single phase authoring-only guide first and fixed original idle reference second. The guide is not shipped art; no local pose synthesis.",
+    "Approved bounded magenta cutouts and uniform scales 0.57/0.31/0.18 preserve paint. Inspected crop bands separate neighboring boots/maul ends without losing the overhead gripping hand. Complete atlas visually inspected.",
+    "Candidate only: full alternating gait, body mass, maul shaft/head/butt and basket/hand contact continuity, palette/edges and connected timing remain refinement. No automated/import/gameplay/Linux/Windows acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 10,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 2,
+    "generation": "art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_charcoal_mauls/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_charcoal_mauls/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_charcoal_mauls.png",
+    "runtime_sha256": "19c70a63b54031f6429d51f546a504edc5f083169e8a1f4cf8ac0145566e77f3",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_charcoal_mauls/alpha/poses.png": "2405ed14950563ebc07a14baf83e30f239ef306d2f023ede3a7de7ff68a77114",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-alpha/guided-planted-passing-step.png": "6da4a730018aef9efc7c428e819c4c4014d308f402d4ff45b19dc7b93617ef9f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-alpha/maul-recovery-ready-and-passing.png": "95e9aa892af997cb3d5b9d19eee02265e99f93253bb9a9a3f1cfb5ee87f67e9b"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/charcoal-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

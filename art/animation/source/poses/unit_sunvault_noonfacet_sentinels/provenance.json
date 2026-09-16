@@ -1,0 +1,127 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_sunvault_noonfacet_sentinels",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "runtime_candidate_pending_consolidated_validation",
+  "reference": "art/units/source/curated/unit_sunvault_noonfacet_sentinels.png",
+  "reference_sha256": "ffe6710668b1ecaea7aa352a68f334c7fc8246ff615cd9c00bc0565e419729af",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/poses.png",
+      "source_sha256": "6b1e22d09194686b8b934dfcc006aeef55c2bc8bb272746aad0abe2887124ada",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a7aec23d-f39f-4c0d-a30c-aa9523ba1819.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle animation sheet. Reference defines ONE Noonfacet Sentinel, humanoid in ivory faceted plate with gold edges, closed angular gold/ivory helmet, black joints, long ivory tabard with gold trim and blue side cloth. Anatomical RIGHT hand holds long dark shaft topped with huge gold sunburst and TWO upward silver prism blades, ivory streamer hanging from head. LEFT arm bears tall pointed faceted mirror shield with gold border and central sun medallion. Preserve precise weapon/shield design and full armor. Exactly TWELVE full-body articulated poses in FOUR columns THREE rows, constant body size, fixed elevated three-quarter view facing screen-right. Generous clear margins for complete tall weapon and shield. Genuine transparent RGBA background no painted checkerboard, scene, floor, grid or labels. Row1: idle settled; idle shoulders breathe shield shifts and cloth sways; walk right foot forward left behind; opposite walk LEFT foot forward RIGHT behind, visibly reverse leg lead. Row2: passing raised foot under hips; wind-up RIGHT polearm lifted behind shoulder LEFT shield guarding; attack RIGHT polearm chops down-forward toward screen-right target LEFT shield held close; defense shield raised in front helmet weapon lowered safely to side. Row3: hit recoil torso back shield recoils; dying kneels head bows equipment lowers; side fall hips knees bend with shield and polearm landing alongside; dead side-lying inert armor with both shield and entire polearm beside body, no magical glow, cloth limp. Exactly two arms two legs and one polearm one shield, no duplication. Constant polearm length shield height, all gear retained. Actual articulated joints not rotated standing cutouts. Original art only no copyrighted franchise assets.",
+      "alpha_source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/alpha/poses.png",
+      "alpha_sha256": "39a0c5a7ebef0497cebe41917ce977d930d33f453f6f19e7481324ade8b269ee",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-06c830c5-5899-486f-b20e-37c61adeffd6.png",
+      "alpha_prompt": "Use case: background-extraction. Remove ONLY checkerboard from supplied twelve-pose Noonfacet Sentinel sheet to genuine transparent RGBA. Preserve all twelve painted armored figures, complete polearms/shields/streamers, poses, positions, scale, colors, canvas and corpse exactly. No repainting, no replacement backdrop, no painted checkerboard, no colored edge matte."
+    }
+  ],
+  "review_notes": [
+    "Four new guided contact/passing poses alternate support legs and keep right polearm/left shield ownership.",
+    "New two-frame shield brace retains tall twin-bladed polearm; shortened original guard omitted. Lower collapse corrected for polearm-to-body scale and joins original kneeling/seated/final corpse.",
+    "Packed composite inspected: body anchors and scale corrected, disjoint idle/windup/hit crops exclude neighboring boots and tall weapon tips.",
+    "Candidate only, not final motion acceptance. Exact source masters, rejected oversize collapse, prompts and local recipes retained; no gameplay/save/size-profile changes."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses retain polearm and shield through attack/guard/death.",
+    "Walking contacts repeat leading leg; idle subtle. Passing needs transition to genuinely opposite contact.",
+    "Polearm shortens markedly in guard and rear shaft obscured in attack; length/grip and streamer continuity need correction.",
+    "Shield height/width, armor proportions and sunburst head vary across poses. Falling intermediate is seated and requires stronger collapse articulation.",
+    "Tall weapon nearly touches top edge and wide corpse right edge; explicit margins/crops needed. Extraction colored fringes and detail changes unaccepted.",
+    "Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "sources": [
+      {
+        "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/walk-contact-a.png",
+        "source_sha256": "e85f769ad72ddb2b143ab3a3e215555d37dc2bbd170fbd7f4631b524f0db14ac",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2afb61de-4644-441a-afec-45b865378e2b.png",
+        "prompt": "Use case: sketch-to-render. ONE original Noonfacet Sentinel battle sprite walking contact A. Image1 is the authoritative near/far leg pose guide, replace its drawing with character art. Image2 is armor/equipment identity only, NOT leg pose; ignore tiny unrelated fragment at bottom edge. BLUE guide leg = near RIGHT leg extends FORWARD toward screen-right, crossing in front of the far leg, heel lands. ORANGE = far LEFT leg extends BEHIND toward screen-left, toe pushing off. Torso stays elevated three-quarter facing screen-right. Closed angular ivory/gold helmet, no visible face; faceted ivory plate, gold trim, black joints, ivory gold-trimmed tabard and dark navy side cloth. ONE tall polearm in RIGHT near hand at screen-left, dark straight shaft, gold sunburst head with circular silver center and EXACTLY TWO upward silver prism blades, one ivory-gold streamer below head. Keep full original polearm length, taller than wearer, lower shaft extending below hand to near ankle; held upright slightly leaning left. ONE tall pointed faceted mirror shield on LEFT far arm at screen-right, gold border and large central sun medallion. Same armor proportions, shield, polearm and streamer, no equipment swaps. Split cloth shows crossed-leg ownership, exactly two feet. Original crisp painterly raster game art matching identity. Plain uniform neutral gray #808080 background for later local cutout; no guide colors, text, checkerboard, shadows, ground, motion effects or other figures. Generous margins around entire tall weapon, shield and boots.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/walk-passing-a.png",
+        "source_sha256": "5cccf7dab4d20c737f2e868e21e2b1c83d8d839003c640f2689d352d1fd7a34d",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f5f7a470-bdd4-4b2e-becd-75ac21fd4a8c.png",
+        "prompt": "Use case: sketch-to-render. ONE Noonfacet Sentinel full-body battle walking pose. Image1 is authoritative leg/body pose guide; replace drawing with painted character maintaining near/far leg geometry. Image2 establishes identity ONLY, not leg pose; ignore tiny unrelated bottom fragment. Passing A: BLUE/near RIGHT leg is straight planted support under hip. ORANGE/far LEFT thigh swings forward towards screen-right, knee bends, far boot visibly lifted behind near calf. Legs close together with raised far foot, not a broad stride. Fixed elevated three-quarter camera, torso/head face screen-right. Cloth parts enough to show actual near/far knee and boot ownership. Closed angular ivory/gold helmet, faceted ivory plate gold trim, black joints, ivory gold-trimmed tabard/navy side cloth. RIGHT near hand at screen-left holds ONE tall upright dark-shaft polearm with gold sunburst circular silver center, EXACTLY TWO upward silver prism blades, single ivory-gold streamer below head. Polearm taller than wearer, full shaft continues below grip to ankle. LEFT far arm at screen-right carries ONE tall pointed faceted mirror shield, gold border central sun medallion. No swapped equipment, no duplicated limbs. Match original armor/body/weapon proportions. Plain uniform neutral gray #808080 background for local cutout, no checkerboard, floor, shadow, effects, labels or guide colors. Crisp original painted raster sprite, one full figure with generous margins around both weapon ends, shield and feet.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/walk-contact-b.png",
+        "source_sha256": "526df0862aebff64a3eace8eaa1e89e3ab1da578e39f21f1d0419966cbae52d5",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d52a20de-9bfa-47bc-b081-6ad2e3bf85de.png",
+        "prompt": "Use case: sketch-to-render. ONE Noonfacet Sentinel full-body battle walking pose. Image1 is authoritative leg/body pose guide; replace drawing with painted character maintaining near/far leg geometry. Image2 establishes identity ONLY, not leg pose; ignore tiny unrelated bottom fragment. Contact B: BLUE/near RIGHT leg extends BEHIND to screen-LEFT, its knee clearly LEFT of belt center and toe planted far left. ORANGE/far LEFT leg extends FORWARD to screen-RIGHT, knee RIGHT of belt center, heel landing far right. Open uncrossed A-shaped stride, opposite of near-leg-forward. Do NOT mirror torso or exchange legs. Fixed elevated three-quarter camera, torso/head face screen-right. Cloth parts enough to show actual near/far knee and boot ownership. Closed angular ivory/gold helmet, faceted ivory plate gold trim, black joints, ivory gold-trimmed tabard/navy side cloth. RIGHT near hand at screen-left holds ONE tall upright dark-shaft polearm with gold sunburst circular silver center, EXACTLY TWO upward silver prism blades, single ivory-gold streamer below head. Polearm taller than wearer, full shaft continues below grip to ankle. LEFT far arm at screen-right carries ONE tall pointed faceted mirror shield, gold border central sun medallion. No swapped equipment, no duplicated limbs. Match original armor/body/weapon proportions. Plain uniform neutral gray #808080 background for local cutout, no checkerboard, floor, shadow, effects, labels or guide colors. Crisp original painted raster sprite, one full figure with generous margins around both weapon ends, shield and feet.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/walk-passing-b.png",
+        "source_sha256": "447c0305bed6785ef830122b8b5d1a3357e22ae83bcfe9fbf1e1ba39113269c2",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-3385ae4c-ca5c-4a58-85c7-fa7431a8482d.png",
+        "prompt": "Use case: sketch-to-render. ONE Noonfacet Sentinel full-body battle walking passing B. Image1 is authoritative limb pose guide; paint character onto it, preserve near/far leg geometry. Image2 is armor/equipment identity only, NOT standing pose, ignore tiny unrelated bottom fragment. BLUE guide leg = near RIGHT thigh swings forward to screen-right crossing in front of far thigh, knee bent, near shin folds back, boot clearly suspended off ground in front of far calf. ORANGE guide leg = far LEFT leg straight planted beneath hip, full sole on ground. Legs close together, NOT wide stride, exactly one lifted foot. Fixed elevated three-quarter camera torso/head facing screen-right. Closed angular ivory/gold helmet, faceted ivory/gold plate, black joints, ivory gold tabard navy side cloth. RIGHT near hand at screen-left holds ONE tall upright dark-shaft polearm: gold sunburst circular silver center, exactly TWO upward silver prism blades, single ivory-gold streamer; full shaft below hand to ankle. LEFT far arm at screen-right carries ONE pointed faceted mirror shield gold edge and central sun medallion. Preserve weapon length greater than wearer's height, all equipment identity, original armor/body proportions. Split cloth reveals the crossed raised knee and planted far shin. Crisp painterly original raster sprite. Plain uniform neutral gray #808080 background for later local cutout; generous clear margins around entire weapon, helmet, shield, boots. No diagram colors/lines, text, effects, checkerboard, ground, shadow or extra figures.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/defense-pair.png",
+        "source_sha256": "5434a44f43a5ab6177b2c900934e7898d766590ff5b5e576b06cf4ea8109587f",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-da47be11-1cfc-4619-b01d-65997a6bde7e.png",
+        "prompt": "Use case: stylized-concept. Original tactical battle sprite mini-sheet: exactly TWO full-body Noonfacet Sentinel defensive poses side-by-side, broad clear gutter, consistent body and equipment size. Reference establishes exact character identity and full weapon proportions only; ignore tiny stray fragment at its bottom edge. BOTH poses: closed ivory/gold angular helmet and faceted plate with black joints, ivory/navy gold-edged tabard, planted wide braced feet and lowered bent knees. LEFT far forearm holds tall pointed faceted mirror shield forward covering chest and part of helmet, gold edge and central sun medallion; shield remains visibly attached to left arm. RIGHT near hand at screen-left retains ONE FULL-LENGTH polearm upright tilted slightly outward to screen-left, not a short mace: dark shaft continues well below fist toward ground, gold sunburst circular silver center, EXACTLY TWO long silver prism points at top, one ivory-gold streamer. Polearm identical length in both poses, taller than the STANDING armored character despite crouch. LEFT image: deep shield brace, head tucked. RIGHT image: small defensive inhale shoulders and helmet lift slightly, knees a little less bent, shield tilts inward about five degrees; polearm grip unchanged, streamer sways subtly. Not walking, no hand/equipment swap. Fixed elevated three-quarter view facing screen-right, original crisp painterly raster style matching identity. Plain uniform neutral gray #808080 background for local cutout, generous margin around all polearm tips, shield, boots. No cropping, overlap, checkerboard, shadows, floor, captions, effects, extra limbs or other characters. TWO clearly separated complete poses only.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/collapse-low.png",
+        "source_sha256": "368cdbe6e72344854936596789cf41d8735bc2e3af983ca36bc51c0ce2ef551d",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-50db9c57-2e78-4b84-97d3-7966ddc1aca5.png",
+        "prompt": "Use case: stylized-concept. ONE original Noonfacet Sentinel battle death-collapse sprite, intermediate between seated collapse and the fully prone corpse in Image2. Image1 establishes exact standing armor, polearm and shield design. Image2 establishes the final side-lying corpse orientation and equipment rest positions. Show the same ivory/gold faceted armored sentinel falling onto its near RIGHT side: hips and bent legs on ground, torso low tilted diagonally about 30 degrees above horizontal, helmet bowed toward its right elbow, RIGHT elbow nearing ground to break fall, RIGHT hand loosely retains ONE long polearm shaft low across the foreground. LEFT forearm still wears ONE tall pointed mirror shield, tipped almost flat across flank and bent legs. Do not make an upright sitting pose; shoulder and helmet only slightly above hips, visibly losing support. Closed helmet, black joint cloth, limp ivory/navy gold-edged tabard, no face/gore. Entire polearm rests nearly horizontal across foreground, dark shaft FULL original length, gold sunburst circular silver center and EXACTLY TWO silver prism blades at screen-right, single limp ivory streamer. Full weapon and shield retained, no disappearing or duplicated gear/arms. Match original anatomy and armor, fixed elevated three-quarter view consistent with final corpse. Original crisp painterly raster art. Plain uniform neutral gray #808080 background for local cutout, no painted floor or shadow, no checkerboard, effects, text or extra figures. Generous margins around all armor, shield and entire horizontal polearm.",
+        "selection": "rejected_oversized_polearm"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/collapse-low-corrected.png",
+        "source_sha256": "b6b1158f6a21384c138cdcbc16c0e603a849cc885ee298b0f697c9a675d6f7d5",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f885bdac-5343-4723-a448-1532f4c30437.png",
+        "prompt": "Use case: precise-object-edit. Correct ONLY polearm proportions in Image1, the low collapsed Noonfacet Sentinel. Image2 final corpse establishes the correct weapon-to-body ratio. Keep Image1's armored body, helmet, shield, bent legs, right gripping hand, cloth, camera and canvas EXACTLY unchanged. The current polearm shaft is much too long relative to this body. Shorten the DARK SHAFT while retaining identical gold sunburst head size, exact TWO silver blades and ivory streamer. Move the gold head LEFT along the foreground so its farthest silver tip ends approximately level with the armored boot at the right edge of the body, and move the butt end RIGHT to just left of the supporting right elbow. Overall polearm horizontal extent should be only about 1.1 times the collapsed body's horizontal extent, like Image2, not 1.8 times. RIGHT glove remains at the same location gripping the same shaft; straight continuous shaft from butt through glove to head, no detached or duplicated parts. Head/streamer rest below foreground as before, not over torso, no change to head or hand anatomy. Preserve opaque ivory/gold painted interiors and neutral gray #808080 background. No other pose or equipment change, no text, effects, shadows or extra objects. Single full painted original game sprite.",
+        "selection": "packed_candidate"
+      }
+    ],
+    "reference_crops": [
+      {
+        "source": "alpha/poses.png",
+        "rect": [
+          0,
+          0,
+          359,
+          375
+        ],
+        "output": "identity-reference.png"
+      },
+      {
+        "source": "alpha/poses.png",
+        "rect": [
+          1084,
+          892,
+          1448,
+          1086
+        ],
+        "output": "dead-reference.png"
+      }
+    ],
+    "reference_roles": {
+      "walking": "Single biped near/far-limb guide first; original idle crop second supplies equipment and armor only.",
+      "defense": "Original idle identity, two related shield-brace phases painted together to preserve full-length polearm.",
+      "collapse": "Idle and corpse references establish identity/rest orientation. Targeted follow-up changes oversized shaft proportions only; rejected master retained."
+    },
+    "original_alpha_sha256": "39a0c5a7ebef0497cebe41917ce977d930d33f453f6f19e7481324ade8b269ee",
+    "preparation": "Owner-approved local neutral matte via continuity-cutouts.json; inspected enclosed arm/shaft background seeds, per-output source/tool/recipe/output hashes. Original alpha sheet reused unchanged.",
+    "packing": "packing.json",
+    "runtime_sheet": "art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
+    "runtime_sha256": "fc98ef49290b26813263925e2d100a6ba58e8919688f2d15fb83fe46cbc63519",
+    "frames": 15,
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/noonfacet-continuity-20260915/",
+    "validation": "Production assembly and actual alpha-composite review only. Final connected battle timing, cross-sheet equipment/body/streamer continuity and platform acceptance remain deferred; no tests/imports/exports."
+  }
+}

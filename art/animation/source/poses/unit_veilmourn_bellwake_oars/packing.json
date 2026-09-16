@@ -1,0 +1,380 @@
+{
+  "unit_id": "unit_veilmourn_bellwake_oars",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_right_corrected",
+      "source": "continuity-alpha/poses-shaft-and-gaze-corrected.png",
+      "rects": [
+        [
+          0,
+          0,
+          372,
+          383
+        ]
+      ],
+      "anchor": [
+        185,
+        376
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_b",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          400,
+          0,
+          745,
+          383
+        ]
+      ],
+      "anchor": [
+        564,
+        373
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_contact",
+      "source": "continuity-alpha/guided-walk-and-guards.png",
+      "rects": [
+        [
+          0,
+          0,
+          527,
+          514
+        ]
+      ],
+      "anchor": [
+        274,
+        506
+      ],
+      "scale": 0.455
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "continuity-alpha/guided-walk-and-guards.png",
+      "rects": [
+        [
+          597,
+          0,
+          1027,
+          514
+        ]
+      ],
+      "anchor": [
+        785,
+        506
+      ],
+      "scale": 0.455
+    },
+    {
+      "name": "walk_planted_bridge",
+      "source": "continuity-alpha/guided-walk-and-guards.png",
+      "rects": [
+        [
+          1057,
+          0,
+          1536,
+          515
+        ]
+      ],
+      "anchor": [
+        1272,
+        506
+      ],
+      "scale": 0.455
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "continuity-alpha/guided-walk-and-guards.png",
+      "rects": [
+        [
+          0,
+          517,
+          530,
+          1024
+        ]
+      ],
+      "anchor": [
+        275,
+        1006
+      ],
+      "scale": 0.455
+    },
+    {
+      "name": "melee_windup",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          405,
+          380,
+          741,
+          714
+        ]
+      ],
+      "anchor": [
+        568,
+        704
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "melee_release",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          748,
+          412,
+          1187,
+          704
+        ],
+        [
+          1187,
+          495,
+          1259,
+          560
+        ]
+      ],
+      "anchor": [
+        922,
+        691
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "guard_a",
+      "source": "continuity-alpha/guided-walk-and-guards.png",
+      "rects": [
+        [
+          542,
+          525,
+          1023,
+          1024
+        ]
+      ],
+      "anchor": [
+        760,
+        994
+      ],
+      "scale": 0.455
+    },
+    {
+      "name": "guard_b",
+      "source": "continuity-alpha/guided-walk-and-guards.png",
+      "rects": [
+        [
+          1027,
+          525,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1272,
+        996
+      ],
+      "scale": 0.455
+    },
+    {
+      "name": "hit",
+      "source": "continuity-alpha/poses.png",
+      "rects": [
+        [
+          0,
+          720,
+          399,
+          1024
+        ],
+        [
+          0,
+          710,
+          184,
+          720
+        ],
+        [
+          225,
+          710,
+          399,
+          720
+        ]
+      ],
+      "anchor": [
+        220,
+        1004
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_kneel_one_shaft",
+      "source": "continuity-alpha/connected-kneel-fall-corpse.png",
+      "rects": [
+        [
+          0,
+          0,
+          726,
+          626
+        ],
+        [
+          726,
+          474,
+          767,
+          626
+        ]
+      ],
+      "anchor": [
+        352,
+        552
+      ],
+      "scale": 0.32
+    },
+    {
+      "name": "death_side_fall",
+      "source": "continuity-alpha/connected-kneel-fall-corpse.png",
+      "rects": [
+        [
+          769,
+          183,
+          1536,
+          627
+        ],
+        [
+          728,
+          350,
+          769,
+          425
+        ]
+      ],
+      "anchor": [
+        1124,
+        557
+      ],
+      "scale": 0.32
+    },
+    {
+      "name": "death_settle",
+      "source": "continuity-alpha/connected-kneel-fall-corpse.png",
+      "rects": [
+        [
+          0,
+          628,
+          770,
+          1024
+        ]
+      ],
+      "anchor": [
+        385,
+        930
+      ],
+      "scale": 0.32
+    },
+    {
+      "name": "dead_cold_lantern",
+      "source": "continuity-alpha/connected-kneel-fall-corpse.png",
+      "rects": [
+        [
+          770,
+          628,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1146,
+        930
+      ],
+      "scale": 0.32
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 5,
+      "indices": [
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        14
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

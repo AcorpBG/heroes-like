@@ -1,0 +1,411 @@
+{
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          308,
+          323
+        ]
+      ],
+      "anchor": [
+        150,
+        314
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          309,
+          0,
+          624,
+          323
+        ]
+      ],
+      "anchor": [
+        454,
+        317
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "contact_original",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          626,
+          0,
+          938,
+          331
+        ]
+      ],
+      "anchor": [
+        779,
+        319
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "passing_original",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          324,
+          311,
+          632
+        ]
+      ],
+      "anchor": [
+        168,
+        610
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "contact_attempt",
+      "source": "continuity-alpha/four-phase-step-left-lamp-and-left-corpse-blue.png",
+      "rects": [
+        [
+          0,
+          0,
+          511,
+          493
+        ]
+      ],
+      "anchor": [
+        241,
+        450
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "passing_a",
+      "source": "continuity-alpha/four-phase-step-left-lamp-and-left-corpse-blue.png",
+      "rects": [
+        [
+          512,
+          0,
+          1023,
+          493
+        ]
+      ],
+      "anchor": [
+        682,
+        451
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "passing_b_attempt",
+      "source": "continuity-alpha/four-phase-step-left-lamp-and-left-corpse-blue.png",
+      "rects": [
+        [
+          0,
+          494,
+          511,
+          1024
+        ]
+      ],
+      "anchor": [
+        188,
+        921
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "melee_windup_corrected",
+      "source": "alpha/melee-windup.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        644,
+        1205
+      ],
+      "scale": 0.177
+    },
+    {
+      "name": "lamp_melee_contact",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          628,
+          330,
+          983,
+          633
+        ]
+      ],
+      "anchor": [
+        781,
+        619
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "lamp_melee_recovery",
+      "source": "continuity-alpha/four-phase-step-left-lamp-and-left-corpse-blue.png",
+      "rects": [
+        [
+          512,
+          494,
+          928,
+          1024
+        ]
+      ],
+      "anchor": [
+        694,
+        928
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "guard_hood",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          984,
+          333,
+          1254,
+          633
+        ]
+      ],
+      "anchor": [
+        1100,
+        609
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "lamp_gather",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          633,
+          311,
+          944
+        ]
+      ],
+      "anchor": [
+        149,
+        919
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "lamp_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          313,
+          627,
+          624,
+          944
+        ]
+      ],
+      "anchor": [
+        482,
+        925
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "lamp_release",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          626,
+          634,
+          966,
+          946
+        ]
+      ],
+      "anchor": [
+        788,
+        926
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "lamp_reload",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          967,
+          634,
+          1254,
+          945
+        ]
+      ],
+      "anchor": [
+        1109,
+        926
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          312,
+          950,
+          582,
+          1254
+        ]
+      ],
+      "anchor": [
+        453,
+        1187
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_side_fall",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          584,
+          1036,
+          905,
+          1235
+        ]
+      ],
+      "anchor": [
+        742,
+        1184
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "dead_head_left",
+      "source": "continuity-alpha/four-phase-step-left-lamp-and-left-corpse-blue.png",
+      "rects": [
+        [
+          929,
+          701,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1193,
+        938
+      ],
+      "scale": 0.43
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 430,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 6,
+      "indices": [
+        2,
+        3,
+        4,
+        5,
+        4,
+        6
+      ],
+      "loop": true,
+      "frame_msec": 145,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        7,
+        8,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 1
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        10,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        15,
+        16,
+        17
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        17
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  },
+  "unit_id": "unit_neutral_sporelamp_tossers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

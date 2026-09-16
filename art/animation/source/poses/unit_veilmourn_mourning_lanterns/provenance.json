@@ -1,0 +1,132 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_mourning_lanterns",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_mourning_lanterns.png",
+  "reference_sha256": "b12f75e6b7b7419544194b3dd22ca672fce76207ab988c46025755d81e87591b",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/poses-death-lamps-dark.png",
+      "source_sha256": "342f712ec35c19b7ff5f3df73249a5a0c7ef1eff2f61e482540c85aac3f70c86",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-db380987-5674-411c-95b6-daba893ffa5a.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY lighting inside the lamps in BOTTOM ROW FOUR sprites of this original Mourning Lantern 4x4 sheet. Each death sprite has TWO hanging staff lamps and ONE handheld reflector lamp; keep all three exact objects and bodies. Bottom row column1: reduce all three lamp interiors to faint brown amber, no bright yellow centers. Bottom row columns2,3,4: all lamp interiors dark smoky brown glass, completely extinguished, no yellow orange light centers. Retain ordinary metal/glass reflections, cages, reflector flaps and staff, clothing faces poses positions and scale EXACTLY. Other twelve sprites unchanged, preserve original background. Do not darken whole characters, only lamp interiors. No text or added effects.",
+      "review": "Select frames13-16 only. All three lamp interiors dark brown without bright yellow centers through kneeling/fall/corpse, with restored handheld lantern retained. Intended progressive dimming is visually near-uniform; assembly timing, geometry continuity and alpha remain unaccepted. Other frames not selected; not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/poses-kneeling-lantern.png",
+      "source_sha256": "443cf48d987ae687e264465e823707ff45d641ce515bfdfc87000eab9a0dc85a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-efcfebd5-4e2c-4c14-8e38-dc72a89a7328.png",
+      "prompt": "Use case: precise-object-edit. Edit original Mourning Lantern 4x4 battle sheet. Change ONLY bottom row first TWO sprites (death frames13 and14). Restore missing handheld search lantern beside her anatomical LEFT hand (screen-right hand) in each. Same compact dark brass lantern with round lens and four rectangular reflector flaps as idle frame1. Frame13 lantern hangs loosely from left hand beside knee, lens dim amber; frame14 lantern rests on ground immediately beside left knee/hand, lens dull brown unlit. Keep existing tall staff and its TWO hanging lamps, so each sprite has THREE lamps total. Preserve woman kneeling poses, faces, two hands, costume, staff size and all other fourteen frames. No extra props or text. Same grid scale camera and background.",
+      "review": "Select frames13/14 only. Handheld reflector lantern restored beside anatomical left hand/knee in both kneeling death poses, retaining staff with two hanging lamps. Frame14 handheld lens duller, but staff lamps remain bright and frame13 lens still luminous. Further death dimming, grip/scale continuity, gait and alpha pending. Other generated frames unselected; not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/poses.png",
+      "source_sha256": "729198c8ebcbebc43e51b7467406d3d5f6e87ddc82fffdeb7bd7c9f035a54651",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-407c15be-6f3a-48bb-9b29-bbb7210c6975.png",
+      "prompt": "Use case: stylized-concept. Original painted fantasy battle animation sprite sheet. Reference defines ONE Mourning Lantern woman: brown hair tied bun, gray-green hooded mantle, black leather layered long coat, dark trousers boots, belts rope and silver mirror charms. Anatomical RIGHT hand (viewer left in reference) holds tall dark crook staff with TWO hanging amber lamps at top (one long narrow and one round diamond cage), small square mirror plates and tattered green cloth. Anatomical LEFT hand carries separate handheld brass search lantern with round amber lens and four square reflector flaps. Preserve costume, face, equipment counts, staff height and lantern design. Create SIXTEEN full-body articulated poses in 4 equal columns x 4 rows, generous empty gutters and complete equipment inside cells. Fixed elevated three-quarter camera facing screen right, constant character size. Genuine transparent RGBA, no painted checkerboard, scenery, floor, grid or text. Row1: idle settled; idle shoulders breathe lamps gently swing; walk right leg leading left behind; walk LEFT leg leading RIGHT behind, truly opposite contact. Row2: passing stride lifted foot beneath pelvis; melee wind-up LEFT lantern hand retracts to chest RIGHT staff planted; melee shove LEFT lantern arm extended forward at enemy screen-right, RIGHT hand retains staff; defense lowers head behind left reflector lantern while staff braced. Row3: ranged aim left lantern points screen-right right staff remains held; ranged flash small amber light only at hand-lantern lens, both arms stay anatomically attached; ranged recovery left elbow drops slightly; hit recoil torso back knees bending. Row4: death knee buckles eyes closing lanterns dim; death kneels head bowed arms slack equipment lowering; side fall bent knees and hips all gear landing beside; dead side-lying woman eyes CLOSED all THREE lamps extinguished, staff and handheld lantern beside body, no detached duplicate props. Exactly two hands, same ownership throughout. No whole-body affine tricks, change actual joints and cloth. Original art not copyrighted franchise assets.",
+      "alpha_source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/alpha/poses.png",
+      "alpha_sha256": "560ff94126264c8c8245bd9099486608d789b847a1e9830fceb1a19a3da5651e",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ed77ffc5-113a-4126-92f8-ca3b02a6eb36.png",
+      "alpha_prompt": "Use case: background-extraction. Edit the supplied sixteen-pose Mourning Lantern sheet. Remove only checkerboard to actual transparent RGBA pixels. Preserve all sixteen painted figures exactly including staff lamps, mirrors, handheld lantern, cloth, faces, gear, positions, sizes and canvas. Keep the last corpse lamps dark. Do not repaint or replace the background with a color or gradient. No baked checkerboard or edge matte."
+    }
+  ],
+  "review_notes": [
+    "19-frame candidate reuses nine original paintings and ten new travel/guard/release/recoil/equipped-kneel paintings from two built-in outputs.",
+    "Death keeps the left-hand projector throughout two knees/grounding poses, then the original head-right fall and persistent cold corpse. Original kneels that omitted the projector and baked-flash ranged frame are excluded.",
+    "Original source named alpha/poses.png is RGB checker-backed and not selected. Genuine RGBA equipped-kneels-and-recoil is reused without rekeying; other selected sheets use owner-approved explicit aperture keys.",
+    "Inspected staff crook/arm/robe apertures are background, while framed white reflectors remain painted glass. Banded cropping removes neighboring staff heads and boots.",
+    "Repeated leading contacts are not accepted gait. Body/staff/projector scale and grip, crouch-to-upright staff transitions, lantern intensity, support/travel and event timing remain full-roster refinement. Static previews are not final playback acceptance."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses include handheld lantern aim/flash, left-arm shove, defense and fallen body.",
+    "Walking contacts repeat lead; passing stride also extended contact rather than under-pelvis passing. Idle differentiation subtle.",
+    "Kneeling poses obscure or omit handheld lantern; preserve three lamps and hand ownership throughout.",
+    "Staff height, mirror count, lantern scale and dimming continuity require refinement. Final lamp lenses retain amber coloring and need clear inactive presentation.",
+    "Extraction still displays checkerboard; actual transparency not established and must be resolved before integration. Source only, not packed or enabled. 29 candidates and final acceptance 0/160 unchanged; no tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "edited_retained_paintings": 0,
+    "new_selected_paintings": 10,
+    "generated_outputs": 2,
+    "generation": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+    "runtime_sha256": "6c7d96bda20fa59c1373da427fa7ae1214fae2ffb6f89467f8c4043758c21ef9",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/poses.png": "08f89b878251b9e8afe5642a0eae7179395faebf1d458e11bcbc25903927d7f3",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/guided-travel-guards-and-release.png": "cef476c4fb2e40840a66519cf946f92ed02ba1826296b049640e01f534a2a107",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mourning_lanterns/equipped-kneels-and-recoil.png": "d70278c48864898d0a2ce05db528735d17814fe284b83637ae9a0fa1e366b861"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "policy": "Removed only exact byte-identical task preview copies after SHA-256 and no-live-handle checks. Identical retained copies permit restoration. Used generation references, original/rejected masters, unique evidence, processing proofs, caches and unrelated artifacts remain.",
+      "duplicates_removed": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/original-alpha/unit_veilmourn_mourning_lanterns-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/original-alpha/unit_veilmourn_mourning_lanterns-poses-light.png",
+          "sha256": "93db1896574a401965c0b2edd085388b77b0bd101511df86928a88428431cfbc",
+          "bytes": 2680962
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/final-cutouts/guided-travel-guards-and-release-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/last-gap/guided-travel-guards-and-release-light.png",
+          "sha256": "eb8a8a465c1914929dfc9dedde203886738301595d242555e9c176dad2ff6973",
+          "bytes": 1167756
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/gap-cleaned/guided-travel-guards-and-release-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/last-gap/guided-travel-guards-and-release-light.png",
+          "sha256": "eb8a8a465c1914929dfc9dedde203886738301595d242555e9c176dad2ff6973",
+          "bytes": 1167756
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/final-cutouts/guided-travel-guards-and-release-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/last-gap/guided-travel-guards-and-release-green.png",
+          "sha256": "ba1e262c139e77da76df90cad1ee27006d7ce549d3284c2e5d517ee10ac3b44d",
+          "bytes": 1138009
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/gap-cleaned/guided-travel-guards-and-release-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/last-gap/guided-travel-guards-and-release-green.png",
+          "sha256": "ba1e262c139e77da76df90cad1ee27006d7ce549d3284c2e5d517ee10ac3b44d",
+          "bytes": 1138009
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/identity-v3/unit_veilmourn_mourning_lanterns-poses-rect-0-0-302-366-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mourning_lanterns/identity-reference-v3.png",
+          "sha256": "4662eb71ec15a09d4bdee879cc4a88123a0cce5dc4fac1923b056c45e0fd3c72",
+          "bytes": 600280
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/identity-v2/unit_veilmourn_mourning_lanterns-poses-rect-0-0-302-366-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mourning_lanterns/identity-reference-v2.png",
+          "sha256": "78efbcdd20c4d0f31386a6fd3444cf980c9752dec15e3007e337423d534e5302",
+          "bytes": 607766
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/identity/unit_veilmourn_mourning_lanterns-poses-rect-0-0-302-366-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mourning_lanterns/identity-reference.png",
+          "sha256": "cd81fe8bbcf9bfa69099d6500462f9e0b755b89bec8924ed065f5f63d6aed7a3",
+          "bytes": 617494
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/crook-detail/poses-poses-rect-24-689-99-785-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/lantern-continuity-20260916/crook-detail/poses-poses-rect-24-689-99-785-light.png",
+          "sha256": "5474f44d720a2da031e57c28452aeac95e449fa9ec966d2edab946216daa425c",
+          "bytes": 25438
+        }
+      ],
+      "removed_bytes": 9143470
+    }
+  }
+}

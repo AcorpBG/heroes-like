@@ -1,0 +1,48 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_switchback_pikes",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_switchback_pikes.png",
+  "reference_sha256": "c600e879ac720e35f3f55f73a97ea3217ac14e323545a4d5009a2a0963ed57bd",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "87327f586fc04da874fdffc020c657aeef1cc449266c94e999458a6a00c27ab5",
+      "source_output": "exec-5cc03ff4-0df7-46c6-aab6-c4e8a628da5b.png",
+      "prompt": "Use case: stylized-concept. Original Switchback Pike battle animation sheet matching reference: bearded mountain guide feathered green brim hat, green scarf, layered gray wool mantle green edging, gray tunic/trousers, leather gauntlets, brown climbing boots crampons, rope coil over shoulder, backpack bedroll and metal cup. LONG straight wooden pike steel pointed head with two small side hooks, butt spike. BOTH hands grip same pike, no shield. Twelve full-body articulated poses FOUR columns THREE rows, same elevated three-quarter view facing RIGHT, consistent scale generous gutters complete pike/boots. Row1 idle diagonal pike; alert shoulders breath; walking long contact near leg forward; passing knee bent under hip feet close. Row2 opposite contact near thigh backward crossing far forward thigh, same torso not mirrored; attack windup pike horizontal drawn back two hands spaced elbows bent; attack full two-hand thrust RIGHT front knee bends torso leans forward; deep defensive crouch pike braced diagonally across chest. Row3 hit recoil; dying knees buckle pole lowers; side fall low torso; dead relaxed horizontal SIDE eyes shut backpack retained, pike intact resting flat alongside hands. Preserve hat/rope/backpack in every frame and rigid weapon length. Real articulated arms/legs, no copied upright poses or rotated standing corpse. Original painterly raster, pale gray background no shadows/grid/text/blood/effects/scenery.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "36a5a787ef43c9e02e51d831a4af0a0fac7e1057851c3ba6c5ffd7584045093d",
+      "alpha_output": "exec-56e6f97a-276e-4c9c-913f-8d93ea7f3038.png",
+      "alpha_prompt": "Use case: background-extraction. Extract twelve original Switchback Pike poses onto genuinely transparent RGBA. Remove gray only, preserve exact positions/body scale, pike tips and shafts, crampon spikes, hat feathers/backpack/rope, limb gaps and corpse. No checkerboard/matte/shadows/text/effects/redraw/reframing."
+    }
+  ],
+  "review_notes": [
+    "Twelve original poses and extraction visually inspected. Two-hand attack anticipation/thrust, crouched defense, side-fall and relaxed corpse retain guide equipment. Movement grip/contact alternation, pike-length/hand continuity, corpse expression and per-frame long-weapon crops need refinement/review. Source-only not packed/enabled; full-motion/compositing unaccepted. No tests/exports or disposable test intermediates created.",
+    "13 packed frames retain nine original paintings and select four new full-pike thrust, recovery, ready guard and closed-eye head-right corpse paintings. New thrust keeps the rear shaft and butt spike previously missing from the original thrust.",
+    "Clean original RGBA is reused; new blue-backed painting uses approved bounded preparation. Source scales 0.58/0.44 remain uniform per source. The thrust ground anchor is 350,471 so its full forward pike fits the 512-wide frame without clipping or shrinking the body. Banded crops exclude neighboring guard-tip, boot and fallen-pike fragments.",
+    "Old/new and within-source weapon lengths still vary; walking leg support/hand grip, pike/body/palette/edge consistency and connected action/death timing need refinement. Candidate integration is not final motion/gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_switchback_pikes/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_switchback_pikes/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_switchback_pikes/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_switchback_pikes/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_switchback_pikes.png",
+    "runtime_sha256": "2034d5737bc0ae9e451916ac3302e0a2c8810c2d947f710a2e5c59495161ea17",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_switchback_pikes/alpha/poses.png": "36a5a787ef43c9e02e51d831a4af0a0fac7e1057851c3ba6c5ffd7584045093d",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_switchback_pikes/continuity-alpha/full-pike-thrust-recovery-and-rest.png": "156eb0aa73882af7ac63c769db6aecdaad69e0005ab901ddebc8b13e567cd8b1"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/switchback-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

@@ -1,0 +1,482 @@
+{
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          310,
+          333
+        ]
+      ],
+      "anchor": [
+        150,
+        318
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          313,
+          0,
+          624,
+          333
+        ]
+      ],
+      "anchor": [
+        463,
+        318
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "contact_original",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          625,
+          0,
+          931,
+          333
+        ]
+      ],
+      "anchor": [
+        766,
+        319
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "passing_original",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          333,
+          310,
+          640
+        ]
+      ],
+      "anchor": [
+        143,
+        618
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "contact_attempt",
+      "source": "continuity-alpha/supported-travel-melee-and-left-corpse.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          531
+        ]
+      ],
+      "anchor": [
+        300,
+        507
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "passing_knee_lift",
+      "source": "continuity-alpha/supported-travel-melee-and-left-corpse.png",
+      "rects": [
+        [
+          512,
+          0,
+          1010,
+          531
+        ]
+      ],
+      "anchor": [
+        744,
+        509
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "passing_rear_lift",
+      "source": "continuity-alpha/supported-travel-melee-and-left-corpse.png",
+      "rects": [
+        [
+          1011,
+          0,
+          1536,
+          531
+        ]
+      ],
+      "anchor": [
+        1250,
+        515
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "melee_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          313,
+          333,
+          620,
+          633
+        ],
+        [
+          560,
+          633,
+          610,
+          640
+        ]
+      ],
+      "anchor": [
+        480,
+        620
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "melee_retained_sling",
+      "source": "continuity-alpha/original-punch-flat-sling-cradle.png",
+      "rects": [
+        [
+          0,
+          0,
+          1269,
+          1240
+        ]
+      ],
+      "anchor": [
+        625,
+        1174
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "melee_recovery",
+      "source": "continuity-alpha/supported-travel-melee-and-left-corpse.png",
+      "rects": [
+        [
+          530,
+          532,
+          942,
+          1024
+        ]
+      ],
+      "anchor": [
+        746,
+        975
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "guard_brace",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          936,
+          333,
+          1254,
+          640
+        ]
+      ],
+      "anchor": [
+        1090,
+        620
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "sling_load",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          641,
+          313,
+          942
+        ]
+      ],
+      "anchor": [
+        142,
+        928
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "sling_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          343,
+          635,
+          563,
+          668
+        ],
+        [
+          313,
+          668,
+          623,
+          947
+        ]
+      ],
+      "anchor": [
+        480,
+        927
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "sling_release",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          625,
+          641,
+          1035,
+          705
+        ],
+        [
+          625,
+          705,
+          1028,
+          725
+        ],
+        [
+          625,
+          725,
+          1016,
+          744
+        ],
+        [
+          625,
+          744,
+          1007,
+          781
+        ],
+        [
+          625,
+          781,
+          929,
+          959
+        ]
+      ],
+      "anchor": [
+        778,
+        933
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "sling_followthrough",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1036,
+          640,
+          1254,
+          712
+        ],
+        [
+          1029,
+          712,
+          1254,
+          735
+        ],
+        [
+          1010,
+          735,
+          1254,
+          774
+        ],
+        [
+          936,
+          774,
+          1254,
+          959
+        ]
+      ],
+      "anchor": [
+        1109,
+        941
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          947,
+          313,
+          1254
+        ]
+      ],
+      "anchor": [
+        152,
+        1220
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          314,
+          959,
+          609,
+          1254
+        ]
+      ],
+      "anchor": [
+        461,
+        1214
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "death_side_fall",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          610,
+          1010,
+          936,
+          1254
+        ]
+      ],
+      "anchor": [
+        777,
+        1218
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "dead_head_left",
+      "source": "continuity-alpha/supported-travel-melee-and-left-corpse.png",
+      "rects": [
+        [
+          944,
+          691,
+          1536,
+          1015
+        ]
+      ],
+      "anchor": [
+        1242,
+        965
+      ],
+      "scale": 0.37
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 430,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 6,
+      "indices": [
+        2,
+        3,
+        4,
+        5,
+        4,
+        6
+      ],
+      "loop": true,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        7,
+        8,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        15,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        16,
+        17,
+        18
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        18
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  },
+  "unit_id": "unit_neutral_windglass_slingers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

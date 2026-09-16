@@ -1,0 +1,437 @@
+{
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          298,
+          433
+        ]
+      ],
+      "anchor": [
+        144,
+        422
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          299,
+          0,
+          591,
+          433
+        ]
+      ],
+      "anchor": [
+        446,
+        422
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "run_extended",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          592,
+          0,
+          932,
+          433
+        ]
+      ],
+      "anchor": [
+        773,
+        425
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "run_gathered",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          933,
+          0,
+          1254,
+          433
+        ]
+      ],
+      "anchor": [
+        1079,
+        425
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "run_passing",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          433,
+          310,
+          790
+        ],
+        [
+          0,
+          790,
+          290,
+          833
+        ]
+      ],
+      "anchor": [
+        155,
+        816
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "contact_attempt",
+      "source": "continuity-alpha/four-phase-step-and-two-blade-recovery.png",
+      "rects": [
+        [
+          0,
+          0,
+          511,
+          496
+        ]
+      ],
+      "anchor": [
+        264,
+        469
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "passing_a",
+      "source": "continuity-alpha/four-phase-step-and-two-blade-recovery.png",
+      "rects": [
+        [
+          512,
+          0,
+          1023,
+          496
+        ]
+      ],
+      "anchor": [
+        726,
+        472
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "passing_b_attempt",
+      "source": "continuity-alpha/four-phase-step-and-two-blade-recovery.png",
+      "rects": [
+        [
+          0,
+          497,
+          511,
+          1024
+        ]
+      ],
+      "anchor": [
+        238,
+        966
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "blade_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          311,
+          434,
+          585,
+          832
+        ]
+      ],
+      "anchor": [
+        440,
+        817
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "blade_slash",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          586,
+          434,
+          979,
+          654
+        ],
+        [
+          586,
+          654,
+          1003,
+          741
+        ],
+        [
+          586,
+          741,
+          996,
+          836
+        ]
+      ],
+      "anchor": [
+        772,
+        820
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "blade_recovery",
+      "source": "continuity-alpha/four-phase-step-and-two-blade-recovery.png",
+      "rects": [
+        [
+          512,
+          497,
+          1087,
+          1024
+        ]
+      ],
+      "anchor": [
+        753,
+        963
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "guard_ready",
+      "source": "continuity-alpha/four-phase-step-and-two-blade-recovery.png",
+      "rects": [
+        [
+          1088,
+          497,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1264,
+        974
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "guard_crossed",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1004,
+          434,
+          1254,
+          741
+        ],
+        [
+          997,
+          741,
+          1254,
+          836
+        ]
+      ],
+      "anchor": [
+        1123,
+        790
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          837,
+          305,
+          1080
+        ],
+        [
+          0,
+          1080,
+          279,
+          1254
+        ]
+      ],
+      "anchor": [
+        149,
+        1201
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          306,
+          837,
+          536,
+          1254
+        ]
+      ],
+      "anchor": [
+        418,
+        1172
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "death_side_fall",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          537,
+          946,
+          813,
+          1105
+        ],
+        [
+          537,
+          1105,
+          824,
+          1122
+        ],
+        [
+          537,
+          1122,
+          851,
+          1144
+        ],
+        [
+          537,
+          1144,
+          872,
+          1200
+        ]
+      ],
+      "anchor": [
+        686,
+        1184
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "dead_head_right",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          818,
+          971,
+          1254,
+          1100
+        ],
+        [
+          873,
+          1100,
+          1254,
+          1190
+        ]
+      ],
+      "anchor": [
+        1041,
+        1158
+      ],
+      "scale": 0.52
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 400,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 6,
+      "indices": [
+        5,
+        6,
+        2,
+        3,
+        7,
+        4
+      ],
+      "loop": true,
+      "frame_msec": 125,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        8,
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 165,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        13,
+        11
+      ],
+      "loop": false,
+      "frame_msec": 165,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "unit_id": "unit_neutral_dustjack_blades",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

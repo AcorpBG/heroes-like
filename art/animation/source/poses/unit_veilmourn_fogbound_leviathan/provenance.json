@@ -1,0 +1,86 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_fogbound_leviathan",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_fogbound_leviathan.png",
+  "reference_sha256": "b30e43ca1d825ceedc1dbc407cfc02e217dcaa6ae80abe2e3a16bafce77bf8dd",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/poses-draft.png",
+      "source_sha256": "01b87820669c0aac772ce838cc2e2c87f6ae5a30399fa851f0b7b3b1da936244",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-53ea35d9-2140-410a-b828-6755a74613bf.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle animation sheet. Reference defines ONE Fogbound Leviathan, huge quadrupedal dark teal scaled amphibian dragon, ivory ridged skull-like faceplate, bearded chin tentacles, FOUR muscular legs with broad webbed claw feet, tall torn sail fins on back with violet spectral lights at bases, long curling finned tail, hanging small violet lanterns on side and tail. Preserve exact silhouette and original painted style. Create exactly TWELVE articulated full-body poses in FOUR columns THREE rows, wide cells with ample margins for complete tail and claws. Fixed elevated three-quarter battle camera facing screen LEFT as reference, constant body size and anatomy. Genuine transparent RGBA background, no painted checkerboard, no floor/scenery/grid/text. Row1: idle crouched; idle breathing chest expands head slightly lifts tail relaxes; crawl near-front leg reaching forward far-front leg behind and opposite rear pair; opposite crawl FAR-front leg forward NEAR-front behind with rear pair exchanged. Row2: passing step belly rises feet gather beneath body; attack anticipation forequarters lowered neck draws back jaws open; attack lunging head forward biting jaws closing forefeet planted, neck stretches not whole-body rotation; defend crouches lower tucks chin behind armored foreleg. Row3: hit recoil head back sails flinch legs bend; dying front knees buckle chin lowers lights fade; side collapse body rolls with all four limbs bent and tail dropping; fully dead side-lying beast with FOUR limp legs folded, tail and sail fins intact, eyes and violet lights/lanterns dark, no active fog, same body not flattened standing cutout. No extra legs or missing tail, no added riders or weapons. Original art only no copyrighted franchise assets."
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/poses.png",
+      "source_sha256": "e625a4ba8781562d5d76209f412cd623bbe49066f57dae0aaa19b84cd6173076",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d8d2ac0c-0028-4ade-8896-964d1686923e.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY row2 column3 bite contact in this twelve-pose Fogbound Leviathan sheet. Close its jaws into a powerful bite, lower jaw meeting upper jaw, while preserving extended neck, ivory faceplate, beard tentacles, four planted legs, body, sail fins, tail and lanterns. Do not alter any other eleven poses, sizes, canvas, colors or placement. This should be the closing-jaw contact after row2 column2 open-mouth anticipation.",
+      "alpha_source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/alpha/poses.png",
+      "alpha_sha256": "10f349c666b11631cb2517df0d2a4dcdfb3078ee8951e755c494f31c7af51b13",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-784bc1cc-9811-4f35-a2b3-07e1a0c2a128.png",
+      "alpha_prompt": "Use case: background-extraction. Remove ONLY checkerboard from this twelve-pose Fogbound Leviathan sheet to actual transparent RGBA. Preserve all twelve beasts, jaws, four legs, tail, sails, lanterns, colors, positions and canvas exactly. No background replacement, no painted checkerboard, no redesign or colored matte."
+    }
+  ],
+  "review_notes": [
+    "14 packed frames retain eight original poses through inspected background derivatives and add six crawl/support, tucked guard and side-fold paintings. Closed bite follows open anticipation; final body has dark lamps/flames. Original left-facing camera is explicit metadata, with no local pose mirroring.",
+    "Original alpha-named file is RGB with painted checker, not usable alpha. Neutral extraction left enclosed checker apertures; built-in green-background derivatives and approved bounded chroma preparation clear tail/sail/leg gaps while retaining ivory faceplate and gray sail membranes.",
+    "Banded crops exclude a neighboring lantern at buckle and preserve the full guarded claw. Four-leg alternating support and rear-limb ownership remain unclear; sail/lantern details, head/tentacles and curled final tail require continuity review.",
+    "Uniform source-specific scale/ground anchors and persistent corpse are integrated as candidates. Body/gear consistency, edge finish, connected travel/attack/death timing and gameplay readability remain unaccepted. Offline static previews are not motion acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses; bite contact edited to close jaws after open-mouth anticipation.",
+    "Four-leg gait alternation and rear-leg accounting unclear; refine articulation and scale through passing/contact.",
+    "Sail count/proportions, head/tentacle anatomy, tail curl and lantern attachments vary. Left-facing reference orientation requires packing normalization.",
+    "First death largely crouch; second collapse resembles corpse with lights changing. More articulated transition needed; final tail remains curled.",
+    "Extraction retains displayed checker pattern and repaints detail. Transparency/compositing not established; final violet lights need clearly inactive review.",
+    "Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 8,
+    "new_or_corrected_selected_paintings": 6,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_fogbound_leviathan.png",
+    "runtime_sha256": "3aaef7f81b347e2d1df8c0ee3993e1a57dc795adae467d69fd773d592dc38088",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses-green-background.png": "f671569153c1b1946cc251cf66861a0d9ced666064fd8959dace2a90f2f2b292",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/four-leg-crawl-and-fold-green-background.png": "37fd8b1b040d145a27172a6213d4f6506c87a56cc12fdc3c57d54c2a2dad539b"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/leviathan-continuity-20260916",
+    "pose_source_facing": "left",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes; offline static visual evidence is not final playback acceptance.",
+    "cleanup": {
+      "policy": "Removed only SHA-256-identical task preview copies after no-live-handle checks. Retained identical recovery copies, unique evidence, originals/rejected masters, all used references, processing proofs, caches and unrelated files.",
+      "duplicates_removed": [
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/leviathan-continuity-20260916/source-inspection/unit_veilmourn_fogbound_leviathan-poses-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/leviathan-continuity-20260916/source-inspection/unit_veilmourn_fogbound_leviathan-poses-light.png",
+          "sha256": "29e393627371b6e55f80b33a39b42c4656c780b58e386f1d29bcedc74da6cd57",
+          "bytes": 2676758
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/leviathan-continuity-20260916/prepared-original/poses-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/leviathan-continuity-20260916/prepared-green/poses-light.png",
+          "sha256": "2c1605d1359af127954b7d304a5a62efeb5e45d314a4707c3044a21ff1feeb42",
+          "bytes": 1561063
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/leviathan-continuity-20260916/prepared-original/poses-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/leviathan-continuity-20260916/prepared-green/poses-green.png",
+          "sha256": "346d00c4fbe2783aea59a0eea16039b2d78f8a6a68acbf6254f17281888bdd8a",
+          "bytes": 1511476
+        }
+      ],
+      "removed_bytes": 5749297
+    }
+  }
+}

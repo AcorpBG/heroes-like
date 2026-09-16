@@ -1,0 +1,48 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_ashdart_stalkers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_ashdart_stalkers.png",
+  "reference_sha256": "8bb8bc92099b7c30d88574545955736a4eac38193230fc4862434c9fceb7c012",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "089164d333677cebef20b34d7946ac2d399c1c405a4b9f0dabd86a08c31fd362",
+      "source_output": "exec-d0d6dd43-662b-4266-ae42-a8233f468472.png",
+      "prompt": "Use case: stylized-concept. Original Ashdart Stalker battle animation sheet based on reference: athletic human woman black high ponytail bronze amber goggles forehead, burnt-orange hooded scarf/cape hood down, charcoal leather tunic/trousers brown bracers/knee guards/boots, rope belt bronze compass, back quiver small orange-feather darts. Weapon is a LONG STRAIGHT WOOD/BRASS BLOWPIPE with small orange feathers hanging near muzzle, NOT gun/crossbow; both hands hold tube to mouth to shoot by blowing. Sixteen full-body articulated poses FOUR columns FOUR rows same elevated three-quarter camera facing RIGHT consistent scale ample gutters for tube/cape. Row1 relaxed idle blowpipe low both hands; alert breath scarf shifts; extended running stride tube held low; gathered running stride knees under hips. Row2 opposite stride far leg forward near leg back no mirroring torso; melee windup two hands hold blowpipe across chest; two-hand horizontal tube shove toward RIGHT; deep crouch holding tube close guarding torso. Row3 reload RIGHT hand inserts small dart at mouthpiece LEFT supports tube; aim tube to pursed lips BOTH hands along tube; blow firing cheeks slightly puffed torso forward no external projectile; hit recoil tube retained. Row4 knees buckle; sideways fall torso low; body lands on side tube alongside; final relaxed horizontal SIDE corpse eyes closed tube lying beside hands back quiver and cape retained. One tube no stock/trigger/bowstring, anatomy actual hip/knee/elbow articulation no copied standing poses or rotated standing corpse. Painterly original raster pale gray background no shadows/scenery/grid/text/blood/effects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "3188aa809c2cdf077b154d159ab64e3d989ab89fa1af8fa717cf460c195df3c7",
+      "alpha_output": "exec-9408eb9b-a780-4201-bd30-b4224f9dc4fe.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all sixteen Ashdart Stalker poses to genuine transparent RGBA with empty spaces alpha zero. Preserve exact layout/scale, anatomy, orange cape, hair, blowpipe including hanging feathers, quiver, boots, limb gaps and corpse. Remove pale gray background and ground shadows only. No colored matte/cloudy backdrop/checkerboard, no redraw/reframing/effects/text."
+    }
+  ],
+  "review_notes": [
+    "Sixteen original poses and extraction visually inspected: blowpipe retained, reload/aim/blow release, defense and equipped side corpse. Running contacts repeat; melee windup reverses tube orientation relative to shove, and grip/tube/feather continuity needs refinement. Final alpha compositing and complete motion unaccepted. Source-only not packed/enabled; no tests or exports.",
+    "18 frames retain twelve original paintings and select six new direction-consistent tube-shove anticipation/recovery, distinct post-blow recovery, ready guard, head-left tipping and head-left corpse paintings. The old muzzle-reversed melee windup, opposite-direction tipping/corpse and duplicate running contact remain unselected. Retained head-left side-fall links new tipping to relaxed corpse without reversing body direction.",
+    "Original clean alpha is reused. New green source uses approved bounded preparation; uniform old/new standing scales 0.63/0.40. New low fall 0.43 and corpse 0.40 normalize generated anatomy, replacing undersized initial selections without warping. Banded crops exclude neighboring boots, hair, blowpipe tips and corpse fragments while retaining own tube/feathers.",
+    "Retained run extension/gather does not establish a grounded alternating gait. Blowpipe hand ownership, feather attachment, quiver/cape/body proportions, palette/edges and event timing remain refinement. New tipping uses a supporting hand different from the prompt; do not claim the requested hand ownership was achieved. Static production review is not motion/gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 12,
+    "new_or_corrected_selected_paintings": 6,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_ashdart_stalkers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_ashdart_stalkers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_ashdart_stalkers.png",
+    "runtime_sha256": "659cc7c3ea809692840e95e769f6974e924e721711946d76f8f51819a9865b3c",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png": "3188aa809c2cdf077b154d159ab64e3d989ab89fa1af8fa717cf460c195df3c7",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-alpha/blowpipe-action-recovery-and-directional-collapse.png": "0f93630aa1409b58d51550050d06b987417797f4440f6e66f03c2e7e4591aabe"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/ashdart-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

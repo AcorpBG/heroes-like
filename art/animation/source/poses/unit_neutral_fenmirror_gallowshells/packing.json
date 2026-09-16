@@ -1,0 +1,234 @@
+{
+  "unit_id": "unit_neutral_fenmirror_gallowshells",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          0,
+          0,
+          385,
+          345
+        ]
+      ],
+      "anchor": [
+        215,
+        340
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "idle_breath",
+      "source": "alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          385,
+          0,
+          770,
+          345
+        ]
+      ],
+      "anchor": [
+        599,
+        340
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          770,
+          0,
+          1155,
+          345
+        ]
+      ],
+      "anchor": [
+        983,
+        340
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          1155,
+          0,
+          1536,
+          345
+        ]
+      ],
+      "anchor": [
+        1367,
+        340
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "walk_pass",
+      "source": "alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          0,
+          345,
+          385,
+          655
+        ]
+      ],
+      "anchor": [
+        215,
+        655
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "attack_windup",
+      "source": "alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          385,
+          345,
+          775,
+          560
+        ],
+        [
+          385,
+          560,
+          760,
+          655
+        ]
+      ],
+      "anchor": [
+        599,
+        655
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "attack_snap",
+      "source": "alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          775,
+          350,
+          1155,
+          655
+        ],
+        [
+          1155,
+          425,
+          1215,
+          540
+        ]
+      ],
+      "anchor": [
+        983,
+        655
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "guard",
+      "source": "alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          1215,
+          345,
+          1536,
+          560
+        ],
+        [
+          1155,
+          560,
+          1536,
+          655
+        ]
+      ],
+      "anchor": [
+        1367,
+        655
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "recoil",
+      "source": "alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          0,
+          655,
+          385,
+          1000
+        ]
+      ],
+      "anchor": [
+        215,
+        990
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_fold",
+      "source": "alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          385,
+          710,
+          775,
+          1000
+        ]
+      ],
+      "anchor": [
+        599,
+        990
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_fall",
+      "source": "alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          775,
+          750,
+          1155,
+          1000
+        ]
+      ],
+      "anchor": [
+        983,
+        990
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "dead",
+      "source": "alpha/poses-anatomy-v3.png",
+      "rects": [
+        [
+          1155,
+          750,
+          1536,
+          1000
+        ]
+      ],
+      "anchor": [
+        1367,
+        990
+      ],
+      "scale": 0.7
+    }
+  ]
+}

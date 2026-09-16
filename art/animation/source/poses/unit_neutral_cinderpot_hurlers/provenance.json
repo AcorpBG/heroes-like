@@ -1,0 +1,61 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_cinderpot_hurlers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_cinderpot_hurlers.png",
+  "reference_sha256": "cd13c20e4e4fe4687ec41596756a9cc2b5eb26abcb897b3a374bbcc7c66230c5",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "9926ff172ba59117d8ed47a25c4760187812189ce1930f5f5fc96da03766c07d",
+      "source_output": "exec-e70ecad1-ad96-456b-a466-113c16b38707.png",
+      "prompt": "Use case: stylized-concept. Original Cinderpot Hurler battle animation sprite sheet matching attached identity: lean adult human with charcoal hood edged burnt orange, black face wrap, dark leather shoulder straps and bracers, ragged charcoal tunic with orange split sash, dark trousers and wrapped brown boots, corked round terracotta ember pots secured to chest harness and belt. Throws pot with RIGHT hand, left balances. Exactly SIXTEEN full-body articulated poses FOUR columns FOUR rows, consistent scale and elevated three-quarter view facing RIGHT, generous gutters and complete hands/boots. Row1 idle hands near belt; alert breathing shoulders/hood shift; walking contact near leg forward; opposite walking near thigh back overlapping far forward thigh no torso mirroring. Row2 passing step knee under hip; melee empty right fist windup near shoulder left forearm guards pots; right punch across torso toward RIGHT front knee bends, no pot in fist; defense low crouch both forearms shelter face and chest. Row3 right hand lifts corked pot from harness left steadies harness; windup RIGHT hand with pot raised behind head; release SAME RIGHT arm sweeps across torso extending RIGHT empty palm, left arm balances low, no floating projectile; recovery right hand returns to belt. Row4 hit recoil shoulders/head back; dying knees buckle pots dim; side fall torso low; DEAD figure lying SIDE eyes closed horizontal torso/head intact corked pots dark beside and on harness. No blood, flames, smoke clouds, magical effects or trails. True articulated elbows/hips/knees not duplicated standing cutouts or rotated corpse. Original gritty painterly raster. Plain pale gray background no shadows/checkerboard/text/borders/scenery.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "3d6b23fbef2e6700ce39df4b1f07effcecfcaf472b99bc754ab416009fcc67b7",
+      "alpha_output": "exec-800f6473-b82a-493c-8763-bf33252b96e2.png",
+      "alpha_prompt": "Use case: background-extraction. Remove gray background from all sixteen Cinderpot Hurler poses onto genuinely transparent RGBA. Preserve exact poses, layout/body size, hood and orange sash, all corked pots, hands and corpse. Clean transparent gaps between limbs. No checkerboard, matte, shadows, effects, smoke, text, blur or new elements."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "6b27cbbdffd9e6b980735c0ce1a20402426e4e99583ef89868437a056b016e09",
+      "source_output": "exec-bc61ccee-7d79-4f78-9d75-f5f21d2787a9.png",
+      "prompt": "Use case: precise-object-edit. Correct two frames only in this original Cinderpot Hurler 4x4 sheet. Row2 column3 melee punch: RIGHT arm originating at viewer-left shoulder crosses IN FRONT of chest to punch rightward, matching raised right fist in preceding anticipation. LEFT arm folds back close to ribs; two arms only, no hand swaps. Row4 column4 final corpse: eyes completely closed, all pots dull unlit clay with no orange glow. Preserve corpse pose, intact harness and dark-orange cloth. All other fourteen frames unchanged, same identity/grid/body scale and gray background. No text/effects/new objects.",
+      "alpha_source": "alpha/poses-corrected.png",
+      "alpha_sha256": "866cabfd8cfe73fa4cd467dca52139973c5c538437119cebcb567dc188c498b2",
+      "alpha_output": "exec-f923ebb9-20af-43a4-a0e8-385e45cb6b25.png",
+      "alpha_prompt": "Use case: background-extraction. Extract this corrected sixteen-pose Cinderpot Hurler sheet onto genuine transparent RGBA, remove only gray background. Preserve exact 4x4 layout, body scale, all hands, clothing, pots, dark closed-eye corpse and clear limb gaps. No checkerboard, matte, shadow, effects, redraw or reframing."
+    }
+  ],
+  "review_notes": [
+    "18 packed frames retain 14 original RGBA paintings and select four new supported passing, empty-right-fist recovery and final head-left corpse paintings. Melee remains separate from pot gather/windup/release/recovery; new resting body follows original head-left fall, keeps face wrap/closed eyes and dark attached pots. Reversed original corpse and duplicate original contact are unselected.",
+    "Original corrected alpha reused; new green-backed sheet uses approved bounded edge preparation. Uniform per-source scales 0.72/0.40 and anatomical anchors; tightened recovery/corpse and kneel/fall crops exclude neighbor pixels and surplus alpha without cutting the intended boots, face wrap, pots or sash.",
+    "Passing guides still do not establish opposite support; new frames read as backward/forward lift of the same leg. Pot count/strap continuity, body/hood/palette/edge consistency, travel-to-action transition, grounding and connected attack/death timing remain refinement, not final motion acceptance."
+  ],
+  "prior_review_notes": [
+    "Sixteen poses and extraction visually inspected: separate pot preparation/windup/release, melee, crouched guard and side-collapse corpse. Melee strike switches arms, walking contacts repeat and corpse eye/pot brightness needs refinement. Source only, not packed or enabled; continuous motion/compositing unaccepted. No automated tests/exports launched.",
+    "Corrected source and extraction visually inspected: punch now crosses from the same arm as windup; corpse eyes closed and pots dark. Repeated walking contacts still need refinement. No runtime enablement or automated validation."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 14,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_cinderpot_hurlers.png",
+    "runtime_sha256": "b3b2205b453cc1fc147fdbfe036d333bbc884aaf78388bdbeae3a3d726d0b083",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png": "866cabfd8cfe73fa4cd467dca52139973c5c538437119cebcb567dc188c498b2",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_cinderpot_hurlers/continuity-alpha/passing-recovery-and-directional-corpse.png": "89e92537c8ae1cdf66f92d4f239c7b063f432649fab799dafa24e87a6f1ab0df"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/cinderpot-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

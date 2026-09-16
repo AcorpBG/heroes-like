@@ -1,0 +1,392 @@
+{
+  "unit_id": "unit_mireclaw_mudglass_slingers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          307,
+          323
+        ]
+      ],
+      "anchor": [
+        150,
+        313
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "idle_1",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          314,
+          0,
+          617,
+          323
+        ]
+      ],
+      "anchor": [
+        466,
+        313
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "move_contact_a",
+      "source": "continuity-alpha/walk-phase-0-crossing-corrected-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1209,
+          1300
+        ]
+      ],
+      "anchor": [
+        600,
+        1260
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "move_passing_a",
+      "source": "continuity-alpha/walk-phase-1-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1210,
+          1300
+        ]
+      ],
+      "anchor": [
+        600,
+        1260
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "move_contact_b",
+      "source": "continuity-alpha/walk-phase-2-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1209,
+          1300
+        ]
+      ],
+      "anchor": [
+        600,
+        1260
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "move_passing_b",
+      "source": "continuity-alpha/walk-phase-3-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1210,
+          1300
+        ]
+      ],
+      "anchor": [
+        600,
+        1260
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "melee_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          0,
+          323,
+          311,
+          626
+        ]
+      ],
+      "anchor": [
+        145,
+        618
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "melee_contact",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          314,
+          323,
+          621,
+          626
+        ]
+      ],
+      "anchor": [
+        455,
+        618
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "defend",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          632,
+          366,
+          920,
+          626
+        ]
+      ],
+      "anchor": [
+        770,
+        618
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "hit",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          964,
+          323,
+          1226,
+          629
+        ]
+      ],
+      "anchor": [
+        1090,
+        624
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "reload_right_hand_retains_cords",
+      "source": "continuity-alpha/reload-right-hand-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1209,
+          1301
+        ]
+      ],
+      "anchor": [
+        600,
+        1245
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "ranged_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          325,
+          628,
+          601,
+          959
+        ]
+      ],
+      "anchor": [
+        449,
+        948
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "ranged_release",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          632,
+          635,
+          989,
+          959
+        ]
+      ],
+      "anchor": [
+        762,
+        949
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "ranged_recovery",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          990,
+          645,
+          1230,
+          959
+        ]
+      ],
+      "anchor": [
+        1100,
+        947
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          8,
+          965,
+          262,
+          1190
+        ]
+      ],
+      "anchor": [
+        144,
+        1174
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "death_collapse",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          322,
+          1002,
+          724,
+          1217
+        ]
+      ],
+      "anchor": [
+        475,
+        1190
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "dead",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          765,
+          1035,
+          1245,
+          1202
+        ]
+      ],
+      "anchor": [
+        1000,
+        1180
+      ],
+      "scale": 0.68
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        8
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 5,
+      "indices": [
+        10,
+        11,
+        12,
+        13,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  }
+}

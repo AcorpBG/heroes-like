@@ -1,0 +1,132 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_embercourt_beaconline_writguard",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_embercourt_beaconline_writguard.png",
+  "reference_sha256": "53537eead3a13d8a9ef36fe666cb0093d6a47ed9c50efc0e798d8bfbe1689a9f",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/poses-collapse-forearm-shield.png",
+      "source_sha256": "d4b3d04a5bbb54ecdbeb86cdcda603412059438382fb3d63fbbad01626b1a582",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5209c3ee-6a9f-4165-8e7c-f74cd2901d4c.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY shield placement on bottom row column3, frame11 of original Beaconline Writguard 4x3 sprite sheet. Shield currently incorrectly sits on shoulder/back. Move that ONE kite shield DOWN in front of the bent LEFT forearm and chest, pointed tip near grounded axe, upper rim below shoulder exposing shoulder armor. Show same left arm behind shield with leather forearm strap and existing hand retaining axe. Do not add arm or duplicate shield. Preserve EXACT collapse torso head bent legs, staff in right hand, banner, axe, dark lamps and cape. Other eleven sprites unchanged. Same canvas camera scale background, no text.",
+      "review": "Prefer frame11 over poses-side-collapse.png. Shield lowered in front of bent forearm, shoulder exposed, head/torso fall and bent legs retained. Axe head visible below shield; hand/strap occluded so attachment remains assembly-review concern. Explicit crop/scale matching and alpha unresolved; other frames not selected, not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/poses-side-collapse.png",
+      "source_sha256": "a4a8790ce1b739f9578c0253dad711ce056450e6a49826ffa8c9c48c8db6afea",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c1939603-6f4c-408d-81d2-3d01b91133e7.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY frame11, bottom row column3 in this original Beaconline Writguard 4x3 sheet. Replace seated upright pose with articulated sideways collapse toward the existing final corpse next to it: hips grounded, BOTH knees bent to screen-right, torso folding down screen-left with helmet/head lower than shoulders, right elbow bending as standard tips diagonally down screen-left, left forearm shield still strapped across front, poleaxe lowered alongside. Not another sitting pose, not a rigid rotated standing sprite. Keep exactly two arms two legs, same helmet red plume cape armor, full red banner standard with three lamps, kite shield lamp and belt lamp ALL DARK. Match figure size and original elevated camera; fully contain gear in own cell. Other eleven sprites unchanged, same grid and background. No text or effects.",
+      "review": "Select frame11 only: torso lowered screen-left, both knees bent to right, standard tips diagonally and axe retained, lamps dark. Clearer side collapse than seated original. Shield rises over shoulder/upper arm; forearm strap continuity needs matching. Figure extends across nominal left cell boundary; explicit crop needed. Tool darkened other sprites, all unselected. Gait/alpha and assembly pending."
+    },
+    {
+      "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/poses-death-lamps-dark.png",
+      "source_sha256": "2ee180882260118b1632a3d5a83011ab871aab2cf8a25f96d3274f52c07b31b8",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7153a4dc-358e-4c8a-abb1-f9284e01936f.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY lamp interiors on death poses bottom row columns2,3,4 of original Beaconline Writguard twelve-pose sheet. Turn all FIVE lamps in each death pose off: central circular standard lantern plus two side standard lanterns, shield inset lantern, small belt lantern. Dark brown smoked glass with no yellow orange bright centers, retain brass metal reflections. Especially remove bright belt lamp from seated collapse bottom row column3 and shield/standard lights from kneeling column2. Keep all actual lamp housings, body, shield, axe, staff, banner and poses exactly. Other nine sprites unchanged. Same canvas scale camera background. No whole-character darkening, no text or effects.",
+      "review": "Select death frames10-12 ONLY. Standard lamps, shield inset and belt lamp now dark, restored kneeling shield retained. Tool also dimmed shield/belt in unrelated attack/defense/hit frames; those frames explicitly unselected. Grip, collapse articulation, gait and alpha unresolved; not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/poses-kneeling-shield.png",
+      "source_sha256": "0f20c2696f1ab2d2547d2a9704fb565784ce58df852c9de31cb428b22b72b199",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-24ac312b-1d05-434d-b81d-fc38b8d9e140.png",
+      "prompt": "Use case: precise-object-edit. Original Beaconline Writguard 4 columns x3 rows battle sheet edit. Restore ONLY missing shield in row3 column2 kneeling death pose, frame10. Same red/black kite shield with brass edging and inset lantern as idle frame1, strapped to anatomical LEFT forearm (image-right arm), lowered beside knee, bottom tip near ground. Keep left hand gripping existing short poleaxe and right hand holding tall standard. Shield naturally foreshortened with arm; no new arm, no second axe. Preserve kneeling pose, helmet, cape, ALL other eleven sprites, same layout scale camera and background. Shield lantern dim amber. No text.",
+      "review": "Select kneeling frame10 only. Kite shield restored over lowered left forearm, existing axe head remains by knee, standard retained. Shield obscures hand/strap, and inset lamp still bright rather than dim. Grip, lighting, gait and alpha continuity pending; not packed/enabled."
+    },
+    {
+      "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/poses-draft.png",
+      "source_sha256": "f8f2dd27f4a6ab20090379b646190e08df8490959d948d98203c596548d0c3dc",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bc0e5f74-082f-430d-8279-7369f16681b9.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle animation sprite sheet. Reference defines ONE Beaconline Writguard, bearded adult man in blackened steel plate with brass trim, red-plumed helmet, red scarf/tabard, long dark/red cape, brown armored boots. Anatomical RIGHT hand holds tall brass standard staff with red hanging banner and THREE lanterns at top: one large central circular housing and two small side lanterns. LEFT forearm bears red/black kite shield with brass border and inset lantern; LEFT hand also grips short poleaxe down beside shield, as reference. Belt lantern. Preserve all equipment and hand attachments. Exactly TWELVE full-body articulated poses FOUR columns THREE rows, constant body/staff/shield scale fixed elevated three-quarter view facing screen-right, generous blank gutters containing entire standard and cape. Genuine transparent RGBA no painted checkerboard/scenery/floor/grid/text. Row1 idle planted standard; idle shoulder breath banner/cape sway; walk right foot forward left behind standard lifted; opposite contact LEFT foot forward RIGHT behind standard lifted. Row2 passing foot beneath hips; melee wind-up LEFT poleaxe draws back under shield RIGHT standard retained upright; attack LEFT poleaxe swings down-forward screen-right shield strapped to same forearm RIGHT staff upright; defense LEFT kite shield raises over chest poleaxe lowered RIGHT standard planted. Row3 hit recoil torso back knees flex gear retained; dying kneels head bowed lanterns dim standard lowers; side fall hips knees bend shield/axe/standard landing alongside; dead side-lying man eyes CLOSED all lanterns dark, full banner staff shield poleaxe belt gear retained beside limp cape. Exactly two hands, consistent shield strap/axe grip. No duplicate weapons, no disappearing standard. Actual joint articulation not rotated standing cutouts. Original art only no copyrighted franchise assets."
+    },
+    {
+      "source": "art/animation/source/poses/unit_embercourt_beaconline_writguard/poses.png",
+      "source_sha256": "f6d73efc67e6e7b8e30125eb3f7eba35533baad1bd784c2ef8ffcc6911ba92b3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-64c48af3-0180-4601-96f6-0e20a127a07c.png",
+      "prompt": "Use case: precise-object-edit. Restore missing LEFT forearm kite shield in THREE cells only: row1 column2 idle, row2 column2 axe wind-up, row2 column3 axe contact. Same red/black brass-bordered kite shield with inset amber lantern as row1 column1. It is STRAPPED to left forearm while that same left hand continues holding poleaxe. Show shield appropriately foreshortened alongside forearm; do not replace axe, add arm, obscure entire attack, or move standard from right hand. Preserve all other nine poses and all body sizes, canvas, layout, colors and equipment."
+    }
+  ],
+  "review_notes": [
+    "Thirteen packed candidate frames combine eleven viable original source paintings with two new opposite-foot passing poses. No first-sheet-only replacement pass; exact original and corrective masters remain preserved.",
+    "Movement selects original opposite contacts and new shield-side/standard-side foot lifts; standard remains on screen left, shield and axe on screen right. Full pole, banner, three standard lamps, shield inset lamp and belt lamp retained.",
+    "Death selects only the previously corrected dark-lamp kneel, lowered forearm-shield side collapse and equipped corpse. Other live poses accidentally darkened by those edits are excluded. Shield strap/axe grip remain partly occluded and require timed close review.",
+    "Original sheets really contain opaque checkerboard. Approved connected neutral extraction and explicit enclosed-gap seeds remove it without global rekeying of armor/axe paint. Real composites used for inspection; narrow edge residues and isolated low-opacity particles remain final refinement items.",
+    "Explicit source-row bands avoid neighboring boots/standard finials and isolate corpse equipment. New body/equipment scale, banner/cape movement, axe-head geometry, gait grounding, focus-facing and actual attack/death timing remain pending full-roster refinement and acceptance.",
+    "Atlas and offline art desk inspected as production evidence only. No tests/imports/exports, paid API, gameplay/save/footprint edits. Full160 production and one consolidated Linux/Windows acceptance remain open."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses; missing shields restored second idle and two attack frames.",
+    "Kneeling still omits shield; restore legitimate gear throughout. Attack axe grip obscured by added shield and forearm strap continuity needs correction.",
+    "Poleaxe head/shaft changes shape and length, standard height/lantern/banner scale varies.",
+    "Walking orientation and foot cycle inconsistent; passing repeats contact. Idle relies largely on cape motion.",
+    "Seated fall needs articulated collapse; final lanterns dim but verify eyes closed and all lamps inactive.",
+    "Transparency/compositing unresolved. Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "reference_crops": [
+      {
+        "file": "standing-reference-light.png",
+        "sha256": "f1bbf31d35c1f3104e0e67324015b132bff4c0ff68d74a58f99a0e4b88b56c6b",
+        "source": "poses.png",
+        "source_sha256": "f6d73efc67e6e7b8e30125eb3f7eba35533baad1bd784c2ef8ffcc6911ba92b3",
+        "rect": [
+          70,
+          0,
+          338,
+          405
+        ],
+        "method": "Prepared original crop; nearest magnification and light alpha composite by prepare_battle_pose_cutouts.py --inspect-rect. Exact reference PNG preserved. Later enclosed-gap seed refinements are outside this standing cell. Prompt excludes tiny neighbouring finial fragment at bottom."
+      }
+    ],
+    "sources": [
+      {
+        "file": "walk-shield-side-lift-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7109acca-a9d8-4b12-a9df-0d280a6b5446.png",
+        "prompt": "Use case: precise-object-edit. ONE original Beaconline Writguard walking PASSING pose based on this exact standing identity. Keep bearded face/red-plumed helmet, blackened steel/brass armor, red scarf/tabard/cape, brown boots, tall standard in hand at screen LEFT with red banner and THREE lit brass lamps, kite shield STRAPPED to forearm at screen RIGHT with its lit inset lamp, same shield-arm HAND gripping the small poleaxe beneath shield, and belt lamp. Exactly two arms/hands, no gear swap. Change legs: STANDARD-SIDE leg at screen LEFT is the planted supporting leg below pelvis; SHIELD-SIDE leg at screen RIGHT raises its knee modestly forward, boot lifted visibly off ground. A restrained armored marching step, not a high kick. Upper torso stays same elevated three-quarter RIGHT-facing view; staff is carried slightly above ground, never shortened, and banner/cape flow backward. Full small poleaxe, complete standard finial and bottom tip, shield and both boots inside wide margins. Preserve original human body/weapon proportions, no mirror or duplicate weapon. Original detailed painterly tactical raster. Flat vivid GREEN #00ff00 background with green also through banner/arm/ring gaps, neutral illumination with no green spill. No ground, shadows, scenery, text or detached fragments; ignore tiny cut-off object at bottom of supplied reference.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_beaconline_writguard/standing-reference-light.png"
+        ],
+        "selected": true,
+        "selection": "Shield-side boot lifted, standard-side foot bears weight; all five lamps and attached standard/shield/axe retained.",
+        "sha256": "4021c611dc252c78664c5c4bd418594c290a944b27e4e9285204c520de61d023"
+      },
+      {
+        "file": "walk-standard-side-lift-green.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f0970946-49c6-4423-99fd-e34fb1c9ac2c.png",
+        "prompt": "Use case: precise-object-edit. Opposite supporting-foot passing pose of this exact original Beaconline Writguard. Change ONLY legs and their cloth overlap. Keep head torso both arms/hands full staff/banner/three lamps shield/its lamp poleaxe and belt lamp identical, same size/camera/framing. Lower the currently lifted SHIELD-SIDE boot at screen RIGHT: extend its knee and plant the sole beneath the right hip around x655,y1435. Lift the currently planted STANDARD-SIDE boot at screen LEFT: bend that knee, draw lower leg BACK behind the planted shin, with its heel raised and boot around x480,y1230 clearly above ground. Exactly two legs attached to same hips, one foot planted and opposite foot raised. No torso mirror, no equipment hand swap, not another shield-side lift. Restrained armored marching action, no exaggerated kick. Keep complete tall standard and short poleaxe identical length and shield strapped to same forearm. Original painterly raster, vivid GREEN #00ff00 in all empty gaps, no green spill, floor/shadow/text/scenery or detached objects.",
+        "references": [
+          "art/animation/source/poses/unit_embercourt_beaconline_writguard/walk-shield-side-lift-green.png"
+        ],
+        "selected": true,
+        "selection": "Targeted opposite supporting foot: shield-side sole planted, standard-side boot raised behind. Same torso/equipment screen sides.",
+        "sha256": "65cea77da39459e7830ff5a982c1d4ab0f80e515fa45a663f24d8cac549589ce"
+      }
+    ],
+    "generation": "continuity-generation.json",
+    "reused_sources": [
+      {
+        "source": "poses.png",
+        "sha256": "f6d73efc67e6e7b8e30125eb3f7eba35533baad1bd784c2ef8ffcc6911ba92b3",
+        "selection": "Eight original poses: idle pair, two contacts, windup, contact, guard and hit. Original repeated passing cell and incomplete death cells excluded."
+      },
+      {
+        "source": "poses-collapse-forearm-shield.png",
+        "sha256": "d4b3d04a5bbb54ecdbeb86cdcda603412059438382fb3d63fbbad01626b1a582",
+        "selection": "Three final death poses ONLY: retained forearm shield, lowered side collapse, lamps dark. Other accidentally darkened live cells unselected."
+      }
+    ],
+    "preparation": "continuity-cutouts.json: bounded connected neutral matte plus explicit enclosed-gap seeds on original checkerboard sheets; saturated green extraction on two new paintings. Source/tool/recipe/output hashes in processing proofs.",
+    "packing": "packing.json",
+    "packed_frames": 13,
+    "runtime_candidate": "art/animation/runtime/poses/unit_embercourt_beaconline_writguard.png",
+    "runtime_sha256": "382c4d48c4af90e17283c25b6898c3683bfc12bbce1ce5b08247263d9787d8ae",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/beaconline-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted"
+  }
+}

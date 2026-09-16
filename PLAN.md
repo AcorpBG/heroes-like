@@ -24,7 +24,11 @@ Rules:
 
 ### Complete Battle Unit Animation and Size
 
-`combat-unit-animation-and-size-20260913` — in_progress, owner-directed Phase 6 goal. All 160 size profiles are authored; 37 long bodies use shared two-hex rules/AI/UI geometry. Twenty-eight original-art candidates pass consolidated repository, official exports, package parity and 4,136 Linux / 4,108 Windows battle checks. Eight packing tests pass; small/wide captures inspected. Gallowshell corrected source is prepared but not enabled. Continue roster production/refinement; final accepted coverage remains 0/160 pending full motion review. Legacy affine sheets do not count. Requirements/evidence: `docs/combat-unit-animation-and-size.md`.
+Owner sequencing override: finish animation-art generation/refinement before consolidated validation, without per-unit test/export loops. The first full160 production pass is now integrated and consolidated validation is underway; fix concrete findings within this grouped pass. This does not authorize returning to per-pose generation/test/export cycles.
+
+Owner resumed workflow recovery on 2026-09-15. Inspect actual alpha composites before rejecting art, retain viable paintings, and finish complete-unit batches. Do not hold the roster behind repeated retries of one difficult pose or treat a pilot as the full goal.
+
+`combat-unit-animation-and-size-20260913` — completed, owner-directed Phase 6. All160 original animation sets are visually accepted (90 faction,70 neutral), with160 size profiles and37 two-cell bodies. Ground anchors, queued-reaction holds,29 guard transitions and two dedicated ranged corrections are integrated. Source/Windows roster checks pass32507 each; all160 small idle/dead and wide action captures inspected. The rendered run's one late-capture failure is retained; unchanged focused replay passes311. Final Linux/Windows bodies1033/1030, shell input64,25 Python tests, repository, official exports and exact payload parity/equivalence pass. Superseded rebuildable exports cleaned; original art/provenance/caches and final evidence retained. No next slice selected or release-ready claim. Requirements/evidence: `docs/combat-unit-animation-and-size.md`; hash-bound review: `docs/battle-unit-animation-acceptance.json`; workflow: `docs/battle-animation-production-workflow.md`.
 
 ### Layered Combat Visual Effects
 

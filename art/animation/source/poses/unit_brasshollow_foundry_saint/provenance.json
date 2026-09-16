@@ -1,0 +1,190 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_brasshollow_foundry_saint",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "source_pending_refinement_and_packing",
+  "reference": "art/units/source/curated/unit_brasshollow_foundry_saint.png",
+  "reference_sha256": "f1ec065a27c9eda3111505577a685ebd5a91929794240a386b5df061e6488615",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/poses-draft.png",
+      "source_sha256": "4426eda37d6e80d2fd470abdd7aa019a1b9d2210f4721cd3363cefd0bd363826",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b7a24183-e534-40a3-8fe1-3646cfa81017.png",
+      "prompt": "Use case: stylized-concept. Asset type: original painted tactical fantasy battle animation sheet. Reference image defines ONE Foundry Saint, a massive biped iron/brass/ivory furnace automaton. Preserve its spiked circular glowing furnace halo behind head, narrow barred face, cathedral arched orange chest furnace, ivory armored knees, long ivory hanging cloth marked gold with red seals, shoulder banners, black mechanical joints, broad heavy boots. Its anatomical LEFT hand holds ONE long-handled black/brass forge hammer (viewer right in reference); its anatomical RIGHT hand holds ONE long pair of forge tongs gripping a rectangular glowing orange ingot (viewer left). Small secondary back-mounted tools stay folded; no extra handheld weapons. Create exactly TWELVE fully articulated poses, four equal columns by three equal rows, complete figures and weapons comfortably within each cell, generous blank margins. Fixed elevated three-quarter view facing screen right, constant body/weapon size, same painterly style. Actual transparent RGBA background, no painted checkerboard, text, grid lines, floor or scene. Row1 left to right: idle settled; idle chest rising shoulders and cloth shifting; walking with anatomical right boot forward left boot behind; walking with anatomical LEFT boot forward RIGHT behind, visibly opposite step. Row2: passing step raised rear foot beneath hips; left hammer raised behind head in wind-up with tongs held low safely aside; hammer strike extended down-forward toward enemy at screen right, both hands retain correct tools, right tongs held off to side; defense hammer shaft braces across chest while tongs lower. Row3: hit recoil chest back knees bending; death kneeling head bowed furnace fading; falling onto side with hammer and tongs dropping alongside, halo intact; fully dead side-lying automaton with dark eyes, dark chest/halo/hammer and cooled dark ingot, all equipment still visible, no fire or smoke. No extra limbs, no mirrored hand swaps, no detached equipment while alive. Death changes actual articulated limbs not a rotated standing cutout. Original art only, no copyrighted franchise assets."
+    },
+    {
+      "source": "art/animation/source/poses/unit_brasshollow_foundry_saint/poses.png",
+      "source_sha256": "9caf718c30efad07ce545a8a5fab31d0f09a7566f04117fcc0da55f898cb5797",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f47c6954-db4c-4f2d-b605-5a83f1603cbf.png",
+      "prompt": "Use case: precise-object-edit. Edit only row2 column3 hammer strike and row2 column4 guard in this twelve-pose Foundry Saint sheet. Both must retain LEFT hand holding hammer and RIGHT hand holding tongs with orange ingot. In row2 col3: LEFT shoulder is on viewer RIGHT, its arm extends down-forward to screen RIGHT gripping hammer. RIGHT shoulder on viewer LEFT leads down to tongs at screen LEFT; remove the erroneous right-arm crossover hammer grip. In row2 col4: only LEFT hand (viewer right shoulder) holds hammer horizontally in front of chest, RIGHT hand down at viewer LEFT holds tongs gripping ingot. No floating tongs, no two-handed hammer, exactly two arms two hands each retaining its correct tool. Keep all other ten poses, identity, layout, scale, colors, background and dark corpse unchanged. Do not enlarge hammer or shorten tongs."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1bbabde8-4aa3-42a2-83e5-7f8c940ff33e.png",
+      "prompt": "Use case: background-extraction. Edit target: this twelve-pose Foundry Saint sheet. Remove ONLY checkerboard to genuine transparent RGBA. Preserve all twelve figures, their placement, size, weapons, colors, cloth, halos and dark corpse exactly. No replacement background, no painted checkerboard, no colored matte, no redesign.",
+      "reason": "Brown replacement backdrop instead of transparency; not selected."
+    }
+  ],
+  "review_notes": "13-frame candidate: seven original paintings plus six selected new paintings from three built-in outputs. Planted/near-lift/planted/far-lift creep uses a single-pose guide to resolve repeated far-leg lifts. Left-hand short hammer and right-hand tongs/ingot remain owned correctly. New normal-handle kneel and head-left intermediate collapse replace staff-like kneel and wrong-direction fall; original cold equipped corpse retained. Inspected seeds clear halo/elbow/banner background gaps while preserving ivory. Full-roster translated support, body/tool scale, glow/guard/death transitions and timing remain unaccepted.",
+  "prior_review_notes": [
+    "Twelve poses; strike and guard corrected to left hammer and right tongs. Dead furnace/halo/ingot are dark.",
+    "Walking contacts repeat leading leg and idle changes are subtle; gait requires refinement.",
+    "Hammer length changes markedly in kneeling pose, grips/tool size and back-tool/cloth continuity require correction.",
+    "Side fall resembles final corpse too closely; intermediate collapse needs stronger articulation.",
+    "Transparency and in-context motion/compositing remain unaccepted. Source only, not packed or enabled; 29 runtime candidates and final acceptance 0/160. No tests/exports run."
+  ],
+  "status": "candidate_pending_playback_acceptance",
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 7,
+    "quiet_vent_derivative_paintings": 0,
+    "new_selected_paintings": 6,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_brasshollow_foundry_saint/packing.json",
+    "packing_result": "art/animation/source/poses/unit_brasshollow_foundry_saint/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_brasshollow_foundry_saint.png",
+    "runtime_sha256": "49d06754d57d2c609c364648d255a337f95d0dcf886fd49c6cd14e58b082ca39",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-alpha/original-poses.png": "d99421036c2d7ba7df4e843a155b509609f13868a885883bb56dd7361e277788",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-alpha/creep-guard-and-collapse.png": "577b8e503803cf2f7ccdc4a82d1d9345e62f5ff88c4c8d2217cfab5aba58cdeb",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-alpha/guided-near-leg-lift.png": "ca11bbb307d952dfae2c14fa65685b508bda5ba6fa846fc67f0710af72fcf125",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_foundry_saint/continuity-alpha/collapse-toward-matched-corpse.png": "dcdb0be6e0a3ad8384470150f4349346056ad34eb54d5485332639c46ca0b577"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated gameplay/repository/import/export checks deferred until all160 generation/refinement/integration finishes. Static source/composite/offline art inspection is not final motion acceptance.",
+    "cleanup": {
+      "date": "2026-09-16",
+      "policy": "Only task-owned byte-identical preview duplicates; exact SHA-256 rechecked and fuser found no open handles. All original/rejected paintings, unique evidence, processing proofs and caches retained.",
+      "removed_files": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/sixth/creep-guard-and-collapse-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/final/creep-guard-and-collapse-green.png",
+          "sha256": "4c818957458ed331be822150cb9e27028c6d93b4e7f0482e5d841eae43d29bed",
+          "bytes": 1693166
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/sixth/creep-guard-and-collapse-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/final/creep-guard-and-collapse-light.png",
+          "sha256": "c9a7eee15f84c0dde4672649d332cb8e2f8328c7ece8128966c28fe01cc610d8",
+          "bytes": 1705819
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fifth/guided-near-leg-lift-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/final/guided-near-leg-lift-green.png",
+          "sha256": "2a6317a507dd55f76939bf7a8bc9167e51fdbfb23516de4d9e4c6f8678267381",
+          "bytes": 1193913
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/sixth/guided-near-leg-lift-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/final/guided-near-leg-lift-green.png",
+          "sha256": "2a6317a507dd55f76939bf7a8bc9167e51fdbfb23516de4d9e4c6f8678267381",
+          "bytes": 1193913
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fourth/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fifth/original-poses-green.png",
+          "sha256": "702b7cc072501f81488ded88ad55768deb03f47b76ffc60cb3a194777f1aeeeb",
+          "bytes": 1466519
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/second/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fifth/original-poses-green.png",
+          "sha256": "702b7cc072501f81488ded88ad55768deb03f47b76ffc60cb3a194777f1aeeeb",
+          "bytes": 1466519
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/sixth/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fifth/original-poses-green.png",
+          "sha256": "702b7cc072501f81488ded88ad55768deb03f47b76ffc60cb3a194777f1aeeeb",
+          "bytes": 1466519
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/third/original-poses-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fifth/original-poses-green.png",
+          "sha256": "702b7cc072501f81488ded88ad55768deb03f47b76ffc60cb3a194777f1aeeeb",
+          "bytes": 1466519
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fifth/guided-near-leg-lift-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/final/guided-near-leg-lift-light.png",
+          "sha256": "b394bd3cf8c2c6e80c792725e7f6aa5d037f0d44df9c6f9a075b49e221775c4b",
+          "bytes": 1208031
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/sixth/guided-near-leg-lift-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/final/guided-near-leg-lift-light.png",
+          "sha256": "b394bd3cf8c2c6e80c792725e7f6aa5d037f0d44df9c6f9a075b49e221775c4b",
+          "bytes": 1208031
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fourth/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fifth/original-poses-light.png",
+          "sha256": "9595f95cfb108e5e2070affd884851f3b17471f108e574a2fd7c0f32b74a32a7",
+          "bytes": 1488395
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/second/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fifth/original-poses-light.png",
+          "sha256": "9595f95cfb108e5e2070affd884851f3b17471f108e574a2fd7c0f32b74a32a7",
+          "bytes": 1488395
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/sixth/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fifth/original-poses-light.png",
+          "sha256": "9595f95cfb108e5e2070affd884851f3b17471f108e574a2fd7c0f32b74a32a7",
+          "bytes": 1488395
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/third/original-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fifth/original-poses-light.png",
+          "sha256": "9595f95cfb108e5e2070affd884851f3b17471f108e574a2fd7c0f32b74a32a7",
+          "bytes": 1488395
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/identity-v2/unit_brasshollow_foundry_saint-original-poses-rect-20-0-375-370-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_foundry_saint/identity-reference-v2.png",
+          "sha256": "5b8379ef15a5be5ac04b2180cfaf12f2934c36fa7b571ba7cc5cf6ac2f0f3e57",
+          "bytes": 1025627
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/identity/unit_brasshollow_foundry_saint-original-poses-rect-20-0-375-370-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_foundry_saint/identity-reference.png",
+          "sha256": "c0a3d5be59884d8ff648a78a82dee2b8ba34988a2e75bbdb0a40a5928cc2c867",
+          "bytes": 1037870
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/original/poses-poses-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/original/poses-poses-green.png",
+          "sha256": "e1ccb3a92f9be4ebf988aceb5766913a5a5e360a4d7993e6ded831f8e6e0e48c",
+          "bytes": 2595111
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/third/creep-guard-and-collapse-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fourth/creep-guard-and-collapse-green.png",
+          "sha256": "4c92a208c504707ae067252a1c6df56ff4112d92aaccf73d61c817fb15905fb2",
+          "bytes": 1702047
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/third/creep-guard-and-collapse-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/fourth/creep-guard-and-collapse-light.png",
+          "sha256": "87871413162172dbbacbd7312552039f2e33464cff1f0f85a40dd3f4335b9bb2",
+          "bytes": 1714129
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/saint-continuity-20260916/corpse-reference/unit_brasshollow_foundry_saint-original-poses-rect-1170-850-1536-1024-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_brasshollow_foundry_saint/corpse-reference.png",
+          "sha256": "a0afdeb1ccb7644ad7161a7cd831cbee7e267ba51a63f6aba2edf97b2a1defd1",
+          "bytes": 113776
+        }
+      ],
+      "removed_bytes": 28211089
+    }
+  }
+}

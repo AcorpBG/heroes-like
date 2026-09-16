@@ -1,0 +1,51 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_reedbarge_poles",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_reedbarge_poles.png",
+  "reference_sha256": "af2abca50db6649c2d3dcd2ec7d2ffc14dbbd54e05af10761d256740f7b4babd",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "4490e5c5b2bbfb2aa250178757c81e79dc51e52cfd279c399e0c9ebdb7bf2dcf",
+      "source_output": "exec-f1fc41a9-2844-4646-850e-7bcd624c4c8e.png",
+      "prompt": "Use case: stylized-concept. Original Reedbarge Pole battle sprite sheet based on attached identity: rugged middle-aged bearded bargeman, broad woven reed hat with small teal cloth, straw shoulder cape, dark teal scarf, faded olive/brown layered coat and split teal tabard, cream sleeves, belt rope coil and small brass lantern, muddy leather boots. Long wooden dock pole with curved iron hook at top and pointed brass butt, held with TWO hands. Exactly twelve original articulated full-body poses FOUR columns THREE rows, consistent body size, elevated three-quarter view facing RIGHT. Generous gutters and complete long pole in each cell. Row1 idle pole diagonal; breathing alert shoulders/hat slightly shift; walk contact near leg forward; opposite contact near thigh back toward LEFT overlapping far thigh stepping right, same equipment hands. Row2 passing step knee lifted beneath hip; attack windup hook pole drawn back over rear shoulder, both hands on shaft; strong forward hooked-pole thrust RIGHT front knee bent rear hand gripping near hip and front arm extended; defensive low stance pole shaft crosswise before chest both hands spread. Row3 hit recoil chest/head pull back; dying knees buckle and hands loosen; falling onto SIDE torso low pole drops beside; dead bargeman lying SIDE horizontal head/torso eyes closed limbs slack pole resting alongside. No blood. Real knees/hips/elbows articulate, no rotated standing corpse, no duplicated standing cutouts. Original gritty painterly raster, retain hat/rope/hook identity. Pale gray plain backdrop no floor, shadow, checkerboard, effects, labels or borders.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "0adae13fbad3c9a3393d43b733fbed99be3fa707fe4b273fcf15675901110fe9",
+      "alpha_output": "exec-bded2a08-b3f0-4fe1-a42a-c1813e5417a1.png",
+      "alpha_prompt": "Use case: background-extraction. Remove pale gray background from all twelve original Reedbarge Pole poses, genuine transparent RGBA. Preserve exact layout and size, complete hooks and pole butts, both gripping hands on thrust and crosswise guard, reed hat/cape fibers, rope and corpse. Clean transparent gaps between limbs and poles. No checkerboard, matte, shadows, effects, text, new objects or altered anatomy."
+    }
+  ],
+  "review_notes": [
+    "15 packed frames retain nine original RGBA paintings and select six new paintings: front-camera supported travel, hook-forward two-hand windup/recovery and a fully resting head-left corpse. Original back-camera contact, reversed-hook windup and head-right corpse are excluded.",
+    "The continuation corpse remained propped. An isolated old side-fall reference drives a selected targeted cheek-on-arm resting corpse, retaining complete pole with pointed butt left and hook right. Approved green-key/edge preparation and banded crops preserve both ends and remove neighboring hook/cloak fragments; passing-step crop retains full boot sole.",
+    "Repeated leading contacts, gaze/body camera, grip/pole-butt details in original guard, anatomical scale and connected travel/action/death timing remain review. No claim of final motion or gameplay acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve poses and extraction visually inspected: two-handed thrust, cross-pole guard, knees buckling, side fall and own prone corpse. Opposite walking pose rotates torso too far and contact alternation remains unaccepted. Pole-tip gutter/scale consistency, continuous motion and in-context compositing require final review. Source only, not packed or enabled; no tests/exports launched."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 9,
+    "new_or_corrected_selected_paintings": 6,
+    "generated_outputs": 2,
+    "generation": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_reedbarge_poles/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_reedbarge_poles/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_reedbarge_poles.png",
+    "runtime_sha256": "76fbfd75ec61df63c9f8000888ff80150a513b36a9d163cdb2d6add1ad0a6ca8",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png": "0adae13fbad3c9a3393d43b733fbed99be3fa707fe4b273fcf15675901110fe9",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/supported-travel-hook-forward-and-left-corpse.png": "6b236da79671f0e695f725529eb662b2298cfcb00ae2654cdaebcd86b3b178ce",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/dead-head-left-cheek-on-arm.png": "c38effba0328238ecc2d9fa09d478bc08f2bf63d95e7892acbd16c30aab54573"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/reedbarge-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

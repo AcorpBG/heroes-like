@@ -9,10 +9,17 @@
   "reference_sha256": "95e7c9fc8dfddeebe0d5cd7439347dc1e6538b4d0e1f52584dac8cbaf76354eb",
   "review_notes": [
     "Real articulated attack, brace and prone body; no affine standing-cutout poses.",
-    "Walk requires playback review: alternating leg contacts are not sufficiently distinct yet.",
-    "Generated edges and death-sheet equipment boundaries need in-context review."
+    "Opposite contact and passing poses redrawn with explicit near/far leg overlap and support. river-passing-motion-buffered-20260914 passes 136 checks and captures live atlas indices 2,3,4,5,2; reduced motion passes 127, alpha seven. 1280x720 passing and light/dark captures inspected. Full-speed continuous and all-state review remain outstanding; no final acceptance.",
+    "Generated edges and death-sheet equipment boundaries need in-context review.",
+    "2026-09-16 consolidated repack reproduced the current guided-walk atlas byte-for-byte. Refreshed the stale pre-refinement runtime hash; originals/source hashes unchanged. Not final playback acceptance."
   ],
   "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/candidate-atlas.png",
+      "source_sha256": "c881efa307190963035e8345c4aeac8711f7b772da320ae98ce8b6a489e3f4af",
+      "workflow_provenance": "art/animation/source/poses/unit_river_guard/workflow-v2/provenance.json",
+      "review": "Four guided gait frames replace indices2-5 as candidate. Exact generation/extraction prompts, original hashes and previous recipe retained in workflow provenance. Other states unchanged. Static art desk inspected, continuous all-state/gameplay acceptance still open; tests/exports deferred."
+    },
     {
       "source": "idle.png",
       "source_sha256": "e792a3c852a5a9625ef2ea12a2dba30f780209a1623d2fb81b98dcedc83603cf",
@@ -62,12 +69,70 @@
       "alpha_sha256": "1fd1c2e36941ccedb5ce46b479f9c4c30407ee7dac994a293a85644c4cfefe5b",
       "alpha_output": "exec-191f47e0-4de5-47ae-9069-dfc579f8894a.png",
       "alpha_prompt": "Remove the green background from this sprite strip. Preserve the three characters and their equipment unchanged. Return them isolated on a transparent background."
+    },
+    {
+      "source": "opposite-contact-gray.png",
+      "source_sha256": "229ac0faa2a7be79e5534e08381a708e0770063c278c179612b820b6b885d4e8",
+      "source_output": "exec-799efe75-a31b-4f52-9996-e51737bb08e2.png",
+      "prompt": "Replace ONLY checkerboard background with uniform pale gray RGB(210,210,210). Preserve exact original guard pose, all leg overlap/contours, face, shield, spear, size and framing. No new shadows or elements.",
+      "alpha_source": "alpha/opposite-contact.png",
+      "alpha_sha256": "71221ad8e36ee3c0451154528a0e6e85a4e5e51e14260563c9e4a3ad4161700c",
+      "alpha_output": "exec-f7b43dde-4a7d-4b2b-b4f5-10ac3ba2e8b3.png",
+      "alpha_prompt": "Remove the pale gray background entirely. Return genuine transparent RGBA. Preserve the original guard, exact backward foreground leg overlap, all equipment and pose dimensions unchanged. No checkerboard, matte, shadows or added pixels."
+    },
+    {
+      "source": "opposite-passing-gray.png",
+      "source_sha256": "d409879f976b9cf2c872ea4567bf1c1a4b6cd9f36d4951cdb0253128ac015767",
+      "source_output": "exec-64be7435-a0c1-4b04-be18-d0d3ee67300a.png",
+      "prompt": "Use case: precise-object-edit. Original River Guard WALK PASSING pose derived from this contact pose. Preserve same face, brass helmet, red quilted coat, cream sash, left-hand oval shield at screen right, right-hand spear at screen left, camera, canvas, body size and all upper-body identity. Change lower-body articulation: FAR leg (currently extending toward RIGHT behind foreground thigh) becomes the SUPPORT leg straight almost vertical under pelvis, far boot planted flat under hip. NEAR foreground leg (currently extending backward LEFT) swings forward: near thigh crosses in FRONT of the support thigh, knee bends gently forward RIGHT, near lower leg folds backward so lifted near boot hangs near the planted shin but stays visibly off ground. A natural low passing step, knee well BELOW belt, not high-knee march. Exactly two legs, one planted and one lifted. Maintain clear near-thigh foreground overlap. Coat hem follows lifted near knee. Keep spear tip/body fully visible, no mirror, no equipment swaps. Uniform pale gray background, no shadows, checkerboard, text or new elements. One original raster figure.",
+      "alpha_source": "alpha/opposite-passing.png",
+      "alpha_sha256": "eb636e99da942ca58b1206817ba2414fc18f66105d02ba33878148b337597deb",
+      "alpha_output": "exec-975e7ca7-6620-4184-b6c2-de12dc67d056.png",
+      "alpha_prompt": "Remove pale gray background entirely to genuine transparent RGBA. Preserve exact original guard pixels and passing pose, the lifted foreground boot crossing in front of planted support shin, equipment, size and framing. No checkerboard, matte, shadows, scenery, text or new anatomy."
     }
   ],
   "packing": {
     "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_river_guard.png",
-    "runtime_sha256": "6e9fabd7a9772bd99611ef86a3a560816c5e1710eb1814a8abd588e75e8598ba"
-  }
+    "runtime_sha256": "c881efa307190963035e8345c4aeac8711f7b772da320ae98ce8b6a489e3f4af",
+    "previous_runtime_sha256": "275f99cc70230027e4316cb22f0b8feac32cfc14d48a205eadbe71084cdcfe72"
+  },
+  "intermediates": [
+    {
+      "source": "walk-v2-draft.png",
+      "sha256": "7b7c947645a3fc31d57ff17d5328117eaa3f4168562ca58a10e63cf6ad1e1ec3",
+      "source_output": "exec-b7d3032e-3f13-4bb2-b447-1ab392080bef.png",
+      "prompt": "Use case: precise-object-edit. Correct this original River Guard FOUR-frame WALK cycle sheet, preserving identity, face, brass helmet, red coat, sash, spear and shield, same 2x2 layout and body size. The top left has the near (viewer-facing) leg forward RIGHT and far leg back LEFT; keep top left. Top right is passing: near leg planted vertical, far leg swinging forward bent; ensure this. Crucial correction BOTTOM LEFT: near/viewer-facing leg must now extend BACK to LEFT with heel raised and toe contact; the FAR leg must extend FORWARD to RIGHT with heel contact. Draw the near hip and thigh going down-left, NOT down-right. This must visibly reverse leg overlap and knee direction relative to top left, not merely repeat that pose. BOTTOM RIGHT: FAR leg planted vertically supporting weight, NEAR leg bent and swinging forward with lifted boot; reverse supporting leg compared to top right. Keep shield in same left hand, spear in same right hand; do not mirror whole character or swap equipment. Show moderate natural walking knee height, not high-knee marching. Coat hem follows the correct forward thigh. Four original articulated poses, consistent size, both feet anatomically connected, same three-quarter RIGHT-facing camera. Generous gaps and uncut spear. Use uniform pale neutral gray background with no shadows, text, borders or checkerboard.",
+      "status": "Unselected anatomy/background production draft; not runtime."
+    },
+    {
+      "source": "opposite-contact-draft.png",
+      "sha256": "54b60c0bbaea34962208ddf6c2d10621b0b1e4240775cec8640691cffef9217c",
+      "source_output": "exec-6a8ce8c1-6e5e-4102-bc76-bdfdb4b9bd09.png",
+      "prompt": "Original game sprite, a SINGLE full-body pose of this same River Guard man, camera and equipment unchanged. Identity reference is attached sheet. Draw the OPPOSITE walking contact to its top-left pose. This is NOT another forward near-leg step. The leg closest to camera emerges under the LEFT side of the belt pouch and sweeps diagonally DOWN-LEFT, forming an unbroken visibly foreground brown thigh and shin to a rear boot on the left with HEEL LIFTED. The distant leg emerges BEHIND that near thigh and reaches forward DOWN-RIGHT to a boot on the right with HEEL on ground and toe lifted. Clearly overlap near thigh IN FRONT of far thigh at the hip crossing. Near rear knee bent mildly, far front knee almost straight. Keep upper body facing right, left-hand oval red-blue shield at screen right, right hand spear at screen left, brass helmet and red quilted coat/cream sash. Do not mirror upper body, do not swap equipment. One full figure only, all spear/body visible, neutral pale gray background, painterly raster matching reference, no text or shadows.",
+      "status": "Unselected anatomy/background production draft; not runtime."
+    },
+    {
+      "source": "opposite-contact-overlap.png",
+      "sha256": "9cb9b1dfd16fa5f24e5fd5ea0f3620126681f04e0081020355cef47d14d5b1a0",
+      "source_output": "exec-09bc2b23-5de5-4872-97cc-dbd509d0479a.png",
+      "prompt": "Edit this single original guard pose. Change ONLY the legs and lower coat folds: bring the BACKWARD LEFT-SCREEN leg into the FOREGROUND at the thigh intersection. That backward leg's thigh must overlap and obscure the upper portion of the forward RIGHT-SCREEN thigh. Draw a clear continuous front contour from the left hip beneath the belt pouch diagonally down-left to the backward knee. The rightward forward thigh is BEHIND and partly hidden by this backward foreground thigh. Mark the entire backward foreground trouser leg temporarily BLUE (boot remains brown) to make the overlap unambiguous. Do NOT recolor the rightward trouser leg. Preserve upper body, head, shield, spear, camera, pose dimensions, foot endpoints and background. This is an anatomy production draft; no text.",
+      "status": "Unselected anatomy/background production draft; not runtime."
+    },
+    {
+      "source": "opposite-contact-checker.png",
+      "sha256": "c8a7bf532b01a269117ef2c558c515f7e1825b1216884841618eda7a68161867",
+      "source_output": "exec-2dd8ea89-3435-4bf6-b384-daff273b16fa.png",
+      "prompt": "Change ONLY the blue trouser leg to the same dark brown fabric as the other trouser leg, preserving EXACT leg contours, overlap, folds, boot positions and the backward foreground leg orientation. Remove pale gray backdrop to genuine transparent RGBA. Keep all other original character pixels, clothing, face, shield, spear, scale, framing and pose unchanged. No new limbs, no shadow, checkerboard, matte, text or scenery.",
+      "status": "Unselected anatomy/background production draft; not runtime."
+    },
+    {
+      "source": "opposite-contact-checker-retry.png",
+      "sha256": "d6194c6d8f6efb298ab4e16064ad102423babbfa36d919812148547f9baeab6a",
+      "source_output": "exec-681b6229-3dca-4321-b10f-a0d797ce7a7d.png",
+      "prompt": "Remove the checkerboard backdrop completely from this original guard. Genuine transparent RGBA output, including gaps around legs, weapon and shield. Preserve exact pose and pixels: foreground trouser leg extends backward down-left overlapping the forward leg. No anatomical changes, no matte, no checkerboard, no shadows, no new elements.",
+      "status": "Unselected anatomy/background production draft; not runtime."
+    }
+  ]
 }

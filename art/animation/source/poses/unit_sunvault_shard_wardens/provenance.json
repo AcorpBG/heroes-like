@@ -1,0 +1,120 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_sunvault_shard_wardens",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "runtime_candidate_pending_consolidated_validation",
+  "reference": "art/units/source/curated/unit_sunvault_shard_wardens.png",
+  "reference_sha256": "8b5721abc52e6ba60237f84bc766434cb9b6c4b4ec1ecb66e36ecf584075821a",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/poses-draft.png",
+      "source_sha256": "401054d826606ccbc84ded405dd58a3f1269810938087b0a9b865189b450e768",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0c3e7bac-d12a-49d9-ab94-ef16c21debf6.png",
+      "prompt": "Use case: stylized-concept. Asset type: original fantasy strategy battle animation sheet. Reference image establishes Shard Warden identity: brown-haired young woman, ivory plate armor with gold edging and blue-purple crystal inlays, royal-blue scarf and split tabard, RIGHT hand short gold-and-crystal mace, LEFT arm huge pointed ivory/gold tower shield with blue-purple faceted crystals and central oval gem. Paint exactly twelve full-body poses in four columns by three rows, fixed three-quarter side view facing right and consistent body/equipment scale. True transparent RGBA background, generous gutters, no labels. Reading order: 1 relaxed idle shield upright mace low; 2 inhaling idle shoulders lift shield tilts slightly; 3 walking right foot forward left back; 4 passing step feet nearly together right planted left knee raised; 5 opposite contact LEFT foot forward RIGHT foot back, torso still facing right; 6 attack windup RIGHT mace raised behind shoulder LEFT shield forward; 7 attack contact RIGHT arm extends mace strike forward LEFT shield remains attached guarding side; 8 defense crouch behind raised tower shield; 9 hit recoil shield tips backward torso recoils; 10 death knees buckle mace lowers; 11 falling onto side shield tips with LEFT arm; 12 dead side-lying body eyes closed, shield and mace resting beside their correct hands. Preserve whole figure including feet, shield point and weapon in every cell. Anatomically articulated changes, not repeated translated standing poses. Same mace head/shaft length, shield height, face and costume throughout. Both equipment pieces remain on all frames including corpse. No ground or shadow, no effects, no blood, no text, no background. Detailed original painted game sprite art matching reference."
+    },
+    {
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/poses.png",
+      "source_sha256": "bcb15d550f6bc302e3b6449d47049768b01d10b5b9d0d7f5bba77c10e9326ad1",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1d37f9d2-796c-4628-be9f-796c53ed5e9c.png",
+      "prompt": "Use case: precise-object-edit. Correct only ROW ONE COLUMN FOUR on this twelve-pose Shard Warden sheet: restore the missing short gold-and-purple-crystal mace in her currently EMPTY RIGHT HAND at screen left of that figure, held low diagonally toward lower left exactly like neighboring walking poses. Same weapon size, crystal head and brown grip. Keep her raised-knee pose, shield, face, armor and every other sprite unchanged. Preserve full sheet layout, no overlaps, no background change. No other edits.",
+      "alpha_source": "art/animation/source/poses/unit_sunvault_shard_wardens/alpha/poses.png",
+      "alpha_sha256": "39d16c48102663cef0d41413e697ae91897f5830095f5143fa73e263f74ad556",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-61e0e3c6-8784-4251-9b03-5b22b26e7d21.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only the checkerboard background from this twelve-pose Shard Warden sheet, delivering actual transparent RGBA alpha. Preserve all twelve painted figures exactly including newly restored mace in top-right pose, ivory armor and shields, blue cloth, gold trim, crystal colors, all opaque interiors, positions and size. Transparent gaps around and between equipment and bodies. No replacement backdrop, painted checkerboard, matte, shadow, edge glow, redraw or layout changes."
+    }
+  ],
+  "review_notes": [
+    "Four newly painted contact/passing phases visibly alternate near/far support legs without torso mirroring or swapping equipment.",
+    "Existing original alpha retains idle, mace windup/contact, shield brace, recoil and three collapse/corpse stages; wide strike and side-lying corpse use explicit crops.",
+    "A second shield-brace painting provides a two-frame defensive cycle. Shield/mace proportions, brace transition and hair edges remain part of full in-game motion acceptance.",
+    "Original sources, rejected contact, exact prompts, guide roles, local cutout recipe and deterministic packing are retained. Candidate is not final accepted art."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses visually inspected; missing top-right mace restored. Not packed or enabled.",
+    "Attack windup/contact, shield brace, kneeling and side-fallen closed-eye corpse present.",
+    "Walking contacts repeat leading leg; raised-knee pose requires gait refinement. Shield height, mace shaft/head scale and hand attachment continuity pending.",
+    "Extracted edge colors/fringes require in-context compositing review. Explicit crops needed for wide attack/corpse forms.",
+    "No tests/exports run. 29 runtime candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "sources": [
+      {
+        "source": "art/animation/source/poses/unit_sunvault_shard_wardens/walk-contact-a.png",
+        "source_sha256": "b507b383fb5cce2eb814c765d3a6201ee3824e89349ddf04d815f61cf2908e5e",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8bf7ba2f-b2da-4137-9a0c-d2970d31246c.png",
+        "prompt": "Use case: sketch-to-render. Image1 is the authoritative LEG POSE DIAGRAM only. Image2 is the original Shard Warden identity, equipment and painted style. Create ONE full-body sprite matching Image1's leg joints and depth, dressed exactly as Image2. CONTACT A: near/right leg (BLUE in guide, on visible mace-hand side) crosses in front of the far thigh and reaches forward RIGHT, heel down; far/left leg (ORANGE, shield side) extends back LEFT on toe. Match the crossing and depth order exactly. Original brown-haired woman with bun, blue neck scarf and blue gold-trim split tabard, ivory/gold plate armor with violet crystal chest/knee inlays, armored boots. Anatomical RIGHT/near hand holds ONE short straight-handled crystal-ended mace down at her right side (screen left). Anatomical LEFT/far forearm carries ONE tall angular ivory-and-gold tower shield with blue/violet crystal rim shards and circular purple center boss, on screen right. Keep mace head/shaft proportions, shield height relative to body, and equipment hand ownership identical to reference. Torso/head face RIGHT in the same elevated three-quarter camera; shield stays on same far arm, no hand swapping or mirrored coat. Natural moderate walking stride, both leg attachments anatomically consistent; tabard may part enough for thighs but do not hide wrong joints. Painterly original raster; no guide colors/lines, new weapons, effects, symbols, text, ground or shadow. Full body, shield tip, mace, hair and boots visible with generous padding. Uniform neutral gray RGB(160,160,160) background for approved local extraction; no checkerboard."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_shard_wardens/walk-passing-a.png",
+        "source_sha256": "7d163ba76010f2c025a501d755b441478373a9439deecb59df59a41d619157ec",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b4131d15-9780-4da3-a95a-3516c1c19f21.png",
+        "prompt": "Use case: sketch-to-render. Image1 is the authoritative LEG POSE DIAGRAM only. Image2 is the original Shard Warden identity, equipment and painted style. Create ONE full-body sprite matching Image1's leg joints and depth, dressed exactly as Image2. PASSING A: near/right leg (BLUE, mace-hand side) is straight and planted under the pelvis; far/left leg (ORANGE, shield side) bends with raised foot behind that supporting shin, knee passing forward. No high marching knee. Original brown-haired woman with bun, blue neck scarf and blue gold-trim split tabard, ivory/gold plate armor with violet crystal chest/knee inlays, armored boots. Anatomical RIGHT/near hand holds ONE short straight-handled crystal-ended mace down at her right side (screen left). Anatomical LEFT/far forearm carries ONE tall angular ivory-and-gold tower shield with blue/violet crystal rim shards and circular purple center boss, on screen right. Keep mace head/shaft proportions, shield height relative to body, and equipment hand ownership identical to reference. Torso/head face RIGHT in the same elevated three-quarter camera; shield stays on same far arm, no hand swapping or mirrored coat. Natural moderate walking stride, both leg attachments anatomically consistent; tabard may part enough for thighs but do not hide wrong joints. Painterly original raster; no guide colors/lines, new weapons, effects, symbols, text, ground or shadow. Full body, shield tip, mace, hair and boots visible with generous padding. Uniform neutral gray RGB(160,160,160) background for approved local extraction; no checkerboard."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_shard_wardens/walk-contact-b.png",
+        "source_sha256": "2d62737d848d535d062366f7f4cb95c48d1fd5abc6d89bc7fbc8878fe3a01ab7",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-19e5939c-1219-45a3-8a9e-a4dd499f7067.png",
+        "prompt": "Use case: precise-object-edit. Image1 is the EDIT TARGET. Image2 is the authoritative leg skeleton for the correction. Keep the whole upper body, head, shoulders, RIGHT-hand mace and LEFT-arm shield EXACTLY as Image1; only reposition the two legs and cloth needed for them. The current near/right leg incorrectly crosses to the forward boot. REVERSE that phase: NEAR/right thigh, from pelvis on screen LEFT (mace side), must angle BACK/LEFT to a knee LEFT of pelvis and boot at SCREEN LEFT behind her, toe contacting ground. FAR/left thigh from pelvis on screen RIGHT (shield side) must angle FORWARD/RIGHT to knee RIGHT of pelvis and forward boot at SCREEN RIGHT, heel down. Open A-shaped stride as Image2, no crossing near leg across front. Near knee should be visibly LEFT of the center belt buckle, far knee visibly RIGHT of it. Shield may occlude upper far thigh only, but knee/boot remain anatomically connected. Do not rotate/mirror the torso, swap hands, change boots/armor design, lengthen limbs or remove equipment. Preserve camera, scale, original palette/paint texture and gray background; no labels, guide lines, extra legs, shadows or other changes."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_shard_wardens/walk-passing-b.png",
+        "source_sha256": "f752b7d4cc879c1e1b296be176235b4320a4c22516708e1202bd00a21a691200",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-906c89b3-1295-457c-8de9-86dda6daa774.png",
+        "prompt": "Use case: sketch-to-render. Image1 is the authoritative LEG POSE DIAGRAM only. Image2 is the original Shard Warden identity, equipment and painted style. Create ONE full-body sprite matching Image1's leg joints and depth, dressed exactly as Image2. PASSING B: far/left leg (ORANGE, shield side) is straight and planted beneath body; near/right leg (BLUE, mace-hand side) bends with raised foot and knee passing forward, in front of the supporting shin. No high marching knee. Original brown-haired woman with bun, blue neck scarf and blue gold-trim split tabard, ivory/gold plate armor with violet crystal chest/knee inlays, armored boots. Anatomical RIGHT/near hand holds ONE short straight-handled crystal-ended mace down at her right side (screen left). Anatomical LEFT/far forearm carries ONE tall angular ivory-and-gold tower shield with blue/violet crystal rim shards and circular purple center boss, on screen right. Keep mace head/shaft proportions, shield height relative to body, and equipment hand ownership identical to reference. Torso/head face RIGHT in the same elevated three-quarter camera; shield stays on same far arm, no hand swapping or mirrored coat. Natural moderate walking stride, both leg attachments anatomically consistent; tabard may part enough for thighs but do not hide wrong joints. Painterly original raster; no guide colors/lines, new weapons, effects, symbols, text, ground or shadow. Full body, shield tip, mace, hair and boots visible with generous padding. Uniform neutral gray RGB(160,160,160) background for approved local extraction; no checkerboard."
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_shard_wardens/defend-breath.png",
+        "source_sha256": "9b2034a600b139e058f5ab383962725f912452ec6211f36b759e10b57148c449",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-22802f57-eca1-4d8e-b0e3-a85be9cbf1f1.png",
+        "prompt": "Use case: identity-preserve. Image1 is the Shard Warden defensive crouch pose reference. Image2 is identity/equipment reference. Draw ONE full-body second frame of exactly this kneeling shield-brace pose, a small defensive breathing action. Preserve near/right knee down and far/left foot planted, body tucked behind tall angular tower shield on LEFT/far forearm, RIGHT/near hand holding short crystal-ended mace low. Keep ivory/gold armor, blue tabard/scarf, violet gems, same brown bun, face/camera facing RIGHT. Only a small inhalation: raise head/chest a fraction and flex shield elbow slightly, shield inclines outward a few degrees while its tip stays near the ground. Remain a deep protective crouch, no swapping knees/arms, no new stance, no change to shield size or mace length. Same fine original painted style, full body/mace/shield inside generous margins. Uniform neutral gray RGB160 background, no scenery, text, ground/shadow, checkerboard or effects."
+      }
+    ],
+    "rejected_sources": [
+      {
+        "source": "art/animation/source/poses/unit_sunvault_shard_wardens/walk-contact-b-draft.png",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c4ca94b3-8f6a-4a45-92f6-87895d33f5c2.png",
+        "prompt": "Use case: sketch-to-render. Image1 is the authoritative LEG POSE DIAGRAM only. Image2 is the original Shard Warden identity, equipment and painted style. Create ONE full-body sprite matching Image1's leg joints and depth, dressed exactly as Image2. CONTACT B: near/right leg (BLUE, mace-hand side) extends back LEFT; far/left leg (ORANGE, shield side) strides forward RIGHT, heel down. Preserve torso/facing, do not mirror the whole character. Original brown-haired woman with bun, blue neck scarf and blue gold-trim split tabard, ivory/gold plate armor with violet crystal chest/knee inlays, armored boots. Anatomical RIGHT/near hand holds ONE short straight-handled crystal-ended mace down at her right side (screen left). Anatomical LEFT/far forearm carries ONE tall angular ivory-and-gold tower shield with blue/violet crystal rim shards and circular purple center boss, on screen right. Keep mace head/shaft proportions, shield height relative to body, and equipment hand ownership identical to reference. Torso/head face RIGHT in the same elevated three-quarter camera; shield stays on same far arm, no hand swapping or mirrored coat. Natural moderate walking stride, both leg attachments anatomically consistent; tabard may part enough for thighs but do not hide wrong joints. Painterly original raster; no guide colors/lines, new weapons, effects, symbols, text, ground or shadow. Full body, shield tip, mace, hair and boots visible with generous padding. Uniform neutral gray RGB(160,160,160) background for approved local extraction; no checkerboard.",
+        "reason": "Repeated near-leg-leading contact; excluded. Corrected by leg-only reference edit plus phase-2 guide instead of another unchanged prompt retry."
+      }
+    ],
+    "reference_roles": {
+      "walking": "Single near/far-limb guide first; original idle identity crop second. Corrected contact B instead uses failed full-figure painting first and phase-2 guide second to change only leg geometry.",
+      "defense": "Original shield-brace crop plus idle identity; retain right mace and left tower shield."
+    },
+    "original_alpha_sha256": "39d16c48102663cef0d41413e697ae91897f5830095f5143fa73e263f74ad556",
+    "reference_crops": [
+      {
+        "source": "alpha/poses.png",
+        "rect": [
+          0,
+          0,
+          360,
+          375
+        ],
+        "output": "identity-reference.png"
+      },
+      {
+        "source": "alpha/poses.png",
+        "rect": [
+          1132,
+          388,
+          1448,
+          728
+        ],
+        "output": "defense-reference.png"
+      }
+    ],
+    "preparation": "Owner-approved local non-generative neutral-background removal via continuity-cutouts.json; per-output .processing.json pins original/output/tool/recipe hashes. Original alpha sheet copied unchanged. Explicit seed clears enclosed gray behind defense arm, not armor.",
+    "packing": "packing.json",
+    "runtime_sheet": "art/animation/runtime/poses/unit_sunvault_shard_wardens.png",
+    "runtime_sha256": "717d91a4b79d18b12179cea9b5c71d2a6781580286b65f59ed7ffcf59bd21972",
+    "frames": 14,
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/shard-warden-continuity-20260915/",
+    "validation": "Production assembly and visual art inspection only; no Godot/tests/imports/exports. Connected battle timing, equipment/cloth consistency and final acceptance remain deferred."
+  }
+}

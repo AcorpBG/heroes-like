@@ -1,0 +1,128 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_sunvault_splitprism_parallax_fencers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "runtime_candidate_pending_consolidated_validation",
+  "reference": "art/units/source/curated/unit_sunvault_splitprism_parallax_fencers.png",
+  "reference_sha256": "702b90f1bd86f72cb90a678c531d07fa13fe8662db7a0f3e2cee73d4fa4642f1",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/poses.png",
+      "source_sha256": "fcc8bddae27d4801970c886669e7c298fa16830ed746643e1cd674c4fec655c9",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c80559a9-0e3e-43ea-b17e-f4d53c81e303.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle animation sprite sheet matching attached Splitprism Parallax Fencer reference. Exactly 12 full-body poses regular FOUR columns THREE rows. Fixed three-quarter camera facing RIGHT same scale spacious gutters. Actual transparent RGBA background no painted checkerboard no ground labels. Human woman curly brown hair bun blue/gold prism headband ivory segmented armor fitted white trousers gold trim blue sash long tails, faceted mirrored shoulder and knee gems. Anatomical RIGHT hand holds BLUE crystalline rapier, anatomical LEFT hand shorter AMBER crystalline parrying blade, both with gold round guards. NEVER swap blade colors or hands. Row1 relaxed en garde blue sword forward low amber beside hip; breathing idle shoulders lift blades subtle wrist change; walk left leg forward right back; walk right leg forward left back visibly opposite anatomical legs not mirror body. Row2 passing bent lifted knee; attack windup RIGHT blue rapier retracts elbow bent LEFT amber protects chest; attack contact RIGHT blue rapier long thrust right into opponent LEFT amber guards torso; defense low stance both blades crossed before chest blue and amber distinct. Row3 hit recoil torso back both blades held; death knees buckle blades sag; collapse sideways releasing blades toward ground; persistent prone corpse eyes closed both solid crystal blades on ground beside hands blue/amber subdued no active glow or floating shards. Coherent articulated shoulders elbows hips knees and equipment continuity. Keep sword lengths body scale headband armor gems and two blades consistent. Painterly original fantasy game sprites matching reference crisp readable shapes, full blades and feet in each cell no clipping overlap extra arms weapons or motion blur."
+    }
+  ],
+  "review_notes": [
+    "All fourteen selected frames are new original art with fixed right-facing camera, blue rapier in near/right hand and amber off-hand at rear/left. Original camera-flipped/short-weapon poses are not packed.",
+    "Guided four-phase walking, quiet idle pair, full-length blue thrust/recovery, blue parry pair and hit reaction share the same identity; first chest-guard attack was rejected for camera/hand ambiguity and replaced by a constrained rear off-hand pose.",
+    "Three-stage kneel, lowering torso and persistent side-lying corpse retain both blades. Uniform death-frame scale .34 selected against head/torso landmarks instead of fitting silhouette height.",
+    "Owner-approved bounded neutral key, explicit enclosed-hair-gap regions and anatomical packing preserve originals; fine hair, sword-guard/sash ornament and cross-state scale/limb continuity remain subject to consolidated motion/battle acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses include two-blade guard, blue thrust and equipped corpse.",
+    "Camera orientation flips between idle, walking and attack; do not normalize by swapping right-blue/left-amber ownership. Opposite gait contact and passing continuity needed.",
+    "Wind-up blue blade becomes dagger length; blue/amber length and guard scale vary. Wind-up raised slash pose does not smoothly connect to thrust.",
+    "Armor prism/headband placements and sash/cape count change. Extended blue blade crosses nominal cell boundary requiring explicit crop.",
+    "Seated fall still supported before prone; final blades remain bright and corpse eye closure needs close review.",
+    "Checker background visible; transparency/compositing unresolved. Source-only not packed/enabled; no tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "sources": [
+      {
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/walk-contact-a.png",
+        "source_sha256": "0fa5358b691e5f57d28daea86ac252aec819cb3122dd17bff6439a91cbeb4a5c",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a905fafa-63e7-42db-84fa-74fd03bebc93.png",
+        "prompt": "Use case: sketch-to-render. Single original painted Parallax Fencer battle WALK CONTACT A. Image1 controls leg pose; image2 exact identity, camera and equipment. Woman curly brown bun gold/prism headband, fitted ivory gold-trim armor and white trousers, blue sash with two long tails, faceted blue shoulder/knee gems. Anatomical RIGHT near hand holds LONG BLUE crystal rapier with gold guard toward screen RIGHT low in front of body; anatomical LEFT far hand holds SHORT AMBER parrying blade low behind hip screen left. Blue blade twice amber blade length, no hand/color swaps. Follow guide: NEAR RIGHT leg blue swings forward-right crossing IN FRONT of far thigh; FAR LEFT leg orange trails left. Exactly two legs. Same three-quarter right-facing body as image2, face looks right, no body mirroring, no changes to swords/grips. One complete full-body sprite with all blade tips, bun and boots in margin, plain flat neutral gray #989898 for cutout. Original richly painted strategy art, opaque white trousers/armor, no floor, shadows, effects, checkerboard, text or extra limbs.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/walk-passing-a.png",
+        "source_sha256": "f407eeb6c2ece5f8a26384a9b8d282b08d676301b5a5c1f80edce170461b7e4b",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0a9d4a3f-1fd5-4331-8c6f-5f2561a21655.png",
+        "prompt": "Use case: sketch-to-render. ONE original painted Parallax Fencer walking PASSING A. Image1 joint guide only, image2 exact character identity/camera. NEAR RIGHT blue leg straight beneath pelvis with boot PLANTED; FAR LEFT orange leg bends at knee forward, foot LIFTED behind the supporting shin visibly off ground. Body faces screen RIGHT, no mirroring. Same woman curly brown bun gold/blue prism headband, ivory/gold fitted armor and white trousers, blue waist sash with two long tails, original shoulder/knee gems. Anatomical RIGHT near hand holds long BLUE crystal rapier low toward screen right across front; LEFT far hand short AMBER blade lowered back at left hip. Blue blade twice amber length; both guards, hands, equipment and face unchanged, no swapping. Full figure and sword tips uncropped with generous margins, plain flat neutral gray #989898 for local cutout. Original crisp painted strategy-game style, opaque white armor/trousers. No floor/shadow, effects, checkerboard, text, extra limbs or blades.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/walk-contact-b.png",
+        "source_sha256": "d443b6af3274af6417828599fe935344fa646942754f6a62b21ccefce2c7df34",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8ee1d8ce-e8a3-46b1-ab34-17e9a20513a4.png",
+        "prompt": "Use case: sketch-to-render. ONE original painted Parallax Fencer WALK CONTACT B. Image1 is authoritative leg placement guide, image2 exact identity/camera. NEAR RIGHT leg BLUE trails BACK toward LEFT, its thigh slopes down-left and foot planted behind hips; FAR LEFT ORANGE leg reaches FORWARD screen RIGHT with boot planted ahead. OPEN stride between knees, unlike crossed near-leg-leading identity. Keep torso/face facing RIGHT same three-quarter view, do not mirror torso or swap hands. Curly brown bun woman gold-blue prism headband, fitted ivory/gold armor white trousers, blue sash two long tails, same shoulder/knee gems. RIGHT NEAR hand holds LONG BLUE crystalline rapier low pointing RIGHT; LEFT FAR hand holds SHORT AMBER parrying blade low at rear left hip. Blue blade twice amber length, both original gold guards and exact hand ownership. Full figure including blades/boots uncropped with broad margins on flat neutral gray #989898. Rich original painted strategy-game style, opaque white materials. No extra hands/legs/weapons, shadow, floor, effects, checkerboard or text.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/walk-passing-b.png",
+        "source_sha256": "137b367a865296571f0a300f0732a88037f4461596cb693392443f2eba515a7d",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4bc3c914-67b8-476f-9ff2-29243a3fc589.png",
+        "prompt": "Use case: sketch-to-render. ONE Parallax Fencer original painted WALK PASSING B. Image1 leg articulation guide only, image2 exact identity and fixed camera. FAR LEFT ORANGE leg straight under pelvis with boot planted; NEAR RIGHT BLUE thigh lifted FORWARD screen right, knee raised well ahead of hips, shin folds BACK toward left, boot clearly above ground in front of far supporting shin. Exactly two legs, opposite support from prior passing. Same right-facing three-quarter torso/face, no mirror. Woman curly brown bun gold/blue prism headband, ivory/gold fitted segmented armor white trousers, blue sash with two long tails, same blue mirror shoulder and knee gems. RIGHT NEAR hand holds LONG BLUE crystalline rapier low toward RIGHT, LEFT FAR hand SHORT AMBER parrying blade lowered rearward left. Two original gold guards; preserve hand/color ownership and blue blade twice amber length. Entire woman and both sword tips in generous margin on plain flat neutral gray #989898. Original rich painted strategy style, opaque white armor. No new equipment/limbs, floor, shadows, beams, effects, checkerboard or text.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/idle-pair.png",
+        "source_sha256": "b9e37c78322e8da773b7d78b94fc81b702580e2f380e3b8032ccc26aef149edb",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ca7162b0-be06-48a3-8368-ab4c02734569.png",
+        "prompt": "Use case: stylized-concept. TWO original painted Parallax Fencer IDLE animation poses side-by-side, same woman and camera as reference. Quiet ready stance, both boots planted shoulder-width, knees slightly soft, body and face to screen RIGHT fixed three-quarter view. RIGHT near hand holds full LONG BLUE crystal rapier low forward screen right; LEFT far hand holds SHORT AMBER parrying dagger low behind left hip. Blue blade twice amber length, same gold guards and hand ownership. LEFT calm resting guard; RIGHT subtle inhale shoulders/chest lift a little, right wrist lifts rapier just a few degrees, sash tips move slightly. No walking or attack. Curly brown bun woman, blue prism gold headband, ivory/gold fitted segmented armor white trousers, blue sash with two long tails, original faceted shoulder/knee gems. Identical anatomy and equipment sizes between cells, no camera flip, keep same figure as reference. Two separate full-body sprites with generous gutters and uncropped tips/boots on plain flat neutral gray #989898. Original richly painted strategy-game style, opaque white armor, no floor, shadows, effects, checkerboard, text or extra body parts.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/attack-front-camera-rejected.png",
+        "source_sha256": "cffc9a2b35cde6bd9bcb2476d15518914adb4ba62c992b274cfacd8a62faa0bc",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4643bd17-bb47-4f74-810b-50ad194ce772.png",
+        "prompt": "Use case: stylized-concept. TWO original painted Parallax Fencer MELEE attack poses side by side, same woman/camera/body/equipment as reference. LEFT WINDUP: knees bend into fencing stance, torso coils slightly backward but still faces RIGHT, anatomical RIGHT near elbow retracts beside ribs, long BLUE rapier held horizontally forward at chest height, full blade pointing right; LEFT far hand raises SHORT AMBER dagger diagonally guarding chest without crossing blue blade. RIGHT IMPACT: front/right knee deep lunge forward-right, rear/left leg extended back, RIGHT near arm extends long BLUE rapier straight to screen right in thrust, LEFT AMBER dagger still guards chest. Full blue rapier blade identical length in both panels, twice amber blade, never shorten to dagger. Same gold guards; no swapping hands/colors, no extra blade/arm, no camera flip. Curly brown bun, prism gold headband, ivory/gold fitted armor and white trousers, blue sash two tails, faceted shoulder/knee gems. Two separate uncropped figures at SAME anatomy scale with large gutter and generous blade margin; wide flat neutral gray #989898 backdrop, opaque armor and crystal. Rich original painted strategy-game art, no ground, shadow, beam, effects, checkerboard, text or enemy.",
+        "selection": "rejected_camera_and_hand_continuity"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/attack-pair.png",
+        "source_sha256": "9cde9cb48c91c899ffe6fd9e98d3e30b6ce82944d1fb53dddbd1f0c57bdd7bf9",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7792ca43-cd3e-4e67-8d36-3f4b81cdc001.png",
+        "prompt": "Use case: precise-object-edit. TWO-panel attack mini-sheet derived from this exact Parallax Fencer. Treat reference pose as EDIT TARGET copied into both panels; KEEP SAME BACK/RIGHT three-quarter camera, torso armor orientation, face, shoulder ornaments and both weapon owners. Do not turn chest toward viewer. LEFT ARM holding AMBER dagger remains stretched down behind hip screen LEFT exactly as reference in BOTH panels, no chest guard. Only RIGHT foreground arm holding BLUE rapier changes: LEFT panel right elbow bends drawing blue guard back toward near waist while LONG full-length blue blade aims straight RIGHT, windup. RIGHT panel same right shoulder and torso orientation, right elbow straightens to full forward RIGHT blue-rapier thrust while right/front knee bends deeper into lunge, left/rear leg extends back. The blue sleeve/gauntlet is always the foreground arm across body's front-right contour, amber arm always at rear-left behind torso. Keep blue blade twice amber length, same gold guards, two hands and two legs total per sprite. Curly bun, prism headband, ivory/gold armor white trousers and two blue sash tails unchanged, no scale/camera changes. Two complete figures with all blade tips safely inside widely separated panels on flat neutral gray #989898. Original rich painted raster art, no floor, shadow, effects, checkerboard, captions or new parts.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/defense-hit.png",
+        "source_sha256": "68f72211edf12905e3d5f90afde35866f07e49bad8ce54962ee55339019cc7b7",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b0e39dc2-bc7e-4846-b7e1-c4cd4ddfef59.png",
+        "prompt": "Use case: stylized-concept. THREE original painted Parallax Fencer poses in one horizontal row: defensive guard, breathing guard, hit recoil. SAME back/right three-quarter camera and body orientation as reference, face RIGHT; NEVER turn chest front-on. Same woman curly brown bun blue-prism gold headband, ivory/gold fitted armor white trousers, blue sash two long tails, same shoulder/knee gems. RIGHT foreground hand always holds LONG BLUE crystal rapier, LEFT rear hand always SHORT AMBER dagger lowered behind left hip. Keep amber arm DOWN BEHIND hip in all three. LEFT defensive guard: low bent knees, near/right elbow flexed across near side, full blue rapier raised diagonally UP toward screen right to parry, blade long not shortened. MIDDLE continuation of SAME guard, chest small inhale, blue wrist/parry angle shifts a few degrees, knees still flexed; identical body/equipment sizes. RIGHT hit reaction: both feet remain planted, torso leans back toward left and head recoils, blue forearm lowers a little in front while still gripping full rapier, amber stays behind at left hip. Exactly two arms/two legs/two blades per figure, blue blade twice amber length, both gold guards retained. Three separate complete figures equal anatomy scale, large gutters and ample full-blade/head/foot margins on plain flat neutral gray #989898. Original rich painted strategy-game art, opaque ivory and solid colored crystal. No floor/shadows/beam/effects/checkerboard/text.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/death-sequence.png",
+        "source_sha256": "8a2e78e6423f05402bfc9485ac11611bdc8ffeaa1d9e69b63759a0abea8281ff",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ad9c65da-bfd9-4b85-aa1a-9df5b401b594.png",
+        "prompt": "Use case: stylized-concept. THREE original painted Parallax Fencer death animation poses in one wide horizontal row, all SAME woman and equipment, identical anatomical scale, generous gutters. Identity/camera from reference: curly brown bun gold-blue prism headband, ivory/gold armor fitted white trousers, blue sash two tails, faceted shoulder/knee gems. RIGHT foreground hand owns LONG BLUE rapier; LEFT rear hand SHORT AMBER dagger; full blue blade twice amber length and same gold guards throughout. LEFT knees buckle to ground, torso bows forward screen right, eyes closed, right blue rapier droops forward-right, left amber dagger lowers behind-left. MIDDLE falling onto near/right side, hips and folded legs touch ground, upper torso still inclined about30 degrees and right elbow weakly braced; head above ground bowed, eyes CLOSED. Blue rapier now resting on ground along right hand toward screen right, amber dagger on far side beside left hand. RIGHT final corpse fully prone side-lying horizontal, cheek resting on right forearm, eyes CLOSED, feet toward screen left and head toward screen right; same two folded legs, two arms, both swords lying inert next to their original hands. Blue and amber are subdued colored crystal with no emission/star sparks, not dark metal. Preserve full sword lengths, gold guards, face, hair, armor and sash. No equipment disappearing or swapping, no sitting upright in final frame, no blood/gore. Three complete isolated sprites on flat neutral gray #989898, no ground, shadows, effects, checkerboard, labels or extra bodies. Rich original painted strategy-game art, opaque ivory armor.",
+        "selection": "packed_candidate"
+      }
+    ],
+    "reference_crops": [
+      {
+        "source": "continuity-alpha/poses.png",
+        "rect": [
+          1170,
+          0,
+          1536,
+          356
+        ],
+        "output": "reference-crops/identity.png"
+      }
+    ],
+    "reference_roles": {
+      "walking": "Single near/far biped joint guide first and original right-facing contact identity second.",
+      "idle": "Original right-facing identity, two breathing poses.",
+      "attack": "Original right-facing identity; front-chest amber guard rejected. Replacement retains rear amber arm and articulates only foreground blue rapier/lunge.",
+      "defense": "Original right-facing identity, near-arm blue parry with rear amber arm retained plus hit reaction.",
+      "death": "Original right-facing identity, three linked death poses with closed eyes and two retained blades."
+    },
+    "preparation": "Original checker source prepared only to derive identity reference, never packed. All selected new masters use owner-approved minimum100 maximum185 tolerance12 edge_radius2 key; explicitly sampled hair-gap seeds and three bounded bright-background curl regions. Exact source/tool/recipe/output hashes in continuity-alpha/*.processing.json; originals unchanged.",
+    "packing": "packing.json",
+    "runtime_sheet": "art/animation/runtime/poses/unit_sunvault_splitprism_parallax_fencers.png",
+    "runtime_sha256": "6cbebcc5e96777324f503a50ef0c91842f83d3f4ad50df6748584e5b5ad8b91c",
+    "frames": 14,
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/parallax-continuity-20260915/",
+    "validation": "Actual source/packed composites and offline art desk visually inspected as production review, not in-game motion acceptance. No automated tests/imports/exports; consolidated all-roster/repository/Linux/Windows pass deferred."
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_thornwake_thornwhip_carriers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_thornwake_thornwhip_carriers.png",
+  "reference_sha256": "65b539dd7ce63fdf410f3d9ce5466c20753664b3d760d8e91b6da0568eacf98b",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/poses-draft.png",
+      "source_sha256": "06d9958f585a2e909ab31950b8e8d780d05d65bbf42d5c615834a6fbf16484de",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1236030c-ff66-4ab7-a783-065510869041.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle animation sprite sheet. Reference Thornwhip Carrier: brown-haired young woman with tied-back hair, green scarf and layered leaf-green skirt, brown leather torso armor, pale seed-shell shoulder/forearm/knee/shin plates tied with red cord, brown boots, strapped round wicker back frame with thorn-vine coils and small amber vials. ONE long brown-green thorny vine whip with red thorns, gold-banded wooden handle in RIGHT hand, LEFT hand holds loose coil only when resting. Twelve full-body articulated poses in FOUR columns THREE rows; generous gutters for whip, constant body/handle/vine length and fixed three-quarter view facing right. Transparent RGBA background. Reading order: 1 relaxed idle handle upright loose loop supported left hand; 2 inhaling idle shoulders lift vine coil sways; 3 walking right foot forward left back; 4 passing right foot planted left knee advances feet close; 5 opposite contact LEFT foot forward RIGHT back torso unchanged; 6 whip windup RIGHT handle back above shoulder vine trails loop behind LEFT hand released coil away safely; 7 lash contact RIGHT arm and handle extended toward right vine follows continuous tapering arc forward, LEFT arm back for balance; 8 defensive crouch handle diagonal left hand gathers vine; 9 struck recoil equipment retained; 10 dying knees buckle vine falls loose; 11 collapse onto side vine rests nearby back frame attached; 12 dead side-lying eyes closed handle beside RIGHT hand one continuous thorn vine coiled on ground and attached wicker frame retained. Exactly one handle and one continuous vine, no extra ropes replacing whip, no detached segments. Same costume and gear in every pose. No labels, background, ground shadow, effects or gore. Detailed original painted strategy art matching reference, real articulated motion not translated duplicates."
+    },
+    {
+      "source": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/poses.png",
+      "source_sha256": "dd29320ad5e94f95b3542ff739da1c3cc5637bd3b5d321cadf063ba2fe998a82",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bc0f6735-6193-4ed9-aad8-4bc36fe99430.png",
+      "prompt": "Use case: precise-object-edit. Edit ONLY row three column two, kneeling dying Thornwhip Carrier. Remove the SECOND loose gold-banded wooden handle lying at screen right of that pose inside vine loops. Keep the original handle in her RIGHT hand at screen left beside knee. Repair the removed loose handle area to checkerboard empty background and continuous thorn-vine loop only. Exactly ONE whip handle remains. Preserve her body, both hands, equipment, existing held handle and every other sprite unchanged."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5a3556fe-e812-4431-971f-b073febb2d2b.png",
+      "prompt": "Use case: background-extraction. Remove only checkerboard background from twelve-pose Thornwhip Carrier sheet into actual transparent RGBA alpha. Preserve all painted figures, one whip per pose, corrected kneeling single handle, continuous vines, armor and equipment, exact layout and proportions. Clear gaps inside whip loops and around bodies, keep opaque interiors. No matte, backdrop, painted checkerboard, shadows, colored fringe or redraw.",
+      "reason": "Extraction introduced brown backdrop; not accepted or copied as runtime alpha."
+    }
+  ],
+  "review_notes": [
+    "11 packed candidate frames: nine retained original idle/action/death paintings plus two selected new walking paintings from two built-in masters. Retain corrected single-handle kneel and closed-eye equipped corpse; old repeated walking paintings remain unselected.",
+    "Opaque RGB checker prepared with owner-approved connected neutral190/tolerance16/edge2 and31 inspected gap seeds. Clear whip loops and arm/torso apertures without globally erasing pale armor. Original brown-backdrop extraction remains unselected.",
+    "Fixed cleaned idle identity guides opposite screen-side knee lifts. Right hand keeps the single gold-banded whip handle and left hand gathers the vine; moving knees remain clear of the lower whip arc. Short-step cycle alternates planted idle and both lifts, not final translated-gait acceptance.",
+    "Banded crops exclude a neighboring windup vine from breathing idle, an idle boot above windup, and lash fragments from guard. Full extended lash remains inside512x256 frame without shortening; death ground anchors retain whole floor coils with margins. Final art-desk inspection also found a one-row neighboring boot fragment above hit; a top-band crop excludes it while preserving hair and whip.",
+    "Whip length and coil continuity, handle/hand attachment, face/back-frame/armor scale, knee/foot support and travel, fine pale edges and action/death timing remain for full160 refinement and consolidated acceptance. Actual-alpha atlas and art-desk capture are production evidence only. No tests/imports/exports, paid API or gameplay/save/footprint changes."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses inspected. Duplicate loose handle removed from kneeling death pose.",
+    "Lash continuous vine and equipped closed-eye corpse present. Gait passing/opposite contacts and torso orientation need refinement.",
+    "Whip length, handle proportions, vine attachment and loose coil continuity differ across poses; wide lash requires explicit crop extending beyond nominal cell.",
+    "Clean extraction required. Source-only, not packed or enabled.",
+    "No tests/exports or disposable test intermediates created; 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "generation": "continuity-generation.json",
+    "reference_crops": [
+      {
+        "path": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/standing-reference-light.png",
+        "sha256": "ab2ff89c0264e4975c6dcf5a84c4ed1d8589fc4ad6aac121c58c477cf2daa41b",
+        "source": "continuity-alpha/original.png",
+        "source_sha256": "42f56e7ea244705dcf75fc0b3ea7052929554f41a832ca87d713d4e9e73e31f1",
+        "rect": [
+          79,
+          0,
+          289,
+          389
+        ],
+        "method": "Actual alpha composited on light and nearest4x for fixed identity reference; no repaint, distortion or synthesized pose."
+      }
+    ],
+    "sources": [
+      {
+        "source": "walk-near-lift-magenta.png",
+        "sha256": "e6821ba49114de2b81026d69d28028028e8cbb918ead0b5c3e749a2d47d35fab",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4158bbcb-5640-4b2d-8c22-84a21b416aaa.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Image1 is the fixed neutral identity painting and edit target. Original Thornwhip Carrier woman, brown tied hair, green scarf and leaf skirt, brown leather armor, pale seed-shell plates with red bindings, wicker circular back frame and amber vials. Exactly ONE gold-banded wooden whip handle remains upright in her RIGHT hand at picture-left. ONE continuous thorn vine with red thorns from that handle; left hand at picture-right gathers its remaining loose coil at waist, safely above the moving knees, no vine across the foot sweep. Preserve head/torso camera facing RIGHT, same painted face, body proportions, equipment and palette. Change only leg articulation and slight natural leaf settling for this one small walking step. No whole-body mirror, no swapped hands, no second handle or disconnected vines. Full body, boots and whole whip inside wide margins, flat vivid MAGENTA255,0,255 backing, no ground shadow/checker/text/effects. Lift the leg from picture-LEFT hip: bend this NEAR knee upward in front of the skirt, boot clearly raised in front of the other shin. The picture-RIGHT leg remains straight down, boot planted. Exactly two legs; this is a left-origin knee lift, not the other knee.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/standing-reference-light.png",
+            "sha256": "ab2ff89c0264e4975c6dcf5a84c4ed1d8589fc4ad6aac121c58c477cf2daa41b"
+          }
+        ]
+      },
+      {
+        "source": "walk-far-lift-magenta.png",
+        "sha256": "f51747a67e69e4b0f824a4e39a296a25c5b39a70e0dda0984ec5998ed133e188",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cc5b3a5c-7421-43ad-9f0d-a3094f963229.png",
+        "selected": true,
+        "prompt": "Use case: precise-object-edit. Image1 is the fixed neutral identity painting and edit target. Original Thornwhip Carrier woman, brown tied hair, green scarf and leaf skirt, brown leather armor, pale seed-shell plates with red bindings, wicker circular back frame and amber vials. Exactly ONE gold-banded wooden whip handle remains upright in her RIGHT hand at picture-left. ONE continuous thorn vine with red thorns from that handle; left hand at picture-right gathers its remaining loose coil at waist, safely above the moving knees, no vine across the foot sweep. Preserve head/torso camera facing RIGHT, same painted face, body proportions, equipment and palette. Change only leg articulation and slight natural leaf settling for this one small walking step. No whole-body mirror, no swapped hands, no second handle or disconnected vines. Full body, boots and whole whip inside wide margins, flat vivid MAGENTA255,0,255 backing, no ground shadow/checker/text/effects. Lift the leg from picture-RIGHT hip: bend this FAR knee toward the right with its boot clearly raised behind/alongside the other shin. Picture-LEFT leg stays straight down and its boot is planted. Exactly two legs; this is a right-origin knee lift, not the other knee.",
+        "references": [
+          {
+            "path": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/standing-reference-light.png",
+            "sha256": "ab2ff89c0264e4975c6dcf5a84c4ed1d8589fc4ad6aac121c58c477cf2daa41b"
+          }
+        ]
+      }
+    ],
+    "preparation": "continuity-cutouts.json",
+    "packing": "packing.json",
+    "packing_result": "packing-result.json",
+    "packed_frames": 11,
+    "reused_pose_count": 9,
+    "new_selected_pose_count": 2,
+    "runtime_candidate": "art/animation/runtime/poses/unit_thornwake_thornwhip_carriers.png",
+    "runtime_sha256": "8ff007de90b6ada3584ce5a68e37642572320f33f891380f4dbb82826acbe928",
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/thornwhip-continuity-20260915/",
+    "status": "candidate_registered_not_final_accepted",
+    "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/thornwhip-continuity-20260915/art-desk-final.html",
+    "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/thornwhip-continuity-20260915/art-desk-final.png",
+    "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/thornwhip-continuity-20260915/packed-final-v2/poses-candidate-atlas-green.png"
+  }
+}

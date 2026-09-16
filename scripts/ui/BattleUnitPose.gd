@@ -17,6 +17,12 @@ static func clip_name(state: String) -> String:
 static func has_authored_poses(animation: Dictionary) -> bool:
 	return not String(animation.get("pose_sheet", "")).is_empty() and animation.get("pose_clips", {}) is Dictionary and not animation.get("pose_clips", {}).is_empty()
 
+static func facing_flip(animation: Dictionary, side: String) -> bool:
+	# Source-facing metadata preserves the artist's camera and equipment ownership.
+	# Reflection is a render transform, never a newly synthesized animation pose.
+	var source_left := has_authored_poses(animation) and String(animation.get("pose_source_facing", "right")) == "left"
+	return (side == "enemy") != source_left
+
 static func elapsed_msec(playback_record: Dictionary, now_msec: int) -> int:
 	# Idle loops use wall time. Event loops start at their own first contact,
 	# hold during queue delay and follow the same speed as the action's travel.
@@ -27,11 +33,22 @@ static func elapsed_msec(playback_record: Dictionary, now_msec: int) -> int:
 	var elapsed := maxi(0, now_msec - int(playback_record.get("started_at_msec", now_msec)))
 	return int(float(elapsed) * float(base_duration) / float(duration))
 
-static func grounded_rect(ground: Vector2, height: float, region: Rect2) -> Rect2:
+static func waiting_for_start(playback_record: Dictionary, now_msec: int) -> bool:
+	# A queued reaction still owns its future playback/corpse lifetime, but it
+	# must not replace the resting pose before its audio and action clock start.
+	return not playback_record.is_empty() and now_msec < int(playback_record.get("started_at_msec", now_msec))
+
+static func grounded_rect(ground: Vector2, height: float, region: Rect2, animation: Dictionary = {}) -> Rect2:
 	# Preserve raster aspect for long weapons and prone bodies. Gameplay body
 	# cells are independent of this presentation-only transparent canvas.
 	var width := height * region.size.x / maxf(1.0, region.size.y)
-	return Rect2(Vector2(ground.x - width * 0.5, ground.y - height), Vector2(width, height))
+	# The packer puts the anatomical ground anchor above the transparent bottom
+	# margin. Anchor that authored line, not the canvas edge or alpha bounds:
+	# raised feet, flying bodies and prone silhouettes must keep their motion.
+	# Legacy layouts without this optional metadata retain their original rect.
+	var margin := clampf(float(animation.get("pose_ground_margin", 0.0)), 0.0, maxf(0.0, region.size.y - 1.0))
+	var ground_offset := height * margin / maxf(1.0, region.size.y)
+	return Rect2(Vector2(ground.x - width * 0.5, ground.y - height + ground_offset), Vector2(width, height))
 
 static func clip(animation: Dictionary, state: String, dead: bool = false) -> Dictionary:
 	var clips: Dictionary = animation.get("pose_clips", {})

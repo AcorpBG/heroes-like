@@ -1,0 +1,94 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_wakeglass_navigators",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_wakeglass_navigators.png",
+  "reference_sha256": "7019f7fbc74338b678f8509a591e59428c706e6102bdceb6b9acf68a59c621d4",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/poses.png",
+      "source_sha256": "8e5bcae4e4ab1c2b4083c3ff8cc5a40026699b255ee299ecf32a4914bd24581e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ac16bf8f-2b7f-46c3-ae24-05a24f15c471.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle sprite sheet. Reference defines ONE Wakeglass Navigator, tall spectral humanoid in layered navy/teal hooded robes with ragged ivory-edged hems, ivory expressionless full mask, rope/net shoulder mantle, hanging blue glass charms and hourglass at belt. Anatomical LEFT hand (viewer right) holds ONE tall twisted dark staff with forked branch crown encircling luminous cyan compass orb, dangling charms and teal streamer. RIGHT hand free. Preserve mask, staff compass design, robe/net/charm identity. Exactly SIXTEEN articulated full-body poses FOUR columns FOUR rows, constant body/staff scale fixed elevated three-quarter camera facing screen-right. Generous blank gutters for staff and robe. Genuine transparent RGBA no painted checkerboard/scenery/floor/grid/text. Row1 idle upright; idle head inclines compass shoulder shifts; glide forward torso leaning robe ribbons trail backward; glide recovery torso rises robe curls reverse. Row2 passing glide shoulder advances robe folds gather; melee wind-up LEFT staff draws backward RIGHT hand balances; melee LEFT staff butt thrust screen-right compass end held high behind, RIGHT hand assists lower shaft; defense staff diagonal before torso both hands grip. Row3 cast anticipation LEFT staff upright RIGHT hand draws inward; release RIGHT free hand extends screen-right small cyan wisp from palm LEFT retains staff; recovery right hand lowers compass glow settles; hit recoil torso back staff retained. Row4 dying folds forward mask lowered lights fade; kneeling robe gathers staff lowers beside; side fall hips/torso bent staff settles alongside; dead side-lying persistent robed body mask intact compass orb and charms dark all cloth limp staff complete beside. Exactly two arms one staff, consistent attachments. Actual articulation not rotated standing cutouts. Original art only no copyrighted franchise assets.",
+      "alpha_source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/alpha/poses.png",
+      "alpha_sha256": "040d54a3bcaa2dffe245ff21b3f57875aa8821ad95efdb7d1cb36e1a382a5486",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1eab9939-371a-4044-95c1-b3756b12d6d5.png",
+      "alpha_prompt": "Use case: background-extraction. Remove ONLY checkerboard from this sixteen-pose Wakeglass Navigator sheet to genuine transparent RGBA. Preserve all sixteen figures, staffs, compass orbs, cloth, masks, charms, casting effect, scale, placement and canvas exactly. No repainting, no replacement backdrop, no painted checkerboard, no colored matte."
+    }
+  ],
+  "review_notes": [
+    "16 frames retain two original idles, hit and corpse. Full-length staff attack, four spectral glides, guards, cold kneel/fall and explicitly visible left-staff/right-empty-hand casting replace short-staff and hand-swap sources.",
+    "Only the corrected bottom-left casting cell is selected from its edit; other poses use the earlier source. Genuine original alpha reused unchanged.",
+    "Banded source crops remove adjacent pose fragments without erasing legitimate tips. Explicit neutral aperture seeds or source-specific chroma preparation preserve original interior paint.",
+    "Body/gear scale and palette, support/travel, grip continuity, death settling and connected event timing remain full-roster refinement. Offline static previews are not gameplay or final animation acceptance."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses with casting and persistent corpse.",
+    "Melee wind-up staff shrinks to compass head; restore full-length shaft and left-hand ownership. Contact uses compass rather than butt and needs correct sequence.",
+    "Casting release swaps hands; retain left staff/right casting hand. Kneeling staff support/grip unclear.",
+    "Glide robe cycle and shoulder/head motion need refinement, preserve charms/net and mask proportions.",
+    "Final compass still cyan-colored; clear inactive treatment needed. Extraction alters details and has prominent blue fringes; transparency/compositing unaccepted.",
+    "Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 4,
+    "new_or_corrected_selected_paintings": 12,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_wakeglass_navigators.png",
+    "runtime_sha256": "678bfc4afa44da26cfc2f3dcf2cf846e1e7e88ab8aa48d8731e167937335a9bd",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakeglass_navigators/alpha/poses.png": "040d54a3bcaa2dffe245ff21b3f57875aa8821ad95efdb7d1cb36e1a382a5486",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/glide-and-grounded-collapse.png": "b8a9920f769dfd707bf548e689622f4d75c4b09ffeabc41f5d3bc8dab1d16844",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/full-staff-actions-and-guards.png": "7e6da8a89d6590afbe1b2762f7523ba88fc6ac7bf45eef8357723feb12a21eae",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/cast-with-visible-staff-grip.png": "5de7afb96fc2e2047ea2328794503769e777525a2db64037dace432c7d3d9826"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/navigator-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes; offline visual production evidence is not final playback acceptance.",
+    "cleanup": {
+      "policy": "Removed only SHA-256-identical task preview copies after no-live-handle checks. Retained identical recovery copies, unique evidence, originals/rejected masters, all used references, processing proofs, caches and unrelated files.",
+      "duplicates_removed": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/navigator-continuity-20260916/prepared-v2/full-staff-actions-and-guards-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/navigator-continuity-20260916/prepared-v3/full-staff-actions-and-guards-light.png",
+          "sha256": "2f562ac124249f45f845c19a99ba259b61accf4af05a041c7810720fff1ba15e",
+          "bytes": 1672074
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/navigator-continuity-20260916/prepared-v2/full-staff-actions-and-guards-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/navigator-continuity-20260916/prepared-v3/full-staff-actions-and-guards-green.png",
+          "sha256": "a3387d696663150512a892cac8e25ef07ddffeb43c6c2fc6059ac766032d973f",
+          "bytes": 1656246
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/navigator-continuity-20260916/prepared-v2/glide-and-grounded-collapse-green.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/navigator-continuity-20260916/prepared-v3/glide-and-grounded-collapse-green.png",
+          "sha256": "e0939b6a6a44ee2db2c688650f10ba59aa337c3bab9f0287a2653ea1663dfb0a",
+          "bytes": 1522448
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/navigator-continuity-20260916/prepared-v2/glide-and-grounded-collapse-light.png",
+          "retain": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/navigator-continuity-20260916/prepared-v3/glide-and-grounded-collapse-light.png",
+          "sha256": "1e5322277c546742c6ac6729d08acd9f22d52c0a2bc85d39636902adfba9321e",
+          "bytes": 1538120
+        },
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/navigator-continuity-20260916/identity/unit_veilmourn_wakeglass_navigators-poses-rect-0-0-303-338-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_wakeglass_navigators/identity-reference.png",
+          "sha256": "e8cb72be0234dd44220ddb1d4315291383831abbb0c110737f2a102e1e06cf57",
+          "bytes": 187199
+        }
+      ],
+      "removed_bytes": 6576087
+    }
+  }
+}

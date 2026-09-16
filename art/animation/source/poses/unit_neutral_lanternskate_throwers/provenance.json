@@ -1,0 +1,55 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_lanternskate_throwers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_lanternskate_throwers.png",
+  "reference_sha256": "42288e69ec4f0f41b9bebaa5c5b61ef4c3a4cd34ddcfa689aeb6ea0c484d3818",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "414dbd1a75883b2800645520c6c6e4492248df411e4eb50df7a847fcc856aa05",
+      "source_output": "exec-45b72f92-9ecd-4abe-9fd3-3246a6d56a20.png",
+      "prompt": "Use case: stylized-concept. Original Lanternskate Thrower battle animation sheet using reference identity. Woman brown braid teal hood/coat cream wool scarf and cuffs, gray trousers navy quilted knees, brown lace-up boots each with a SINGLE metal ice skate runner, brown gloves belts holding spherical brass cage amber lantern bombs. RIGHT hand holds lantern LEFT balances. SIXTEEN articulated full-body poses FOUR columns FOUR rows same scale elevated three-quarter facing RIGHT generous gutters. Row1 idle right lantern low; breath alert scarf shoulders shift still holding lantern; skating push near skate forward far leg extends BACK; glide weight on near leg far skate drawn under hips. Row2 opposite push FAR skate forward NEAR leg back same torso orientation; melee right fist cocked lantern stowed belt; right fist punches across chest toward RIGHT left guards ribs; defensive crouch arms protecting head both skates grounded. Row3 hit recoil; right hand draws lantern from belt; right lantern raised behind shoulder overhand throw anticipation left aims; completed right overhand release toward RIGHT empty open right palm left lowered. Row4 recovery empty right hand lowers; knees buckle; side fall torso low scarf and skates retained; final relaxed horizontal side corpse eyes CLOSED both skates intact belt lanterns dim spare lantern beside hand. No ice platform/snow trails/projectiles/effects, clear varied joints and skating leg leads not repeated standing cutouts or rotated corpse. Original painterly raster pale gray background no shadow grid text blood scenery."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "329424308e88e9351cf260b83ad891cccfcb2110536e34c4837b5c8e79af49c7",
+      "source_output": "exec-923cf97b-7206-4bf9-85eb-a7be7b43b06f.png",
+      "prompt": "Use case: precise-object-edit. Preserve entire 4x4 sheet except three corrections. SECOND ROW THIRD punch: RIGHT arm from screen LEFT shoulder extends across chest toward screen RIGHT, left fist protects ribs, matching preceding right-fist windup rather than switching arms. THIRD ROW FIRST hit: restore teal hood covering crown/back of head as all surrounding frames, keep recoiling face and neck angle. BOTTOM RIGHT corpse: all lanterns extinguished dull amber glass with no bright orange stars or glow. Keep all other poses/layout/scale outfit skates and background unchanged.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "61c6e1a190cf492b5d5a51625c39720ee85f35d79dafebad41953dfe8e738456",
+      "alpha_output": "exec-23879a4f-97aa-4d09-b705-a73ba2b643b5.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all sixteen Lanternskate Thrower poses onto genuine transparent RGBA. Preserve exact layout scale body poses lantern cages, hood scarf frayed edges braid fingers and both metal skate runners including collapse/corpse. Remove gray background and ground shadows only, no checkerboard cloudy matte halos redraw reframing effects or text."
+    }
+  ],
+  "review_notes": [
+    "Sixteen poses/extraction visually inspected. Hit hood restored and corpse lanterns dimmed; attempted punch correction did not switch to required right arm. Skating lead repeats; opposite push and runner attachment/orientation need refinement. Lantern belt count, punch continuity and alpha-edge/full-motion review pending. Source-only not packed/enabled; no tests/exports.",
+    "17 packed frames retain fourteen original paintings and select three new paintings: a near-shoulder right cross matching the original right-hand windup, right-arm recovery and empty-fist readiness. The old left jab remains unselected. Throwing retains draw/aim/empty release/recovery and three head-right collapse/corpse states.",
+    "Approved preparation of the magenta precursor exposed pink scarf/hair spill. Selected built-in extraction has genuine alpha and clean inspected composites; the precursor remains preserved but unselected. Genuine original alpha and generated extraction are not rekeyed.",
+    "Inspected crop bands preserve hair, hands, both skate runners and complete corpses while excluding neighboring runners/arms/boots. Uniform original/new scales 0.67/0.29; full atlas visually inspected.",
+    "Candidate only: full alternating skating gait and glide/foot ownership, scarf/lantern/hood/gear proportions, anatomy and palette/edge continuity, full motion/timing remain refinement. No automated/import/gameplay/Linux/Windows acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 14,
+    "new_or_corrected_selected_paintings": 3,
+    "generated_outputs": 2,
+    "generation": "art/animation/source/poses/unit_neutral_lanternskate_throwers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_lanternskate_throwers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_lanternskate_throwers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_lanternskate_throwers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_lanternskate_throwers.png",
+    "runtime_sha256": "5fef9bcaefea3ed4b55854d99d0231d5cf941cd024c6fd2c2f49b2139cd6c47f",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_lanternskate_throwers/alpha/poses.png": "61c6e1a190cf492b5d5a51625c39720ee85f35d79dafebad41953dfe8e738456",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_lanternskate_throwers/right-fist-strike-recovery-and-ready-extracted.png": "6587d5158d257685127d7a121bbb7fc3313c6e9094b9e900fa40e94c28256ec8"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/lanternskate-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

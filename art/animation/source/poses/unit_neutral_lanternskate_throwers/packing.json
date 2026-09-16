@@ -1,0 +1,396 @@
+{
+  "unit_id": "unit_neutral_lanternskate_throwers",
+  "frames": [
+    {
+      "name": "idle_a_lantern",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          41,
+          0,
+          263,
+          326
+        ]
+      ],
+      "anchor": [
+        159,
+        321
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "idle_b_lantern",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          333,
+          0,
+          564,
+          327
+        ]
+      ],
+      "anchor": [
+        456,
+        321
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "skate_push",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          599,
+          15,
+          915,
+          326
+        ]
+      ],
+      "anchor": [
+        795,
+        320
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "skate_gather",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          946,
+          0,
+          1248,
+          326
+        ]
+      ],
+      "anchor": [
+        1080,
+        321
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "right_fist_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          324,
+          327,
+          605,
+          633
+        ]
+      ],
+      "anchor": [
+        466,
+        627
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "right_fist_cross",
+      "source": "right-fist-strike-recovery-and-ready-extracted.png",
+      "rects": [
+        [
+          0,
+          0,
+          744,
+          768
+        ]
+      ],
+      "anchor": [
+        347,
+        749
+      ],
+      "scale": 0.29
+    },
+    {
+      "name": "right_fist_recovery",
+      "source": "right-fist-strike-recovery-and-ready-extracted.png",
+      "rects": [
+        [
+          744,
+          0,
+          1411,
+          768
+        ]
+      ],
+      "anchor": [
+        1063,
+        749
+      ],
+      "scale": 0.29
+    },
+    {
+      "name": "empty_fists_ready",
+      "source": "right-fist-strike-recovery-and-ready-extracted.png",
+      "rects": [
+        [
+          1411,
+          0,
+          2046,
+          768
+        ]
+      ],
+      "anchor": [
+        1744,
+        749
+      ],
+      "scale": 0.29
+    },
+    {
+      "name": "empty_fists_crouch",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          977,
+          367,
+          1190,
+          636
+        ]
+      ],
+      "anchor": [
+        1089,
+        624
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "hit_recoil_hood_retained",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          9,
+          624,
+          174,
+          650
+        ],
+        [
+          9,
+          650,
+          270,
+          906
+        ],
+        [
+          9,
+          906,
+          93,
+          918
+        ],
+        [
+          185,
+          906,
+          270,
+          918
+        ]
+      ],
+      "anchor": [
+        147,
+        909
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "draw_lantern",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          320,
+          626,
+          525,
+          650
+        ],
+        [
+          320,
+          650,
+          598,
+          930
+        ]
+      ],
+      "anchor": [
+        454,
+        918
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "throw_lantern_aim",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          720,
+          617,
+          829,
+          631
+        ],
+        [
+          643,
+          631,
+          834,
+          642
+        ],
+        [
+          604,
+          642,
+          953,
+          840
+        ],
+        [
+          604,
+          840,
+          907,
+          940
+        ]
+      ],
+      "anchor": [
+        779,
+        931
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "throw_empty_release",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          956,
+          635,
+          1254,
+          822
+        ],
+        [
+          923,
+          822,
+          1254,
+          933
+        ]
+      ],
+      "anchor": [
+        1060,
+        922
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "empty_hand_recovery",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          86,
+          901,
+          185,
+          922
+        ],
+        [
+          30,
+          922,
+          265,
+          1245
+        ]
+      ],
+      "anchor": [
+        163,
+        1236
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          305,
+          964,
+          559,
+          1100
+        ],
+        [
+          305,
+          1100,
+          541,
+          1135
+        ],
+        [
+          305,
+          1135,
+          559,
+          1181
+        ]
+      ],
+      "anchor": [
+        438,
+        1170
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "death_side_fall",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          552,
+          1008,
+          895,
+          1096
+        ],
+        [
+          552,
+          1096,
+          887,
+          1130
+        ],
+        [
+          610,
+          1130,
+          884,
+          1195
+        ]
+      ],
+      "anchor": [
+        725,
+        1183
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "dead_head_right_dim_lanterns",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          930,
+          1033,
+          1254,
+          1096
+        ],
+        [
+          891,
+          1096,
+          1254,
+          1130
+        ],
+        [
+          884,
+          1130,
+          1254,
+          1150
+        ],
+        [
+          900,
+          1150,
+          1254,
+          1195
+        ]
+      ],
+      "anchor": [
+        1071,
+        1182
+      ],
+      "scale": 0.67
+    }
+  ],
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20
+}

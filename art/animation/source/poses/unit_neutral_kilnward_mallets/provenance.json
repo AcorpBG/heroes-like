@@ -1,0 +1,56 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_kilnward_mallets",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_kilnward_mallets.png",
+  "reference_sha256": "cbd9d9bc6891c0671c8335e9aa99267a06e31de3c8393cb150529bd405778752",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "68586972da3ee971a7b9cb79d7384dada11473eb81baeeac61395a693364cc3f",
+      "source_output": "exec-d44bf431-e836-42a2-997b-ef2c7f556cbf.png",
+      "prompt": "Use case: stylized-concept. Original Kilnward Mallet battle sprite sheet based on attached identity: broad muscular middle-aged bearded human smith, dark hair tied back under leather headband, black rolled-sleeve shirt, heavy dark brown riveted leather apron/shoulders/forearm guards, red brick kiln arch motif on apron and square iron mallet head, reinforced dark boots. One long wooden-handled heavy rectangular mallet held TWO-HANDED. Twelve full-body articulated poses FOUR columns THREE rows, consistent body scale and elevated three-quarter view facing RIGHT. Clear generous gutters and complete mallet within each cell. Row1 idle mallet diagonal before waist; breathing alert shoulders rise slightly; heavy walking near leg forward; opposite walking near thigh BACK left overlapping far forward thigh, no torso mirroring. Row2 passing step knee under hip; windup both hands raise mallet head behind/above shoulder knees bend; powerful downward-forward two-handed mallet SLAM toward RIGHT head near knee height front knee bent rear heel lifts; defense low planted crouch mallet shaft crosswise before chest both hands apart forearms braced. Row3 hit recoil torso/head back elbows compress; dying knees buckle and mallet lowers; side fall torso low mallet slips beside; DEAD smith lying on SIDE eyes closed head/torso horizontal mallet resting alongside, no blood. True elbow/hip/knee articulation and gravity, not rotated standing cutouts. Preserve original gritty painterly identity, mallet shape/size consistent. Plain pale gray background no shadows/checkerboard/scenery/effects/text/borders.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "alpha_output": "exec-6cbb5646-0f27-4250-ad87-71265270aba1.png",
+      "alpha_prompt": "Remove the gray background entirely. Output a genuinely TRANSPARENT RGBA PNG of these twelve Kilnward Mallet sprites. Do not draw a checkerboard or substitute any background color. Preserve all figures, hammer heads/shafts, exact 4x3 layout and size. No floor shadows, matte, text, effects or pose changes. Transparent empty space including gaps between hands/arms/hammer."
+    },
+    {
+      "source": "poses-checker-draft.png",
+      "source_sha256": "5d3457b89bc25484c77a147a88d5e3277cce8b6fa4bc324fcedbb0abde4f8948",
+      "source_output": "exec-e7486bb8-edd6-4e66-b481-1ac6f35689f4.png",
+      "prompt": "Use case: background-extraction. Remove pale gray background from this twelve-pose original Kilnward Mallet sheet onto genuine transparent RGBA. Preserve exact twelve poses/layout/body scale, both hands and complete hammer shafts/heads, beard/apron details and prone corpse. Clean gaps between limbs and hammer. No matte/checkerboard/shadows/blur/effects/text or new elements."
+    }
+  ],
+  "review_notes": [
+    "15 packed frames select 11 original RGBA paintings and four new supported passing, low two-handed mallet recovery and guard-release paintings. Original overhead windup, low strike, crouched guard, recoil, buckle, side fall and head-right resting corpse remain; duplicate original contact is unselected.",
+    "Original genuine alpha reused; new green-backed source prepared with approved bounded edge cleanup. Uniform per-source scales 0.60/0.36, support anchors and inspected banded boundaries preserve the mallet and falling boot without the neighboring hammer fragment.",
+    "Separate passing guides do not establish alternating near/far support: the generated poses still appear to lift the same leg through backward/forward positions. Full gait, hammer/hand/shoulder continuity, palette/edges, grounding and connected recovery/death timing remain refinement; not final accepted animation."
+  ],
+  "prior_review_notes": [
+    "Twelve poses and retry extraction visually inspected: overhead windup, low strike, crouched brace and own side corpse. First extraction was RGB checkerboard and is unselected. Opposite gait contacts, hammer proportions/hand separation and continuous motion/compositing remain refinement/review work. Source only, not packed or enabled; no automated tests/exports launched."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 11,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_kilnward_mallets/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_kilnward_mallets/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_kilnward_mallets/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_kilnward_mallets/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_kilnward_mallets.png",
+    "runtime_sha256": "e9d4fe0a429b23a14dca1f39fab30dd0bd7fb0ab237da671a9296f25111863e8",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_kilnward_mallets/continuity-alpha/guided-passing-and-mallet-recovery.png": "6a98d8df571934d89cdc2c24e1cfe9557a26fa3c24136f73d30623d3865bf3a9"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/kilnward-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

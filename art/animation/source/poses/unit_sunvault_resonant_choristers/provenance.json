@@ -1,0 +1,189 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_sunvault_resonant_choristers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "runtime_candidate_pending_consolidated_validation",
+  "reference": "art/units/source/curated/unit_sunvault_resonant_choristers.png",
+  "reference_sha256": "ee39e131b5b80d7986b16314dd4e817ee97178d114f9baf3a8ddda0bb1e20fdf",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/poses.png",
+      "source_sha256": "96491c3ebde3b7e613f865eeaf2c00ff4cb83bc8cc27412f77e46eea48060cea",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bb99c0cf-fdbe-46fd-98ad-187e0b39fb4f.png",
+      "prompt": "Use case: stylized-concept. Original fantasy battle animation sprite sheet. Reference identity is ONE UNIT formed by EXACTLY THREE choristers together: central tall fair woman with gold circlet and long gold staff crowned by circular gold orrery with purple-blue crystals; behind her screen-left a brown-haired man holding open blue-gold illuminated book; behind her screen-right dark-skinned braided woman holding small circular gold crystal lyre. All ivory and royal-blue gold-trimmed ceremonial robes and armor, no other people. Paint twelve group poses, each containing these SAME THREE PEOPLE and all three instruments, in FOUR columns THREE rows with broad gutters. Constant group/body/instrument scale, three-quarter facing right. Reading order: 1 relaxed idle choir; 2 inhaling singing idle shoulders rise mouths open; 3 group walking near feet forward; 4 passing step feet nearly together knees bend, instruments retained; 5 opposite-foot contact all walkers alternate legs without mirroring faces/equipment; 6 attack windup central woman draws staff back two hands while companions brace book/lyre; 7 attack release central woman thrusts staff diagonally forward while companions lean forward singing; 8 defense all three crouch staff diagonal book/lyre protective near chest; 9 hit all three recoil; 10 dying all three knees buckle; 11 all three collapse sideways instruments lower; 12 all three dead side-lying eyes closed staff/book/lyre on ground beside their owners, count exactly three bodies. Keep book holder and lyre holder visible in every pose, no disappearing people or merged limbs. Same original ornament arrangement and staff length. True transparent RGBA background, no scenery, shadows, effects clouds, text or gore. Original detailed painted game art matching reference; clearly articulated poses not translated duplicates. Full bodies including crowns, instruments and boots uncropped."
+    }
+  ],
+  "unselected_attempts": [
+    {
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0d3514a1-95cd-421a-a13f-e2429fa343d3.png",
+      "prompt": "Use case: background-extraction. Remove only checkerboard background from supplied twelve-group Resonant Chorister sprite sheet into actual transparent RGBA alpha. Preserve all three people and their staff, book and lyre in every group, including three final dead bodies. Keep original painted ivory/blue/gold colors, crystals, opaque clothing interiors, exact layout and sizes. Clear gaps between bodies, staff rings and instruments. No matte, backdrop, painted checkerboard, shadows, redraw or added effects. Genuine transparent empty space.",
+      "reason": "Extraction introduced visible gray/brown backdrop; not accepted or copied as runtime alpha."
+    }
+  ],
+  "review_notes": [
+    "Four guided three-person gait phases replace near-static originals; all performers retain their instrument and positions. A targeted edit restores navy trousers/ivory-gold knee armor in raised-knee pose.",
+    "Original shortened attack omitted. Full-length shaft correction retained both gripping hands; corresponding long-shaft windup/release now selected.",
+    "All three kneel together, then lower onto elbows, then settle prone into original three-body corpse; no upright surviving companions in selected death frames.",
+    "Bounded gray key restores white shoulder/lyre paint removed by unrestricted first preparation. Exact immutable sources, region/seed recipes and explicit packing retained; final equipment/cloth/glass/edge continuity and connected battle acceptance remain pending.",
+    "2026-09-16: Dedicated ranged sequence added from original built-in paintings; prior missing-ranged note superseded, final acceptance remains pending."
+  ],
+  "prior_review_notes": [
+    "Twelve group poses visually inspected; exactly three choristers and staff/book/lyre retained including final three-body corpse.",
+    "Walking near-identical and insufficient alternating contact/passing. First death keeps companions upright; second remains seated instead of falling. Refine full group motion.",
+    "Staff markedly shortens in overhead attack; grip, ring/crystal count and instrument/body scale continuity pending.",
+    "Clean alpha extraction and explicit wide-group crops remain needed; not packed or enabled.",
+    "No tests/exports or disposable test intermediates created; 29 candidates and 0/160 final acceptances unchanged."
+  ],
+  "continuity_production": {
+    "date": "2026-09-15",
+    "tool_mode": "built_in_image_gen",
+    "model": "not_exposed_by_tool",
+    "sources": [
+      {
+        "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/walk-contact-a.png",
+        "source_sha256": "62c9c210ea83a6335836736a59d3c23d8024eab939bd8e9699692877437cabcd",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-07517b17-2352-4e31-923f-6ca21f0957b6.png",
+        "prompt": "Use case: sketch-to-render. ONE original raster fantasy battle unit group, exactly THREE Resonant Choristers WALKING CONTACT A. Image1 is leg-pose guide applied to EACH person's legs. Image2 is exact THREE-person identity and arrangement, NOT standing pose. Central tall fair adult woman gold circlet and long ivory/royal-blue/gold robes holds a full-height gold staff crowned with large circular gold orrery, blue-purple center crystal and surrounding matching small crystal points. Behind screen-LEFT brown-haired adult man holds original open blue-gold illuminated book with small blue crystals above it. Behind screen-RIGHT dark-skinned braided adult woman holds original small circular gold crystal lyre in both hands. Keep ALL THREE visible, in the same compact triangular group; central taller figure forward, companions left/right behind, instruments stay with owners. All face three-quarter SCREEN-RIGHT fixed elevated camera. For EACH walker BLUE/near anatomical RIGHT leg steps FORWARD to screen-right across far thigh, heel arriving at ground; ORANGE/far LEFT leg stretches BEHIND screen-left with toe pushing. Show exactly six boots, split robes part naturally to reveal stride. Actual articulated hips/knees/ankles and cloth, no static standing cutouts. Staff upright unchanged full height, near hand mid-shaft far hand high; book and lyre safely carried at chest. Original painted ivory gold armor/navy robes, precise equipment consistent with identity, not redesigned. Entire three-person group with generous clear margins around staff crystals, book, lyre, boots; uniform neutral gray #808080 backdrop for extraction. No extra figures, duplicate limbs, guide colors/lines, shadow, floor, checkerboard, text or effects beyond existing crystal ornaments.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/walk-passing-a.png",
+        "source_sha256": "4896329174ac0e907bbb2815976f7ccda68607b01cb9007b56f58cf44472452d",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-147bb650-91c5-4b9e-b5b2-872b3385a3be.png",
+        "prompt": "Use case: sketch-to-render. ONE original painted THREE-person Resonant Chorister battle group WALK PASSING A. Image1 is authoritative leg pose applied to EACH performer, image2 identity and group placement ONLY not standing pose. EACH BLUE/anatomical RIGHT NEAR leg supports weight straight beneath hip, boot planted. EACH ORANGE/anatomical LEFT FAR leg swings with knee bent forward screen-right and far boot tucked up behind planted calf, clearly airborne. Narrow mid-stride legs not wide contact, three planted plus three raised boots. Split robes reveal actual leg articulation; cloth responds naturally. EXACTLY THREE people in compact triangular group: central tall fair woman long brown hair gold circlet full-height gold orrery staff, large circular gold crown and blue-purple center/surrounding crystal points; behind screen-LEFT brown-haired man holding open blue-gold illuminated book with small crystals above; behind screen-RIGHT dark-skinned braided woman holding small circular gold crystal lyre. All three ivory and royal-blue gold-trimmed robes/armor, two legs each, all six boots visible when not naturally occluded by raised legs. Each instrument stays with owner; central right near hand mid-shaft left far hand high. Same faces/proportions, fixed elevated three-quarter camera and screen-right body orientation. Staff full original length and head size; no equipment redesign. Central taller singer forward companions a little behind on their same sides, everyone and all instruments remain visible. Original crisp painterly raster art. ONE complete three-person group, ample margins around staff crown/instruments/boots. Uniform neutral gray #808080 backdrop for later local extraction. No guide colors/lines, floor, shadow, text, checkerboard, extra performers, extra limbs, motion trails or effects beyond existing crystal ornaments.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/walk-contact-b.png",
+        "source_sha256": "ec55357f4d1943b5148ebafc8582e05536915d7d1dc649fe7f84164caeaa1deb",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a95fbe19-d02d-4f45-8228-367d41ae2a0a.png",
+        "prompt": "Use case: sketch-to-render. ONE original painted THREE-person Resonant Chorister battle group WALK CONTACT B, genuine opposite leg stride. Image1 authoritative leg pose applied to EACH performer, image2 identity/group placement ONLY, NOT leg pose. EACH BLUE/anatomical RIGHT NEAR leg extends BACK toward screen-LEFT with knee clearly LEFT of belt center, toe pushing at far left. EACH ORANGE/anatomical LEFT FAR leg extends FORWARD screen-RIGHT with knee RIGHT of belt and heel landing to right. Open uncrossed A-shaped stride, hips not mirrored, DO NOT repeat right-near-leg-forward. Six boots, split cloth reveals knee ownership, actual articulated motion. EXACTLY THREE people in compact triangular group: central tall fair woman long brown hair gold circlet full-height gold orrery staff, large circular gold crown and blue-purple center/surrounding crystal points; behind screen-LEFT brown-haired man holding open blue-gold illuminated book with small crystals above; behind screen-RIGHT dark-skinned braided woman holding small circular gold crystal lyre. All three ivory and royal-blue gold-trimmed robes/armor, two legs each, all six boots visible when not naturally occluded by raised legs. Each instrument stays with owner; central right near hand mid-shaft left far hand high. Same faces/proportions, fixed elevated three-quarter camera and screen-right body orientation. Staff full original length and head size; no equipment redesign. Central taller singer forward companions a little behind on same sides, everyone and instruments visible. Original crisp painterly raster art. ONE complete group ample margins around staff crown/instruments/boots. Uniform neutral gray #808080 backdrop for local extraction. No guide colors/lines, floor, shadow, text, checkerboard, extra performers, extra limbs, motion trails or effects beyond existing crystal ornaments.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/walk-passing-b-bare-knees-rejected.png",
+        "source_sha256": "8076d5515a79e2669eb697ba01b2af1b4e7adc486e4a8bc863e082e7a0acf10f",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-61e86fbf-f4f9-4970-b38d-ba980d1b8e79.png",
+        "prompt": "Use case: sketch-to-render. ONE original painted THREE-person Resonant Chorister battle group WALK PASSING B. Image1 authoritative leg pose applied to EACH performer, image2 identity/group placement ONLY, not standing pose. EACH ORANGE/anatomical LEFT FAR leg supports weight planted directly beneath pelvis. EACH BLUE/anatomical RIGHT NEAR thigh swings FORWARD toward screen-right crossing in front of far thigh, knee bent high, boot tucked back below knee CLEARLY AIRBORNE in front of far calf. Narrow mid-stride legs NOT wide contact. Three planted boots and three clearly visible raised boots, exactly two legs per person. Part split robes naturally to expose lifted knees and correct boot ownership. EXACTLY THREE people in compact triangular group: central tall fair woman long brown hair gold circlet full-height gold orrery staff, large circular gold crown and blue-purple center/surrounding crystal points; behind screen-LEFT brown-haired man holding open blue-gold illuminated book with small crystals above; behind screen-RIGHT dark-skinned braided woman holding small circular gold crystal lyre. All three ivory and royal-blue gold-trimmed robes/armor, two legs each, all six boots visible when not naturally occluded by raised legs. Each instrument stays with owner; central right near hand mid-shaft left far hand high. Same faces/proportions, fixed elevated three-quarter camera and screen-right body orientation. Staff full original length and head size; no equipment redesign. Keep central woman in front and companions on same left/right sides, fixed compact group/body/instrument proportions. Original crisp painterly raster art. ONE complete group ample margins around staff crown/instruments/boots, uniform neutral gray #808080 backdrop for later extraction. No guide colors/lines, floor, shadow, text, checkerboard, extra performers, extra limbs, motion trails or effects beyond existing crystal ornaments.",
+        "selection": "rejected_continuity"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/walk-passing-b.png",
+        "source_sha256": "c60315ec66bee2b64e881336a396bb33dbfdf88f2098fe2603311fcd651c824d",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c91f9471-83f0-4111-8dd6-83d31aceb29e.png",
+        "prompt": "Use case: precise-object-edit. Image1 is edit target THREE Resonant Choristers with raised right knees. Image2 identity reference. Change ONLY the THREE exposed skin-colored knees/thigh patches in image1: each man's/woman's raised knee must be covered with fitted deep navy trouser fabric and a small ivory-and-gold armored knee cap matching their shin armor. These characters wear fully covered armored legs in every other pose, not bare skin. Preserve exact bent-knee anatomy, each lifted boot, leg positions, robe boundaries, all three faces/hair/hands, staff/book/lyre, crystal ornaments, all other paint, camera, canvas dimensions and gray background unchanged. No other adjustments, no extra limbs, no labels. The result must be this exact existing group painting with only bare knees replaced by original matching navy fabric and ivory/gold knee armor; do not redraw gait or equipment.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/attack-pair-short-shaft-rejected.png",
+        "source_sha256": "f215edef458777cabc04d26be322592ba2ae078ea81747c14c4c656acc378ae3",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e87559db-94e2-4e36-b1be-fc4578106081.png",
+        "prompt": "Use case: stylized-concept. Original fantasy tactical battle animation mini-sheet exactly TWO THREE-person Resonant Chorister groups side by side in WIDE landscape canvas, broad empty central gutter. Same group body/instrument scale both poses, not individual person panels. Image1 establishes original identities. EXACTLY THREE people in compact triangular group: central tall fair woman long brown hair gold circlet full-height gold orrery staff, large circular gold crown and blue-purple center/surrounding crystal points; behind screen-LEFT brown-haired man holding open blue-gold illuminated book with small crystals above; behind screen-RIGHT dark-skinned braided woman holding small circular gold crystal lyre. All three ivory and royal-blue gold-trimmed robes/armor, two legs each, all six boots visible when not naturally occluded by raised legs. Each instrument stays with owner; central right near hand mid-shaft left far hand high. Same faces/proportions, fixed elevated three-quarter camera and screen-right body orientation. Staff full original length and head size; no equipment redesign. LEFT group ATTACK WINDUP: central woman draws long staff diagonally BACK above her near shoulder with BOTH hands, elbows bent, knees braced; book holder crouches clutching open book at chest, lyre holder crouches gripping lyre, all same left/right positions. RIGHT group ATTACK RELEASE: central woman lunges screen-right and thrusts same full-length gold staff diagonally forward toward upper-right, both hands firmly gripping separated shaft locations; companions lean forward singing but retain instruments and visible bodies. Staff is a long continuous straight shaft roughly the central woman's standing body height excluding its LARGE circular gold crystal orrery head, NOT a short baton. Full shaft extends well behind lower grip in both poses and no shortening between panels. Crown circular nested gold rings with original purple-blue central diamond and surrounding crystal points, identical head/shaft proportions across BOTH phases. Cloth responds to motion, exactly THREE complete people per group and one staff/book/lyre per group. Original detailed painterly raster art, fixed elevated three-quarter view facing right, full armored legs navy trousers under ivory/navy gold robes. No bare knees. All extremities entire staff ends inside generous margins, no overlap between groups. Plain neutral gray #808080 backdrop for local cutout. No ground, shadows, checkerboard, extra people, extra instruments, captions, beams or VFX.",
+        "selection": "rejected_continuity"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/attack-pair.png",
+        "source_sha256": "c306bf403214a35563fd63d32433be6dd4f419ef28b1a406c956af4bad8f00a8",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ec0583c2-6837-481e-b96f-94d45b689878.png",
+        "prompt": "Use case: precise-object-edit. Image1 is a TWO-panel THREE-person Resonant Chorister attack mini-sheet. Correct ONLY the SHORT STAFF SHAFT in the LEFT PANEL. Right panel is correct, preserve it pixel-for-pixel in appearance. The LEFT staff is a short baton; extend its straight gold shaft DOWN AND LEFT beyond the lower hand so its butt reaches near the left book-holder's knee level, approximately x90 y545 on this 1774x887 canvas. Keep left circular orrery head EXACT same position/size, upper shaft and BOTH gripping hands exactly in place at x345 y283 and x313 y315. Shaft continuous straight line from gold head base x403 y232 through BOTH grips down-left to new pointed butt around x90 y545. This makes left staff full length equal to right staff, about central woman's standing height including head. Keep staff in foreground wherever it passes robe/book, no anatomy deletion. Only remove old pointed butt at x267 y369 and put the same gold butt at the new extended end. All THREE people, all SIX hands/legs, faces, clothing, book, lyre, crystals, head positions, camera, canvas and background unchanged. Do NOT shorten right staff, move figures, resize groups or change other ornament. Plain original gray background, no text.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/defense-breath.png",
+        "source_sha256": "2f3d33104286910ffe7e536c47f2d5fbdb039675103fb420b4b9f6e462969d1c",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5e415fac-2b00-4749-8d1c-066e250bed5a.png",
+        "prompt": "Use case: identity-preserve. ONE complete THREE-person Resonant Chorister group defensive breathing pose. Image1 exact defensive pose reference, image2 original identities. Preserve all three CROUCHING LOW in their same group positions: central circleted fair woman in front grips full gold orrery staff diagonally across chest (long continuous shaft and large original crystal-ring crown), brown-haired man behind screen-LEFT cradles open illuminated blue-gold book, braided dark-skinned woman behind screen-RIGHT holds circular gold lyre near chest. Change only small inhale articulation: central shoulders lift a little, head tucks toward staff, elbows flex; companions lift chest slightly while keeping knees bent, hands and instruments safe. No walking. Everyone retains ivory/gold armor navy/ivory long split gold robes and fully covered armored legs, no bare knee skin. Staff retains exact original length, entire butt and crystal crown visible. Fixed elevated three-quarter view to screen-right, original identity and equipment counts, exactly three full people, same relative size and layout. Crisp painterly raster game art, ample margin around entire group and all instruments. Uniform neutral gray #808080 background for cutout, no floor, shadow, checkerboard, text, extra figures, extra hands or effects beyond original crystal ornaments.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/death-pair.png",
+        "source_sha256": "d201e2797305ae9e9307258075ad0b6bf1f45e406b8076e825d984c212de63ea",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a3f1748b-dea6-40b6-9a2d-1a0efd93cfd2.png",
+        "prompt": "Use case: stylized-concept. Original tactical battle DEATH ANIMATION mini-sheet exactly TWO group poses side-by-side in wide canvas, each group EXACTLY THREE Resonant Choristers, generous center gutter. Image1 identity, image2 final corpse orientation and equipment positions. Preserve three owners: central fair woman circlet long gold crystal-orrrery staff, left brown-haired man open blue-gold book, right dark-skinned braided woman circular gold crystal lyre. All ivory/gold armor over navy/ivory robes, fully covered legs. LEFT PANEL: ALL THREE lose support at once, both companions and center have knees deeply buckled toward ground, torsos sag/bow forward, eyes closed mouths relaxed, instruments lowering. Central staff leaning diagonally downward but full original length and ring crown retained; companions' book/lyre securely lowering. None standing upright or singing. RIGHT PANEL: all THREE falling toward their near sides, hips and folded legs already on ground, torsos only 20 degrees above horizontal propped weakly on elbows and about to give way, heads low. NOT sitting upright. Match original final corpse group: man behind-left, central woman foreground, braided woman behind-right. Book on ground at left man's hand; full gold staff almost horizontal across foreground with circular blue-purple crystal orrery at screen-LEFT and butt screen-right, center hand loosely touching shaft; lyre resting beside right woman's forearm. Exactly THREE complete bodies visible and one staff/book/lyre, no merged limbs, no missing person or equipment. Equal anatomy scale between panels, no group resizing. Inert colored glass no glowing aura or floating light effects, no blood or gore. Fixed elevated three-quarter camera, consistent original crisp painterly raster game style. Whole groups/instruments uncropped, uniform neutral gray #808080 background for local cutout. No floor, shadows, checkerboard, text, captions or extra figures.",
+        "selection": "packed_candidate"
+      },
+      {
+        "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/death-low-fall.png",
+        "source_sha256": "77c8166c0eb53265fb769d520a3244696157f0c4264178c44f0b0cf0c34597a7",
+        "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-04439636-771d-4aee-b617-aeb4fdf3667f.png",
+        "prompt": "Use case: precise-object-edit. Single THREE-person group image is edit target, intermediate FALL pose not final corpse. Preserve same three people, leg/hip positions, robes, equipment placement, camera, group scale, gray background and canvas. Change only upper body articulation for ALL THREE: each person's near ELBOW is planted on ground with forearm bracing, shoulder raised about one head-height above ground, torso inclined roughly 30 degrees from horizontal, head hanging DOWN forward above their hands. All three shoulders and cheeks must CLEAR the ground, faces bowed NOT cheek resting flat. Their elbows are starting to buckle, not standing or sitting upright. Central circleted woman's shoulder/head raised over supporting left forearm, right hand still touches horizontal staff shaft. Left man's head/shoulder raised above his forearms with book resting just below his hand. Right braided woman's shoulder/head raised above elbow with lyre under hand. All six folded legs stay grounded, same three separate bodies, no extra limbs. Faces eyes closed, no singing. Preserve original ivory/gold armor navy/ivory robes, same full long gold shaft in foreground with original nested circular gold blue-purple crystal head screen-left and butt screen-right, book left and circular lyre right. Do not shorten or move instruments or mirror the group. Plain neutral gray #808080, NO ground shadow, checkerboard, effect, text or additional figure. This must be the moment BEFORE the supplied fully prone state, all heads visibly still above ground.",
+        "selection": "packed_candidate"
+      }
+    ],
+    "reference_crops": [
+      {
+        "source": "continuity-alpha/poses.png",
+        "rect": [
+          5,
+          0,
+          355,
+          379
+        ],
+        "output": "identity-reference.png"
+      },
+      {
+        "source": "continuity-alpha/poses.png",
+        "rect": [
+          1106,
+          804,
+          1536,
+          1024
+        ],
+        "output": "dead-reference.png"
+      },
+      {
+        "source": "continuity-alpha/poses.png",
+        "rect": [
+          1170,
+          430,
+          1536,
+          720
+        ],
+        "output": "defense-reference.png"
+      },
+      {
+        "source": "death-pair.png",
+        "rect": [
+          960,
+          0,
+          2048,
+          768
+        ],
+        "output": "fall-reference.png"
+      }
+    ],
+    "reference_roles": {
+      "walking": "One biped near/far phase guide first applied to all three performers, original group identity second; leg-covering-only correction to passing B.",
+      "attack": "Original group identity, then targeted full-length shaft correction to left windup only.",
+      "defense": "Original defensive crop and full idle group.",
+      "death": "Original identity/final corpse, then corpse crop used for articulated elbows-raised low fall; all three bodies/instruments retained."
+    },
+    "preparation": "Owner-approved deterministic local matte via continuity-cutouts.json. Selected plain-gray masters restrict background maximum to185 to retain neutral-white armor/instrument highlights, while original checker source keeps its separate recipe. Inspected enclosed-gap seeds, narrow edge processing and byte-preserved interior paint. Per-output source/tool/recipe/output proof hashes retained.",
+    "packing": "packing.json",
+    "runtime_sheet": "art/animation/runtime/poses/unit_sunvault_resonant_choristers.png",
+    "runtime_sha256": "a2e8773071c16be9ac6fb1993777230054a962b43fd4ef397d464e6f881d6f3f",
+    "frames": 15,
+    "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/chorister-continuity-20260915/",
+    "validation": "Actual source/packed alpha-composite production review, not in-game motion acceptance. Consolidated roster/repository/Linux/Windows validation remains deferred; no tests/imports/exports."
+  },
+  "packing": {
+    "recipe": "art/animation/source/poses/unit_sunvault_resonant_choristers/packing.json",
+    "runtime": "art/animation/runtime/poses/unit_sunvault_resonant_choristers.png",
+    "runtime_sha256": "7a755377af8da83e52f0bdd26580d1444e6aa2430872e1c2e22df5eae55f9f09"
+  },
+  "ranged_correction": {
+    "date": "2026-09-16",
+    "generation": "art/animation/source/poses/unit_sunvault_resonant_choristers/ranged-correction-20260916/generation.json",
+    "preparation": "art/animation/source/poses/unit_sunvault_resonant_choristers/ranged-correction-20260916/cutouts.json",
+    "packing_result": "art/animation/source/poses/unit_sunvault_resonant_choristers/ranged-correction-20260916/packing-result.json",
+    "selected_frames": [
+      15,
+      16,
+      17
+    ],
+    "runtime_sha256": "7a755377af8da83e52f0bdd26580d1444e6aa2430872e1c2e22df5eae55f9f09",
+    "review": "Original generated preparation/release/recovery replace melee alias. Source/composites/packed atlas inspected; final gameplay/continuous-motion acceptance pending. Existing frames untouched."
+  }
+}

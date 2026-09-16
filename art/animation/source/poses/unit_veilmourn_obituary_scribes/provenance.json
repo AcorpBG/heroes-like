@@ -1,0 +1,76 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_obituary_scribes",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_obituary_scribes.png",
+  "reference_sha256": "880a6eee35be1d612622ba1d427999bdf1dcea38d2290f2661820ac31136c5c6",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/poses-draft.png",
+      "source_sha256": "1da08c55d9ac1c6b2fbe73d5155136b4231bdcd8f2b9142744fb37c33b6fef9f",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e497ac00-48f5-43b9-8451-c662fb4347a0.png",
+      "prompt": "Use case: stylized-concept. Original painted tactical fantasy battle animation sheet. Reference defines ONE Obituary Scribe: tall spectral masked figure, ivory full face mask, spiked dark silver crown, long black/teal robes with ivory armored central panels, silver floral clasps, long tendril ribbons. Anatomical RIGHT hand holds a long silver quill staff (large dark feather at upper end); LEFT supports ONE open black embossed chained book glowing purple from pages. Upper left trailing ribbon suspends a small purple lantern; upper right ribbon suspends ivory scroll with dark seal. Preserve book, staff, lantern, scroll, crown and ribbon attachments. Generate SIXTEEN articulated full-body poses in 4 columns x 4 rows, same body scale and fixed elevated three-quarter view facing screen-right, generous gutters and full ribbons/weapons within cells. Genuine transparent RGBA background, no checkerboard painted in, no scenery/floor/grid/text. Row1: idle upright hovering; idle book tilted head lowered ribbons curling differently; glide forward robes/ribbons swept backward body leans slightly forward; glide recovery torso upright ribbons curling forward with a different robe hem, no mere translation. Row2: glide passing lower robe folds gather and left shoulder advances; melee wind-up right quill staff draws back LEFT book held close; melee right staff thrust forward screen-right feather end at enemy chest height left book retained; defend staff diagonal guarding mask book shields chest. Row3: casting anticipation head toward book right staff raised; casting release staff points screen-right small purple wisp at feather tip book glows; recovery staff lowers book settles; hit recoil torso arches back ribbons flare. Row4: dying folds forward knees/robe buckle lights dim; kneeling crown lowered book falling into left lap; side fall bent hips/robe staff and book landing alongside; fully dead prone side-lying masked robed figure with limp ribbons and dark lantern/book/staff, scroll and equipment retained. Actual torso/arms/head and robe articulation, no rotated standing cutouts. Exactly two hands and one book/staff. Original art only, no copyrighted franchise assets."
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/poses.png",
+      "source_sha256": "dc5f79b97ee0a5fa9d15ae5c7befc77a3cc22b897931db2a06ae027d1328ff27",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-32ae3ce7-c766-489d-a603-a77019cd203d.png",
+      "prompt": "Use case: precise-object-edit. Edit only TWO cells of supplied sixteen-pose Obituary Scribe sheet. Row3 column4 hit recoil: restore the missing quill staff held in anatomical RIGHT hand, the visible dangling hand on viewer LEFT. Staff slopes down-left within the cell, with long silver shaft and ONE feather blade at upper end; retain left book and recoil torso. Row4 column4 final corpse: extinguish ALL purple glow on book pages and belt vials, leaving dark inert book and glass. Lower raised ribbon loops so ribbons lie limp around corpse while their lantern and scroll stay attached and visible. Preserve other fourteen poses and every cell placement, canvas, character size, equipment design and palette. No new background or extra props.",
+      "alpha_source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/alpha/poses.png",
+      "alpha_sha256": "f4f9654ebbd220bfee52a59cc31532df69ccc6f3f42fa1b763eaa4ca3825435f",
+      "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b121350d-bf40-4707-ab22-fedaf4980c18.png",
+      "alpha_prompt": "Use case: background-extraction. Remove ONLY checkerboard from this sixteen-pose Obituary Scribe sheet to genuine transparent RGBA. Preserve all sixteen painted figures exactly, their staff/book/lantern/scroll, ribbons, purple casting effects, positions, sizes and canvas. Preserve dark final corpse. No replacement background, no painted checkerboard, no repainting or colored edge matte."
+    }
+  ],
+  "review_notes": [
+    "17 frames retain original two idles and hit; new single-feather glide/guards/actions replace double-ended staff sources. Four corrected head-left death poses retain book, whole staff, one lantern and one scroll with cold glass.",
+    "Original fall changed head direction before its final corpse. New connected head-left paintings replace that mismatch; duplicate-lantern precursor is unselected. Genuine original alpha reused unchanged.",
+    "Banded source crops remove adjacent pose fragments without erasing legitimate tips. Explicit neutral aperture seeds or source-specific chroma preparation preserve original interior paint.",
+    "Body/gear scale and palette, support/travel, grip continuity, death settling and connected event timing remain full-roster refinement. Offline static previews are not gameplay or final animation acceptance."
+  ],
+  "prior_review_notes": [
+    "Sixteen poses; hit staff restored and final book/vials darkened. Final ribbons lowered but remain partly arched.",
+    "Glide and casting frames sometimes have feather blades on both ends of staff; enforce single feather end and constant length.",
+    "First death omits book and passing may obscure staff; equipment/hand continuity must be corrected.",
+    "Glide needs consistent torso/robe cycle and orientation; ribbon count/attachments and mask/crown scale vary.",
+    "Extraction changes details and has colored fringes, particularly spell effects; alpha/compositing and explicit crops pending.",
+    "Source only, not packed/enabled. 29 runtime candidates and 0/160 final acceptances unchanged. No tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 3,
+    "new_or_corrected_selected_paintings": 14,
+    "generated_outputs": 4,
+    "generation": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_obituary_scribes/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_obituary_scribes/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_obituary_scribes.png",
+    "runtime_sha256": "779155edcfbc165be97ebc445e32a212cea9d67c267b5c5819559b03fd05489d",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_obituary_scribes/alpha/poses.png": "f4f9654ebbd220bfee52a59cc31532df69ccc6f3f42fa1b763eaa4ca3825435f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-glide-and-guards.png": "c44da01ef61351512d6f2664aa282e194bddc9402cf22aadf6b4e414c03fdbe1",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-attack-and-cast.png": "db3f8e7efd9f12d156d19b1d0abb2119b5829aafa6e7d352a6a9f747655430de",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-lantern-cold-collapse.png": "c6faba5ba2b158f067645ff0e4dc0a5d2afd2290b059703e66f20399d0f3302b"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/scribe-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes; offline visual production evidence is not final playback acceptance.",
+    "cleanup": {
+      "policy": "Removed only SHA-256-identical task preview copies after no-live-handle checks. Retained identical recovery copies, unique evidence, originals/rejected masters, all used references, processing proofs, caches and unrelated files.",
+      "duplicates_removed": [
+        {
+          "remove": "/root/dev/heroes-like/.artifacts/battle-unit-animation-size-20260913/scribe-continuity-20260916/identity/unit_veilmourn_obituary_scribes-poses-rect-0-0-308-341-green.png",
+          "retain": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_obituary_scribes/identity-reference.png",
+          "sha256": "32565995fc7fb67b4265021f183c6df68258530d4483fc1aa2282dc73a28cf90",
+          "bytes": 174331
+        }
+      ],
+      "removed_bytes": 174331
+    }
+  }
+}

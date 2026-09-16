@@ -1,0 +1,292 @@
+{
+  "unit_id": "unit_neutral_charcoal_mauls",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          45,
+          8,
+          373,
+          397
+        ]
+      ],
+      "anchor": [
+        190,
+        389
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "idle_b",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          378,
+          8,
+          698,
+          375
+        ],
+        [
+          378,
+          375,
+          481,
+          395
+        ],
+        [
+          593,
+          375,
+          698,
+          395
+        ]
+      ],
+      "anchor": [
+        527,
+        387
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "walk_contact",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          46,
+          398,
+          365,
+          731
+        ],
+        [
+          46,
+          731,
+          96,
+          746
+        ],
+        [
+          216,
+          731,
+          365,
+          746
+        ]
+      ],
+      "anchor": [
+        182,
+        740
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "guided_passing",
+      "source": "continuity-alpha/guided-planted-passing-step.png",
+      "rects": [
+        [
+          0,
+          0,
+          1221,
+          1289
+        ]
+      ],
+      "anchor": [
+        602,
+        1247
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "maul_overhead_windup",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          530,
+          379,
+          553,
+          384
+        ],
+        [
+          514,
+          384,
+          570,
+          395
+        ],
+        [
+          459,
+          395,
+          616,
+          403
+        ],
+        [
+          367,
+          403,
+          671,
+          755
+        ]
+      ],
+      "anchor": [
+        533,
+        745
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "maul_downward_strike",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          704,
+          447,
+          1038,
+          643
+        ],
+        [
+          704,
+          643,
+          1080,
+          754
+        ]
+      ],
+      "anchor": [
+        886,
+        745
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "maul_recovery",
+      "source": "continuity-alpha/maul-recovery-ready-and-passing.png",
+      "rects": [
+        [
+          0,
+          0,
+          670,
+          786
+        ]
+      ],
+      "anchor": [
+        299,
+        736
+      ],
+      "scale": 0.31
+    },
+    {
+      "name": "maul_ready_guard",
+      "source": "continuity-alpha/maul-recovery-ready-and-passing.png",
+      "rects": [
+        [
+          670,
+          0,
+          1340,
+          786
+        ]
+      ],
+      "anchor": [
+        962,
+        736
+      ],
+      "scale": 0.31
+    },
+    {
+      "name": "maul_deep_guard",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1060,
+          438,
+          1426,
+          620
+        ],
+        [
+          1092,
+          620,
+          1426,
+          739
+        ]
+      ],
+      "anchor": [
+        1253,
+        728
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "hit_recoil",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          32,
+          737,
+          218,
+          756
+        ],
+        [
+          32,
+          756,
+          365,
+          1055
+        ]
+      ],
+      "anchor": [
+        176,
+        1043
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "death_kneel",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          358,
+          780,
+          688,
+          1060
+        ]
+      ],
+      "anchor": [
+        527,
+        1046
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "death_side_fall",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          693,
+          798,
+          1035,
+          1068
+        ]
+      ],
+      "anchor": [
+        860,
+        1057
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "dead_head_left_dark_maul",
+      "source": "alpha/poses.png",
+      "rects": [
+        [
+          1043,
+          852,
+          1438,
+          1072
+        ]
+      ],
+      "anchor": [
+        1233,
+        1060
+      ],
+      "scale": 0.57
+    }
+  ],
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20
+}

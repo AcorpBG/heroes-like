@@ -1,0 +1,50 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_fenhound_runners",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_fenhound_runners.png",
+  "reference_sha256": "4e8095c1f44ef4cfc7c6a9588c4f8bc9a43e51ac3ec0140091c5af29818db4ca",
+  "outputs": [
+    {
+      "source": "poses.png",
+      "source_sha256": "7471c12cf4c0d75cac0d6df3e000c929b0a9dad8ba94857db6f0184204d508c9",
+      "source_output": "exec-d02b43a9-f75d-4aa9-b02c-8de173c4d361.png",
+      "prompt": "Use case: stylized-concept. Original battle sprite sheet for Fenhound Runner based on attached reference identity: lean shaggy brown-gray wolf-like working hound, long muzzle, upright ears, amber eyes, turquoise painted streaks along face/back/flanks, mossy leather courier harness with small parcels and round bronze collar token, bushy tail. Exactly twelve full-body separately articulated poses FOUR columns THREE rows, same anatomical size, elevated three-quarter tactical camera facing RIGHT, generous gutters and complete tail/paws inside each cell. Row1: idle four paws grounded mouth shut; alert breathing chest expands ears perk tail subtly lifts; running extended suspension front legs reaching RIGHT and hind legs stretched LEFT; gathered suspension forelegs fold BACK beneath chest and hind legs fold FORWARD beneath belly, arched back, all four distinct legs. Row2: landing front paws grounded hindquarters lifted; attack crouched windup head drawn back jaws opening; forward biting lunge head/jaws extended right forepaws braced; defense low wide stance shoulders tucked head turned slightly toward threat ears flattened. Row3: hit recoil shoulders twist head pulled back; dying foreknees buckle chest sinking; falling on SIDE with four slack bent legs; final DEAD hound prone on side eyes closed jaws slack torso fully horizontal harness still on and tail resting, no blood. No duplicated running silhouettes, no extra limbs, no upright rotated corpse. Original gritty painterly raster, consistent harness markings and body size. Plain pale gray background, no checkerboard, floor/shadows, effects, labels, frame borders or scenery. Original legal artwork.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "25af57c315e8eb6f40854393e0e33a1bafd48cf08503d90987d3533587ca727f",
+      "alpha_output": "exec-68147cbc-18d6-4615-9b15-cae813f9d985.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all twelve Fenhound sprites from this sheet onto genuine transparent RGBA background. Preserve every original pose, exact layout/size, four paws, fur tips, harness, collar and prone corpse. Clear gray from all gaps between limbs. No checkerboard, matte, shadows, glow, text, new elements or changes to anatomy."
+    }
+  ],
+  "review_notes": [
+    "17 packed frames retain 11 original RGBA paintings and add six supported run, closed-bite contact/recovery, low-guard and head-right lowering paintings. Extended/gathered suspension, closed bite and resting corpse remain distinct.",
+    "Actual original-alpha composites are clean despite misleading raw brown preview. New green-backed art uses owner-approved bounded chroma/edge preparation. Banded crops exclude the neighboring tail from open bite/low guard; corpse crop excludes faint alpha below the body without shrinking it.",
+    "New landing far-hind separation and three-paw low-guard support, body/harness/turquoise markings, ground settling and connected gait/action/death timing remain unaccepted. Static production previews are not motion or gameplay acceptance."
+  ],
+  "prior_review_notes": [
+    "Twelve source poses and extraction visually inspected. Distinct extended/gathered running, bite/brace and side-collapse corpse. Extraction source metadata RGBA 1536x1024 alpha range 0..254; raw brown preview alone is not evidence of opaque background. Not packed or enabled; final compositing and continuous-motion acceptance outstanding. No automated tests launched per generation-first instruction."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 11,
+    "new_or_corrected_selected_paintings": 6,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_fenhound_runners/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_fenhound_runners/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_fenhound_runners/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_fenhound_runners/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_fenhound_runners.png",
+    "runtime_sha256": "4290011bb099a1fdbec0ad886dacc91682ac873fdf14e824abbd429cb962f708",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_fenhound_runners/alpha/poses.png": "25af57c315e8eb6f40854393e0e33a1bafd48cf08503d90987d3533587ca727f",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_fenhound_runners/continuity-alpha/supported-run-bite-and-fold.png": "19d91f643ddc6aec9d5c5f9d5e377418350f47aae128e186dc34a098e13782a1"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/fenhound-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

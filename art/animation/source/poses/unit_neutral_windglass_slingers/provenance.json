@@ -1,0 +1,64 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_windglass_slingers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_windglass_slingers.png",
+  "reference_sha256": "e5d92d0e973c4695b16b77e36b7b7659bb60f8df55b68b80fa2e3d73ce3aba84",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "6629f6a1c2d95c19b2219b96403cc2554a942cab5813739d6b42e232c42efa12",
+      "source_output": "exec-78999598-c749-4c76-be95-73f42d8cd5bb.png",
+      "prompt": "Use case: stylized-concept. Original Windglass Slinger battle animation sheet based on reference identity: athletic adult woman with tousled brown hair and goggles on forehead, teal scarf, torn cream sleeveless tunic, brown belt and pouch containing pale blue glass stones, dark blue trousers, leather knee guards and wrapped boots. Simple two-cord leather sling in RIGHT hand, not a staff or bow. Exactly SIXTEEN complete articulated poses FOUR columns FOUR rows, same character/camera/body scale, elevated three-quarter tactical view facing RIGHT. Generous gutters around complete sling cords, hands and boots. Row1 idle sling lowered; breathing alert scarf settles; walking near leg forward; walking near thigh back overlapping far forward thigh, no mirrored torso. Row2 passing step knee under hip; melee windup right fist drawn back with sling wrapped in fist; forward short right punch toward right with front knee bent, NOT sling shot; guard crouch both forearms shielding face. Row3 loading pale blue stone into sling pouch with left hand; sling windup right elbow raised cord and loaded pouch stretched above head inside cell; release right arm sweeps forward right, one loose release cord trails, no floating projectile; follow-through right arm crosses down before chest left arm balances. Row4 hit recoil shoulders back; dying knees buckle sling slack; side fall torso low limbs bending; DEAD woman lying on SIDE eyes shut horizontal torso/head sling resting beside, no rotated standing cutout and no blood. True joint/hip/elbow articulation. Original gritty painterly raster, preserve clothing identity. Pale gray plain backdrop, no shadows, checkerboard, motion trails, effects, text, borders, scenery or extra weapons."
+    },
+    {
+      "source": "poses-cord-draft.png",
+      "source_sha256": "aecae412b533ee91002b81dfd9cb70f25eaaedf00fde01b101eb8d915d9bbef8",
+      "source_output": "exec-f60a3b02-c576-4e00-883f-76ca1155a342.png",
+      "prompt": "Use case: precise-object-edit. Correct ONLY row3 column3 release pose of this sixteen-pose original Windglass Slinger sheet. The extended right hand retains ONE looped sling cord, leading to the leather pouch beyond the hand; the SECOND release cord trails loose from that pouch. Show a complete empty two-cord sling unfurling after stone release, not a short single whip or disconnected fragment. No stone/projectile. Preserve hand/body pose, all other fifteen poses, exact scale/layout/clothing, gray backdrop and clear gutters. No text/effects/extra elements."
+    },
+    {
+      "source": "poses-corrected.png",
+      "source_sha256": "47e13f803d2b8a9f53919e0ce56df3ec3e2f2d396698b600d85872a1c49a5ee1",
+      "source_output": "exec-0642c7a5-0da9-4e3f-a9d5-358c71488315.png",
+      "prompt": "Use case: precise-object-edit. In row3 column3 ONLY, replace tangled sling with ONE continuous simple line: right hand at left -> taut cord curving up to EMPTY brown leather pouch at upper right -> loose cord curving downward from that pouch, with a free knotted end hanging at lower right. Only ONE cord connects hand to pouch. The loose second cord starts at the pouch, NOT at the hand. No loop from pouch back to hand, no third cord. Keep complete sling inside open space without touching next woman. Also restore pale blue stone INSIDE loaded pouch in row3 column2 windup. Preserve every body pose, all other frames, gray background, exact 4x4 layout, scale and clothing. No effects/text/new objects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "8ea73bb0041cff4c69af9a05240b4c26b7432416c51601536062f9e83845691d",
+      "alpha_output": "exec-0847a9a5-0936-4b63-8e90-0c60641b57b1.png",
+      "alpha_prompt": "Use case: background-extraction. Remove gray background and all ground shadows from this sixteen-pose Windglass Slinger sheet, genuine transparent RGBA. Preserve exact layout, poses, scale, clothing, loaded blue stone in windup and complete EMPTY release sling with one retained cord and one loose cord from pouch. Transparent gaps between sling cords and limbs. No checkerboard, matte, blur, effects, text, added elements or changes to anatomy."
+    }
+  ],
+  "review_notes": [
+    "19 packed frames retain 13 original RGBA paintings and select six new/corrected paintings: supported travel, recovery, retained-sling punch and a head-left resting corpse. Separate load/windup/release/followthrough clips preserve the original corrected two-cord sling.",
+    "New six-pose punch is excluded because hand/torso continuity is uncertain. Targeted original-contact repair first invented a bucket-like bag (retained unselected); the selected correction uses an isolated original sling reference to restore its shallow cradle. Corpse source scale aligns anatomical body size rather than fitting each silhouette.",
+    "Approved bounded green-key/edge preparation preserves cream paint. Banded release/followthrough crops retain the complete loose cord while excluding neighboring paint. Leading-leg repetition, hand/body/gear consistency, settling and connected timing remain unaccepted; static previews are not playback acceptance."
+  ],
+  "prior_review_notes": [
+    "Sixteen poses and extraction visually inspected. Initial shortened release sling and subsequent extra cord corrected in selected source: single retained cord to empty pouch, loose release cord from pouch; blue stone restored in windup. Separate loading, windup, release, recovery, melee punch, guard and own corpse.",
+    "Opposite walking contact remains insufficiently distinct; gait, hand continuity and full in-context motion/compositing require review. Source only, not packed or enabled. No automated tests or exports launched per generation-first instruction."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 13,
+    "new_or_corrected_selected_paintings": 6,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_neutral_windglass_slingers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_windglass_slingers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_windglass_slingers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_windglass_slingers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+    "runtime_sha256": "953707d56f80219bf76e50b2f50dcd9fb75ed372aa82e04dd2daf1ab637a8077",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_windglass_slingers/alpha/poses.png": "8ea73bb0041cff4c69af9a05240b4c26b7432416c51601536062f9e83845691d",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_windglass_slingers/continuity-alpha/supported-travel-melee-and-left-corpse.png": "3b333db6c335243e6c013f38f6c6bb6695a60621771286eb475063e44323a152",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_windglass_slingers/continuity-alpha/original-punch-flat-sling-cradle.png": "1a398112415640d7b87634f5ce2f9a5f0c005e7d65cfd71cb05f93d724b877a1"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/windglass-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}

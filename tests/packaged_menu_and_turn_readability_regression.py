@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import os
 import shutil
 import menu_and_turn_readability_regression as ui
 import packaged_town_scene_layer_regression as packages
@@ -38,7 +39,7 @@ def main():
             code=packages.main()
         if not receipt['ok']: code=1
     else: code=packages.main()
-    report=ui.OUTPUT/args.label/'packaged-ui-owners.json'
+    report=packages.Path(os.environ.get('HEROES_BATTLE_READABILITY_ARTIFACT_DIR',str(ui.OUTPUT)))/args.label/'packaged-ui-owners.json'
     report.write_text(json.dumps({'ok':code==0,'compiled_owner_sha256':owners},indent=2)+'\n')
     return code
 

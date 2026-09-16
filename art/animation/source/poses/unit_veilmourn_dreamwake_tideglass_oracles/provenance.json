@@ -1,0 +1,89 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_veilmourn_dreamwake_tideglass_oracles.png",
+  "reference_sha256": "7755b100722b1f1b6f34113f1294c111dffabb3681d235d7e09912abe060a63f",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/poses-single-staff.png",
+      "source_sha256": "86ebbac8f3a13cc3f9c4b23a680e2d6871ce06ae12e46c3faf51af0b382eb5b2",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0af16227-b19f-482e-bdbc-c6b1e6d1b7aa.png",
+      "prompt": "Use case: precise-object-edit. Repair ONLY row TWO column THREE (seventh sprite) of this 4x4 Oracle sheet. DELETE the vertical crescent staff standing behind her back in that cell, including its crescent orb and ribbons. Retain the ONE horizontal staff she is actually holding in her right hand, its silver crescent and blue orb at right; extend its dark rear shaft leftward behind her right hand as needed for full staff length. Preserve left hand supporting basin, torso/legs, character costume. Exactly one staff and one basin in repaired pose. Do not touch any other sprite or repaint other artwork. Keep canvas dimensions and positions unchanged. Transparent background, no painted checkerboard."
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/poses.png",
+      "source_sha256": "59ee079218b4f3ce2fe03b11af790de5e655d5a6c49a695a2690ec9bfdf666b3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e60d74c8-2c32-476c-a8b5-fd75af5604d9.png",
+      "prompt": "Use case: stylized-concept. Original tactical battle sprite animation sheet matching attached Dreamwake Tideglass Oracle reference. Exactly 16 isolated full body poses FOUR columns FOUR rows same scale fixed 3/4 camera facing RIGHT generous gutters. Actual transparent RGBA background no painted checkerboard no ground no text. Human pale woman long dark braided hair navy ivory flowing layered embroidered robe aqua ribbons pearlescent blue shoulder plate black boots, belt blue glass charms and small bells. Anatomical RIGHT hand ONE tall dark staff topped with silver crescent cradling ONE blue glass orb, dangling ivory/aqua ribbons. LEFT hand supports ONE round shallow silver basin filled blue reflective water, held level like a dish not vertical shield except deliberate defense. Keep full staff/orb and basin count shape consistent. Row1 idle planted staff basin waist level; breathing idle shoulders lift basin slight tilt ripples; walk LEFT foot forward RIGHT back beneath parted robe; walk RIGHT foot forward LEFT back opposite anatomical contacts do not mirror character. Row2 passing raised bent knee; melee windup RIGHT elbow pulls staff diagonally back LEFT basin stable; melee contact RIGHT arm thrusts lower staff butt toward right crescent remains behind torso LEFT basin retained; defense crouch basin tilted outward defensively staff braced beside body. Row3 hit recoil body back basin held water sloshes slightly no spills disappearing; cast anticipation LEFT basin lifts chest height RIGHT staff orb near rim; cast release basin extended left arm toward right small cyan ripple rising above water RIGHT staff remains planted; recovery basin lowers ripple fades. Row4 wounded knees buckle staff lowers basin tilts; collapse sideways basin and staff slip to ground; prone dead eyes closed basin resting on side staff beside body orb dim; same persistent corpse orb dark water still no magical ripple ribbons limp. Real articulated elbows shoulders hips knees robe changes not translated duplicates, no extra arms missing equipment. Painterly original game art matching reference readable at small combat size. Entire staff and basin within each cell no clipping overlap or giant effects."
+    }
+  ],
+  "review_notes": [
+    "16 packed frames retain original idle pair, contact and passing through a background derivative; twelve new paintings add a one-staff butt-first strike/recovery, level-basin channel/water curl/brace, travel/lift, hit, head-left collapse and cold corpse.",
+    "The original duplicated staff, tipped water basin and textlike casting glyphs are excluded. Original neutral extraction eroded ivory ribbons; green-backed paintings plus approved bounded chroma/edge preparation preserve cloth and staff/basin gaps.",
+    "Full staff and basin remain through all selected stages; final eyes closed, orb/water dark-blue with residual rings rather than bright casting. Near/far gait ownership under cloth and inconsistent live orb brightness remain refinement.",
+    "Defend enters from upright recovery into low level-basin brace; reduced motion selects the braced frame. Body/gear proportions, grips, palette/edge consistency, ground settling and connected action/death timing remain unaccepted; static preview is not gameplay acceptance."
+  ],
+  "prior_review_notes": [
+    "Sixteen source poses include basin casting and corpse with dark final staff orb.",
+    "Original melee contact duplicated staff. poses-single-staff.png removes upright duplicate and restores horizontal rear shaft; use its seventh frame for subsequent refinement. Still strikes with crescent end rather than butt and requires continuous wind-up/grip. Basin retained. Whole-sheet edit also changes minor details; do not silently replace unaffected frames.",
+    "Walking contacts repeat lead; need opposite anatomical contact/passing. Idle subtle.",
+    "Basin depth changes from shallow dish to bowl; hand support/rim/water and charms/ribbon counts require continuity. Defense tilts full water basin vertically without spill.",
+    "Hit/cast water effects resemble tiny glyph fragments rather than water; remove textlike artifacts. Cast anticipation does not bring orb to rim.",
+    "Seated fall props staff before prone. Final basin remains brightly magical-looking; establish inactive water state. Checker background visible transparency unaccepted. Source-only no packing/enabling/tests/exports."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 4,
+    "new_or_corrected_selected_paintings": 12,
+    "generated_outputs": 3,
+    "generation": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/packing.json",
+    "packing_result": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_veilmourn_dreamwake_tideglass_oracles.png",
+    "runtime_sha256": "6057f1b240b0a5d570847493ab7c3833dcce664f5c29030df189860aa63f2d18",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/continuity-alpha/poses-green-background.png": "fea60aac9b11ca6f8969d87b7d50980b2bd5cbee46a2eedb1a2749e7dc574b98",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/continuity-alpha/travel-hit-and-cold-collapse.png": "4c916a677ea43e47d80dbb3ebcd47ecab4609d793f5bb602aae8caafdf247751",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/continuity-alpha/single-staff-actions-and-level-basin.png": "5b58f5b2e190ebc02a2dba7af34d0b5ad6818f931c92c30cc1d8c4155fb8c912"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/oracle-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes; offline static visual evidence is not final playback acceptance.",
+    "cleanup": {
+      "policy": "Removed only SHA-256-identical task preview copies after no-live-handle checks. Retained identical recovery copies, unique evidence, originals/rejected masters, all used references, processing proofs, caches and unrelated files.",
+      "duplicates_removed": [
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/oracle-continuity-20260916/prepared-original/poses-single-staff-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/oracle-continuity-20260916/prepared-green/poses-single-staff-light.png",
+          "sha256": "12af53c1896a665bdd813d52b63ec43da2fbcf438e2074a7ce109a5d0bf8c6c9",
+          "bytes": 1353504
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/oracle-continuity-20260916/prepared-original/poses-light.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/oracle-continuity-20260916/prepared-green/poses-light.png",
+          "sha256": "f0e9bc3394ab74b2c479228b83a9805645c6b47374aecb53110806439ef33eee",
+          "bytes": 1460423
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/oracle-continuity-20260916/prepared-original/poses-single-staff-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/oracle-continuity-20260916/prepared-green/poses-single-staff-green.png",
+          "sha256": "bb1fbc9dd488d5c960adff9c4d81714a5fbd465c00597b7c4fc0c59480d260f1",
+          "bytes": 1319696
+        },
+        {
+          "remove": ".artifacts/battle-unit-animation-size-20260913/oracle-continuity-20260916/prepared-original/poses-green.png",
+          "retain": ".artifacts/battle-unit-animation-size-20260913/oracle-continuity-20260916/prepared-green/poses-green.png",
+          "sha256": "68e242e054541b89ab81072a8bc2c05ab33b3a55958ef194eb8274ab286d3d4e",
+          "bytes": 1431520
+        }
+      ],
+      "removed_bytes": 5565143
+    }
+  }
+}

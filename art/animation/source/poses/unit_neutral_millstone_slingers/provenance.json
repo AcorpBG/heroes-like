@@ -1,0 +1,77 @@
+{
+  "schema_id": "original_unit_pose_provenance_v1",
+  "unit_id": "unit_neutral_millstone_slingers",
+  "date": "2026-09-14",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "review_status": "candidate_pending_playback_acceptance",
+  "reference": "art/units/source/curated/unit_neutral_millstone_slingers.png",
+  "reference_sha256": "9b61faeb853ef421523750c97591b7be6057e79808e6c7dd9ca65ac53845cffc",
+  "outputs": [
+    {
+      "source": "poses-draft.png",
+      "source_sha256": "cd1e6c1805100cc32f576d98cd6ce52a4bd4c80bbfef09d4b21380a34bfa088c",
+      "source_output": "exec-6bbe47e7-9637-4641-8306-d1a0c4a49d19.png",
+      "prompt": "Use case: stylized-concept. Original Millstone Slinger battle animation sheet matching reference: young woman brown tied hair green headband/scarf, cream rolled sleeve shirt, weathered brown leather apron, olive trousers brown wrapped boots, stone-filled hip pouch. Hand sling with exactly two cords and leather stone cradle, RIGHT throws, left loads. Sixteen full-body poses FOUR columns FOUR rows, same elevated three-quarter view facing RIGHT, consistent scale generous gutters. Row1 idle sling bundled in right hand; alert breathing; running EXTENSION wide split legs with near leg forward far leg back; running GATHER both knees bent below hips feet close together off ground. Row2 running opposite EXTENSION near thigh sweeps BACK crossing far thigh which extends forward, upright same torso; melee right empty fist drawn back near shoulder left guards chest sling loop secured to right wrist; right punch across torso toward RIGHT front knee bends; defense crouch forearms protect face. Row3 left hand sets stone in sling cradle while right holds cord ends low; loaded sling windup RIGHT hand raised behind head both cord ends in same fist and stone cradle extended behind; release RIGHT arm sweeps across body toward RIGHT, retain ONE cord connected hand-to-empty-cradle then second cord trails loose from cradle, no stone; recovery right lowers empty sling toward pouch. Row4 hit recoil; dying knees buckle; side fall torso low; dead relaxed SIDE body horizontal eyes shut, sling lying slack beside right hand, pouch intact. Preserve identity and two arms, anatomical elbows/knees, one sling no branching ropes. Painterly original fantasy raster. Plain pale gray background without shadow, no grid/text/scenery/trails/projectile/blood/effects."
+    },
+    {
+      "source": "poses-refinement.png",
+      "source_sha256": "c83ad75aa4dd8087b15befdd9573b7e02a145b3114f9206be052954d8203954a",
+      "source_output": "exec-39ce8a32-12b0-42a9-b081-571e6b88651a.png",
+      "prompt": "Use case: precise-object-edit. Correct THREE frames only of this original Millstone Slinger 4x4 sheet. Row2 col3 punch: RIGHT arm originating viewer-left shoulder crosses chest to punch RIGHT, matching right raised fist in previous frame; LEFT arm tucked back, sling loop remains right wrist. Row3 col2 loaded windup: exactly two parallel sling cords from SAME raised right fist to ONE leather cradle holding ONE gray stone at outer far-right end. Remove the extra stone/cradle near hand, no third cord. Row3 col3 release: only ONE cord extends from throwing hand to EMPTY leather cradle on far right, then second loose cord attaches to cradle and trails downward/back left, NOT attached to hand. Preserve actual two-cord sling connectivity. All other thirteen poses same, original face/clothing/layout/scale and gray background, no text/effects.",
+      "alpha_source": "alpha/poses.png",
+      "alpha_sha256": "9ac1bc3a60ae831b6303e56fe1dae9fd2c0604ac6e5572f90c198d051ebf0e15",
+      "alpha_output": "exec-0bb1644d-24bf-442b-94f4-0e598f9e4ec7.png",
+      "alpha_prompt": "Use case: background-extraction. Extract all sixteen original Millstone Slinger poses from gray onto genuine transparent RGBA. Preserve exact layout/body size, both arms, all sling cords and stone, pouch, clothing and corpse. Transparent limb gaps, no checkerboard/matte/shadow/text/effects/redraw/reframing."
+    },
+    {
+      "source": "release-arm-draft.png",
+      "source_sha256": "8fc698df19f87d97ee4f4c0fd50cc22a9df2445d62043afa751aca32bac4c51a",
+      "source_output": "exec-26b668c1-9e75-48d6-ab76-3308d02da382.png",
+      "prompt": "Use case: stylized-concept. Create ONE original full-body Millstone Slinger ranged RELEASE animation pose matching woman in attached sheet. Cream rolled-sleeve shirt, green scarf/headband, brown hair bun, worn leather apron, olive trousers, wrapped brown boots, stone pouch on left hip. Three-quarter elevated camera facing RIGHT, forward lunge, RIGHT shoulder rotates across chest and right arm extends to RIGHT, left arm swept behind. A real sling after release: one retained thin cord connects RIGHT fist to EMPTY leather cradle stretched rightward. At the OTHER end of that cradle a second cord trails DOWNWARD, with its free knotted tip clearly dangling BELOW cradle and NOT returning to fist. Exactly two cords, one cradle, no stone/projectile. Draw clear physical connectivity hand--cord--cradle--loose cord in one continuous open chain, not closed loop. Full body and entire sling in frame with generous gray margins. Original painterly raster identical identity, no text, effects, shadows."
+    },
+    {
+      "source": "punch-torso-draft.png",
+      "source_sha256": "07700519cd3d8127171dfd68ad5c9ca7552f7017c4b6008276587db9e5baa2b1",
+      "source_output": "exec-7e8f7862-edf2-4d57-918a-a2962221019e.png",
+      "prompt": "Use case: stylized-concept. ONE full-body original Millstone Slinger RIGHT CROSS punch pose, identity from attached sheet. Same green headband/scarf brown hair bun, cream rolled shirt, leather apron and olive trousers boots, stone pouch. Facing RIGHT, camera sees her RIGHT SHOULDER and back of that shoulder prominently in foreground. Her RIGHT arm extends from that foreground shoulder across the front of chest, fist punching to right. Torso turned enough that LEFT arm is visible BEHIND body, left fist pulled back at ribs on far side, not punching. Right wrist has bundled slack sling hanging below fist. Two arms total, no hand weapons/stone, same forward lunge and body proportions. Full body generous margins pale gray background, painterly raster, no effects/text/shadow."
+    },
+    {
+      "source": "poses-cord-corrected.png",
+      "source_sha256": "704667a069993bb2ec1a30305c7ae6fdb628794e59fdeda82859f972df4ce32a",
+      "source_output": "exec-b2105962-95a5-4680-9a75-624db9ba9f0f.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY the sling ropes in row3 column3 of image1 (4x4 Millstone sheet). Image2 is reference ONLY for correct sling connectivity. Preserve image1 throwing woman's exact body, arm, hand, clothing, pose, scale and all other fifteen frames. Row3 col3: remove lower cord that returns to hand. Instead attach a loose downward-hanging cord to the far outer edge of the empty leather cradle. Upper cord still joins fist to cradle. One continuous open chain fist--cord--empty cradle--dangling free cord. No returning loop, no stone. Keep gray background and layout.",
+      "alpha_source": "alpha/poses-cord-corrected.png",
+      "alpha_sha256": "2c453627d8047c46fb08786923b70098bcb16a13e8b1e3518b90e7ceef807ff7",
+      "alpha_output": "exec-f1c4ba32-bf69-4b52-b1b7-2af06a920da6.png",
+      "alpha_prompt": "Use case: background-extraction. Remove only gray background from this corrected sixteen-pose Millstone Slinger sheet onto true transparent RGBA. Preserve exact pose layout/body size, open sling chain with dangling free cord in row3 col3, all clothing/limb gaps and corpse. No checkerboard/matte/shadow/effects/text/redraw/reframing."
+    }
+  ],
+  "review_notes": [
+    "Sixteen poses and extraction visually inspected. Extended and gathered running silhouettes, crouched defense and side-collapse corpse are distinct. Refinement removes extra windup cradle; punch still switches arms and release still holds both cords. Those frames are not accepted and require further original-art correction. Opposite leg alternation, fine cord/edge compositing and in-context motion also remain pending. Source-only, not packed/enabled. No tests/exports or disposable test intermediates created.",
+    "Follow-up: separate release has correct open cord but changes throwing arm; separate punch over-rotates torso. Both unselected drafts. Reference-assisted sheet edit corrects release cord connectivity while retaining original pose; poses-cord-corrected.png and extraction visually inspected. Extraction is RGBA 1254x1254 alpha 0..255; compositing remains unaccepted. Punch continuity and gait still pending. No runtime enablement or automated tests/exports.",
+    "17 packed frames retain thirteen original paintings and select four new right-hand punch/guard paintings. A connected same-hand anticipation/contact/recovery replaces the old arm-switching melee frames. Corrected open-cord ranged release remains separate from melee; original head-right fall and horizontal corpse retain sling and stone pouch.",
+    "Actual crop composites exposed nonzero gray background alpha (sample values 4..13) across the old RGBA sheet. Preserve that source as evidence; derive a clean matte directly from the inspected original RGB poses-cord-corrected.png using the approved bounded color-distance recipe and inspected enclosed-gap seeds. Do not rekey or modify the old RGBA. Clean matte and packed fall were visually inspected on contrasting backgrounds. Banded crops exclude neighboring sling cradle, boot and next-row head fragments without clipping intended cord/hand.",
+    "Original/new scales 0.64/0.35 with anatomical anchors, not per-frame bounding-box normalization. Full alternating gait/ground contact, tool and pouch consistency, sling/hand mechanics, body/palette/edge continuity and connected timing remain refinement. Current static production review is not final motion/gameplay acceptance."
+  ],
+  "continuity_production": {
+    "date": "2026-09-16",
+    "status": "candidate_registered_not_final_accepted",
+    "retained_paintings": 13,
+    "new_or_corrected_selected_paintings": 4,
+    "generated_outputs": 1,
+    "generation": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-generation.json",
+    "cutout_recipe": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-cutouts.json",
+    "packing": "art/animation/source/poses/unit_neutral_millstone_slingers/packing.json",
+    "packing_result": "art/animation/source/poses/unit_neutral_millstone_slingers/packing-result.json",
+    "runtime_atlas": "art/animation/runtime/poses/unit_neutral_millstone_slingers.png",
+    "runtime_sha256": "9492d6904405852ac262d0aec74af330e1ea1eef648b94fb4a9be8de88bc0a8a",
+    "selected_sources": {
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png": "de5fb84613c0cd48a16a76190fa1d8338cf11143272ca7157bcba4969040e7fa",
+      "/root/dev/heroes-like/art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/same-hand-punch-and-recovery.png": "7e44caf820e21601cdb4096f6a64ba011bb1ba88e3256fa71f3245b7cf26e800"
+    },
+    "evidence": ".artifacts/battle-unit-animation-size-20260913/millstone-continuity-20260916",
+    "pose_source_facing": "right",
+    "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  }
+}
