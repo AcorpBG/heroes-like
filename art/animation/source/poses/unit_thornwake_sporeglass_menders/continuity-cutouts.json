@@ -1,0 +1,40 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "jobs": [
+    {
+      "id": "sporemender-walk-opposite-passing-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/walk-opposite-passing-magenta.png",
+      "source_sha256": "8a13167109d59353c51e9af7951b597ac1ed933ceea5da64571f83fbcb899f91",
+      "output": "art/animation/source/poses/unit_thornwake_sporeglass_menders/continuity-alpha/walk-opposite-passing-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "sporemender-walk-near-contact-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/walk-near-contact-magenta.png",
+      "source_sha256": "05d5b7f161499378fe73f139a488caee2faa773f61e6cfb3e95ece789d394800",
+      "output": "art/animation/source/poses/unit_thornwake_sporeglass_menders/continuity-alpha/walk-near-contact-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

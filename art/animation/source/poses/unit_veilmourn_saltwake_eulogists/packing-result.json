@@ -1,0 +1,196 @@
+{
+  "unit_id": "unit_veilmourn_saltwake_eulogists",
+  "output": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/candidate-atlas.png",
+  "sha256": "70532b3eb55bf5af1dd1cf427d01324069a17a98bde34aaa716fa8ce5317ebf9",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        148,
+        23,
+        305,
+        247
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        174,
+        24,
+        322,
+        247
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        143,
+        28,
+        316,
+        243
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        146,
+        26,
+        309,
+        241
+      ]
+    },
+    {
+      "name": "walk_repeated_contact_bridge",
+      "index": 4,
+      "alpha_bounds": [
+        124,
+        25,
+        315,
+        242
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        156,
+        31,
+        326,
+        243
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        164,
+        27,
+        337,
+        240
+      ]
+    },
+    {
+      "name": "melee_thrust",
+      "index": 7,
+      "alpha_bounds": [
+        148,
+        74,
+        395,
+        244
+      ]
+    },
+    {
+      "name": "melee_recover",
+      "index": 8,
+      "alpha_bounds": [
+        169,
+        24,
+        329,
+        244
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 9,
+      "alpha_bounds": [
+        145,
+        33,
+        326,
+        243
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 10,
+      "alpha_bounds": [
+        143,
+        53,
+        342,
+        246
+      ]
+    },
+    {
+      "name": "cast_anticipate",
+      "index": 11,
+      "alpha_bounds": [
+        166,
+        24,
+        318,
+        244
+      ]
+    },
+    {
+      "name": "cast_release",
+      "index": 12,
+      "alpha_bounds": [
+        151,
+        24,
+        359,
+        243
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 13,
+      "alpha_bounds": [
+        145,
+        23,
+        334,
+        244
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        149,
+        85,
+        363,
+        253
+      ]
+    },
+    {
+      "name": "death_fall",
+      "index": 15,
+      "alpha_bounds": [
+        140,
+        113,
+        353,
+        245
+      ]
+    },
+    {
+      "name": "death_settle",
+      "index": 16,
+      "alpha_bounds": [
+        152,
+        141,
+        352,
+        246
+      ]
+    },
+    {
+      "name": "dead_equipped",
+      "index": 17,
+      "alpha_bounds": [
+        148,
+        154,
+        356,
+        247
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png": "3c9e7344ae594760efbb2aa3d8fedcee93d6f4436c0dabd0323e693e18971ad5",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards-green.png": "95a663e67c2362a4613ad57eb32b2ab24dca58452887d4a499512b4a7e882fd9",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png": "e081a3aefd9181d4a2fb526a90d08fcb0c44b582f86d74d8d2c50986dbe3dfcf"
+  }
+}

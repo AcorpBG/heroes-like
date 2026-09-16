@@ -1,0 +1,78 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paintings preserved.",
+  "id": "walk-2",
+  "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/walk-2.png",
+  "source_sha256": "ee2aa645bc8afbfba003d365e69a104ff8bb94f79d2a8d37114de7538a5f1e4b",
+  "source_rect": [
+    0,
+    0,
+    1194,
+    1317
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/walk-2.png",
+  "output_sha256": "4c9a79ffc0e602c915071a38d2b6441eea32b54a68aec0635ff22df50148339d",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-cutouts.json",
+  "recipe_sha256": "ea6d0fa66800477982c01f519ff952059602fd13e8eff563e5dca10a9874fbe0",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        290,
+        740
+      ],
+      [
+        530,
+        561
+      ],
+      [
+        514,
+        918
+      ],
+      [
+        631,
+        130
+      ],
+      [
+        895,
+        216
+      ],
+      [
+        609,
+        277
+      ],
+      [
+        894,
+        178
+      ],
+      [
+        596,
+        179
+      ],
+      [
+        590,
+        277
+      ],
+      [
+        644,
+        96
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1033922,
+    "edge_pixels": 12606,
+    "unchanged_paint_pixels": 525970,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

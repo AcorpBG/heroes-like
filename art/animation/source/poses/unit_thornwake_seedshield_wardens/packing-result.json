@@ -1,0 +1,149 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens",
+  "output": "art/animation/source/poses/unit_thornwake_seedshield_wardens/candidate-atlas.png",
+  "sha256": "605e4510fba5585d9b76e75449532150348eef524317a38d54ed3340be43e882",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        191,
+        19,
+        322,
+        238
+      ]
+    },
+    {
+      "name": "idle_1",
+      "index": 1,
+      "alpha_bounds": [
+        181,
+        19,
+        318,
+        238
+      ]
+    },
+    {
+      "name": "walk_near_contact",
+      "index": 2,
+      "alpha_bounds": [
+        182,
+        14,
+        314,
+        240
+      ]
+    },
+    {
+      "name": "walk_far_lift",
+      "index": 3,
+      "alpha_bounds": [
+        183,
+        17,
+        318,
+        240
+      ]
+    },
+    {
+      "name": "walk_far_contact",
+      "index": 4,
+      "alpha_bounds": [
+        180,
+        13,
+        315,
+        239
+      ]
+    },
+    {
+      "name": "walk_near_lift",
+      "index": 5,
+      "alpha_bounds": [
+        181,
+        17,
+        316,
+        240
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        122,
+        3,
+        332,
+        239
+      ]
+    },
+    {
+      "name": "melee_contact",
+      "index": 7,
+      "alpha_bounds": [
+        166,
+        64,
+        432,
+        243
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 8,
+      "alpha_bounds": [
+        187,
+        36,
+        336,
+        241
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 9,
+      "alpha_bounds": [
+        172,
+        36,
+        338,
+        240
+      ]
+    },
+    {
+      "name": "kneel",
+      "index": 10,
+      "alpha_bounds": [
+        176,
+        45,
+        352,
+        233
+      ]
+    },
+    {
+      "name": "side_fall",
+      "index": 11,
+      "alpha_bounds": [
+        135,
+        92,
+        353,
+        239
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 12,
+      "alpha_bounds": [
+        137,
+        157,
+        361,
+        242
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png": "a1e3c5c2b540c1a7861e70f9e64bf0355ea8f4aa97241f40bd1f5dfbae801dd8",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-near-contact-corrected-magenta.png": "b66b38145e15c1f7bdfa19599abc4031c0b11c67976f6f9b8b7b18d64811a86c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-phase-3-magenta.png": "43cdafe51b2a243d3ade171b78da2ecf1704ae55f9e8408d25939927fa8ab5c8",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-phase-2-magenta.png": "dd5e4cfd5029c84033e428e476b15ea1eb7876595a0dbedbff614404af009e1c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-near-lift-corrected-magenta.png": "2177f11220c445b3993057895eff8c09592b433a716fcf83003137466a9e0d72",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/windup-full-shaft-magenta.png": "9f66a5c4b13ede05b03e13f7a136f2f6876c772cf745c9b5c06eec8b0490773f"
+  }
+}

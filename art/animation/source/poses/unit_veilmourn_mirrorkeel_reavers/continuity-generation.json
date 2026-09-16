@@ -1,0 +1,93 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "opposite-contact",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/opposite-contact-guide-rejected.png",
+      "source_sha256": "3540c12c7e99487441c3e0a5cb063cbfdabcdac87f8077da1dbc46252d690e24",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6d852694-767b-4daa-82da-c0d862d7ed4e.png",
+      "prompt": "Use case: sketch-to-render. Asset: ONE original tactical battle sprite, no sheet. Image 1 is the authoritative LEG POSE to render; image 2 supplies this same Mirrorkeel Reaver's costume and equipment. Render the diagram's orange FAR leg stretched FORWARD toward screen RIGHT, blue NEAR leg behind to screen LEFT, both clawed feet on the same ground line. Keep that leg ownership, do not copy the reference stance. Same slightly elevated three-quarter camera facing RIGHT, entire armored figure and weapons generously padded. Preserve tall split black helmet with ivory mask, silver-black faceted armor, ragged teal fin cape, THREE violet lanterns attached around helmet, hanging mirror charms. Anatomical RIGHT/near hand carries ONE long curved saber lowered outside the legs; LEFT/far hand carries ONE small silver sickle away from stride. Two distinct blades; no third weapon. Constant adult anatomy, visible far forward knee behind near hip, near rear thigh/ankle nearest viewer. Original finely painted game sprite. Genuine transparent RGBA background, no floor/shadow/checker/diagram/text/grid. Do not reflect the body or swap hands to change the stride.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/units/source/curated/unit_veilmourn_mirrorkeel_reavers.png",
+          "sha256": "b67a8149e9b36add5c87c20297e1e8cd441af264b78ce2656c66dab81e22df94"
+        }
+      ],
+      "selected": false,
+      "selected_cells": [],
+      "notes": "Rejected: repeats near-forward lead despite guide; only two lanterns visible instead of three."
+    },
+    {
+      "id": "opposite-passing",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/opposite-passing-guide.png",
+      "source_sha256": "d1ffe7483ae104604b2109a9c3ce7a10c4f938d4d327ac92d205e190b4d75f99",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-33b84ed0-4985-4f0e-80fb-b296ae918281.png",
+      "prompt": "Use case: sketch-to-render. One original painted tactical sprite. PRIMARY input image1 specifies exact leg mechanics: far leg/orange vertical SUPPORT from pelvis to planted foot, near leg/blue knee lifted FORWARD to screen RIGHT, near boot lifted across the supporting shin. SECOND image2 is identity/costume only, not a stance to copy. Render this passing pose in the Reaver's silver-black armor, tall black split helm/ivory faceplate and teal fin cape. THREE visible violet collar lanterns, hanging mirror charms; RIGHT near hand long curved saber held clear and low, LEFT far hand smaller crescent sickle. Keep both distinct blades and both feet visible. Fixed slightly elevated three-quarter camera facing right. No side swapping, no standing lunge, no extra limbs. Full body with generous margin around helmet/cape/blades/feet, genuine transparent RGBA background no checker floor text or diagrams. Preserve original adult anatomy and ornate painted materials.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/units/source/curated/unit_veilmourn_mirrorkeel_reavers.png",
+          "sha256": "b67a8149e9b36add5c87c20297e1e8cd441af264b78ce2656c66dab81e22df94"
+        }
+      ],
+      "selected": false,
+      "selected_cells": [],
+      "notes": "Near raised knee crosses planted far shin; three upper lanterns retained. Torso ornament, blade/body and cape consistency remain visual refinement."
+    },
+    {
+      "id": "recovery-and-braced-guard",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/recovery-and-braced-guard.png",
+      "source_sha256": "31941a510bff92115b3eb4d98d6066e6d8ab97ddfe161bd4a4a56fd033617681",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-17ce8077-baa1-41fe-88f1-abb02cba7efe.png",
+      "prompt": "Use case: stylized-concept. FOUR original painted battle animation poses in TWO columns TWO rows, generous separate gutters, full equipment inside each cell. Reference1 existing Reaver sprites is primary body size/style/equipment reference; reference2 confirms identity. Fixed elevated three-quarter view facing screen RIGHT, same body proportions all four cells. Silver-black faceted armor, ivory split faceplate tall black helm fins, teal ragged fin cloak and hanging mirrors, exactly THREE violet collar lanterns. RIGHT near hand holds long curved saber, LEFT far hand small sickle, no hand swaps. TOP LEFT: grounded passing stance, near leg planted beneath pelvis, far boot lifted behind, relaxed knee support, blades held clear. TOP RIGHT: sword strike followthrough/recovery, right elbow draws saber down away from chest while left sickle stays guarding, both feet planted. BOTTOM LEFT: compact crossed-blade brace, knees flexed, torso lowered slightly. BOTTOM RIGHT: brace relaxes by a small breath, same crossed blades and feet, cloak settles; don't repeat exactly. Separate coherent articulated poses, no ghosts or trails. Genuine transparent RGBA background, no checkerboard text floor shadow grid labels or scenery. Original art only.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png",
+          "sha256": "dd9c71a7fea7048fa7c71db5af0090e9c1bb933d7ebb5089a0c7b36a0b3b902e"
+        },
+        {
+          "path": "art/units/source/curated/unit_veilmourn_mirrorkeel_reavers.png",
+          "sha256": "b67a8149e9b36add5c87c20297e1e8cd441af264b78ce2656c66dab81e22df94"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "notes": "Four articulated additions for passing/recovery/guard; lamp and body consistency remain review."
+    },
+    {
+      "id": "opposite-passing-green",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/opposite-passing-green.png",
+      "source_sha256": "e078bd2779f92b2b87f5c2784a78f3b89614bd55bd8ee5fe63c14d950ef2056c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f2108b7b-2e7c-4dc1-9ced-0a179b27a064.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY the checkerboard background of this single battle sprite to perfectly flat vivid chroma GREEN RGB(0,255,0), including enclosed checkerboard apertures between cape fins, arms, chain/mirror ornaments and legs. Preserve EVERY painted armor/face/cape/weapon/lantern pixel as closely as possible: exact figure, pose, canvas size, location, scale, colors, lighting and edges. No green reflection or spill, no painted floor/shadow, no new objects, no labels. Do not repaint, restyle or relight the character. Output same complete full-body sprite with all extremities preserved, now on uniform pure green.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/opposite-passing-guide.png",
+          "sha256": "d1ffe7483ae104604b2109a9c3ce7a10c4f938d4d327ac92d205e190b4d75f99"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0
+      ],
+      "notes": "Selected background-only derivative for bounded green extraction; original gray key left checker fragments."
+    }
+  ]
+}

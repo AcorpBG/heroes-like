@@ -1,0 +1,161 @@
+{
+  "unit_id": "unit_thornwake_canopy_rammers",
+  "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/candidate-atlas.png",
+  "sha256": "69722f2ae7207b9dca93552935a143909635b358890989072fb5b3af3c648821",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle",
+      "index": 0,
+      "alpha_bounds": [
+        155,
+        21,
+        351,
+        242
+      ]
+    },
+    {
+      "name": "idle_breath",
+      "index": 1,
+      "alpha_bounds": [
+        157,
+        19,
+        363,
+        242
+      ]
+    },
+    {
+      "name": "near_contact",
+      "index": 2,
+      "alpha_bounds": [
+        142,
+        25,
+        361,
+        242
+      ]
+    },
+    {
+      "name": "far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        161,
+        7,
+        343,
+        242
+      ]
+    },
+    {
+      "name": "far_contact",
+      "index": 4,
+      "alpha_bounds": [
+        145,
+        20,
+        356,
+        243
+      ]
+    },
+    {
+      "name": "near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        150,
+        26,
+        347,
+        243
+      ]
+    },
+    {
+      "name": "ram_windup",
+      "index": 6,
+      "alpha_bounds": [
+        149,
+        23,
+        355,
+        244
+      ]
+    },
+    {
+      "name": "ram_contact",
+      "index": 7,
+      "alpha_bounds": [
+        123,
+        40,
+        385,
+        244
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 8,
+      "alpha_bounds": [
+        149,
+        33,
+        341,
+        243
+      ]
+    },
+    {
+      "name": "guard_breath",
+      "index": 9,
+      "alpha_bounds": [
+        151,
+        30,
+        343,
+        243
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        141,
+        26,
+        344,
+        243
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 11,
+      "alpha_bounds": [
+        147,
+        77,
+        362,
+        246
+      ]
+    },
+    {
+      "name": "death_side",
+      "index": 12,
+      "alpha_bounds": [
+        127,
+        113,
+        400,
+        243
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 13,
+      "alpha_bounds": [
+        120,
+        133,
+        382,
+        244
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/original.png": "41645c5ff11553ce1cd60280d95ddedaa9fe8f71f33f09da923896d940db1395",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/far-passing-stout.png": "d723cc6def75345e843af9f595fa8318e64ed6dcfec73a2ca48cfafeea3fd542",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/guided-opposite-contact.png": "fe35eec54a1e06fb6863a104b184633c0a3b34ba8150c6d40ec05ffea7f544cd",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/opposite-passing.png": "fbedafe6b2bdfd3906cc341484b123826f1a99dc2f6c59fa65b2866149fdbcf0",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/ram-windup.png": "e597ae24c4df7cc24d8dee855b07fdbca6800e5935d5ea997184728cde56d358",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/ram-contact.png": "ef5f570e4c8cab0cfea432c0dd47a93d56917baaeef8d254e0289fc018bc5a3d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/guard-breath.png": "9b1cbaf2d7aeccd7ab759bd69b0393256f96649ecbea8fb11a92b4943a8439a8",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/hit-recoil.png": "29f4566ae2af109433076f2fb320bc1f90ac1be2bac6707107bcb24935a48c34"
+  }
+}

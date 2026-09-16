@@ -1,0 +1,177 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "output": "art/animation/source/poses/unit_veilmourn_saltbell_casters/candidate-atlas.png",
+  "sha256": "aee9230163597069d391ac86adc9ce5394a53e05d71b619fd9592963f6add549",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        194,
+        19,
+        344,
+        239
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        191,
+        19,
+        342,
+        239
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        155,
+        23,
+        346,
+        242
+      ]
+    },
+    {
+      "name": "walk_near_passing_a",
+      "index": 3,
+      "alpha_bounds": [
+        166,
+        22,
+        336,
+        240
+      ]
+    },
+    {
+      "name": "walk_repeated_contact",
+      "index": 4,
+      "alpha_bounds": [
+        173,
+        27,
+        342,
+        243
+      ]
+    },
+    {
+      "name": "walk_near_passing_b",
+      "index": 5,
+      "alpha_bounds": [
+        180,
+        23,
+        347,
+        241
+      ]
+    },
+    {
+      "name": "melee_anticipation",
+      "index": 6,
+      "alpha_bounds": [
+        173,
+        22,
+        361,
+        243
+      ]
+    },
+    {
+      "name": "melee_left_palm_shove",
+      "index": 7,
+      "alpha_bounds": [
+        165,
+        38,
+        346,
+        252
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        171,
+        29,
+        357,
+        242
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        173,
+        46,
+        350,
+        243
+      ]
+    },
+    {
+      "name": "cast_windup",
+      "index": 10,
+      "alpha_bounds": [
+        151,
+        0,
+        360,
+        245
+      ]
+    },
+    {
+      "name": "cast_continuous_rope_release",
+      "index": 11,
+      "alpha_bounds": [
+        157,
+        30,
+        438,
+        241
+      ]
+    },
+    {
+      "name": "cast_retrieval",
+      "index": 12,
+      "alpha_bounds": [
+        174,
+        23,
+        359,
+        243
+      ]
+    },
+    {
+      "name": "death_kneel_right_coil",
+      "index": 13,
+      "alpha_bounds": [
+        145,
+        80,
+        348,
+        249
+      ]
+    },
+    {
+      "name": "death_forearm_fall",
+      "index": 14,
+      "alpha_bounds": [
+        135,
+        134,
+        365,
+        253
+      ]
+    },
+    {
+      "name": "dead_equipped",
+      "index": 15,
+      "alpha_bounds": [
+        142,
+        163,
+        375,
+        252
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/idle-and-equipped-collapse.png": "88f972b36afae35b8a0d5429a2d88578538052ad4fe9cf0e8ae7748564ac8eae",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/guided-walk-and-guards.png": "b621b9dde6b3ee1e6ac75f0c7cb45563097d599c77f9fe23c13c37811304ff1a",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/continuous-rope-melee-and-cast.png": "1f4164d131ef1873b2697daaed4fbbe5f961d98f0b86777fdb7d575b4e702aee",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/idle-collapse-correct-hand.png": "7840bfe7642b666375e19b50b28ff29b6e4b774271865ba0d14cb1743720367e"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and narrow edge cleanup. Preserve original paint; no local pose invention or warping.",
+  "id": "seedglassPunch",
+  "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-punch-contact.png",
+  "source_sha256": "214568df477b54234d64f16c46fde37d9d6a3dfa44acc5224179219a30390b60",
+  "source_rect": [
+    0,
+    0,
+    1155,
+    1362
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/punch-contact.png",
+  "output_sha256": "f09168541356b8f8a10d919a6153ac3debdbb213db98d8bc2a658884907f17b8",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-cutouts.json",
+  "recipe_sha256": "1552e4db4aea76b45ed7b14f6129b7cf444801e5f89b0ddae908b20b7aaf80f6",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        705,
+        480
+      ],
+      [
+        744,
+        530
+      ],
+      [
+        735,
+        759
+      ],
+      [
+        790,
+        328
+      ],
+      [
+        675,
+        682
+      ],
+      [
+        738,
+        941
+      ],
+      [
+        769,
+        928
+      ],
+      [
+        794,
+        752
+      ],
+      [
+        784,
+        818
+      ],
+      [
+        333,
+        990
+      ],
+      [
+        812,
+        253
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1101990,
+    "edge_pixels": 10469,
+    "unchanged_paint_pixels": 460651,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,58 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "opposite-contact-and-guards",
+  "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/opposite-contact-and-guards.png",
+  "source_sha256": "b413055b55cd4389d2123592bbe25fb41c067a497ee8cc4786ad989e2b8b1710",
+  "source_rect": [
+    0,
+    0,
+    1158,
+    1358
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/opposite-contact-and-guards.png",
+  "output_sha256": "e33173283101fd80906db565a530c390a2b891fd0897d6505c980591de28a948",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-cutouts.json",
+  "recipe_sha256": "33b7008fbd968324f4ac87542e779f88fb294d597d8faacd4f44adf43a204cd6",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        548,
+        430
+      ],
+      [
+        1048,
+        440
+      ],
+      [
+        973,
+        215
+      ],
+      [
+        187,
+        840
+      ],
+      [
+        984,
+        887
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 931577,
+    "edge_pixels": 13528,
+    "unchanged_paint_pixels": 627459,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

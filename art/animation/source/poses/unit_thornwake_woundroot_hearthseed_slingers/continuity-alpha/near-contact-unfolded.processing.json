@@ -1,0 +1,58 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paintings preserved.",
+  "id": "near-contact-unfolded",
+  "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/near-contact-unfolded.png",
+  "source_sha256": "113a7fa26adb23488a0cfc9ec44d16151b1113f53f976e4e88c8222237a70dd4",
+  "source_rect": [
+    0,
+    0,
+    1194,
+    1317
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/near-contact-unfolded.png",
+  "output_sha256": "3428031e3e63f86bd1cdfded31ba325ed866e0cb51d4dfde1e511bb715efb187",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-cutouts.json",
+  "recipe_sha256": "ea6d0fa66800477982c01f519ff952059602fd13e8eff563e5dca10a9874fbe0",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        280,
+        688
+      ],
+      [
+        515,
+        525
+      ],
+      [
+        503,
+        244
+      ],
+      [
+        576,
+        181
+      ],
+      [
+        827,
+        210
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1113882,
+    "edge_pixels": 12823,
+    "unchanged_paint_pixels": 445793,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

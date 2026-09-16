@@ -1,0 +1,175 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "jobs": [
+    {
+      "id": "seedwarden-original-checker",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/poses.png",
+      "source_sha256": "edd3ac4b95167fb12bc54f2cd1504b66a1951a6b22c0a687d99568d6ea7da6e1",
+      "output": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 190,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            156,
+            209
+          ],
+          [
+            471,
+            210
+          ],
+          [
+            824,
+            213
+          ],
+          [
+            1190,
+            205
+          ],
+          [
+            149,
+            914
+          ],
+          [
+            487,
+            938
+          ],
+          [
+            154,
+            557
+          ],
+          [
+            209,
+            70
+          ],
+          [
+            530,
+            62
+          ]
+        ]
+      }
+    },
+    {
+      "id": "seedwarden-walk-phase-0-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/walk-phase-0-magenta.png",
+      "source_sha256": "336978426325ef7a902405e9c2f729c1da168b7ca0c60c1d42ae55564f124e59",
+      "output": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-phase-0-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "seedwarden-walk-phase-1-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/walk-phase-1-magenta.png",
+      "source_sha256": "5d539a08e94f5456ac41893a6b61d19b5fa529a225d852f09bbaf21523ae6efe",
+      "output": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-phase-1-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "seedwarden-walk-phase-2-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/walk-phase-2-magenta.png",
+      "source_sha256": "57acde229466448c336da8a03dd2c5d427a00c0439656db65261bcd79b46e51e",
+      "output": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-phase-2-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "seedwarden-walk-phase-3-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/walk-phase-3-magenta.png",
+      "source_sha256": "386145088c3aa5f6aa804555909c60adfa2402a2395a22d19a6c25ea5fd4e48b",
+      "output": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-phase-3-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "seedwarden-windup-full-shaft-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/windup-full-shaft-magenta.png",
+      "source_sha256": "cb2e1a7bcfb58daa5b25dfc5eb8b44019841520a82377cba076442d2f2db1c6a",
+      "output": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/windup-full-shaft-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "seedwarden-walk-near-lift-corrected-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/walk-near-lift-corrected-magenta.png",
+      "source_sha256": "b3f09e5c39c75c828513d70cab23c3e6e91303a26c84b6e904528a534373d8ae",
+      "output": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-near-lift-corrected-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "seedwarden-walk-near-contact-corrected-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/walk-near-contact-corrected-magenta.png",
+      "source_sha256": "1c5833c3d33d1132b323445f3570e8691569d7137e08f4262c20db528bf37a6a",
+      "output": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-near-contact-corrected-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "opposite-contact",
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/contact-guide.png",
+      "source_sha256": "160f00c7a1ba633bd52f998e9bbfb3c4374976127e37266220ddf58a07be501f",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-1440ef25-caa3-4faa-a9a9-3f8de09ae29f.png",
+      "prompt": "Use case: sketch-to-render. Render ONE original painted tactical game sprite. Image1 is authoritative leg pose, image2 costume identity only. FAR leg behind body extends FORWARD screen RIGHT heel down; NEAR leg extends BACK screen LEFT toe down; follow diagram not costume reference stance. Facing RIGHT fixed elevated three-quarter camera. Gloamkeel Bulwark broad bearded adult man navy hood/scarf, worn dark scaled armor, ivory/navy torn tabard, wrapped legs iron boots rope belt silver charms. RIGHT near hand holds one short dark crescent boarding hook outside near leg, tiny chain loop attached to hook handle. LEFT far forearm tall curved woodplank shield with iron rim and abstract ivory stripe; exactly one brass bell with blue tassel attached at shield upper edge. Shield held slightly out so far-forward thigh and knee remain visible, near back leg closest viewer. Preserve all equipment hand ownership and same human body proportions. Full figure padded around shield/hood/boots, no cropping. Genuinely transparent RGBA background without checker, floor shadow, scenery, diagrams, labels or text.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/units/source/curated/unit_veilmourn_gloamkeel_bulwarks.png",
+          "sha256": "28200cc4bc83bbaec5230cd8554fa5f94129f7d4f3cb1b07ce574ce6f1f8a6ea"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0
+      ],
+      "notes": "Broad planted stride, far-forward shield-side boot; not proof of a distinct opposite contact versus original lead. Equipment and cloth need continuity review."
+    },
+    {
+      "id": "passing-and-recovery",
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/passing-and-recovery.png",
+      "source_sha256": "2c3b2a64635069c170b51a7e22ed83f67f11533a031eb3a4e893792202a41e65",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-296bdeb7-f18a-43a9-a438-e13fcfb9483c.png",
+      "prompt": "Use case: stylized-concept. Original painted battle sprite sheet, FOUR full-body poses TWO columns TWO rows, generous gutters. Image1 authoritative leg pose for TOP LEFT only: near knee raised forward, near boot lifted across planted far shin. Image2 authoritative costume/body/equipment reference and camera; image3 identity detail. Same broad bearded Gloamkeel man in navy hood/scarf, dark scales, ivory/navy torn tabard, iron boots. RIGHT hand short crescent iron boarding hook with tiny linked chain loop at handle. LEFT forearm tall curved ship-plank shield iron-rimmed ivory stripe, ONE attached brass bell with blue tassel. Face and both weapons consistent. Top left: guide's far-leg-supported near-knee lift. Top right: opposite support, near leg straight planted, far boot raised backward clear from ground, shield held out to see both legs. Bottom left: recovery after hook thrust, right elbow pulls hook near right hip, left shield still covering chest, feet planted knees softly bent. Bottom right: shield defensive brace with deeper flexed knees, shield angled forward and hook at right hip, not hidden/deleted. Fixed slightly elevated three-quarter camera looking screen RIGHT. Stable anatomical scale across cells, visible correct arm grips, all shield tips/boots/hook contained. Genuine transparent RGBA background no checker, scenery, shadow, labels, diagrams or text.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/poses.png",
+          "sha256": "aa13e1ee7e21fe272a2549ee45c2b546180410a16ac57cd1b95b80b920884651"
+        },
+        {
+          "path": "art/units/source/curated/unit_veilmourn_gloamkeel_bulwarks.png",
+          "sha256": "28200cc4bc83bbaec5230cd8554fa5f94129f7d4f3cb1b07ce574ce6f1f8a6ea"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "notes": "Two support/lift poses plus visible-hook recovery and braced shield. Chain-loop/tassel and body/gear consistency remain review."
+    }
+  ]
+}

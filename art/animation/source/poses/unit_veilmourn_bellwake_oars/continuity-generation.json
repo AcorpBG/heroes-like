@@ -1,0 +1,104 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_bellwake_oars",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/poses-shaft-and-gaze-corrected.png",
+      "source_sha256": "e25c033bde37401d0af7d0057dc0639c5cd61ab3ee96e9a4f766e01ae3e4a964",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-d70e8145-cbf5-481c-a32f-773c6340fed7.png",
+      "prompt": "Use case: precise-object-edit. Edit this original twelve-pose 4-column by 3-row Bellwake Oar sheet, keeping exact cell layout, body positions, camera, scale, clothing, face identity and paint style. Make ONLY two corrections: (1) top-left first idle: turn face/gaze toward screen RIGHT like the second idle, without mirroring body or changing equipment hands. (2) bottom row second cell kneeling: remove the duplicate SHORT diagonal staff stub running from lower hand down toward her knee; retain ONE uninterrupted full-length black oar shaft, bronze collars, bell at upper-left end and complete paddle lower-right, with both hands naturally on that single shaft. Do not remove any other legitimate shaft or change any other cell. Preserve moss-gray shoulder cape, off-white scarf/tattered long tunic panels, black pants, brass trim, dark boots, brown tied-back hair, bronze belt lantern, hanging bell/ribbons on oar butt. All figures/equipment uncut. Genuinely transparent background instead of painted checkerboard, no floor, shadow, captions or added effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/poses.png",
+          "sha256": "343406009c5be4de718b1a0d76c6d3c1ee1a9d4e45325abf61ed491d65b79445",
+          "role": "edit_target_or_motion_guide"
+        }
+      ],
+      "selected_cells": [
+        0
+      ],
+      "excluded_cells": {
+        "9": "Duplicate short shaft remains; replace with connected death sheet.",
+        "others": "Only corrected right-facing first idle selected; retain original viable poses."
+      }
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/guided-walk-and-guards.png",
+      "source_sha256": "ffc5e306abf900eddc054b3eb7bd11ee2a31776a23cb5618e42e43462d6af287",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8688002b-e697-47ee-9ada-1d201713f9f3.png",
+      "prompt": "Use case: sketch-to-render. Original tactical battle character supplement: SIX whole-body painted Bellwake Oar figures in 3 columns x 2 rows with ample clear gutters, same body/equipment scale and fixed RIGHT-facing three-quarter torso/head camera. Inputs1-4 are EXACT four lower-body phase guides in reading order; input5 is identity/clothes/equipment reference only. Cells1-4 follow diagrams1-4 respectively: near RIGHT leg forward heel contact; near RIGHT leg supports while far LEFT heel curls up behind; far LEFT leg reaches forward heel contact while near RIGHT leg trails behind; far LEFT leg supports while near RIGHT knee/foot lifts forward. BLUE means near RIGHT leg, ORANGE far LEFT, but paint original black trousers and dark boots, not diagram colors. Distinguish which thigh crosses in front, exactly two legs with continuous hip-knee-boot attachment. Never mirror face/torso or swap hands. ALL FOUR walking figures retain input5's two-hand DIAGONAL oar carry: bell end high screen LEFT, paddle low screen RIGHT, ONE constant-length straight shaft across torso. No turning sideways or changing carry to horizontal. Final two figures: matching low braced guards, knees bent, same two grips/diagonal complete oar, subtle weight shift and scarf/bell movement. Identity: brown tied-back hair, moss-gray cape, off-white scarf and tattered long tunic panels, dark trousers/boots, leather bracers, brass belt lantern and tags, black oar with bronze collars/edge, bronze bell and ribbons at butt. Keep full paddle and bell inside cell. Original painterly style, not thicker comic outlines. Genuine transparent background, no checkerboard, diagrams, text, floor, shadows, extra weapons or effects.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716",
+          "role": "edit_target_or_motion_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734",
+          "role": "identity_or_supporting_reference"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d",
+          "role": "identity_or_supporting_reference"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9",
+          "role": "identity_or_supporting_reference"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/identity-reference.png",
+          "sha256": "b4b7a382e221d0ca65fbfeffccc6a939c2a907df26b556b6404ca18869f8ecf5",
+          "role": "identity_or_supporting_reference"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "excluded_cells": {}
+    },
+    {
+      "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/connected-kneel-fall-corpse.png",
+      "source_sha256": "7fb90e3fa85a4cf6b1c11eb4523801bce9a4b082ec4643a714373c1ed1d641ff",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5db81069-86a6-4b66-97ec-8cebee9ebcb1.png",
+      "prompt": "Use case: precise-object-edit. FOUR connected original Bellwake Oar death poses in TWO columns by TWO rows, each wide enough for entire oar and body. Input1 fixes standing identity/costume/ONE oar, input2 fixes final corpse direction and equipment arrangement, not its warm lantern. Same body/gear scale, painterly camera and proportions across all four cells. Top-left: knees buckle onto ground, head bows, both hands retain ONE continuous straight full-length oar, bell end upper-left and paddle lower-right resting on ground. Exactly ONE shaft, no duplicate short stub at lower hand. Top-right: controlled side-fall toward screen LEFT onto bent right forearm; head moves LEFT, folded knees and boots remain RIGHT, same oar already grounded across foreground, left hand still touching shaft. Bottom-left: lying on side like input2, head LEFT on right forearm, legs/boots RIGHT, eyes closed, left hand slack over grounded oar shaft, cloak/scarf settling. Bottom-right: same final still corpse, closed eyes, inert body and equipment, no new pose angle or body flip. Oar bell LEFT and complete paddle RIGHT across foreground remains intact and same length throughout. Retain brown tied-back hair, moss-gray cape, off-white scarf/tattered cloth, dark pants/boots/bracers, brass trinkets, ONE bronze belt lantern, bell and ribbons. In last two poses belt lantern is visibly extinguished dark amber glass, no glowing core; bell bead nonluminous amber. No blood, gore, smoke, extra objects or effects. Generous margins contain oar/boots/bell. Genuine transparent background, no checkerboard, text, floor/shadow or heavy comic outlines.",
+      "references": [
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/identity-reference.png",
+          "sha256": "b4b7a382e221d0ca65fbfeffccc6a939c2a907df26b556b6404ca18869f8ecf5",
+          "role": "edit_target_or_motion_guide"
+        },
+        {
+          "path": "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_bellwake_oars/corpse-direction-reference.png",
+          "sha256": "5c0bf254a4aa9eea20cfc986dc73b19448486de354e281a4eb9f89f58f28dc80",
+          "role": "identity_or_supporting_reference"
+        }
+      ],
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "excluded_cells": {}
+    }
+  ],
+  "review_notes": [
+    "15-frame candidate: four retained original paintings, one corrected right-facing idle and ten new walk/guard/death paintings across three built-in outputs.",
+    "Selected death kneel retains one continuous complete oar; side fall and settle lead head-left to the cold equipped corpse. Original duplicate-shaft kneel, seated opposite-direction fall and glowing corpse are not selected. Prior claim that original corpse lantern was dark was contradicted by actual crop inspection.",
+    "New travel holds the oar diagonally clear of legs. Contact and planted bridge repeat the leading leg; distinct passing poses do not establish an accepted full gait.",
+    "Inspected arm/shaft/hair gaps use explicit neutral seeds. Banded crop removes neighboring kneeling paddle without shortening the selected side-fall oar.",
+    "Full-roster gait/support/travel, body/oar/bell scale, grip/attack/recovery and guard/death timing remain for motion refinement. Static alpha and offline previews are not final acceptance."
+  ]
+}

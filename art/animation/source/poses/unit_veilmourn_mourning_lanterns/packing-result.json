@@ -1,0 +1,206 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns",
+  "output": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/candidate-atlas.png",
+  "sha256": "6c7d96bda20fa59c1373da427fa7ae1214fae2ffb6f89467f8c4043758c21ef9",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        183,
+        22,
+        322,
+        241
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        180,
+        22,
+        331,
+        241
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        183,
+        19,
+        324,
+        241
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        186,
+        19,
+        322,
+        241
+      ]
+    },
+    {
+      "name": "walk_planted_bridge",
+      "index": 4,
+      "alpha_bounds": [
+        180,
+        22,
+        316,
+        241
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        189,
+        19,
+        331,
+        242
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        182,
+        46,
+        326,
+        241
+      ]
+    },
+    {
+      "name": "melee_release",
+      "index": 7,
+      "alpha_bounds": [
+        166,
+        44,
+        338,
+        241
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        162,
+        41,
+        330,
+        242
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        180,
+        44,
+        323,
+        243
+      ]
+    },
+    {
+      "name": "ranged_aim",
+      "index": 10,
+      "alpha_bounds": [
+        177,
+        59,
+        349,
+        241
+      ]
+    },
+    {
+      "name": "ranged_release",
+      "index": 11,
+      "alpha_bounds": [
+        183,
+        39,
+        354,
+        243
+      ]
+    },
+    {
+      "name": "ranged_recoil",
+      "index": 12,
+      "alpha_bounds": [
+        169,
+        27,
+        322,
+        242
+      ]
+    },
+    {
+      "name": "ranged_recovery",
+      "index": 13,
+      "alpha_bounds": [
+        169,
+        27,
+        319,
+        241
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 14,
+      "alpha_bounds": [
+        158,
+        72,
+        323,
+        243
+      ]
+    },
+    {
+      "name": "death_equipped_kneel",
+      "index": 15,
+      "alpha_bounds": [
+        180,
+        21,
+        337,
+        244
+      ]
+    },
+    {
+      "name": "death_projector_grounded",
+      "index": 16,
+      "alpha_bounds": [
+        164,
+        24,
+        320,
+        244
+      ]
+    },
+    {
+      "name": "death_side_fall",
+      "index": 17,
+      "alpha_bounds": [
+        155,
+        140,
+        348,
+        254
+      ]
+    },
+    {
+      "name": "dead_three_lamps",
+      "index": 18,
+      "alpha_bounds": [
+        162,
+        164,
+        343,
+        254
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/poses.png": "08f89b878251b9e8afe5642a0eae7179395faebf1d458e11bcbc25903927d7f3",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/guided-travel-guards-and-release.png": "cef476c4fb2e40840a66519cf946f92ed02ba1826296b049640e01f534a2a107",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_mourning_lanterns/equipped-kneels-and-recoil.png": "d70278c48864898d0a2ce05db528735d17814fe284b83637ae9a0fa1e366b861"
+  }
+}

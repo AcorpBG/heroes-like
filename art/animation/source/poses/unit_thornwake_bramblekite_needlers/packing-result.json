@@ -1,0 +1,199 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers",
+  "output": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/candidate-atlas.png",
+  "sha256": "05e7f9d3c99482938001d982ba354754ed7ca59b63e5c929c0e1422848650881",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        169,
+        23,
+        338,
+        245
+      ]
+    },
+    {
+      "name": "idle_1",
+      "index": 1,
+      "alpha_bounds": [
+        151,
+        23,
+        354,
+        245
+      ]
+    },
+    {
+      "name": "flight_up",
+      "index": 2,
+      "alpha_bounds": [
+        136,
+        13,
+        357,
+        243
+      ]
+    },
+    {
+      "name": "flight_down",
+      "index": 3,
+      "alpha_bounds": [
+        100,
+        39,
+        357,
+        248
+      ]
+    },
+    {
+      "name": "flight_passing",
+      "index": 4,
+      "alpha_bounds": [
+        145,
+        35,
+        363,
+        235
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 5,
+      "alpha_bounds": [
+        150,
+        39,
+        361,
+        245
+      ]
+    },
+    {
+      "name": "melee_contact",
+      "index": 6,
+      "alpha_bounds": [
+        140,
+        40,
+        375,
+        246
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 7,
+      "alpha_bounds": [
+        160,
+        53,
+        356,
+        250
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 8,
+      "alpha_bounds": [
+        154,
+        33,
+        357,
+        245
+      ]
+    },
+    {
+      "name": "ranged_aim",
+      "index": 9,
+      "alpha_bounds": [
+        151,
+        30,
+        345,
+        248
+      ]
+    },
+    {
+      "name": "ranged_release",
+      "index": 10,
+      "alpha_bounds": [
+        153,
+        34,
+        340,
+        238
+      ]
+    },
+    {
+      "name": "reload_pouch",
+      "index": 11,
+      "alpha_bounds": [
+        160,
+        31,
+        341,
+        239
+      ]
+    },
+    {
+      "name": "reload_seating",
+      "index": 12,
+      "alpha_bounds": [
+        152,
+        30,
+        345,
+        252
+      ]
+    },
+    {
+      "name": "kneel",
+      "index": 13,
+      "alpha_bounds": [
+        143,
+        49,
+        359,
+        247
+      ]
+    },
+    {
+      "name": "side_fall",
+      "index": 14,
+      "alpha_bounds": [
+        141,
+        67,
+        364,
+        238
+      ]
+    },
+    {
+      "name": "dead_0",
+      "index": 15,
+      "alpha_bounds": [
+        133,
+        108,
+        372,
+        240
+      ]
+    },
+    {
+      "name": "dead_settled",
+      "index": 16,
+      "alpha_bounds": [
+        147,
+        126,
+        359,
+        247
+      ]
+    },
+    {
+      "name": "guard_breath",
+      "index": 17,
+      "alpha_bounds": [
+        159,
+        44,
+        349,
+        242
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png": "3282dfd65e23d313877cee84ac165a2295c8547b056b39412ecdca3c02828cbd",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/flight-downstroke-matched.png": "a1e337e84ae7eacef98c11ab89f7bc65213aa0a1d1034f6b7116a48f7d5b91bd",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/firing-no-projectile.png": "5ab861bd25cb1e78a3c4c6fe28ed1f9b3d2849341436be2e3fce6a33fbb01af3",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_bramblekite_needlers/reload-pouch-draft.png": "6cec9c08c4e1163d06befda461a717d552bcb2f6a8015e4161e32aa09f85e6ae",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/reload-seating.png": "c54ba5128cea6be2cd144e07835f1e58e37abe19bc992e3509c7c972e47dc9e1",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/guard-breath.png": "12e21f3b3063530a2d2be550161d4ca15da47e2670d014ba6636b2b132e5b764"
+  }
+}

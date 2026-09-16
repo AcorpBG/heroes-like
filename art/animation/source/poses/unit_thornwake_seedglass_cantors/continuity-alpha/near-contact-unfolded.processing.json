@@ -1,0 +1,74 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and narrow edge cleanup. Preserve original paint; no local pose invention or warping.",
+  "id": "seedglassNearContactFixed",
+  "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-near-contact-unfolded.png",
+  "source_sha256": "268b2a5b7a8cc68fc7f27a16785e230dcef32ab7b2d4d8b3dabbbd13644969b4",
+  "source_rect": [
+    0,
+    0,
+    1155,
+    1362
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/near-contact-unfolded.png",
+  "output_sha256": "f7dd5a4b67b03bd88becf55183a5af51e23b279b2f515e7295787ac3a81ae013",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-cutouts.json",
+  "recipe_sha256": "1552e4db4aea76b45ed7b14f6129b7cf444801e5f89b0ddae908b20b7aaf80f6",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        884,
+        544
+      ],
+      [
+        794,
+        740
+      ],
+      [
+        702,
+        672
+      ],
+      [
+        464,
+        543
+      ],
+      [
+        763,
+        906
+      ],
+      [
+        832,
+        774
+      ],
+      [
+        858,
+        368
+      ],
+      [
+        899,
+        393
+      ],
+      [
+        926,
+        451
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1144923,
+    "edge_pixels": 7876,
+    "unchanged_paint_pixels": 420311,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

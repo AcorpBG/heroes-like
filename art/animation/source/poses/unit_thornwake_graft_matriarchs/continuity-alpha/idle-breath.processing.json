@@ -1,0 +1,90 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "graft-idle-breath",
+  "source": "art/animation/source/poses/unit_thornwake_graft_matriarchs/idle-breath.png",
+  "source_sha256": "5ebcea18a85534ff852c45a57cef3a980a521a8bf6c74b36b8aeb0390d8ad6ee",
+  "source_rect": [
+    0,
+    0,
+    1202,
+    1309
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_graft_matriarchs/continuity-alpha/idle-breath.png",
+  "output_sha256": "409eff386708002d362e52c50cc3cf43a5497ab0c0413233fd4106e4bbfef2a5",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_graft_matriarchs/continuity-cutouts.json",
+  "recipe_sha256": "b655cf33f6f01d3af91e6e357f7ac7dc94fc2a54c2625061cae6760b84ecffce",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        408,
+        101
+      ],
+      [
+        623,
+        130
+      ],
+      [
+        552,
+        124
+      ],
+      [
+        684,
+        163
+      ],
+      [
+        348,
+        158
+      ],
+      [
+        294,
+        200
+      ],
+      [
+        652,
+        371
+      ],
+      [
+        434,
+        390
+      ],
+      [
+        417,
+        520
+      ],
+      [
+        665,
+        629
+      ],
+      [
+        783,
+        694
+      ],
+      [
+        225,
+        738
+      ],
+      [
+        626,
+        700
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1029815,
+    "edge_pixels": 15915,
+    "unchanged_paint_pixels": 527688,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

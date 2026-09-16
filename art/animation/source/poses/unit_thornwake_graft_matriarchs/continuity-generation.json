@@ -1,0 +1,194 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_thornwake_graft_matriarchs",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "sources": [
+    {
+      "source": "poses-action-death-draft.png",
+      "sha256": "ec1e19c49db8e05cbf3f2f306dfb018b90ff1f7030a10a6a2befa63a63a32e7c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bf487953-4cf1-4da3-adad-4378bdb463f8.png",
+      "selected": false,
+      "selected_source_indices": [],
+      "prompt": "Edit the supplied ORIGINAL game-unit sprite sheet, preserving the SAME 4-column by 4-row arrangement, same 1536x1024 canvas, camera, cell scale, character identity and original painted style. This is an original living-tree archer called Graft Matriarch, not any existing franchise character. It has exactly TWO functional pale birch arms, two decorative looped shoulder branches (not extra arms), a tall branch crown, green moss torso, amber resin nodes, one red-bound curved branch bow and an articulated ROOT SKIRT, never human legs. Face the combat opponent toward screen RIGHT.\n\nChange ONLY these six cells, indexed row-column starting at 1:\nR2C2 melee windup: put the seed arrow away. Both hands grip the solid wooden bow stave across the torso, pulled BACK toward the body ready for a short physical two-handed shove. No string drawn, no arrow, no shooting pose.\nR2C3 melee contact: same bow and same two grips as R2C2, both arms extended toward screen RIGHT, shoving the rigid wooden bow stave into an adjacent enemy. This is a physical close-range bow-stave shove, not shooting. Root skirt braces naturally. No enemy or VFX.\nR4C1 dying buckle: keep the original silhouette and equipment placement; amber eyes and all resin nodes darken to dull opaque brown amber, no light emission.\nR4C2 side collapse: same original silhouette; eyes inactive and amber resin dull dark brown.\nR4C3 prone dead and R4C4 settled corpse: retain full connected trunk, crown, shoulder loops, roots and original bow lying beside the hands. Make eyes closed/dark and ALL resin nodes opaque dark brown, no orange glow, no alive-looking bright lamps, no new leaves or objects.\n\nPreserve all OTHER TEN cells as closely as possible. Keep every crown tip, bow tip and root inside its own cell, clean separation and no text. Output a transparent-background raster PNG with genuine alpha, NOT a drawn checkerboard. Make empty bow-string triangles, shoulder loops and gaps between arms transparent too. Preserve pale birch bark and gold bowstrings; never erase them as background. No shadow or floor, no colored matte, no labels, no motion lines. Deliver the complete updated sheet.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_graft_matriarchs/poses.png",
+          "sha256": "264a5c659d8f0f3ca344e4042accf0f05449f4ee95d49af2de0d1c9943d1e4c7"
+        }
+      ],
+      "review": "Unselected whole-sheet action/death attempt: melee still retains seed arrow and ranged-like gesture; retained as precursor only."
+    },
+    {
+      "source": "melee-brace.png",
+      "sha256": "6ac56a2c7190d5c1f896811801d8aff8e4a770cc173e266e9752749ddcb35cc7",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4e035705-1933-4bb5-8b38-067e3c95b796.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Create ONE original painted battle-unit animation frame using this fixed character reference. Match the same tree archer identity, ivory birch bark with red graft bindings, green moss trunk, amber resin nodes, intricate branch crown, two looped decorative shoulder branches and ONE red-bound curved branch bow with gold string. Exactly TWO functional arms with hands; shoulder loops are decorations. The lower body is an articulated fan of thick ROOTS, NOT humanoid legs or a dress. Same three-quarter battle camera, combat facing screen RIGHT. Keep the whole unit, every twig, bow tip and root visible with generous empty margin. Crisp hand-painted game illustration; keep camera and body proportions consistent with the reference. ONE isolated full-body figure on genuinely transparent PNG background, no floor, shadow, backdrop, text, checker texture, particles or motion lines. Do not introduce any other equipment. MELEE WINDUP: The green seed arrow is completely ABSENT, put away before melee. Both hands grasp the SOLID WOODEN BOW STAVE at two separated points, NOT the string. Hold the bow nearly VERTICAL in front of the torso with its convex curve toward screen RIGHT. The two arms are bent with elbows pulled back, preparing to shove the bow's wooden curve into an adjacent enemy. Clearly show both hands ON the stave, one grip above and one below its middle. Gold string runs straight from bow tip to bow tip, UNDRAWN. Root fan braced and trunk slightly back. This is not a ranged aim or shot. No arrow, spear, green spike, drawn bowstring, opponent or impact effect.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_graft_matriarchs/standing-reference-light.png",
+          "sha256": "219a95b83ea8577e781ff563eeded0806bb8642f90832121e1215ab2f4a069b3"
+        }
+      ],
+      "review": "Two hands grip the solid bow stave with undrawn string and no arrow. Bent-arm brace distinct from ranged draw."
+    },
+    {
+      "source": "melee-shove.png",
+      "sha256": "b3b210ea9a202f3d42a540a047a313273c359f25a7b4fe3d1b70694a1d2ed2a4",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-da631483-88b1-4cfc-a878-bc56685d5f5c.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Create ONE original painted battle-unit animation frame using this fixed character reference. Match the same tree archer identity, ivory birch bark with red graft bindings, green moss trunk, amber resin nodes, intricate branch crown, two looped decorative shoulder branches and ONE red-bound curved branch bow with gold string. Exactly TWO functional arms with hands; shoulder loops are decorations. The lower body is an articulated fan of thick ROOTS, NOT humanoid legs or a dress. Same three-quarter battle camera, combat facing screen RIGHT. Keep the whole unit, every twig, bow tip and root visible with generous empty margin. Crisp hand-painted game illustration; keep camera and body proportions consistent with the reference. ONE isolated full-body figure on genuinely transparent PNG background, no floor, shadow, backdrop, text, checker texture, particles or motion lines. Do not introduce any other equipment. MELEE CONTACT: The green seed arrow is completely ABSENT, put away before melee. Both hands grasp the SOLID WOODEN BOW STAVE at two separated points, NOT the string. Hold the bow nearly VERTICAL toward screen RIGHT with its convex curve facing the opponent. Both arms extend FORWARD to shove the wooden curve into an adjacent enemy. Clearly show both hands ON the stave, one grip above and one below its middle. Gold string runs straight from bow tip to bow tip, UNDRAWN. Root fan braces and trunk leans slightly forward. This is the extension of a two-handed physical bow shove, not ranged aim or shooting. No arrow, spear, green spike, drawn bowstring, opponent or impact effect.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_graft_matriarchs/standing-reference-light.png",
+          "sha256": "219a95b83ea8577e781ff563eeded0806bb8642f90832121e1215ab2f4a069b3"
+        }
+      ],
+      "review": "Two separated stave grips push bow toward adjacent screen-right opponent; no arrow or drawn string."
+    },
+    {
+      "source": "root-near-lift-draft.png",
+      "sha256": "9eb630f085d0c0bab4963bc6ff4c69e8996dbde8211ce310e6ca2c7f998e44ed",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0cadbdbf-5885-4da9-b3f2-1fcb3eb17bb0.png",
+      "selected": false,
+      "selected_source_indices": [],
+      "prompt": "Create ONE original painted battle-unit animation frame using this fixed character reference. Match the same tree archer identity, ivory birch bark with red graft bindings, green moss trunk, amber resin nodes, intricate branch crown, two looped decorative shoulder branches and ONE red-bound curved branch bow with gold string. Exactly TWO functional arms with hands; shoulder loops are decorations. The lower body is an articulated fan of thick ROOTS, NOT humanoid legs or a dress. Same three-quarter battle camera, combat facing screen RIGHT. Keep the whole unit, every twig, bow tip and root visible with generous empty margin. Crisp hand-painted game illustration; keep camera and body proportions consistent with the reference. ONE isolated full-body figure on genuinely transparent PNG background, no floor, shadow, backdrop, text, checker texture, particles or motion lines. Do not introduce any other equipment. ROOT-CRAWL NEAR-ROOT SWING phase: Keep the upper body, two hands and low horizontal bow with green seed arrow in the same idle carry as the reference. The tree locomotes by lifting and replanting its ROOT FAN. Paint the large foreground ivory root at the lower center visibly CURLED UP off the ground, bending upward at its middle, its branching tip reaching forward toward screen RIGHT with a clear gap beneath the entire lifted tip. Other dark back roots and the far-side ivory root stay planted and bear the trunk. No walking human feet, knees or shoes. Root articulations visibly change; do not merely tilt the whole static tree. One actual lifted-root pose.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_graft_matriarchs/standing-reference-light.png",
+          "sha256": "219a95b83ea8577e781ff563eeded0806bb8642f90832121e1215ab2f4a069b3"
+        }
+      ],
+      "review": "Unselected first root lift: copied extra lower-left hand from old reference."
+    },
+    {
+      "source": "root-far-lift-draft.png",
+      "sha256": "359b98e76bccfc5a47a0b8c7c09f366f4afc16b81ce3632498c8304b5d3ee524",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8a0357da-6a91-49c0-a093-ee2e4df0c5e3.png",
+      "selected": false,
+      "selected_source_indices": [],
+      "prompt": "Create ONE original painted battle-unit animation frame using this fixed character reference. Match the same tree archer identity, ivory birch bark with red graft bindings, green moss trunk, amber resin nodes, intricate branch crown, two looped decorative shoulder branches and ONE red-bound curved branch bow with gold string. Exactly TWO functional arms with hands; shoulder loops are decorations. The lower body is an articulated fan of thick ROOTS, NOT humanoid legs or a dress. Same three-quarter battle camera, combat facing screen RIGHT. Keep the whole unit, every twig, bow tip and root visible with generous empty margin. Crisp hand-painted game illustration; keep camera and body proportions consistent with the reference. ONE isolated full-body figure on genuinely transparent PNG background, no floor, shadow, backdrop, text, checker texture, particles or motion lines. Do not introduce any other equipment. ROOT-CRAWL FAR-ROOT SWING phase: Keep the upper body, two hands and low horizontal bow with green seed arrow in the same idle carry as the reference. The tree locomotes by lifting and replanting its ROOT FAN. The large foreground ivory root at lower center is now fully PLANTED and weight bearing. Lift and curl the BACK/FAR side root bundle at the lower screen-RIGHT edge UP off the ground and reach its branching tips forward toward screen RIGHT; leave a clearly visible gap beneath that lifted far-root tip. Retain connected root anatomy and root count. No human feet, knees or shoes. Do not merely tilt or resize the static tree. This is the opposite root-contact phase.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_graft_matriarchs/standing-reference-light.png",
+          "sha256": "219a95b83ea8577e781ff563eeded0806bb8642f90832121e1215ab2f4a069b3"
+        }
+      ],
+      "review": "Unselected first opposite root lift: copied extra lower-left hand from old reference."
+    },
+    {
+      "source": "poses-anatomy-death-draft.png",
+      "sha256": "914bb791d395b4548eb102a64d550a8c18ad9e46795e2c9f02f96e55c3a76a80",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7fe63035-443a-430c-9f02-078618dc2d51.png",
+      "selected": true,
+      "selected_source_indices": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "prompt": "Surgical character-continuity correction to this ORIGINAL 4x4 game sprite sheet. Keep the same canvas, sixteen cell positions, scale, camera, pale birch tree archer identity, root skirt, green moss trunk, red graft bindings, branch crown, looped shoulder ornaments, one bow and seed arrow. Do not redesign.\n\nONLY the first TWO top-row idle cells and bottom FOUR dying/dead cells will be used.\nIn the FIRST TWO idle cells, there are erroneously THREE hands. Remove ONLY the EXTRA lower screen-LEFT arm: it descends vertically beside the left torso and ends in a small hand gripping the bottom-left bow stave. Replace the removed branch-arm's former location with the existing green torso/root silhouette or empty background as anatomically appropriate. KEEP the main foreground diagonal pale arm and hand crossing from screen LEFT shoulder toward center, and KEEP the other arm from screen RIGHT shoulder to the arrow/bow. Those are the ONLY TWO arms/hands. Both surviving hands still hold the one bow and seed arrow. Keep the two circular shoulder branches as closed ornaments without any downward extra arm. Do NOT remove the functional diagonal arm or erase the bow. This is a tree with exactly two arms, not a three-handed archer.\n\nIn the BOTTOM ROW, keep all four existing buckle/fall/prone/corpse silhouettes and equipment. Darken the resin and eyes progressively: first two dying poses muted dull amber; last TWO prone dead poses CLOSED DARK eyes and opaque DARK BROWN resin with NO bright orange/yellow lights. Keep crown, roots and bow. No extra arms in any edited pose.\n\nAll other cells unchanged as closely as possible. Transparent raster alpha background, including all gaps. No floor, text or effects. Preserve painted pale bark; no colored matte.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_graft_matriarchs/poses-action-death-draft.png",
+          "sha256": "ec1e19c49db8e05cbf3f2f306dfb018b90ff1f7030a10a6a2befa63a63a32e7c"
+        }
+      ],
+      "review": "Select bottom-row dying/dead cells12-15 only. First two idle corrections shorten the bow and remain unselected. Final corpse resin/eyes are dark."
+    },
+    {
+      "source": "root-near-lift.png",
+      "sha256": "dfb6d6d6a9b39a4558c4c1a1302985987c023e39e77f1e6c27e7e73b49c06fde",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6366aa93-dbd1-4bd6-97a3-86b10fb0abcc.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Surgical edit of the supplied original painted tree-archer sprite. Preserve the exact pose, body scale, root-lift articulation, branch crown, camera, colors, bow and seed arrow. Correct ONE anatomy error: this figure has THREE hands; it must have exactly TWO. REMOVE ONLY the lowest screen-LEFT dangling forearm and small hand gripping the left part of the horizontal bow. This unwanted arm runs nearly vertically down the outside of the left trunk. Its deleted space should expose the existing mossy trunk or empty background. KEEP the main diagonal pale arm reaching from the left shoulder toward center with its hand above the bow; KEEP the other right-side arm and hand beside the arrow. KEEP the bow stave itself uninterrupted where the extra hand is removed. Two shoulder loops remain ornamental loops only, no extra arm descending from them. Exactly two arms/hands total. Do not alter the raised root, planted roots, roots versus legs anatomy, face or stance. Full-body original game raster on real transparent alpha background including all enclosed gaps; no floor, labels, shadow or new objects. No crop or zoom.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_graft_matriarchs/root-near-lift-draft.png",
+          "sha256": "9eb630f085d0c0bab4963bc6ff4c69e8996dbde8211ce310e6ca2c7f998e44ed"
+        }
+      ],
+      "review": "Extra lower-left hand removed generatively; foreground root curls upward, other roots planted."
+    },
+    {
+      "source": "root-far-lift.png",
+      "sha256": "499d2edf07761d52fad4a7d4724986c05deee897f5d0aff4dbcca642770b3ceb",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-def96fc9-0655-4ce2-a092-0ab2857b1ed2.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Surgical edit of the supplied original painted tree-archer sprite. Preserve the exact pose, body scale, root-lift articulation, branch crown, camera, colors, bow and seed arrow. Correct ONE anatomy error: this figure has THREE hands; it must have exactly TWO. REMOVE ONLY the lowest screen-LEFT dangling forearm and small hand gripping the left part of the horizontal bow. This unwanted arm runs nearly vertically down the outside of the left trunk. Its deleted space should expose the existing mossy trunk or empty background. KEEP the main diagonal pale arm reaching from the left shoulder toward center with its hand above the bow; KEEP the other right-side arm and hand beside the arrow. KEEP the bow stave itself uninterrupted where the extra hand is removed. Two shoulder loops remain ornamental loops only, no extra arm descending from them. Exactly two arms/hands total. Do not alter the raised root, planted roots, roots versus legs anatomy, face or stance. Full-body original game raster on real transparent alpha background including all enclosed gaps; no floor, labels, shadow or new objects. No crop or zoom.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_graft_matriarchs/root-far-lift-draft.png",
+          "sha256": "359b98e76bccfc5a47a0b8c7c09f366f4afc16b81ce3632498c8304b5d3ee524"
+        }
+      ],
+      "review": "Extra lower-left hand removed generatively; far/right root bundle lifted, main foreground root planted."
+    },
+    {
+      "source": "guard-breath.png",
+      "sha256": "66caaf9c363f14cda2de24a320c2f4784f92ff1ecaef51e8bdf60d46e185eae6",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7787499f-78d1-4c56-879b-b810ab8997bf.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Create one adjacent DEFENSE BREATH animation frame of the supplied original Graft Matriarch guard pose. Keep the exact low root-fan crouch, original pale birch crown and bark, moss green torso, red graft bindings and amber resin nodes, one curved branch bow held diagonally/vertically in front toward screen RIGHT and gold string. Exactly TWO functional arms and two hands on the bow, two circular shoulder branches are ornaments not extra arms. No seed arrow in defense. Only a slight articulated trunk and shoulder settling, tiny elbow flex and crown settling to make the second frame of a quiet breathing guard loop, not a new stance. Same camera, body/root/bow size and ground contacts, full body visible with margins. Original hand-painted fantasy strategy sprite; isolated genuine transparent PNG alpha including bow/arm/shoulder holes. No checker texture, background, floor, shadow, text, extra equipment, effects or redesign.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_graft_matriarchs/guard-reference-light.png",
+          "sha256": "89037f470ee6d2475cde9fdb179de078a84820657b05dd81c492d897c889b01f"
+        }
+      ],
+      "review": "Adjacent low defensive settling painting; two arms, bow retained and no projectile."
+    },
+    {
+      "source": "idle-planted.png",
+      "sha256": "34cb67a5b24a2b20cdb66e99e7e6612c7f1eb15e308e019fa147bcbedf565424",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a72a354d-8adf-4986-960d-0528370d6cf3.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Edit the supplied original tree archer frame to a steady upright idle. KEEP every detail of the upper half: same TWO hands/arms only, exact branch crown, shoulder loops, pale birch and green moss trunk, red graft bindings, complete single curved branch bow held horizontally low and full green seed arrow. Preserve BOTH left and right bow tips and the complete gold bowstring. Do NOT remove any part of the bow. Change only the ROOT SKIRT stance: lower the lifted screen-right rear root bundle back down to the same ground plane as the already planted foreground ivory root, forming a stable root fan. All root tips rest on the ground; this is NOT walking. Do not add human legs or an extra arm, do not shrink or shorten the trunk. Same whole-body size/camera, facing screen RIGHT, full branches and roots uncropped with empty margin. Painted original fantasy game sprite, genuinely transparent PNG alpha including all gaps. No floor, ground shadow, backdrop, text, effects or checkerboard texture.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_graft_matriarchs/root-far-lift.png",
+          "sha256": "499d2edf07761d52fad4a7d4724986c05deee897f5d0aff4dbcca642770b3ceb"
+        }
+      ],
+      "review": "Derived planted root fan retains two arms and entire bow; full breathing/pose continuity remains unaccepted."
+    },
+    {
+      "source": "idle-breath.png",
+      "sha256": "5ebcea18a85534ff852c45a57cef3a980a521a8bf6c74b36b8aeb0390d8ad6ee",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f167cb10-da1b-4014-80f5-3fcfef27399c.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Edit the supplied original tree archer frame to a adjacent quiet idle exhalation, trunk and crown settling slightly. KEEP every detail of the upper half: same TWO hands/arms only, exact branch crown, shoulder loops, pale birch and green moss trunk, red graft bindings, complete single curved branch bow held horizontally low and full green seed arrow. Preserve BOTH left and right bow tips and the complete gold bowstring. Do NOT remove any part of the bow. Change only the ROOT SKIRT stance: lower the lifted screen-right rear root bundle back down to the same ground plane as the already planted foreground ivory root, forming a stable root fan. All root tips rest on the ground; this is NOT walking. Do not add human legs or an extra arm, do not shrink or shorten the trunk. Same whole-body size/camera, facing screen RIGHT, full branches and roots uncropped with empty margin. Painted original fantasy game sprite, genuinely transparent PNG alpha including all gaps. No floor, ground shadow, backdrop, text, effects or checkerboard texture.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_graft_matriarchs/root-far-lift.png",
+          "sha256": "499d2edf07761d52fad4a7d4724986c05deee897f5d0aff4dbcca642770b3ceb"
+        }
+      ],
+      "review": "Second planted-root settling painting; upper-body change subtle and connected idle motion remains unaccepted."
+    }
+  ]
+}

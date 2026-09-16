@@ -1,0 +1,63 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic original-raster matte and bounded edge cleanup; preserve original sources and interior paint.",
+  "jobs": [
+    {
+      "id": "original-poses",
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/poses.png",
+      "source_sha256": "aa13e1ee7e21fe272a2549ee45c2b546180410a16ac57cd1b95b80b920884651",
+      "output": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/poses.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            95,
+            248
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "passing-and-recovery",
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/passing-and-recovery.png",
+      "source_sha256": "2c3b2a64635069c170b51a7e22ed83f67f11533a031eb3a4e893792202a41e65",
+      "output": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/passing-and-recovery.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            279,
+            795
+          ],
+          [
+            260,
+            788
+          ],
+          [
+            903,
+            868
+          ]
+        ],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "contact-guide",
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/contact-guide.png",
+      "source_sha256": "160f00c7a1ba633bd52f998e9bbfb3c4374976127e37266220ddf58a07be501f",
+      "output": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/contact-guide.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

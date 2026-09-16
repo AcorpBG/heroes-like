@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "sporemender-walk-near-contact-magenta",
+  "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/walk-near-contact-magenta.png",
+  "source_sha256": "05d5b7f161499378fe73f139a488caee2faa773f61e6cfb3e95ece789d394800",
+  "source_rect": [
+    0,
+    0,
+    1026,
+    1533
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_sporeglass_menders/continuity-alpha/walk-near-contact-magenta.png",
+  "output_sha256": "65e9473c7ff588f997e8861c16a78a99ad151891d46b25e0cbc2d2cc79d61c61",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_sporeglass_menders/continuity-cutouts.json",
+  "recipe_sha256": "67bf18ce25da80a538a5c2f9842c8ba8ff447f074e982c11ef58476fb1e066eb",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 932912,
+    "edge_pixels": 11545,
+    "unchanged_paint_pixels": 628401,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

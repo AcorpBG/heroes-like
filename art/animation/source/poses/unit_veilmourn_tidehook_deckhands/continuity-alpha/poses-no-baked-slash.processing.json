@@ -1,0 +1,146 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "poses-no-baked-slash",
+  "source": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/poses-no-baked-slash.png",
+  "source_sha256": "edcd7a541f0b41382eab27efc738758ac19a04b18964cb18b767516e5d896067",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-alpha/poses-no-baked-slash.png",
+  "output_sha256": "82b56e48e92358f6ecbd6a3684f9e3026d3452ac9c65de823195d419f2addf0d",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-cutouts.json",
+  "recipe_sha256": "8881d7551c7c06907d9bcb77862a727352dc031cd06f7c0c47c60ad43932cc39",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        245,
+        155
+      ],
+      [
+        159,
+        163
+      ],
+      [
+        257,
+        176
+      ],
+      [
+        320,
+        207
+      ],
+      [
+        327,
+        221
+      ],
+      [
+        316,
+        188
+      ],
+      [
+        301,
+        181
+      ],
+      [
+        535,
+        158
+      ],
+      [
+        592,
+        164
+      ],
+      [
+        940,
+        183
+      ],
+      [
+        1313,
+        167
+      ],
+      [
+        239,
+        486
+      ],
+      [
+        156,
+        487
+      ],
+      [
+        682,
+        493
+      ],
+      [
+        924,
+        515
+      ],
+      [
+        1460,
+        596
+      ],
+      [
+        922,
+        909
+      ],
+      [
+        1010,
+        523
+      ],
+      [
+        1090,
+        540
+      ],
+      [
+        1103,
+        562
+      ]
+    ],
+    "background_regions": [
+      {
+        "polygon": [
+          [
+            1123,
+            615
+          ],
+          [
+            1140,
+            615
+          ],
+          [
+            1140,
+            632
+          ],
+          [
+            1123,
+            632
+          ]
+        ],
+        "minimum": 190,
+        "tolerance": 25,
+        "seed": [
+          1132,
+          623
+        ]
+      }
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1002493,
+    "edge_pixels": 39923,
+    "unchanged_paint_pixels": 530448,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

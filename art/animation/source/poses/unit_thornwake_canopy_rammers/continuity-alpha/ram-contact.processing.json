@@ -1,0 +1,62 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "canopy-ram-contact",
+  "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/ram-contact.png",
+  "source_sha256": "ce8e3e66578cddc87a5f62ab7774bcda63297dd6aceb18493077a7f64572830e",
+  "source_rect": [
+    0,
+    0,
+    1254,
+    1254
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/ram-contact.png",
+  "output_sha256": "ef5f570e4c8cab0cfea432c0dd47a93d56917baaeef8d254e0289fc018bc5a3d",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-cutouts.json",
+  "recipe_sha256": "a54d0f2fd78096bebda556dea59fbdf462be9b5167f357b5dad2ac9d4941a8f4",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        356,
+        601
+      ],
+      [
+        885,
+        386
+      ],
+      [
+        661,
+        729
+      ],
+      [
+        590,
+        297
+      ],
+      [
+        562,
+        250
+      ],
+      [
+        583,
+        241
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 965029,
+    "edge_pixels": 12901,
+    "unchanged_paint_pixels": 594586,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

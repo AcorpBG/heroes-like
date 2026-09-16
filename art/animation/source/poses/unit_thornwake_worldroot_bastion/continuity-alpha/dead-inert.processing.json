@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "worldroot-dead-inert",
+  "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/dead-inert.png",
+  "source_sha256": "01052689f7e41b6f0f157232c57b2b80f61a58728e37628d5bd93cb54b013202",
+  "source_rect": [
+    0,
+    0,
+    1511,
+    1041
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/dead-inert.png",
+  "output_sha256": "b50c56bd15f1ac5f2ada3f881f08085e34187ddce7a21f07bffff4a493a2f986",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-cutouts.json",
+  "recipe_sha256": "8e2e9e2f0e2264781cc7e9326cbc44786442a7f185a2e44373c15a2e8895ef49",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 160,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        817,
+        344
+      ],
+      [
+        1366,
+        566
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 932849,
+    "edge_pixels": 5574,
+    "unchanged_paint_pixels": 634528,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

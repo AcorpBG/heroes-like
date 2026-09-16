@@ -1,0 +1,210 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and narrow edge cleanup. Preserve original paint; no local pose invention or warping.",
+  "id": "seedglass-original",
+  "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/poses.png",
+  "source_sha256": "e244d76b27966d36621407aa267013886f6c5561d1a6822ee7bf746aa03c0fd1",
+  "source_rect": [
+    0,
+    0,
+    1223,
+    1286
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/original.png",
+  "output_sha256": "2bd74173e510123cff48f4612d5717c674de5a446627257e842c0b9354426be7",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-cutouts.json",
+  "recipe_sha256": "1552e4db4aea76b45ed7b14f6129b7cf444801e5f89b0ddae908b20b7aaf80f6",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        482,
+        707
+      ],
+      [
+        484,
+        778
+      ],
+      [
+        1129,
+        524
+      ],
+      [
+        796,
+        804
+      ],
+      [
+        824,
+        148
+      ],
+      [
+        234,
+        463
+      ],
+      [
+        1160,
+        776
+      ],
+      [
+        213,
+        145
+      ],
+      [
+        751,
+        790
+      ],
+      [
+        553,
+        455
+      ],
+      [
+        532,
+        151
+      ],
+      [
+        1142,
+        149
+      ],
+      [
+        520,
+        494
+      ],
+      [
+        221,
+        733
+      ],
+      [
+        542,
+        525
+      ],
+      [
+        1156,
+        454
+      ],
+      [
+        799,
+        721
+      ],
+      [
+        215,
+        1098
+      ],
+      [
+        1122,
+        212
+      ],
+      [
+        576,
+        1120
+      ],
+      [
+        222,
+        1157
+      ],
+      [
+        802,
+        206
+      ],
+      [
+        202,
+        530
+      ],
+      [
+        530,
+        793
+      ],
+      [
+        178,
+        483
+      ],
+      [
+        509,
+        211
+      ],
+      [
+        1128,
+        835
+      ],
+      [
+        221,
+        802
+      ],
+      [
+        197,
+        786
+      ],
+      [
+        206,
+        198
+      ],
+      [
+        741,
+        1188
+      ],
+      [
+        1047,
+        1186
+      ],
+      [
+        794,
+        188
+      ],
+      [
+        529,
+        729
+      ],
+      [
+        794,
+        753
+      ],
+      [
+        1117,
+        817
+      ],
+      [
+        1145,
+        540
+      ],
+      [
+        483,
+        746
+      ],
+      [
+        769,
+        749
+      ],
+      [
+        1098,
+        437
+      ],
+      [
+        1082,
+        552
+      ],
+      [
+        1146,
+        512
+      ],
+      [
+        203,
+        1166
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1058830,
+    "edge_pixels": 29327,
+    "unchanged_paint_pixels": 484621,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

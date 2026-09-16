@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint.",
+  "id": "poses-green-background",
+  "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/poses-green-background.png",
+  "source_sha256": "19c179d1b96e3caa3ab6a259144565f1deafc066687b68cf8623dc724310838c",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses-green-background.png",
+  "output_sha256": "f671569153c1b1946cc251cf66861a0d9ced666064fd8959dace2a90f2f2b292",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-cutouts.json",
+  "recipe_sha256": "13486c5025b735c956d797b7fb1d5e09aa44829450e70bcad77053dddfb00382",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 988494,
+    "edge_pixels": 49629,
+    "unchanged_paint_pixels": 534741,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

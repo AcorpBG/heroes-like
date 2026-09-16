@@ -1,0 +1,66 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "canopy-guided-far-passing",
+  "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/guided-far-passing.png",
+  "source_sha256": "8b6416f1e2529b5a57cc0464627ae586f828663697917e03e637b1633e9da81c",
+  "source_rect": [
+    0,
+    0,
+    1158,
+    1358
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/guided-far-passing.png",
+  "output_sha256": "f796498011c4eec911dc99d973a1b302b34f63e7d9ad075b86e16db97e5c17fe",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-cutouts.json",
+  "recipe_sha256": "a54d0f2fd78096bebda556dea59fbdf462be9b5167f357b5dad2ac9d4941a8f4",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        735,
+        182
+      ],
+      [
+        478,
+        156
+      ],
+      [
+        484,
+        178
+      ],
+      [
+        507,
+        151
+      ],
+      [
+        460,
+        126
+      ],
+      [
+        461,
+        140
+      ],
+      [
+        490,
+        141
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1014068,
+    "edge_pixels": 12201,
+    "unchanged_paint_pixels": 546295,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,112 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner explicitly approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paint and masters retained.",
+  "jobs": [
+    {
+      "id": "walk-1",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/walk-1.png",
+      "source_sha256": "ff59958273150d60fc3599921d65d81b0d720a01ef8e43cdc2cb7b24a5e206e8",
+      "output": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-1.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            930,
+            751
+          ],
+          [
+            713,
+            636
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-2",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/walk-2.png",
+      "source_sha256": "9fcbd6aabc1034e0b6b85638835789befa0d735efab8afa6eb249b5a88395c56",
+      "output": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-2.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 100,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            891,
+            771
+          ],
+          [
+            737,
+            650
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-3",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/walk-3.png",
+      "source_sha256": "a137863aebcee51ad8b271da18da8ed31762243b2770932eef696a1fdb232219",
+      "output": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-3.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            900,
+            763
+          ],
+          [
+            739,
+            646
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guard-braced",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/guard-braced.png",
+      "source_sha256": "42a603fa78fb12d0ba15b3b664a0b568c35498c19002c613ef7fd1fd4f558274",
+      "output": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/guard-braced.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            931,
+            596
+          ]
+        ]
+      }
+    },
+    {
+      "id": "near-contact-unfolded",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/near-contact-unfolded.png",
+      "source_sha256": "2a07541daaa00f584175574122b95311e1a90dc0c6523c0ec4db0fa8c7db8e6d",
+      "output": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/near-contact-unfolded.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            893,
+            764
+          ],
+          [
+            744,
+            645
+          ]
+        ]
+      }
+    }
+  ]
+}

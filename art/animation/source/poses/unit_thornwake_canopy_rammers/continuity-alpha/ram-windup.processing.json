@@ -1,0 +1,66 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "canopy-ram-windup",
+  "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/ram-windup.png",
+  "source_sha256": "8adbf3b90d41a1c390599e76d2e00f0236da3d06bcf25ca8b209867f7e3e3dec",
+  "source_rect": [
+    0,
+    0,
+    1239,
+    1270
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/ram-windup.png",
+  "output_sha256": "e597ae24c4df7cc24d8dee855b07fdbca6800e5935d5ea997184728cde56d358",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-cutouts.json",
+  "recipe_sha256": "a54d0f2fd78096bebda556dea59fbdf462be9b5167f357b5dad2ac9d4941a8f4",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 24,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        778,
+        216
+      ],
+      [
+        377,
+        567
+      ],
+      [
+        316,
+        550
+      ],
+      [
+        369,
+        170
+      ],
+      [
+        430,
+        195
+      ],
+      [
+        454,
+        181
+      ],
+      [
+        398,
+        140
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 769385,
+    "edge_pixels": 20323,
+    "unchanged_paint_pixels": 783822,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

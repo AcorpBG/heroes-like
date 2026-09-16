@@ -1,0 +1,252 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "poses",
+      "source": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/poses.png",
+      "source_sha256": "b45330e6b3a2acec7bfbd33b92a72f147ca67200427502712ae761121c5ffd67",
+      "output": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-alpha/poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            245,
+            155
+          ],
+          [
+            159,
+            163
+          ],
+          [
+            257,
+            176
+          ],
+          [
+            320,
+            207
+          ],
+          [
+            327,
+            221
+          ],
+          [
+            316,
+            188
+          ],
+          [
+            301,
+            181
+          ],
+          [
+            650,
+            177
+          ],
+          [
+            265,
+            787
+          ],
+          [
+            643,
+            527
+          ]
+        ]
+      }
+    },
+    {
+      "id": "poses-no-baked-slash",
+      "source": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/poses-no-baked-slash.png",
+      "source_sha256": "edcd7a541f0b41382eab27efc738758ac19a04b18964cb18b767516e5d896067",
+      "output": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-alpha/poses-no-baked-slash.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            245,
+            155
+          ],
+          [
+            159,
+            163
+          ],
+          [
+            257,
+            176
+          ],
+          [
+            320,
+            207
+          ],
+          [
+            327,
+            221
+          ],
+          [
+            316,
+            188
+          ],
+          [
+            301,
+            181
+          ],
+          [
+            535,
+            158
+          ],
+          [
+            592,
+            164
+          ],
+          [
+            940,
+            183
+          ],
+          [
+            1313,
+            167
+          ],
+          [
+            239,
+            486
+          ],
+          [
+            156,
+            487
+          ],
+          [
+            682,
+            493
+          ],
+          [
+            924,
+            515
+          ],
+          [
+            1460,
+            596
+          ],
+          [
+            922,
+            909
+          ],
+          [
+            1010,
+            523
+          ],
+          [
+            1090,
+            540
+          ],
+          [
+            1103,
+            562
+          ]
+        ],
+        "background_regions": [
+          {
+            "polygon": [
+              [
+                1123,
+                615
+              ],
+              [
+                1140,
+                615
+              ],
+              [
+                1140,
+                632
+              ],
+              [
+                1123,
+                632
+              ]
+            ],
+            "minimum": 190,
+            "tolerance": 25,
+            "seed": [
+              1132,
+              623
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "guided-gathered-chain-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/guided-gathered-chain-and-guards.png",
+      "source_sha256": "30089cea6c52bb60ed72208f97bf0254ec1e1e8e0c255ebe202db5bc57926c88",
+      "output": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-alpha/guided-gathered-chain-and-guards.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            206,
+            217
+          ],
+          [
+            338,
+            240
+          ],
+          [
+            691,
+            238
+          ],
+          [
+            836,
+            254
+          ],
+          [
+            1185,
+            240
+          ],
+          [
+            1351,
+            265
+          ],
+          [
+            194,
+            759
+          ],
+          [
+            337,
+            759
+          ],
+          [
+            710,
+            711
+          ],
+          [
+            851,
+            766
+          ],
+          [
+            1379,
+            786
+          ],
+          [
+            325,
+            273
+          ],
+          [
+            826,
+            278
+          ],
+          [
+            1367,
+            271
+          ]
+        ]
+      }
+    }
+  ]
+}

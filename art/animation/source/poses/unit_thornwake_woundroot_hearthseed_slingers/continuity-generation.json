@@ -1,0 +1,139 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_thornwake_woundroot_hearthseed_slingers",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "idle-pair",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/idle-pair.png",
+      "source_sha256": "02bce8ccfc42d7b4141a7aafc9e03ea9d7ca946f10241ecbef8ee740b9d30c02",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6690cec1-a94c-48ad-85f1-0fcfb4a67a4f.png",
+      "prompt": "Use case: identity-preserve. Original Hearthseed Slinger battle animation art. Input image 1 is fixed costume, face, equipment and painting-style reference. Same young human woman with curly tied-up brown hair, olive scarf, cream sleeves, brown bark/leather corset, green/cream leaf skirt, black trousers, vine-wrapped brown boots, belt seedbasket; LEFT forearm wears the oval wooden/vine buckler with amber central sigil. RIGHT hand carries her FULL-LENGTH tall wooden forked STAFF SLING (not a short slingshot), exactly two green cords and a brown leather seed pouch. Same fixed three-quarter camera body and head facing RIGHT, original hand-painted fantasy raster art. Whole body, staff tip and boots with generous margins; transparent real alpha, no checkerboard, no floor, no text/effects. Produce a clean 2-column SINGLE ROW animation strip, two separate complete paintings with equal scale and ground height. Both show a relaxed ready stance, both feet on ground, weight balanced, looking right. Tall loaded staff vertical at her right side (viewer-left), one amber seed resting inside hanging leather pouch, two cords to fork. Left buckler rests close to body. Left frame rest exhale. Right frame very subtle inhale: shoulders just rise, scarf tip stirs, pose/equipment identical. Do not turn her face left, no steps, no copied horizontal mirror.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/identity-reference.png",
+          "sha256": "8f1b67ad1ec8e8f356cb2d65ee00b6ae1193b53a1ac15c9d8ce062d416d2980d"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "shield-bash-pair",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/shield-bash-pair.png",
+      "source_sha256": "bb85e4db369c1cb2d6e5999b445c31a3f8f186b98a500774ab32045e00aa486f",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-051b3f7c-c943-4211-9981-3e9270d9feb6.png",
+      "prompt": "Use case: identity-preserve. Original Hearthseed Slinger battle animation art. Input image 1 is fixed costume, face, equipment and painting-style reference. Same young human woman with curly tied-up brown hair, olive scarf, cream sleeves, brown bark/leather corset, green/cream leaf skirt, black trousers, vine-wrapped brown boots, belt seedbasket; LEFT forearm wears the oval wooden/vine buckler with amber central sigil. RIGHT hand carries her FULL-LENGTH tall wooden forked STAFF SLING (not a short slingshot), exactly two green cords and a brown leather seed pouch. Same fixed three-quarter camera body and head facing RIGHT, original hand-painted fantasy raster art. Whole body, staff tip and boots with generous margins; transparent real alpha, no checkerboard, no floor, no text/effects. Produce a clean 2-column SINGLE ROW strip of two complete paintings, consistent body scale and ground baseline. Close-combat SHIELD BASH, never using the sling as a club. Left frame wind-up: knees bent, torso draws slightly back left, LEFT shield-bearing elbow bent with buckler across chest. Right frame contact: plant front foot right, LEFT arm drives buckler forward toward RIGHT into an unseen opponent, torso leans forward, right rear foot pushes. In BOTH frames RIGHT hand retains the full tall staff VERTICAL behind/right side at viewer-left, with its fork, BOTH cords and one seed in leather pouch visible and undamaged; no shortened staff and no disconnected floating weapon. Exactly two arms. No attacker, no impact sparks. Wider spacing for extended shield, no overlap.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/identity-reference.png",
+          "sha256": "8f1b67ad1ec8e8f356cb2d65ee00b6ae1193b53a1ac15c9d8ce062d416d2980d"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "release-empty",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/release-empty.png",
+      "source_sha256": "4ab01656c9638e619b58e4c3219312bba26d449d89dd8a48794884e71fc7b97e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c1279868-75f5-42e3-ab37-7dd348861726.png",
+      "prompt": "Use case: identity-preserve. Original Hearthseed Slinger battle animation art. Input image 1 is fixed costume, face, equipment and painting-style reference. Same young human woman with curly tied-up brown hair, olive scarf, cream sleeves, brown bark/leather corset, green/cream leaf skirt, black trousers, vine-wrapped brown boots, belt seedbasket; LEFT forearm wears the oval wooden/vine buckler with amber central sigil. RIGHT hand carries her FULL-LENGTH tall wooden forked STAFF SLING (not a short slingshot), exactly two green cords and a brown leather seed pouch. Same fixed three-quarter camera body and head facing RIGHT, original hand-painted fantasy raster art. Whole body, staff tip and boots with generous margins; transparent real alpha, no checkerboard, no floor, no text/effects. One complete isolated painting: ranged RELEASE FOLLOW-THROUGH after overhead staff-sling throw. Right arm extends FORWARD toward RIGHT holding tall staff now near-horizontal, fork at far right, FULL wooden butt continues behind the fist toward left. Preserve complete staff length, do not shrink into hand slingshot. Sling mechanics: ONE green cord remains tied to fork; brown leather pouch is EMPTY, open and flaring just ahead/below fork; SECOND cord has slipped off the other fork tip, its FREE END visibly flicks outward as the pouch opens. No seed in pouch, no drawn projectile/beam/trail (game handles projectile). LEFT buckler arm is tucked near chest. Firm lunge right, rear heel raised. Do not add third cord or elastic band between fork tips.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/identity-reference.png",
+          "sha256": "8f1b67ad1ec8e8f356cb2d65ee00b6ae1193b53a1ac15c9d8ce062d416d2980d"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "walk-1",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/walk-1.png",
+      "source_sha256": "c92c7d1c7c724a9e45fc00f3edffcc0bc18ddc07c066a1793e833fd02b83efee",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-791df465-2d99-4f7d-96f6-195b3327f6aa.png",
+      "prompt": "Use case: sketch-to-render. Produce ONE full-body Hearthseed Slinger painted walking pose by rendering the LEG GEOMETRY in image 1 with the exact woman/costume/staff/buckler identity in image 2. Image 1 is authoritative leg pose; image 2 is identity, not pose. Fixed three-quarter RIGHT camera. BLUE is foreground anatomical right leg, ORANGE is far left leg. Foreground/right leg supports her weight straight under pelvis; far/left foot lifts, bends at knee and passes BEHIND the foreground calf. Keep whole upper body/camera/gear consistent: same curly tied-up brown hair, olive scarf, cream sleeves, brown bark corset, green/ivory leaf skirt, black trousers, vine-wrapped brown boots. RIGHT hand holds full tall forked wooden STAFF SLING upright on viewer-left; TWO green cords with one loaded brown leather pouch holding ONE amber seed hang down, unchanged length. LEFT forearm retains oval wooden/vine shield with amber sigil close to chest. No weapon shortening, no arm/leg swap, no extra limbs. Detailed original hand-painted raster game sprite. Transparent real alpha no checkerboard, no floor or effects/text/diagram colors. Entire staff and boots, generous margins.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/identity-reference.png",
+          "sha256": "8f1b67ad1ec8e8f356cb2d65ee00b6ae1193b53a1ac15c9d8ce062d416d2980d"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "walk-2",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/walk-2.png",
+      "source_sha256": "ee2aa645bc8afbfba003d365e69a104ff8bb94f79d2a8d37114de7538a5f1e4b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-71d203b2-2e8a-49c1-ba5d-e8e9fac85737.png",
+      "prompt": "Use case: sketch-to-render. Produce ONE full-body Hearthseed Slinger painted walking pose by rendering the LEG GEOMETRY in image 1 with the exact woman/costume/staff/buckler identity in image 2. Image 1 is authoritative leg pose; image 2 is identity, not pose. Fixed three-quarter RIGHT camera. BLUE is foreground anatomical right leg, ORANGE is far left leg. Foreground/right leg trails BACK toward LEFT, heel lifted; far/left leg reaches FORWARD toward RIGHT, heel down. The foreground boot is the trailing boot, not the leading boot. Keep whole upper body/camera/gear consistent: same curly tied-up brown hair, olive scarf, cream sleeves, brown bark corset, green/ivory leaf skirt, black trousers, vine-wrapped brown boots. RIGHT hand holds full tall forked wooden STAFF SLING upright on viewer-left; TWO green cords with one loaded brown leather pouch holding ONE amber seed hang down, unchanged length. LEFT forearm retains oval wooden/vine shield with amber sigil close to chest. No weapon shortening, no arm/leg swap, no extra limbs. Detailed original hand-painted raster game sprite. Transparent real alpha no checkerboard, no floor or effects/text/diagram colors. Entire staff and boots, generous margins.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/identity-reference.png",
+          "sha256": "8f1b67ad1ec8e8f356cb2d65ee00b6ae1193b53a1ac15c9d8ce062d416d2980d"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "walk-3",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/walk-3.png",
+      "source_sha256": "ef1dfe8182531769e7ae0e769e93ed3604f5f41f109b55a4965e11a056b503a3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a21449d9-31e3-42df-9d7f-a01f3f8c7466.png",
+      "prompt": "Use case: sketch-to-render. Produce ONE full-body Hearthseed Slinger painted walking pose by rendering the LEG GEOMETRY in image 1 with the exact woman/costume/staff/buckler identity in image 2. Image 1 is authoritative leg pose; image 2 is identity, not pose. Fixed three-quarter RIGHT camera. BLUE is foreground anatomical right leg, ORANGE is far left leg. Far/left leg supports weight under pelvis; FOREGROUND/right knee lifts FORWARD toward RIGHT, its boot passing visibly in FRONT of the straight far shin, fully above ground. Keep whole upper body/camera/gear consistent: same curly tied-up brown hair, olive scarf, cream sleeves, brown bark corset, green/ivory leaf skirt, black trousers, vine-wrapped brown boots. RIGHT hand holds full tall forked wooden STAFF SLING upright on viewer-left; TWO green cords with one loaded brown leather pouch holding ONE amber seed hang down, unchanged length. LEFT forearm retains oval wooden/vine shield with amber sigil close to chest. No weapon shortening, no arm/leg swap, no extra limbs. Detailed original hand-painted raster game sprite. Transparent real alpha no checkerboard, no floor or effects/text/diagram colors. Entire staff and boots, generous margins.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/identity-reference.png",
+          "sha256": "8f1b67ad1ec8e8f356cb2d65ee00b6ae1193b53a1ac15c9d8ce062d416d2980d"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "guard-pair",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/guard-pair.png",
+      "source_sha256": "3c14388e90300f54d10ba00738053b81d1ff1fa3b9b4da07c296e1f92786bc49",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6406228a-c56a-4af7-8e71-82071d4bb7a9.png",
+      "prompt": "Use case: identity-preserve. Original Hearthseed Slinger battle animation art. Input image 1 is fixed costume, face, equipment and painting-style reference. Same young human woman with curly tied-up brown hair, olive scarf, cream sleeves, brown bark/leather corset, green/cream leaf skirt, black trousers, vine-wrapped brown boots, belt seedbasket; LEFT forearm wears the oval wooden/vine buckler with amber central sigil. RIGHT hand carries her FULL-LENGTH tall wooden forked STAFF SLING (not a short slingshot), exactly two green cords and a brown leather seed pouch. Same fixed three-quarter camera body and head facing RIGHT, original hand-painted fantasy raster art. Whole body, staff tip and boots with generous margins; transparent real alpha, no checkerboard, no floor, no text/effects. Produce ONE 2-column strip, two separate complete GUARD paintings with identical scale and ground baseline. Image 2 action reference row2 column4: low crouched defensive guard, knees flexed, head sheltered behind LEFT forearm buckler raised front toward RIGHT. RIGHT hand holds the ENTIRE upright forked staff at viewer-left, loaded pouch and BOTH long green cords hanging intact. ONE amber seed visibly remains INSIDE the pouch in BOTH frames (do not empty it). Left painting braced crouch, right painting subtle higher breathing phase with knees a little less flexed, shield remains up. Do not attack, walk or lift staff offhand, maintain exact face/equipment and two arms. Enough spacing, no overlap.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/identity-reference.png",
+          "sha256": "8f1b67ad1ec8e8f356cb2d65ee00b6ae1193b53a1ac15c9d8ce062d416d2980d"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/poses.png",
+          "sha256": "e216a556b2a08664fa640c770f6950b6ce384e78611e9956c15cdc02c554f103"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "near-contact-unfolded",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/near-contact-unfolded.png",
+      "source_sha256": "113a7fa26adb23488a0cfc9ec44d16151b1113f53f976e4e88c8222237a70dd4",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b4c310f0-2773-4740-ad8b-2a21f6a72f4c.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY the legs in this exact Hearthseed Slinger painting to the continuous NEXT walking pose. Her currently bent/lifted FOREGROUND knee on the right unfolds FORWARD toward RIGHT: that same boot moves down and to the right, heel contacting ground in FRONT. Her currently straight far support leg moves BACK toward LEFT, heel up with toe still grounded. Preserve which leg is foreground; do not mirror or exchange them. Exactly two legs. Keep entire face, hair, torso, cream sleeves, leaf skirt, BOTH arms and gear unchanged: RIGHT hand tall vertical forked staff with two long green sling cords and loaded leather pouch ONE amber seed, LEFT forearm buckler. Same RIGHT-facing three-quarter camera and hand-painted raster. Full body/staff, margins, transparent real alpha no checker, no shadow, no text/effects.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/walk-3.png",
+          "sha256": "ef1dfe8182531769e7ae0e769e93ed3604f5f41f109b55a4965e11a056b503a3"
+        }
+      ],
+      "selected": true
+    }
+  ],
+  "selection_note": "All eight new masters selected: idle2, shield bash2, guard2, four single gait frames and one empty release =11 new paintings. Seven original paintings retained."
+}

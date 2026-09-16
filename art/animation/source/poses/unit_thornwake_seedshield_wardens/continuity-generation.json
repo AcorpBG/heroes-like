@@ -1,0 +1,159 @@
+{
+  "schema_id": "original_battle_pose_continuity_generation_v1",
+  "unit_id": "unit_thornwake_seedshield_wardens",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_pending_whole_roster_refinement_and_acceptance",
+  "reference_crops": [
+    {
+      "path": "art/animation/source/poses/unit_thornwake_seedshield_wardens/standing-reference-light.png",
+      "sha256": "98c4fcd7b453028aa79f52a3776a859a4b55b8dd4192e6c54a7552e4e294c4df",
+      "source": "continuity-alpha/original.png",
+      "source_sha256": "a1e3c5c2b540c1a7861e70f9e64bf0355ea8f4aa97241f40bd1f5dfbae801dd8",
+      "rect": [
+        78,
+        0,
+        343,
+        372
+      ],
+      "method": "Prepared original painting composited on light and nearest4x, no repaint. Standing crop tiny neighbor at bottom explicitly omitted; windup crop excludes prior upper neighbor boot. Generation preserves full weapon margins."
+    },
+    {
+      "path": "art/animation/source/poses/unit_thornwake_seedshield_wardens/windup-reference-light.png",
+      "sha256": "7cb365a59019d36bb1d16b3d0e036b0bb77cea4360e1f0638139bdbf4b7bbfa9",
+      "source": "continuity-alpha/original.png",
+      "source_sha256": "a1e3c5c2b540c1a7861e70f9e64bf0355ea8f4aa97241f40bd1f5dfbae801dd8",
+      "rect": [
+        355,
+        372,
+        710,
+        722
+      ],
+      "method": "Prepared original painting composited on light and nearest4x, no repaint. Standing crop tiny neighbor at bottom explicitly omitted; windup crop excludes prior upper neighbor boot. Generation preserves full weapon margins."
+    }
+  ],
+  "outputs": [
+    {
+      "source": "walk-phase-0-magenta.png",
+      "sha256": "336978426325ef7a902405e9c2f729c1da168b7ca0c60c1d42ae55564f124e59",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-33c88e57-680e-4968-a647-0e5149451c99.png",
+      "selected": false,
+      "prompt": "Use case: stylized-concept. ONE original Seedshield Warden tactical-game walking sprite. Image1 is authoritative LEG ARTICULATION only: blue is anatomical NEAR/RIGHT leg, orange is FAR/LEFT leg. Image2 is the exact character identity, equipment, proportions, palette and soft painted rendering. Render its original bark-armored humanoid, closed wooden helmet with branching antler crown and green leaves, leaf pauldrons/tabard, rooted brown/gold boots, tall wood-shaft polearm with curved amber blade in RIGHT hand at screen-left, and pointed oval amber seed shield with green sprout in LEFT forearm at screen-right. Keep the shield side and polearm side unchanged, full polearm length and both complete arms. Torso/head remain fixed three-quarter facing RIGHT; no mirror. Convert guide legs to normal original bark armor/boots, no diagram colors or new markings. Keep crown/shield/weapon dimensions and dark green/brown/gold palette, no enlarged torso or redesigned gear. Tiny stray fragment below image2 is unrelated and must be omitted.\nCONTACT A: follow BLUE near leg starting from screen-left hip, swinging forward ACROSS THE FRONT of the far thigh to screen RIGHT, gold kneecap in foreground and near boot planted at far-right. ORANGE far leg trails diagonally to screen LEFT behind the crossing near thigh, far boot planted at left. Preserve visible thigh overlap from the guide; not just spread feet. Two legs and two planted boots, both toes aligned for rightward travel.\nOnly one complete isolated full-body pose, fixed natural torso height. Generous margins containing every polearm tip, antler, leaf and boot. Flat solid vivid magenta RGB255,0,255 removable backdrop including all apertures, no magenta reflections or spill, no floor, shadow, checkerboard, guide lines, labels, text or effects.",
+      "references": [
+        {
+          "path": "art/animation/source/workflow_20260915/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedshield_wardens/standing-reference-light.png",
+          "sha256": "98c4fcd7b453028aa79f52a3776a859a4b55b8dd4192e6c54a7552e4e294c4df"
+        }
+      ],
+      "reason": "Repeated lead/support in the guide output; retained unselected. Targeted lower-body edit supplies the missing phase."
+    },
+    {
+      "source": "walk-phase-1-magenta.png",
+      "sha256": "5d539a08e94f5456ac41893a6b61d19b5fa529a225d852f09bbaf21523ae6efe",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-e5310931-2f97-4a23-bdf8-a7b6d84b37c2.png",
+      "selected": false,
+      "prompt": "Use case: stylized-concept. ONE original Seedshield Warden tactical-game walking sprite. Image1 is authoritative LEG ARTICULATION only: blue is anatomical NEAR/RIGHT leg, orange is FAR/LEFT leg. Image2 is the exact character identity, equipment, proportions, palette and soft painted rendering. Render its original bark-armored humanoid, closed wooden helmet with branching antler crown and green leaves, leaf pauldrons/tabard, rooted brown/gold boots, tall wood-shaft polearm with curved amber blade in RIGHT hand at screen-left, and pointed oval amber seed shield with green sprout in LEFT forearm at screen-right. Keep the shield side and polearm side unchanged, full polearm length and both complete arms. Torso/head remain fixed three-quarter facing RIGHT; no mirror. Convert guide legs to normal original bark armor/boots, no diagram colors or new markings. Keep crown/shield/weapon dimensions and dark green/brown/gold palette, no enlarged torso or redesigned gear. Tiny stray fragment below image2 is unrelated and must be omitted.\nPASSING A: BLUE near leg stands almost vertical beneath its hip, its boot firmly planted supporting weight. ORANGE far leg advances with bent knee and its boot lifted, passing BEHIND the near shin with a visible gap from floor. Match the actual guide's two distinct leg paths, not a second planted contact. Two complete legs and exactly one lifted boot.\nOnly one complete isolated full-body pose, fixed natural torso height. Generous margins containing every polearm tip, antler, leaf and boot. Flat solid vivid magenta RGB255,0,255 removable backdrop including all apertures, no magenta reflections or spill, no floor, shadow, checkerboard, guide lines, labels, text or effects.",
+      "references": [
+        {
+          "path": "art/animation/source/workflow_20260915/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedshield_wardens/standing-reference-light.png",
+          "sha256": "98c4fcd7b453028aa79f52a3776a859a4b55b8dd4192e6c54a7552e4e294c4df"
+        }
+      ],
+      "reason": "Repeated lead/support in the guide output; retained unselected. Targeted lower-body edit supplies the missing phase."
+    },
+    {
+      "source": "walk-phase-2-magenta.png",
+      "sha256": "57acde229466448c336da8a03dd2c5d427a00c0439656db65261bcd79b46e51e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-88de1a7e-5383-4132-861e-8d3ab756edbf.png",
+      "selected": true,
+      "prompt": "Use case: stylized-concept. ONE original Seedshield Warden tactical-game walking sprite. Image1 is authoritative LEG ARTICULATION only: blue is anatomical NEAR/RIGHT leg, orange is FAR/LEFT leg. Image2 is the exact character identity, equipment, proportions, palette and soft painted rendering. Render its original bark-armored humanoid, closed wooden helmet with branching antler crown and green leaves, leaf pauldrons/tabard, rooted brown/gold boots, tall wood-shaft polearm with curved amber blade in RIGHT hand at screen-left, and pointed oval amber seed shield with green sprout in LEFT forearm at screen-right. Keep the shield side and polearm side unchanged, full polearm length and both complete arms. Torso/head remain fixed three-quarter facing RIGHT; no mirror. Convert guide legs to normal original bark armor/boots, no diagram colors or new markings. Keep crown/shield/weapon dimensions and dark green/brown/gold palette, no enlarged torso or redesigned gear. Tiny stray fragment below image2 is unrelated and must be omitted.\nCONTACT B: BLUE near leg starts screen-left hip and trails BACK to screen LEFT, in front of the other thigh at their crossing. ORANGE far leg now extends FORWARD toward screen RIGHT, its boot planted beyond the near boot. Preserve camera, same shield side and same right polearm hand, no whole-body mirror. This is opposite anatomical support to A, not the same lead with shifted boots. Both boots planted.\nOnly one complete isolated full-body pose, fixed natural torso height. Generous margins containing every polearm tip, antler, leaf and boot. Flat solid vivid magenta RGB255,0,255 removable backdrop including all apertures, no magenta reflections or spill, no floor, shadow, checkerboard, guide lines, labels, text or effects.",
+      "references": [
+        {
+          "path": "art/animation/source/workflow_20260915/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedshield_wardens/standing-reference-light.png",
+          "sha256": "98c4fcd7b453028aa79f52a3776a859a4b55b8dd4192e6c54a7552e4e294c4df"
+        }
+      ]
+    },
+    {
+      "source": "walk-phase-3-magenta.png",
+      "sha256": "386145088c3aa5f6aa804555909c60adfa2402a2395a22d19a6c25ea5fd4e48b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-68a408c6-025d-4acb-9e34-f05048f4f56b.png",
+      "selected": true,
+      "prompt": "Use case: stylized-concept. ONE original Seedshield Warden tactical-game walking sprite. Image1 is authoritative LEG ARTICULATION only: blue is anatomical NEAR/RIGHT leg, orange is FAR/LEFT leg. Image2 is the exact character identity, equipment, proportions, palette and soft painted rendering. Render its original bark-armored humanoid, closed wooden helmet with branching antler crown and green leaves, leaf pauldrons/tabard, rooted brown/gold boots, tall wood-shaft polearm with curved amber blade in RIGHT hand at screen-left, and pointed oval amber seed shield with green sprout in LEFT forearm at screen-right. Keep the shield side and polearm side unchanged, full polearm length and both complete arms. Torso/head remain fixed three-quarter facing RIGHT; no mirror. Convert guide legs to normal original bark armor/boots, no diagram colors or new markings. Keep crown/shield/weapon dimensions and dark green/brown/gold palette, no enlarged torso or redesigned gear. Tiny stray fragment below image2 is unrelated and must be omitted.\nPASSING B: ORANGE far leg is planted vertically beneath the hip, supporting the body behind the other limb. BLUE near leg lifts its knee FORWARD toward screen RIGHT across the FRONT of the far thigh, folds shin back and holds its boot clearly above ground IN FRONT of the far shin. Large near knee is visibly elevated; do not instead lift the far knee. Two complete legs, one supporting boot and one raised boot.\nOnly one complete isolated full-body pose, fixed natural torso height. Generous margins containing every polearm tip, antler, leaf and boot. Flat solid vivid magenta RGB255,0,255 removable backdrop including all apertures, no magenta reflections or spill, no floor, shadow, checkerboard, guide lines, labels, text or effects.",
+      "references": [
+        {
+          "path": "art/animation/source/workflow_20260915/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedshield_wardens/standing-reference-light.png",
+          "sha256": "98c4fcd7b453028aa79f52a3776a859a4b55b8dd4192e6c54a7552e4e294c4df"
+        }
+      ]
+    },
+    {
+      "source": "windup-full-shaft-magenta.png",
+      "sha256": "cb2e1a7bcfb58daa5b25dfc5eb8b44019841520a82377cba076442d2f2db1c6a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-fa99c95c-4881-4771-bcdf-5607a63c80e4.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 is the original Seedshield Warden wind-up pose to correct. Image2 is the exact standing identity and authoritative FULL POLEARM LENGTH. Preserve image1's raised RIGHT arm, wide planted stance, left forearm seed shield, helmet, leaf cloak and original painted style; change ONLY the shortened weapon shaft. The polearm must be the same long weapon as image2, about a full character height from butt to blade tip. Keep the right fist at its current raised grip and the amber curved blade shape/size unchanged. Extend the wooden rear shaft from that fist diagonally DOWN toward screen LEFT by roughly one forearm length, with the original amber butt-cap at the new endpoint. Also leave a natural long forward shaft segment from fist to amber blade; this must not be a short one-handed axe. One straight continuous wooden shaft through the gripping hand, one blade, no second weapon. Provide ample blank canvas around the extended weapon so it never overlaps another sprite or clips. Same left shield with green sprout, antler crown, dark green leaf and brown/gold bark armor, fixed three-quarter facing RIGHT, exactly two arms and two planted legs. ONE complete isolated anticipation pose, not a sheet. Flat pure magenta RGB255,0,255 backdrop including gaps, no checkerboard, floor, shadow, extra limb, text or effects.\nDo not inherit the tight top crop of image1: render the COMPLETE curved amber blade from image2, with generous blank space above it.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedshield_wardens/windup-reference-light.png",
+          "sha256": "7cb365a59019d36bb1d16b3d0e036b0bb77cea4360e1f0638139bdbf4b7bbfa9"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedshield_wardens/standing-reference-light.png",
+          "sha256": "98c4fcd7b453028aa79f52a3776a859a4b55b8dd4192e6c54a7552e4e294c4df"
+        }
+      ]
+    },
+    {
+      "source": "walk-near-lift-corrected-magenta.png",
+      "sha256": "b3f09e5c39c75c828513d70cab23c3e6e91303a26c84b6e904528a534373d8ae",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-2fd3cd6a-98b5-4cf0-ada8-f84c9b830f1f.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Input image is the edit target, one original fantasy Warden sprite on magenta. Change ONLY the walking legs below the belt to the OPPOSITE leg-lift. Currently the boot on the RIGHT side of the picture is lifted and the boot on the LEFT side is planted. Reverse that: straighten the leg descending beneath the shield on picture-RIGHT and put that boot FLAT on the bottom ground line. Bend and lift the OTHER leg that descends from picture-LEFT hip. Bring that left-origin thigh diagonally across IN FRONT OF the center tabard toward picture-right; make its knee visibly above the planted leg's knee, with a bent hanging calf and boot clearly OFF the floor. Two legs exactly, connected to their original hips. The raised boot and knee must cross in FRONT of the supporting leg, not hide behind it. This is not an image mirror. Preserve every element above the waist, full tall polearm in the picture-left hand, shield on picture-right, original helmet, leaf crown, armor design, paint detail, camera, proportions, lighting. Keep full character and weapon uncropped, same canvas 1058 by 1486, flat vivid magenta background, no ground shadow, no labels, no new equipment. Do NOT keep the present raised leg.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedshield_wardens/walk-phase-3-magenta.png",
+          "sha256": "386145088c3aa5f6aa804555909c60adfa2402a2395a22d19a6c25ea5fd4e48b"
+        }
+      ]
+    },
+    {
+      "source": "walk-near-contact-corrected-magenta.png",
+      "sha256": "1c5833c3d33d1132b323445f3570e8691569d7137e08f4262c20db528bf37a6a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-8fdd8756-f54b-4711-91ce-91940da32fa2.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Input image is the edit target. Original bark-armored Warden on vivid magenta. Change ONLY the leg pose below the belt. Current image has the picture-right leg extended forward and picture-left leg back. Make the OPPOSITE walking contact with a conspicuous thigh crossover: the leg originating at the picture-LEFT hip sweeps diagonally RIGHT across IN FRONT OF the pale hanging tabard and across the other thigh, then extends down-right to a heel-planted forward boot near x850 y1410. The leg originating at the picture-RIGHT hip goes diagonally back LEFT behind the crossing thigh, to a back boot near x320 y1330 with its heel raised. Show a clear X-like overlapping stride with two intact legs, nearer crossing thigh and knee visible over the far thigh. Do NOT simply change the angle of the existing boots while keeping current knee/hip ownership. Do NOT mirror the sprite. Everything above the waist, tall whole polearm on picture-left, amber shield on picture-right, helmet, camera, armor designs, colors, lighting must remain unchanged. Full body and whole weapon no clipping, generous magenta margin, same1058x1486 canvas, no shadows/labels/effects. Exactly two legs and two arms.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_seedshield_wardens/walk-phase-2-magenta.png",
+          "sha256": "57acde229466448c336da8a03dd2c5d427a00c0439656db65261bcd79b46e51e"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "13 packed candidate frames: eight retained original paintings plus five selected new paintings from seven built-in masters. Retain two idles, corrected full-shaft thrust, shield guard/recoil, kneel/side-fall and dark-eyed equipped persistent corpse.",
+    "Original RGB checker uses approved connected neutral190/tolerance16/edge2 plus nine inspected aperture seeds. No global pale-paint erasure. New magenta paintings use distance75/edge2; no green key against green leaves.",
+    "Single-phase gait guides initially repeated lead/support. Guide phases0 and1 remain unselected. Lower-body-only edits of phase2 and phase3 produce a crossing-thigh contact and the opposite screen-left knee lift; selected phase3 and corrected near-lift visibly alternate support. Original repeated walking poses are unselected. Final translated gait, anatomical depth and travel still require motion review.",
+    "Original windup had a shortened axe-like shaft. New painting restores one continuous full rear shaft with amber butt behind the raised right hand and complete curved blade. Preserve polearm in right hand and amber shield on left forearm, antler helmet, leaves and tabard. No mirrored equipment or extra limb.",
+    "Banded source crops preserve long thrust and side-fall weapon while excluding neighboring guard foot, thrust tip and side-fall blade from contact/guard/kneel. Fixed anatomical anchors and uniform downscaling only. Initial and corrected actual-alpha atlases retained.",
+    "Body/head/antler/shield scale, leaf design, eye/slit and sprout motif, hand/strap and blade angle/length through actions, finer edges and battle event/death timing remain for full160 refinement and consolidated acceptance. Art-desk/static crops do not prove smooth motion or platform behavior. No tests/imports/exports or gameplay/save/footprint changes."
+  ]
+}

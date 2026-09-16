@@ -1,0 +1,147 @@
+{
+  "unit_id": "unit_thornwake_seedcutters",
+  "output": "art/animation/source/poses/unit_thornwake_seedcutters/candidate-atlas.png",
+  "sha256": "d1f32349eff3d80e56e5ef63820a6e0b335974cc321bc15172c944a43729656e",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        179,
+        19,
+        339,
+        239
+      ]
+    },
+    {
+      "name": "idle_1",
+      "index": 1,
+      "alpha_bounds": [
+        186,
+        12,
+        330,
+        238
+      ]
+    },
+    {
+      "name": "walk_near_contact",
+      "index": 2,
+      "alpha_bounds": [
+        185,
+        17,
+        320,
+        239
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 3,
+      "alpha_bounds": [
+        178,
+        16,
+        316,
+        240
+      ]
+    },
+    {
+      "name": "walk_far_contact",
+      "index": 4,
+      "alpha_bounds": [
+        182,
+        19,
+        324,
+        242
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 5,
+      "alpha_bounds": [
+        187,
+        17,
+        319,
+        239
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        183,
+        32,
+        356,
+        245
+      ]
+    },
+    {
+      "name": "melee_contact",
+      "index": 7,
+      "alpha_bounds": [
+        161,
+        34,
+        387,
+        242
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 8,
+      "alpha_bounds": [
+        174,
+        51,
+        347,
+        245
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 9,
+      "alpha_bounds": [
+        173,
+        44,
+        337,
+        248
+      ]
+    },
+    {
+      "name": "kneel",
+      "index": 10,
+      "alpha_bounds": [
+        176,
+        67,
+        336,
+        243
+      ]
+    },
+    {
+      "name": "side_fall",
+      "index": 11,
+      "alpha_bounds": [
+        144,
+        105,
+        357,
+        243
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 12,
+      "alpha_bounds": [
+        134,
+        129,
+        362,
+        246
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedcutters/alpha/poses.png": "add4e04619a11fc61d4befbbd1f3d141efe6c4c043ec54528c15c1464725b7bf",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedcutters/continuity-alpha/walk-near-contact-guide-green.png": "a6a321737eb76bfc220a5f06463079427ff2b15adfae20142dafe3591f9f1b3f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedcutters/continuity-alpha/walk-guide-strip-green.png": "c9ea1bc685658a1a6bc8f89edc45da1234c908fed3ddc73250f58ee821200d0e",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedcutters/continuity-alpha/walk-far-passing-guide-green.png": "74c2cc3bb9a9220086b8679559dc1d842dc8171bbe312bd7cc35b251cbb697f2"
+  }
+}

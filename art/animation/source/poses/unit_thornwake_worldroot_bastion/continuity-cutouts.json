@@ -1,0 +1,308 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "jobs": [
+    {
+      "id": "worldroot-step-rear-left",
+      "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/step-rear-left.png",
+      "source_sha256": "7be24b3aeaa9a076749ddc98552c2c994e1be139c6cf6e37b0807780086d9aa2",
+      "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-rear-left.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            311,
+            345
+          ],
+          [
+            373,
+            343
+          ],
+          [
+            616,
+            871
+          ],
+          [
+            1012,
+            754
+          ]
+        ]
+      }
+    },
+    {
+      "id": "worldroot-step-fore-left",
+      "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/step-fore-left.png",
+      "source_sha256": "fcd805b8c821c5d95d2aabbeb3787e8a9813cc320e2fcb82887a575a95d05ea0",
+      "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-fore-left.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 120,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            317,
+            337
+          ],
+          [
+            370,
+            336
+          ],
+          [
+            1016,
+            745
+          ],
+          [
+            567,
+            708
+          ]
+        ]
+      }
+    },
+    {
+      "id": "worldroot-step-rear-middle",
+      "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/step-rear-middle.png",
+      "source_sha256": "5579ac483cf5efd00eae61527f5832dd10af6abc871b2fd84154dfd7938a31cc",
+      "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-rear-middle.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            336,
+            344
+          ],
+          [
+            377,
+            343
+          ],
+          [
+            1007,
+            764
+          ],
+          [
+            251,
+            910
+          ]
+        ]
+      }
+    },
+    {
+      "id": "worldroot-step-fore-right",
+      "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/step-fore-right.png",
+      "source_sha256": "2663a4912f729921d713f5d23e47343c0be91a768f3b52b25bf18f90c93810a0",
+      "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-fore-right.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            322,
+            338
+          ],
+          [
+            371,
+            336
+          ],
+          [
+            621,
+            857
+          ],
+          [
+            239,
+            897
+          ]
+        ]
+      }
+    },
+    {
+      "id": "worldroot-idle-breath",
+      "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/idle-breath.png",
+      "source_sha256": "c8d3baa201dd28eeab61929ce88fb321079ec1fe6e7d7b6acceeea81a8292835",
+      "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/idle-breath.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            323,
+            322
+          ],
+          [
+            372,
+            319
+          ],
+          [
+            659,
+            829
+          ],
+          [
+            1024,
+            715
+          ],
+          [
+            243,
+            878
+          ]
+        ]
+      }
+    },
+    {
+      "id": "worldroot-ram-windup",
+      "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/ram-windup.png",
+      "source_sha256": "e63325f97b0e38676163d45304747e47484ad167074149ffd0658a747902819b",
+      "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/ram-windup.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            346,
+            360
+          ],
+          [
+            723,
+            874
+          ]
+        ]
+      }
+    },
+    {
+      "id": "worldroot-guard-brace",
+      "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/guard-brace.png",
+      "source_sha256": "fa3828fa852f1a2e30d95cdc4818e748a6647d0da3e80cedef567990d9d42434",
+      "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/guard-brace.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            324,
+            394
+          ],
+          [
+            371,
+            391
+          ],
+          [
+            659,
+            874
+          ],
+          [
+            243,
+            881
+          ]
+        ]
+      }
+    },
+    {
+      "id": "worldroot-ram-contact-complete",
+      "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/ram-contact-complete.png",
+      "source_sha256": "3e55d2afe54c79b29d3b69c246cf7fe989dc6fbf1820d5c4eef6fff6a417e0c5",
+      "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/ram-contact-complete.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            571,
+            309
+          ],
+          [
+            702,
+            699
+          ]
+        ]
+      }
+    },
+    {
+      "id": "worldroot-guard-breath",
+      "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/guard-breath.png",
+      "source_sha256": "509da21dd307ab04ad4576b028a55000794f25270ed8d6b5e30821679bf4a448",
+      "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/guard-breath.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            325,
+            396
+          ],
+          [
+            635,
+            873
+          ],
+          [
+            314,
+            882
+          ]
+        ]
+      }
+    },
+    {
+      "id": "worldroot-dead-inert",
+      "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/dead-inert.png",
+      "source_sha256": "01052689f7e41b6f0f157232c57b2b80f61a58728e37628d5bd93cb54b013202",
+      "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/dead-inert.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            817,
+            344
+          ],
+          [
+            1366,
+            566
+          ]
+        ]
+      }
+    },
+    {
+      "id": "worldroot-hit-recoil",
+      "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/hit-recoil.png",
+      "source_sha256": "59c321f1a9517205c284e3b67bcf87ba30e156b88d7805c5008958828fc40045",
+      "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/hit-recoil.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 160,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            192,
+            465
+          ],
+          [
+            993,
+            844
+          ],
+          [
+            750,
+            845
+          ]
+        ]
+      }
+    }
+  ]
+}

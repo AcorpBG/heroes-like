@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint.",
+  "id": "poses-hit-helmet-corrected",
+  "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-hit-helmet-corrected.png",
+  "source_sha256": "7ef74b5afbaddbbfc5dc65ba462c9504e2a7b0ec6f2f43ffb85bcab3d6ac8a5d",
+  "source_rect": [
+    0,
+    0,
+    1479,
+    1064
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses-hit-helmet-corrected.png",
+  "output_sha256": "ae5042b0d65a9f2685d521c34cf62cea9dbeae0065d25aaccecba4e7f6e9847e",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-cutouts.json",
+  "recipe_sha256": "18b484c522c58ac6fd567419fd54136e559f5a0274914d81f3632c6aa34be056",
+  "parameters": {
+    "minimum": 175,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 967669,
+    "edge_pixels": 39318,
+    "unchanged_paint_pixels": 566669,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

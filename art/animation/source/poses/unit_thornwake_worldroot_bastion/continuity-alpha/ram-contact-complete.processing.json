@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "worldroot-ram-contact-complete",
+  "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/ram-contact-complete.png",
+  "source_sha256": "3e55d2afe54c79b29d3b69c246cf7fe989dc6fbf1820d5c4eef6fff6a417e0c5",
+  "source_rect": [
+    0,
+    0,
+    1513,
+    1040
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/ram-contact-complete.png",
+  "output_sha256": "e78bc42a0e4ecf9bf9dc1cfc083671fc9dc57672ec0be3b52daeaeb6a07b1fb7",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-cutouts.json",
+  "recipe_sha256": "8e2e9e2f0e2264781cc7e9326cbc44786442a7f185a2e44373c15a2e8895ef49",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 160,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        571,
+        309
+      ],
+      [
+        702,
+        699
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1002819,
+    "edge_pixels": 4443,
+    "unchanged_paint_pixels": 566258,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

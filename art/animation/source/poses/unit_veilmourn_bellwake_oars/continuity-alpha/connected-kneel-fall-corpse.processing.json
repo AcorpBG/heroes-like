@@ -1,0 +1,74 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "connected-kneel-fall-corpse",
+  "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/connected-kneel-fall-corpse.png",
+  "source_sha256": "7fb90e3fa85a4cf6b1c11eb4523801bce9a4b082ec4643a714373c1ed1d641ff",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/connected-kneel-fall-corpse.png",
+  "output_sha256": "d6ce6d543a6b9517cdbf7df25b76b0c47a00f21b96b3bfdaf353c06dec6ffdd8",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-cutouts.json",
+  "recipe_sha256": "94730b816b771e2e08bcb87e7daeddb08f2628f41f0252fb8d4f7773b469a42f",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        265,
+        304
+      ],
+      [
+        968,
+        436
+      ],
+      [
+        240,
+        175
+      ],
+      [
+        236,
+        196
+      ],
+      [
+        893,
+        435
+      ],
+      [
+        270,
+        118
+      ],
+      [
+        347,
+        106
+      ],
+      [
+        972,
+        429
+      ],
+      [
+        870,
+        355
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1021228,
+    "edge_pixels": 14860,
+    "unchanged_paint_pixels": 536776,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,58 @@
+{
+  "schema_id": "original_battle_pose_continuity_generation_v1",
+  "unit_id": "unit_thornwake_thornwhip_carriers",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_pending_whole_roster_refinement_and_acceptance",
+  "reference_crops": [
+    {
+      "path": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/standing-reference-light.png",
+      "sha256": "ab2ff89c0264e4975c6dcf5a84c4ed1d8589fc4ad6aac121c58c477cf2daa41b",
+      "source": "continuity-alpha/original.png",
+      "source_sha256": "42f56e7ea244705dcf75fc0b3ea7052929554f41a832ca87d713d4e9e73e31f1",
+      "rect": [
+        79,
+        0,
+        289,
+        389
+      ],
+      "method": "Actual alpha composited on light and nearest4x for fixed identity reference; no repaint, distortion or synthesized pose."
+    }
+  ],
+  "outputs": [
+    {
+      "source": "walk-near-lift-magenta.png",
+      "sha256": "e6821ba49114de2b81026d69d28028028e8cbb918ead0b5c3e749a2d47d35fab",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4158bbcb-5640-4b2d-8c22-84a21b416aaa.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 is the fixed neutral identity painting and edit target. Original Thornwhip Carrier woman, brown tied hair, green scarf and leaf skirt, brown leather armor, pale seed-shell plates with red bindings, wicker circular back frame and amber vials. Exactly ONE gold-banded wooden whip handle remains upright in her RIGHT hand at picture-left. ONE continuous thorn vine with red thorns from that handle; left hand at picture-right gathers its remaining loose coil at waist, safely above the moving knees, no vine across the foot sweep. Preserve head/torso camera facing RIGHT, same painted face, body proportions, equipment and palette. Change only leg articulation and slight natural leaf settling for this one small walking step. No whole-body mirror, no swapped hands, no second handle or disconnected vines. Full body, boots and whole whip inside wide margins, flat vivid MAGENTA255,0,255 backing, no ground shadow/checker/text/effects. Lift the leg from picture-LEFT hip: bend this NEAR knee upward in front of the skirt, boot clearly raised in front of the other shin. The picture-RIGHT leg remains straight down, boot planted. Exactly two legs; this is a left-origin knee lift, not the other knee.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/standing-reference-light.png",
+          "sha256": "ab2ff89c0264e4975c6dcf5a84c4ed1d8589fc4ad6aac121c58c477cf2daa41b"
+        }
+      ]
+    },
+    {
+      "source": "walk-far-lift-magenta.png",
+      "sha256": "f51747a67e69e4b0f824a4e39a296a25c5b39a70e0dda0984ec5998ed133e188",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-cc5b3a5c-7421-43ad-9f0d-a3094f963229.png",
+      "selected": true,
+      "prompt": "Use case: precise-object-edit. Image1 is the fixed neutral identity painting and edit target. Original Thornwhip Carrier woman, brown tied hair, green scarf and leaf skirt, brown leather armor, pale seed-shell plates with red bindings, wicker circular back frame and amber vials. Exactly ONE gold-banded wooden whip handle remains upright in her RIGHT hand at picture-left. ONE continuous thorn vine with red thorns from that handle; left hand at picture-right gathers its remaining loose coil at waist, safely above the moving knees, no vine across the foot sweep. Preserve head/torso camera facing RIGHT, same painted face, body proportions, equipment and palette. Change only leg articulation and slight natural leaf settling for this one small walking step. No whole-body mirror, no swapped hands, no second handle or disconnected vines. Full body, boots and whole whip inside wide margins, flat vivid MAGENTA255,0,255 backing, no ground shadow/checker/text/effects. Lift the leg from picture-RIGHT hip: bend this FAR knee toward the right with its boot clearly raised behind/alongside the other shin. Picture-LEFT leg stays straight down and its boot is planted. Exactly two legs; this is a right-origin knee lift, not the other knee.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/standing-reference-light.png",
+          "sha256": "ab2ff89c0264e4975c6dcf5a84c4ed1d8589fc4ad6aac121c58c477cf2daa41b"
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "11 packed candidate frames: nine retained original idle/action/death paintings plus two selected new walking paintings from two built-in masters. Retain corrected single-handle kneel and closed-eye equipped corpse; old repeated walking paintings remain unselected.",
+    "Opaque RGB checker prepared with owner-approved connected neutral190/tolerance16/edge2 and31 inspected gap seeds. Clear whip loops and arm/torso apertures without globally erasing pale armor. Original brown-backdrop extraction remains unselected.",
+    "Fixed cleaned idle identity guides opposite screen-side knee lifts. Right hand keeps the single gold-banded whip handle and left hand gathers the vine; moving knees remain clear of the lower whip arc. Short-step cycle alternates planted idle and both lifts, not final translated-gait acceptance.",
+    "Banded crops exclude a neighboring windup vine from breathing idle, an idle boot above windup, and lash fragments from guard. Full extended lash remains inside512x256 frame without shortening; death ground anchors retain whole floor coils with margins. Final art-desk inspection also found a one-row neighboring boot fragment above hit; a top-band crop excludes it while preserving hair and whip.",
+    "Whip length and coil continuity, handle/hand attachment, face/back-frame/armor scale, knee/foot support and travel, fine pale edges and action/death timing remain for full160 refinement and consolidated acceptance. Actual-alpha atlas and art-desk capture are production evidence only. No tests/imports/exports, paid API or gameplay/save/footprint changes."
+  ]
+}

@@ -1,0 +1,131 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint.",
+  "jobs": [
+    {
+      "id": "poses",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses.png",
+      "source_sha256": "8b9a366c51a3ad10bad6859c2a9a5ac5dffdbacea367e2ae924509c42e739dbb",
+      "output": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "poses-idle-planted",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-idle-planted.png",
+      "source_sha256": "ac6493f435ddf966282e9b8e38bccf33f9f8c716dfab67e115757f3accef4455",
+      "output": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses-idle-planted.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "poses-hit-helmet-corrected",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-hit-helmet-corrected.png",
+      "source_sha256": "7ef74b5afbaddbbfc5dc65ba462c9504e2a7b0ec6f2f43ffb85bcab3d6ac8a5d",
+      "output": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses-hit-helmet-corrected.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "poses-fall-helmet-corrected",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-fall-helmet-corrected.png",
+      "source_sha256": "417104c830f2e0511c6249516d107168d5ce17836a86fb59c8a72ff4841ea032",
+      "output": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses-fall-helmet-corrected.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "poses-dead-helmet-corrected",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-dead-helmet-corrected.png",
+      "source_sha256": "18406445c1e5f508bf20c0cdef57fd494e8fb0981409df66685e3cb9355f318a",
+      "output": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses-dead-helmet-corrected.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "gathered-chain-travel-and-guard",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/gathered-chain-travel-and-guard.png",
+      "source_sha256": "2fd4987adb8ab69f9e63514e4b604b2aa7ae632bd0d96082c3cda1e44b427387",
+      "output": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/gathered-chain-travel-and-guard.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "poses-fall-helmet-green-background",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-fall-helmet-green-background.png",
+      "source_sha256": "c1194f715c1ab8dd6ce06eaa56138ad75901b4a58220de88002757abd0d821cf",
+      "output": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses-fall-helmet-green-background.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "poses-hit-helmet-green-background",
+      "source": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/poses-hit-helmet-green-background.png",
+      "source_sha256": "af3503b2464791682d4bfcf80d58632b3356124eb05235f5271c28331393c0e0",
+      "output": "art/animation/source/poses/unit_veilmourn_dreamwake_foganchor_colossi/continuity-alpha/poses-hit-helmet-green-background.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

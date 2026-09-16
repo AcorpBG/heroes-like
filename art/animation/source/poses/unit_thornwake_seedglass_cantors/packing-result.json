@@ -1,0 +1,201 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors",
+  "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/candidate-atlas.png",
+  "sha256": "26b8d1b2bcc3b5432c6d765c5475aaae49432438732c6926108c609fd7d60b30",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle",
+      "index": 0,
+      "alpha_bounds": [
+        184,
+        27,
+        334,
+        240
+      ]
+    },
+    {
+      "name": "idle_breath",
+      "index": 1,
+      "alpha_bounds": [
+        177,
+        27,
+        334,
+        241
+      ]
+    },
+    {
+      "name": "near_contact",
+      "index": 2,
+      "alpha_bounds": [
+        190,
+        25,
+        324,
+        239
+      ]
+    },
+    {
+      "name": "far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        192,
+        22,
+        328,
+        239
+      ]
+    },
+    {
+      "name": "far_contact",
+      "index": 4,
+      "alpha_bounds": [
+        188,
+        25,
+        337,
+        239
+      ]
+    },
+    {
+      "name": "near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        190,
+        25,
+        324,
+        239
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        174,
+        43,
+        358,
+        240
+      ]
+    },
+    {
+      "name": "melee_contact",
+      "index": 7,
+      "alpha_bounds": [
+        180,
+        21,
+        324,
+        240
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 8,
+      "alpha_bounds": [
+        180,
+        60,
+        334,
+        238
+      ]
+    },
+    {
+      "name": "guard_braced",
+      "index": 9,
+      "alpha_bounds": [
+        173,
+        57,
+        330,
+        239
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        170,
+        34,
+        333,
+        241
+      ]
+    },
+    {
+      "name": "ranged_aim",
+      "index": 11,
+      "alpha_bounds": [
+        169,
+        32,
+        340,
+        240
+      ]
+    },
+    {
+      "name": "ranged_release",
+      "index": 12,
+      "alpha_bounds": [
+        173,
+        32,
+        324,
+        239
+      ]
+    },
+    {
+      "name": "ranged_recover",
+      "index": 13,
+      "alpha_bounds": [
+        172,
+        32,
+        318,
+        239
+      ]
+    },
+    {
+      "name": "dying_kneel",
+      "index": 14,
+      "alpha_bounds": [
+        182,
+        80,
+        334,
+        240
+      ]
+    },
+    {
+      "name": "dying_fall",
+      "index": 15,
+      "alpha_bounds": [
+        140,
+        81,
+        350,
+        243
+      ]
+    },
+    {
+      "name": "dying_prone",
+      "index": 16,
+      "alpha_bounds": [
+        159,
+        153,
+        353,
+        244
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 17,
+      "alpha_bounds": [
+        156,
+        153,
+        348,
+        243
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/original.png": "2bd74173e510123cff48f4612d5717c674de5a446627257e842c0b9354426be7",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/near-contact-unfolded.png": "f7dd5a4b67b03bd88becf55183a5af51e23b279b2f515e7295787ac3a81ae013",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-1.png": "4652351deca5dfcbfd4327c8644a4c6a2badab7d8765f7fd8fa212dabf8ded2c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-2.png": "bdc5f93f09182c8dca5b4125071d661452092e6d7b0fa2854bc61e08bee2281a",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/walk-3.png": "5efcb82a8180b327d02c976a058d40c6f1c8ac79a96e5ad9317988d25efafddf",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/punch-contact.png": "f09168541356b8f8a10d919a6153ac3debdbb213db98d8bc2a658884907f17b8",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/guard-braced.png": "be363cb5b4fbf9d41a18f79a4cd1eacb45335a656e15413fae37aaa78d868df4",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/ranged-release-clear.png": "b955d5f3615ea1efbd65f0ca0beeeedba362bdf95eefdfc912c16dc266488dac"
+  }
+}

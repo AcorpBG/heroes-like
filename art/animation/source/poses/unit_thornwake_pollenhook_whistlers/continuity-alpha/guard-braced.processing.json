@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paint and masters retained.",
+  "id": "guard-braced",
+  "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/guard-braced.png",
+  "source_sha256": "42a603fa78fb12d0ba15b3b664a0b568c35498c19002c613ef7fd1fd4f558274",
+  "source_rect": [
+    0,
+    0,
+    1203,
+    1308
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/guard-braced.png",
+  "output_sha256": "89f0687ba44240d5eb8f17e3b0f4f53a46cea99b7ed53f3f2c605e941b42ffea",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-cutouts.json",
+  "recipe_sha256": "a0ae9f2c7f7aa985ba95f703ed48704b033804fbe94e6dfd4f898ae1d94e7ba5",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        931,
+        596
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1041432,
+    "edge_pixels": 7517,
+    "unchanged_paint_pixels": 524575,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

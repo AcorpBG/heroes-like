@@ -1,0 +1,178 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "jobs": [
+    {
+      "id": "thornwhip-original-checker",
+      "source": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/poses.png",
+      "source_sha256": "dd29320ad5e94f95b3542ff739da1c3cc5637bd3b5d321cadf063ba2fe998a82",
+      "output": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/continuity-alpha/original.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 190,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            129,
+            53
+          ],
+          [
+            117,
+            180
+          ],
+          [
+            480,
+            46
+          ],
+          [
+            480,
+            198
+          ],
+          [
+            831,
+            48
+          ],
+          [
+            832,
+            186
+          ],
+          [
+            1005,
+            248
+          ],
+          [
+            1245,
+            47
+          ],
+          [
+            1246,
+            178
+          ],
+          [
+            1395,
+            244
+          ],
+          [
+            266,
+            592
+          ],
+          [
+            468,
+            470
+          ],
+          [
+            1488,
+            573
+          ],
+          [
+            97,
+            768
+          ],
+          [
+            300,
+            926
+          ],
+          [
+            620,
+            970
+          ],
+          [
+            792,
+            945
+          ],
+          [
+            822,
+            947
+          ],
+          [
+            886,
+            978
+          ],
+          [
+            1212,
+            976
+          ],
+          [
+            1450,
+            960
+          ],
+          [
+            151,
+            145
+          ],
+          [
+            513,
+            154
+          ],
+          [
+            863,
+            149
+          ],
+          [
+            1273,
+            152
+          ],
+          [
+            968,
+            197
+          ],
+          [
+            974,
+            229
+          ],
+          [
+            239,
+            541
+          ],
+          [
+            290,
+            606
+          ],
+          [
+            283,
+            629
+          ],
+          [
+            1258,
+            951
+          ]
+        ]
+      }
+    },
+    {
+      "id": "thornwhip-walk-near-lift-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/walk-near-lift-magenta.png",
+      "source_sha256": "e6821ba49114de2b81026d69d28028028e8cbb918ead0b5c3e749a2d47d35fab",
+      "output": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/continuity-alpha/walk-near-lift-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    },
+    {
+      "id": "thornwhip-walk-far-lift-magenta",
+      "source": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/walk-far-lift-magenta.png",
+      "source_sha256": "f51747a67e69e4b0f824a4e39a296a25c5b39a70e0dda0984ec5998ed133e188",
+      "output": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/continuity-alpha/walk-far-lift-magenta.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          255,
+          0,
+          255
+        ],
+        "distance": 75,
+        "edge_radius": 2,
+        "all_keyed_is_background": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "poses-shaft-and-gaze-corrected",
+  "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/poses-shaft-and-gaze-corrected.png",
+  "source_sha256": "e25c033bde37401d0af7d0057dc0639c5cd61ab3ee96e9a4f766e01ae3e4a964",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/poses-shaft-and-gaze-corrected.png",
+  "output_sha256": "e8c14215119a1a13de9673e4d96f2ba5a06304fb2afacefa91e63bcf8f1dd9e6",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-cutouts.json",
+  "recipe_sha256": "94730b816b771e2e08bcb87e7daeddb08f2628f41f0252fb8d4f7773b469a42f",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        139,
+        107
+      ],
+      [
+        69,
+        100
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1104779,
+    "edge_pixels": 29411,
+    "unchanged_paint_pixels": 438674,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

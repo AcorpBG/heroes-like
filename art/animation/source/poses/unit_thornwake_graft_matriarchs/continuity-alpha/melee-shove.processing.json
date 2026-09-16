@@ -1,0 +1,86 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "graft-melee-shove",
+  "source": "art/animation/source/poses/unit_thornwake_graft_matriarchs/melee-shove.png",
+  "source_sha256": "b3b210ea9a202f3d42a540a047a313273c359f25a7b4fe3d1b70694a1d2ed2a4",
+  "source_rect": [
+    0,
+    0,
+    1203,
+    1308
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_graft_matriarchs/continuity-alpha/melee-shove.png",
+  "output_sha256": "2e6f496e6952d9c5f47e5f07ba0b1572449f1f524e89bccf0394fa83de9d5a79",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_graft_matriarchs/continuity-cutouts.json",
+  "recipe_sha256": "b655cf33f6f01d3af91e6e357f7ac7dc94fc2a54c2625061cae6760b84ecffce",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        1091,
+        319
+      ],
+      [
+        637,
+        155
+      ],
+      [
+        438,
+        186
+      ],
+      [
+        530,
+        190
+      ],
+      [
+        641,
+        203
+      ],
+      [
+        476,
+        443
+      ],
+      [
+        708,
+        464
+      ],
+      [
+        444,
+        581
+      ],
+      [
+        1028,
+        601
+      ],
+      [
+        904,
+        620
+      ],
+      [
+        1029,
+        919
+      ],
+      [
+        545,
+        1173
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1005706,
+    "edge_pixels": 26638,
+    "unchanged_paint_pixels": 541180,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

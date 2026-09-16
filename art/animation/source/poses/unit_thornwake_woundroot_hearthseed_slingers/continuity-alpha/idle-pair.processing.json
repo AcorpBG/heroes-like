@@ -1,0 +1,82 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paintings preserved.",
+  "id": "idle-pair",
+  "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/idle-pair.png",
+  "source_sha256": "02bce8ccfc42d7b4141a7aafc9e03ea9d7ca946f10241ecbef8ee740b9d30c02",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/idle-pair.png",
+  "output_sha256": "0a7d37153f27975071834218fd49d665f037a733b7b478a18253064284db7118",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-cutouts.json",
+  "recipe_sha256": "ea6d0fa66800477982c01f519ff952059602fd13e8eff563e5dca10a9874fbe0",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        153,
+        542
+      ],
+      [
+        330,
+        420
+      ],
+      [
+        890,
+        542
+      ],
+      [
+        1064,
+        420
+      ],
+      [
+        360,
+        183
+      ],
+      [
+        1301,
+        139
+      ],
+      [
+        563,
+        140
+      ],
+      [
+        380,
+        105
+      ],
+      [
+        1118,
+        106
+      ],
+      [
+        360,
+        211
+      ],
+      [
+        1108,
+        144
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1004247,
+    "edge_pixels": 10912,
+    "unchanged_paint_pixels": 557705,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,50 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "worldroot-hit-recoil",
+  "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/hit-recoil.png",
+  "source_sha256": "59c321f1a9517205c284e3b67bcf87ba30e156b88d7805c5008958828fc40045",
+  "source_rect": [
+    0,
+    0,
+    1293,
+    1216
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/hit-recoil.png",
+  "output_sha256": "f2d23a48c4ce08ce1fbabccab20a0843f271191a9dee7be2305c4b16443f9240",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-cutouts.json",
+  "recipe_sha256": "8e2e9e2f0e2264781cc7e9326cbc44786442a7f185a2e44373c15a2e8895ef49",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 160,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        192,
+        465
+      ],
+      [
+        993,
+        844
+      ],
+      [
+        750,
+        845
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 802765,
+    "edge_pixels": 10169,
+    "unchanged_paint_pixels": 759354,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

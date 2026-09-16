@@ -1,0 +1,596 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner explicitly approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paint and masters retained.",
+  "jobs": [
+    {
+      "id": "poses",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/poses.png",
+      "source_sha256": "9aa0a3f5457b620c3d1e9d8374c6fee8930ed7b3bd029f708683905217dd6467",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            224,
+            129
+          ],
+          [
+            240,
+            143
+          ],
+          [
+            99,
+            259
+          ],
+          [
+            113,
+            238
+          ],
+          [
+            86,
+            268
+          ],
+          [
+            746,
+            964
+          ],
+          [
+            768,
+            673
+          ],
+          [
+            966,
+            682
+          ],
+          [
+            1354,
+            662
+          ],
+          [
+            574,
+            821
+          ]
+        ]
+      }
+    },
+    {
+      "id": "poses-idle-neck-corrected",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/poses-idle-neck-corrected.png",
+      "source_sha256": "af7f76300e9ceb726276820bfaf7b25daef9452092bf16d109d99b10b38d601e",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses-idle-neck-corrected.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            466,
+            256
+          ],
+          [
+            583,
+            129
+          ],
+          [
+            604,
+            145
+          ],
+          [
+            542,
+            317
+          ],
+          [
+            448,
+            269
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-near-contact-draft",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/walk-near-contact-draft.png",
+      "source_sha256": "d2160e25d8283d3ccdb235d4eaa9e3647e894a8228ad26da9ba092519226d7f3",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-near-contact-draft.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            352,
+            716
+          ],
+          [
+            491,
+            541
+          ],
+          [
+            540,
+            512
+          ],
+          [
+            409,
+            686
+          ],
+          [
+            945,
+            193
+          ],
+          [
+            605,
+            234
+          ],
+          [
+            500,
+            527
+          ],
+          [
+            438,
+            571
+          ],
+          [
+            1079,
+            181
+          ],
+          [
+            959,
+            201
+          ],
+          [
+            564,
+            302
+          ],
+          [
+            1327,
+            271
+          ],
+          [
+            199,
+            599
+          ],
+          [
+            932,
+            163
+          ],
+          [
+            961,
+            217
+          ],
+          [
+            238,
+            636
+          ],
+          [
+            1228,
+            295
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-near-passing-diagonal",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/walk-near-passing-diagonal.png",
+      "source_sha256": "e9c758d59fa3ba3e5e9dc12ebc6147f72e1d9e54d77ab62f74a5c3e2ec0cc0fc",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-near-passing-diagonal.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            419,
+            689
+          ],
+          [
+            1085,
+            161
+          ],
+          [
+            969,
+            183
+          ],
+          [
+            1091,
+            183
+          ],
+          [
+            968,
+            163
+          ],
+          [
+            198,
+            591
+          ],
+          [
+            616,
+            231
+          ],
+          [
+            958,
+            174
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-far-contact-draft",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/walk-far-contact-draft.png",
+      "source_sha256": "8913173815cf366138052128ad272f4efed4afff0db5596ef49cc11c17e6e54c",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-far-contact-draft.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            943,
+            195
+          ],
+          [
+            301,
+            714
+          ],
+          [
+            606,
+            238
+          ],
+          [
+            279,
+            724
+          ],
+          [
+            1079,
+            181
+          ],
+          [
+            934,
+            164
+          ],
+          [
+            961,
+            204
+          ],
+          [
+            1244,
+            283
+          ],
+          [
+            932,
+            183
+          ],
+          [
+            958,
+            212
+          ],
+          [
+            241,
+            636
+          ]
+        ]
+      }
+    },
+    {
+      "id": "walk-far-passing-draft",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/walk-far-passing-draft.png",
+      "source_sha256": "3223247ef2d4bdd6b5af375b341b7d9af34f6e53bbebb3c0e93077b04e9ab0e3",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-far-passing-draft.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            553,
+            690
+          ],
+          [
+            944,
+            194
+          ],
+          [
+            299,
+            714
+          ],
+          [
+            605,
+            237
+          ],
+          [
+            531,
+            698
+          ],
+          [
+            1079,
+            181
+          ],
+          [
+            279,
+            723
+          ],
+          [
+            960,
+            203
+          ],
+          [
+            1244,
+            284
+          ],
+          [
+            961,
+            212
+          ],
+          [
+            936,
+            162
+          ],
+          [
+            933,
+            183
+          ]
+        ]
+      }
+    },
+    {
+      "id": "slam-windup",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/slam-windup.png",
+      "source_sha256": "7e897cd3eeba52f3dc4da69bde898e9bc3c23da7c95e4fe68ab7268870587751",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/slam-windup.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            329,
+            680
+          ],
+          [
+            1051,
+            455
+          ],
+          [
+            973,
+            497
+          ],
+          [
+            772,
+            308
+          ],
+          [
+            625,
+            239
+          ],
+          [
+            395,
+            558
+          ],
+          [
+            491,
+            389
+          ],
+          [
+            517,
+            356
+          ],
+          [
+            900,
+            308
+          ],
+          [
+            90,
+            936
+          ],
+          [
+            327,
+            642
+          ],
+          [
+            459,
+            450
+          ],
+          [
+            186,
+            914
+          ],
+          [
+            729,
+            279
+          ],
+          [
+            770,
+            166
+          ],
+          [
+            233,
+            621
+          ]
+        ]
+      }
+    },
+    {
+      "id": "hit-recoil",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/hit-recoil.png",
+      "source_sha256": "8991ff282dece29f2185e71fa9b1e3e91809cea1f87328856a437f83c405ca5b",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/hit-recoil.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            376,
+            790
+          ],
+          [
+            822,
+            437
+          ],
+          [
+            424,
+            708
+          ],
+          [
+            840,
+            471
+          ],
+          [
+            569,
+            562
+          ],
+          [
+            394,
+            494
+          ],
+          [
+            336,
+            820
+          ],
+          [
+            762,
+            411
+          ],
+          [
+            387,
+            721
+          ],
+          [
+            504,
+            604
+          ],
+          [
+            439,
+            689
+          ],
+          [
+            917,
+            534
+          ],
+          [
+            166,
+            938
+          ],
+          [
+            870,
+            497
+          ],
+          [
+            587,
+            546
+          ],
+          [
+            1099,
+            601
+          ],
+          [
+            922,
+            384
+          ],
+          [
+            381,
+            746
+          ],
+          [
+            341,
+            559
+          ],
+          [
+            539,
+            593
+          ],
+          [
+            603,
+            525
+          ],
+          [
+            499,
+            386
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guard-braced",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/guard-braced.png",
+      "source_sha256": "20fc063b39dd034b7c3c0a3fd07b7acab34ff079509bc0c660ad6895caeb92e9",
+      "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/guard-braced.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            821,
+            239
+          ],
+          [
+            375,
+            716
+          ],
+          [
+            861,
+            271
+          ],
+          [
+            906,
+            308
+          ],
+          [
+            881,
+            279
+          ],
+          [
+            960,
+            343
+          ],
+          [
+            1198,
+            353
+          ],
+          [
+            807,
+            257
+          ],
+          [
+            417,
+            574
+          ],
+          [
+            1233,
+            509
+          ],
+          [
+            895,
+            305
+          ],
+          [
+            132,
+            757
+          ],
+          [
+            599,
+            247
+          ],
+          [
+            1121,
+            363
+          ],
+          [
+            366,
+            574
+          ]
+        ]
+      }
+    }
+  ]
+}

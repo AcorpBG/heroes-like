@@ -1,0 +1,95 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_obituary_scribes",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "single-quill-glide-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/single-quill-glide-and-guards.png",
+      "source_sha256": "77dd2545fb8b18a8ebb28e4ea30b836ec95963f1122e4d37b3357a018c77c15c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0df39e02-e497-4521-86a8-1ac305eb2e08.png",
+      "prompt": "Use case: stylized-concept. Six articulated animation poses of this SAME original spectral Obituary Scribe, 3 columns x 2 rows, generous separate gutters. Image 1 is identity, equipment, body proportions and painterly style reference only; its green background is inspection backing, NOT scene. Fixed elevated three-quarter camera, face and travel toward screen RIGHT. Preserve ivory full mask, spiked crown, slim dark teal/black and ivory-panel robe, exact silver clasps. Anatomical RIGHT near-side hand on screen LEFT holds one full-length silver staff with ONE dark feather at the upper end; plain narrow metal butt at the other end, never a second feather. LEFT hand supports one open black embossed book. Two upper shoulder ribbons retain ONE small purple lantern at back-left and ONE ivory scroll at back-right throughout. Lower ribbons unchanged attachments. Top row: 1 hovering forward glide, torso modest lean, robe hem and shoulder ribbons swept backward LEFT; 2 mid-glide torso steadies, lower robe hem curls inward while attached ribbons undulate down; 3 returning glide torso slightly rises, hem spreads and ribbons arc upward still trailing LEFT. Bottom row: 4 second glide recovery, torso relaxes toward first pose, hem narrows ribbons settle; 5 defensive crouch/hover, right staff diagonally across mask and chest, left book shields chest; 6 deeper guard with same diagonal staff and book, shoulders lowered. These are spectral floating motions, no invented boots, no walking legs or literal shifted copies. Keep staff/book size, mask/crown, hands and attachments constant. ALL full staff tips and ribbons inside cells. Genuine transparent RGBA background, no painted checkerboard, ground, labels, grid, symbols or projectiles. Original art only.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_obituary_scribes/identity-reference.png",
+          "sha256": "32565995fc7fb67b4265021f183c6df68258530d4483fc1aa2282dc73a28cf90"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "notes": "Packed production candidate, not connected-motion or gameplay acceptance."
+    },
+    {
+      "id": "single-quill-attack-and-cast",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/single-quill-attack-and-cast.png",
+      "source_sha256": "e9b476a0a85dcd829812bafa7ed04a5aa5b56af570097a69f8871c4d59d619e5",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-6bcba925-a142-4309-a7ab-cd0586452062.png",
+      "prompt": "Use case: stylized-concept. Four distinct original Obituary Scribe battle poses, 2 columns by 2 rows. Image 1 defines exact costume, proportions and painted style; green is inspection backing only. Constant fixed elevated three-quarter camera, mask faces screen RIGHT. Preserve ivory mask/crown, teal/black robes, ivory breast/robe panels and clasps. Anatomical RIGHT near-side hand always holds ONE full-length slender silver quill staff: one dark feather blade at ONE end, opposite butt is plain metal. LEFT hand always supports ONE open chained black book. Back shoulder ribbons carry one purple lantern and one ivory sealed scroll with unchanged attachment. Top-left: physical melee windup, right elbow draws staff BACK so feather head is behind shoulder upper LEFT, complete plain butt extends down-right before robe; left book tucked to chest. Top-right: physical melee thrust, right shoulder/elbow extend full staff toward RIGHT, single feather head at forward tip, full plain rear shaft continues behind grip toward LEFT; left book still close. Bottom-left: spell release, right hand raises staff diagonal pointing toward upper RIGHT, left book lifted with pages facing mask; both arms visible, book glow only, no beam or floating projectile. Bottom-right: recovery, right quill staff returns to diagonal travel hold, left book lowers to waist, ribbons settle. Constant feather/shaft length, mask/crown size and outfit. Whole staff, ribbons, lantern and scroll within each generous cell with no overlap, no cropped tips. Genuine transparent RGBA, no drawn checker, ground, backdrop, text, grid or extra limbs. Original fantasy painting, no copyrighted art.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_obituary_scribes/identity-reference.png",
+          "sha256": "32565995fc7fb67b4265021f183c6df68258530d4483fc1aa2282dc73a28cf90"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "notes": "Packed production candidate, not connected-motion or gameplay acceptance."
+    },
+    {
+      "id": "equipped-head-left-collapse",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/equipped-head-left-collapse.png",
+      "source_sha256": "7b643bc7f40ceb7bca7d8f9cc9c085e3c82067990aacc5d705ebac3d4b0ec1f8",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5b1ef7a9-6024-4639-bbdc-833fc5a9d182.png",
+      "prompt": "Use case: stylized-concept. FOUR original Obituary Scribe dying animation paintings, 2x2 generously separated cells, full equipment and same anatomy scale. Image1 exact identity/style/equipment, green is inspection backing only. Image2 bottom-right corpse establishes HEAD-LEFT prone direction, not other poses. Fixed elevated three-quarter camera. Preserve ivory full mask/spiked crown, slim teal/black and ivory layered robes, silver clasps; RIGHT hand holds ONE full-length silver staff with one dark feather on ONE end, plain metal butt other end. LEFT hand retains ONE open black book. Two upper ribbons each retain their attachment: one purple lantern and one ivory sealed scroll. TOP LEFT: wounded kneel, head bowed, right hand lowers complete quill staff to ground across knees; left hand visibly holds open book against lap. TOP RIGHT: falling toward screen LEFT, left hip and elbow near ground, head descends leftward, left book remains in palm on ground beneath chest, right hand loosens full staff beside body. BOTTOM LEFT: settling on LEFT side with head LEFT and robe body extending RIGHT, mask close to ground, book open beside left forearm, whole staff lying along front of body, lantern and scroll settle on slack ribbons. BOTTOM RIGHT: final lifeless corpse HEAD-LEFT, body and cloak prone extending RIGHT, mask/crown intact, book dark open on ground by hands, whole ONE-feather staff grounded in front, lantern and scroll both grounded and attached by limp ribbons. No glow anywhere in all four poses: glass stays dark purple and pages dark gray. No extra feather, no lost book, no hovering accessories, no shortened staff, no blood. Entire figure/ribbons/staff fit within each cell with 25px outside padding. Genuine transparent RGBA, no painted checkerboard, floor, scene, text, grid or copyrighted assets.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_obituary_scribes/identity-reference.png",
+          "sha256": "32565995fc7fb67b4265021f183c6df68258530d4483fc1aa2282dc73a28cf90"
+        },
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_obituary_scribes/alpha/poses.png",
+          "sha256": "f4f9654ebbd220bfee52a59cc31532df69ccc6f3f42fa1b763eaa4ca3825435f"
+        }
+      ],
+      "selected": false,
+      "selected_cells": [],
+      "notes": "Superseded by targeted duplicate-lantern and cold-glass correction."
+    },
+    {
+      "id": "single-lantern-cold-collapse",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/single-lantern-cold-collapse.png",
+      "source_sha256": "d06c87bf10c4b71ff6eb05c19cb8db806904576e69f87b6b6203f71ca966fa09",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-5a17f606-2cea-47a4-a71b-34903020e3bf.png",
+      "prompt": "Use case: precise-object-edit. Edit supplied FOUR-pose sheet, keep same canvas/layout, all original paintings, scale, anatomy, book, crown, clothes, staff and one feather unchanged. Exactly TWO corrections only: (1) in BOTTOM-LEFT pose remove the extra purple lantern floating above the back near the middle of that cell, including its short unattached hook; retain the legitimate lantern near the LEFT edge beside the mask and its ribbon. Every pose must have exactly ONE lantern and ONE ivory scroll. (2) in ALL FOUR poses extinguish lantern glass and small purple belt bottles: make glass dark unlit purple, no bright center or glow; preserve opaque metal frames and physical shapes. Keep every other pixel/design detail as close as possible, no restyling, no new objects, no changes to body poses, books or grounded staff. Final pose still head LEFT with scroll and ONE lamp settled on ground. Genuine transparent background replacing checker only, no floor, labels or scene.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_obituary_scribes/equipped-head-left-collapse.png",
+          "sha256": "7b643bc7f40ceb7bca7d8f9cc9c085e3c82067990aacc5d705ebac3d4b0ec1f8"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "notes": "Packed production candidate, not connected-motion or gameplay acceptance."
+    }
+  ]
+}

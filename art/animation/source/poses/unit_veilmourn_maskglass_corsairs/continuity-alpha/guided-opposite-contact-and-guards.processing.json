@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "guided-opposite-contact-and-guards",
+  "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/guided-opposite-contact-and-guards.png",
+  "source_sha256": "79055e30c337d80a004b15572c680f7317e443de95c0832d6ffda08082824b9d",
+  "source_rect": [
+    0,
+    0,
+    1312,
+    1199
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/continuity-alpha/guided-opposite-contact-and-guards.png",
+  "output_sha256": "08f3f1f4fcc1282a2b64065b93a7bc1ade637c27aa3e6773bcd12c592d14a780",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/continuity-cutouts.json",
+  "recipe_sha256": "f6066bfbe4b9ee8fe9b5682029a4bfd135b666066ff0ce95616cbc870e90a651",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1078897,
+    "edge_pixels": 22093,
+    "unchanged_paint_pixels": 472098,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

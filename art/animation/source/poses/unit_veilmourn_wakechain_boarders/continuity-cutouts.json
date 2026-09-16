@@ -1,0 +1,39 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup, preserving originals and interior paint.",
+  "jobs": [
+    {
+      "id": "travel-recovery-and-head-right-fall",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/travel-recovery-and-head-right-fall.png",
+      "source_sha256": "6da183d540b8e7bcec3fbdc2962dcc181a8aba504d2d4d5c31825c64dd977143",
+      "output": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-alpha/travel-recovery-and-head-right-fall.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "travel-recovery-and-head-right-fall-green",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/travel-recovery-and-head-right-fall-green.png",
+      "source_sha256": "f7e7abe0cd405b74525ac689f5f7d91cd51562829b1729fdc1ded94e9fcd8e09",
+      "output": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-alpha/travel-recovery-and-head-right-fall-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,162 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "thornwhip-original-checker",
+  "source": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/poses.png",
+  "source_sha256": "dd29320ad5e94f95b3542ff739da1c3cc5637bd3b5d321cadf063ba2fe998a82",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/continuity-alpha/original.png",
+  "output_sha256": "42f56e7ea244705dcf75fc0b3ea7052929554f41a832ca87d713d4e9e73e31f1",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/continuity-cutouts.json",
+  "recipe_sha256": "f2aee54e10aba5e0a346086ce108b256c4da34466af46d1b6c812cf9426620cb",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 190,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        129,
+        53
+      ],
+      [
+        117,
+        180
+      ],
+      [
+        480,
+        46
+      ],
+      [
+        480,
+        198
+      ],
+      [
+        831,
+        48
+      ],
+      [
+        832,
+        186
+      ],
+      [
+        1005,
+        248
+      ],
+      [
+        1245,
+        47
+      ],
+      [
+        1246,
+        178
+      ],
+      [
+        1395,
+        244
+      ],
+      [
+        266,
+        592
+      ],
+      [
+        468,
+        470
+      ],
+      [
+        1488,
+        573
+      ],
+      [
+        97,
+        768
+      ],
+      [
+        300,
+        926
+      ],
+      [
+        620,
+        970
+      ],
+      [
+        792,
+        945
+      ],
+      [
+        822,
+        947
+      ],
+      [
+        886,
+        978
+      ],
+      [
+        1212,
+        976
+      ],
+      [
+        1450,
+        960
+      ],
+      [
+        151,
+        145
+      ],
+      [
+        513,
+        154
+      ],
+      [
+        863,
+        149
+      ],
+      [
+        1273,
+        152
+      ],
+      [
+        968,
+        197
+      ],
+      [
+        974,
+        229
+      ],
+      [
+        239,
+        541
+      ],
+      [
+        290,
+        606
+      ],
+      [
+        283,
+        629
+      ],
+      [
+        1258,
+        951
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1124720,
+    "edge_pixels": 30411,
+    "unchanged_paint_pixels": 417733,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

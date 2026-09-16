@@ -1,0 +1,186 @@
+{
+  "unit_id": "unit_thornwake_sporeglass_menders",
+  "output": "art/animation/source/poses/unit_thornwake_sporeglass_menders/candidate-atlas.png",
+  "sha256": "ee99b0c0b33cc9a0a82aa5e71bc5b39d11e63297432d43ecf2adba07a702b8b9",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_0",
+      "index": 0,
+      "alpha_bounds": [
+        196,
+        17,
+        336,
+        242
+      ]
+    },
+    {
+      "name": "idle_1",
+      "index": 1,
+      "alpha_bounds": [
+        192,
+        18,
+        336,
+        243
+      ]
+    },
+    {
+      "name": "walk_far_contact",
+      "index": 2,
+      "alpha_bounds": [
+        183,
+        23,
+        346,
+        242
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 3,
+      "alpha_bounds": [
+        184,
+        23,
+        339,
+        240
+      ]
+    },
+    {
+      "name": "walk_near_contact",
+      "index": 4,
+      "alpha_bounds": [
+        191,
+        22,
+        332,
+        239
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 5,
+      "alpha_bounds": [
+        180,
+        18,
+        342,
+        242
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        173,
+        26,
+        355,
+        246
+      ]
+    },
+    {
+      "name": "melee_contact",
+      "index": 7,
+      "alpha_bounds": [
+        183,
+        27,
+        346,
+        244
+      ]
+    },
+    {
+      "name": "ranged_aim",
+      "index": 8,
+      "alpha_bounds": [
+        180,
+        23,
+        338,
+        242
+      ]
+    },
+    {
+      "name": "ranged_recoil",
+      "index": 9,
+      "alpha_bounds": [
+        176,
+        27,
+        350,
+        246
+      ]
+    },
+    {
+      "name": "ranged_recovery",
+      "index": 10,
+      "alpha_bounds": [
+        185,
+        26,
+        348,
+        246
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 11,
+      "alpha_bounds": [
+        175,
+        60,
+        343,
+        243
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 12,
+      "alpha_bounds": [
+        167,
+        36,
+        340,
+        245
+      ]
+    },
+    {
+      "name": "kneel",
+      "index": 13,
+      "alpha_bounds": [
+        167,
+        77,
+        340,
+        246
+      ]
+    },
+    {
+      "name": "side_fall",
+      "index": 14,
+      "alpha_bounds": [
+        149,
+        102,
+        355,
+        251
+      ]
+    },
+    {
+      "name": "dead_0",
+      "index": 15,
+      "alpha_bounds": [
+        139,
+        148,
+        356,
+        248
+      ]
+    },
+    {
+      "name": "dead_1",
+      "index": 16,
+      "alpha_bounds": [
+        147,
+        149,
+        357,
+        249
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png": "e10b5a94bb164f68588b83f2d9ef9616ae3bccf355ee72c79c152d29497ed9ad",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_sporeglass_menders/continuity-alpha/walk-opposite-passing-magenta.png": "73ca6f5b067575b9cd68e7b7fecaa152a456a3fd8fd732f665236ab53a6dc7a3",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_sporeglass_menders/continuity-alpha/walk-near-contact-magenta.png": "65e9473c7ff588f997e8861c16a78a99ad151891d46b25e0cbc2d2cc79d61c61"
+  }
+}

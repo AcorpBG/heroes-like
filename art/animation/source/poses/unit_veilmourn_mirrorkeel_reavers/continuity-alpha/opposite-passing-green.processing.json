@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup, preserving originals and interior paint.",
+  "id": "opposite-passing-green",
+  "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/opposite-passing-green.png",
+  "source_sha256": "e078bd2779f92b2b87f5c2784a78f3b89614bd55bd8ee5fe63c14d950ef2056c",
+  "source_rect": [
+    0,
+    0,
+    1140,
+    1380
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/opposite-passing-green.png",
+  "output_sha256": "5afb1f16124fb7e2aab4c5ed59eb4388928d7da2cbe3cacd01865ea83fc3dd48",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-cutouts.json",
+  "recipe_sha256": "605ab94c67be74a179bfa9a63463ad1a26628511213ce325ccd111c26ac2c77b",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1042498,
+    "edge_pixels": 25212,
+    "unchanged_paint_pixels": 505490,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

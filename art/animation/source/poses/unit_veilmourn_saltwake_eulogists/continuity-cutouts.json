@@ -1,0 +1,126 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "unit_id": "unit_veilmourn_saltwake_eulogists",
+  "owner_approval": "Explicit approval for deterministic background and edge cleanup; preserve original paint and poses.",
+  "jobs": [
+    {
+      "id": "poses",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/poses.png",
+      "source_sha256": "4790e00a57e56237d33988e406bb80dfb92b9f64cdc05f4baca33927b6d9ec2a",
+      "output": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 105,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "poses-narrow",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/poses.png",
+      "source_sha256": "4790e00a57e56237d33988e406bb80dfb92b9f64cdc05f4baca33927b6d9ec2a",
+      "output": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/poses-narrow.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 95,
+        "tolerance": 4,
+        "edge_radius": 1,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "guided-walk-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/guided-walk-and-guards.png",
+      "source_sha256": "fb66d83a246d3152cd68e4399a167ad62a5d0d981232ceaa41900aa686d24050",
+      "output": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards.png",
+      "matte": {
+        "minimum": 145,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "equipped-attacks-and-casting",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/equipped-attacks-and-casting.png",
+      "source_sha256": "53053a55b72025166ad8579e5cb43005319e3c0eca36884a289794dae27def9e",
+      "output": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting.png",
+      "matte": {
+        "minimum": 145,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "idle-and-equipped-cold-collapse",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/idle-and-equipped-cold-collapse.png",
+      "source_sha256": "1bffe5e299ab1f39841e7bfc73b280ef9457e456f457ed49bf74d64568dd700e",
+      "output": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse.png",
+      "matte": {
+        "minimum": 145,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "guided-walk-and-guards-green",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/guided-walk-and-guards-green.png",
+      "source_sha256": "43aa56b95c68b9c016cc613547ea6d1db5f1a73244aeeb46a247ec22b2bb1bd4",
+      "output": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "all_keyed_is_background": true,
+        "max_edge_residual": 80
+      }
+    },
+    {
+      "id": "equipped-attacks-and-casting-green",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/equipped-attacks-and-casting-green.png",
+      "source_sha256": "482955b05879e3f1b9e2968f41bed21062b957d7b137e37bdfb0b50b717c40ee",
+      "output": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "all_keyed_is_background": true,
+        "max_edge_residual": 80
+      }
+    },
+    {
+      "id": "idle-and-equipped-cold-collapse-green",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/idle-and-equipped-cold-collapse-green.png",
+      "source_sha256": "bfe948204d82e7b7044c9141c5a70ba3c2e2bbb64ca9812fe92f96d2040ce6a5",
+      "output": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "all_keyed_is_background": true,
+        "max_edge_residual": 80
+      }
+    }
+  ]
+}

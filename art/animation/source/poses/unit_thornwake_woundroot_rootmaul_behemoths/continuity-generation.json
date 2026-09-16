@@ -1,0 +1,57 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "slam-windup",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/slam-windup.png",
+      "source_sha256": "7e897cd3eeba52f3dc4da69bde898e9bc3c23da7c95e4fe68ab7268870587751",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-40c33176-21d6-4a60-bac4-4233ddb82db3.png",
+      "prompt": "Use case: identity-preserve. Asset type: original fantasy battle animation, one isolated complete Rootmaul Behemoth painting. Input image 1 is the fixed identity reference. Preserve its exact massive FOUR-legged wooden beast anatomy, short compact branch-crowned head seated BETWEEN the stone-plated shoulders, amber eye/core, gray stone forearm and hip armor, hanging moss and orange flowers, long curled tail. Same three-quarter camera facing RIGHT, detailed hand-painted raster style. No new equipment, no extra limbs, no dragon snout, absolutely no long flexible neck. Transparent background with real alpha, no checkerboard, no ground, no shadow cloud, no text. Entire tail, crown and claws with generous 7 percent margins. Change only action: preparing a heavy double-forepaw slam. BOTH hind paws stay planted carrying its weight; BOTH heavy forepaws are lifted to chest/head height, elbows visibly bent, claws pointing toward the target to the right. Torso rocks back a little but remains broad and compact. The short branch-crowned head stays in its original downward-forward orientation directly between shoulder armor, not thrown back. Exactly two lifted forelimbs and two grounded hindlimbs, the curled tail balances to the left. No impact or attack effect.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/identity-reference.png",
+          "sha256": "d392a349e8f75454a20c39cef17957e9a394bfbe8774a2fff58fb47c67843037"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "hit-recoil",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/hit-recoil.png",
+      "source_sha256": "8991ff282dece29f2185e71fa9b1e3e91809cea1f87328856a437f83c405ca5b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-aabfb837-c3ab-4583-96ae-0bd6348ee3ca.png",
+      "prompt": "Use case: identity-preserve. Asset type: original fantasy battle animation, one isolated complete Rootmaul Behemoth painting. Input image 1 is the fixed identity reference. Preserve its exact massive FOUR-legged wooden beast anatomy, short compact branch-crowned head seated BETWEEN the stone-plated shoulders, amber eye/core, gray stone forearm and hip armor, hanging moss and orange flowers, long curled tail. Same three-quarter camera facing RIGHT, detailed hand-painted raster style. No new equipment, no extra limbs, no dragon snout, absolutely no long flexible neck. Transparent background with real alpha, no checkerboard, no ground, no shadow cloud, no text. Entire tail, crown and claws with generous 7 percent margins. Change only action: a brief hit-reaction. All four paws stay visibly on the ground but knees flex, body recoils slightly back toward LEFT and head turns down a little toward RIGHT into the shoulders. Claws remain planted, moss swings slightly forward. Preserve exact compact head/crown proportions; no upward neck extension and no human standing pose. This is hurt but alive: amber eyes and central chest core still lit. No effects or attacker.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/identity-reference.png",
+          "sha256": "d392a349e8f75454a20c39cef17957e9a394bfbe8774a2fff58fb47c67843037"
+        }
+      ],
+      "selected": true
+    },
+    {
+      "id": "guard-braced",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/guard-braced.png",
+      "source_sha256": "20fc063b39dd034b7c3c0a3fd07b7acab34ff079509bc0c660ad6895caeb92e9",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-25248024-6ad2-4a69-8a0b-a5d6dcdcece2.png",
+      "prompt": "Use case: identity-preserve. One original Rootmaul Behemoth full-body battle DEFEND painting. Image 1 fixed identity; image 2 action reference row2 column4 crouched guard. Keep exactly this massive FOUR-legged wooden beast, short branch-crowned head between stone shoulders, gray stone forearm/hip plates, amber eyes and central heartcore, moss, orange flowers, curled tail to left. All four clawed paws grounded, forepaws planted slightly wide as a brace, elbows bent, shoulder plates shelter the head, head stays compact and low pointing RIGHT, torso crouched a little above the impact pose. This is the breathing-up phase of a held guard, not an attack, no raised paws. Same three-quarter RIGHT camera and body proportions. Transparent real alpha no checkerboard, no floor, no effects, no text; full tail/crown/claws and generous margins.",
+      "inputs": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/identity-reference.png",
+          "sha256": "d392a349e8f75454a20c39cef17957e9a394bfbe8774a2fff58fb47c67843037"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/poses.png",
+          "sha256": "9aa0a3f5457b620c3d1e9d8374c6fee8930ed7b3bd029f708683905217dd6467"
+        }
+      ],
+      "selected": true
+    }
+  ],
+  "selection_note": "Three new single paintings selected: compact-head slam windup, hit and braced guard. Six original sheet paintings plus corrected idle and four previously generated gait paintings reused."
+}

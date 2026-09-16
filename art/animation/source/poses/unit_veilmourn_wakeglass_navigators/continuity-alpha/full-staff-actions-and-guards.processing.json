@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Explicit approval for deterministic background and edge cleanup; preserve original paint and poses.",
+  "id": "full-staff-actions-and-guards",
+  "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/full-staff-actions-and-guards.png",
+  "source_sha256": "b026640771c07aa5e22f81cbb510c9beb5b6dcf1ca79d8836c20bd89de42254a",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/full-staff-actions-and-guards.png",
+  "output_sha256": "7e6da8a89d6590afbe1b2762f7523ba88fc6ac7bf45eef8357723feb12a21eae",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-cutouts.json",
+  "recipe_sha256": "3acbc5e5176a464cc095a3383ae489adfb17a46269f0948bbeefd18f9d257dee",
+  "parameters": {
+    "minimum": 175,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        1390,
+        420
+      ],
+      [
+        356,
+        766
+      ]
+    ],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 858344,
+    "edge_pixels": 20561,
+    "unchanged_paint_pixels": 693959,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,164 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_thornwake_dawnseed_bolters",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_registered_not_final_accepted",
+  "sources": [
+    {
+      "source": "continuity-walk-0.png",
+      "sha256": "1ecb38e9d7100dc7f8373a4b70eccc8427cb71226fcd32caba073ecaf45770b6",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4fa2b9ed-e5e5-4e19-b8c2-453583140e4e.png",
+      "selected": false,
+      "selected_source_indices": [],
+      "prompt": "Use case: sketch-to-render. Asset type: original painted tactical battle animation, ONE full-body walk pose.\nImage 1 is the authoritative leg skeleton and limb-occlusion guide, not artwork. Image 2 is the fixed identity, costume, body mass, weapon and painting reference. Paint image 2's character in image 1's leg pose.\nCONTACT A: the NEAR right leg (blue guide) extends from the foreground hip forward toward screen RIGHT, foot planted forward. The FAR left leg (orange) trails toward screen LEFT, planted behind. Clearly trace two separate hip-knee-foot chains.\nPreserve the compact stout bark humanoid, dark hood with two green eyes, paired branching antlers, green layered leaf cloak, two white flowers at the near shoulder, amber belt seedpods, bark root feet, and exactly ONE complete ornate wooden seed-bolt crossbow held aimed slightly down toward screen RIGHT. Exactly two arms: near/right hand at rear trigger, far/left hand under the front stock; no extra hands or hand-like limbs. Keep the long bow limbs and string mechanically intact, one red-tipped bolt seated on top, no flying projectile. Fixed three-quarter camera facing RIGHT, same torso proportions and costume. No mirror, no redrawn equipment design.\nFully include both antlers, every root toe, cloak tip and crossbow tip with a generous 12 percent clear border. Isolated single character on genuine transparent background, otherwise plain pure white, no checkerboard, ground, cast shadow, text, labels, guide colors, glow trail, motion lines or other figures. Warm detailed painted original fantasy sprite; leg-guide geometry must not appear in the result.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/standing-reference-light.png",
+          "sha256": "27eaeb37b87eadc089cc036ec763c05f7497a3e4c6ef474fd6bffb0a94219db5"
+        }
+      ],
+      "review": "Unselected repeated-contact precursor; diagram did not establish requested opposite leg lead."
+    },
+    {
+      "source": "continuity-walk-1.png",
+      "sha256": "cd2144ca5fc808c3bb76cdb5bc0f0d629d396b05ed214bcd3e72cd169ea11ed9",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f122b419-b0db-47fd-8a1b-cb768811539d.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: sketch-to-render. Asset type: original painted tactical battle animation, ONE full-body walk pose.\nImage 1 is the authoritative leg skeleton and limb-occlusion guide, not artwork. Image 2 is the fixed identity, costume, body mass, weapon and painting reference. Paint image 2's character in image 1's leg pose.\nPASSING A: the NEAR right leg (blue) is planted upright directly beneath the foreground hip and supports the weight. The FAR left leg (orange) bends at its knee, its foot lifted behind the supporting calf. Do not invent a third foot.\nPreserve the compact stout bark humanoid, dark hood with two green eyes, paired branching antlers, green layered leaf cloak, two white flowers at the near shoulder, amber belt seedpods, bark root feet, and exactly ONE complete ornate wooden seed-bolt crossbow held aimed slightly down toward screen RIGHT. Exactly two arms: near/right hand at rear trigger, far/left hand under the front stock; no extra hands or hand-like limbs. Keep the long bow limbs and string mechanically intact, one red-tipped bolt seated on top, no flying projectile. Fixed three-quarter camera facing RIGHT, same torso proportions and costume. No mirror, no redrawn equipment design.\nFully include both antlers, every root toe, cloak tip and crossbow tip with a generous 12 percent clear border. Isolated single character on genuine transparent background, otherwise plain pure white, no checkerboard, ground, cast shadow, text, labels, guide colors, glow trail, motion lines or other figures. Warm detailed painted original fantasy sprite; leg-guide geometry must not appear in the result.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/standing-reference-light.png",
+          "sha256": "27eaeb37b87eadc089cc036ec763c05f7497a3e4c6ef474fd6bffb0a94219db5"
+        }
+      ],
+      "review": "Selected candidate painting; exact anatomy/equipment/continuity and event timing remain whole-roster refinement."
+    },
+    {
+      "source": "continuity-walk-2.png",
+      "sha256": "12c72d067364dc923c010c8b3748a750e7ac7e7397c235ebcadd1579c8af0f2e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-17f54ee8-b756-4fd0-a803-7d17b532c8b3.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: sketch-to-render. Asset type: original painted tactical battle animation, ONE full-body walk pose.\nImage 1 is the authoritative leg skeleton and limb-occlusion guide, not artwork. Image 2 is the fixed identity, costume, body mass, weapon and painting reference. Paint image 2's character in image 1's leg pose.\nCONTACT B: the NEAR right leg (blue) extends backward toward screen LEFT from the foreground hip; the FAR left leg (orange) extends forward toward screen RIGHT from the rear hip. The near backward thigh MUST occlude the far forward thigh at the hip crossing. This is the opposite leg lead, not a copied pose with the same foot forward.\nPreserve the compact stout bark humanoid, dark hood with two green eyes, paired branching antlers, green layered leaf cloak, two white flowers at the near shoulder, amber belt seedpods, bark root feet, and exactly ONE complete ornate wooden seed-bolt crossbow held aimed slightly down toward screen RIGHT. Exactly two arms: near/right hand at rear trigger, far/left hand under the front stock; no extra hands or hand-like limbs. Keep the long bow limbs and string mechanically intact, one red-tipped bolt seated on top, no flying projectile. Fixed three-quarter camera facing RIGHT, same torso proportions and costume. No mirror, no redrawn equipment design.\nFully include both antlers, every root toe, cloak tip and crossbow tip with a generous 12 percent clear border. Isolated single character on genuine transparent background, otherwise plain pure white, no checkerboard, ground, cast shadow, text, labels, guide colors, glow trail, motion lines or other figures. Warm detailed painted original fantasy sprite; leg-guide geometry must not appear in the result.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/standing-reference-light.png",
+          "sha256": "27eaeb37b87eadc089cc036ec763c05f7497a3e4c6ef474fd6bffb0a94219db5"
+        }
+      ],
+      "review": "Selected candidate painting; exact anatomy/equipment/continuity and event timing remain whole-roster refinement."
+    },
+    {
+      "source": "continuity-walk-3.png",
+      "sha256": "69480d6e0914896730e095d23644191dca2900402782aaf39f6b0eb4ea1098a9",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-bbf02037-46e6-41f7-9d7a-dbb79e0f1fe0.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: sketch-to-render. Asset type: original painted tactical battle animation, ONE full-body walk pose.\nImage 1 is the authoritative leg skeleton and limb-occlusion guide, not artwork. Image 2 is the fixed identity, costume, body mass, weapon and painting reference. Paint image 2's character in image 1's leg pose.\nPASSING B: the FAR left leg (orange) supports the weight upright under the rear hip. The NEAR right leg (blue) bends forward at the knee, its foot lifted near the planted calf in the foreground. Two legs only.\nPreserve the compact stout bark humanoid, dark hood with two green eyes, paired branching antlers, green layered leaf cloak, two white flowers at the near shoulder, amber belt seedpods, bark root feet, and exactly ONE complete ornate wooden seed-bolt crossbow held aimed slightly down toward screen RIGHT. Exactly two arms: near/right hand at rear trigger, far/left hand under the front stock; no extra hands or hand-like limbs. Keep the long bow limbs and string mechanically intact, one red-tipped bolt seated on top, no flying projectile. Fixed three-quarter camera facing RIGHT, same torso proportions and costume. No mirror, no redrawn equipment design.\nFully include both antlers, every root toe, cloak tip and crossbow tip with a generous 12 percent clear border. Isolated single character on genuine transparent background, otherwise plain pure white, no checkerboard, ground, cast shadow, text, labels, guide colors, glow trail, motion lines or other figures. Warm detailed painted original fantasy sprite; leg-guide geometry must not appear in the result.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/standing-reference-light.png",
+          "sha256": "27eaeb37b87eadc089cc036ec763c05f7497a3e4c6ef474fd6bffb0a94219db5"
+        }
+      ],
+      "review": "Selected candidate painting; exact anatomy/equipment/continuity and event timing remain whole-roster refinement."
+    },
+    {
+      "source": "continuity-punch-contact.png",
+      "sha256": "af2f7a5b10461ed3f8fad9e942b59a2fa05d1cc77c6cf957243f4ca19b4762a4",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-acda24cf-60c4-42af-af08-4c38789cc901.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: sketch-to-render. One original painted tactical battle sprite. Image 1 defines the attack anatomy; image 2 is the only character/weapon/style reference.\nPaint this bark crossbow guardian performing one NEAR RIGHT-arm straight punch toward screen RIGHT. The fist originates from its NEAR shoulder (viewer LEFT) and the full near arm extends across the chest to the RIGHT. The FAR LEFT arm remains lower, holding the COMPLETE crossbow horizontally at waist level under the punch. Exactly two arms and two hands: one extended fist and one bow-support hand; there is NO trigger hand remaining on the weapon. The crossbow has its two original limbs, string, amber details and a single seated red-tipped seed bolt. No discharge.\nKeep original stout body, same antlers/hood/green eyes/white shoulder flowers/leaf cloak/amber belt pods/root legs. Braced planted feet, a slight forward torso twist. Same right-facing three-quarter camera. The fist is anatomically connected to the foreground shoulder, not the far shoulder. No added arms.\nSingle complete full-body figure centered with 12 percent clear margins, original painted style, genuine transparency or pure white otherwise; no guide pixels/colors, labels, shadows, checkerboard, effects or cropping.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-near-arm-punch.png",
+          "sha256": "4caaf54d3a8c423b70b462eafe8c12c91970ab5ff66d2883b5fae171182190a3"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/standing-reference-light.png",
+          "sha256": "27eaeb37b87eadc089cc036ec763c05f7497a3e4c6ef474fd6bffb0a94219db5"
+        }
+      ],
+      "review": "Selected candidate painting; exact anatomy/equipment/continuity and event timing remain whole-roster refinement."
+    },
+    {
+      "source": "continuity-guard-braced.png",
+      "sha256": "1d276db75998b56900e22f51a7fd25e6b2191867c102d85f9302fad88214fe99",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-71e22451-4e3b-4b1a-8736-44e7a2abf8cd.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: identity-preserve. Edit this ONE original battle unit guard pose into its braced impact/compression animation frame.\nKeep the same stout bark crossbow guardian, right-facing camera, paired antlers, hood, green eyes, white shoulder flowers, leaf cape, amber belt pods, bark root feet and complete ornate wooden crossbow. Lower the head and shoulders slightly behind the crossbow and bend both knees slightly deeper; tighten the two hands on the weapon without switching their ownership. Near RIGHT hand at trigger and FAR LEFT hand beneath stock. Exactly two arms/hands. Both feet remain planted; preserve body mass.\nKeep the entire original crossbow, its bowstring and a single seated red seed bolt, no discharge. No new equipment or extra fingers. Whole body and weapon within 12 percent clear margins. Match the painted original sprite. Genuine transparent background, otherwise pure white; no checkerboard, ground/shadow, text, guides, particles or hit sparks.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guard-reference-light.png",
+          "sha256": "b32bc7ef456b0736aec7712699d7bcddb3e0299201a8db40e7cf5783e32fa2bb"
+        }
+      ],
+      "review": "Selected candidate painting; exact anatomy/equipment/continuity and event timing remain whole-roster refinement."
+    },
+    {
+      "source": "continuity-death-inert-pair.png",
+      "sha256": "d44378751d9928e98b03b8771125b06c3b2dc46236ee8a7e7e436a06106f82a9",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-70f41e32-4118-4a80-a8d5-a7c473cd3e34.png",
+      "selected": true,
+      "selected_source_indices": [
+        1
+      ],
+      "prompt": "Use case: precise-object-edit. Two-frame original game death/corpse sprite strip. Edit the two prone figures from the reference, preserving EACH figure's exact side-lying pose, body shape, equipment, antlers, cloth and painting.\nChange ONLY this: extinguish ALL green eye glow in BOTH black hood openings. The faces are now dark, empty, inert; no luminous eyes or other active emission. Do not redraw the corpses into rubble or change the poses. Each figure retains exactly one complete crossbow lying on the ground with it.\nKeep the left figure head-left and the right figure head-right, in the same left-to-right order. Place both whole figures in two equally spaced cells of one horizontal row, generously separated and fully inside the canvas including crossbow tips, feet and antlers. Omit any tiny fragment entering from an unrelated pose at the extreme left of the reference.\nGenuine transparent background, otherwise pure white; no checkerboard, text, cell borders, labels, ground shadows, blood or new objects. Same detailed warm painted fantasy art.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/death-reference-light.png",
+          "sha256": "3ec539eac9a7b085a6bb2a2288854a82f7f55a376d8bcbea7c4b4d6f736ac7ac"
+        }
+      ],
+      "review": "Only head-right cell1 selected; eyes dark. Head-left cell0 excluded to avoid corpse orientation jump."
+    },
+    {
+      "source": "continuity-near-contact-unfolded.png",
+      "sha256": "c0f7442b63b8ecd62e3bc526e488a0c81a48db9e32c4e63d8ca384f99b93ed78",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c057d604-fd6e-442d-9836-a9d759240cd0.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use case: precise-object-edit. Original battle WALK animation frame. Edit ONLY the legs in this single full-body sprite; keep the head, torso, arms, crossbow, costume, body proportions and right-facing camera unchanged.\nThis reference already has the NEAR RIGHT thigh raised in the foreground, crossing from the foreground hip diagonally toward the forward knee on screen RIGHT. KEEP that exact foreground thigh and its forward knee. Unfold THAT lifted shin down and forward toward screen RIGHT, planting THAT root foot well in FRONT of the body. The raised foot must become the FORWARD planted foot, not move backward. The other FAR LEFT leg, currently straight planted below the body at screen LEFT, extends back with its foot behind the body to the LEFT. The near forward thigh must visibly pass in FRONT of the far trailing thigh at the crossing.\nDo not merely spread the current legs sideways. Keep a clear rightward walking stride with the foreground/right knee and foot leading. Two legs and two feet only. Do not mirror the figure or exchange leg ownership.\nPreserve the one complete crossbow with trigger/support hands, green hood and eyes, antlers, white flowers, amber belt pods and leafy cape. Keep all extremities fully within canvas with clear margin. Genuine transparent background otherwise pure white; no floor, shadow, lettering, effects, checkerboard or guide artwork.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-walk-3.png",
+          "sha256": "69480d6e0914896730e095d23644191dca2900402782aaf39f6b0eb4ea1098a9"
+        }
+      ],
+      "review": "Selected foreground knee unfolding from passing reference; full gait acceptance deferred."
+    }
+  ]
+}

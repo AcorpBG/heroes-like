@@ -1,0 +1,162 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/candidate-atlas.png",
+  "sha256": "df4d9c3e75c295ebc2633f6a3337a075bc0ea84d3feb77b8d8febb8625bfada8",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle",
+      "index": 0,
+      "alpha_bounds": [
+        135,
+        53,
+        348,
+        241
+      ]
+    },
+    {
+      "name": "idle_breath_compact",
+      "index": 1,
+      "alpha_bounds": [
+        135,
+        53,
+        343,
+        240
+      ]
+    },
+    {
+      "name": "near_contact",
+      "index": 2,
+      "alpha_bounds": [
+        112,
+        62,
+        355,
+        238
+      ]
+    },
+    {
+      "name": "far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        112,
+        65,
+        355,
+        232
+      ]
+    },
+    {
+      "name": "far_contact",
+      "index": 4,
+      "alpha_bounds": [
+        112,
+        65,
+        367,
+        239
+      ]
+    },
+    {
+      "name": "near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        112,
+        63,
+        367,
+        239
+      ]
+    },
+    {
+      "name": "slam_windup_compact",
+      "index": 6,
+      "alpha_bounds": [
+        136,
+        12,
+        351,
+        240
+      ]
+    },
+    {
+      "name": "slam_contact",
+      "index": 7,
+      "alpha_bounds": [
+        121,
+        93,
+        359,
+        242
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 8,
+      "alpha_bounds": [
+        139,
+        78,
+        344,
+        243
+      ]
+    },
+    {
+      "name": "guard_braced",
+      "index": 9,
+      "alpha_bounds": [
+        110,
+        75,
+        363,
+        239
+      ]
+    },
+    {
+      "name": "hit_compact",
+      "index": 10,
+      "alpha_bounds": [
+        132,
+        51,
+        347,
+        242
+      ]
+    },
+    {
+      "name": "death_buckle",
+      "index": 11,
+      "alpha_bounds": [
+        137,
+        86,
+        334,
+        243
+      ]
+    },
+    {
+      "name": "death_collapse",
+      "index": 12,
+      "alpha_bounds": [
+        113,
+        124,
+        343,
+        240
+      ]
+    },
+    {
+      "name": "corpse",
+      "index": 13,
+      "alpha_bounds": [
+        127,
+        139,
+        340,
+        239
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png": "9fb6b2e8a89382f4b15e9f0fcdeec5552417be2c8a21575d6bf5e03a10f6c934",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses-idle-neck-corrected.png": "1c49785ba2f78924c251a743d51cc63d204c16ffea3bc12fa3d648541029945f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-near-contact-draft.png": "214308ff9c09664f5f0c67e682ff0e95bfe97cc2726f9cf4e3dd27d4244800bd",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-far-passing-draft.png": "4772c2d13ea69bd0116bd38307d1f9099d9cd1d654eea173d6c974a7e5e9026f",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-far-contact-draft.png": "f9424213c2e87dbb1cffa26d415cae0092a50586c935a1db8361c3433123fd37",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-near-passing-diagonal.png": "3561b4190d9396dbac937d769778a7ce37d0ed97aebad20be9432a8f40d14268",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/slam-windup.png": "75907be7c3ecc867cfe272bacd49721817542b1e98c7908d3aa35e292d11cacd",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/guard-braced.png": "b94d300295c0db2164d128f785617da9ea2e3ca544af4f5dc58f1bab3154ee7c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/hit-recoil.png": "ead232a9c54605e973c4fd6d9b020c7394a3fc2c1b592760c7efa868c0617b6d"
+  }
+}

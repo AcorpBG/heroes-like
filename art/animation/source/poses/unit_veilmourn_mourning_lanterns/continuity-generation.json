@@ -1,0 +1,70 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_mourning_lanterns",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "guided-travel-guards-and-release",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/guided-travel-guards-and-release.png",
+      "source_sha256": "909f8aea74f8cd1dcf2f3f2443c546df563c0177223b8100a31faa93a1dba22b",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7d6628fe-d6b6-49b0-b9fd-84a707f39db0.png",
+      "prompt": "Use case: sketch-to-render. SIX original painted Mourning Lantern figures in 3 columns x2 rows, full gear and generous clear gutters. TOP row figures follow leg diagrams inputs1,2,3 respectively; input4 is immutable identity/equipment reference. 1 near RIGHT leg forward heel contact to screen RIGHT, far LEFT toe behind; foreground shin passes in front. 2 near RIGHT foot planted under hip, far LEFT foot raised behind as knee advances. 3 far LEFT planted supporting, near RIGHT knee bent forward with boot lifted. Same three-quarter RIGHT-facing camera, never mirror. All travel lifts the tall staff bottom a few centimeters clear of the ground, RIGHT hand keeps same shaft grip; LEFT hand carries the small projector low away from legs. Bottom LEFT defensive crouch holding staff upright and projector across chest; bottom MIDDLE same defensive crouch compresses more, shoulders tucked. Bottom RIGHT ranged release: feet planted, LEFT arm extends projector toward RIGHT at chest height with bright amber lens but no emitted beam/flare/projectile; RIGHT hand still supports upright staff. Adult brown-haired woman with bun, original gray-sage ragged mantle/scarf, black long tunic and pants, leather belts, brass/blue hanging trinkets and boots. Exactly ONE tall crooked black/brass staff with TWO hanging lamps (left rectangular, right round) plus small mirrors, and ONE handheld black/brass amber-lens projector with four small metal barn-door flaps. Three lights total, no added lanterns or mirrors. Full staff crook, mirrors, lamps, projector and boots within each cell. Constant proportions, painted detail and grip ownership. Genuine transparent background, no checkerboard, colored rim/spill, floor/shadows, diagrams, labels or text.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/units/source/curated/unit_veilmourn_mourning_lanterns.png",
+          "sha256": "b12f75e6b7b7419544194b3dd22ca672fce76207ab988c46025755d81e87591b"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "notes": "Candidate selection pending packing, motion continuity and in-game acceptance."
+    },
+    {
+      "id": "equipped-kneels-and-recoil",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/equipped-kneels-and-recoil.png",
+      "source_sha256": "d70278c48864898d0a2ce05db528735d17814fe284b83637ae9a0fa1e366b861",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-0a7de5dd-c657-4189-9f73-132b1c97c7b6.png",
+      "prompt": "Use case: identity-preserve. FOUR full-body original painted Mourning Lantern poses, 2x2 grid with wide gaps and constant scale, fixed three-quarter facing RIGHT. Input1 immutable identity/equipment, input2 only references existing head-RIGHT final fall/corpse direction. TOP LEFT wounded kneel: both knees down, head lowered slightly, RIGHT hand holds entire tall crook staff upright beside right knee, LEFT hand still visibly grips handheld projector low before LEFT knee pointing screen RIGHT. TOP RIGHT deeper kneel: shoulders and head bowed toward screen RIGHT, RIGHT hand slides a little down still-whole shaft, LEFT hand carefully places projector on ground immediately before the left knee, fingertips still on its top handle. The projector must be clearly visible, not hidden by cloak. Keep staff full original height (not shrunken), crook/two lamps/mirrors intact, tilt staff slightly if needed. All THREE lamp lenses in these dying poses are dark amber glass with no bright core; preserve their metal frames. BOTTOM LEFT ranged recoil after release: STANDING braced legs, LEFT elbow flexes as same handheld projector draws back from extended firing toward chest, lens faint amber, RIGHT hand holds upright staff with its two lit lamps. BOTTOM RIGHT recovery: same standing stance relaxes, left hand lowers projector toward hip, right staff grip unchanged. Original adult woman brown bun, sage/gray ragged mantle/scarf, black layered tunic/pants, leather belts, brass and blue trinkets and boots. Exactly ONE black/brass tall staff with crook, TWO suspended lamps (rectangular left, round right) and small mirrors, plus ONE black/brass handheld projector with amber circular lens and four short barn-door flaps. No extra lamps or loss of equipment. Full staff/lamps/body/projector inside every cell, large enough clear margins. Transparent background, no checkerboard, floor shadow, text, rays, flash, smoke or blood.",
+      "references": [
+        {
+          "path": "art/units/source/curated/unit_veilmourn_mourning_lanterns.png",
+          "sha256": "b12f75e6b7b7419544194b3dd22ca672fce76207ab988c46025755d81e87591b"
+        },
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/poses.png",
+          "sha256": "729198c8ebcbebc43e51b7467406d3d5f6e87ddc82fffdeb7bd7c9f035a54651"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "notes": "Candidate selection pending packing, motion continuity and in-game acceptance."
+    }
+  ]
+}

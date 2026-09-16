@@ -1,0 +1,90 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paintings preserved.",
+  "id": "guard-pair",
+  "source": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/guard-pair.png",
+  "source_sha256": "3c14388e90300f54d10ba00738053b81d1ff1fa3b9b4da07c296e1f92786bc49",
+  "source_rect": [
+    0,
+    0,
+    1774,
+    887
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-alpha/guard-pair.png",
+  "output_sha256": "e289d888125d6c3c8018bf78a3156da5d53195a12fd5f4f61aaaf836e3c7635f",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_woundroot_hearthseed_slingers/continuity-cutouts.json",
+  "recipe_sha256": "ea6d0fa66800477982c01f519ff952059602fd13e8eff563e5dca10a9874fbe0",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        193,
+        520
+      ],
+      [
+        353,
+        451
+      ],
+      [
+        1080,
+        520
+      ],
+      [
+        1260,
+        420
+      ],
+      [
+        1083,
+        517
+      ],
+      [
+        1252,
+        642
+      ],
+      [
+        358,
+        290
+      ],
+      [
+        1254,
+        252
+      ],
+      [
+        626,
+        270
+      ],
+      [
+        373,
+        258
+      ],
+      [
+        1270,
+        229
+      ],
+      [
+        1266,
+        281
+      ],
+      [
+        425,
+        235
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1029840,
+    "edge_pixels": 14208,
+    "unchanged_paint_pixels": 529490,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,218 @@
+{
+  "unit_id": "unit_veilmourn_undertow_harpooners",
+  "output": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/candidate-atlas.png",
+  "sha256": "f7560cc0fb3aa9543745bb6aa56864309989acabadc92df65410ceb26eae371f",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        162,
+        17,
+        333,
+        240
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        170,
+        19,
+        353,
+        241
+      ]
+    },
+    {
+      "name": "walk_contact",
+      "index": 2,
+      "alpha_bounds": [
+        153,
+        17,
+        365,
+        243
+      ]
+    },
+    {
+      "name": "walk_far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        158,
+        23,
+        344,
+        244
+      ]
+    },
+    {
+      "name": "walk_planted_bridge",
+      "index": 4,
+      "alpha_bounds": [
+        159,
+        17,
+        376,
+        240
+      ]
+    },
+    {
+      "name": "walk_near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        167,
+        41,
+        367,
+        243
+      ]
+    },
+    {
+      "name": "melee_pullback",
+      "index": 6,
+      "alpha_bounds": [
+        170,
+        45,
+        353,
+        248
+      ]
+    },
+    {
+      "name": "melee_forward_shove",
+      "index": 7,
+      "alpha_bounds": [
+        159,
+        52,
+        396,
+        254
+      ]
+    },
+    {
+      "name": "guard_a",
+      "index": 8,
+      "alpha_bounds": [
+        158,
+        33,
+        376,
+        241
+      ]
+    },
+    {
+      "name": "guard_b",
+      "index": 9,
+      "alpha_bounds": [
+        172,
+        44,
+        352,
+        239
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 10,
+      "alpha_bounds": [
+        165,
+        42,
+        345,
+        242
+      ]
+    },
+    {
+      "name": "ranged_loaded_aim",
+      "index": 11,
+      "alpha_bounds": [
+        169,
+        40,
+        368,
+        246
+      ]
+    },
+    {
+      "name": "ranged_empty_recoil",
+      "index": 12,
+      "alpha_bounds": [
+        174,
+        11,
+        357,
+        238
+      ]
+    },
+    {
+      "name": "retrieval_contained",
+      "index": 13,
+      "alpha_bounds": [
+        169,
+        10,
+        367,
+        237
+      ]
+    },
+    {
+      "name": "reload_bolt_lift",
+      "index": 14,
+      "alpha_bounds": [
+        167,
+        17,
+        366,
+        239
+      ]
+    },
+    {
+      "name": "reload_insertion",
+      "index": 15,
+      "alpha_bounds": [
+        177,
+        19,
+        363,
+        240
+      ]
+    },
+    {
+      "name": "death_buckle",
+      "index": 16,
+      "alpha_bounds": [
+        153,
+        72,
+        353,
+        253
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 17,
+      "alpha_bounds": [
+        155,
+        74,
+        353,
+        237
+      ]
+    },
+    {
+      "name": "death_fall_cold_lantern",
+      "index": 18,
+      "alpha_bounds": [
+        144,
+        101,
+        354,
+        239
+      ]
+    },
+    {
+      "name": "dead_cold_lantern",
+      "index": 19,
+      "alpha_bounds": [
+        153,
+        136,
+        355,
+        240
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png": "64b200fbd0518388fef3e60da6bfca47144526f1966de24ed02346108e86d417",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/opposite-contact-and-guards.png": "e33173283101fd80906db565a530c390a2b891fd0897d6505c980591de28a948",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/recoil-retrieval-and-reload.png": "d7a3c2cceef6adc5c3b3920a2e0d2636e5a31eeefe89b9924dc87229c4d5b153",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/retrieval-contained.png": "3cdff63f47a1632f19f4e69507687d504abc6bed6232f350e6e9eb465926b34d",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/poses-cold-lanterns.png": "a68c98f335977dbb4e9fc98ba5f221d7f410c8fcb7465c2896e7fe2db3421636"
+  }
+}

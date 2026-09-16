@@ -1,0 +1,44 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint.",
+  "id": "poses-green-background",
+  "source": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/poses-green-background.png",
+  "source_sha256": "e479bee2ad0b1e24bbdfb6a3f81f7ef80b102b91080ad608b5e1df6c959d9675",
+  "source_rect": [
+    0,
+    0,
+    1305,
+    1206
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/continuity-alpha/poses-green-background.png",
+  "output_sha256": "fea60aac9b11ca6f8969d87b7d50980b2bd5cbee46a2eedb1a2749e7dc574b98",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_dreamwake_tideglass_oracles/continuity-cutouts.json",
+  "recipe_sha256": "a3001278d4d62163bc1c13e29572c2df763ff0c5fa5f8b934079a370c4583e26",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 128,
+    "edge_radius": 3,
+    "max_edge_residual": 80,
+    "all_keyed_is_background": true,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 1060592,
+    "edge_pixels": 54169,
+    "unchanged_paint_pixels": 459069,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

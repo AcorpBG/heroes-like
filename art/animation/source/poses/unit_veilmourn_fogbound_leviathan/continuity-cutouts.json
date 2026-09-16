@@ -1,0 +1,59 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic inspected-matte and bounded edge cleanup; preserve original sources and interior paint.",
+  "jobs": [
+    {
+      "id": "poses",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/poses.png",
+      "source_sha256": "e625a4ba8781562d5d76209f412cd623bbe49066f57dae0aaa19b84cd6173076",
+      "output": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses.png",
+      "matte": {
+        "minimum": 175,
+        "tolerance": 12,
+        "edge_radius": 2,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "poses-green-background",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/poses-green-background.png",
+      "source_sha256": "19c179d1b96e3caa3ab6a259144565f1deafc066687b68cf8623dc724310838c",
+      "output": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses-green-background.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    },
+    {
+      "id": "four-leg-crawl-and-fold-green-background",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/four-leg-crawl-and-fold-green-background.png",
+      "source_sha256": "3526a084c645457a0c068264cebc6228031484c11b299d2ef25a9c32ef1b338b",
+      "output": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/four-leg-crawl-and-fold-green-background.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          0,
+          255,
+          0
+        ],
+        "distance": 128,
+        "edge_radius": 3,
+        "max_edge_residual": 80,
+        "all_keyed_is_background": true,
+        "background_seeds": [],
+        "protected_polygons": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "schema_id": "original_battle_continuity_generation_v1",
+  "unit_id": "unit_thornwake_canopy_rammers",
+  "date": "2026-09-15",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "sources": [
+    {
+      "source": "opposite-contact.png",
+      "sha256": "d0cf547ab31e16da0419ccf13ccbb7ba6a8d48d01707d6970d14185555e5d925",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-26b76097-3052-425d-9a94-4233f61b0eaa.png",
+      "selected": false,
+      "selected_source_indices": [],
+      "prompt": "Edit the supplied original game creature reference into ONE new animation pose, not a sheet. Maintain the EXACT same Thornwake Canopy Rammer: hulking moss-covered bark humanoid, exactly TWO thick wooden legs with root feet and TWO arms with huge closed wooden fists, amber cracks, pale lichen patches, leafy shoulder canopy. Head anatomy locked: TWO long pointed horns projecting forward/up toward screen RIGHT, plus TWO upright rear branch antlers with the same small offshoots/leaves. Preserve horn identity/count/shape and original hand-painted strategy-game cutout appearance, body proportions and three-quarter facing RIGHT camera. Do not redesign, mirror, make rear view, add weapons/limbs, floor/scene, effects, labels or interface. Complete figure, every root toe and horn tip uncut, leave 6 percent clear margin. Transparent background; if transparency is unavailable use a uniform light neutral gray, no shadow or checkerboard. POSE: the opposite grounded walking contact. The NEAR leg (large foreground leg originally on the LEFT side of the standing reference, connected to the large foreground thigh) has stepped BACK toward screen LEFT and bears weight on the rear root foot. The FAR leg has stepped FORWARD toward screen RIGHT, its smaller foot clearly in FRONT of the hips. Both soles on ground. Show the far shin passing behind the near thigh but extending forward-right; do NOT repeat near foot forward. Torso stays right-facing and upright, fists gently counter-swing. This is a readable one-step walking contact, not running, attacking, rotating, or floating.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+          "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+        }
+      ],
+      "review": "Unselected first opposite-contact attempt repeats near-leg lead when traced from the hips; replaced with explicit diagram-first opposite contact."
+    },
+    {
+      "source": "opposite-passing.png",
+      "sha256": "87def324d798fc25415074a35117c1457e4dc297d5ee6d0d31c84b333f7dd913",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-7c274748-bf95-4a43-b83e-597da5b6f671.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Edit the supplied original game creature reference into ONE new animation pose, not a sheet. Maintain the EXACT same Thornwake Canopy Rammer: hulking moss-covered bark humanoid, exactly TWO thick wooden legs with root feet and TWO arms with huge closed wooden fists, amber cracks, pale lichen patches, leafy shoulder canopy. Head anatomy locked: TWO long pointed horns projecting forward/up toward screen RIGHT, plus TWO upright rear branch antlers with the same small offshoots/leaves. Preserve horn identity/count/shape and original hand-painted strategy-game cutout appearance, body proportions and three-quarter facing RIGHT camera. Do not redesign, mirror, make rear view, add weapons/limbs, floor/scene, effects, labels or interface. Complete figure, every root toe and horn tip uncut, leave 6 percent clear margin. Transparent background; if transparency is unavailable use a uniform light neutral gray, no shadow or checkerboard. POSE: the NEAR-leg lifted walking passing pose. The large FOREGROUND thigh on the left side of the standing reference is now lifted: near knee bends UP under the belly toward screen RIGHT, near root foot hangs CLEARLY OFF THE GROUND, visible in front of the far shin. The FAR leg remains straight and planted under the torso, supporting the full weight. Exactly one lifted root foot and one planted root foot; keep the lifted knee and foot visibly connected to the large near hip and don't lift the back leg instead. Torso upright facing right, closed fists gently counter-swing. No charge, no weapon action.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+          "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+        }
+      ],
+      "review": "Selected NEAR-foot-lift passing pose; despite filename it is not the missing far-foot passing. Foreground thigh flexes and far leg bears weight."
+    },
+    {
+      "source": "ram-windup.png",
+      "sha256": "8adbf3b90d41a1c390599e76d2e00f0236da3d06bcf25ca8b209867f7e3e3dec",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-71f459c7-65e2-470b-9923-8e40e8f83690.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Edit the supplied original game creature reference into ONE new animation pose, not a sheet. Maintain the EXACT same Thornwake Canopy Rammer: hulking moss-covered bark humanoid, exactly TWO thick wooden legs with root feet and TWO arms with huge closed wooden fists, amber cracks, pale lichen patches, leafy shoulder canopy. Head anatomy locked: TWO long pointed horns projecting forward/up toward screen RIGHT, plus TWO upright rear branch antlers with the same small offshoots/leaves. Preserve horn identity/count/shape and original hand-painted strategy-game cutout appearance, body proportions and three-quarter facing RIGHT camera. Do not redesign, mirror, make rear view, add weapons/limbs, floor/scene, effects, labels or interface. Complete figure, every root toe and horn tip uncut, leave 6 percent clear margin. Transparent background; if transparency is unavailable use a uniform light neutral gray, no shadow or checkerboard. POSE: anticipation for a head-first horn ram toward screen RIGHT. BOTH root feet remain firmly planted in a broad support stance, knees flexed. Lean the upper trunk and head BACK to screen LEFT, draw the fists back close beside the ribcage, chin tucked and both long front horns still pointing forward-right. Preserve the four original horns exactly (two long front tusk-horns, two smaller upright rear antlers). Clear gathering of weight through hips and bent knees, not a strike yet. Do not turn the body away.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+          "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+        }
+      ],
+      "review": "Flexed-knee anticipation with fists gathered and original four-horn head; actual timing/readability unaccepted."
+    },
+    {
+      "source": "ram-contact.png",
+      "sha256": "ce8e3e66578cddc87a5f62ab7774bcda63297dd6aceb18493077a7f64572830e",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-33b8c267-3b9a-4e84-a6c2-b4f3ac36b9b8.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Create ONE original battle sprite animation pose by editing the supplied Canopy Rammer reference. Exact same hand-painted mossy bark monster, same warm wood/amber seams/pale lichen, 2 arms ending in oversized fists, 2 thick root legs, leafy shoulder canopy. Keep the original four-horn head identity: two long forward-curved pointed horns aimed toward screen RIGHT, two shorter upright rear branch antlers. Exact same right-facing three-quarter camera and bodily proportions. No redesign or mirrors, no additional creature, weapon, effects, ground, text or panels. Whole figure including every horn and root toe with ample uncropped margin on every side. Transparent background or flat neutral light gray if transparency unavailable; no checker. POSE: powerful HEAD-FIRST RAM CONTACT toward screen RIGHT. Clear silhouette change: hips low, knees bent, trunk leaning diagonally FORWARD-right by about 35 degrees, head lowered, both front horns projecting mostly HORIZONTALLY RIGHT ready to hit an unseen enemy. The rear antlers rotate with the SAME head, not replaced by new horns. Both root feet stay planted, left/rear leg pushes, right/front knee receives weight. Fists tucked near ribs, don't turn this into a punch. Show effort through body articulation, no speed streaks, no impact graphics, no enemy. Give the extended horns enough room on the right.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+          "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+        }
+      ],
+      "review": "Forward/downward body and head ram toward screen-right with both long horns retained and feet planted."
+    },
+    {
+      "source": "hit-recoil.png",
+      "sha256": "569d2b09a5a3fb6c347dfec04caea2deec334982b8c0da1c3bc513a4c86766d0",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f5a80f1d-38bd-49a1-bd09-b8dbcd81dffb.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Create ONE original battle sprite animation pose by editing the supplied Canopy Rammer reference. Exact same hand-painted mossy bark monster, same warm wood/amber seams/pale lichen, 2 arms ending in oversized fists, 2 thick root legs, leafy shoulder canopy. Keep the original four-horn head identity: two long forward-curved pointed horns aimed toward screen RIGHT, two shorter upright rear branch antlers. Exact same right-facing three-quarter camera and bodily proportions. No redesign or mirrors, no additional creature, weapon, effects, ground, text or panels. Whole figure including every horn and root toe with ample uncropped margin on every side. Transparent background or flat neutral light gray if transparency unavailable; no checker. POSE: reacting to a hit from the RIGHT. Both feet planted but knees buckling; upper chest and head recoil distinctly BACK toward screen LEFT, fists move apart with elbows flexed, shoulders recoiling. Keep the creature facing RIGHT, four horns rotate backward with its head, no rotation toward camera or rear. No blood, wound graphics or magic effect. Full two feet and two hands.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+          "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+        }
+      ],
+      "review": "Backward recoil with intact limbs; overlapping horns are occluded rather than dropped."
+    },
+    {
+      "source": "guard-breath.png",
+      "sha256": "5c80fc4c440731bb819b46c2ecc00fe27ccae5a11390f3a00a847bfa97866080",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ae1c4f76-5ad7-4d78-9183-b8a5e5e3ffc6.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Create ONE original battle sprite animation pose by editing the supplied Canopy Rammer reference. Exact same hand-painted mossy bark monster, same warm wood/amber seams/pale lichen, 2 arms ending in oversized fists, 2 thick root legs, leafy shoulder canopy. Keep the original four-horn head identity: two long forward-curved pointed horns aimed toward screen RIGHT, two shorter upright rear branch antlers. Exact same right-facing three-quarter camera and bodily proportions. No redesign or mirrors, no additional creature, weapon, effects, ground, text or panels. Whole figure including every horn and root toe with ample uncropped margin on every side. Transparent background or flat neutral light gray if transparency unavailable; no checker. POSE: the next subtle breathing frame in the supplied crossed-arm defensive guard. Keep BOTH fists/forearms crossed in exactly the same guarding relationship in front of the chest, both wide-spaced feet planted, same head angle and head-horn occlusion. A small shoulder settling and slightly shifted hanging leaves, not a different stance, no extra hands. Preserve the large guarded body's silhouette and scale.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/guard-reference-light.png",
+          "sha256": "9eb7d9df8ad479527e68d25bcb45b77cc07033f41cb820b2d1151e92f7440648"
+        }
+      ],
+      "review": "Adjacent original crossed-arm guard settling, not a new defensive stance."
+    },
+    {
+      "source": "guided-opposite-contact.png",
+      "sha256": "07aa14ea59bac6dbd15dea79d1a501791f61d3f0db063bd573c2e0cdf4044238",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-f2c994ae-a6dc-4bc4-a033-9bdadb8262eb.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Use IMAGE ONE as the PRIMARY POSE GUIDE, replacing the simple figure with the original painted forest monster in IMAGE TWO. Image TWO supplies ONLY appearance and fixed RIGHT-facing three-quarter camera, NOT its standing leg arrangement. Final is one full-body Canopy Rammer sprite: massive mossy bark body, exactly two thick wooden root legs, two enormous closed-fist arms, pale lichen, amber cracks, leafy shoulder canopy, same four-horn head (two long forward upward horns and two upright rear antlers). Full uncut horns and toes with margin. Original hand-painted game cutout, NOT a diagram. NO BLUE/ORANGE COLOR IN FINAL, no lines, labels, guide, floor, shadow, effects or background scene. Put figure on clean uniform white if genuine transparent alpha unavailable. Keep upper body same reference identity, fists low, looking RIGHT, NOT mirrored. The large foreground/near leg has the broad lichen-covered thigh from reference's LEFT HIP; its entire chain must follow BLUE in guide. The other leg from rear/right hip follows ORANGE and is behind near limb in overlap. POSE EXACTLY guide B contact: BLUE/NEAR hip to knee slopes down LEFT and its big root foot is grounded far LEFT BEHIND hips; ORANGE/FAR leg extends diagonally down RIGHT, its foot grounded far RIGHT IN FRONT of hips. Both feet planted, clearly separated. The foreground thigh must slope down-left, not travel across the belly to the right foot. Do not reverse the leg ownership or change the torso view.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+          "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+        }
+      ],
+      "review": "Diagram-first B contact puts the near foreground leg backward/left and far foot forward/right without mirroring the body."
+    },
+    {
+      "source": "guided-far-passing.png",
+      "sha256": "8b6416f1e2529b5a57cc0464627ae586f828663697917e03e637b1633e9da81c",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-4c4ff34c-3a18-43bc-9b6d-36ff12f213c1.png",
+      "selected": false,
+      "selected_source_indices": [],
+      "prompt": "Use IMAGE ONE as the PRIMARY POSE GUIDE, replacing the simple figure with the original painted forest monster in IMAGE TWO. Image TWO supplies ONLY appearance and fixed RIGHT-facing three-quarter camera, NOT its standing leg arrangement. Final is one full-body Canopy Rammer sprite: massive mossy bark body, exactly two thick wooden root legs, two enormous closed-fist arms, pale lichen, amber cracks, leafy shoulder canopy, same four-horn head (two long forward upward horns and two upright rear antlers). Full uncut horns and toes with margin. Original hand-painted game cutout, NOT a diagram. NO BLUE/ORANGE COLOR IN FINAL, no lines, labels, guide, floor, shadow, effects or background scene. Put figure on clean uniform white if genuine transparent alpha unavailable. Keep upper body same reference identity, fists low, looking RIGHT, NOT mirrored. The large foreground/near leg has the broad lichen-covered thigh from reference's LEFT HIP; its entire chain must follow BLUE in guide. The other leg from rear/right hip follows ORANGE and is behind near limb in overlap. POSE EXACTLY guide A passing: BLUE/NEAR foreground leg stays straight and weight-bearing, big root foot GROUNDED below hips. ORANGE/FAR leg behind bends at the knee UP toward RIGHT, smaller root foot curled BACK above the ground behind the foreground shin. Its foot and knee are clearly lifted while the large foreground leg stays planted. Exactly one small far foot raised; do not raise the large foreground thigh/foot.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+          "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+        }
+      ],
+      "review": "Unselected slender guided far-passing precursor: correct limb ownership but too narrow/stretched beside atlas neighbors. Retained as input to body-mass correction."
+    },
+    {
+      "source": "far-passing-stout.png",
+      "sha256": "9cf8982052552c1c4e8bf5307e8a69f2ce370e3f482148312b0318ff7a0fd6a3",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-b28c3ed4-ca53-4d59-a8c1-699bdb2bd66b.png",
+      "selected": true,
+      "selected_source_indices": [
+        0
+      ],
+      "prompt": "Refine the body proportions of IMAGE ONE, the original Canopy Rammer FAR-FOOT-LIFT animation pose. IMAGE TWO is the SAME creature's authoritative stout body reference. Preserve IMAGE ONE's correct leg ownership: large FOREGROUND leg is the ONLY planted support, smaller FAR leg bent and lifted behind it, far foot visible off-ground to screen LEFT of the support shin. Do NOT swap which foot is raised, add a third leg, rotate or mirror the body. Correct the overly slender upright stretched figure: restore IMAGE TWO's broad bulky shoulder canopy, thick barrel chest, oversized heavy fists, very thick short wooden thighs and squat root shins. Flex the planted foreground knee modestly to carry weight at the same hip height as the reference; it remains grounded. The lifted far foot remains clear of the ground. Keep the full original four-horn head (two long curved forward horns plus two rear antlers), bark/lichen/amber crack details, RIGHT-facing three-quarter camera and original hand-painted fantasy game appearance. This is a hulking stump-like biped, not a slim tall humanoid. Keep the torso's original mass and head size while changing only the weight-bearing leg pose. Full-body ONE sprite, all horns and toes uncut with generous margins, clean uniform WHITE background, no checker, no ground, shadow, guide marks, labels, weapon, scenery or effects.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/guided-far-passing.png",
+          "sha256": "8b6416f1e2529b5a57cc0464627ae586f828663697917e03e637b1633e9da81c"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_canopy_rammers/standing-reference-light.png",
+          "sha256": "c00f921b517930b9cb41a5378e9d07cee8ca9af6638d2743fbffec5978f04bf9"
+        }
+      ],
+      "review": "Selected body-mass refinement restores broad torso, thick fists and squat flexed support leg while keeping far foot lifted. Original pose and identity supplied together; no local warp."
+    }
+  ]
+}

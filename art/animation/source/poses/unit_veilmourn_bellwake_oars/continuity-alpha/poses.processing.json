@@ -1,0 +1,66 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "poses",
+  "source": "art/animation/source/poses/unit_veilmourn_bellwake_oars/poses.png",
+  "source_sha256": "343406009c5be4de718b1a0d76c6d3c1ee1a9d4e45325abf61ed491d65b79445",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-alpha/poses.png",
+  "output_sha256": "5b148e052540660e5e380758ce509ae2c82d448d3608a1f2ca12765e6a5ffab7",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_bellwake_oars/continuity-cutouts.json",
+  "recipe_sha256": "94730b816b771e2e08bcb87e7daeddb08f2628f41f0252fb8d4f7773b469a42f",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        526,
+        151
+      ],
+      [
+        92,
+        458
+      ],
+      [
+        436,
+        804
+      ],
+      [
+        515,
+        431
+      ],
+      [
+        810,
+        470
+      ],
+      [
+        785,
+        492
+      ],
+      [
+        942,
+        534
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1108535,
+    "edge_pixels": 30421,
+    "unchanged_paint_pixels": 433908,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

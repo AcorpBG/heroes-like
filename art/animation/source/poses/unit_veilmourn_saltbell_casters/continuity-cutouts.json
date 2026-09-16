@@ -1,0 +1,671 @@
+{
+  "schema_id": "original_battle_cutout_recipe_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "jobs": [
+    {
+      "id": "poses",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/poses.png",
+      "source_sha256": "b2b54e1b68fd78d9f1ee4f4feab5eacc50f2b8a4be5ce93ea8e3eb13e13cdd66",
+      "output": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/poses.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 16,
+        "edge_radius": 2,
+        "background_seeds": []
+      }
+    },
+    {
+      "id": "poses-magenta-matte",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/poses-magenta-matte.png",
+      "source_sha256": "28a4ef12c7017c9703bf7743ecce647a9ec198eabd3c5e26f192b83b146c2335",
+      "output": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/poses-magenta-matte.png",
+      "matte": {
+        "mode": "color_distance",
+        "color": [
+          210,
+          0,
+          210
+        ],
+        "distance": 128,
+        "edge_radius": 4,
+        "all_keyed_is_background": true,
+        "max_edge_residual": 80
+      }
+    },
+    {
+      "id": "poses-preserved-ivory",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/poses.png",
+      "source_sha256": "b2b54e1b68fd78d9f1ee4f4feab5eacc50f2b8a4be5ce93ea8e3eb13e13cdd66",
+      "output": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/poses-preserved-ivory.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 2,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            500,
+            185
+          ],
+          [
+            489,
+            158
+          ],
+          [
+            530,
+            150
+          ],
+          [
+            121,
+            168
+          ],
+          [
+            97,
+            720
+          ],
+          [
+            917,
+            965
+          ],
+          [
+            1320,
+            967
+          ]
+        ]
+      }
+    },
+    {
+      "id": "guided-walk-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/guided-walk-and-guards.png",
+      "source_sha256": "e8331977b7094faef41a3494e3f53ae2702c46ec484a4f22f2d8a07e18f8ece4",
+      "output": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/guided-walk-and-guards.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 8,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            99,
+            79
+          ],
+          [
+            82,
+            111
+          ],
+          [
+            170,
+            81
+          ],
+          [
+            613,
+            86
+          ],
+          [
+            595,
+            114
+          ],
+          [
+            642,
+            90
+          ],
+          [
+            1155,
+            124
+          ],
+          [
+            1140,
+            153
+          ],
+          [
+            1185,
+            192
+          ],
+          [
+            1207,
+            105
+          ],
+          [
+            122,
+            574
+          ],
+          [
+            104,
+            605
+          ],
+          [
+            182,
+            579
+          ],
+          [
+            659,
+            600
+          ],
+          [
+            642,
+            622
+          ],
+          [
+            678,
+            589
+          ],
+          [
+            1177,
+            638
+          ],
+          [
+            1156,
+            670
+          ],
+          [
+            1196,
+            616
+          ],
+          [
+            89,
+            110
+          ],
+          [
+            112,
+            72
+          ],
+          [
+            170,
+            89
+          ],
+          [
+            602,
+            107
+          ],
+          [
+            1193,
+            198
+          ],
+          [
+            1210,
+            208
+          ],
+          [
+            1157,
+            129
+          ],
+          [
+            123,
+            594
+          ],
+          [
+            175,
+            578
+          ],
+          [
+            650,
+            632
+          ],
+          [
+            677,
+            600
+          ],
+          [
+            1180,
+            655
+          ],
+          [
+            1200,
+            626
+          ],
+          [
+            110,
+            85
+          ],
+          [
+            112,
+            65
+          ],
+          [
+            105,
+            82
+          ],
+          [
+            99,
+            101
+          ],
+          [
+            109,
+            114
+          ],
+          [
+            610,
+            95
+          ],
+          [
+            1145,
+            112
+          ],
+          [
+            1204,
+            201
+          ],
+          [
+            122,
+            584
+          ],
+          [
+            140,
+            569
+          ]
+        ],
+        "protected_polygons": [
+          [
+            [
+              249,
+              28
+            ],
+            [
+              263,
+              25
+            ],
+            [
+              277,
+              26
+            ],
+            [
+              280,
+              32
+            ],
+            [
+              273,
+              41
+            ],
+            [
+              257,
+              48
+            ],
+            [
+              247,
+              43
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "id": "continuous-rope-melee-and-cast",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuous-rope-melee-and-cast.png",
+      "source_sha256": "3d967226dcb0492f62806363f57cb7d3ce4d8cd9bb004dbf40fc622bcf12c3da",
+      "output": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/continuous-rope-melee-and-cast.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 8,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            205,
+            354
+          ],
+          [
+            187,
+            355
+          ],
+          [
+            241,
+            316
+          ],
+          [
+            748,
+            161
+          ],
+          [
+            728,
+            194
+          ],
+          [
+            771,
+            133
+          ],
+          [
+            811,
+            333
+          ],
+          [
+            447,
+            815
+          ],
+          [
+            462,
+            826
+          ],
+          [
+            433,
+            825
+          ],
+          [
+            924,
+            846
+          ],
+          [
+            914,
+            865
+          ],
+          [
+            1052,
+            904
+          ],
+          [
+            215,
+            349
+          ],
+          [
+            447,
+            845
+          ],
+          [
+            764,
+            177
+          ],
+          [
+            213,
+            365
+          ],
+          [
+            448,
+            847
+          ]
+        ],
+        "background_regions": [
+          {
+            "polygon": [
+              [
+                433,
+                829
+              ],
+              [
+                458,
+                817
+              ],
+              [
+                458,
+                851
+              ],
+              [
+                436,
+                851
+              ]
+            ],
+            "minimum": 180,
+            "tolerance": 24,
+            "seed": [
+              448,
+              847
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "idle-and-equipped-collapse",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-and-equipped-collapse.png",
+      "source_sha256": "092123f7c46f48014bec3fea05604bca9a502667750d61262b9cd0ba8961cecd",
+      "output": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/idle-and-equipped-collapse.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 8,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            152,
+            300
+          ],
+          [
+            166,
+            310
+          ],
+          [
+            150,
+            320
+          ],
+          [
+            178,
+            295
+          ],
+          [
+            184,
+            248
+          ],
+          [
+            642,
+            303
+          ],
+          [
+            626,
+            312
+          ],
+          [
+            655,
+            270
+          ],
+          [
+            674,
+            254
+          ],
+          [
+            1328,
+            508
+          ],
+          [
+            1350,
+            506
+          ],
+          [
+            1380,
+            483
+          ],
+          [
+            1410,
+            477
+          ],
+          [
+            660,
+            706
+          ],
+          [
+            635,
+            718
+          ],
+          [
+            627,
+            738
+          ],
+          [
+            691,
+            730
+          ],
+          [
+            281,
+            925
+          ],
+          [
+            270,
+            937
+          ],
+          [
+            318,
+            950
+          ],
+          [
+            366,
+            943
+          ],
+          [
+            411,
+            945
+          ],
+          [
+            1172,
+            950
+          ],
+          [
+            1189,
+            960
+          ],
+          [
+            1235,
+            955
+          ],
+          [
+            1281,
+            960
+          ],
+          [
+            1325,
+            956
+          ],
+          [
+            1362,
+            968
+          ],
+          [
+            175,
+            278
+          ],
+          [
+            142,
+            307
+          ],
+          [
+            154,
+            303
+          ],
+          [
+            181,
+            280
+          ],
+          [
+            676,
+            711
+          ],
+          [
+            696,
+            713
+          ],
+          [
+            1408,
+            943
+          ],
+          [
+            1421,
+            949
+          ],
+          [
+            164,
+            291
+          ],
+          [
+            166,
+            282
+          ],
+          [
+            153,
+            313
+          ],
+          [
+            140,
+            316
+          ],
+          [
+            676,
+            719
+          ],
+          [
+            688,
+            711
+          ]
+        ],
+        "protected_polygons": [
+          [
+            [
+              266,
+              23
+            ],
+            [
+              280,
+              22
+            ],
+            [
+              298,
+              27
+            ],
+            [
+              306,
+              34
+            ],
+            [
+              289,
+              40
+            ],
+            [
+              275,
+              36
+            ],
+            [
+              268,
+              41
+            ],
+            [
+              263,
+              33
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "id": "idle-collapse-correct-hand",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-collapse-correct-hand.png",
+      "source_sha256": "47c076dc686cdf9cce2a2cb7851dca7ee23637e586079fb6349f0b86ca0e4d3a",
+      "output": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/idle-collapse-correct-hand.png",
+      "matte": {
+        "mode": "neutral",
+        "minimum": 175,
+        "tolerance": 8,
+        "edge_radius": 2,
+        "background_seeds": [
+          [
+            1156,
+            466
+          ],
+          [
+            1176,
+            441
+          ],
+          [
+            1164,
+            461
+          ],
+          [
+            1197,
+            503
+          ],
+          [
+            1218,
+            508
+          ],
+          [
+            1140,
+            507
+          ],
+          [
+            1129,
+            462
+          ],
+          [
+            1183,
+            433
+          ]
+        ]
+      }
+    }
+  ]
+}

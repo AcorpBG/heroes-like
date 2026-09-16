@@ -1,0 +1,66 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "bramble-downstroke",
+  "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/flight-downstroke-matched.png",
+  "source_sha256": "dce2044d5b894923713d8aae445f63eb94ea26fdff30fb1f36b22bd86e2f4499",
+  "source_rect": [
+    0,
+    0,
+    1312,
+    1199
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/flight-downstroke-matched.png",
+  "output_sha256": "a1e337e84ae7eacef98c11ab89f7bc65213aa0a1d1034f6b7116a48f7d5b91bd",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-cutouts.json",
+  "recipe_sha256": "215940edc0efbc9eeb7d184f3d8b7bac9d28270ffbde13d8baa879faddd8ae16",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        800,
+        699
+      ],
+      [
+        810,
+        783
+      ],
+      [
+        573,
+        567
+      ],
+      [
+        807,
+        664
+      ],
+      [
+        482,
+        745
+      ],
+      [
+        456,
+        883
+      ],
+      [
+        678,
+        808
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1153626,
+    "edge_pixels": 15057,
+    "unchanged_paint_pixels": 404405,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

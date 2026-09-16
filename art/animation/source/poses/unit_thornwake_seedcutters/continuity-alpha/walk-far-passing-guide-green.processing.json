@@ -1,0 +1,41 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "seedcutter-walk-far-passing-guide-green",
+  "source": "art/animation/source/poses/unit_thornwake_seedcutters/walk-far-passing-guide-green.png",
+  "source_sha256": "2dbea73a5ba5eedc238b9ec204d9a6ca0d1da8341b5a387177549f64808aedbd",
+  "source_rect": [
+    0,
+    0,
+    1071,
+    1469
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_seedcutters/continuity-alpha/walk-far-passing-guide-green.png",
+  "output_sha256": "74c2cc3bb9a9220086b8679559dc1d842dc8171bbe312bd7cc35b251cbb697f2",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_seedcutters/continuity-cutouts.json",
+  "recipe_sha256": "0be91b73d006f85dd9962b6089063b178046df5acebd6949b1abfa75bc0a5d84",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "distance": 75,
+    "edge_radius": 2,
+    "all_keyed_is_background": true
+  },
+  "measurements": {
+    "removed_background_pixels": 1088240,
+    "edge_pixels": 6080,
+    "unchanged_paint_pixels": 478979,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,94 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "guided-gathered-chain-and-guards",
+  "source": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/guided-gathered-chain-and-guards.png",
+  "source_sha256": "30089cea6c52bb60ed72208f97bf0254ec1e1e8e0c255ebe202db5bc57926c88",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-alpha/guided-gathered-chain-and-guards.png",
+  "output_sha256": "7890710e1fe20f7e28046eedb2409aa87e1a4a91331a2673c43d8f9468be0538",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/continuity-cutouts.json",
+  "recipe_sha256": "8881d7551c7c06907d9bcb77862a727352dc031cd06f7c0c47c60ad43932cc39",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        206,
+        217
+      ],
+      [
+        338,
+        240
+      ],
+      [
+        691,
+        238
+      ],
+      [
+        836,
+        254
+      ],
+      [
+        1185,
+        240
+      ],
+      [
+        1351,
+        265
+      ],
+      [
+        194,
+        759
+      ],
+      [
+        337,
+        759
+      ],
+      [
+        710,
+        711
+      ],
+      [
+        851,
+        766
+      ],
+      [
+        1379,
+        786
+      ],
+      [
+        325,
+        273
+      ],
+      [
+        826,
+        278
+      ],
+      [
+        1367,
+        271
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 994527,
+    "edge_pixels": 28931,
+    "unchanged_paint_pixels": 549406,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and exact recipes, no invented or warped poses.",
+  "id": "stag-hind-contact",
+  "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/gallop-hind-contact.png",
+  "source_sha256": "0c3958c22f960c42795da76a1db3eb969b81b78b460beebfb2e16906505baee0",
+  "source_rect": [
+    0,
+    0,
+    1232,
+    1277
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-alpha/gallop-hind-contact.png",
+  "output_sha256": "397b74344fe0d2f38e27ec2a8da570fabd9278fa18142a4993ccf83d6900c713",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-cutouts.json",
+  "recipe_sha256": "cb51bae95d10d82ad805a620a160dddaca8cea591fcc72fa469c60d50809403b",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 115,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        978,
+        208
+      ],
+      [
+        741,
+        278
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1113511,
+    "edge_pixels": 15570,
+    "unchanged_paint_pixels": 444183,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

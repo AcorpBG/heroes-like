@@ -1,0 +1,42 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved deterministic matte and narrow-edge cleanup of original generated art on 2026-09-15; no local pose synthesis.",
+  "id": "poses-magenta-matte",
+  "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/poses-magenta-matte.png",
+  "source_sha256": "28a4ef12c7017c9703bf7743ecce647a9ec198eabd3c5e26f192b83b146c2335",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-alpha/poses-magenta-matte.png",
+  "output_sha256": "df9ae6c6b231bb4f0aee3164dc36598a6f8eb33bce9a534176446c58e99da882",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuity-cutouts.json",
+  "recipe_sha256": "9c7e4c3898f2e4f51850efc5a77a8aad52bfed82a390d7ec9f070fa7db3701c7",
+  "parameters": {
+    "mode": "color_distance",
+    "color": [
+      210,
+      0,
+      210
+    ],
+    "distance": 128,
+    "edge_radius": 4,
+    "all_keyed_is_background": true,
+    "max_edge_residual": 80
+  },
+  "measurements": {
+    "removed_background_pixels": 1105714,
+    "edge_pixels": 44594,
+    "unchanged_paint_pixels": 422556,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,54 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "worldroot-step-fore-left",
+  "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/step-fore-left.png",
+  "source_sha256": "fcd805b8c821c5d95d2aabbeb3787e8a9813cc320e2fcb82887a575a95d05ea0",
+  "source_rect": [
+    0,
+    0,
+    1293,
+    1216
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-fore-left.png",
+  "output_sha256": "c0d907fb82865434802b7dbc2478a4bb8b5c0c936c3e8c5664852175b8549160",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-cutouts.json",
+  "recipe_sha256": "8e2e9e2f0e2264781cc7e9326cbc44786442a7f185a2e44373c15a2e8895ef49",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 120,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        317,
+        337
+      ],
+      [
+        370,
+        336
+      ],
+      [
+        1016,
+        745
+      ],
+      [
+        567,
+        708
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 717666,
+    "edge_pixels": 13230,
+    "unchanged_paint_pixels": 841392,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

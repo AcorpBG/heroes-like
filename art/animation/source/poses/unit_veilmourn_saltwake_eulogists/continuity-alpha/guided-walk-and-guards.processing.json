@@ -1,0 +1,37 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Explicit approval for deterministic background and edge cleanup; preserve original paint and poses.",
+  "id": "guided-walk-and-guards",
+  "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/guided-walk-and-guards.png",
+  "source_sha256": "fb66d83a246d3152cd68e4399a167ad62a5d0d981232ceaa41900aa686d24050",
+  "source_rect": [
+    0,
+    0,
+    1536,
+    1024
+  ],
+  "output": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards.png",
+  "output_sha256": "b53ea563fa0837cc1c03d92fdd3cfb23f0ae63a040a60198a0210dc514ae584c",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-cutouts.json",
+  "recipe_sha256": "7f62887079812e3dc278f195c8df98b48c597d2614d057d16123ace886c9c715",
+  "parameters": {
+    "minimum": 145,
+    "tolerance": 12,
+    "edge_radius": 2,
+    "background_seeds": [],
+    "protected_polygons": []
+  },
+  "measurements": {
+    "removed_background_pixels": 941397,
+    "edge_pixels": 21883,
+    "unchanged_paint_pixels": 609584,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

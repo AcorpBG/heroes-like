@@ -1,0 +1,191 @@
+{
+  "unit_id": "unit_thornwake_dawnseed_bolters",
+  "output": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/candidate-atlas.png",
+  "sha256": "15436880dacc9c17c7e41209b486e4e096a1228929b76c147cd1788988b317b6",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle",
+      "index": 0,
+      "alpha_bounds": [
+        190,
+        29,
+        371,
+        239
+      ]
+    },
+    {
+      "name": "idle_breath",
+      "index": 1,
+      "alpha_bounds": [
+        185,
+        30,
+        368,
+        240
+      ]
+    },
+    {
+      "name": "near_contact",
+      "index": 2,
+      "alpha_bounds": [
+        180,
+        30,
+        363,
+        238
+      ]
+    },
+    {
+      "name": "far_passing",
+      "index": 3,
+      "alpha_bounds": [
+        188,
+        29,
+        365,
+        239
+      ]
+    },
+    {
+      "name": "far_contact",
+      "index": 4,
+      "alpha_bounds": [
+        176,
+        29,
+        366,
+        238
+      ]
+    },
+    {
+      "name": "near_passing",
+      "index": 5,
+      "alpha_bounds": [
+        182,
+        23,
+        363,
+        238
+      ]
+    },
+    {
+      "name": "melee_windup",
+      "index": 6,
+      "alpha_bounds": [
+        160,
+        34,
+        376,
+        240
+      ]
+    },
+    {
+      "name": "melee_contact",
+      "index": 7,
+      "alpha_bounds": [
+        173,
+        26,
+        368,
+        238
+      ]
+    },
+    {
+      "name": "guard",
+      "index": 8,
+      "alpha_bounds": [
+        164,
+        62,
+        356,
+        241
+      ]
+    },
+    {
+      "name": "guard_braced",
+      "index": 9,
+      "alpha_bounds": [
+        147,
+        63,
+        357,
+        239
+      ]
+    },
+    {
+      "name": "ranged_aim",
+      "index": 10,
+      "alpha_bounds": [
+        172,
+        43,
+        381,
+        241
+      ]
+    },
+    {
+      "name": "ranged_release",
+      "index": 11,
+      "alpha_bounds": [
+        161,
+        44,
+        355,
+        241
+      ]
+    },
+    {
+      "name": "ranged_reload",
+      "index": 12,
+      "alpha_bounds": [
+        168,
+        40,
+        357,
+        240
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 13,
+      "alpha_bounds": [
+        119,
+        41,
+        339,
+        241
+      ]
+    },
+    {
+      "name": "dying_buckle",
+      "index": 14,
+      "alpha_bounds": [
+        159,
+        41,
+        372,
+        240
+      ]
+    },
+    {
+      "name": "dying_kneel",
+      "index": 15,
+      "alpha_bounds": [
+        171,
+        55,
+        375,
+        240
+      ]
+    },
+    {
+      "name": "dead",
+      "index": 16,
+      "alpha_bounds": [
+        137,
+        135,
+        371,
+        239
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-alpha/original.png": "dcd7a14d2a542df1ff866aebdb44c2e7f68abd642be0ae54a6bb5dfe243c709c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-alpha/near-contact-unfolded.png": "4de349d8fcff67838c31552ff422734baa8653c2404110ef735c4c49f4fa509c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-alpha/walk-1.png": "82d2b3d68b733311bce61371bfbfacc3dcf4d216df5fd8e9a562a0fc334a56bf",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-alpha/walk-2.png": "61b8a16b16189d58368c8d65e96bdc1c4be0dbd2ac9b1fd19d5d14986c581c26",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-alpha/walk-3.png": "30d022bca8d8a2c17911895c3330b99b2924c7a9ff9a53e4df38e1d6ed6d979c",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-alpha/punch-contact.png": "de91f669934a7612a09f6c6c13361a56016a67c8e6c45bc31b190b6cb0b8d980",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-alpha/guard-braced.png": "bcc1edd468620565114a29de2d28344a17e045a60980b65cbdf93434322b65f9",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_thornwake_dawnseed_bolters/continuity-alpha/death-inert-pair.png": "865fae209e217e71b845d1adb3ab341fde68339b49404750f8eba9034e1534c9"
+  }
+}

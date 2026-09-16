@@ -1,0 +1,126 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_saltbell_casters",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "poses-magenta-matte",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/poses-magenta-matte.png",
+      "source_sha256": "28a4ef12c7017c9703bf7743ecce647a9ec198eabd3c5e26f192b83b146c2335",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a6b6c2f7-1470-4bcc-ad97-5df76bffe506.png",
+      "prompt": "Use case: precise-object-edit, background preparation only. This original 16-pose Saltbell Caster sheet is the exact edit target. Replace ONLY the gray/white checker background, including enclosed holes in rope coils and between arms, with a perfectly flat vivid MAGENTA #FF00FF matte. Preserve ALL painted character pixels, the complete ivory hood crowns, ragged ivory/navy clothing edges, light hair, pale sleeves, dark boots, brass bells, rope coils, poses, positions, 4x4 layout, proportions and canvas. Do not make clothing transparent or add magenta reflected light, glow, tint or fringes to the character. No repaint/restyle or alteration of faces, hands, rope paths or equipment. No texture on the matte, no checkerboard, no text or ground/shadows. All sixteen full figures and their existing gear remain exactly as painted.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_saltbell_casters/poses.png",
+          "sha256": "b2b54e1b68fd78d9f1ee4f4feab5eacc50f2b8a4be5ce93ea8e3eb13e13cdd66"
+        }
+      ],
+      "selected": false,
+      "selected_cells": [],
+      "notes": "Unselected: pink spill persists after bounded approved edge cleanup. Original source and derivative retained; no interior recoloring."
+    },
+    {
+      "id": "guided-walk-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/guided-walk-and-guards.png",
+      "source_sha256": "e8331977b7094faef41a3494e3f53ae2702c46ec484a4f22f2d8a07e18f8ece4",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-40fa897e-f634-4562-8519-f33b5df62711.png",
+      "prompt": "Use case: sketch-to-render. SIX complete original painted Saltbell Caster poses, 3 columns x2 rows with wide gutters. First FOUR figures follow the four input leg diagrams in order; input5 defines original character, palette, equipment and camera. 1 near RIGHT leg forward to screen RIGHT, far LEFT trails screen LEFT, near shin in FRONT. 2 near RIGHT planted under hip, far LEFT knee lifting with foot off ground. 3 far LEFT heel forward screen RIGHT, near RIGHT toe behind screen LEFT, near shin crosses IN FRONT toward screen LEFT. 4 far LEFT supporting, near RIGHT knee swings forward with foot lifted. Fixed 3/4 RIGHT-facing torso/head, never mirror costume. Paint original costume colors, not blue/orange guides. Last TWO figures: defensive low brace LEFT forearm protects upper chest/face, RIGHT hand retains gathered rope coil and bell near right shoulder; then compress same brace further with tucked chin. Original slim pale adult, intact ivory ragged hood/cloak, navy scarf/trousers, leather gloves, dark round knee plate, wrapped brown boots, rope belt with two small bronze bells. Exactly ONE large bronze mourning bell with navy tassel attached to continuous tan rope; gathered coil always in RIGHT hand. During travel gather it SHORT enough that bell stays above knee and clear of both moving legs, never drag the bell. Left hand free. Same bell size, hood, proportions, camera, light and brushwork. Entire figure/rope/bell inside each cell. Truly transparent background, no painted checkerboard or colored matte/fringe, no text, ground/shadow, magical effects or extra equipment.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/units/source/curated/unit_veilmourn_saltbell_casters.png",
+          "sha256": "0e433b71732ac76abdd51c14262095bccd75f8ee303b6aad1d033ebb911f0c27"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "notes": "Candidate selection pending packing, motion continuity and in-game acceptance."
+    },
+    {
+      "id": "continuous-rope-melee-and-cast",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/continuous-rope-melee-and-cast.png",
+      "source_sha256": "3d967226dcb0492f62806363f57cb7d3ce4d8cd9bb004dbf40fc622bcf12c3da",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-9f014fa3-492f-4673-b5b6-89c971354f76.png",
+      "prompt": "Use case: identity-preserve. FOUR complete original painted Saltbell Caster action poses, 2x2 grid, generous empty margins for entire bell/rope. Fixed 3/4 RIGHT-facing camera, constant body and bell size. Reference defines pale slim adult with ivory ragged hood/cloak, navy scarf/trousers, dark leather gloves, dark round knee plates, wrapped brown boots, two small belt bells. Exactly ONE large brass bell with navy tassel on ONE continuous tan rope; gathered remaining coil always stays in anatomical RIGHT hand (near arm). TOP LEFT melee wind-up: RIGHT hand retains coil and hanging bell low beside right hip; LEFT open palm draws close to chest with elbow bent, ready to shove screen RIGHT. No swinging rope. TOP RIGHT ranged anticipation: RIGHT arm raises coil behind right shoulder; same rope leaves RIGHT grip and makes one smooth arch overhead to suspended brass bell just above/front of head toward screen RIGHT; LEFT open hand extends forward for balance. BOTTOM LEFT ranged cast: RIGHT arm thrusts forward across chest toward screen RIGHT, coil still visibly at RIGHT fingers, continuous free rope leaves that SAME grip extending to bell farther screen RIGHT. LEFT arm extends BACK for balance with OPEN EMPTY hand, does not hold rope. Exactly one connected outgoing segment, no detached rope or duplicate bell, no glyph/particle effect. BOTTOM RIGHT retrieval: RIGHT hand draws original coil back beside chest; LEFT open fingers guide returning loose segment without taking coil ownership, bell hangs low ahead of knees, slack remains fully visible and contained. All limbs connected, exactly two hands/arms/legs, no long rope crossing into another cell, bell stays fully inside image with margin. Painterly original game art matching reference, no design changes. Genuine transparent background, no checkerboard, colored spill, ground shadow, labels, text or baked magical projectile.",
+      "references": [
+        {
+          "path": "art/units/source/curated/unit_veilmourn_saltbell_casters.png",
+          "sha256": "0e433b71732ac76abdd51c14262095bccd75f8ee303b6aad1d033ebb911f0c27"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "notes": "Candidate selection pending packing, motion continuity and in-game acceptance."
+    },
+    {
+      "id": "idle-and-equipped-collapse",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-and-equipped-collapse.png",
+      "source_sha256": "092123f7c46f48014bec3fea05604bca9a502667750d61262b9cd0ba8961cecd",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-61890a50-827c-4ae1-ae42-65035c0a780c.png",
+      "prompt": "Use case: identity-preserve. SIX complete original painted Saltbell Caster poses in 3 columns x2 rows, generous clean margins. Immutable reference identity: slim pale adult, loose light hair under intact ivory ragged hood/cloak, navy scarf/pants, dark leather gloves, dark round knee plates, wrapped brown boots, rope belt with TWO tiny brass bells. ONE large bronze mourning bell with navy tassel attached to ONE continuous tan rope gathered into coil in RIGHT hand; LEFT hand free. Fixed elevated 3/4 camera facing RIGHT, constant character and bell size, original painterly game style. TOP LEFT neutral idle: feet apart relaxed, right hand holds gathered rope and bell short beside hip clear of knees, left hand relaxed. TOP MIDDLE breathing idle: same feet/camera/grips, shoulders rise slightly, hood hem/hair settle differently, no new gear. TOP RIGHT hurt kneel: BOTH knees ground, head bows, right hand lowers large bell onto ground screen RIGHT before knees, LEFT hand presses chest, entire continuous coil/rope retained. BOTTOM LEFT intermediate collapse: tipping forward onto LEFT forearm with head going RIGHT, boots trailing LEFT, right hand loosens rope on ground leading to bell just ahead on RIGHT. BOTTOM MIDDLE alive MELEE palm shove: feet widely braced, LEFT empty palm thrust forward toward screen RIGHT, left elbow extending, torso leans into push; RIGHT hand retains coil and short-hanging bell low beside right hip without swinging the rope, no light effect. BOTTOM RIGHT persistent dead: follows the bottom-left fall, body lies fully horizontal head RIGHT feet LEFT, closed eyes and relaxed hands, large bell/tassel and entire slack rope on ground in front, no motion/glow. All bodies, boots, robes, rope and bell uncut and inside own cell, no gore, no detached pieces, no rigid standing cutout rotation. Genuinely transparent background with no checkerboard, colored matte, floor/shadows, captions or effects.",
+      "references": [
+        {
+          "path": "art/units/source/curated/unit_veilmourn_saltbell_casters.png",
+          "sha256": "0e433b71732ac76abdd51c14262095bccd75f8ee303b6aad1d033ebb911f0c27"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        3,
+        4,
+        5
+      ],
+      "notes": "Candidate selection pending packing, motion continuity and in-game acceptance."
+    },
+    {
+      "id": "idle-collapse-correct-hand",
+      "source": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-collapse-correct-hand.png",
+      "source_sha256": "47c076dc686cdf9cce2a2cb7851dca7ee23637e586079fb6349f0b86ca0e4d3a",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-c8be21cc-a853-4709-b819-eb659a1e26a2.png",
+      "prompt": "Use case: precise-object-edit. Edit target: supplied six-pose original Saltbell Caster animation sheet. Change ONLY the upper-right kneeling figure's arms and rope/bell placement to preserve the same equipment hand as the two standing figures at upper left. The anatomical RIGHT arm is the nearer arm on screen LEFT: lower that right arm beside the right knee, RIGHT fingers still gripping the rope coil. The single large bell and attached continuous loose rope rest on the floor on SCREEN LEFT beside that right knee. Anatomical LEFT arm, on screen RIGHT, folds across her chest with EMPTY hand. Keep the kneeling head, face, hood, torso, legs, body scale, cell position and outfit unchanged. Preserve the other five figures and their original pixels/composition unchanged, including bottom-left fall, bottom-middle empty LEFT palm shove and bottom-right equipped corpse. Keep all cells, all rope, hands and bell fully visible, no added props, no effects, no text. Genuine transparent RGBA background if possible; no colored matte, no color spill, no redesign or scene.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_saltbell_casters/idle-and-equipped-collapse.png",
+          "sha256": "092123f7c46f48014bec3fea05604bca9a502667750d61262b9cd0ba8961cecd"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        2
+      ],
+      "notes": "Only top-right kneel selected: right near-side hand retains coil; empty left hand at chest. Other five cells use the earlier source without this edit."
+    }
+  ]
+}

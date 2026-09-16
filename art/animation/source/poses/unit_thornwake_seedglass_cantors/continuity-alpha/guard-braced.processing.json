@@ -1,0 +1,74 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and narrow edge cleanup. Preserve original paint; no local pose invention or warping.",
+  "id": "seedglassGuard",
+  "source": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-guard-braced.png",
+  "source_sha256": "4a2a9e6c896dc70d5f6a394eec8b92c9a634a76f253f42173d0c221e605538a1",
+  "source_rect": [
+    0,
+    0,
+    1171,
+    1343
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-alpha/guard-braced.png",
+  "output_sha256": "be363cb5b4fbf9d41a18f79a4cd1eacb45335a656e15413fae37aaa78d868df4",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_seedglass_cantors/continuity-cutouts.json",
+  "recipe_sha256": "1552e4db4aea76b45ed7b14f6129b7cf444801e5f89b0ddae908b20b7aaf80f6",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        825,
+        823
+      ],
+      [
+        867,
+        539
+      ],
+      [
+        879,
+        837
+      ],
+      [
+        880,
+        982
+      ],
+      [
+        942,
+        806
+      ],
+      [
+        912,
+        287
+      ],
+      [
+        867,
+        226
+      ],
+      [
+        826,
+        1095
+      ],
+      [
+        978,
+        439
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 998352,
+    "edge_pixels": 11371,
+    "unchanged_paint_pixels": 562930,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

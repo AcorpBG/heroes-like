@@ -1,0 +1,58 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "worldroot-idle-breath",
+  "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/idle-breath.png",
+  "source_sha256": "c8d3baa201dd28eeab61929ce88fb321079ec1fe6e7d7b6acceeea81a8292835",
+  "source_rect": [
+    0,
+    0,
+    1293,
+    1216
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/idle-breath.png",
+  "output_sha256": "e6f3d1eab1daae5e4aa8e514dc86b0a3547d3f36471f220701fb72e3b88c45a3",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-cutouts.json",
+  "recipe_sha256": "8e2e9e2f0e2264781cc7e9326cbc44786442a7f185a2e44373c15a2e8895ef49",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 160,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        323,
+        322
+      ],
+      [
+        372,
+        319
+      ],
+      [
+        659,
+        829
+      ],
+      [
+        1024,
+        715
+      ],
+      [
+        243,
+        878
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 658428,
+    "edge_pixels": 8610,
+    "unchanged_paint_pixels": 905250,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

@@ -1,0 +1,166 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+  "output": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/candidate-atlas.png",
+  "sha256": "204a60f78417d0dbabe302410e0100997eff42b6fed90a33e39bb4887891c084",
+  "frame_size": [
+    512,
+    256
+  ],
+  "frames": [
+    {
+      "name": "idle_a",
+      "index": 0,
+      "alpha_bounds": [
+        179,
+        25,
+        345,
+        241
+      ]
+    },
+    {
+      "name": "idle_b",
+      "index": 1,
+      "alpha_bounds": [
+        175,
+        23,
+        340,
+        243
+      ]
+    },
+    {
+      "name": "contact_original",
+      "index": 2,
+      "alpha_bounds": [
+        176,
+        29,
+        344,
+        245
+      ]
+    },
+    {
+      "name": "passing_near_lift",
+      "index": 3,
+      "alpha_bounds": [
+        140,
+        17,
+        318,
+        241
+      ]
+    },
+    {
+      "name": "contact_planted",
+      "index": 4,
+      "alpha_bounds": [
+        152,
+        18,
+        342,
+        239
+      ]
+    },
+    {
+      "name": "passing_rear_lift",
+      "index": 5,
+      "alpha_bounds": [
+        153,
+        17,
+        353,
+        242
+      ]
+    },
+    {
+      "name": "attack_windup",
+      "index": 6,
+      "alpha_bounds": [
+        153,
+        33,
+        338,
+        244
+      ]
+    },
+    {
+      "name": "attack_hook_thrust",
+      "index": 7,
+      "alpha_bounds": [
+        165,
+        50,
+        387,
+        244
+      ]
+    },
+    {
+      "name": "attack_recover",
+      "index": 8,
+      "alpha_bounds": [
+        175,
+        30,
+        350,
+        242
+      ]
+    },
+    {
+      "name": "defend_original",
+      "index": 9,
+      "alpha_bounds": [
+        172,
+        70,
+        338,
+        244
+      ]
+    },
+    {
+      "name": "defend_brace",
+      "index": 10,
+      "alpha_bounds": [
+        169,
+        38,
+        368,
+        242
+      ]
+    },
+    {
+      "name": "hit",
+      "index": 11,
+      "alpha_bounds": [
+        168,
+        42,
+        345,
+        241
+      ]
+    },
+    {
+      "name": "death_kneel",
+      "index": 12,
+      "alpha_bounds": [
+        176,
+        72,
+        369,
+        247
+      ]
+    },
+    {
+      "name": "death_sidefall",
+      "index": 13,
+      "alpha_bounds": [
+        147,
+        120,
+        361,
+        252
+      ]
+    },
+    {
+      "name": "dead_equipped",
+      "index": 14,
+      "alpha_bounds": [
+        137,
+        150,
+        350,
+        255
+      ]
+    }
+  ],
+  "sources": {
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/poses.png": "ac0c263796b35ca33e4c033d9b27b5ee2a5abb630526ffe74495352132d10f28",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/passing-and-recovery.png": "6295a6c6411722dec0907e33311823bc9faf4d985890d30ce34b7e066c0e8746",
+    "/root/dev/heroes-like/art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/contact-guide.png": "f45d0f9c614e5551951616d1996a6989a64a4876051364a005b2cbf3eca6a2e3"
+  }
+}

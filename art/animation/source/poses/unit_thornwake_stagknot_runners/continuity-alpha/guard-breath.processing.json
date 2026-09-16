@@ -1,0 +1,46 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and exact recipes, no invented or warped poses.",
+  "id": "stag-guard-breath",
+  "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/guard-breath.png",
+  "source_sha256": "85fea1a58552b179c704ce06c97e60ca49ea7f77cbb4f48112ef19a84b52ac66",
+  "source_rect": [
+    0,
+    0,
+    1444,
+    1089
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-alpha/guard-breath.png",
+  "output_sha256": "658d12761668a0af87eb657929fd29bc10a04658badfb74c1cf41567d173e9fc",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-cutouts.json",
+  "recipe_sha256": "cb51bae95d10d82ad805a620a160dddaca8cea591fcc72fa469c60d50809403b",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 160,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        916,
+        298
+      ],
+      [
+        1154,
+        370
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 1115112,
+    "edge_pixels": 11892,
+    "unchanged_paint_pixels": 445512,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

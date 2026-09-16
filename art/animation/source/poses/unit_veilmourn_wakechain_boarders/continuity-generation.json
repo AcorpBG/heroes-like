@@ -1,0 +1,61 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_wakechain_boarders",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "travel-recovery-and-head-right-fall",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/travel-recovery-and-head-right-fall.png",
+      "source_sha256": "6da183d540b8e7bcec3fbdc2962dcc181a8aba504d2d4d5c31825c64dd977143",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-a559df2f-959d-4a23-a886-3cbf2cf10f89.png",
+      "prompt": "Use case: stylized-concept. SIX original painted battle animation poses, THREE columns TWO rows, generous empty gutters, ALL full weapons/feet within each cell. Image1 exact TOP LEFT leg pose (far leg forward RIGHT, near leg back LEFT). Image2 exact TOP MIDDLE leg pose (far leg planted, near knee lifted forward with boot crossing shin). Image3 authoritative costume and body/camera reference, image4 detail. Same adult Wakechain Boarder woman ivory hood/navy scarf, silver armor, torn ivory/navy coat panels, armored boots, ONE amber belt lantern. RIGHT near hand controls a SINGLE continuous linked chain with ONE crescent hook at free end, blue cloth tied near that hook, excess chain gathered in RIGHT hand clear of knees. LEFT far hand ONE short crescent sickle. No disconnected chains, no hook appearing in other hand, no new props. Fixed elevated three-quarter camera facing RIGHT and identical anatomical scale. TOP LEFT: guide1 far-forward walking contact, chain gathered clear of leg sweep. TOP MIDDLE: guide2 supported knee-lift passing pose, chain gathered. TOP RIGHT: recovery after forward lash, right hand gathers slack back toward hip with chain hook descending in front and left sickle close to chest. BOTTOM LEFT: defensive crouch, left sickle forward guard, right hand holds gathered chain close, lantern retained. BOTTOM MIDDLE: dying fall toward screen RIGHT, head at right side and feet trailing left, right forearm and left knee approach ground, chain and sickle falling beside, lantern dark. BOTTOM RIGHT: next fall pose, same head-right feet-left orientation, torso almost on side on ground, both weapons/continuous chain beside, single belt lantern cold dark glass. Keep death equipment and anatomy matching bottom-right corpse of image3, NOT its reversed bottom-third fall. No gore. Genuine transparent RGBA backdrop no checker, background scenery, text, floor or shadows.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-2.png",
+          "sha256": "4c45da1ef3404f8e16c4c4f3c020010141b1ecc5aa2abdceb2340083f533901d"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-3.png",
+          "sha256": "fc35f31ea1f000035f9306641eb433ab7f26e732fe8a1d31a38235448632cca9"
+        },
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png",
+          "sha256": "2600066c7437ddb9a11bf5f4683a115d1d8a2090c5c46b69b53af6f09d90c19f"
+        },
+        {
+          "path": "art/units/source/curated/unit_veilmourn_wakechain_boarders.png",
+          "sha256": "a816f24a217b3d9eb35f7230b8f2bac76f674d4c0db4d3b08c609914688b9d06"
+        }
+      ],
+      "selected": false,
+      "selected_cells": [],
+      "notes": "Six poses retain continuous chain and single sickle. Head-right lowering/final body fixes old direction reversal; first fall lamp still lit and final dark. Contact still repeats lead; review travel timing and gear lengths."
+    },
+    {
+      "id": "travel-recovery-and-head-right-fall-green",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/travel-recovery-and-head-right-fall-green.png",
+      "source_sha256": "f7e7abe0cd405b74525ac689f5f7d91cd51562829b1729fdc1ded94e9fcd8e09",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-93cbc772-e0b7-4938-8b05-479ebd5cded9.png",
+      "prompt": "Use case: precise-object-edit. Change ONLY checkerboard backdrop in this SIX-pose battle sheet to uniform pure GREEN RGB(0,255,0), including enclosed chain loops and every individual link hole, arm/torso gaps, under weapons and between legs. Preserve all six figures, their exact pose, anatomy, equipment, chain continuity, ivory cloth, metal highlights, lamp colors and artwork. Keep exact original canvas dimensions, layout, locations, sizes and lighting. No green reflections, no green tint on cloth, no additions, no text or shadows. Do not turn garment highlights into gaps or repaint figures. Full weapons and cloth remain intact. This is background replacement only.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/travel-recovery-and-head-right-fall.png",
+          "sha256": "6da183d540b8e7bcec3fbdc2962dcc181a8aba504d2d4d5c31825c64dd977143"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "notes": "All six chroma-backed poses selected after bounded extraction; retains ivory paint and open chain links."
+    }
+  ]
+}

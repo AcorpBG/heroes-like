@@ -1,0 +1,39 @@
+{
+  "schema_id": "original_unit_continuity_generation_v1",
+  "unit_id": "unit_veilmourn_maskglass_corsairs",
+  "date": "2026-09-16",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "status": "candidate_pending_playback_acceptance",
+  "outputs": [
+    {
+      "id": "guided-opposite-contact-and-guards",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/guided-opposite-contact-and-guards.png",
+      "source_sha256": "79055e30c337d80a004b15572c680f7317e443de95c0832d6ffda08082824b9d",
+      "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-683a052b-b126-485b-8244-9aa4377f1816.png",
+      "prompt": "Use case: sketch-to-render. Original painted battle-animation supplement: FOUR complete Maskglass Corsair figures in a 2x2 grid, generous gutters and consistent body/equipment scale. Input1 is the exact leg arrangement for TOP LEFT; input2 exact legs for TOP RIGHT; input3 fixes the character, costume, camera and equipment. TOP LEFT: near RIGHT anatomical leg (blue guide) reaches diagonally forward screen RIGHT, far LEFT leg (orange guide) trails to screen LEFT. The near shin must visibly pass IN FRONT of the other leg. TOP RIGHT: near RIGHT foot planted under pelvis, far LEFT knee swings forward behind it, foot lifted. Keep torso/head facing 3/4 RIGHT, no mirror. Bottom LEFT: bent-knee defense left round shield raised covering shoulder and upper chest, right cutlass held low safely outside legs. Bottom RIGHT: same guard absorbs impact, shield closer to face and knees compress a little. Original adult woman brown tied hair, silver asymmetrical half-mask covering near eye/cheek, weathered sage-gray scarf and ragged overskirt, ivory rolled sleeves, dark leather corset/pants, rope sash/brass belt bell, black wrapped boots, one curved steel cutlass in RIGHT hand and one round black wooden shield with brass spokes/boss on LEFT arm. Keep weapon grips, face, mask and shield size invariant. Full sword/shield/hair/boots inside each cell; no extra limbs/equipment. Paint the original costume colors, not colored diagram limbs. Genuine transparent background, no checkerboard, ground, shadow, text, diagram labels or attack effects.",
+      "references": [
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-0.png",
+          "sha256": "b5bde92e00dd4ab23eaab36dde2ebc661545d8386282d84a7f12b6d5381e3716"
+        },
+        {
+          "path": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/guides/biped-walk-phase-1.png",
+          "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734"
+        },
+        {
+          "path": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/identity-reference.png",
+          "sha256": "c9549cec74a53d378feffb4d748a23208c9093eab7c17b239cad21b98e0152b8"
+        }
+      ],
+      "selected": true,
+      "selected_cells": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "notes": "Candidate selection pending packing, motion continuity and in-game acceptance."
+    }
+  ]
+}

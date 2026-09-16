@@ -1,0 +1,36 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner approved non-generative raster matte and edge cleanup; preserve originals and recipes, no invented or warped poses.",
+  "id": "canopy-opposite-contact",
+  "source": "art/animation/source/poses/unit_thornwake_canopy_rammers/opposite-contact.png",
+  "source_sha256": "d0cf547ab31e16da0419ccf13ccbb7ba6a8d48d01707d6970d14185555e5d925",
+  "source_rect": [
+    0,
+    0,
+    1233,
+    1275
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-alpha/opposite-contact.png",
+  "output_sha256": "9c553895fd243dbcac7ac3253e2c290454d0c095c67b23af23e9880b2dd5aeb5",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_canopy_rammers/continuity-cutouts.json",
+  "recipe_sha256": "a54d0f2fd78096bebda556dea59fbdf462be9b5167f357b5dad2ac9d4941a8f4",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2
+  },
+  "measurements": {
+    "removed_background_pixels": 798891,
+    "edge_pixels": 15615,
+    "unchanged_paint_pixels": 757569,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}

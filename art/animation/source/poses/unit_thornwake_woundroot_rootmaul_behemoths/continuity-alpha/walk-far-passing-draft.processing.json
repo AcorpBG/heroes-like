@@ -1,0 +1,86 @@
+{
+  "schema_id": "original_battle_cutout_processing_v1",
+  "owner_approval": "Owner explicitly approved non-generative local raster background removal and narrow edge cleanup on 2026-09-15; original paint and masters retained.",
+  "id": "walk-far-passing-draft",
+  "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/walk-far-passing-draft.png",
+  "source_sha256": "3223247ef2d4bdd6b5af375b341b7d9af34f6e53bbebb3c0e93077b04e9ab0e3",
+  "source_rect": [
+    0,
+    0,
+    1448,
+    1086
+  ],
+  "output": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-far-passing-draft.png",
+  "output_sha256": "4772c2d13ea69bd0116bd38307d1f9099d9cd1d654eea173d6c974a7e5e9026f",
+  "tool": "tools/prepare_battle_pose_cutouts.py",
+  "tool_sha256": "f89c5cf8f41007f13eed7c11bd9937ad284870eb7ed2329aa37ed97e327afd83",
+  "recipe": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-cutouts.json",
+  "recipe_sha256": "64d4aeb4310305decf0620f741fc25810966bea0e2e113f632ef96beb68fd982",
+  "parameters": {
+    "mode": "neutral",
+    "minimum": 175,
+    "tolerance": 16,
+    "edge_radius": 2,
+    "background_seeds": [
+      [
+        553,
+        690
+      ],
+      [
+        944,
+        194
+      ],
+      [
+        299,
+        714
+      ],
+      [
+        605,
+        237
+      ],
+      [
+        531,
+        698
+      ],
+      [
+        1079,
+        181
+      ],
+      [
+        279,
+        723
+      ],
+      [
+        960,
+        203
+      ],
+      [
+        1244,
+        284
+      ],
+      [
+        961,
+        212
+      ],
+      [
+        936,
+        162
+      ],
+      [
+        933,
+        183
+      ]
+    ]
+  },
+  "measurements": {
+    "removed_background_pixels": 905404,
+    "edge_pixels": 12932,
+    "unchanged_paint_pixels": 654192,
+    "protected_pixels": 0,
+    "alpha_extrema": [
+      0,
+      255
+    ]
+  },
+  "status": "prepared_requires_visual_and_motion_review"
+}
