@@ -205,6 +205,7 @@ func _ready() -> void:
 	_message_log.name = "BattleMessageLog"
 	var content := $ContentMargin/Content
 	content.add_child(_message_log)
+	_message_log.expanded_changed.connect(func(_expanded): call_deferred("_configure_battle_keyboard_focus", false))
 	content.move_child(_message_log, $ContentMargin/Content/Footer.get_index())
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
@@ -2164,7 +2165,7 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 		_save_button,
 		_settings_button,
 		_menu_button,
-		_message_log.history,
+		_message_log,
 	]
 	var controls := FrontierVisualKit.configure_focus_cycle(surfaces)
 	_last_battle_keyboard_focus_cycle_names = []

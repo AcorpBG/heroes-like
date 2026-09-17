@@ -4,6 +4,8 @@ extends VBoxContainer
 signal operation_requested(source_holder_id: String, source_slot_index: int, target_holder_id: String, target_slot_index: int, amount_token: String)
 signal selection_changed(snapshot: Dictionary)
 
+const SlotButton := preload("res://scenes/shared/ArmySlotButton.gd")
+const VisualKit := preload("res://scripts/ui/FrontierVisualKit.gd")
 const SLOT_COUNT := 7
 const SLOT_SIZE := Vector2(38.0, 48.0)
 const COMPACT_SLOT_SIZE := Vector2(28.0, 38.0)
@@ -28,13 +30,22 @@ var _slot_buttons: Dictionary = {}
 var _texture_cache: Dictionary = {}
 var _missing_textures: Dictionary = {}
 var _compact_mode := false
+var _revision := 0
+var _exact_mode := false
+var _quantity: SpinBox
+var _quantity_row: HBoxContainer
+var _heading: Label
 
 func _ready() -> void:
 	add_theme_constant_override("separation", 4)
 	_build_static_surface()
 	_rebuild_holder_rows()
+	SettingsService.settings_changed.connect(func(_settings):
+		for button in _mode_buttons.values(): VisualKit.apply_button(button, "secondary", 40, 28, VisualKit.FONT_CAPTION)
+	)
 
 func configure(holders: Array, can_manage: bool = true) -> void:
+	_revision += 1
 	_holders = holders.duplicate(true)
 	_can_manage = can_manage
 	if not _selected_slot_still_valid():
@@ -45,6 +56,7 @@ func set_compact_mode(compact: bool) -> void:
 	if _compact_mode == compact:
 		return
 	_compact_mode = compact
+	if _heading != null: _heading.visible = not compact
 	for button_value in _slot_buttons.values():
 		var button := button_value as Button
 		if button != null:
@@ -99,8 +111,11 @@ func _build_static_surface() -> void:
 	if _holders_box != null:
 		return
 	var heading := Label.new()
+	_heading = heading
+	heading.visible = not _compact_mode
 	heading.text = "Formation"
-	heading.tooltip_text = "Select a stack, choose Move All or a split amount, then choose its destination slot."
+	heading.tooltip_text = "Click or drag a stack to its destination. All, Half, One, or an exact quantity; the destination is previewed before committing."
+	VisualKit.apply_label(heading, "gold", 13)
 	add_child(heading)
 	_holders_box = VBoxContainer.new()
 	_holders_box.name = "ArmyHolderRows"
@@ -114,23 +129,46 @@ func _build_static_surface() -> void:
 		{"token": "all", "label": "All", "tooltip": "Move, merge, or swap the complete selected stack."},
 		{"token": "half", "label": "Half", "tooltip": "Move half of the selected stack into an empty slot or matching unit stack."},
 		{"token": "1", "label": "One", "tooltip": "Move one unit into an empty slot or matching unit stack."},
+		{"token": "exact", "label": "Exact", "tooltip": "Choose precisely how many units to move. Keyboard: type in the quantity field."},
 	]:
 		var button := Button.new()
 		var token := String(definition.get("token", "all"))
 		button.text = String(definition.get("label", token))
 		button.tooltip_text = String(definition.get("tooltip", ""))
 		button.focus_mode = Control.FOCUS_ALL
+		button.accessibility_name = button.tooltip_text
+		VisualKit.apply_button(button, "secondary", 40, 28, 12)
 		button.toggle_mode = true
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		button.pressed.connect(_on_amount_mode_pressed.bind(token))
 		mode_row.add_child(button)
 		_mode_buttons[token] = button
 	add_child(mode_row)
+	_quantity_row = HBoxContainer.new()
+	_quantity_row.name = "ExactArmyQuantity"
+	var quantity_label := Label.new()
+	quantity_label.text = "Units"
+	VisualKit.apply_label(quantity_label, "body", 12)
+	_quantity_row.add_child(quantity_label)
+	_quantity = SpinBox.new()
+	_quantity.min_value = 1
+	_quantity.max_value = 1
+	_quantity.step = 1
+	_quantity.allow_greater = false
+	_quantity.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_quantity.get_line_edit().accessibility_name = "Exact number of units to transfer"
+	_quantity.value_changed.connect(_on_exact_quantity_changed)
+	_quantity_row.add_child(_quantity)
+	_quantity_row.hide()
+	add_child(_quantity_row)
 	_status_label = Label.new()
 	_status_label.name = "ArmyInstruction"
 	_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_status_label.max_lines_visible = 2
+	_status_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_status_label.text = "Choose stack → destination"
 	_status_label.tooltip_text = "Select a stack, choose an amount, then choose its destination slot."
+	VisualKit.apply_label(_status_label, "body", 12)
 	add_child(_status_label)
 	_update_mode_styles()
 
@@ -152,6 +190,7 @@ func _rebuild_holder_rows() -> void:
 		var label := Label.new()
 		label.text = "%s · %d" % [String(holder.get("holder_label", holder_id)), int(holder.get("troop_count", 0))]
 		label.clip_text = true
+		VisualKit.apply_label(label, "body", 12)
 		label.tooltip_text = label.text
 		row_box.add_child(label)
 		var slots_row := HBoxContainer.new()
@@ -183,7 +222,10 @@ func _rebuild_holder_rows() -> void:
 	_status_label.visible = has_valid_holder
 
 func _make_slot_button(holder_id: String, slot_index: int, slot: Dictionary) -> Button:
-	var button := Button.new()
+	var button := SlotButton.new()
+	button.army_bar = self
+	button.holder_id = holder_id
+	button.slot_index = slot_index
 	var occupied := bool(slot.get("occupied", false))
 	button.custom_minimum_size = COMPACT_SLOT_SIZE if _compact_mode else SLOT_SIZE
 	button.focus_mode = Control.FOCUS_ALL
@@ -201,12 +243,16 @@ func _make_slot_button(holder_id: String, slot_index: int, slot: Dictionary) -> 
 	button.add_theme_stylebox_override("disabled", _slot_style(Color(0.025, 0.035, 0.034, 0.86), Color(0.25, 0.25, 0.22, 0.8), 1))
 	button.text = str(int(slot.get("count", 0))) if occupied else "·"
 	button.tooltip_text = _slot_tooltip(slot, slot_index)
+	button.accessibility_name = button.tooltip_text
 	if occupied:
 		button.icon = _texture(String(slot.get("battle_icon", "")))
 	button.set_meta("occupied", occupied)
 	button.set_meta("holder_id", holder_id)
 	button.set_meta("slot_index", slot_index)
 	button.pressed.connect(_on_slot_pressed.bind(holder_id, slot_index, occupied))
+	button.mouse_entered.connect(_preview_destination.bind(holder_id, slot_index))
+	button.focus_entered.connect(_preview_destination.bind(holder_id, slot_index))
+	button.mouse_exited.connect(_update_status)
 	return button
 
 func _slot_style(fill: Color, border: Color, width: int) -> StyleBoxFlat:
@@ -250,12 +296,17 @@ func _on_slot_pressed(holder_id: String, slot_index: int, occupied: bool) -> voi
 	if _selected_holder_id == holder_id and _selected_slot_index == slot_index:
 		clear_selection()
 		return
-	operation_requested.emit(_selected_holder_id, _selected_slot_index, holder_id, slot_index, _amount_token)
+	var preview := destination_preview(holder_id, slot_index)
+	_status_label.text = String(preview.get("message", ""))
+	if bool(preview.get("allowed", false)):
+		operation_requested.emit(_selected_holder_id, _selected_slot_index, holder_id, slot_index, _amount_token)
 
 func _on_amount_mode_pressed(token: String) -> void:
-	_amount_token = token if token in ["all", "half", "1"] else "all"
+	_exact_mode = token == "exact"
+	_amount_token = str(int(_quantity.value)) if _exact_mode else (token if token in ["all", "half", "1"] else "all")
 	_update_mode_styles()
 	_update_status()
+	_update_slot_styles()
 	selection_changed.emit(validation_snapshot())
 
 func _update_mode_styles() -> void:
@@ -265,12 +316,19 @@ func _update_mode_styles() -> void:
 		if button == null:
 			continue
 		button.disabled = not _can_manage
-		button.button_pressed = token == _amount_token
-		button.modulate = SELECTED_MODULATE if token == _amount_token else OCCUPIED_MODULATE
+		var chosen := token == "exact" if _exact_mode else token == _amount_token
+		button.button_pressed = chosen
+		button.modulate = SELECTED_MODULATE if chosen else OCCUPIED_MODULATE
+	if _quantity_row != null:
+		_quantity_row.visible = _exact_mode
 
 func _update_status() -> void:
 	if _status_label == null:
 		return
+	if _quantity != null:
+		var available := int(_slot_snapshot(_selected_holder_id, _selected_slot_index).get("count", 0))
+		_quantity.max_value = maxi(1, available)
+		_quantity.editable = _can_manage and available > 0
 	if _selected_holder_id == "":
 		_status_label.text = "Choose stack → destination"
 	else:
@@ -289,6 +347,10 @@ func _update_slot_styles() -> void:
 			button.modulate = SELECTED_MODULATE
 		else:
 			button.modulate = OCCUPIED_MODULATE if bool(button.get_meta("occupied", false)) else EMPTY_MODULATE
+		var destination := destination_preview(String(button.get_meta("holder_id", "")), int(button.get_meta("slot_index", -1)))
+		var legal := not _selected_holder_id.is_empty() and bool(destination.get("allowed", false))
+		button.set_meta("legal_destination", legal)
+		button.add_theme_stylebox_override("normal", _slot_style(SLOT_FILL, Color(0.52, 0.76, 0.57) if legal else SLOT_BORDER, 2 if legal else 1))
 
 func _selected_slot_still_valid() -> bool:
 	if _selected_holder_id == "" or _selected_slot_index < 0:
@@ -303,6 +365,7 @@ func _selected_slot_still_valid() -> bool:
 	return false
 
 func _amount_label() -> String:
+	if _exact_mode: return "move %d" % int(_amount_token)
 	match _amount_token:
 		"half":
 			return "split half"
@@ -310,6 +373,67 @@ func _amount_label() -> String:
 			return "split one"
 		_:
 			return "move all"
+
+func _on_exact_quantity_changed(value: float) -> void:
+	if not _exact_mode: return
+	_amount_token = str(int(value))
+	_update_status()
+	_update_slot_styles()
+
+func _slot_snapshot(holder_id: String, slot_index: int) -> Dictionary:
+	for holder in _holders:
+		if not holder is Dictionary or String(holder.get("holder_id", "")) != holder_id: continue
+		if not bool(holder.get("capacity_valid", true)): return {}
+		var slots: Array = holder.get("slots", [])
+		if slot_index >= 0 and slot_index < slots.size() and slots[slot_index] is Dictionary:
+			return slots[slot_index]
+	return {}
+
+func destination_preview(holder_id: String, slot_index: int) -> Dictionary:
+	var source := _slot_snapshot(_selected_holder_id, _selected_slot_index)
+	var target := _slot_snapshot(holder_id, slot_index)
+	if not _can_manage or not bool(source.get("occupied", false)) or target.is_empty():
+		return {"allowed": false, "message": "Choose an available source stack first."}
+	if holder_id == _selected_holder_id and slot_index == _selected_slot_index:
+		return {"allowed": false, "message": "Choose a different destination slot."}
+	var available := int(source.get("count", 0))
+	var amount := available if _amount_token == "all" else (maxi(1, available / 2) if _amount_token == "half" else int(_amount_token))
+	if amount < 1 or amount > available:
+		return {"allowed": false, "message": "Quantity exceeds the selected stack."}
+	var swap := bool(target.get("occupied", false)) and String(target.get("unit_id", "")) != String(source.get("unit_id", ""))
+	if swap and amount != available:
+		return {"allowed": false, "message": "Partial stacks need an empty slot or matching unit. Choose All to swap."}
+	var recipient := holder_id
+	for holder in _holders:
+		if String(holder.get("holder_id", "")) == holder_id: recipient = String(holder.get("holder_label", holder_id))
+	var verb := "Swap" if swap else ("Merge" if bool(target.get("occupied", false)) else "Move")
+	return {"allowed": true, "amount": amount, "recipient": recipient, "message": "%s %d %s → %s · slot %d" % [verb, amount, String(source.get("unit_name", source.get("unit_id", "units"))), recipient, slot_index + 1]}
+
+func _preview_destination(holder_id: String, slot_index: int) -> void:
+	if _selected_holder_id.is_empty(): return
+	_status_label.text = String(destination_preview(holder_id, slot_index).get("message", ""))
+	_status_label.tooltip_text = _status_label.text
+
+func begin_slot_drag(holder_id: String, slot_index: int) -> Dictionary:
+	var source := _slot_snapshot(holder_id, slot_index)
+	if not _can_manage or not bool(source.get("occupied", false)): return {}
+	_selected_holder_id = holder_id
+	_selected_slot_index = slot_index
+	_update_status()
+	_update_slot_styles()
+	selection_changed.emit(validation_snapshot())
+	return {"kind": "army_stack", "bar": get_instance_id(), "revision": _revision, "holder": holder_id, "slot": slot_index, "amount": _amount_token, "caption": "%s · %s" % [String(source.get("unit_name", source.get("unit_id", "units"))), _amount_label()]}
+
+func can_drop_stack(data: Variant, holder_id: String, slot_index: int) -> bool:
+	if not data is Dictionary or data.get("kind") != "army_stack": return false
+	if data.get("bar") != get_instance_id() or data.get("revision") != _revision: return false
+	if data.get("holder") != _selected_holder_id or data.get("slot") != _selected_slot_index or data.get("amount") != _amount_token: return false
+	_preview_destination(holder_id, slot_index)
+	return bool(destination_preview(holder_id, slot_index).get("allowed", false))
+
+func drop_stack(data: Variant, holder_id: String, slot_index: int) -> void:
+	if can_drop_stack(data, holder_id, slot_index):
+		operation_requested.emit(_selected_holder_id, _selected_slot_index, holder_id, slot_index, _amount_token)
 
 func _slot_key(holder_id: String, slot_index: int) -> String:
 	return "%s:%02d" % [holder_id, slot_index]

@@ -8,7 +8,7 @@ Validation: Python-owned focused Godot retention/order/bounds checks and small/w
 
 ## Implementation
 
-`BattleMessageLog.gd` adds an 88-pixel history strip between the battlefield and command footer, with about four recent lines visible. It retains up to 200 captions for the current BattleShell, permits selection/scrolling and participates in the explicit keyboard focus cycle. New entries follow the bottom only when the reader was already at the bottom. Updates are coalesced so an instant action does not rebuild the text for every animation frame.
+`BattleMessageLog.gd` sits between the battlefield and command footer. The 2026-09-17 [cohesion pass](graphical-usability-cohesion.md) folds it into a latest-event strip by default (36-pixel minimum, about 44 pixels including current button metrics). The Log toggle expands an 88-pixel history viewport. Both states retain up to 200 captions for the current BattleShell. Expansion rebuilds the explicit keyboard focus cycle; Tab can enter the selectable/scrollable history. New entries follow the bottom only when the reader was already at the bottom. Updates are coalesced so an instant action does not rebuild the text for every animation frame.
 
 `BattleShell.gd` uses the same caption formatter for live animation and retained history. Round, side, unit, action/target, damage and losses come from existing authoritative playback records. Frames append as they play; instant/headless paths and switching an active queue to instant preserve the remaining captions. Refresh does not clear the history. No battle rules, RNG, saved data or action timing changes.
 

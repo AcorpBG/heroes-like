@@ -203,6 +203,66 @@ var _session: SessionStateStore.SessionData
 var _map_data: Array = []
 var _map_size := Vector2i(1, 1)
 var _selected_tile := Vector2i(-1, -1)
+const Inspection := preload("res://scripts/ui/OverworldInspection.gd")
+const ScoutDialog := preload("res://scenes/shared/ScoutInspectionDialog.gd")
+var _highlight_interactions_button: Button
+var _inspect_tile_button: Button
+var _scout_dialog: AcceptDialog
+
+func _configure_scout_controls() -> void:
+	var row := HBoxContainer.new()
+	row.name = "ScoutControls"
+	row.add_theme_constant_override("separation", 4)
+	_map_level_button.get_parent().add_child(row)
+	_map_level_button.get_parent().move_child(row, _map_level_button.get_index() + 1)
+	_highlight_interactions_button = Button.new()
+	_highlight_interactions_button.name = "HighlightInteractables"
+	_highlight_interactions_button.text = "Sites · Alt"
+	_highlight_interactions_button.toggle_mode = true
+	_highlight_interactions_button.tooltip_text = "Hold Alt, or toggle here, to label visible sites: Available, Guarded, Visited, Exhausted. Hidden sites stay hidden."
+	_highlight_interactions_button.accessibility_name = "Highlight visible interactable sites"
+	_highlight_interactions_button.toggled.connect(func(_enabled): _sync_interaction_highlights())
+	FrontierVisualKit.apply_button(_highlight_interactions_button, "secondary", 90, 26, 12)
+	_highlight_interactions_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(_highlight_interactions_button)
+	_inspect_tile_button = Button.new()
+	_inspect_tile_button.name = "InspectSelectedTile"
+	_inspect_tile_button.text = "Inspect"
+	_inspect_tile_button.tooltip_text = "Inspect the selected tile: scouted army, approximate strength, terrain and known reward. Does not move or attack."
+	_inspect_tile_button.accessibility_name = "Inspect selected tile without committing an order"
+	FrontierVisualKit.apply_button(_inspect_tile_button, "secondary", 74, 26, 12)
+	_inspect_tile_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_inspect_tile_button.pressed.connect(_open_scout_inspection)
+	row.add_child(_inspect_tile_button)
+	SettingsService.settings_changed.connect(func(_settings):
+		FrontierVisualKit.apply_button(_highlight_interactions_button, "secondary", 90, 26, FrontierVisualKit.FONT_CAPTION)
+		FrontierVisualKit.apply_button(_inspect_tile_button, "secondary", 74, 26, FrontierVisualKit.FONT_CAPTION)
+	)
+	_scout_dialog = ScoutDialog.new()
+	_scout_dialog.name = "ScoutInspection"
+	add_child(_scout_dialog)
+	_scout_dialog.visibility_changed.connect(func():
+		_sync_interaction_highlights()
+		if not _scout_dialog.visible: call_deferred("_configure_overworld_keyboard_focus", true)
+	)
+	# The shell disables its animation _process while idle. A lightweight
+	# child timer owns key/focus/modal observation without keeping VFX awake.
+	var observer := Timer.new()
+	observer.wait_time = 0.08
+	observer.timeout.connect(_sync_interaction_highlights)
+	add_child(observer)
+	observer.start()
+
+func _sync_interaction_highlights() -> void:
+	if not is_instance_valid(_highlight_interactions_button): return
+	var can_highlight := _overworld_gameplay_movement_blocked_reason().is_empty() and get_window().has_focus()
+	_map_view.set_interaction_highlights(can_highlight and (_highlight_interactions_button.button_pressed or Input.is_key_pressed(KEY_ALT)))
+
+func _open_scout_inspection() -> void:
+	if _session == null or _overworld_gameplay_movement_blocked_reason() != "": return
+	_clear_controller_move_state()
+	var report := Inspection.inspect_tile(_session, _selected_tile, LevelRules.view_level(_session))
+	_scout_dialog.open_report(report, get_viewport_rect().size)
 var _hovered_tile := Vector2i(-1, -1)
 var _last_message := ""
 var _last_enemy_activity_text := ""
@@ -386,11 +446,13 @@ func _ready() -> void:
 	FrontierVisualKit.apply_button(_map_level_button, "secondary", 120.0, 24.0, 11)
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
+	_configure_scout_controls()
 	var minimap_recenter_callable := Callable(self, "_on_minimap_recenter_requested")
 	if _minimap.has_signal("recenter_requested") and not _minimap.is_connected("recenter_requested", minimap_recenter_callable):
 		_minimap.connect("recenter_requested", minimap_recenter_callable)
 	if not _army_management.operation_requested.is_connected(_on_army_slot_operation_requested):
 		_army_management.operation_requested.connect(_on_army_slot_operation_requested)
+	_army_management.selection_changed.connect(func(_snapshot): call_deferred("_configure_overworld_keyboard_focus", false))
 	_spell_cast_input_blocker.visible = false
 	_artifact_acquired_input_blocker.visible = false
 	_artifact_action_cue_row.visible = false
@@ -503,7 +565,7 @@ func _apply_responsive_layout() -> void:
 	_top_strip_panel.custom_minimum_size.y = 38.0 if compact_layout else 44.0
 	_hero_panel.custom_minimum_size.y = 168.0 if compact_layout else 190.0
 	_roster_scroll.custom_minimum_size.y = 70.0 if compact_layout else (176.0 if available_size.y >= 1000.0 else 94.0)
-	_action_panel.custom_minimum_size.y = 68.0 if compact_layout else 76.0
+	_action_panel.custom_minimum_size.y = 44.0 if compact_layout else 76.0
 	_command_band_panel.custom_minimum_size.y = 46.0 if compact_layout else 50.0
 	_briefing_panel.visible = false
 	_commitment_panel.visible = false
@@ -538,6 +600,10 @@ func _responsive_available_size() -> Vector2:
 	return available_size
 
 func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.keycode == KEY_ALT:
+		call_deferred("_sync_interaction_highlights")
+	if is_instance_valid(_scout_dialog) and _scout_dialog.visible:
+		return
 	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
 		return
 	if is_instance_valid(_turn_presenter):
@@ -849,6 +915,8 @@ func _controller_route_direction_from_axis(axis: Vector2) -> Vector2i:
 	return Vector2i.DOWN if axis.y > 0.0 else Vector2i.UP
 
 func _overworld_gameplay_movement_blocked_reason() -> String:
+	if is_instance_valid(_scout_dialog) and _scout_dialog.visible:
+		return "scout_inspection_open"
 	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
 		return "hero_sheet_open"
 	if _session == null:
@@ -1110,6 +1178,9 @@ func _exit_tree() -> void:
 	_cancel_controller_route_semantic()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if is_instance_valid(_scout_dialog) and _scout_dialog.visible:
+		get_viewport().set_input_as_handled()
+		return
 	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
 		get_viewport().set_input_as_handled()
 		return
@@ -4239,6 +4310,7 @@ func _refresh_tooltip_context_drawer_surfaces(
 
 func _refresh_commander_card(compact: bool) -> void:
 	_hero_portrait.set_hero_id(_live_player_hero_id())
+	_hero_portrait.visible = get_viewport_rect().size.y >= 760.0
 	if compact:
 		var hero: Dictionary = _session.overworld.get("hero", {})
 		var movement: Dictionary = _session.overworld.get("movement", {})
@@ -8803,6 +8875,7 @@ func _set_active_drawer(drawer: String) -> void:
 	_active_drawer = drawer
 
 func _configure_overworld_keyboard_focus(force: bool = false) -> void:
+	if is_instance_valid(_scout_dialog) and _scout_dialog.visible: return
 	if not is_inside_tree() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()) or (_end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible):
 		return
 	if _artifact_acquired_input_blocker != null and _artifact_acquired_input_blocker.visible:
@@ -8812,6 +8885,9 @@ func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 		_spell_cast_input_blocker.grab_focus()
 		return
 	var surfaces := [
+		_highlight_interactions_button,
+		_inspect_tile_button,
+		_army_management,
 		_primary_action_button,
 		_minimap,
 		_context_actions,

@@ -7,6 +7,38 @@ signal spell_cast_presentation_blocking_changed(blocking: bool)
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const OverworldRulesScript = preload("res://scripts/core/OverworldRules.gd")
+const Inspection := preload("res://scripts/ui/OverworldInspection.gd")
+var _interaction_highlights := false
+var _interaction_highlight_index: Dictionary = {}
+
+func set_interaction_highlights(enabled: bool) -> void:
+	if enabled == _interaction_highlights: return
+	_interaction_highlights = enabled
+	_refresh_interaction_highlights()
+	_invalidate_dynamic_layer("interaction_highlights")
+
+func _refresh_interaction_highlights() -> void:
+	_interaction_highlight_index.clear()
+	if not _interaction_highlights or _session == null: return
+	for row in Inspection.highlight_rows(_session, _level):
+		_interaction_highlight_index[row.tile] = row
+
+func _draw_interaction_highlight(tile: Vector2i, rect: Rect2, viewport_rect: Rect2) -> void:
+	if not _interaction_highlights or not _interaction_highlight_index.has(tile): return
+	# Recheck visibility at the draw boundary, including during AI playback.
+	if not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level): return
+	var state := String(_interaction_highlight_index[tile].get("state", "Available"))
+	var font := get_theme_default_font()
+	var font_size := 11
+	var extent := font.get_string_size(state, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size)
+	var label_size := Vector2(extent.x + 10, 19)
+	var position := rect.get_center() + Vector2(-label_size.x / 2, rect.size.y * 0.20)
+	position.x = clampf(position.x, viewport_rect.position.x, maxf(viewport_rect.position.x, viewport_rect.end.x - label_size.x))
+	position.y = clampf(position.y, viewport_rect.position.y, maxf(viewport_rect.position.y, viewport_rect.end.y - label_size.y))
+	var canvas := _current_draw_canvas_item()
+	canvas.draw_rect(Rect2(position, label_size), Color(0.018, 0.025, 0.022, 0.94))
+	var tone := "red" if state == "Guarded" else ("gold" if state == "Available" else "muted")
+	canvas.draw_string(font, position + Vector2(5, 14), state, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, FrontierVisualKitScript.text_color(tone))
 const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacementRules.gd")
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 const Motion = preload("res://scenes/overworld/OverworldMotion.gd")
@@ -851,6 +883,7 @@ func set_map_state(
 	var previous_session_present := _session != null
 	_session = session
 	_level = LevelRules.view_level(session)
+	_refresh_interaction_highlights()
 	_map_data = LevelRules.terrain_rows(session, _level) if LevelRules.level_count(session) > 1 else map_data
 	_map_size = Vector2i(max(map_size.x, 1), max(map_size.y, 1))
 	_hero_tile = OverworldRulesScript.hero_position(session) if session != null else Vector2i.ZERO
@@ -2112,6 +2145,7 @@ func _draw_dynamic_layer() -> void:
 			tile_checks += 1
 			_draw_tile_focus(tile, rect)
 			_draw_tile_dynamic_icon(tile, rect)
+			_draw_interaction_highlight(tile, rect, viewport_rect)
 	_draw_hero_movement_presentation(board_rect)
 	_draw_turn_playback_actor(board_rect)
 	_draw_object_resolution_presentation(board_rect)

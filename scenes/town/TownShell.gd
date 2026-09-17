@@ -123,6 +123,29 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _town_catalog_subtitle_label: Label = %TownCatalogSubtitle
 @onready var _town_catalog_scroll: ScrollContainer = %TownCatalogScroll
 @onready var _town_catalog_close_button: Button = %TownCatalogClose
+var _construction_peek_button: Button
+var _construction_scene_only := false
+
+func _configure_construction_peek() -> void:
+	_construction_peek_button = Button.new()
+	_construction_peek_button.name = "PreviewConstructionInTown"
+	_construction_peek_button.text = "View placement in town"
+	_construction_peek_button.tooltip_text = "Fold away the ledger to see the selected building in its actual scenic location. No construction is committed."
+	_construction_peek_button.accessibility_name = "Show selected building placement in town"
+	FrontierVisualKit.apply_button(_construction_peek_button, "secondary", 180, 28, 12)
+	_construction_peek_button.pressed.connect(_toggle_construction_peek)
+	var catalog_box := _town_catalog_scroll.get_parent()
+	catalog_box.add_child(_construction_peek_button)
+	catalog_box.move_child(_construction_peek_button, 2)
+	_construction_peek_button.hide()
+	SettingsService.settings_changed.connect(func(_settings): FrontierVisualKit.apply_button(_construction_peek_button, "secondary", 180, 28, FrontierVisualKit.FONT_CAPTION))
+
+func _toggle_construction_peek() -> void:
+	_construction_scene_only = not _construction_scene_only
+	_restore_selected_construction_preview()
+	_apply_responsive_layout()
+	_configure_town_keyboard_focus(false)
+	_construction_peek_button.grab_focus()
 @onready var _domain_actions: VBoxContainer = %DomainActions
 @onready var _guide_overlay: Control = %TownGuideOverlay
 @onready var _guide_panel: PanelContainer = %TownGuidePanel
@@ -199,6 +222,7 @@ func _ready() -> void:
 	_configure_town_guide_surface()
 	_town_action_input_blocker.visible = false
 	_town_catalog_overlay.visible = false
+	_configure_construction_peek()
 	if not _town_stage_view.town_action_presentation_blocking_changed.is_connected(_on_town_action_presentation_blocking_changed):
 		_town_stage_view.town_action_presentation_blocking_changed.connect(_on_town_action_presentation_blocking_changed)
 	var main_building_callable := Callable(self, "_on_open_build_catalog_pressed")
@@ -212,6 +236,7 @@ func _ready() -> void:
 		_management_tabs.tab_changed.connect(_on_management_tab_changed)
 	if not _army_management.operation_requested.is_connected(_on_army_slot_operation_requested):
 		_army_management.operation_requested.connect(_on_army_slot_operation_requested)
+	_army_management.selection_changed.connect(func(_snapshot): call_deferred("_configure_town_keyboard_focus", false))
 	_session = SessionState.ensure_active_session()
 	if _session.scenario_id == "":
 		push_warning("Cannot enter a town without an active scenario session.")
@@ -298,13 +323,36 @@ func _apply_responsive_layout() -> void:
 	_footer_panel.offset_right = -TOWN_EDGE_GAP
 	_footer_panel.offset_bottom = -TOWN_EDGE_GAP
 	if _town_catalog_panel != null:
+		var preview_layout := _town_catalog_mode == "build" and available_size.x >= 1100.0
+		var peek := _town_catalog_mode == "build" and _construction_scene_only
+		var catalog_center := _town_catalog_panel.get_parent() as CenterContainer
+		catalog_center.offset_left = available_size.x - 514.0 if preview_layout else 18.0
+		catalog_center.offset_right = -18.0
+		catalog_center.offset_top = TOWN_HEADER_HEIGHT + 12.0 if preview_layout else 18.0
+		catalog_center.offset_bottom = -TOWN_FOOTER_HEIGHT - 20.0 if preview_layout else -18.0
+		if peek:
+			# Place the folded controls on the opposite edge from the candidate.
+			var candidate: Dictionary = _town_stage_view.construction_preview_snapshot()
+			var rect: Rect2 = candidate.get("destination_rect", Rect2())
+			if rect.get_center().x > available_size.x * 0.5:
+				catalog_center.offset_left = 18.0
+				catalog_center.offset_right = 514.0 - available_size.x
+			catalog_center.offset_top = available_size.y - TOWN_FOOTER_HEIGHT - 220.0
+		(_town_catalog_overlay.get_node("CatalogShade") as ColorRect).color.a = 0.0 if peek else (0.12 if preview_layout else 0.72)
+		_town_catalog_scroll.visible = not peek
+		_town_catalog_scroll.custom_minimum_size.y = 250.0 if preview_layout else 340.0
+		_town_catalog_subtitle_label.visible = not peek
+		_build_plan_label.visible = _town_catalog_mode == "build" and not peek
+		if _construction_peek_button != null:
+			_construction_peek_button.visible = _town_catalog_mode == "build"
+			_construction_peek_button.text = "Back to construction plans" if peek else "View placement in town"
 		_town_catalog_panel.custom_minimum_size = Vector2(
-			min(1080.0, max(620.0, available_size.x - 44.0)),
-			min(690.0, max(480.0, available_size.y - 44.0))
+			480.0 if preview_layout else min(1080.0, max(620.0, available_size.x - 44.0)),
+			150.0 if peek else (min(690.0, available_size.y - TOWN_HEADER_HEIGHT - TOWN_FOOTER_HEIGHT - 48.0) if preview_layout else min(690.0, max(480.0, available_size.y - 44.0)))
 		)
 	var catalog_columns := 2 if available_size.x < 900.0 else (3 if available_size.x < 1320.0 else 4)
 	if _build_actions is GridContainer:
-		(_build_actions as GridContainer).columns = catalog_columns
+		(_build_actions as GridContainer).columns = 2 if _town_catalog_mode == "build" else catalog_columns
 	if _recruit_actions is GridContainer:
 		(_recruit_actions as GridContainer).columns = catalog_columns
 
@@ -564,6 +612,9 @@ func _open_town_catalog(mode: String) -> void:
 	if not _town_catalog_is_open() and focus_owner is Control:
 		_town_catalog_previous_focus = focus_owner
 	_town_catalog_mode = mode
+	_construction_scene_only = false
+	_town_stage_view.set_construction_preview("")
+	_apply_responsive_layout()
 	_build_actions.visible = mode == "build"
 	_recruit_actions.visible = mode == "muster"
 	_domain_actions.visible = mode in ["spells", "trade", "log", "building_info"]
@@ -607,7 +658,11 @@ func _open_town_catalog(mode: String) -> void:
 	else:
 		_populate_building_information(_selected_building_info_id)
 	_town_catalog_scroll.scroll_vertical = 0
+	# Canvas z-index alone does not order Control input. The promoted edge
+	# rails must not intercept clicks through a visibly foreground ledger.
+	move_child(_town_catalog_overlay, get_child_count() - 1)
 	_town_catalog_overlay.visible = true
+	if mode == "build": _preview_construction(_selected_build_action_id.trim_prefix("build:"))
 	call_deferred("_configure_town_keyboard_focus", true)
 
 func _close_town_catalog(restore_focus: bool = true) -> void:
@@ -616,6 +671,9 @@ func _close_town_catalog(restore_focus: bool = true) -> void:
 	var focus_target := _town_catalog_previous_focus
 	_town_catalog_overlay.visible = false
 	_town_catalog_mode = ""
+	_construction_scene_only = false
+	_town_stage_view.set_construction_preview("")
+	_apply_responsive_layout()
 	_town_catalog_previous_focus = null
 	if restore_focus and focus_target != null and is_instance_valid(focus_target) and focus_target.is_visible_in_tree():
 		call_deferred("_restore_town_catalog_focus", focus_target)
@@ -634,6 +692,14 @@ func _restore_town_catalog_focus(focus_target: Control) -> void:
 
 func _on_build_action_pressed(action_id: String) -> void:
 	_select_build_action("build:%s" % action_id)
+	_preview_construction(action_id)
+
+func _preview_construction(building_id: String) -> void:
+	if _town_catalog_mode == "build":
+		_town_stage_view.set_construction_preview(building_id)
+
+func _restore_selected_construction_preview() -> void:
+	_preview_construction(_selected_build_action_id.trim_prefix("build:"))
 
 func _on_town_orders_toggle_pressed() -> void:
 	if not _narrow_layout_active:
@@ -1228,7 +1294,7 @@ func _configure_town_keyboard_focus(force: bool = false) -> void:
 	if _town_catalog_is_open():
 		var catalog_surfaces := [_town_catalog_close_button]
 		if _town_catalog_mode == "build":
-			catalog_surfaces.append_array([_build_actions, _confirm_build_button])
+			catalog_surfaces.append_array([_construction_peek_button, _build_actions, _confirm_build_button])
 		elif _town_catalog_mode == "muster":
 			catalog_surfaces.append(_recruit_actions)
 		else:
@@ -3756,6 +3822,10 @@ func _rebuild_build_actions(actions_override: Variant = null) -> void:
 		button.set_meta("catalog_status", String(action.get("catalog_status", "")))
 		_apply_build_action_icon(button, action)
 		button.pressed.connect(_on_build_action_pressed.bind(String(action.get("id", "")).trim_prefix("build:")))
+		button.mouse_entered.connect(_preview_construction.bind(action_id.trim_prefix("build:")))
+		button.focus_entered.connect(_preview_construction.bind(action_id.trim_prefix("build:")))
+		button.mouse_exited.connect(_restore_selected_construction_preview)
+		button.accessibility_description = "Preview this building in its town location. %s" % button.tooltip_text
 		card_box.add_child(button)
 		var cost_label := Label.new()
 		var cost_text := TownRules._describe_resources(action.get("cost", {}))
