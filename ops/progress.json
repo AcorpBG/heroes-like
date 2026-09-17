@@ -16701,14 +16701,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Completed all six graphical/usability improvements. Source/Linux 4197 checks each, Windows 4178, 804 scenic previews across six factions, existing army/log/targeting/spellbook/effects/menu/town checks, full repository and both official exports/parity pass. Small/wide visuals inspected. Removed 3.18 GB disposable outputs; saves/caches/source/art/RMG and unrelated files preserved. Windows is headless, not GPU certification; no release-ready claim.",
+  "currentNotes": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-graphical-usability-cohesion-20260917",
-  "currentSliceId": "ux-graphical-usability-cohesion-20260917",
-  "currentSliceNotes": "Completed all six graphical/usability improvements. Source/Linux 4197 checks each, Windows 4178, 804 scenic previews across six factions, existing army/log/targeting/spellbook/effects/menu/town checks, full repository and both official exports/parity pass. Small/wide visuals inspected. Removed 3.18 GB disposable outputs; saves/caches/source/art/RMG and unrelated files preserved. Windows is headless, not GPU certification; no release-ready claim.",
+  "currentSlice": "ux-usability-expansion-20-20260917",
+  "currentSliceId": "ux-usability-expansion-20-20260917",
+  "currentSliceNotes": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Graphical and Usability Cohesion",
-  "currentSliceUpdatedAt": "2026-09-17T20:48:37Z",
+  "currentSliceTitle": "Twenty Further Usability Improvements",
+  "currentSliceUpdatedAt": "2026-09-17T21:47:53Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22013,37 +22013,39 @@
       }
     }
   },
-  "guardrailNote": "Completed the six approved graphical/usability slices only. Preserve gameplay, targeting, event timing, saves, accessibility, original art/provenance and native RMG.",
+  "guardrailNote": "Only the 20 requirements in docs/usability-expansion-20.md are selected; no new art, rules/save/native RMG changes.",
   "lastValidation": {
-    "id": "ux-graphical-usability-cohesion-20260917",
-    "sliceId": "ux-graphical-usability-cohesion-20260917",
+    "id": "ux-usability-expansion-20-20260917",
+    "sliceId": "ux-usability-expansion-20-20260917",
     "status": "completed",
-    "validatedAt": "2026-09-17T20:48:37Z",
-    "sourceReport": "docs/graphical-usability-cohesion.md",
-    "summary": "Completed all six graphical/usability improvements. Source/Linux 4197 checks each, Windows 4178, 804 scenic previews across six factions, existing army/log/targeting/spellbook/effects/menu/town checks, full repository and both official exports/parity pass. Small/wide visuals inspected. Removed 3.18 GB disposable outputs; saves/caches/source/art/RMG and unrelated files preserved. Windows is headless, not GPU certification; no release-ready claim.",
+    "validatedAt": "2026-09-17T21:47:53Z",
+    "sourceReport": "docs/usability-expansion-20.md",
+    "summary": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
     "evidence": {
-      "sourceRenderedChecks": 4197,
-      "linuxRenderedChecks": 4197,
-      "windowsHeadlessChecks": 4178,
-      "townPreviewPlacements": 804,
-      "townFactions": 6,
-      "townTemplates": 32,
+      "sourceRenderedChecks": 985,
+      "linuxPackageRenderedChecks": 985,
+      "windowsPackageHeadlessChecks": 977,
+      "implementedImprovements": 20,
       "existingChecks": {
-        "battleLog": 87,
-        "targeting": 95,
-        "spellbook": 4627,
-        "combatEffects": 1817,
-        "menuAndTurn": 61,
-        "townLayerPythonTests": 31,
-        "army": "Pass: live Town Log, two resolutions, split/merge/swap, save restore, battle survivor slot order"
+        "graphicalUsability": 4197,
+        "townPreviewPlacements": 804,
+        "spellbook": 4633,
+        "heroSheet": 528,
+        "battleHistory": 87,
+        "targeting": 95
       },
-      "repository": "Pass, exit 0; 26 absent historical smoke reports explicitly unexecuted",
-      "exports": "Official Linux/Windows export/startup pass; Windows generated-map/Town 23-step flow passes",
-      "packageBytesEach": 648444232,
-      "packageParity": "8911 entries each; 8910 identical, only project.binary differs; 12 UI owners verified; exports unchanged",
-      "visualReview": "1280x720 source and 1920x1080 immutable Linux; battle, army, scouting, town and six faction previews inspected",
-      "cleanup": "3.18 GB rebuildable reports/captures/logs/test packages removed; 3.1 MB user data/saves retained; caches/source/art/RMG/unrelated paths preserved",
-      "limits": "Windows headless only; historical smokes not inferred; not full-game release readiness"
+      "repository": "VALIDATION PASSED, exit 0; 26 absent historical smokes explicitly unexecuted",
+      "exports": "Official Linux/Windows export/startup pass; Windows 23-step generated-map/Town construction-information flow passed",
+      "packageBytesEach": 648459312,
+      "packageParity": "8915 entries, 8914 identical, only project.binary differs; 16 compiled UI owners present; final exports unchanged",
+      "probeSha256": "69f0caf66be71f7abe5fd67ba6d3d43709df43c17f5c1142cc3d00e72678fd5b",
+      "pythonProbeSha256": "68e029e7b982cf2375df78757ac503b78ef937fe6794d610db9cec643f36fac5",
+      "linuxPackSha256": "178f6987411f798073a8372f607c2aa38c6034a1d9bdbf2cb66a956edacaadb1",
+      "windowsPackSha256": "c8688cca717495a05606efdee948a8abbd8dc08d94c4bb137097f5cc98bef10f",
+      "visualReview": "1280x720 source and actual 1920x1080 Linux export; battle/ledger/roster/hero/spell discovery inspected",
+      "cleanupAllocatedBytes": 3042623488,
+      "cleanup": "Removed all task-owned disposable outputs after recording results; 3.09 MB Wine user data retained; source/art/caches/saves/RMG/unrelated files preserved",
+      "limits": "Windows headless Wine, not GPU certification; no historical smoke inference or whole-game release-ready claim"
     }
   },
   "priorHeroSheetValidation": {
@@ -22243,46 +22245,47 @@
     ]
   },
   "latestEvidence": {
-    "id": "ux-graphical-usability-cohesion-20260917",
-    "sliceId": "ux-graphical-usability-cohesion-20260917",
+    "id": "ux-usability-expansion-20-20260917",
+    "sliceId": "ux-usability-expansion-20-20260917",
     "status": "completed",
-    "validatedAt": "2026-09-17T20:48:37Z",
-    "sourceReport": "docs/graphical-usability-cohesion.md",
-    "summary": "Completed all six graphical/usability improvements. Source/Linux 4197 checks each, Windows 4178, 804 scenic previews across six factions, existing army/log/targeting/spellbook/effects/menu/town checks, full repository and both official exports/parity pass. Small/wide visuals inspected. Removed 3.18 GB disposable outputs; saves/caches/source/art/RMG and unrelated files preserved. Windows is headless, not GPU certification; no release-ready claim.",
+    "validatedAt": "2026-09-17T21:47:53Z",
+    "sourceReport": "docs/usability-expansion-20.md",
+    "summary": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
     "evidence": {
-      "sourceRenderedChecks": 4197,
-      "linuxRenderedChecks": 4197,
-      "windowsHeadlessChecks": 4178,
-      "townPreviewPlacements": 804,
-      "townFactions": 6,
-      "townTemplates": 32,
+      "sourceRenderedChecks": 985,
+      "linuxPackageRenderedChecks": 985,
+      "windowsPackageHeadlessChecks": 977,
+      "implementedImprovements": 20,
       "existingChecks": {
-        "battleLog": 87,
-        "targeting": 95,
-        "spellbook": 4627,
-        "combatEffects": 1817,
-        "menuAndTurn": 61,
-        "townLayerPythonTests": 31,
-        "army": "Pass: live Town Log, two resolutions, split/merge/swap, save restore, battle survivor slot order"
+        "graphicalUsability": 4197,
+        "townPreviewPlacements": 804,
+        "spellbook": 4633,
+        "heroSheet": 528,
+        "battleHistory": 87,
+        "targeting": 95
       },
-      "repository": "Pass, exit 0; 26 absent historical smoke reports explicitly unexecuted",
-      "exports": "Official Linux/Windows export/startup pass; Windows generated-map/Town 23-step flow passes",
-      "packageBytesEach": 648444232,
-      "packageParity": "8911 entries each; 8910 identical, only project.binary differs; 12 UI owners verified; exports unchanged",
-      "visualReview": "1280x720 source and 1920x1080 immutable Linux; battle, army, scouting, town and six faction previews inspected",
-      "cleanup": "3.18 GB rebuildable reports/captures/logs/test packages removed; 3.1 MB user data/saves retained; caches/source/art/RMG/unrelated paths preserved",
-      "limits": "Windows headless only; historical smokes not inferred; not full-game release readiness"
+      "repository": "VALIDATION PASSED, exit 0; 26 absent historical smokes explicitly unexecuted",
+      "exports": "Official Linux/Windows export/startup pass; Windows 23-step generated-map/Town construction-information flow passed",
+      "packageBytesEach": 648459312,
+      "packageParity": "8915 entries, 8914 identical, only project.binary differs; 16 compiled UI owners present; final exports unchanged",
+      "probeSha256": "69f0caf66be71f7abe5fd67ba6d3d43709df43c17f5c1142cc3d00e72678fd5b",
+      "pythonProbeSha256": "68e029e7b982cf2375df78757ac503b78ef937fe6794d610db9cec643f36fac5",
+      "linuxPackSha256": "178f6987411f798073a8372f607c2aa38c6034a1d9bdbf2cb66a956edacaadb1",
+      "windowsPackSha256": "c8688cca717495a05606efdee948a8abbd8dc08d94c4bb137097f5cc98bef10f",
+      "visualReview": "1280x720 source and actual 1920x1080 Linux export; battle/ledger/roster/hero/spell discovery inspected",
+      "cleanupAllocatedBytes": 3042623488,
+      "cleanup": "Removed all task-owned disposable outputs after recording results; 3.09 MB Wine user data retained; source/art/caches/saves/RMG/unrelated files preserved",
+      "limits": "Windows headless Wine, not GPU certification; no historical smoke inference or whole-game release-ready claim"
     }
   },
   "latestEvidenceArtifacts": [
-    "docs/graphical-usability-cohesion.md",
-    "tests/graphical_usability_regression.py",
-    "tests/army_stack_bar_regression.py"
+    "docs/usability-expansion-20.md",
+    "tests/usability_expansion_regression.py"
   ],
-  "latestEvidenceId": "ux-graphical-usability-cohesion-20260917",
-  "latestFinding": "Completed all six graphical/usability improvements. Source/Linux 4197 checks each, Windows 4178, 804 scenic previews across six factions, existing army/log/targeting/spellbook/effects/menu/town checks, full repository and both official exports/parity pass. Small/wide visuals inspected. Removed 3.18 GB disposable outputs; saves/caches/source/art/RMG and unrelated files preserved. Windows is headless, not GPU certification; no release-ready claim.",
+  "latestEvidenceId": "ux-usability-expansion-20-20260917",
+  "latestFinding": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
   "metrics": {
-    "scope": "Historical full-match checkpoint metrics retained below; these are not current release metrics. Current art-goal acceptance is in latestEvidence and validation.",
+    "scope": "Historical full-match checkpoint metrics retained below; these are not current release metrics. Current UI-goal acceptance is in latestEvidence and validation.",
     "audit_only": false,
     "runtime_behavior_changed": true,
     "source_backed_behavior_progress": true,
@@ -22345,7 +22348,7 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "No next slice selected. Completion of this UI batch is not full-game release readiness or resolution of unrelated historical test failures.",
+  "nextActionGuardrailNote": "No next slice selected. Preserve original art, rules, fog, saves and native RMG; completion of this bounded batch is not release readiness.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
@@ -112833,6 +112836,235 @@
         "tests/test_packaging_wine_cleanup.py",
         "docs/packaging-windows-export-smoke-report.md"
       ]
+    },
+    {
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/usability-expansion-20.md"
+      ],
+      "status": "completed",
+      "createdAt": "2026-09-17T21:16:11Z",
+      "startedAt": "2026-09-17T21:16:11Z",
+      "updatedAt": "2026-09-17T21:47:53Z",
+      "validation": [
+        "python3 -B tests/usability_expansion_regression.py --label source-small --render --resolution 1280x720",
+        "Existing graphical-usability/spellbook/hero/log/targeting regressions",
+        "python3 -B tests/validate_repo.py",
+        "Official Linux/Windows export smokes and immutable probes/parity",
+        "1280x720/1920x1080 visual review",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No art generation, balance, gameplay/save/native RMG/content changes or unrelated cleanup"
+      ],
+      "id": "ux-usability-expansion-20-20260917",
+      "title": "Twenty Further Usability Improvements",
+      "classification": "parent_implementation_goal",
+      "parentId": "phase-6-production-alpha-layer",
+      "childSliceIds": [
+        "ux-spell-discovery-20260917",
+        "ux-construction-discovery-20260917",
+        "ux-battle-reading-controls-20260917",
+        "ux-owned-roster-readiness-20260917",
+        "ux-hero-decision-details-20260917"
+      ],
+      "targets": [
+        "scenes/shared/SpellbookView.gd",
+        "scenes/town/TownShell.gd",
+        "scenes/battle/BattleMessageLog.gd",
+        "scenes/battle/BattleShell.gd",
+        "scenes/overworld/OverworldShell.gd",
+        "scenes/shared/HeroSheet.gd",
+        "scripts/ui/DecisionDetails.gd",
+        "scripts/ui/ReadinessWidgets.gd"
+      ],
+      "completionCriteria": [
+        "All 20 numbered requirements implemented and validated",
+        "Cleanup, truthful tracking, coherent commit/push and origin verification"
+      ],
+      "completedAt": "2026-09-17T21:47:53Z",
+      "notes": "Implemented and accepted in the coordinated 20-feature batch; see docs/usability-expansion-20.md for behavior, actual source/package checks, corrected probe wiring and platform limits."
+    },
+    {
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/usability-expansion-20.md"
+      ],
+      "status": "completed",
+      "createdAt": "2026-09-17T21:16:11Z",
+      "startedAt": "2026-09-17T21:16:11Z",
+      "updatedAt": "2026-09-17T21:47:53Z",
+      "validation": [
+        "python3 -B tests/usability_expansion_regression.py --label source-small --render --resolution 1280x720",
+        "Existing graphical-usability/spellbook/hero/log/targeting regressions",
+        "python3 -B tests/validate_repo.py",
+        "Official Linux/Windows export smokes and immutable probes/parity",
+        "1280x720/1920x1080 visual review",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No art generation, balance, gameplay/save/native RMG/content changes or unrelated cleanup"
+      ],
+      "id": "ux-spell-discovery-20260917",
+      "title": "Spell Discovery",
+      "classification": "implementation_slice",
+      "parentSliceId": "ux-usability-expansion-20-20260917",
+      "targets": [
+        "scenes/shared/SpellbookView.gd"
+      ],
+      "completionCriteria": [
+        "Requirements 1-4 in docs/usability-expansion-20.md implemented and validated"
+      ],
+      "completedAt": "2026-09-17T21:47:53Z",
+      "notes": "Implemented and accepted in the coordinated 20-feature batch; see docs/usability-expansion-20.md for behavior, actual source/package checks, corrected probe wiring and platform limits."
+    },
+    {
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/usability-expansion-20.md"
+      ],
+      "status": "completed",
+      "createdAt": "2026-09-17T21:16:11Z",
+      "startedAt": "2026-09-17T21:16:11Z",
+      "updatedAt": "2026-09-17T21:47:53Z",
+      "validation": [
+        "python3 -B tests/usability_expansion_regression.py --label source-small --render --resolution 1280x720",
+        "Existing graphical-usability/spellbook/hero/log/targeting regressions",
+        "python3 -B tests/validate_repo.py",
+        "Official Linux/Windows export smokes and immutable probes/parity",
+        "1280x720/1920x1080 visual review",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No art generation, balance, gameplay/save/native RMG/content changes or unrelated cleanup"
+      ],
+      "id": "ux-construction-discovery-20260917",
+      "title": "Construction Discovery",
+      "classification": "implementation_slice",
+      "parentSliceId": "ux-usability-expansion-20-20260917",
+      "targets": [
+        "scenes/town/TownShell.gd",
+        "scripts/ui/DecisionDetails.gd"
+      ],
+      "completionCriteria": [
+        "Requirements 5-8 in docs/usability-expansion-20.md implemented and validated"
+      ],
+      "completedAt": "2026-09-17T21:47:53Z",
+      "notes": "Implemented and accepted in the coordinated 20-feature batch; see docs/usability-expansion-20.md for behavior, actual source/package checks, corrected probe wiring and platform limits."
+    },
+    {
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/usability-expansion-20.md"
+      ],
+      "status": "completed",
+      "createdAt": "2026-09-17T21:16:11Z",
+      "startedAt": "2026-09-17T21:16:11Z",
+      "updatedAt": "2026-09-17T21:47:53Z",
+      "validation": [
+        "python3 -B tests/usability_expansion_regression.py --label source-small --render --resolution 1280x720",
+        "Existing graphical-usability/spellbook/hero/log/targeting regressions",
+        "python3 -B tests/validate_repo.py",
+        "Official Linux/Windows export smokes and immutable probes/parity",
+        "1280x720/1920x1080 visual review",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No art generation, balance, gameplay/save/native RMG/content changes or unrelated cleanup"
+      ],
+      "id": "ux-battle-reading-controls-20260917",
+      "title": "Battle Reading Controls",
+      "classification": "implementation_slice",
+      "parentSliceId": "ux-usability-expansion-20-20260917",
+      "targets": [
+        "scenes/battle/BattleMessageLog.gd",
+        "scenes/battle/BattleShell.gd"
+      ],
+      "completionCriteria": [
+        "Requirements 9-12 in docs/usability-expansion-20.md implemented and validated"
+      ],
+      "completedAt": "2026-09-17T21:47:53Z",
+      "notes": "Implemented and accepted in the coordinated 20-feature batch; see docs/usability-expansion-20.md for behavior, actual source/package checks, corrected probe wiring and platform limits."
+    },
+    {
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/usability-expansion-20.md"
+      ],
+      "status": "completed",
+      "createdAt": "2026-09-17T21:16:11Z",
+      "startedAt": "2026-09-17T21:16:11Z",
+      "updatedAt": "2026-09-17T21:47:53Z",
+      "validation": [
+        "python3 -B tests/usability_expansion_regression.py --label source-small --render --resolution 1280x720",
+        "Existing graphical-usability/spellbook/hero/log/targeting regressions",
+        "python3 -B tests/validate_repo.py",
+        "Official Linux/Windows export smokes and immutable probes/parity",
+        "1280x720/1920x1080 visual review",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No art generation, balance, gameplay/save/native RMG/content changes or unrelated cleanup"
+      ],
+      "id": "ux-owned-roster-readiness-20260917",
+      "title": "Owned Roster Readiness",
+      "classification": "implementation_slice",
+      "parentSliceId": "ux-usability-expansion-20-20260917",
+      "targets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scripts/ui/ReadinessWidgets.gd"
+      ],
+      "completionCriteria": [
+        "Requirements 13-16 in docs/usability-expansion-20.md implemented and validated"
+      ],
+      "completedAt": "2026-09-17T21:47:53Z",
+      "notes": "Implemented and accepted in the coordinated 20-feature batch; see docs/usability-expansion-20.md for behavior, actual source/package checks, corrected probe wiring and platform limits."
+    },
+    {
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/usability-expansion-20.md"
+      ],
+      "status": "completed",
+      "createdAt": "2026-09-17T21:16:11Z",
+      "startedAt": "2026-09-17T21:16:11Z",
+      "updatedAt": "2026-09-17T21:47:53Z",
+      "validation": [
+        "python3 -B tests/usability_expansion_regression.py --label source-small --render --resolution 1280x720",
+        "Existing graphical-usability/spellbook/hero/log/targeting regressions",
+        "python3 -B tests/validate_repo.py",
+        "Official Linux/Windows export smokes and immutable probes/parity",
+        "1280x720/1920x1080 visual review",
+        "git diff --check"
+      ],
+      "nonGoals": [
+        "No art generation, balance, gameplay/save/native RMG/content changes or unrelated cleanup"
+      ],
+      "id": "ux-hero-decision-details-20260917",
+      "title": "Hero Decision Details",
+      "classification": "implementation_slice",
+      "parentSliceId": "ux-usability-expansion-20-20260917",
+      "targets": [
+        "scenes/shared/HeroSheet.gd",
+        "scripts/ui/DecisionDetails.gd"
+      ],
+      "completionCriteria": [
+        "Requirements 17-20 in docs/usability-expansion-20.md implemented and validated"
+      ],
+      "completedAt": "2026-09-17T21:47:53Z",
+      "notes": "Implemented and accepted in the coordinated 20-feature batch; see docs/usability-expansion-20.md for behavior, actual source/package checks, corrected probe wiring and platform limits."
     }
   ],
   "project": "heroes-like",
@@ -112842,8 +113074,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "No remaining work in the six approved UI slices; overall production/release goals are separate.",
-  "remainingWork": "No next implementation slice selected; no release-readiness claim.",
+  "remainingGap": "None for this bounded 20-feature UI batch. No next slice selected; broader release readiness is not claimed.",
+  "remainingWork": "None for this bounded 20-feature UI batch. No next slice selected; broader release readiness is not claimed.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -113381,7 +113613,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "graphical_usability_cohesion_complete",
+  "result": "twenty_usability_improvements_complete",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -113482,49 +113714,45 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed all six graphical/usability improvements. Source/Linux 4197 checks each, Windows 4178, 804 scenic previews across six factions, existing army/log/targeting/spellbook/effects/menu/town checks, full repository and both official exports/parity pass. Small/wide visuals inspected. Removed 3.18 GB disposable outputs; saves/caches/source/art/RMG and unrelated files preserved. Windows is headless, not GPU certification; no release-ready claim.",
+  "summary": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-17T20:48:37Z",
+  "updatedAt": "2026-09-17T21:47:53Z",
   "validation": {
-    "id": "vfx-spell-effect-variety-20260917",
-    "sliceId": "vfx-spell-effect-variety-20260917",
+    "id": "ux-usability-expansion-20-20260917",
+    "sliceId": "ux-usability-expansion-20-20260917",
     "status": "completed",
-    "validatedAt": "2026-09-17T18:52:58Z",
-    "sourceReport": "docs/spell-effect-variety.md",
-    "summary": "Explicit mapping for all 97 battle spells; 44 former shared ward routes now use 21 original school/effect paintings and seven motion profiles. Passing source/package coverage and inspected visuals, with baseline legacy-report exceptions documented.",
+    "validatedAt": "2026-09-17T21:47:53Z",
+    "sourceReport": "docs/usability-expansion-20.md",
+    "summary": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
     "evidence": {
-      "battleSpells": 97,
-      "updatedSpells": 44,
-      "newOriginalPaintings": 21,
-      "motionProfiles": 7,
-      "sourceRenderedChecks": 3960,
-      "linuxPackageRenderedChecks": 3960,
-      "windowsPackageHeadlessChecks": 3897,
-      "assetMutationTests": 8,
-      "existingCombatVfxChecks": 1831,
-      "readabilityNormalChecks": 64,
-      "readabilityFastReducedChecks": 64,
-      "targetingChecks": 87,
-      "spellbookChecks": 4627,
-      "rules": "Magic schema and battle behavior reports pass; no gameplay, mana, timing, RNG or save changes",
-      "repositoryValidation": "VALIDATION PASSED, exit 0; 26 absent historical disposable smokes explicitly not run or counted as passed",
-      "platformExports": "Both official export/boot smokes pass; Windows 23 generated Overworld/Town steps pass",
-      "packageBytesEach": 648421008,
-      "packageEntryCount": 8905,
-      "identicalPlatformEntries": 8904,
-      "packageParity": "Only project.binary differs; 21 new imports present and source art excluded",
-      "visualReview": "All 21 source paintings and 1280x720 real-cast families inspected, 1920x1080 frames and 20/50/80-percent samples across seven profiles; target, unit, caption and control readability preserved",
-      "broaderTestExceptions": [
-        "Legacy 32-case combined event report has 122 headless timing/audio/idle-art failures; same failure labels reproduced with pre-slice 60035b51 Board, motion, manifest and report. No new failure labels after updating artwork counts; not counted as green."
-      ],
-      "cleanupRemovedLogicalBytes": 1946244885,
-      "cleanupFreedFilesystemBytes": 1947033600,
-      "cleanup": "43 exact task-owned disposable targets removed after process checks; three Wine prefixes lifecycle-cleaned, their user data retained. Original/generated art, caches/saves/RMG and unrelated files preserved.",
-      "limits": "Windows uses headless Wine, not physical GPU certification. No release-readiness claim."
+      "sourceRenderedChecks": 985,
+      "linuxPackageRenderedChecks": 985,
+      "windowsPackageHeadlessChecks": 977,
+      "implementedImprovements": 20,
+      "existingChecks": {
+        "graphicalUsability": 4197,
+        "townPreviewPlacements": 804,
+        "spellbook": 4633,
+        "heroSheet": 528,
+        "battleHistory": 87,
+        "targeting": 95
+      },
+      "repository": "VALIDATION PASSED, exit 0; 26 absent historical smokes explicitly unexecuted",
+      "exports": "Official Linux/Windows export/startup pass; Windows 23-step generated-map/Town construction-information flow passed",
+      "packageBytesEach": 648459312,
+      "packageParity": "8915 entries, 8914 identical, only project.binary differs; 16 compiled UI owners present; final exports unchanged",
+      "probeSha256": "69f0caf66be71f7abe5fd67ba6d3d43709df43c17f5c1142cc3d00e72678fd5b",
+      "pythonProbeSha256": "68e029e7b982cf2375df78757ac503b78ef937fe6794d610db9cec643f36fac5",
+      "linuxPackSha256": "178f6987411f798073a8372f607c2aa38c6034a1d9bdbf2cb66a956edacaadb1",
+      "windowsPackSha256": "c8688cca717495a05606efdee948a8abbd8dc08d94c4bb137097f5cc98bef10f",
+      "visualReview": "1280x720 source and actual 1920x1080 Linux export; battle/ledger/roster/hero/spell discovery inspected",
+      "cleanupAllocatedBytes": 3042623488,
+      "cleanup": "Removed all task-owned disposable outputs after recording results; 3.09 MB Wine user data retained; source/art/caches/saves/RMG/unrelated files preserved",
+      "limits": "Windows headless Wine, not GPU certification; no historical smoke inference or whole-game release-ready claim"
     },
     "artifacts": [
-      "docs/spell-effect-variety.md",
-      "art/battle/source/generated/spell_variety/manifest.json"
+      "docs/usability-expansion-20.md",
+      "tests/usability_expansion_regression.py"
     ]
   },
   "validationHistory": [
@@ -127530,38 +127758,114 @@
         "art/overworld/source/generated/terrain/ground_materials_v3/manifest.json",
         "tests/overworld_biome_surface_regression.py"
       ]
+    },
+    {
+      "id": "ux-graphical-usability-cohesion-20260917",
+      "sliceId": "ux-graphical-usability-cohesion-20260917",
+      "status": "completed",
+      "validatedAt": "2026-09-17T20:48:37Z",
+      "sourceReport": "docs/graphical-usability-cohesion.md",
+      "summary": "Completed all six graphical/usability improvements. Source/Linux 4197 checks each, Windows 4178, 804 scenic previews across six factions, existing army/log/targeting/spellbook/effects/menu/town checks, full repository and both official exports/parity pass. Small/wide visuals inspected. Removed 3.18 GB disposable outputs; saves/caches/source/art/RMG and unrelated files preserved. Windows is headless, not GPU certification; no release-ready claim.",
+      "evidence": {
+        "sourceRenderedChecks": 4197,
+        "linuxRenderedChecks": 4197,
+        "windowsHeadlessChecks": 4178,
+        "townPreviewPlacements": 804,
+        "townFactions": 6,
+        "townTemplates": 32,
+        "existingChecks": {
+          "battleLog": 87,
+          "targeting": 95,
+          "spellbook": 4627,
+          "combatEffects": 1817,
+          "menuAndTurn": 61,
+          "townLayerPythonTests": 31,
+          "army": "Pass: live Town Log, two resolutions, split/merge/swap, save restore, battle survivor slot order"
+        },
+        "repository": "Pass, exit 0; 26 absent historical smoke reports explicitly unexecuted",
+        "exports": "Official Linux/Windows export/startup pass; Windows generated-map/Town 23-step flow passes",
+        "packageBytesEach": 648444232,
+        "packageParity": "8911 entries each; 8910 identical, only project.binary differs; 12 UI owners verified; exports unchanged",
+        "visualReview": "1280x720 source and 1920x1080 immutable Linux; battle, army, scouting, town and six faction previews inspected",
+        "cleanup": "3.18 GB rebuildable reports/captures/logs/test packages removed; 3.1 MB user data/saves retained; caches/source/art/RMG/unrelated paths preserved",
+        "limits": "Windows headless only; historical smokes not inferred; not full-game release readiness"
+      }
+    },
+    {
+      "id": "vfx-spell-effect-variety-20260917",
+      "sliceId": "vfx-spell-effect-variety-20260917",
+      "status": "completed",
+      "validatedAt": "2026-09-17T18:52:58Z",
+      "sourceReport": "docs/spell-effect-variety.md",
+      "summary": "Explicit mapping for all 97 battle spells; 44 former shared ward routes now use 21 original school/effect paintings and seven motion profiles. Passing source/package coverage and inspected visuals, with baseline legacy-report exceptions documented.",
+      "evidence": {
+        "battleSpells": 97,
+        "updatedSpells": 44,
+        "newOriginalPaintings": 21,
+        "motionProfiles": 7,
+        "sourceRenderedChecks": 3960,
+        "linuxPackageRenderedChecks": 3960,
+        "windowsPackageHeadlessChecks": 3897,
+        "assetMutationTests": 8,
+        "existingCombatVfxChecks": 1831,
+        "readabilityNormalChecks": 64,
+        "readabilityFastReducedChecks": 64,
+        "targetingChecks": 87,
+        "spellbookChecks": 4627,
+        "rules": "Magic schema and battle behavior reports pass; no gameplay, mana, timing, RNG or save changes",
+        "repositoryValidation": "VALIDATION PASSED, exit 0; 26 absent historical disposable smokes explicitly not run or counted as passed",
+        "platformExports": "Both official export/boot smokes pass; Windows 23 generated Overworld/Town steps pass",
+        "packageBytesEach": 648421008,
+        "packageEntryCount": 8905,
+        "identicalPlatformEntries": 8904,
+        "packageParity": "Only project.binary differs; 21 new imports present and source art excluded",
+        "visualReview": "All 21 source paintings and 1280x720 real-cast families inspected, 1920x1080 frames and 20/50/80-percent samples across seven profiles; target, unit, caption and control readability preserved",
+        "broaderTestExceptions": [
+          "Legacy 32-case combined event report has 122 headless timing/audio/idle-art failures; same failure labels reproduced with pre-slice 60035b51 Board, motion, manifest and report. No new failure labels after updating artwork counts; not counted as green."
+        ],
+        "cleanupRemovedLogicalBytes": 1946244885,
+        "cleanupFreedFilesystemBytes": 1947033600,
+        "cleanup": "43 exact task-owned disposable targets removed after process checks; three Wine prefixes lifecycle-cleaned, their user data retained. Original/generated art, caches/saves/RMG and unrelated files preserved.",
+        "limits": "Windows uses headless Wine, not physical GPU certification. No release-readiness claim."
+      },
+      "artifacts": [
+        "docs/spell-effect-variety.md",
+        "art/battle/source/generated/spell_variety/manifest.json"
+      ]
     }
   ],
   "validationResults": {
-    "id": "ux-graphical-usability-cohesion-20260917",
-    "sliceId": "ux-graphical-usability-cohesion-20260917",
+    "id": "ux-usability-expansion-20-20260917",
+    "sliceId": "ux-usability-expansion-20-20260917",
     "status": "completed",
-    "validatedAt": "2026-09-17T20:48:37Z",
-    "sourceReport": "docs/graphical-usability-cohesion.md",
-    "summary": "Completed all six graphical/usability improvements. Source/Linux 4197 checks each, Windows 4178, 804 scenic previews across six factions, existing army/log/targeting/spellbook/effects/menu/town checks, full repository and both official exports/parity pass. Small/wide visuals inspected. Removed 3.18 GB disposable outputs; saves/caches/source/art/RMG and unrelated files preserved. Windows is headless, not GPU certification; no release-ready claim.",
+    "validatedAt": "2026-09-17T21:47:53Z",
+    "sourceReport": "docs/usability-expansion-20.md",
+    "summary": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
     "evidence": {
-      "sourceRenderedChecks": 4197,
-      "linuxRenderedChecks": 4197,
-      "windowsHeadlessChecks": 4178,
-      "townPreviewPlacements": 804,
-      "townFactions": 6,
-      "townTemplates": 32,
+      "sourceRenderedChecks": 985,
+      "linuxPackageRenderedChecks": 985,
+      "windowsPackageHeadlessChecks": 977,
+      "implementedImprovements": 20,
       "existingChecks": {
-        "battleLog": 87,
-        "targeting": 95,
-        "spellbook": 4627,
-        "combatEffects": 1817,
-        "menuAndTurn": 61,
-        "townLayerPythonTests": 31,
-        "army": "Pass: live Town Log, two resolutions, split/merge/swap, save restore, battle survivor slot order"
+        "graphicalUsability": 4197,
+        "townPreviewPlacements": 804,
+        "spellbook": 4633,
+        "heroSheet": 528,
+        "battleHistory": 87,
+        "targeting": 95
       },
-      "repository": "Pass, exit 0; 26 absent historical smoke reports explicitly unexecuted",
-      "exports": "Official Linux/Windows export/startup pass; Windows generated-map/Town 23-step flow passes",
-      "packageBytesEach": 648444232,
-      "packageParity": "8911 entries each; 8910 identical, only project.binary differs; 12 UI owners verified; exports unchanged",
-      "visualReview": "1280x720 source and 1920x1080 immutable Linux; battle, army, scouting, town and six faction previews inspected",
-      "cleanup": "3.18 GB rebuildable reports/captures/logs/test packages removed; 3.1 MB user data/saves retained; caches/source/art/RMG/unrelated paths preserved",
-      "limits": "Windows headless only; historical smokes not inferred; not full-game release readiness"
+      "repository": "VALIDATION PASSED, exit 0; 26 absent historical smokes explicitly unexecuted",
+      "exports": "Official Linux/Windows export/startup pass; Windows 23-step generated-map/Town construction-information flow passed",
+      "packageBytesEach": 648459312,
+      "packageParity": "8915 entries, 8914 identical, only project.binary differs; 16 compiled UI owners present; final exports unchanged",
+      "probeSha256": "69f0caf66be71f7abe5fd67ba6d3d43709df43c17f5c1142cc3d00e72678fd5b",
+      "pythonProbeSha256": "68e029e7b982cf2375df78757ac503b78ef937fe6794d610db9cec643f36fac5",
+      "linuxPackSha256": "178f6987411f798073a8372f607c2aa38c6034a1d9bdbf2cb66a956edacaadb1",
+      "windowsPackSha256": "c8688cca717495a05606efdee948a8abbd8dc08d94c4bb137097f5cc98bef10f",
+      "visualReview": "1280x720 source and actual 1920x1080 Linux export; battle/ledger/roster/hero/spell discovery inspected",
+      "cleanupAllocatedBytes": 3042623488,
+      "cleanup": "Removed all task-owned disposable outputs after recording results; 3.09 MB Wine user data retained; source/art/caches/saves/RMG/unrelated files preserved",
+      "limits": "Windows headless Wine, not GPU certification; no historical smoke inference or whole-game release-ready claim"
     }
   },
   "blockedReason": null,

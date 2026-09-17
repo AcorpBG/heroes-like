@@ -85,7 +85,7 @@ func battle() -> void:
 	check(log_control.expanded and log_control.history.visible,"log click did not expand")
 	check("BattleHistory" in shell._last_battle_keyboard_focus_cycle_names,"expanded history missing from keyboard navigation")
 	if DisplayServer.get_name()!="headless":
-		log_control.toggle.grab_focus()
+		log_control.jump_latest.grab_focus()
 		var key:=InputEventKey.new()
 		key.keycode=KEY_TAB;key.pressed=true
 		Input.parse_input_event(key)

@@ -22,6 +22,20 @@ Rules:
 
 ## Current Tactical State
 
+### Twenty Further Usability Improvements
+
+id: `ux-usability-expansion-20-20260917`
+
+Status: completed, owner-directed Phase 6 parent. All 20 requirements in `docs/usability-expansion-20.md` are implemented: source/Linux 985 checks each, Windows 977, existing UI regressions, full repository and official exports/parity pass. Final package launches and small/wide visuals verified; corrected an early probe-launcher mistake without counting its source runs as package acceptance. Cleaned 3.04 GB disposable outputs; saves/caches/source/art/RMG and unrelated files preserved. No new art, gameplay/save/native changes or release-ready claim.
+
+| Child slice | Requirements | Status |
+| --- | --- | --- |
+| `ux-spell-discovery-20260917` | 1–4: search, school, cost ordering, affordable filter | completed |
+| `ux-construction-discovery-20260917` | 5–8: search, status, shortfalls, prerequisite navigation | completed |
+| `ux-battle-reading-controls-20260917` | 9–12: history search, latest, unread, speed selector | completed |
+| `ux-owned-roster-readiness-20260917` | 13–16: movement/mana meters, defenders, next movable hero | completed |
+| `ux-hero-decision-details-20260917` | 17–20: XP, unit body/role, artifact search and comparison | completed |
+
 ### Graphical and Usability Cohesion
 
 id: `ux-graphical-usability-cohesion-20260917`
