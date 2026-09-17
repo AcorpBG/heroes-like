@@ -36783,8 +36783,8 @@ def validate_overworld_landmark_readability_runtime_report(errors: list[str]) ->
         'const REPORT_ID := "OVERWORLD_LANDMARK_READABILITY_RUNTIME_REPORT"',
         '"classic_readable_semantic_landmark_bands_v6"',
         '"decoration": 0.46',
-        '"artifact": 0.58',
-        '"pickup": 0.68',
+        '"artifact": 0.42',
+        '"pickup": 0.56',
         '"hero": 0.86',
         '"encounter": 0.88',
         '"landmark": 0.94',
@@ -37354,8 +37354,8 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
     world_tile_extent_block = gd_function_block(map_text, "_object_world_tile_extent")
     visible_footprint_block = gd_function_block(map_text, "_object_visible_footprint_rect")
     for token in (
-        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.58",
-        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.68",
+        "const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.42",
+        "const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.56",
         'const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "classic_readable_semantic_landmark_bands_v6"',
         "const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.88",
         "const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.82",
@@ -37457,7 +37457,11 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         ensure(token in extent_block, errors, f"Visible sprite hierarchy is missing an exact semantic scale boundary: {token}")
     for forbidden in ("asset_id", "texture", "get_image", "session", "_session", "runtime_object_role"):
         ensure(forbidden not in extent_block + semantic_class_block, errors, f"Semantic scale selection must not inspect assets or gameplay state: {forbidden}")
-    semantic_order = tuple(semantic_class_block.find(token) for token in (
+    # Loose native rewards may reuse mine/site definitions. Their explicit
+    # presentation-kind precedence is checked separately from authored families.
+    ensure('String(profile.get("presentation_kind", "")) == "reward_reference"' in semantic_class_block, errors, "Native loose rewards must not inherit production-site visual scale")
+    authored_semantic_block = semantic_class_block[semantic_class_block.find('var family :='):]
+    semantic_order = tuple(authored_semantic_block.find(token) for token in (
         'var family := String(profile.get("family", "pickup")).strip_edges()',
         'var primary_class := String(profile.get("primary_class", "")).strip_edges()',
         '"artifact":',
@@ -37635,9 +37639,9 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'not bool(payload.get("cache_repeat_exact", false))',
         'not is_equal_approx(float(payload.get("source_aspect", 0.0)), float(payload.get("draw_aspect", -1.0)))',
         'String(artifact.get("semantic_scale_class", "")) != "handheld_artifact"',
-        'float(artifact.get("visible_extent_tiles", 0.0)), 0.58',
+        'float(artifact.get("visible_extent_tiles", 0.0)), 0.42',
         'String(pickup.get("semantic_scale_class", "")) != "loose_pickup"',
-        'float(pickup.get("visible_extent_tiles", 0.0)), 0.68',
+        'float(pickup.get("visible_extent_tiles", 0.0)), 0.56',
         'float(decoration.get("visible_extent_tiles", 0.0)), 0.46',
         'float(generic_object.get("visible_extent_tiles", 0.0)), 0.62',
         'float(encounter.get("visible_extent_tiles", 0.0)), 0.88',
@@ -37681,7 +37685,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         '"map_roles": ["small_reward", "build_resource", "counter_capture_target"]',
         '"id": "object_contract_scribe_booth"',
         '"map_roles": ["route_pacing", "world_lore", "repeatable_service"]',
-        'float(authored_pickup.get("visible_extent_tiles", 0.0)), 0.68',
+        'float(authored_pickup.get("visible_extent_tiles", 0.0)), 0.56',
         'float(authored_service.get("visible_extent_tiles", 0.0)), 0.88',
         'float(service.get("visible_extent_tiles", 0.0))',
         '< float(blocker.get("visible_extent_tiles", 0.0))',
@@ -84984,6 +84988,8 @@ def main() -> int:
     validate_overworld_scenery_animation(errors)
     from overworld_ground_materials_contract import validate as validate_original_ground_materials
     errors.extend(validate_original_ground_materials())
+    from overworld_object_density_contract import validate as validate_object_raster_density
+    errors.extend(validate_object_raster_density())
     ui_frame_path = ROOT / "art/ui/runtime/shared/hud_frame_ornate.png"
     ensure(ui_frame_path.is_file(), errors, "Scenery-first core UI frame is missing")
     if ui_frame_path.is_file():

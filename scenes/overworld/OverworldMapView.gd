@@ -178,8 +178,8 @@ const HERO_PLATE_RADIUS_FACTOR := 0.33
 const OBJECT_SPRITE_PLATE_RADIUS_FACTOR := 0.40
 const OBJECT_SPRITE_EXTENT_FACTOR := 0.88
 const WORLD_OBJECT_SCALE_HIERARCHY_MODEL := "classic_readable_semantic_landmark_bands_v6"
-const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.58
-const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.68
+const OBJECT_HANDHELD_ARTIFACT_VISIBLE_EXTENT_TILES := 0.42
+const OBJECT_LOOSE_PICKUP_VISIBLE_EXTENT_TILES := 0.56
 const OBJECT_ENCOUNTER_VISIBLE_EXTENT_TILES := 0.88
 const OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES := 1.08
 const OBJECT_DURABLE_VISIBLE_EXTENT_TILES := 0.82
@@ -4453,7 +4453,6 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 		return false
 	var footprint := _object_profile_footprint(profile)
 	var family := String(profile.get("family", "pickup"))
-	_draw_mapped_sprite_grounding_anchor(rect, tile, family, footprint, remembered)
 	var town_adjunct_cap_tiles := TOWN_ADJUNCT_RESOURCE_VISIBLE_EXTENT_CAP_TILES if not _town_presentation_at(tile).is_empty() else 0.0
 	var metrics := _object_sprite_visual_metrics(rect, profile, 0.0, Rect2(), town_adjunct_cap_tiles)
 	var sprite_extent := float(metrics.get("sprite_extent_px", 12.0))
@@ -4461,15 +4460,37 @@ func _draw_object_sprite(asset_id: String, rect: Rect2, remembered: bool, profil
 	var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)
 	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
 	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(sprite_center, Vector2.ZERO))
+	if _object_is_portable(profile):
+		# A legacy mine footprint may back a loose reward. Its shadow belongs to
+		# the painted item, not to that unchanged gameplay/interaction footprint.
+		var contact_rect := _portable_object_grounding_rect(sprite_rect, sprite_extent)
+		_draw_mapped_sprite_grounding_anchor(contact_rect, tile, "pickup", Vector2i.ONE, remembered)
+	else:
+		_draw_mapped_sprite_grounding_anchor(rect, tile, family, footprint, remembered)
 	if _mapped_object_uses_interactive_silhouette(profile):
 		_draw_sprite_silhouette_outline(
 			draw_texture,
 			sprite_rect,
 			OBJECT_INTERACTIVE_SILHOUETTE_MEMORY if remembered else OBJECT_INTERACTIVE_SILHOUETTE_VISIBLE,
-			maxf(OBJECT_INTERACTIVE_SILHOUETTE_MIN_PX, sprite_extent * OBJECT_INTERACTIVE_SILHOUETTE_WIDTH_FACTOR)
+			_object_silhouette_width(profile, sprite_extent)
 		)
 	_draw_living_scenery(asset_id, draw_texture, sprite_rect, _mapped_object_sprite_modulate(profile, remembered), tile)
 	return true
+
+func _object_is_portable(profile: Dictionary) -> bool:
+	return _semantic_visual_scale_class(profile) in ["handheld_artifact", "loose_pickup"]
+
+func _object_silhouette_width(profile: Dictionary, sprite_extent: float) -> float:
+	if _object_is_portable(profile):
+		return maxf(0.65, sprite_extent * 0.014)
+	return maxf(OBJECT_INTERACTIVE_SILHOUETTE_MIN_PX, sprite_extent * OBJECT_INTERACTIVE_SILHOUETTE_WIDTH_FACTOR)
+
+func _portable_object_grounding_rect(sprite_rect: Rect2, sprite_extent: float) -> Rect2:
+	return Rect2(
+		Vector2(sprite_rect.get_center().x - sprite_extent * 0.5,
+			sprite_rect.end.y - sprite_extent * _mapped_sprite_ground_center_y_factor("pickup")),
+		Vector2.ONE * sprite_extent
+	)
 
 func _mapped_object_uses_interactive_silhouette(profile: Dictionary) -> bool:
 	return _semantic_visual_scale_class(profile) not in ["ground_detail", "terrain_blocker"]
@@ -4577,8 +4598,9 @@ func _object_sprite_visual_metrics(
 	var single_tile_extent := world_tile_extent_override if world_tile_extent_override > 0.0 else _object_world_tile_extent(rect, footprint)
 	var visible_footprint_rect := visible_footprint_rect_override if visible_footprint_rect_override.size.x > 0.0 and visible_footprint_rect_override.size.y > 0.0 else _object_visible_footprint_rect(rect)
 	var sprite_fraction := _sprite_extent_fraction(profile, footprint)
-	var uncapped_sprite_extent := maxf(12.0, extent * sprite_fraction)
-	var uses_multi_tile_cap := (footprint.x > 1 or footprint.y > 1) and family not in ["blocker", "decoration", "town"]
+	var portable := _object_is_portable(profile)
+	var uncapped_sprite_extent := maxf(12.0, (single_tile_extent if portable else extent) * sprite_fraction)
+	var uses_multi_tile_cap := not portable and (footprint.x > 1 or footprint.y > 1) and family not in ["blocker", "decoration", "town"]
 	var multi_tile_bounds := _multi_tile_interactive_sprite_extent_bounds(footprint) if uses_multi_tile_cap else Vector2.ZERO
 	var sprite_extent := clampf(
 		uncapped_sprite_extent,
@@ -6139,6 +6161,11 @@ func _sprite_extent_fraction(profile: Dictionary, footprint: Vector2i) -> float:
 	)
 
 func _semantic_visual_scale_class(profile: Dictionary) -> String:
+	# Native reward references reuse production-site content IDs, but their
+	# manifest resolves loose supplies. Do not promote the painted coffer/jar
+	# into a mine-sized structure or rewrite the authoritative footprint.
+	if String(profile.get("presentation_kind", "")) == "reward_reference":
+		return "loose_pickup"
 	var family := String(profile.get("family", "pickup")).strip_edges()
 	var primary_class := String(profile.get("primary_class", "")).strip_edges()
 	match family:
@@ -6792,7 +6819,7 @@ func validation_object_sprite_scale_payload(asset_id: String, family: String, fo
 		"semantic_scale_class": _semantic_visual_scale_class(profile),
 		"interactive_silhouette": _mapped_object_uses_interactive_silhouette(profile),
 		"interactive_silhouette_model": WORLD_SPRITE_SILHOUETTE_MODEL if _mapped_object_uses_interactive_silhouette(profile) else "none",
-		"interactive_silhouette_width_px": maxf(OBJECT_INTERACTIVE_SILHOUETTE_MIN_PX, visible_extent_px * OBJECT_INTERACTIVE_SILHOUETTE_WIDTH_FACTOR) if _mapped_object_uses_interactive_silhouette(profile) else 0.0,
+		"interactive_silhouette_width_px": _object_silhouette_width(profile, visible_extent_px) if _mapped_object_uses_interactive_silhouette(profile) else 0.0,
 		"visible_modulate_alpha": _mapped_object_sprite_modulate(profile, false).a,
 		"footprint": {"width": normalized_footprint.x, "height": normalized_footprint.y},
 		"visible_footprint_span": {"width": normalized_visible_span.x, "height": normalized_visible_span.y},
@@ -11130,6 +11157,31 @@ func _load_overworld_art_manifest() -> void:
 
 	_load_decorative_object_sprite_manifest(String(_overworld_art_manifest.get("decorative_object_sprite_manifest", "")))
 	_load_map_object_sprite_manifest(String(_overworld_art_manifest.get("map_object_sprite_manifest", "")))
+	_load_object_raster_density()
+
+func _load_object_raster_density() -> void:
+	# Historical atlases keep their source/provenance contracts. This explicit
+	# raster-density layer changes pixels/UVs only, never IDs or state routes.
+	var data: Dictionary = ContentService.load_json("res://art/overworld/object_raster_density.json")
+	if data.get("schema_id", "") != "overworld_object_raster_density_v1":
+		push_error("Missing or invalid overworld object raster-density manifest.")
+		return
+	var assets = data.get("assets", {})
+	if not assets is Dictionary or assets.is_empty():
+		push_error("Empty overworld object raster-density manifest.")
+		return
+	for asset_id in assets:
+		var entry: Dictionary = assets[asset_id]
+		if _object_asset_paths.get(asset_id, "") != entry.get("original_path", "") or _object_asset_regions.get(asset_id, []) != entry.get("original_region", []):
+			push_error("Object raster-density identity mismatch: " + str(asset_id))
+			continue
+		var path := String(entry.get("path", ""))
+		var region: Array = entry.get("atlas_region", [])
+		if not path.begins_with("res://art/overworld/runtime/objects/") or region.size() != 4 or float(region[2]) < 192 or float(region[3]) < 192:
+			push_error("Invalid object raster-density entry: " + str(asset_id))
+			continue
+		_object_asset_paths[asset_id] = path
+		_object_asset_regions[asset_id] = region.duplicate()
 
 func _overworld_vfx_manifest_cue(cue_id: String) -> Dictionary:
 	_load_overworld_vfx_manifest()
@@ -11405,6 +11457,7 @@ func _resource_object_profile(node: Dictionary) -> Dictionary:
 	var profile = _resource_site_object_profiles.get(site_id, {})
 	if profile is Dictionary and not profile.is_empty():
 		var resolved_profile: Dictionary = profile.duplicate(true)
+		resolved_profile["presentation_kind"] = String(node.get("kind", ""))
 		if node.get("runtime_footprint", {}) is Dictionary and not node.get("runtime_footprint", {}).is_empty():
 			var runtime_footprint: Dictionary = node.get("runtime_footprint", {}).duplicate(true)
 			resolved_profile["footprint"] = runtime_footprint
@@ -11417,6 +11470,7 @@ func _resource_object_profile(node: Dictionary) -> Dictionary:
 	if family == "":
 		family = "pickup"
 	var fallback := _default_object_profile(family, Vector2i(1, 1))
+	fallback["presentation_kind"] = String(node.get("kind", ""))
 	if node.get("runtime_footprint", {}) is Dictionary and not node.get("runtime_footprint", {}).is_empty():
 		var runtime_footprint: Dictionary = node.get("runtime_footprint", {}).duplicate(true)
 		fallback["footprint"] = runtime_footprint
