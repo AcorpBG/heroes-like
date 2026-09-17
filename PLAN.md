@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Retaliation Casualty Playback
+
+`bugfix-retaliation-casualty-playback-20260917` — blocked on full repository validation; runtime fix and focused/platform acceptance implemented. Both attack paths now capture retaliation before damage: alive → one death → persistent corpse, with unchanged deterministic combat/save state. Source/Windows 660 checks each, rendered Linux 685, Fast/reduced 682, existing readability 39 and both official exports/parity pass. `validate_repo.py` fails only on 26 historical smoke reports removed under the owner retention rule; resolving that validator/report-lifecycle conflict is a separate follow-up, not a combat change. Targets: `BattleRules.gd`, Python-owned regression. Requirements/results: `docs/retaliation-casualty-playback.md`. No art, balance, RNG, save schema or RMG changes. Remove disposable non-RMG test artifacts; preserve caches/saves and their map dependencies.
+
 ### Complete Battle Unit Animation and Size
 
 Owner sequencing override: finish animation-art generation/refinement before consolidated validation, without per-unit test/export loops. The first full160 production pass is now integrated and consolidated validation is underway; fix concrete findings within this grouped pass. This does not authorize returning to per-pose generation/test/export cycles.

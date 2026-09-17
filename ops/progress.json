@@ -1,6 +1,12 @@
 {
   "actionableNextTasks": [
     {
+      "id": "bugfix-retaliation-casualty-playback-20260917",
+      "title": "Retaliation Casualty Playback",
+      "status": "blocked",
+      "priority": "top"
+    },
+    {
       "id": "combat-unit-animation-and-size-20260913",
       "title": "Complete Battle Unit Animation and Size",
       "status": "completed",
@@ -1969,7 +1975,7 @@
     "blockedReason": ""
   },
   "active_slice": null,
-  "blocker": "",
+  "blocker": "Full repository validation requires 26 historical consolidated smoke reports removed under the owner non-RMG artifact-retention policy; align that validator/report-lifecycle policy in a separately approved follow-up. No combat regression failures.",
   "completedImplementationEvidence": [
     {
       "id": "ux-overworld-town-proportion-and-environs-20260904",
@@ -16671,14 +16677,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Completed all160 original articulated battle animation sets and persistent corpses,160 authored size profiles and37 two-hex bodies. All160 action/idle/dead visuals inspected. Source/Windows roster32507 each, final bodies1033/1030, shell input64,25 Python tests, repository and both final exports/parity pass. Original single late-capture failure retained; unchanged311-check follow-up passed. Cleanup preserves originals/caches/saves/final evidence. No next slice selected; not whole-game release readiness.",
+  "currentNotes": "Retaliation windups now capture pre-impact health in both attack paths, preventing corpse/standing/death replay and restoring damage/casualty captions. Source and Windows 660 checks each, Linux rendered 685, Fast/reduced 682, existing battle readability 39 and official platform exports/parity pass. Full repository validator fails on 26 deleted historical reports; closure remains blocked, not claimed complete. Removed 1.42 GiB disposable outputs; preserved caches/saves/maps and RMG.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "combat-unit-animation-and-size-20260913",
-  "currentSliceId": "combat-unit-animation-and-size-20260913",
-  "currentSliceNotes": "Completed all160 original articulated battle animation sets and persistent corpses,160 authored size profiles and37 two-hex bodies. All160 action/idle/dead visuals inspected. Source/Windows roster32507 each, final bodies1033/1030, shell input64,25 Python tests, repository and both final exports/parity pass. Original single late-capture failure retained; unchanged311-check follow-up passed. Cleanup preserves originals/caches/saves/final evidence. No next slice selected; not whole-game release readiness.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Complete Battle Unit Animation and Size",
-  "currentSliceUpdatedAt": "2026-09-16T18:46:31Z",
+  "currentSlice": "bugfix-retaliation-casualty-playback-20260917",
+  "currentSliceId": "bugfix-retaliation-casualty-playback-20260917",
+  "currentSliceNotes": "Retaliation windups now capture pre-impact health in both attack paths, preventing corpse/standing/death replay and restoring damage/casualty captions. Source and Windows 660 checks each, Linux rendered 685, Fast/reduced 682, existing battle readability 39 and official platform exports/parity pass. Full repository validator fails on 26 deleted historical reports; closure remains blocked, not claimed complete. Removed 1.42 GiB disposable outputs; preserved caches/saves/maps and RMG.",
+  "currentSliceStatus": "blocked",
+  "currentSliceTitle": "Retaliation Casualty Playback",
+  "currentSliceUpdatedAt": "2026-09-17T07:46:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21983,59 +21989,38 @@
       }
     }
   },
-  "guardrailNote": "Implement selected unit animation/size goal only; preserve original identity, deterministic combat and save compatibility. No native RMG or unrelated UI work.",
+  "guardrailNote": "Retaliation casualty playback only; no art, gameplay balance, save schema, RMG or unrelated UI changes.",
   "lastValidation": {
-    "id": "combat-unit-animation-and-size-20260913",
-    "sliceId": "combat-unit-animation-and-size-20260913",
-    "status": "completed",
-    "validatedAt": "2026-09-16T18:46:31Z",
-    "sourceReport": "docs/combat-unit-animation-and-size.md",
+    "id": "bugfix-retaliation-casualty-playback-20260917",
+    "sliceId": "bugfix-retaliation-casualty-playback-20260917",
+    "status": "blocked",
+    "validatedAt": "2026-09-17T07:46:00Z",
+    "sourceReport": "docs/retaliation-casualty-playback.md",
     "runtimeEvidence": {
-      "unitSizeProfiles": 160,
-      "twoCellUnits": 37,
-      "acceptedNewPoseUnits": 160,
-      "pendingNewPoseUnits": 0,
-      "sourceChecks": 1033,
-      "linuxPackagedChecks": 1033,
-      "windowsPackagedChecks": 1030,
-      "sourceRosterChecks": 32507,
-      "windowsPackagedRosterChecks": 32507,
-      "rosterClockMode": "controlled_headless; separate actual rendered all-roster review",
-      "renderedRosterChecks": 27107,
-      "renderedRosterUnits": 160,
-      "renderedRosterOriginalFailures": [
-        "Milestone movement capture expired:767ms/700ms"
-      ],
-      "unchangedFocusedReplayChecks": 311,
-      "restingSourceChecks": 2153,
-      "visuallyReviewedActionUnits": 160,
-      "visuallyReviewedIdleAndDeadUnits": 160,
-      "linuxShellInputChecks": 64,
-      "pythonTests": 25,
-      "vfxChecks": 1333,
-      "deterministicFlowChecks": 39,
-      "officialExports": "accepted-r2-linux and accepted-r2-windows passed; Windows generated-map/Town/build and managed cleanup passed",
-      "packParity": "8846 members,638705108 bytes each; only project.binary differs",
-      "payloadEquivalence": "All art, compiled owners and runtime pose data identical to full-roster-tested packages; only pose review metadata changed",
-      "repositoryValidation": ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/repository-closure.log:VALIDATION PASSED; clean exit2026-09-16T18:42:12Z",
-      "evidenceRoot": ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916",
-      "packageRoot": "/tmp/heroes-battle-roster-validation-20260916-RbzwGc",
-      "acceptanceManifest": "docs/battle-unit-animation-acceptance.json",
-      "cleanupBytes": 7085194272,
-      "remainingDependency": "",
-      "limits": "Windows headless Wine is not native GPU/controller certification; battle fixtures are not a whole-game release-ready claim. Failed/interrupted runs remain failed/incomplete."
+      "implementation": "Both player/enemy retaliation snapshots precede damage; rules/RNG/save/art unchanged",
+      "sourceChecks": 660,
+      "cases": 36,
+      "sourceRenderedNormalChecks": 690,
+      "sourceRenderedFastReducedChecks": 682,
+      "linuxPackagedChecks": 685,
+      "windowsPackagedChecks": 660,
+      "existingReadabilityChecks": 39,
+      "visualInspection": "Counterattack/death/corpse inspected at 1280x720 and 1920x1080; real-clock per-frame no-revival assertions passed",
+      "officialExports": "Linux and Windows export/startup passed; Windows generated map/Town/build and managed Wine cleanup passed",
+      "packParity": "8846 members, 638705572 bytes each; only project.binary differs",
+      "repositoryValidation": "FAILED: exactly 26 missing historical consolidated smoke reports; no new combat-owner errors",
+      "diffCheck": "passed",
+      "initialProbeFailure": "Two shell-state equality assertions exposed fixture normalization bypass; normal entry refresh restored before action and assertions retained. Viewport reset corrected and dimensions asserted.",
+      "cleanupAllocatedBytes": 1527164928,
+      "preservedUserDataBytes": 2710994,
+      "remainingDependency": "Full repository validation requires 26 historical consolidated smoke reports removed under the owner non-RMG artifact-retention policy; align that validator/report-lifecycle policy in a separately approved follow-up. No combat regression failures.",
+      "limits": "Windows headless Wine, not physical Windows GPU certification. Focused combat fix, not whole-game release readiness."
     },
     "artifacts": [
-      "docs/battle-unit-animation-acceptance.json",
-      ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/repository-closure.log",
-      ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/accepted-r2-package-parity.json",
-      ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/accepted-r2-payload-equivalence.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-linux/report.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-windows/report.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-linux-bodies/report.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-windows-bodies/report.json"
+      "docs/retaliation-casualty-playback.md",
+      "tests/battle_retaliation_playback_regression.py"
     ],
-    "summary": "Completed all160 original articulated battle animation sets and persistent corpses,160 authored size profiles and37 two-hex bodies. All160 action/idle/dead visuals inspected. Source/Windows roster32507 each, final bodies1033/1030, shell input64,25 Python tests, repository and both final exports/parity pass. Original single late-capture failure retained; unchanged311-check follow-up passed. Cleanup preserves originals/caches/saves/final evidence. No next slice selected; not whole-game release readiness."
+    "summary": "Retaliation windups now capture pre-impact health in both attack paths, preventing corpse/standing/death replay and restoring damage/casualty captions. Source and Windows 660 checks each, Linux rendered 685, Fast/reduced 682, existing battle readability 39 and official platform exports/parity pass. Full repository validator fails on 26 deleted historical reports; closure remains blocked, not claimed complete. Removed 1.42 GiB disposable outputs; preserved caches/saves/maps and RMG."
   },
   "priorHeroSheetValidation": {
     "id": "ui-owned-hero-screen-20260913",
@@ -22234,70 +22219,43 @@
     ]
   },
   "latestEvidence": {
-    "id": "combat-unit-animation-and-size-20260913",
-    "sliceId": "combat-unit-animation-and-size-20260913",
-    "status": "completed",
-    "validatedAt": "2026-09-16T18:46:31Z",
-    "sourceReport": "docs/combat-unit-animation-and-size.md",
+    "id": "bugfix-retaliation-casualty-playback-20260917",
+    "sliceId": "bugfix-retaliation-casualty-playback-20260917",
+    "status": "blocked",
+    "validatedAt": "2026-09-17T07:46:00Z",
+    "sourceReport": "docs/retaliation-casualty-playback.md",
     "runtimeEvidence": {
-      "unitSizeProfiles": 160,
-      "twoCellUnits": 37,
-      "acceptedNewPoseUnits": 160,
-      "pendingNewPoseUnits": 0,
-      "sourceChecks": 1033,
-      "linuxPackagedChecks": 1033,
-      "windowsPackagedChecks": 1030,
-      "sourceRosterChecks": 32507,
-      "windowsPackagedRosterChecks": 32507,
-      "rosterClockMode": "controlled_headless; separate actual rendered all-roster review",
-      "renderedRosterChecks": 27107,
-      "renderedRosterUnits": 160,
-      "renderedRosterOriginalFailures": [
-        "Milestone movement capture expired:767ms/700ms"
-      ],
-      "unchangedFocusedReplayChecks": 311,
-      "restingSourceChecks": 2153,
-      "visuallyReviewedActionUnits": 160,
-      "visuallyReviewedIdleAndDeadUnits": 160,
-      "linuxShellInputChecks": 64,
-      "pythonTests": 25,
-      "vfxChecks": 1333,
-      "deterministicFlowChecks": 39,
-      "officialExports": "accepted-r2-linux and accepted-r2-windows passed; Windows generated-map/Town/build and managed cleanup passed",
-      "packParity": "8846 members,638705108 bytes each; only project.binary differs",
-      "payloadEquivalence": "All art, compiled owners and runtime pose data identical to full-roster-tested packages; only pose review metadata changed",
-      "repositoryValidation": ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/repository-closure.log:VALIDATION PASSED; clean exit2026-09-16T18:42:12Z",
-      "evidenceRoot": ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916",
-      "packageRoot": "/tmp/heroes-battle-roster-validation-20260916-RbzwGc",
-      "acceptanceManifest": "docs/battle-unit-animation-acceptance.json",
-      "cleanupBytes": 7085194272,
-      "remainingDependency": "",
-      "limits": "Windows headless Wine is not native GPU/controller certification; battle fixtures are not a whole-game release-ready claim. Failed/interrupted runs remain failed/incomplete."
+      "implementation": "Both player/enemy retaliation snapshots precede damage; rules/RNG/save/art unchanged",
+      "sourceChecks": 660,
+      "cases": 36,
+      "sourceRenderedNormalChecks": 690,
+      "sourceRenderedFastReducedChecks": 682,
+      "linuxPackagedChecks": 685,
+      "windowsPackagedChecks": 660,
+      "existingReadabilityChecks": 39,
+      "visualInspection": "Counterattack/death/corpse inspected at 1280x720 and 1920x1080; real-clock per-frame no-revival assertions passed",
+      "officialExports": "Linux and Windows export/startup passed; Windows generated map/Town/build and managed Wine cleanup passed",
+      "packParity": "8846 members, 638705572 bytes each; only project.binary differs",
+      "repositoryValidation": "FAILED: exactly 26 missing historical consolidated smoke reports; no new combat-owner errors",
+      "diffCheck": "passed",
+      "initialProbeFailure": "Two shell-state equality assertions exposed fixture normalization bypass; normal entry refresh restored before action and assertions retained. Viewport reset corrected and dimensions asserted.",
+      "cleanupAllocatedBytes": 1527164928,
+      "preservedUserDataBytes": 2710994,
+      "remainingDependency": "Full repository validation requires 26 historical consolidated smoke reports removed under the owner non-RMG artifact-retention policy; align that validator/report-lifecycle policy in a separately approved follow-up. No combat regression failures.",
+      "limits": "Windows headless Wine, not physical Windows GPU certification. Focused combat fix, not whole-game release readiness."
     },
     "artifacts": [
-      "docs/battle-unit-animation-acceptance.json",
-      ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/repository-closure.log",
-      ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/accepted-r2-package-parity.json",
-      ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/accepted-r2-payload-equivalence.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-linux/report.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-windows/report.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-linux-bodies/report.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-windows-bodies/report.json"
+      "docs/retaliation-casualty-playback.md",
+      "tests/battle_retaliation_playback_regression.py"
     ],
-    "summary": "Completed all160 original articulated battle animation sets and persistent corpses,160 authored size profiles and37 two-hex bodies. All160 action/idle/dead visuals inspected. Source/Windows roster32507 each, final bodies1033/1030, shell input64,25 Python tests, repository and both final exports/parity pass. Original single late-capture failure retained; unchanged311-check follow-up passed. Cleanup preserves originals/caches/saves/final evidence. No next slice selected; not whole-game release readiness."
+    "summary": "Retaliation windups now capture pre-impact health in both attack paths, preventing corpse/standing/death replay and restoring damage/casualty captions. Source and Windows 660 checks each, Linux rendered 685, Fast/reduced 682, existing battle readability 39 and official platform exports/parity pass. Full repository validator fails on 26 deleted historical reports; closure remains blocked, not claimed complete. Removed 1.42 GiB disposable outputs; preserved caches/saves/maps and RMG."
   },
   "latestEvidenceArtifacts": [
-    "docs/battle-unit-animation-acceptance.json",
-    ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/repository-closure.log",
-    ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/accepted-r2-package-parity.json",
-    ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/accepted-r2-payload-equivalence.json",
-    "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-linux/report.json",
-    "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-windows/report.json",
-    "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-linux-bodies/report.json",
-    "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-windows-bodies/report.json"
+    "docs/retaliation-casualty-playback.md",
+    "tests/battle_retaliation_playback_regression.py"
   ],
-  "latestEvidenceId": "combat-unit-animation-and-size-20260913",
-  "latestFinding": "Completed all160 original articulated battle animation sets and persistent corpses,160 authored size profiles and37 two-hex bodies. All160 action/idle/dead visuals inspected. Source/Windows roster32507 each, final bodies1033/1030, shell input64,25 Python tests, repository and both final exports/parity pass. Original single late-capture failure retained; unchanged311-check follow-up passed. Cleanup preserves originals/caches/saves/final evidence. No next slice selected; not whole-game release readiness.",
+  "latestEvidenceId": "bugfix-retaliation-casualty-playback-20260917",
+  "latestFinding": "Retaliation windups now capture pre-impact health in both attack paths, preventing corpse/standing/death replay and restoring damage/casualty captions. Source and Windows 660 checks each, Linux rendered 685, Fast/reduced 682, existing battle readability 39 and official platform exports/parity pass. Full repository validator fails on 26 deleted historical reports; closure remains blocked, not claimed complete. Removed 1.42 GiB disposable outputs; preserved caches/saves/maps and RMG.",
   "metrics": {
     "scope": "Historical full-match checkpoint metrics retained below; these are not current release metrics. Current art-goal acceptance is in latestEvidence and validation.",
     "audit_only": false,
@@ -22362,9 +22320,49 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Implement selected unit animation/size goal only; preserve original identity, deterministic combat and save compatibility. No native RMG or unrelated UI work.",
+  "nextActionGuardrailNote": "Do not broaden combat fix into unrelated validator policy without owner direction. Preserve all RMG recovery material; no disposable non-RMG evidence retention.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "bugfix-retaliation-casualty-playback-20260917",
+      "title": "Retaliation Casualty Playback",
+      "phase": "phase-6-production-alpha-layer",
+      "parentId": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "blocked",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/retaliation-casualty-playback.md",
+        "docs/combat-unit-animation-and-size.md"
+      ],
+      "targets": [
+        "scripts/core/BattleRules.gd",
+        "tests/battle_retaliation_playback_regression.py"
+      ],
+      "validation": [
+        "python3 -B tests/battle_retaliation_playback_regression.py --label focused",
+        "Existing battle readability regression",
+        "python3 tests/validate_repo.py",
+        "Linux/Windows export smokes and focused packaged retaliation playback",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Both sides present lethal retaliation once without premature corpse or visual revival",
+        "Surviving reactions, damage/casualty deltas and deterministic session/RNG/save state remain correct",
+        "Normal/Fast/reduced/Instant and rendered/platform acceptance pass"
+      ],
+      "nonGoals": [
+        "Art generation or cache clearing",
+        "Balance, RMG or save schema changes"
+      ],
+      "createdAt": "2026-09-17T07:27:40Z",
+      "startedAt": "2026-09-17T07:27:40Z",
+      "implementationStatus": "implemented",
+      "blockedReason": "Full repository validation requires 26 historical consolidated smoke reports removed under the owner non-RMG artifact-retention policy; align that validator/report-lifecycle policy in a separately approved follow-up. No combat regression failures.",
+      "updatedAt": "2026-09-17T07:46:00Z",
+      "validationSummary": "Retaliation windups now capture pre-impact health in both attack paths, preventing corpse/standing/death replay and restoring damage/casualty captions. Source and Windows 660 checks each, Linux rendered 685, Fast/reduced 682, existing battle readability 39 and official platform exports/parity pass. Full repository validator fails on 26 deleted historical reports; closure remains blocked, not claimed complete. Removed 1.42 GiB disposable outputs; preserved caches/saves/maps and RMG."
+    },
     {
       "id": "combat-unit-animation-and-size-20260913",
       "title": "Complete Battle Unit Animation and Size",
@@ -112245,8 +112243,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "None for the selected unit-animation/size goal; overall product remains production alpha, not release-ready.",
-  "remainingWork": "No next slice selected.",
+  "remainingGap": "Full repository validation requires 26 historical consolidated smoke reports removed under the owner non-RMG artifact-retention policy; align that validator/report-lifecycle policy in a separately approved follow-up. No combat regression failures.",
+  "remainingWork": "Owner decision on separate historical-report retention validator follow-up; combat implementation and focused/platform checks are complete.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -112784,8 +112782,8 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "combat_unit_animation_and_size_complete",
-  "status": "completed",
+  "result": "retaliation_casualty_fixed_repository_gate_blocked",
+  "status": "blocked",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -112885,61 +112883,40 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed all160 original articulated battle animation sets and persistent corpses,160 authored size profiles and37 two-hex bodies. All160 action/idle/dead visuals inspected. Source/Windows roster32507 each, final bodies1033/1030, shell input64,25 Python tests, repository and both final exports/parity pass. Original single late-capture failure retained; unchanged311-check follow-up passed. Cleanup preserves originals/caches/saves/final evidence. No next slice selected; not whole-game release readiness.",
+  "summary": "Retaliation windups now capture pre-impact health in both attack paths, preventing corpse/standing/death replay and restoring damage/casualty captions. Source and Windows 660 checks each, Linux rendered 685, Fast/reduced 682, existing battle readability 39 and official platform exports/parity pass. Full repository validator fails on 26 deleted historical reports; closure remains blocked, not claimed complete. Removed 1.42 GiB disposable outputs; preserved caches/saves/maps and RMG.",
   "taskId": "10236",
-  "updatedAt": "2026-09-16T18:46:31Z",
+  "updatedAt": "2026-09-17T07:46:00Z",
   "validation": {
-    "id": "combat-unit-animation-and-size-20260913",
-    "sliceId": "combat-unit-animation-and-size-20260913",
-    "status": "completed",
-    "validatedAt": "2026-09-16T18:46:31Z",
-    "sourceReport": "docs/combat-unit-animation-and-size.md",
+    "id": "bugfix-retaliation-casualty-playback-20260917",
+    "sliceId": "bugfix-retaliation-casualty-playback-20260917",
+    "status": "blocked",
+    "validatedAt": "2026-09-17T07:46:00Z",
+    "sourceReport": "docs/retaliation-casualty-playback.md",
     "runtimeEvidence": {
-      "unitSizeProfiles": 160,
-      "twoCellUnits": 37,
-      "acceptedNewPoseUnits": 160,
-      "pendingNewPoseUnits": 0,
-      "sourceChecks": 1033,
-      "linuxPackagedChecks": 1033,
-      "windowsPackagedChecks": 1030,
-      "sourceRosterChecks": 32507,
-      "windowsPackagedRosterChecks": 32507,
-      "rosterClockMode": "controlled_headless; separate actual rendered all-roster review",
-      "renderedRosterChecks": 27107,
-      "renderedRosterUnits": 160,
-      "renderedRosterOriginalFailures": [
-        "Milestone movement capture expired:767ms/700ms"
-      ],
-      "unchangedFocusedReplayChecks": 311,
-      "restingSourceChecks": 2153,
-      "visuallyReviewedActionUnits": 160,
-      "visuallyReviewedIdleAndDeadUnits": 160,
-      "linuxShellInputChecks": 64,
-      "pythonTests": 25,
-      "vfxChecks": 1333,
-      "deterministicFlowChecks": 39,
-      "officialExports": "accepted-r2-linux and accepted-r2-windows passed; Windows generated-map/Town/build and managed cleanup passed",
-      "packParity": "8846 members,638705108 bytes each; only project.binary differs",
-      "payloadEquivalence": "All art, compiled owners and runtime pose data identical to full-roster-tested packages; only pose review metadata changed",
-      "repositoryValidation": ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/repository-closure.log:VALIDATION PASSED; clean exit2026-09-16T18:42:12Z",
-      "evidenceRoot": ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916",
-      "packageRoot": "/tmp/heroes-battle-roster-validation-20260916-RbzwGc",
-      "acceptanceManifest": "docs/battle-unit-animation-acceptance.json",
-      "cleanupBytes": 7085194272,
-      "remainingDependency": "",
-      "limits": "Windows headless Wine is not native GPU/controller certification; battle fixtures are not a whole-game release-ready claim. Failed/interrupted runs remain failed/incomplete."
+      "implementation": "Both player/enemy retaliation snapshots precede damage; rules/RNG/save/art unchanged",
+      "sourceChecks": 660,
+      "cases": 36,
+      "sourceRenderedNormalChecks": 690,
+      "sourceRenderedFastReducedChecks": 682,
+      "linuxPackagedChecks": 685,
+      "windowsPackagedChecks": 660,
+      "existingReadabilityChecks": 39,
+      "visualInspection": "Counterattack/death/corpse inspected at 1280x720 and 1920x1080; real-clock per-frame no-revival assertions passed",
+      "officialExports": "Linux and Windows export/startup passed; Windows generated map/Town/build and managed Wine cleanup passed",
+      "packParity": "8846 members, 638705572 bytes each; only project.binary differs",
+      "repositoryValidation": "FAILED: exactly 26 missing historical consolidated smoke reports; no new combat-owner errors",
+      "diffCheck": "passed",
+      "initialProbeFailure": "Two shell-state equality assertions exposed fixture normalization bypass; normal entry refresh restored before action and assertions retained. Viewport reset corrected and dimensions asserted.",
+      "cleanupAllocatedBytes": 1527164928,
+      "preservedUserDataBytes": 2710994,
+      "remainingDependency": "Full repository validation requires 26 historical consolidated smoke reports removed under the owner non-RMG artifact-retention policy; align that validator/report-lifecycle policy in a separately approved follow-up. No combat regression failures.",
+      "limits": "Windows headless Wine, not physical Windows GPU certification. Focused combat fix, not whole-game release readiness."
     },
     "artifacts": [
-      "docs/battle-unit-animation-acceptance.json",
-      ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/repository-closure.log",
-      ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/accepted-r2-package-parity.json",
-      ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/accepted-r2-payload-equivalence.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-linux/report.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-windows/report.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-linux-bodies/report.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-windows-bodies/report.json"
+      "docs/retaliation-casualty-playback.md",
+      "tests/battle_retaliation_playback_regression.py"
     ],
-    "summary": "Completed all160 original articulated battle animation sets and persistent corpses,160 authored size profiles and37 two-hex bodies. All160 action/idle/dead visuals inspected. Source/Windows roster32507 each, final bodies1033/1030, shell input64,25 Python tests, repository and both final exports/parity pass. Original single late-capture failure retained; unchanged311-check follow-up passed. Cleanup preserves originals/caches/saves/final evidence. No next slice selected; not whole-game release readiness."
+    "summary": "Retaliation windups now capture pre-impact health in both attack paths, preventing corpse/standing/death replay and restoring damage/casualty captions. Source and Windows 660 checks each, Linux rendered 685, Fast/reduced 682, existing battle readability 39 and official platform exports/parity pass. Full repository validator fails on 26 deleted historical reports; closure remains blocked, not claimed complete. Removed 1.42 GiB disposable outputs; preserved caches/saves/maps and RMG."
   },
   "validationHistory": [
     {
@@ -126903,60 +126880,39 @@
     }
   ],
   "validationResults": {
-    "id": "combat-unit-animation-and-size-20260913",
-    "sliceId": "combat-unit-animation-and-size-20260913",
-    "status": "completed",
-    "validatedAt": "2026-09-16T18:46:31Z",
-    "sourceReport": "docs/combat-unit-animation-and-size.md",
+    "id": "bugfix-retaliation-casualty-playback-20260917",
+    "sliceId": "bugfix-retaliation-casualty-playback-20260917",
+    "status": "blocked",
+    "validatedAt": "2026-09-17T07:46:00Z",
+    "sourceReport": "docs/retaliation-casualty-playback.md",
     "runtimeEvidence": {
-      "unitSizeProfiles": 160,
-      "twoCellUnits": 37,
-      "acceptedNewPoseUnits": 160,
-      "pendingNewPoseUnits": 0,
-      "sourceChecks": 1033,
-      "linuxPackagedChecks": 1033,
-      "windowsPackagedChecks": 1030,
-      "sourceRosterChecks": 32507,
-      "windowsPackagedRosterChecks": 32507,
-      "rosterClockMode": "controlled_headless; separate actual rendered all-roster review",
-      "renderedRosterChecks": 27107,
-      "renderedRosterUnits": 160,
-      "renderedRosterOriginalFailures": [
-        "Milestone movement capture expired:767ms/700ms"
-      ],
-      "unchangedFocusedReplayChecks": 311,
-      "restingSourceChecks": 2153,
-      "visuallyReviewedActionUnits": 160,
-      "visuallyReviewedIdleAndDeadUnits": 160,
-      "linuxShellInputChecks": 64,
-      "pythonTests": 25,
-      "vfxChecks": 1333,
-      "deterministicFlowChecks": 39,
-      "officialExports": "accepted-r2-linux and accepted-r2-windows passed; Windows generated-map/Town/build and managed cleanup passed",
-      "packParity": "8846 members,638705108 bytes each; only project.binary differs",
-      "payloadEquivalence": "All art, compiled owners and runtime pose data identical to full-roster-tested packages; only pose review metadata changed",
-      "repositoryValidation": ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/repository-closure.log:VALIDATION PASSED; clean exit2026-09-16T18:42:12Z",
-      "evidenceRoot": ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916",
-      "packageRoot": "/tmp/heroes-battle-roster-validation-20260916-RbzwGc",
-      "acceptanceManifest": "docs/battle-unit-animation-acceptance.json",
-      "cleanupBytes": 7085194272,
-      "remainingDependency": "",
-      "limits": "Windows headless Wine is not native GPU/controller certification; battle fixtures are not a whole-game release-ready claim. Failed/interrupted runs remain failed/incomplete."
+      "implementation": "Both player/enemy retaliation snapshots precede damage; rules/RNG/save/art unchanged",
+      "sourceChecks": 660,
+      "cases": 36,
+      "sourceRenderedNormalChecks": 690,
+      "sourceRenderedFastReducedChecks": 682,
+      "linuxPackagedChecks": 685,
+      "windowsPackagedChecks": 660,
+      "existingReadabilityChecks": 39,
+      "visualInspection": "Counterattack/death/corpse inspected at 1280x720 and 1920x1080; real-clock per-frame no-revival assertions passed",
+      "officialExports": "Linux and Windows export/startup passed; Windows generated map/Town/build and managed Wine cleanup passed",
+      "packParity": "8846 members, 638705572 bytes each; only project.binary differs",
+      "repositoryValidation": "FAILED: exactly 26 missing historical consolidated smoke reports; no new combat-owner errors",
+      "diffCheck": "passed",
+      "initialProbeFailure": "Two shell-state equality assertions exposed fixture normalization bypass; normal entry refresh restored before action and assertions retained. Viewport reset corrected and dimensions asserted.",
+      "cleanupAllocatedBytes": 1527164928,
+      "preservedUserDataBytes": 2710994,
+      "remainingDependency": "Full repository validation requires 26 historical consolidated smoke reports removed under the owner non-RMG artifact-retention policy; align that validator/report-lifecycle policy in a separately approved follow-up. No combat regression failures.",
+      "limits": "Windows headless Wine, not physical Windows GPU certification. Focused combat fix, not whole-game release readiness."
     },
     "artifacts": [
-      "docs/battle-unit-animation-acceptance.json",
-      ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/repository-closure.log",
-      ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/accepted-r2-package-parity.json",
-      ".artifacts/battle-unit-animation-size-20260913/full-roster-validation-20260916/accepted-r2-payload-equivalence.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-linux/report.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-windows/report.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-linux-bodies/report.json",
-      "/tmp/heroes-battle-roster-validation-20260916-RbzwGc/accepted-r2-windows-bodies/report.json"
+      "docs/retaliation-casualty-playback.md",
+      "tests/battle_retaliation_playback_regression.py"
     ],
-    "summary": "Completed all160 original articulated battle animation sets and persistent corpses,160 authored size profiles and37 two-hex bodies. All160 action/idle/dead visuals inspected. Source/Windows roster32507 each, final bodies1033/1030, shell input64,25 Python tests, repository and both final exports/parity pass. Original single late-capture failure retained; unchanged311-check follow-up passed. Cleanup preserves originals/caches/saves/final evidence. No next slice selected; not whole-game release readiness."
+    "summary": "Retaliation windups now capture pre-impact health in both attack paths, preventing corpse/standing/death replay and restoring damage/casualty captions. Source and Windows 660 checks each, Linux rendered 685, Fast/reduced 682, existing battle readability 39 and official platform exports/parity pass. Full repository validator fails on 26 deleted historical reports; closure remains blocked, not claimed complete. Removed 1.42 GiB disposable outputs; preserved caches/saves/maps and RMG."
   },
-  "blockedReason": null,
-  "currentBlocker": "",
+  "blockedReason": "Full repository validation requires 26 historical consolidated smoke reports removed under the owner non-RMG artifact-retention policy; align that validator/report-lifecycle policy in a separately approved follow-up. No combat regression failures.",
+  "currentBlocker": "Full repository validation requires 26 historical consolidated smoke reports removed under the owner non-RMG artifact-retention policy; align that validator/report-lifecycle policy in a separately approved follow-up. No combat regression failures.",
   "historicalStartAuditValidation": {
     "id": "audit-rmg-start-placement-and-h3maped-comparison-20260905-audit",
     "title": "RMG Starting Heroes And H3MapEd Comparison Audit",
