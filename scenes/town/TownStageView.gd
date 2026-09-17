@@ -243,6 +243,19 @@ var _town_building_texture_missing: Dictionary = {}
 var _town_building_masks: Dictionary = {}
 var _building_hotspots: Dictionary = {}
 var _external_command_overlay := false
+var _construction_preview_id := ""
+
+func set_construction_preview(building_id: String) -> void:
+	# A drawing-only candidate. Never add it to the town or hotspot entries.
+	var candidate := building_id if building_id in _town_building_catalog_ids() and building_id not in _town.get("built_buildings", []) else ""
+	if candidate == _construction_preview_id: return
+	_construction_preview_id = candidate
+	queue_redraw()
+
+func construction_preview_snapshot() -> Dictionary:
+	for entry in _town_building_scene_entries(_town_scene_rect(), true):
+		if bool(entry.get("construction_preview", false)): return entry.duplicate(true)
+	return {}
 
 func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
@@ -302,12 +315,16 @@ func set_town_state(session) -> void:
 	queue_redraw()
 
 func set_precomputed_town_state(session, state: Dictionary) -> void:
+	var previous_town := String(_town.get("placement_id", _town.get("town_id", "")))
 	_clear_town_state(session)
 	if state.is_empty():
+		_construction_preview_id = ""
 		_sync_processing_state()
 		queue_redraw()
 		return
 	_town = _duplicate_dictionary(state.get("town", {}))
+	if String(_town.get("placement_id", _town.get("town_id", ""))) != previous_town:
+		_construction_preview_id = ""
 	_town_template = _duplicate_dictionary(state.get("town_template", {}))
 	_faction = _duplicate_dictionary(state.get("faction", {}))
 	_stationed = _duplicate_array(state.get("stationed", []))
@@ -1387,7 +1404,7 @@ func _visible_town_plot_building_id(variant_ids: Array, built_ids: Array) -> Str
 			visible_id = variant_id
 	return visible_id
 
-func _town_building_scene_entries(scene_rect: Rect2) -> Array:
+func _town_building_scene_entries(scene_rect: Rect2, include_preview: bool = false) -> Array:
 	var faction_layout := _building_scene_faction_layout()
 	var plots: Array = faction_layout.get("plots", []) if faction_layout.get("plots", []) is Array else []
 	var modulate_values: Array = faction_layout.get("modulate", []) if faction_layout.get("modulate", []) is Array else []
@@ -1411,6 +1428,8 @@ func _town_building_scene_entries(scene_rect: Rect2) -> Array:
 		if variant_ids.is_empty():
 			continue
 		var visible_building_id := _visible_town_plot_building_id(variant_ids, built_ids)
+		var is_preview := include_preview and _construction_preview_id in variant_ids and _construction_preview_id not in built_ids
+		if is_preview: visible_building_id = _construction_preview_id
 		var anchor_values: Array = plot.get("anchor", []) if plot.get("anchor", []) is Array else []
 		if anchor_values.size() != 2:
 			continue
@@ -1433,6 +1452,7 @@ func _town_building_scene_entries(scene_rect: Rect2) -> Array:
 		var projection := _project_normalized_source_rect(normalized_rect, scene_rect)
 		var building := ContentService.get_building(visible_building_id) if visible_building_id != "" else {}
 		entries.append({
+			"construction_preview": is_preview,
 			"plot_id": String(plot.get("plot_id", "")),
 			"variant_ids": variant_ids,
 			"visible_building_id": visible_building_id,
@@ -1481,7 +1501,7 @@ func _project_normalized_source_rect(normalized_rect: Rect2, scene_rect: Rect2) 
 	}
 
 func _draw_integrated_buildings(scene_rect: Rect2) -> void:
-	for entry_value in _town_building_scene_entries(scene_rect):
+	for entry_value in _town_building_scene_entries(scene_rect, true):
 		var entry: Dictionary = entry_value
 		var building_id := String(entry.get("visible_building_id", ""))
 		if building_id == "" or bool(entry.get("embedded_in_base", false)):
@@ -1493,13 +1513,11 @@ func _draw_integrated_buildings(scene_rect: Rect2) -> void:
 		var region_ratio: Rect2 = entry.get("texture_region_ratio", Rect2(Vector2.ZERO, Vector2.ONE))
 		if destination_rect.size.x <= 0.0 or destination_rect.size.y <= 0.0:
 			continue
-		var reveal_scale := _town_building_reveal_scale(building_id)
-		if not is_equal_approx(reveal_scale, 1.0):
-			var reveal_size := destination_rect.size * reveal_scale
-			destination_rect = Rect2(Vector2(destination_rect.get_center().x - reveal_size.x * 0.5, destination_rect.end.y - reveal_size.y), reveal_size)
 		var texture_size := texture.get_size()
 		var texture_region := Rect2(region_ratio.position * texture_size, region_ratio.size * texture_size)
-		draw_texture_rect_region(texture, destination_rect, texture_region, entry.get("modulate", Color.WHITE))
+		var tint: Color = entry.get("modulate", Color.WHITE)
+		tint.a *= 0.62 if bool(entry.get("construction_preview", false)) else _town_building_reveal_alpha(building_id)
+		draw_texture_rect_region(texture, destination_rect, texture_region, tint)
 
 func _town_building_texture(building_id: String) -> Texture2D:
 	var texture_path := _town_building_texture_path(building_id)
@@ -1517,13 +1535,18 @@ func _town_building_texture(building_id: String) -> Texture2D:
 	_town_building_textures[texture_path] = texture
 	return texture
 
-func _town_building_reveal_scale(building_id: String) -> float:
+func _town_building_reveal_scale(_building_id: String) -> float:
+	# Retained for existing presentation callers: construction must not change
+	# the exact scene-matched rectangle or momentarily overlap a neighbour.
+	return 1.0
+
+func _town_building_reveal_alpha(building_id: String) -> float:
 	if SettingsService.reduced_motion_enabled() or String(_town_action_presentation.get("event_id", "")) != "town_building_built" or String(_town_action_presentation.get("building_id", "")) != building_id:
 		return 1.0
-	var duration_ms := maxi(1, int(_town_action_presentation.get("duration_ms", 1)))
+	var duration_ms := clampi(int(_town_action_presentation.get("duration_ms", 1)), 1, 350)
 	var elapsed_ms := maxi(0, Time.get_ticks_msec() - int(_town_action_presentation.get("started_msec", 0)))
 	var progress := clampf(float(elapsed_ms) / float(duration_ms), 0.0, 1.0)
-	return lerpf(1.06, 1.0, ease(progress, 2.0))
+	return lerpf(0.25, 1.0, ease(progress, 2.0))
 
 func _create_building_hotspot(building_id: String) -> Button:
 	var button := TownBuildingHotspotScript.new()

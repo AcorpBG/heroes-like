@@ -42,9 +42,9 @@ const TURN_STRIP_ACTIVE_FILL := Color(0.115, 0.102, 0.060, 0.98)
 const TURN_STRIP_PORTRAIT_FILL := Color(0.018, 0.024, 0.028, 0.96)
 const TURN_STRIP_QUEUED_FRAME := Color(0.45, 0.49, 0.48, 0.78)
 const STACK_TOKEN_PRESENTATION_MODEL := "grounded_full_body_standee_event_animation_swap"
-const STACK_TOKEN_INNER_FILL := Color(0.035, 0.045, 0.055, 0.94)
-const STACK_TOKEN_SIDE_RIM_ALPHA := 0.92
-const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.15
+const STACK_TOKEN_INNER_FILL := Color(0.035, 0.045, 0.055, 0.32)
+const STACK_TOKEN_SIDE_RIM_ALPHA := 0.78
+const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.07
 const STACK_TOKEN_RADIUS_FACTOR := 0.68
 const STACK_TOKEN_RADIUS_MIN := 15.0
 const STACK_TOKEN_RADIUS_MAX := 32.0
@@ -84,7 +84,7 @@ const LEGAL_RANGED_COLOR := Color(0.72, 0.88, 1.0, 0.82)
 const HEALTH_COLOR := Color(0.95, 0.79, 0.35, 0.96)
 const CONTROLLER_CURSOR_COLOR := Color(1.0, 0.92, 0.58, 1.0)
 const CONTROLLER_CURSOR_BLOCKED_COLOR := Color(0.94, 0.48, 0.32, 1.0)
-const SHADOW_COLOR := Color(0.025, 0.028, 0.031, 0.72)
+const SHADOW_COLOR := Color(0.025, 0.028, 0.031, 0.32)
 const TERRAIN_COLORS := {
 	"grass": Color(0.31, 0.40, 0.24, 1.0),
 	"plains": Color(0.30, 0.38, 0.24, 1.0),
@@ -148,8 +148,8 @@ const TERRAIN_AMBIENT_PROFILES := {
 }
 const TERRAIN_HEX_TEXTURE_INSET := 1.0
 const TERRAIN_HEX_FALLBACK_INSET := 0.975
-const TEXTURED_HEX_LINE_COLOR := Color(0.98, 0.89, 0.62, 0.18)
-const TEXTURED_HEX_CENTER_LINE := Color(1.0, 0.86, 0.46, 0.28)
+const TEXTURED_HEX_LINE_COLOR := Color(0.98, 0.89, 0.62, 0.10)
+const TEXTURED_HEX_CENTER_LINE := Color(1.0, 0.86, 0.46, 0.14)
 const TEXTURED_DEPLOYMENT_FILL_ALPHA := 0.035
 const TEXTURED_CENTER_FILL_ALPHA := 0.045
 const TEXTURED_MID_LANE_FILL_ALPHA := 0.018
@@ -2667,7 +2667,8 @@ func _draw_hex_grid(hex_layout: Dictionary, terrain_texture_loaded: bool) -> voi
 				_draw_hex(center, radius * 0.82, Color(0.93, 0.79, 0.47, lane_alpha), Color(0.0, 0.0, 0.0, 0.0), 0.0)
 
 	if terrain_texture_loaded:
-		_draw_unique_hex_grid_lines(hex_layout, TEXTURED_HEX_LINE_COLOR, 1.05, TERRAIN_HEX_TEXTURE_INSET)
+		var grid_color := Color(0.98, 0.89, 0.62, 0.38) if FrontierVisualKitScript.high_contrast_enabled() else TEXTURED_HEX_LINE_COLOR
+		_draw_unique_hex_grid_lines(hex_layout, grid_color, 1.05, TERRAIN_HEX_TEXTURE_INSET)
 
 	for row in range(HEX_ROWS):
 		var center_cell := Vector2i(int(HEX_COLUMNS / 2), row)
@@ -2691,7 +2692,18 @@ func _draw_field_objectives(hex_layout: Dictionary) -> void:
 func _draw_body_outline(battle_id: String, hex_layout: Dictionary, radius: float, color: Color, width: float) -> void:
 	var stack := BattleRulesScript._get_stack_by_id(_battle, battle_id)
 	for cell in BattleRulesScript.Footprint.cells(stack):
-		_draw_hex_outline(_hex_center(Vector2i(cell.q, cell.r), hex_layout), radius, color, width)
+		var center := _hex_center(Vector2i(cell.q, cell.r), hex_layout)
+		if FrontierVisualKitScript.high_contrast_enabled():
+			_draw_hex_outline(center, radius, color, width)
+		else:
+			# Short corner brackets preserve the exact footprint without fencing
+			# in the painted creature with a dominant full gold hexagon.
+			for index in range(6):
+				var angle := deg_to_rad(60.0 * index - 30.0)
+				var corner := center + Vector2.from_angle(angle) * radius
+				for direction in [-1.0, 1.0]:
+					var neighbor := center + Vector2.from_angle(angle + direction * PI / 3.0) * radius
+					draw_line(corner, corner.lerp(neighbor, 0.22), color, minf(width, 1.8), true)
 
 func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary) -> void:
 	if _spell_target_mode: return
@@ -2887,7 +2899,9 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 		var ground_half_width := token_radius * 0.92
 		draw_set_transform(ground_center, 0.0, Vector2(1.0, 0.34))
 		draw_circle(Vector2(2.0, 5.0), ground_half_width + 4.0, SHADOW_COLOR)
-		draw_circle(Vector2.ZERO, ground_half_width + 2.0, ACTIVE_COLOR if is_active else (BLOCKED_TARGET_COLOR if is_blocked_target else (TARGET_COLOR if is_target else Color(0.11, 0.13, 0.15, 0.82))))
+		draw_circle(Vector2(1.0, 2.0), ground_half_width + 1.0, SHADOW_COLOR)
+		if is_active or is_target:
+			draw_circle(Vector2.ZERO, ground_half_width + 2.0, ACTIVE_COLOR if is_active else (BLOCKED_TARGET_COLOR if is_blocked_target else TARGET_COLOR), false, 1.8, true)
 		draw_circle(Vector2.ZERO, ground_half_width, STACK_TOKEN_INNER_FILL)
 		var side_rim := Color(fill.r, fill.g, fill.b, STACK_TOKEN_SIDE_RIM_ALPHA)
 		draw_circle(Vector2.ZERO, ground_half_width - 1.0, side_rim, false, maxf(2.4, token_radius * STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR), true)
@@ -4888,7 +4902,7 @@ func _stack_caption_layout(center: Vector2, radius: float, stack: Dictionary) ->
 	var font := get_theme_default_font()
 	var text_size := font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, STACK_CAPTION_FONT_SIZE) if font != null else Vector2(float(label.length()) * 5.5, 10.0)
 	var plate_size := Vector2(ceil(text_size.x) + STACK_CAPTION_HORIZONTAL_PADDING * 2.0 + STACK_CAPTION_ACCENT_WIDTH, STACK_CAPTION_PLATE_HEIGHT)
-	var upper_extent := _stack_standee_size(radius).y - radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
+	var upper_extent := _stack_standee_size(radius, stack).y - radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
 	var plate_position := Vector2(round(center.x - plate_size.x * 0.5), round(center.y - upper_extent - STACK_CAPTION_TOKEN_GAP - plate_size.y))
 	var plate_rect := Rect2(plate_position, plate_size)
 	var text_position := plate_position + Vector2(STACK_CAPTION_HORIZONTAL_PADDING + STACK_CAPTION_ACCENT_WIDTH, 12.0)
@@ -5846,7 +5860,7 @@ func _stack_caption_label(stack: Dictionary) -> String:
 	var prefix := full_name.left(12)
 	var boundary := prefix.rfind(" ")
 	if boundary <= 0:
-		return "…"
+		return "%s…" % full_name.left(12)
 	return "%s…" % prefix.left(boundary).strip_edges()
 
 func _side_color(side: String) -> Color:

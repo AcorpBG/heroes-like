@@ -12,6 +12,7 @@ SCRIPT = runner.SCRIPT.replace(
 \tvar log_control=load("res://scenes/battle/BattleMessageLog.gd").new()
 \tadd_child(log_control)
 \tlog_control.size=Vector2(1000,88)
+\tlog_control.set_expanded(true)
 \tfor i in range(205): log_control.append_message("Message %d"%i)
 \tfor i in range(4): await get_tree().process_frame
 \tcheck(log_control.entries.size()==200 and log_control.entries[0]=="Message 5","history bound/order failed")
@@ -43,7 +44,7 @@ SCRIPT = SCRIPT.replace(
 SCRIPT = SCRIPT.replace(
     '\t\tSettingsService.set_battle_playback_speed_id("instant")',
     '''\t\tvar retained:Array=shell._message_log.entries.duplicate()
-\t\tcheck("BattleHistory" in shell._last_battle_keyboard_focus_cycle_names,"history absent from keyboard cycle")
+\t\tcheck("ToggleBattleHistory" in shell._last_battle_keyboard_focus_cycle_names,"history toggle absent from keyboard cycle")
 \t\tcheck(retained.size()>2,"played actions not retained")
 \t\tcheck("damage" in "\\n".join(retained) and "lost" in "\\n".join(retained),"damage/casualty history missing")
 \t\tawait get_tree().create_timer(1.2).timeout

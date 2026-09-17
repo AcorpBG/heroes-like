@@ -1,5 +1,12 @@
 extends RefCounted
 
+const FONT_CAPTION := 12
+const FONT_BODY := 14
+const FONT_HEADING := 18
+const SPACE_TIGHT := 4
+const SPACE_NORMAL := 8
+const SPACE_SECTION := 12
+
 const TEXT_TONES := {
 	"title": Color(0.98, 0.96, 0.90, 1.0),
 	"body": Color(0.86, 0.90, 0.93, 1.0),
@@ -206,6 +213,7 @@ const TAB_PLAQUE_DISABLED_PATH := "res://art/ui/runtime/shared/button_secondary_
 
 static func set_compact_label(label: Label, full_text: String, max_lines: int, max_chars: int = 92, drop_headings: bool = true) -> void:
 	label.tooltip_text = full_text
+	label.accessibility_description = full_text
 	label.text = compact_text(full_text, max_lines, max_chars, drop_headings)
 
 static func compact_text(full_text: String, max_lines: int, max_chars: int = 92, drop_headings: bool = true) -> String:
@@ -220,7 +228,10 @@ static func compact_text(full_text: String, max_lines: int, max_chars: int = 92,
 		if line.begins_with("- "):
 			line = line.trim_prefix("- ").strip_edges()
 		if line.length() > max_chars:
-			line = "%s..." % line.left(max_chars - 3)
+			var prefix := line.left(maxi(1, max_chars - 1))
+			var boundary := prefix.rfind(" ")
+			if boundary >= maxi(1, max_chars / 2): prefix = prefix.left(boundary)
+			line = "%s…" % prefix.strip_edges()
 		lines.append(line)
 	if lines.is_empty():
 		return full_text.strip_edges()
@@ -424,7 +435,7 @@ static func apply_clear_panel(panel: PanelContainer) -> void:
 static func apply_badge(panel: PanelContainer, tone: String) -> void:
 	panel.add_theme_stylebox_override("panel", badge_style(tone))
 
-static func apply_button(button: BaseButton, role: String = "secondary", width: float = 160.0, height: float = 34.0, font_size: int = 14) -> void:
+static func apply_button(button: BaseButton, role: String = "secondary", width: float = 160.0, height: float = 34.0, font_size: int = FONT_BODY) -> void:
 	button.custom_minimum_size = Vector2(width, height)
 	button.focus_mode = Control.FOCUS_ALL
 	button.add_theme_font_size_override("font_size", font_size)
@@ -538,13 +549,13 @@ static func _apply_button_theme(button: BaseButton, role: String) -> void:
 	button.add_theme_stylebox_override("disabled", _button_art_style(art_role, "disabled", disabled))
 	button.add_theme_stylebox_override("focus", _button_focus_style())
 	button.add_theme_color_override("font_color", text_color("title"))
-	button.add_theme_color_override("font_disabled_color", Color(0.68, 0.72, 0.76) if high_contrast_enabled() else Color(0.48, 0.50, 0.53))
+	button.add_theme_color_override("font_disabled_color", Color(0.78, 0.80, 0.82) if high_contrast_enabled() else Color(0.70, 0.69, 0.63))
 
 static func _button_focus_style(corner_radius: int = 10) -> StyleBoxFlat:
 	var focus := StyleBoxFlat.new()
 	focus.bg_color = Color(0.0, 0.0, 0.0, 0.0)
 	focus.border_color = Color(1.0, 0.92, 0.20, 1.0) if high_contrast_enabled() else Color(1.0, 0.84, 0.40, 1.0)
-	focus.set_border_width_all(4 if high_contrast_enabled() else 3)
+	focus.set_border_width_all(4 if high_contrast_enabled() else 2)
 	focus.set_corner_radius_all(corner_radius)
 	focus.set_expand_margin_all(2.0)
 	return focus

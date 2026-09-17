@@ -18589,7 +18589,7 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         "var label := _stack_caption_label(stack)",
         "get_theme_default_font()",
         "font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, STACK_CAPTION_FONT_SIZE)",
-        "var upper_extent := _stack_standee_size(radius).y - radius * STACK_STANDEE_GROUND_OFFSET_FACTOR",
+        "var upper_extent := _stack_standee_size(radius, stack).y - radius * STACK_STANDEE_GROUND_OFFSET_FACTOR",
         "center.y - upper_extent - STACK_CAPTION_TOKEN_GAP - plate_size.y",
         "var plate_rect := Rect2(plate_position, plate_size)",
         "var text_rect := Rect2(Vector2(text_position.x, plate_position.y + 2.0), text_size)",
@@ -18609,7 +18609,7 @@ def validate_battle_board_cursor_semantics(errors: list[str]) -> None:
         "return full_name",
         "var prefix := full_name.left(12)",
         'var boundary := prefix.rfind(" ")',
-        'return "…"',
+        'return "%s…" % full_name.left(12)',
         'return "%s…" % prefix.left(boundary).strip_edges()',
     ))
     ensure(all(index >= 0 for index in caption_order) and list(caption_order) == sorted(caption_order), errors, "BattleBoard caption fitter must retain exact fitting names and truncate overflowing multi-word names only at the last complete word")
@@ -30821,7 +30821,7 @@ def validate_town_building_skyline_progression(errors: list[str]) -> None:
         "func _development_scene_import_payload_exists(texture_path: String) -> bool:",
         'ResourceLoader.load(texture_path, "Texture2D")',
         "ImageTexture.create_from_image(source_image)",
-        "func _town_building_scene_entries(scene_rect: Rect2) -> Array:",
+        "func _town_building_scene_entries(scene_rect: Rect2, include_preview: bool = false) -> Array:",
         "func _draw_integrated_buildings(scene_rect: Rect2) -> void:",
         "func _sync_building_hotspots() -> void:",
         "signal building_activated(building_id: String)",
@@ -64678,9 +64678,9 @@ def validate_unit_art_assets(errors: list[str]) -> None:
     ):
         ensure(required_token in battle_board_text, errors, f"BattleBoardView.gd is missing unit art token {required_token}")
     for required_token in (
-        "const STACK_TOKEN_INNER_FILL := Color(0.035, 0.045, 0.055, 0.94)",
-        "const STACK_TOKEN_SIDE_RIM_ALPHA := 0.92",
-        "const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.15",
+        "const STACK_TOKEN_INNER_FILL := Color(0.035, 0.045, 0.055, 0.32)",
+        "const STACK_TOKEN_SIDE_RIM_ALPHA := 0.78",
+        "const STACK_TOKEN_SIDE_RIM_WIDTH_FACTOR := 0.07",
         "const STACK_TOKEN_RADIUS_FACTOR := 0.68",
         "const STACK_TOKEN_RADIUS_MIN := 15.0",
         "const STACK_TOKEN_RADIUS_MAX := 32.0",

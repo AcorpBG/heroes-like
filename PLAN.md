@@ -22,6 +22,21 @@ Rules:
 
 ## Current Tactical State
 
+### Graphical and Usability Cohesion
+
+id: `ux-graphical-usability-cohesion-20260917`
+
+Status: completed, owner-directed Phase 6 parent. All six improvements implemented; source/Linux 4,197 checks each, Windows 4,178, existing army/log/targeting/spellbook/effects/menu/town tests, repository validation and both official exports/parity pass. Small/wide visuals inspected, 804 construction previews across six factions verified. Removed 3.18 GB of disposable outputs; saves, caches, source/art and RMG preserved. Requirements/results: `docs/graphical-usability-cohesion.md`. No gameplay/save/native RMG or new-art changes; no release-ready claim.
+
+| Child slice | Work | Status |
+| --- | --- | --- |
+| `ux-battlefield-composition-20260917` | Softer grid/selection, grounded readable units, collapsible retained log | completed |
+| `ux-army-direct-manipulation-20260917` | Drag/drop, exact split quantities, legal destinations and recipient preview | completed |
+| `ux-overworld-interactable-highlight-20260917` | Fog-safe hold/toggle highlights for available/guarded/visited/exhausted objects | completed |
+| `ux-scouted-prebattle-inspection-20260917` | Bounded enemy/terrain/reward inspection, approximate disclosed strength | completed |
+| `ux-town-construction-preview-20260917` | Actual scenic-position build preview, costs/prerequisites/benefit and transition | completed |
+| `ux-interface-style-cohesion-20260917` | Shared typography, spacing, focus, disabled and concise wording conventions | completed |
+
 ### Distinct Battle Spell Effects
 
 id: `vfx-spell-effect-variety-20260917`
