@@ -16,7 +16,7 @@ const DIRECT_MODES := ["build", "muster", "spells", "trade", "log"]
 const EXPECTED_TITLES := {
 	"build": "Construction Ledger",
 	"muster": "Muster Hall",
-	"spells": "Spell Study",
+	"spells": "Spellbook · Town Archives",
 	"trade": "Town Market",
 	"log": "Town Log & Logistics",
 }

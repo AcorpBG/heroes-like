@@ -4,6 +4,11 @@ func _make_custom_tooltip(for_text: String) -> Object:
 	return get_node("/root/ContextualHelp").make_hover_card(self, for_text)
 
 const BattleMessageLog = preload("res://scenes/battle/BattleMessageLog.gd")
+const SpellbookViewScript = preload("res://scenes/shared/SpellbookView.gd")
+var _spellbook_dialog: ConfirmationDialog
+var _spellbook_view: VBoxContainer
+var _spellbook_button: Button
+var _spellbook_return_focus: Control
 var _message_log: PanelContainer
 
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
@@ -908,6 +913,8 @@ func _forward_root_physical_input_to_confirmation(dialog: ConfirmationDialog, ev
 
 
 func _active_exclusive_confirmation_dialog() -> ConfirmationDialog:
+	if is_instance_valid(_spellbook_dialog) and _spellbook_dialog.visible:
+		return _spellbook_dialog
 	var quick_resolve_active := _quick_resolve_confirmation_pending and _quick_resolve_confirmation_dialog.visible
 	var withdrawal_active := _pending_withdrawal_action != "" and _withdrawal_confirmation_dialog.visible
 	if quick_resolve_active == withdrawal_active:
@@ -2193,6 +2200,7 @@ func _preferred_battle_keyboard_focus() -> Control:
 			return _surrender_button
 		_:
 			if action_id.begins_with("cast_spell:"):
+				if is_instance_valid(_spellbook_button): return _spellbook_button
 				for child in _spell_actions.get_children():
 					if child is Control \
 							and not child.is_queued_for_deletion() \
@@ -2204,34 +2212,67 @@ func _preferred_battle_keyboard_focus() -> Control:
 func _rebuild_spell_actions() -> void:
 	for child in _spell_actions.get_children():
 		child.queue_free()
-
-	var actions = BattleRules.get_spell_actions(_session)
-	if actions.is_empty():
-		_spell_actions.visible = false
-		return
+	_spellbook_button = Button.new()
+	_spellbook_button.name = "OpenSpellbook"
+	_spellbook_button.text = "Spellbook"
+	_spellbook_button.tooltip_text = "Open the spellbook · Browse icons and effects, filter spells, then prepare a spell to select a battlefield target."
+	_spellbook_button.accessibility_name = "Open spellbook"
+	_style_action_button(_spellbook_button, true, 132)
+	_spellbook_button.pressed.connect(_open_spellbook)
+	_spell_actions.add_child(_spellbook_button)
 	_spell_actions.visible = true
 
-	for action in actions:
-		if not (action is Dictionary):
-			continue
-		action = action.duplicate(true)
-		var legal_spell_targets := BattleRules.spell_target_ids(_session, String(action.get("id", "")).trim_prefix("cast_spell:"))
-		if not legal_spell_targets.is_empty() and bool(action.get("disabled", false)):
-			action["disabled"] = false
-			action["readiness"] = "Select a legal target"
-		var button := Button.new()
-		button.text = _battle_spell_action_button_text(action)
-		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = _battle_spell_action_tooltip(action) + "\nSelect spell, then a highlighted living target. Confirm order casts; Esc cancels."
-		_style_action_button(button, false, 132)
-		_apply_spell_action_icon(button, action)
-		button.set_meta("battle_action_id", String(action.get("id", "")))
-		button.pressed.connect(_on_spell_action_pressed.bind(String(action.get("id", ""))))
-		button.mouse_entered.connect(_preview_combat_action.bind(String(action.get("id", ""))))
-		button.focus_entered.connect(_preview_combat_action.bind(String(action.get("id", ""))))
-		button.mouse_exited.connect(_battle_board_view.set_consequence_preview.bind({}))
-		button.focus_exited.connect(_battle_board_view.set_consequence_preview.bind({}))
-		_spell_actions.add_child(button)
+func _open_spellbook() -> void:
+	if _session == null or _action_playback_in_progress or _battle_exit_handoff_in_progress or _active_exclusive_confirmation_dialog() != null:
+		return
+	if not _battle_resolution_checkpoint_pending.is_empty(): return
+	get_node("/root/ContextualHelp").dismiss()
+	_spellbook_return_focus = get_viewport().gui_get_focus_owner()
+	if not is_instance_valid(_spellbook_dialog):
+		_spellbook_dialog = ConfirmationDialog.new()
+		_spellbook_dialog.name = "BattleSpellbook"
+		_spellbook_dialog.title = "Spellbook"
+		_spellbook_dialog.exclusive = true
+		_spellbook_dialog.dialog_hide_on_ok = false
+		_spellbook_dialog.ok_button_text = "Close spellbook"
+		add_child(_spellbook_dialog)
+		FrontierVisualKit.apply_confirmation_dialog(_spellbook_dialog)
+		_spellbook_dialog.get_cancel_button().hide()
+		_spellbook_dialog.confirmed.connect(_close_spellbook)
+		_spellbook_dialog.canceled.connect(_close_spellbook)
+		var cancel_shortcut := Shortcut.new()
+		var cancel_action := InputEventAction.new()
+		cancel_action.action = "ui_cancel"
+		cancel_shortcut.events = [cancel_action]
+		_spellbook_dialog.get_ok_button().shortcut = cancel_shortcut
+		_spellbook_view = SpellbookViewScript.new()
+		_spellbook_dialog.add_child(_spellbook_view)
+		_spellbook_view.spell_requested.connect(_prepare_book_spell)
+		_spellbook_view.controls_changed.connect(func():
+			FrontierVisualKit.configure_focus_cycle([_spellbook_view, _spellbook_dialog.get_ok_button()]))
+	var hero: Dictionary = BattleRules._player_commander_state(_session)
+	var availability := {}
+	for spell in SpellRules.known_spells(hero):
+		var enabled := String(spell.get("context", "")) == "battle" and not BattleRules.spell_target_ids(_session, String(spell.id)).is_empty()
+		var message := "Prepare this spell, then choose a highlighted target and Confirm order."
+		if not enabled:
+			message = "Overworld spell · Cast from the adventure map." if String(spell.get("context", "")) == "overworld" else "Unavailable now: needs your turn, sufficient mana, an unused commander spell this round, and a legal target."
+		availability[String(spell.id)] = {"enabled": enabled, "message": message}
+	_spellbook_view.configure(hero, hero.get("spellbook", {}).get("known_spell_ids", []), "battle", availability)
+	_spellbook_dialog.popup_centered(Vector2i(minf(1000, get_viewport_rect().size.x - 64), minf(650, get_viewport_rect().size.y - 64)))
+	FrontierVisualKit.configure_focus_cycle([_spellbook_view, _spellbook_dialog.get_ok_button()])
+	_spellbook_view._context.grab_focus()
+
+func _close_spellbook() -> void:
+	FrontierVisualKit.hide_exclusive_dialog(_spellbook_dialog)
+	if is_instance_valid(_spellbook_return_focus) and _spellbook_return_focus.is_visible_in_tree():
+		_spellbook_return_focus.grab_focus()
+
+func _prepare_book_spell(spell_id: String) -> void:
+	# Revalidate against live commander/round/targets; browsing never casts.
+	if BattleRules.spell_target_ids(_session, spell_id).is_empty(): return
+	_close_spellbook()
+	_on_spell_action_pressed("cast_spell:" + spell_id)
 
 func _apply_spell_action_icon(button: Button, action: Dictionary) -> void:
 	var spell_id := SpellRules.spell_id_for_action(String(action.get("id", "")))

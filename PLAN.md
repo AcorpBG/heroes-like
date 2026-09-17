@@ -22,6 +22,12 @@ Rules:
 
 ## Current Tactical State
 
+### Shared Spellbook and Automatic Town Learning
+
+id: `ui-shared-spellbook-and-town-learning-20260917`
+
+Status: completed, owner-directed Phase 6 child. Shared Town/Battle/Hero spellbook now exposes original icons, names, hover/focus effects and combined context/role filters. Owned-town arrivals and archive unlocks automatically teach eligible physically present heroes; remote study is rejected. Casting retains target preview/confirmation, mana and save version 9. Source 4,633, Linux package 4,629, Windows package 4,627, hero 528 and targeting 95 checks pass, as do Town/magic reports, full repository validation and platform exports/parity. Small/wide visuals inspected; one pre-existing adventure fog-test failure reproduced against baseline and documented, not counted as a pass. Removed 1.52 GB disposable outputs; source/art/provenance/caches/saves/RMG and unrelated files preserved. Requirements/results: `docs/shared-spellbook-and-town-learning.md`. No new art, balance, native RMG or save-schema change; no release-ready claim.
+
 ### Coherent Overworld Object Scale
 
 id: `art-overworld-object-scale-coherence-20260917`
