@@ -1,8 +1,9 @@
 # Retaliation casualty playback
 
 Owner-directed Phase 6 slice: `bugfix-retaliation-casualty-playback-20260917`.
-Status: runtime correction implemented and focused/platform validation passed;
-full closure blocked by pre-existing historical-report retention checks.
+Status: completed. Runtime correction and focused/platform validation passed;
+the historical-report retention blocker was resolved by the owner-approved
+validator follow-up on 2026-09-17.
 
 ## Cause and scope
 
@@ -73,16 +74,21 @@ fixture without removing the equality assertions. A requested-resolution reset
 was also corrected and screenshot dimensions are now asserted. Those initial
 probe failures are not counted as passing runs.
 
-`python3 tests/validate_repo.py` **failed with exactly 26 missing historical
+The initial `python3 tests/validate_repo.py` **failed with exactly 26 missing historical
 consolidated smoke reports**, unrelated to the changed combat owners. For example,
-`validate_uncrowned_circuit_campaign` unconditionally requires
+`validate_uncrowned_circuit_campaign` unconditionally required
 `.artifacts/uncrowned_circuit_campaign_smoke/report.json`; `validate_six_marchland_seats`
-has the same retention requirement. These checks conflict with the owner's
-approved removal of non-RMG generated evidence. No validator checks were weakened,
-reports fabricated, or unrelated campaign smokes rerun to recreate disposable
-history. Needed follow-up: align that validator/report-lifecycle policy with the
-owner's retention rule. Until resolved, this slice remains blocked on full
-repository validation, not on the retaliation implementation.
+had the same retention requirement. These checks conflicted with the owner's
+approved removal of non-RMG generated evidence, so the combat commit did not
+claim full closure or fabricate replacement reports.
+
+The owner then approved `tooling-validation-artifact-lifecycle-20260917`:
+`docs/validation-artifact-lifecycle.md` records the narrow presence-policy fix,
+unchanged content/source/provenance and existing-report predicates, 11 passing
+focused tests, and the subsequent **full repository validation pass**. Missing
+historical outputs are disclosed, not counted as fresh gameplay successes;
+strict presence checking remains opt-in. This resolves the only closure blocker.
+No combat code or package payload changed after the platform checks above.
 
 Cleanup removed 68 task-owned non-RMG outputs (screenshots, logs, reports, test
 packages and disposable profile links), recovering 1,527,164,928 allocated bytes
