@@ -1,0 +1,621 @@
+{
+  "schema_id": "overworld_object_density_proof_v1",
+  "recipe_sha256": "c4c2cecc6b29942fb8a7eb13220bf88e5724525384651c13cf91f94e55266fc9",
+  "tool_sha256": "da580b277b96ff3f838ea64e7c72f319827032126b1bf40497899724b318d2aa",
+  "assets": {
+    "resource_site_land_transit_repaired_ferry_stage_active": {
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/repaired_ferry_stage_active_source.png",
+      "source_sha256": "49b8633caf625dbae184e4641d12a82bd94061e47e1ffc7e2ec3639465518216",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_bounds": [
+        103,
+        83,
+        1448,
+        1000
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_land_transit_repaired_ferry_stage_active.png",
+      "trimmed_sha256": "9c996b71571469ad0783dd8a44cf3dbad47703bafba66d45c30d38bc9cd0338a",
+      "rgba_sha256": "5b0f422cc2a40f9afdc81b22a295ab1fba29daf5ba27abca60c648d16a525d73"
+    },
+    "resource_site_land_transit_rope_lift_active": {
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/rope_lift_active_source.png",
+      "source_sha256": "ff4781971b4a695a5e61cf7605df5f44ead49bc55eb83fbc4b3220decddb80db",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        0,
+        33,
+        1226,
+        1254
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_land_transit_rope_lift_active.png",
+      "trimmed_sha256": "d49f34353b3353e48e9c0fcdc29802f62e730313fc3de31d643b0ee3739fecc7",
+      "rgba_sha256": "b47be5061bbaaaaa88edc3e725c614254f89bd77fcf7224ea6c9f350aef72eeb"
+    },
+    "resource_site_land_transit_root_pass_arch_active": {
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_land_transit_root_pass_arch_active.png",
+      "source_sha256": "8f8177be8e8288bdabd1c888ed420fa511e674430fe3353aa4a38796073b0305",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        242,
+        223,
+        1035,
+        1002
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_land_transit_root_pass_arch_active.png",
+      "trimmed_sha256": "67edae38d54992ef678061fc6715aa0d23cbded92d13d687e045e9805b30a8e5",
+      "rgba_sha256": "315a72f0b8c1d014454b26b033cad5339cb6ab4446d4a4e52a6c4108ab175b17"
+    },
+    "resource_site_land_transit_pressure_rail_switch_active": {
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/pressure_rail_switch_active_source.png",
+      "source_sha256": "d911738651e2ecaca59c2be8bab4d0c7287773774eac5100cc07a584e3c75dac",
+      "source_size": [
+        1346,
+        1168
+      ],
+      "source_bounds": [
+        100,
+        21,
+        1302,
+        1168
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_land_transit_pressure_rail_switch_active.png",
+      "trimmed_sha256": "089dfec9648a3678b354736b055a81c0908cb808ef70fdde6c32dce94e509bf4",
+      "rgba_sha256": "170273700298d662de3e6ac28909b59aa34722a501ff1a258219e3aab8704dba"
+    },
+    "resource_site_land_transit_mirror_stair_turn_active": {
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/mirror_stair_turn_active_source.png",
+      "source_sha256": "480b5db0d86b775363d163e3aabbebfb96e35ef8d618b92a557e2394cf334c41",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        258,
+        99,
+        1192,
+        1254
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_land_transit_mirror_stair_turn_active.png",
+      "trimmed_sha256": "e348f9753b7fbd4b9dbee0d0e56287034449b7d4f3a3af9131ee71bef01cd74e",
+      "rgba_sha256": "2e961529f5543d0431af2381b55312d1d2b485ddf3142f00e013bb3858e1f493"
+    },
+    "resource_site_land_transit_basalt_undergate_active": {
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/basalt_undergate_active_source.png",
+      "source_sha256": "ef18803ff3a280f0965fdb594c26f5399f7d2d9176e2724c4b8fa50f03436d24",
+      "source_size": [
+        1377,
+        1142
+      ],
+      "source_bounds": [
+        0,
+        31,
+        1287,
+        1142
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_land_transit_basalt_undergate_active.png",
+      "trimmed_sha256": "bdff41c0baccce389940212f4e5d8f19b64ff402971f0111036d18865699a15c",
+      "rgba_sha256": "db411d38fff0ec15df70c4c3cba663697ec0b46bac76b4df77b5474dafe0a1a5"
+    },
+    "resource_site_land_transit_ridge_wind_chute_active": {
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_land_transit_ridge_wind_chute_active.png",
+      "source_sha256": "9cd0b74cba0ff02d6cef34fe400ca8dfe228b68d7c41176a71fb8ac36872f8d5",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        186,
+        139,
+        1129,
+        1113
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_land_transit_ridge_wind_chute_active.png",
+      "trimmed_sha256": "e5154b640074cac6bda13bdf8d6bb5d5897ce8918563075d1dfab8b7c3783bb5",
+      "rgba_sha256": "b5f49c6b87a16c934a84560a3f9f272759b4495a8d26ef52b01c38ee113d0605"
+    },
+    "resource_site_land_transit_slipgate_mirror_active": {
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/slipgate_mirror_active_source.png",
+      "source_sha256": "949e192b13a73201bdcaea70967a49f58e0003c9c182266b76c3d2dc0f2b6c42",
+      "source_size": [
+        1310,
+        1200
+      ],
+      "source_bounds": [
+        74,
+        21,
+        1286,
+        1200
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_land_transit_slipgate_mirror_active.png",
+      "trimmed_sha256": "a5633fe1d635631f0664bf5bf10ea9879cce3e98c002fec03e77a1eb4bcd6b37",
+      "rgba_sha256": "9f0ef19ee87dad712efce9f22c89da4f3e4508db02a927608ac719c6e6a6b32d"
+    },
+    "resource_site_land_transit_spillway_drop_marker_active": {
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/spillway_drop_marker_active_source.png",
+      "source_sha256": "99cbf26de06dd0763fd486df036becbde76fe0d2825dab53cb226a05bc778481",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_bounds": [
+        105,
+        33,
+        1450,
+        982
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_land_transit_spillway_drop_marker_active.png",
+      "trimmed_sha256": "071cb110904311395cc546640683c0dc4f7f60614cf50d49f814bbd22baa1d2f",
+      "rgba_sha256": "a89ef186575d252bb2cf716887fc3aa522e1096f99cde6d150629f7704079a15"
+    },
+    "resource_site_land_transit_tide_bore_marker_active": {
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/tide_bore_marker_active_source.png",
+      "source_sha256": "0ed3a63f6fd35f7d95356828162604e68f1742bb09a2cc84a4324074fa675696",
+      "source_size": [
+        1536,
+        1024
+      ],
+      "source_bounds": [
+        105,
+        31,
+        1450,
+        1002
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_land_transit_tide_bore_marker_active.png",
+      "trimmed_sha256": "272b258d5bf7ff7daa94d529e43d1ef0c2eed457bbed9c076d53035e6bc4b3d7",
+      "rgba_sha256": "802ec3a7b665ca826c765e33755e9cf0905a8de840089e136625f1d17a3419c9"
+    },
+    "resource_site_minor_cache_toll_ruin_opened": {
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_minor_cache_toll_ruin_opened.png",
+      "source_sha256": "3b53b587e844b7e180b35cbc16318d0e41b35a3505af58bbb55453c3733796ff",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        258,
+        287,
+        979,
+        1007
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_minor_cache_toll_ruin_opened.png",
+      "trimmed_sha256": "dc344e1cee67c957f9eda9a38e957834df46bd66c40b3763d61ffca92b935b99",
+      "rgba_sha256": "c7d44ae3ff47f99e303e606671a664dc67c2853f6cffea78a28cef9200310fb2"
+    },
+    "resource_site_minor_cache_wreck_locker_opened": {
+      "source": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/wreck_locker_opened_source.png",
+      "source_sha256": "baecce82d01022885c22f8d91cdf845059d93322e5cc9fff68fa9e26392577ea",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        286,
+        333,
+        1040,
+        930
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_minor_cache_wreck_locker_opened.png",
+      "trimmed_sha256": "607a9726c5b98abead9bc3d53c8ab4031ae7f1f256e6c2c0f19fbab9f01efc82",
+      "rgba_sha256": "439bf0d636caa0a69790d80129d3777e027abce45bc4ce3bbff946360e52cfd8"
+    },
+    "resource_site_minor_cache_amber_reliquary_opened": {
+      "source": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/amber_reliquary_opened_source.png",
+      "source_sha256": "4b6586649fa8aea6b59d4238cbe855b27a8b9bef6aa35aea9819b8d82b4f08af",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        298,
+        261,
+        941,
+        969
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_minor_cache_amber_reliquary_opened.png",
+      "trimmed_sha256": "2896940ac68f6f95c5733edf53ca4e3d1c61df7364fadca43f9a56c5cb395845",
+      "rgba_sha256": "1740d0fda9416e75d6f779b65b11238afeac1a60fc133b82ca7c8efdd65f676e"
+    },
+    "resource_site_minor_cache_slag_purse_vault_opened": {
+      "source": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/slag_purse_vault_opened_source.png",
+      "source_sha256": "3a87d5aeaadbd41546c0383f6e69480bff6f5db547404b4d504122cc68e46fac",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        242,
+        272,
+        1000,
+        979
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_minor_cache_slag_purse_vault_opened.png",
+      "trimmed_sha256": "1b5b4de3c2ff88f8253f98c1cff97d0fcd0db13188acccfd68c6cefd1b6f5f5f",
+      "rgba_sha256": "9278e95dbe5f27b582e6ee4af081ae7e46ae8e427ba82d3b4c66216f54721413"
+    },
+    "resource_site_minor_cache_old_orchard_crypt_opened": {
+      "source": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/old_orchard_crypt_opened_source.png",
+      "source_sha256": "b3bfb436506429148f2598756552cb7b6da94ca1ed7768c8275357ed714c3ca3",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        247,
+        233,
+        1031,
+        981
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_minor_cache_old_orchard_crypt_opened.png",
+      "trimmed_sha256": "f91653e4faae34b035e9882a587492621b36490e2f405c7cb267b743049b2cc9",
+      "rgba_sha256": "6fbfabf2a686c5dabeb99209a5210459e9709a7cba7d0ec0908c96f4e0848a57"
+    },
+    "resource_site_minor_cache_moss_oath_cache_opened": {
+      "source": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/moss_oath_cache_opened_source.png",
+      "source_sha256": "834ab56e416249bfc373daa084d3b41175558454c7a59ea2c64ce68972aceae7",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        216,
+        211,
+        1066,
+        945
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_minor_cache_moss_oath_cache_opened.png",
+      "trimmed_sha256": "0b64613a0348ba21e018d60a55836f0377dc69ca7e5901739c2b99ae1d933986",
+      "rgba_sha256": "1f850a1ee037a2ac7e14a8945306b60cff8fa0343c24254e3e660d6b5f9b16bf"
+    },
+    "resource_site_minor_cache_frost_tithe_cellar_opened": {
+      "source": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/frost_tithe_cellar_opened_source.png",
+      "source_sha256": "a60c48de0e694b08d76172b7db394e4e76ac9ad389d66189f1f1eb4d8f11abf2",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        258,
+        305,
+        980,
+        950
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_minor_cache_frost_tithe_cellar_opened.png",
+      "trimmed_sha256": "f1d2fcecd7150a649afaaaa8c990efb87952477ebb46819ca6e393e1aa88252c",
+      "rgba_sha256": "aec508e1ff3ab7cc3c22ec1ff708971951c1b7f72cb9ec68856aa701e343c6f7"
+    },
+    "resource_site_route_control_charter_bar_gate_opened": {
+      "source": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/charter_bar_gate_opened_source.png",
+      "source_sha256": "d6b7eb17b43dde7d53f79ce93f3bb445180d4c06134d3d30ddf983796326f164",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        267,
+        184,
+        1001,
+        935
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_route_control_charter_bar_gate_opened.png",
+      "trimmed_sha256": "a7f120b6fa600043c8eef78b045cdb55b6907e31b810f9da7013901a9f1e1d41",
+      "rgba_sha256": "915e337230262cfdad74bd79fe385309e0576919b3e5bd49f9134b370ad10068"
+    },
+    "resource_site_route_control_thorn_seal_gate_opened": {
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_route_control_thorn_seal_gate_opened.png",
+      "source_sha256": "cf22f0032afe00cfa99107c21e0a2410ca2a4ac624939d636c16eddb8a177175",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        235,
+        264,
+        1023,
+        995
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_route_control_thorn_seal_gate_opened.png",
+      "trimmed_sha256": "088ff30f680f3c7938f1489b2cf2a46a7ac99f5ca7eb3195bc1cc7c92c53c420",
+      "rgba_sha256": "8b83e42dfd1ef5c2aa314b3d1f5a11f125deaecf68a9b261a8e754b9096aaa12"
+    },
+    "resource_site_route_control_brass_toll_arch_opened": {
+      "source": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/brass_toll_arch_opened_source.png",
+      "source_sha256": "d5ac25d0083cc01ef0eda13141d346dfbcf69862de59f77793433006b835bd57",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        0,
+        69,
+        1176,
+        1254
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_route_control_brass_toll_arch_opened.png",
+      "trimmed_sha256": "353527e6c92d00e2213b564a2e66bc87c8c6615e5cf18c85cffba8f08810d9e1",
+      "rgba_sha256": "49902ef92d5de0385cba7110efee56e9336030144952fc99bfdc12b0ffb69cde"
+    },
+    "resource_site_route_control_reef_chain_boom_opened": {
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_route_control_reef_chain_boom_opened.png",
+      "source_sha256": "8571bd2fea5ac190ec1902f2ac444f8618a0e637e0ed7b9031e1c52e295af92e",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        190,
+        326,
+        1047,
+        1042
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_route_control_reef_chain_boom_opened.png",
+      "trimmed_sha256": "87b61b185bd62926f38b5ab9b8b44579baece287f0be9b39cc5f5f24d9629b75",
+      "rgba_sha256": "7d50f3083ba2730c32414a9b51ee8a97306162c2d9afb4e607e9fd33c25ae3b1"
+    },
+    "resource_site_route_control_frost_toll_bar_opened": {
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_route_control_frost_toll_bar_opened.png",
+      "source_sha256": "3adcdfedb207ef8bcc4661fad92fc9dc71ff15636b5f164fe498e7fe07e207b9",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        171,
+        234,
+        1087,
+        978
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_route_control_frost_toll_bar_opened.png",
+      "trimmed_sha256": "fb7711225cc7c8482ed44f252f41c47c378f4e1c02dea7948077c1728fe113e2",
+      "rgba_sha256": "be409430249e7581c7e5eaf7208fb16de120b0d7c164266c3b3a3c1f3888abcd"
+    },
+    "resource_site_route_control_ash_sluice_lock_opened": {
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_route_control_ash_sluice_lock_opened.png",
+      "source_sha256": "f7bb5e3385731fad266dc50a177e071ae2d018ec5fa4a23d71047d148a48a108",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        196,
+        242,
+        1075,
+        1041
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_route_control_ash_sluice_lock_opened.png",
+      "trimmed_sha256": "5c0eefbff87b5eb3f0b1f6266d711f9ad93e44de58349f1c6b48eb18e0edacae",
+      "rgba_sha256": "215127cffbf0498d2419094511308c27a7d9d268be1dd48a0141668853113456"
+    },
+    "mapobj_ashcrown_cinderfold": {
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/ashcrown_cinderfold_unclaimed.png",
+      "source_sha256": "bc771060f1af21cf03a9e900274868dabeede5ba1df684d26eb64612a30ccfa9",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        0,
+        0,
+        1248,
+        1254
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/mapobj_ashcrown_cinderfold.png",
+      "trimmed_sha256": "7374608ad627f2e2715eb3dae7e1653c3b65dacdad3b5338a2e17f989e384795",
+      "rgba_sha256": "8f587f1a946005b55920719b8dec29da4642acf527c5125dee6bc51f88740b2d"
+    },
+    "resource_site_neutral_ashcrown_cinderfold_controlled": {
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/ashcrown_cinderfold_controlled.png",
+      "source_sha256": "4275e7594cfb2290ba31ef945c2cd90f82275ee83b6d3d0c44b27710471fea94",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        0,
+        0,
+        1200,
+        1254
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_neutral_ashcrown_cinderfold_controlled.png",
+      "trimmed_sha256": "555d7240578e8829ddb5d1379f794ec4250f582444494e58ab7539c20bf757c4",
+      "rgba_sha256": "1f3405ca03cd6a53a220c623fbc087ecb34e016a1edb0ccd47c93428ace52941"
+    },
+    "mapobj_miremoon_crownmere": {
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/miremoon_crownmere_unclaimed.png",
+      "source_sha256": "318e11938f9d2e4ef61bd70790a0e3e15dae43fc300316ab2c34253b1a4f56aa",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        0,
+        19,
+        1248,
+        1254
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/mapobj_miremoon_crownmere.png",
+      "trimmed_sha256": "75ac022b97ef9b943777bf4ff8b86049987bae664e77db189822748b775a9b42",
+      "rgba_sha256": "b10e206e9fa433f5cd94b50aa60d58a4d1d28b58e7fd9c000b258042628444fb"
+    },
+    "resource_site_neutral_miremoon_crownmere_controlled": {
+      "source": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/crownmere_repair_source.png",
+      "source_sha256": "99dae98e79b0b4a0ad8df2b452b66e1d11fa39995804ba64bbe63c7946b0aa09",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        136,
+        31,
+        1128,
+        1171
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_neutral_miremoon_crownmere_controlled.png",
+      "trimmed_sha256": "3b5023ed2309874a0c62536b3e7310355b5c39440c80a3b68a5dd6883e960305",
+      "rgba_sha256": "d6d12154d2159bcc94efad0920dfa652f5737b24c8aed714c076d5843539cfa6"
+    },
+    "mapobj_noonshard_prism_aviary": {
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/noonshard_prism_aviary_unclaimed.png",
+      "source_sha256": "78a9210833bea9a0ec8713208a5166ae0f8fe73dcd12c51b08aa1fd7fddd9d86",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        33,
+        15,
+        1232,
+        1239
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/mapobj_noonshard_prism_aviary.png",
+      "trimmed_sha256": "4b7d765ca592677c788886b5bcab0d403c5d9569bb21acdb692dd3615fa31e60",
+      "rgba_sha256": "a8ca65e3ed27779d7dbd25bff9d62d70cb43c4475a4d15c3cb57c3595fa9b96f"
+    },
+    "resource_site_neutral_noonshard_prism_aviary_controlled": {
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/noonshard_prism_aviary_controlled.png",
+      "source_sha256": "743d200a499bdfaa29ab3b6471bfdc6e63c3552c8f2a398aff39c555df9cbffd",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        269,
+        5,
+        1009,
+        1253
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_neutral_noonshard_prism_aviary_controlled.png",
+      "trimmed_sha256": "a1ed5e6704d3a57e5859d62525f0798ce0288e9c14275c7dbe5868ffa9e1c0a2",
+      "rgba_sha256": "582cf80cea2d4a16166eb41e3760b2503b944d2d1ec2cc5742456a4100d6edd2"
+    },
+    "mapobj_rootvault_heartwood_hollow": {
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/rootvault_heartwood_hollow_unclaimed.png",
+      "source_sha256": "f3f4ca7f819125993ab2d8e65dddd5cd42736425e50ac612279cf3d5f0fc3027",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        0,
+        15,
+        1240,
+        1254
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/mapobj_rootvault_heartwood_hollow.png",
+      "trimmed_sha256": "715973ee0a00edc42636e5919311e36aac1ba4b3bcc7cd1796c085ea84281eda",
+      "rgba_sha256": "37d6e419175ad4904a529e7341f56b073005963bb2f402510fb9176b59f781c2"
+    },
+    "resource_site_neutral_rootvault_heartwood_hollow_controlled": {
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/rootvault_heartwood_hollow_controlled.png",
+      "source_sha256": "0c3733dde028db373ab3893c86a4bc26fcddecb005542aaaa4e86dc37b9525fb",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        65,
+        16,
+        1190,
+        1232
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_neutral_rootvault_heartwood_hollow_controlled.png",
+      "trimmed_sha256": "f7264b2cb9b6de28bcfcb8dcf8697d8536a7bbb0ea168d6ae25c83048cbe22ec",
+      "rgba_sha256": "a88dcc82920918c74d27611a1511cfcff8f8ac4529e470959fee9e8a39b5d808"
+    },
+    "mapobj_quenchbell_pressure_den": {
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/quenchbell_pressure_den_unclaimed.png",
+      "source_sha256": "90750eaf5f8be51868cab087fc5593adf4f350085a94a39a5c8e90a4cda594d2",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        0,
+        59,
+        1205,
+        1195
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/mapobj_quenchbell_pressure_den.png",
+      "trimmed_sha256": "269b81bbd66e471cb5518c6af6de291491a6aea4e4032ecb196f20ede85579f1",
+      "rgba_sha256": "84943608f6eec17ee47fe1550608217b45628cd2e1325e7b261efab4dad144ec"
+    },
+    "resource_site_neutral_quenchbell_pressure_den_controlled": {
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/quenchbell_pressure_den_controlled.png",
+      "source_sha256": "31f2db72e01ae78365339bca246f77849e5e2b222960d4755a5b7fdf5ffb0860",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        61,
+        61,
+        1203,
+        1167
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_neutral_quenchbell_pressure_den_controlled.png",
+      "trimmed_sha256": "b4a28a8d58ea85ce305ae3d7d975558e338e52d1fe205e5c6b85fb6dae6a2db3",
+      "rgba_sha256": "e555ac00a7054081992583405e282b94605b5c7ea631ec32755f2818feef11ee"
+    },
+    "mapobj_saltwake_belldeep": {
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/saltwake_belldeep_unclaimed.png",
+      "source_sha256": "3f8abc85184002b48ad3bee27a616749d78d0ae559c3bfc47b90e8a935b467ce",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        0,
+        1,
+        1240,
+        1254
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/mapobj_saltwake_belldeep.png",
+      "trimmed_sha256": "ff1771a073bcec79274022e241e7520c8d36c787c5b6da559bf2f4ee8caecb0f",
+      "rgba_sha256": "eff14f8dfda580cbb582d5a3c03ae756bdfe29a1ebce6cfa7ce00e64845013ea"
+    },
+    "resource_site_neutral_saltwake_belldeep_controlled": {
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/saltwake_belldeep_controlled.png",
+      "source_sha256": "f83604c4d742b3dd1aa6ae4d21dc3dfd5c068235dfaa6cd36df7e59678fbd906",
+      "source_size": [
+        1254,
+        1254
+      ],
+      "source_bounds": [
+        84,
+        12,
+        1189,
+        1222
+      ],
+      "trimmed_path": "res://art/overworld/source/trimmed/object_density_20260917/resource_site_neutral_saltwake_belldeep_controlled.png",
+      "trimmed_sha256": "ca2000e7f4ddd4973de0cf5c27c92e51d11879d1e5721b0a77bf7cfc9ea691ac",
+      "rgba_sha256": "1834796a2a4e4b3074364b2c1191809545868f49d5fc5282f8dac63f0aac857d"
+    }
+  },
+  "runtime": {
+    "res://art/overworld/runtime/objects/density_20260917/land_transit_active_atlas.png": {
+      "bytes": 421458,
+      "sha256": "a3b79fe48d1d6e5f0b4c317eeebf22a4e1223aa32e889a638ef9218a04ce1f16"
+    },
+    "res://art/overworld/runtime/objects/density_20260917/minor_guarded_cache_opened_atlas.png": {
+      "bytes": 407742,
+      "sha256": "41e5ff9bbfb8bf16c3576bbc55bbac1ad157e9eff5ff68e630e654308cb74e71"
+    },
+    "res://art/overworld/runtime/objects/density_20260917/route_control_opened_atlas.png": {
+      "bytes": 274367,
+      "sha256": "0e3d517e85f28ce2df46010c0de6c798b09c917b0253b69a9bdee97e219316ca"
+    },
+    "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png": {
+      "bytes": 626413,
+      "sha256": "8527e6c9298d444903fc729e092c480ff6a61b0aaaa11e1160d16f73bde15d51"
+    }
+  },
+  "policy": "Preserve original RGBA paint; tight aspect-fit with eight-pixel minimum clear margin; no generated or procedural substitute."
+}

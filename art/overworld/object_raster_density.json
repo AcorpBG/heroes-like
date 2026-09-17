@@ -1,0 +1,706 @@
+{
+  "schema_id": "overworld_object_raster_density_v1",
+  "source_manifest": "res://art/overworld/source/generated/object_density_20260917/manifest.json",
+  "assets": {
+    "resource_site_land_transit_repaired_ferry_stage_active": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/land_transit_active_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1920,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+      "original_region": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_land_transit_rope_lift_active": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/land_transit_active_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1920,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+      "original_region": [
+        48,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_land_transit_root_pass_arch_active": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/land_transit_active_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1920,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+      "original_region": [
+        96,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_land_transit_pressure_rail_switch_active": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/land_transit_active_atlas.png",
+      "atlas_region": [
+        576,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1920,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+      "original_region": [
+        144,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_land_transit_mirror_stair_turn_active": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/land_transit_active_atlas.png",
+      "atlas_region": [
+        768,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1920,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+      "original_region": [
+        192,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_land_transit_basalt_undergate_active": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/land_transit_active_atlas.png",
+      "atlas_region": [
+        960,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1920,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+      "original_region": [
+        240,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_land_transit_ridge_wind_chute_active": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/land_transit_active_atlas.png",
+      "atlas_region": [
+        1152,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1920,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+      "original_region": [
+        288,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_land_transit_slipgate_mirror_active": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/land_transit_active_atlas.png",
+      "atlas_region": [
+        1344,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1920,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+      "original_region": [
+        336,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_land_transit_spillway_drop_marker_active": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/land_transit_active_atlas.png",
+      "atlas_region": [
+        1536,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1920,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+      "original_region": [
+        384,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_land_transit_tide_bore_marker_active": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/land_transit_active_atlas.png",
+      "atlas_region": [
+        1728,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1920,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+      "original_region": [
+        432,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_minor_cache_toll_ruin_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/minor_guarded_cache_opened_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1344,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+      "original_region": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_minor_cache_wreck_locker_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/minor_guarded_cache_opened_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1344,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+      "original_region": [
+        48,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_minor_cache_amber_reliquary_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/minor_guarded_cache_opened_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1344,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+      "original_region": [
+        96,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_minor_cache_slag_purse_vault_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/minor_guarded_cache_opened_atlas.png",
+      "atlas_region": [
+        576,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1344,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+      "original_region": [
+        144,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_minor_cache_old_orchard_crypt_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/minor_guarded_cache_opened_atlas.png",
+      "atlas_region": [
+        768,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1344,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+      "original_region": [
+        192,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_minor_cache_moss_oath_cache_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/minor_guarded_cache_opened_atlas.png",
+      "atlas_region": [
+        960,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1344,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+      "original_region": [
+        240,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_minor_cache_frost_tithe_cellar_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/minor_guarded_cache_opened_atlas.png",
+      "atlas_region": [
+        1152,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1344,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+      "original_region": [
+        288,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_route_control_charter_bar_gate_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/route_control_opened_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1152,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+      "original_region": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_route_control_thorn_seal_gate_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/route_control_opened_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1152,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+      "original_region": [
+        48,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_route_control_brass_toll_arch_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/route_control_opened_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1152,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+      "original_region": [
+        96,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_route_control_reef_chain_boom_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/route_control_opened_atlas.png",
+      "atlas_region": [
+        576,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1152,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+      "original_region": [
+        144,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_route_control_frost_toll_bar_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/route_control_opened_atlas.png",
+      "atlas_region": [
+        768,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1152,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+      "original_region": [
+        192,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_route_control_ash_sluice_lock_opened": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/route_control_opened_atlas.png",
+      "atlas_region": [
+        960,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        1152,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+      "original_region": [
+        240,
+        0,
+        48,
+        48
+      ]
+    },
+    "mapobj_ashcrown_cinderfold": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [
+        0,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        2304,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "original_region": [
+        0,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_neutral_ashcrown_cinderfold_controlled": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [
+        192,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        2304,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "original_region": [
+        48,
+        0,
+        48,
+        48
+      ]
+    },
+    "mapobj_miremoon_crownmere": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [
+        384,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        2304,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "original_region": [
+        96,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_neutral_miremoon_crownmere_controlled": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [
+        576,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        2304,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "original_region": [
+        144,
+        0,
+        48,
+        48
+      ]
+    },
+    "mapobj_noonshard_prism_aviary": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [
+        768,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        2304,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "original_region": [
+        192,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_neutral_noonshard_prism_aviary_controlled": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [
+        960,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        2304,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "original_region": [
+        240,
+        0,
+        48,
+        48
+      ]
+    },
+    "mapobj_rootvault_heartwood_hollow": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [
+        1152,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        2304,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "original_region": [
+        288,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_neutral_rootvault_heartwood_hollow_controlled": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [
+        1344,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        2304,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "original_region": [
+        336,
+        0,
+        48,
+        48
+      ]
+    },
+    "mapobj_quenchbell_pressure_den": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [
+        1536,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        2304,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "original_region": [
+        384,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_neutral_quenchbell_pressure_den_controlled": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [
+        1728,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        2304,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "original_region": [
+        432,
+        0,
+        48,
+        48
+      ]
+    },
+    "mapobj_saltwake_belldeep": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [
+        1920,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        2304,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "original_region": [
+        480,
+        0,
+        48,
+        48
+      ]
+    },
+    "resource_site_neutral_saltwake_belldeep_controlled": {
+      "path": "res://art/overworld/runtime/objects/density_20260917/sovereign_wild_habitats_atlas.png",
+      "atlas_region": [
+        2112,
+        0,
+        192,
+        192
+      ],
+      "atlas_size": [
+        2304,
+        192
+      ],
+      "original_path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+      "original_region": [
+        528,
+        0,
+        48,
+        48
+      ]
+    }
+  }
+}

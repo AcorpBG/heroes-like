@@ -22,6 +22,12 @@ Rules:
 
 ## Current Tactical State
 
+### Coherent Overworld Object Scale
+
+id: `art-overworld-object-scale-coherence-20260917`
+
+Status: completed, owner-directed Phase 6 child. Reviewed all 2,167 raster identities and live generated-map scale; loose rewards no longer inherit mine-sized visuals, handheld artifacts are smaller, and 35 blurry states use 192px derivatives of their original paintings. Placement, masks, input targets, rules, fog, native RMG, RNG and saves are unchanged. Source/Linux focused probes pass 6,793 each, Windows 6,791; five Python tests, 587 Medium scenery checks, current sprite/landmark reports, repository validation and official Linux/Windows exports/parity pass. Small/wide visuals inspected; three broader-test exceptions are explicitly documented, not counted as passes. Requirements/results: `docs/overworld-object-scale-coherence.md`. Cleaned 1.60 GB disposable outputs plus lifecycle-managed Wine prefixes; preserved originals/provenance/caches/saves/RMG. No unrelated UI, ground, combat, topology or balance changes; no release-ready claim.
+
 ### Natural Biome Transitions and Ground Materials
 
 `art-overworld-biome-transitions-20260917` — completed, owner-directed Phase 6. Sixteen original painted materials with 23 explicit mappings now blend in world space across biome edges/corners, with fog-safe cached sampling and unchanged map/collision/save authority. Source/Linux rendered probes pass 71 each, Windows package 38, existing scenery 459, blocker coverage, seven Python tests, full repository validation and both official exports/parity pass. Small/wide and shoreline/material fixtures inspected; Large lookup uploads are about 6–7 ms. Requirements/results: `docs/overworld-biome-transitions.md`. Approximately 3.9 GB of disposable test outputs cleaned; originals/provenance/caches/saves and RMG preserved. No next slice selected or release-ready claim.

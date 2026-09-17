@@ -1,6 +1,12 @@
 {
   "actionableNextTasks": [
     {
+      "id": "art-overworld-object-scale-coherence-20260917",
+      "title": "Coherent Overworld Object Scale",
+      "status": "in_progress",
+      "priority": "top"
+    },
+    {
       "id": "art-overworld-biome-transitions-20260917",
       "title": "Natural Biome Transitions and Ground Materials",
       "status": "completed",
@@ -16689,14 +16695,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Completed original ground-quality and biome-transition slice: 16 painted materials / 23 mappings, continuous world-space fog-safe blending and cached lookups. Source/Linux 71 checks each, Windows 38, scenery 459, blocker report, seven Python tests, full repository exit 0 and official platform exports/parity pass. Small/wide visuals inspected; about 3.9 GB disposable outputs removed. Original art/provenance/caches/saves and RMG preserved. No next slice selected or release-ready claim.",
+  "currentNotes": "Completed object-scale presentation slice: compact pickups/artifacts and 35 sharper original-raster states. Source/Linux 6793, Windows 6791, Python 5, Medium scenery 587, current sprite/landmark reports, full repository and official exports/parity pass. Small/wide visuals inspected. Three broader-test exceptions are documented, not counted as passes. Cleaned 1.60 GB disposable outputs; originals/provenance/caches/saves/RMG preserved. No next slice selected or release-ready claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-overworld-biome-transitions-20260917",
-  "currentSliceId": "art-overworld-biome-transitions-20260917",
-  "currentSliceNotes": "Completed original ground-quality and biome-transition slice: 16 painted materials / 23 mappings, continuous world-space fog-safe blending and cached lookups. Source/Linux 71 checks each, Windows 38, scenery 459, blocker report, seven Python tests, full repository exit 0 and official platform exports/parity pass. Small/wide visuals inspected; about 3.9 GB disposable outputs removed. Original art/provenance/caches/saves and RMG preserved. No next slice selected or release-ready claim.",
+  "currentSlice": "art-overworld-object-scale-coherence-20260917",
+  "currentSliceId": "art-overworld-object-scale-coherence-20260917",
+  "currentSliceNotes": "Implemented compact footprint-independent pickups and 35 original-raster density repairs. Source/Linux 6793, Windows 6791, five Python tests, Medium scenery 587, sprite/landmark reports, full repository and official exports/parity pass. Visuals inspected; three broader-test exceptions documented. Cleaned 1.60 GB disposable outputs; gameplay/native/save authority unchanged.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Natural Biome Transitions and Ground Materials",
-  "currentSliceUpdatedAt": "2026-09-17T09:50:12Z",
+  "currentSliceTitle": "Coherent Overworld Object Scale",
+  "currentSliceUpdatedAt": "2026-09-17T11:28:54Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22332,9 +22338,54 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "No next slice selected. Preserve original art/provenance, caches/saves, RMG recovery and unrelated files; do not retain disposable non-RMG test outputs.",
+  "nextActionGuardrailNote": "No next slice selected. Preserve gameplay/native/save authority, original art/provenance, caches/saves, RMG recovery and unrelated files. Broader-test exceptions are documented separately; no release-ready claim.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "art-overworld-object-scale-coherence-20260917",
+      "title": "Coherent Overworld Object Scale",
+      "phase": "phase-6-production-alpha-layer",
+      "parentId": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/overworld-object-scale-coherence.md"
+      ],
+      "targets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "art/overworld",
+        "tests/overworld_object_scale_regression.py",
+        "tools/prepare_overworld_object_density.py",
+        "tests/overworld_object_density_contract.py",
+        "tests/test_overworld_object_density.py"
+      ],
+      "validation": [
+        "Focused source and packaged object-scale regression at 1280x720 and 1920x1080",
+        "python3 -B -m unittest discover -s tests -p test_overworld_object_density.py -v",
+        "Existing sprite/scenery/interaction coverage",
+        "python3 -B tests/validate_repo.py",
+        "python3 tests/packaging_linux_export_smoke.py",
+        "python3 tests/packaging_windows_export_smoke.py",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "All object classes inspected and concrete scale/style outliers corrected",
+        "Gameplay footprints, interactions and save authority preserved",
+        "Small/wide visual review and Linux/Windows package checks pass"
+      ],
+      "nonGoals": [
+        "Native RMG topology, placement or balance changes",
+        "Gameplay, save schema or unrelated UI/art changes",
+        "Procedural stand-in art"
+      ],
+      "createdAt": "2026-09-17T10:49:00Z",
+      "updatedAt": "2026-09-17T11:28:53Z",
+      "startedAt": "2026-09-17T10:50:52Z",
+      "notes": "Implemented compact footprint-independent pickups and 35 original-raster density repairs. Source/Linux 6793, Windows 6791, five Python tests, Medium scenery 587, sprite/landmark reports, full repository and official exports/parity pass. Visuals inspected; three broader-test exceptions documented. Cleaned 1.60 GB disposable outputs; gameplay/native/save authority unchanged.",
+      "completedAt": "2026-09-17T11:28:53Z"
+    },
     {
       "id": "art-overworld-biome-transitions-20260917",
       "title": "Natural Biome Transitions and Ground Materials",
@@ -112929,7 +112980,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "validation_artifact_lifecycle_complete",
+  "result": "overworld_object_scale_coherence_complete",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -113030,43 +113081,44 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed original ground-quality and biome-transition slice: 16 painted materials / 23 mappings, continuous world-space fog-safe blending and cached lookups. Source/Linux 71 checks each, Windows 38, scenery 459, blocker report, seven Python tests, full repository exit 0 and official platform exports/parity pass. Small/wide visuals inspected; about 3.9 GB disposable outputs removed. Original art/provenance/caches/saves and RMG preserved. No next slice selected or release-ready claim.",
+  "summary": "Completed object-scale presentation slice: compact pickups/artifacts and 35 sharper original-raster states. Source/Linux 6793, Windows 6791, Python 5, Medium scenery 587, current sprite/landmark reports, full repository and official exports/parity pass. Small/wide visuals inspected. Three broader-test exceptions are documented, not counted as passes. Cleaned 1.60 GB disposable outputs; originals/provenance/caches/saves/RMG preserved. No next slice selected or release-ready claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-17T09:50:12Z",
+  "updatedAt": "2026-09-17T11:28:53Z",
   "validation": {
-    "id": "art-overworld-biome-transitions-20260917",
-    "sliceId": "art-overworld-biome-transitions-20260917",
+    "id": "art-overworld-object-scale-coherence-20260917",
+    "sliceId": "art-overworld-object-scale-coherence-20260917",
     "status": "completed",
-    "validatedAt": "2026-09-17T09:50:12Z",
-    "sourceReport": "docs/overworld-biome-transitions.md",
-    "summary": "Completed original ground-quality and biome-transition slice: 16 painted materials / 23 mappings, continuous world-space fog-safe blending and cached lookups. Source/Linux 71 checks each, Windows 38, scenery 459, blocker report, seven Python tests, full repository exit 0 and official platform exports/parity pass. Small/wide visuals inspected; about 3.9 GB disposable outputs removed. Original art/provenance/caches/saves and RMG preserved. No next slice selected or release-ready claim.",
+    "validatedAt": "2026-09-17T11:28:54Z",
+    "sourceReport": "docs/overworld-object-scale-coherence.md",
+    "summary": "Compact portable object sizing and 35 original-raster density corrections verified through real generated-map source and isolated Linux/Windows package paths. Broader-test exceptions are explicit, not passed or silently weakened.",
     "evidence": {
-      "sourceRenderedChecks": 71,
-      "linuxPackageRenderedChecks": 71,
-      "windowsPackageHeadlessChecks": 38,
-      "pythonTests": 7,
-      "existingSceneryChecks": 459,
-      "blockerCells": 2324,
-      "uncoveredBlockerCells": 0,
-      "largeLookupUploadUsec": {
-        "source": 6903,
-        "linux": 6000,
-        "windows": 6128
-      },
-      "logicalTerrainCollisionAndSaveAuthority": "unchanged; exact baseline hashes in source report",
-      "repositoryValidation": "VALIDATION PASSED; final direct invocation exit 0; 26 absent historical non-RMG smokes explicitly not run",
-      "platformExports": "Both official export/boot smokes pass; Windows generated Overworld/Town construction flow passes",
-      "packageBytesEach": 645179852,
-      "packageEntryCount": 8852,
-      "packageParity": "Byte-identical except project.binary; ground JSON semantics and shader bytes equal source",
-      "visualReview": "Original sheets; Medium normal-fog and diagnostic reveal; 16 materials; diagonal/shore/island fixtures; Large view; source 1280x720 and Linux package 1920x1080",
-      "cleanup": "Approximately 3.9 GB rebuildable test packages/captures/logs removed; caches/saves/map dependencies, original art/provenance, RMG and unrelated files preserved",
-      "limits": "Windows Wine headless is not physical GPU certification; lookup CPU timings are not frame rates; not a release-readiness claim"
+      "catalogRasterIdentities": 2167,
+      "originalRasterDensityCorrections": 35,
+      "sourceRenderedChecks": 6793,
+      "linuxPackageRenderedChecks": 6793,
+      "windowsPackageHeadlessChecks": 6791,
+      "pythonTests": 5,
+      "existingMediumSceneryChecks": 587,
+      "logicalTerrainCollisionAndSaveAuthority": "Unchanged baseline hashes; all 298 generated resource IDs, positions, asset identities and footprints equal before/after; selection outside reduced sprite still works",
+      "repositoryValidation": "VALIDATION PASSED, exit 0; 26 absent historical non-RMG smokes explicitly not run",
+      "platformExports": "Both official export/boot smokes pass; Windows 23 generated Overworld/Town steps pass",
+      "packageBytesEach": 646634724,
+      "packageEntryCount": 8861,
+      "packageParity": "Byte-identical except project.binary; density JSON equals source; all four imported atlases present",
+      "visualReview": "23 catalog pages plus 35 corrected states; generated Medium normal fog and diagnostic reveal at 1280x720 and 1920x1080; source and Linux release",
+      "broaderTestExceptions": [
+        "Legacy visual smoke expects ResourceChip under CommandBand; baseline/current scene uses ResourceStrip",
+        "Legacy small-map report requires town outline >=0.010; baseline/current renderer uses 0.003",
+        "Optional Large scenery run: 573 checks with one zero-eligible-visible-animation failure; animation manifest/selection unchanged, not counted as pass"
+      ],
+      "cleanupRemovedLogicalBytes": 1600974130,
+      "cleanup": "33 disposable targets removed after process/path checks; three Wine prefixes lifecycle-cleaned; originals/provenance/caches/saves/map dependencies, RMG and unrelated files preserved",
+      "limits": "Windows coverage is headless Wine, not physical GPU certification; no full-game release-readiness claim"
     },
     "artifacts": [
-      "docs/overworld-biome-transitions.md",
-      "art/overworld/source/generated/terrain/ground_materials_v3/manifest.json",
-      "tests/overworld_biome_surface_regression.py"
+      "docs/overworld-object-scale-coherence.md",
+      "art/overworld/source/generated/object_density_20260917/manifest.json",
+      "tests/overworld_object_scale_regression.py"
     ]
   },
   "validationHistory": [

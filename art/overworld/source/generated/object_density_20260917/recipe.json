@@ -1,0 +1,868 @@
+{
+  "schema_id": "overworld_object_density_recipe_v1",
+  "cell_size": 192,
+  "paint_limit": 176,
+  "filter": "LANCZOS",
+  "policy": "Preserve original RGBA paint; tight aspect-fit with eight-pixel minimum clear margin; no generated or procedural substitute.",
+  "assets": {
+    "resource_site_minor_cache_toll_ruin_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/toll_ruin_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_toll_ruin",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Toll Ruin barrier stands open beneath a relit road lantern and cleared toll desk.",
+        "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_minor_cache_toll_ruin_opened.png",
+        "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+        "runtime_sha256": "0e0ed78365c9333fb71d354133e32577ac2f1d5186898998fcb434abd4cd9842"
+      },
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_minor_cache_toll_ruin_opened.png",
+      "source_sha256": "3b53b587e844b7e180b35cbc16318d0e41b35a3505af58bbb55453c3733796ff",
+      "mode": "rgba"
+    },
+    "resource_site_minor_cache_wreck_locker_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/wreck_locker_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_wreck_locker",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The wreck locker lid hangs open beside sorted salvage and a steady harbor lamp."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/wreck_locker_opened_source.png",
+      "source_sha256": "baecce82d01022885c22f8d91cdf845059d93322e5cc9fff68fa9e26392577ea",
+      "mode": "rgba"
+    },
+    "resource_site_minor_cache_amber_reliquary_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/amber_reliquary_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_amber_reliquary",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Amber Reliquary petals stand open around a calm survey light and empty reliquary cradle."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/amber_reliquary_opened_source.png",
+      "source_sha256": "4b6586649fa8aea6b59d4238cbe855b27a8b9bef6aa35aea9819b8d82b4f08af",
+      "mode": "rgba"
+    },
+    "resource_site_minor_cache_slag_purse_vault_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/slag_purse_vault_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_slag_purse_vault",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Slag Purse Vault gate is raised over orderly ore bins and a claimed brass tally plate."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/slag_purse_vault_opened_source.png",
+      "source_sha256": "3a87d5aeaadbd41546c0383f6e69480bff6f5db547404b4d504122cc68e46fac",
+      "mode": "rgba"
+    },
+    "resource_site_minor_cache_old_orchard_crypt_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/old_orchard_crypt_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_old_orchard_crypt",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Old Orchard Crypt door stands open beneath trimmed roots and a warm recovery lantern."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/old_orchard_crypt_opened_source.png",
+      "source_sha256": "b3bfb436506429148f2598756552cb7b6da94ca1ed7768c8275357ed714c3ca3",
+      "mode": "rgba"
+    },
+    "resource_site_minor_cache_moss_oath_cache_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/moss_oath_cache_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_moss_oath_cache",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Moss Oath Cache is open beside restored tablets and a fresh green claim ribbon."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/moss_oath_cache_opened_source.png",
+      "source_sha256": "834ab56e416249bfc373daa084d3b41175558454c7a59ea2c64ce68972aceae7",
+      "mode": "rgba"
+    },
+    "resource_site_minor_cache_frost_tithe_cellar_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/minor_guarded_cache_opened_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          336,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/frost_tithe_cellar_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_minor_guarded_cache_opened_atlas",
+        "assigned_resource_site_id": "site_frost_tithe_cellar",
+        "presentation_role": "opened_claimed_state",
+        "accessible_description": "The Frost Tithe Cellar hatch stands open around an orderly blue-lit muster alcove."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/minor_guarded_cache_opened_wave1/frost_tithe_cellar_opened_source.png",
+      "source_sha256": "a60c48de0e694b08d76172b7db394e4e76ac9ad389d66189f1f1eb4d8f11abf2",
+      "mode": "rgba"
+    },
+    "resource_site_land_transit_repaired_ferry_stage_active": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/repaired_ferry_stage_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_repaired_ferry_stage",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A repaired ferry stage with a clear deck, taut guide ropes, lit route lanterns, safety ring, and raised pennant."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/repaired_ferry_stage_active_source.png",
+      "source_sha256": "49b8633caf625dbae184e4641d12a82bd94061e47e1ffc7e2ec3639465518216",
+      "mode": "rgba"
+    },
+    "resource_site_land_transit_rope_lift_active": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/rope_lift_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_rope_lift",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A braced working rope lift with taut lines, a secure platform, lit landing lamps, and route pennant."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/rope_lift_active_source.png",
+      "source_sha256": "ff4781971b4a695a5e61cf7605df5f44ead49bc55eb83fbc4b3220decddb80db",
+      "mode": "rgba"
+    },
+    "resource_site_land_transit_root_pass_arch_active": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/root_pass_arch_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_root_pass_arch",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A living root arch with an open luminous passage, fresh leaves, clear path stones, and green-gold waylight.",
+        "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_land_transit_root_pass_arch_active.png",
+        "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+        "runtime_sha256": "817b538f65588a41b60eebbaa6594b8260b56a1dd232e4a1221e780f20a80218"
+      },
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_land_transit_root_pass_arch_active.png",
+      "source_sha256": "8f8177be8e8288bdabd1c888ed420fa511e674430fe3353aa4a38796073b0305",
+      "mode": "rgba"
+    },
+    "resource_site_land_transit_pressure_rail_switch_active": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/pressure_rail_switch_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_pressure_rail_switch",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "An aligned rail switch with a raised lever, charged blue-brass pipes, clear track, and lit route gauge."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/pressure_rail_switch_active_source.png",
+      "source_sha256": "d911738651e2ecaca59c2be8bab4d0c7287773774eac5100cc07a584e3c75dac",
+      "mode": "rgba"
+    },
+    "resource_site_land_transit_mirror_stair_turn_active": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/mirror_stair_turn_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_mirror_stair_turn",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A curved mirror stair with illuminated glass steps, bright rail beacons, and restrained blue-white route shimmer."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/mirror_stair_turn_active_source.png",
+      "source_sha256": "480b5db0d86b775363d163e3aabbebfb96e35ef8d618b92a557e2394cf334c41",
+      "mode": "rgba"
+    },
+    "resource_site_land_transit_basalt_undergate_active": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/basalt_undergate_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_basalt_undergate",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "An open basalt undergate with a deep lit passage, warm floor lamps, and paired violet guide crystals."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/basalt_undergate_active_source.png",
+      "source_sha256": "ef18803ff3a280f0965fdb594c26f5399f7d2d9176e2724c4b8fa50f03436d24",
+      "mode": "rgba"
+    },
+    "resource_site_land_transit_ridge_wind_chute_active": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/ridge_wind_chute_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_ridge_wind_chute",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A taut ridge wind chute catching a strong directed white-blue current beside a lit departure lantern.",
+        "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_land_transit_ridge_wind_chute_active.png",
+        "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+        "runtime_sha256": "817b538f65588a41b60eebbaa6594b8260b56a1dd232e4a1221e780f20a80218"
+      },
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_land_transit_ridge_wind_chute_active.png",
+      "source_sha256": "9cd0b74cba0ff02d6cef34fe400ca8dfe228b68d7c41176a71fb8ac36872f8d5",
+      "mode": "rgba"
+    },
+    "resource_site_land_transit_slipgate_mirror_active": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/slipgate_mirror_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_slipgate_mirror",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A standing slipgate mirror charged with a directional blue-gold vortex and bright outward transit stream."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/slipgate_mirror_active_source.png",
+      "source_sha256": "949e192b13a73201bdcaea70967a49f58e0003c9c182266b76c3d2dc0f2b6c42",
+      "mode": "rgba"
+    },
+    "resource_site_land_transit_spillway_drop_marker_active": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/spillway_drop_marker_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_spillway_drop_marker",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "An open blue-lit spillway control with a forceful one-way rush through its bounded channel."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/spillway_drop_marker_active_source.png",
+      "source_sha256": "99cbf26de06dd0763fd486df036becbde76fe0d2825dab53cb226a05bc778481",
+      "mode": "rgba"
+    },
+    "resource_site_land_transit_tide_bore_marker_active": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/land_transit_active_atlas.png",
+        "atlas_region": [
+          432,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          480,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/tide_bore_marker_active_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_land_transit_active_atlas",
+        "assigned_resource_site_id": "site_tide_bore_marker",
+        "presentation_role": "active_land_transit_state",
+        "accessible_description": "A carved current marker surrounded by a forceful directional turquoise tide and lit rope posts."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/land_transit_active_wave1/tide_bore_marker_active_source.png",
+      "source_sha256": "0ed3a63f6fd35f7d95356828162604e68f1742bb09a2cc84a4324074fa675696",
+      "mode": "rgba"
+    },
+    "resource_site_route_control_charter_bar_gate_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/charter_bar_gate_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_charter_bar_gate",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Charter Bar Gate with its sealed barrier raised beside the left pillar and both charter medallions glowing warm gold."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/charter_bar_gate_opened_source.png",
+      "source_sha256": "d6b7eb17b43dde7d53f79ce93f3bb445180d4c06134d3d30ddf983796326f164",
+      "mode": "rgba"
+    },
+    "resource_site_route_control_thorn_seal_gate_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/thorn_seal_gate_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_thorn_seal_gate",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Thorn Seal Gate with its living barrier withdrawn into the arch and a broad green-gold passage standing open.",
+        "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_route_control_thorn_seal_gate_opened.png",
+        "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+        "runtime_sha256": "cf027ac06c79f8fd6294c1280a9df729fe020a30db38d9290681adbb1fa8bb99"
+      },
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_route_control_thorn_seal_gate_opened.png",
+      "source_sha256": "cf22f0032afe00cfa99107c21e0a2410ca2a4ac624939d636c16eddb8a177175",
+      "mode": "rgba"
+    },
+    "resource_site_route_control_brass_toll_arch_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/brass_toll_arch_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_brass_toll_arch",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Brass Toll Arch with its striped arm raised against the booth and amber lamps showing lawful passage."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/brass_toll_arch_opened_source.png",
+      "source_sha256": "d5ac25d0083cc01ef0eda13141d346dfbcf69862de59f77793433006b835bd57",
+      "mode": "rgba"
+    },
+    "resource_site_route_control_reef_chain_boom_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/reef_chain_boom_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_reef_chain_boom",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Reef Chain Boom with its heavy chain lifted above the route and teal capstan lights lit.",
+        "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_route_control_reef_chain_boom_opened.png",
+        "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+        "runtime_sha256": "cf027ac06c79f8fd6294c1280a9df729fe020a30db38d9290681adbb1fa8bb99"
+      },
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_route_control_reef_chain_boom_opened.png",
+      "source_sha256": "8571bd2fea5ac190ec1902f2ac444f8618a0e637e0ed7b9031e1c52e295af92e",
+      "mode": "rgba"
+    },
+    "resource_site_route_control_frost_toll_bar_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/frost_toll_bar_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_frost_toll_bar",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Frost Toll Bar with its chain arched high between cyan pylons and the snowy pass fully clear.",
+        "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_route_control_frost_toll_bar_opened.png",
+        "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+        "runtime_sha256": "cf027ac06c79f8fd6294c1280a9df729fe020a30db38d9290681adbb1fa8bb99"
+      },
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_route_control_frost_toll_bar_opened.png",
+      "source_sha256": "3adcdfedb207ef8bcc4661fad92fc9dc71ff15636b5f164fe498e7fe07e207b9",
+      "mode": "rgba"
+    },
+    "resource_site_route_control_ash_sluice_lock_opened": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/route_control_opened_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          288,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/route_control_opened_wave1/ash_sluice_lock_opened_source.png",
+        "source_model": "built_in_image_gen_precise_object_edit_route_control_opened_atlas",
+        "assigned_resource_site_id": "site_ash_sluice_lock",
+        "presentation_role": "opened_route_lock_state",
+        "accessible_description": "Ash Sluice Lock with both grates raised and blue route lamps marking a cooled open channel.",
+        "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/resource_site_route_control_ash_sluice_lock_opened.png",
+        "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json",
+        "runtime_sha256": "cf027ac06c79f8fd6294c1280a9df729fe020a30db38d9290681adbb1fa8bb99"
+      },
+      "source": "res://art/overworld/source/trimmed/cutout_recovery_20260909/passages/sources/resource_site_route_control_ash_sluice_lock_opened.png",
+      "source_sha256": "f7bb5e3385731fad266dc50a177e071ae2d018ec5fa4a23d71047d148a48a108",
+      "mode": "rgba"
+    },
+    "mapobj_ashcrown_cinderfold": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          0,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/ashcrown_cinderfold_unclaimed.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_ashcrown_cinderfold",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "ceramic antler arch and clinker trough",
+        "accessible_description": "A branching ceramic-antler arch shelters a clinker-stone trough between two banked kiln vents and ash-black paving."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/ashcrown_cinderfold_unclaimed.png",
+      "source_sha256": "bc771060f1af21cf03a9e900274868dabeede5ba1df684d26eb64612a30ccfa9",
+      "mode": "rgba"
+    },
+    "resource_site_neutral_ashcrown_cinderfold_controlled": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          48,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/ashcrown_cinderfold_controlled.png",
+        "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+        "assigned_resource_site_id": "site_ashcrown_cinderfold",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The controlled Ashcrown Cinderfold stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/ashcrown_cinderfold_controlled.png",
+      "source_sha256": "4275e7594cfb2290ba31ef945c2cd90f82275ee83b6d3d0c44b27710471fea94",
+      "mode": "rgba"
+    },
+    "mapobj_miremoon_crownmere": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          96,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/miremoon_crownmere_unclaimed.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_miremoon_crownmere",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "crescent peatglass pool and moon-crowned roots",
+        "accessible_description": "A crescent peat-glass pool rests between four moon-crowned root posts, blue mineral glints, moss, and reed beds."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/miremoon_crownmere_unclaimed.png",
+      "source_sha256": "318e11938f9d2e4ef61bd70790a0e3e15dae43fc300316ab2c34253b1a4f56aa",
+      "mode": "rgba"
+    },
+    "resource_site_neutral_miremoon_crownmere_controlled": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          144,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/crownmere_repair_source.png",
+        "source_model": "built_in_image_gen_precise_legacy_family_repair",
+        "assigned_resource_site_id": "site_miremoon_crownmere",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The controlled Miremoon Crownmere stands open, supplied, lit, and marked for weekly sovereign-wild recruitment.",
+        "source_trimmed": "res://art/overworld/source/trimmed/cutout_recovery_20260909/legacy_families/resource_site_neutral_miremoon_crownmere_controlled.png",
+        "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json",
+        "runtime_sha256": "78a86f619bd3897adb56cb98ace0893473ff517150d1eda953899f4c784a102b"
+      },
+      "source": "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/crownmere_repair_source.png",
+      "source_sha256": "99dae98e79b0b4a0ad8df2b452b66e1d11fa39995804ba64bbe63c7946b0aa09",
+      "mode": "frozen_legacy_matte"
+    },
+    "mapobj_noonshard_prism_aviary": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          192,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/noonshard_prism_aviary_unclaimed.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_noonshard_prism_aviary",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "three prism vanes and whiteglass nesting dais",
+        "accessible_description": "Three tall icebound prism vanes hold narrow perches around a raised white-glass nesting dais and gold bracework."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/noonshard_prism_aviary_unclaimed.png",
+      "source_sha256": "78a9210833bea9a0ec8713208a5166ae0f8fe73dcd12c51b08aa1fd7fddd9d86",
+      "mode": "rgba"
+    },
+    "resource_site_neutral_noonshard_prism_aviary_controlled": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          240,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/noonshard_prism_aviary_controlled.png",
+        "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+        "assigned_resource_site_id": "site_noonshard_prism_aviary",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The controlled Noonshard Prism Aviary stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/noonshard_prism_aviary_controlled.png",
+      "source_sha256": "743d200a499bdfaa29ab3b6471bfdc6e63c3552c8f2a398aff39c555df9cbffd",
+      "mode": "rgba"
+    },
+    "mapobj_rootvault_heartwood_hollow": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          288,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/rootvault_heartwood_hollow_unclaimed.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_rootvault_heartwood_hollow",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "concentric root arches and sealed heartwood door",
+        "accessible_description": "Three concentric living-root arches surround a sealed round heartwood door, amber sap knots, moss, and stone steps."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/rootvault_heartwood_hollow_unclaimed.png",
+      "source_sha256": "f3f4ca7f819125993ab2d8e65dddd5cd42736425e50ac612279cf3d5f0fc3027",
+      "mode": "rgba"
+    },
+    "resource_site_neutral_rootvault_heartwood_hollow_controlled": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          336,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/rootvault_heartwood_hollow_controlled.png",
+        "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+        "assigned_resource_site_id": "site_rootvault_heartwood_hollow",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The controlled Rootvault Heartwood Hollow stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/rootvault_heartwood_hollow_controlled.png",
+      "source_sha256": "0c3733dde028db373ab3893c86a4bc26fcddecb005542aaaa4e86dc37b9525fb",
+      "mode": "rgba"
+    },
+    "mapobj_quenchbell_pressure_den": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          384,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/quenchbell_pressure_den_unclaimed.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_quenchbell_pressure_den",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "basalt pressure den and bellhorn gate",
+        "accessible_description": "A squat basalt pressure den carries a broad brass bell-horn gate, three red gauges, vents, and coolant troughs."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/quenchbell_pressure_den_unclaimed.png",
+      "source_sha256": "90750eaf5f8be51868cab087fc5593adf4f350085a94a39a5c8e90a4cda594d2",
+      "mode": "rgba"
+    },
+    "resource_site_neutral_quenchbell_pressure_den_controlled": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          432,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/quenchbell_pressure_den_controlled.png",
+        "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+        "assigned_resource_site_id": "site_quenchbell_pressure_den",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The controlled Quenchbell Pressure Den stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/quenchbell_pressure_den_controlled.png",
+      "source_sha256": "31f2db72e01ae78365339bca246f77849e5e2b222960d4755a5b7fdf5ffb0860",
+      "mode": "rgba"
+    },
+    "mapobj_saltwake_belldeep": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          480,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/saltwake_belldeep_unclaimed.png",
+        "source_generated_atlas": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "source_model": "built_in_image_gen_original_sovereign_wild_habitat_atlas",
+        "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+        "distinct_sprite_assignment": true,
+        "assigned_map_object_id": "object_saltwake_belldeep",
+        "assigned_map_object_family": "neutral_dwelling",
+        "presentation_role": "whalerib saltglass quay and six chimes",
+        "accessible_description": "A half-submerged pale quay lies beneath whale-rib and salt-glass arches, six bronze chimes, fog basins, and dark teal water."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/saltwake_belldeep_unclaimed.png",
+      "source_sha256": "3f8abc85184002b48ad3bee27a616749d78d0ae559c3bfc47b90e8a935b467ce",
+      "mode": "rgba"
+    },
+    "resource_site_neutral_saltwake_belldeep_controlled": {
+      "original_entry": {
+        "path": "res://art/overworld/runtime/objects/resource_sites/sovereign_wild_habitats/sovereign_wild_habitats_atlas.png",
+        "atlas_region": [
+          528,
+          0,
+          48,
+          48
+        ],
+        "atlas_size": [
+          576,
+          48
+        ],
+        "source_generated": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/saltwake_belldeep_controlled.png",
+        "source_model": "built_in_image_gen_precise_edit_and_matte_recovery_sovereign_wild_habitat_atlas",
+        "assigned_resource_site_id": "site_saltwake_belldeep",
+        "presentation_role": "controlled_muster_state",
+        "accessible_description": "The controlled Saltwake Belldeep stands open, supplied, lit, and marked for weekly sovereign-wild recruitment."
+      },
+      "source": "res://art/overworld/source/generated/resource_sites/sovereign_wild_habitats/saltwake_belldeep_controlled.png",
+      "source_sha256": "f83604c4d742b3dd1aa6ae4d21dc3dfd5c068235dfaa6cd36df7e59678fbd906",
+      "mode": "rgba"
+    }
+  },
+  "historical_proof_sha256": {
+    "res://art/overworld/source/generated/cutout_recovery_20260909/passages/recipe.json": "41051bfc466349984e82928f7a8bc0ccca917493f75e67c8892c9c64953d5c1a",
+    "res://art/overworld/source/generated/cutout_recovery_20260909/passages/manifest.json": "f80f57627e7baa1ebc63e410c54a39479eade1384fe0862402d58b60fc64ee2d",
+    "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/recipe.json": "a5b756554f4a2e2f10a49a879895b204c58910b42ab00fc8f917236767b74e0c",
+    "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json": "1f10a92c50de6783ebdde45b22dc0edb21a19ef218656b85d272fa751824e2cb"
+  }
+}

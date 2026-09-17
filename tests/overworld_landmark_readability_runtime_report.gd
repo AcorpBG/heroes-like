@@ -103,9 +103,9 @@ func _semantic_scale_rows(map_view: Node) -> Array:
 func _semantic_scale_exact(rows: Array) -> bool:
 	var expected := {
 		"decoration": 0.46,
-		"artifact": 0.58,
+		"artifact": 0.42,
 		"map_object": 0.62,
-		"pickup": 0.68,
+		"pickup": 0.56,
 		"waypoint": 0.78,
 		"service": 0.82,
 		"hero": 0.86,
