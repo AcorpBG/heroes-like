@@ -1,0 +1,66 @@
+{
+  "schema": "overworld_original_ground_materials_v3",
+  "slice_id": "art-overworld-biome-transitions-20260917",
+  "generation_mode": "built_in_image_gen",
+  "date": "2026-09-17",
+  "originality": "Original generated painted materials. No copyrighted game images, reference pixels or procedural stand-ins.",
+  "sources": [
+    {
+      "path": "res://art/overworld/source/generated/terrain/ground_materials_v3/green_source.png",
+      "sha256": "d6f1687a64de7cad125f73b6b903aa624ba8429896c6848ab6f1d8a58456e64d",
+      "size": [
+        1254,
+        1254
+      ],
+      "first_slot": 0,
+      "prompt": "Use case: stylized-concept. Asset type: original painted ground-material texture atlas for the top-down 2D fantasy strategy game Aurelion Reach. Generate a square high-resolution 2048x2048 image divided mathematically into four equal square quadrants, a strict 2x2 atlas. Each quadrant is one completely filled ground material, independently seamless/tileable along its opposite edges. Quadrants meet at exact horizontal and vertical midlines with NO margins, borders, padding, gaps, labels, text or grid strokes. Consistent directly overhead orthographic camera, small-scale hand-painted natural detail, diffuse ambient daylight, no directional lighting gradient, no vignette, no perspective, no horizon. Looks like beautifully painted miniature landscape floor at strategic map scale, not a macro photograph and not plastic/procedural noise. Fine crisp detail with quietly irregular larger patches; moderate restrained contrast, rich nuanced colors. No trees, buildings, characters, large rocks, standalone props, roads, tracks, symbols, shadows cast by offscreen objects, or copied game pixels. No bilateral mirroring or kaleidoscope symmetry, no repeating radial motifs, no conspicuous vertical streaks. Ground should be readable beneath painted props. Output only the four-material atlas.\nMaterial positions: TOP LEFT: natural lush meadow ground, muted fresh moss/olive grass, tiny uneven short tufts and scattered earth showing through, no large flowers. TOP RIGHT: sun-dried open plains, sage and straw-colored grass interleaved with dusty earth, still clearly grassland. BOTTOM LEFT: shaded deep-forest floor, rich dark moss and leaf litter with tiny root threads, no tree trunks or canopies. BOTTOM RIGHT: wet fen soil, muted olive and umber moss, small damp pools and fine reed stubble, no large water surfaces."
+    },
+    {
+      "path": "res://art/overworld/source/generated/terrain/ground_materials_v3/earth_source.png",
+      "sha256": "ff32da7e0c509ab4479efe6817cad943438af5f43a50e7ab10bf0bd0958c98d4",
+      "size": [
+        1254,
+        1254
+      ],
+      "first_slot": 4,
+      "prompt": "Use case: stylized-concept. Asset type: original painted ground-material texture atlas for the top-down 2D fantasy strategy game Aurelion Reach. Generate a square high-resolution 2048x2048 image divided mathematically into four equal square quadrants, a strict 2x2 atlas. Each quadrant is one completely filled ground material, independently seamless/tileable along its opposite edges. Quadrants meet at exact horizontal and vertical midlines with NO margins, borders, padding, gaps, labels, text or grid strokes. Consistent directly overhead orthographic camera, small-scale hand-painted natural detail, diffuse ambient daylight, no directional lighting gradient, no vignette, no perspective, no horizon. Looks like beautifully painted miniature landscape floor at strategic map scale, not a macro photograph and not plastic/procedural noise. Fine crisp detail with quietly irregular larger patches; moderate restrained contrast, rich nuanced colors. No trees, buildings, characters, large rocks, standalone props, roads, tracks, symbols, shadows cast by offscreen objects, or copied game pixels. No bilateral mirroring or kaleidoscope symmetry, no repeating radial motifs, no conspicuous vertical streaks. Ground should be readable beneath painted props. Output only the four-material atlas.\nMaterial positions: TOP LEFT: warm ochre dirt, compact loam and scattered fine gravel, naturally weathered small-scale mottling, no large polygon crack network. TOP RIGHT: light warm sandy desert floor, fine beige sand with low subtle ripple irregularity and scattered tiny grit, no dunes or strong diagonal bands. BOTTOM LEFT: dry highland ground, tawny grey-brown soil and sparse muted hardy grass, small broken stones. BOTTOM RIGHT: dark slate-grey rocky ground, fine weathered bedrock and scree fragments, subtle cool mineral tones, no cliffs or freestanding boulders."
+    },
+    {
+      "path": "res://art/overworld/source/generated/terrain/ground_materials_v3/extreme_source.png",
+      "sha256": "697315ff009a7f9bf3ec67c00cb8e2002cbc0a94cfae8a9200f77e730d43dfdc",
+      "size": [
+        1254,
+        1254
+      ],
+      "first_slot": 8,
+      "prompt": "Use case: stylized-concept. Asset type: original painted ground-material texture atlas for the top-down 2D fantasy strategy game Aurelion Reach. Generate a square high-resolution 2048x2048 image divided mathematically into four equal square quadrants, a strict 2x2 atlas. Each quadrant is one completely filled ground material, independently seamless/tileable along its opposite edges. Quadrants meet at exact horizontal and vertical midlines with NO margins, borders, padding, gaps, labels, text or grid strokes. Consistent directly overhead orthographic camera, small-scale hand-painted natural detail, diffuse ambient daylight, no directional lighting gradient, no vignette, no perspective, no horizon. Looks like beautifully painted miniature landscape floor at strategic map scale, not a macro photograph and not plastic/procedural noise. Fine crisp detail with quietly irregular larger patches; moderate restrained contrast, rich nuanced colors. No trees, buildings, characters, large rocks, standalone props, roads, tracks, symbols, shadows cast by offscreen objects, or copied game pixels. No bilateral mirroring or kaleidoscope symmetry, no repeating radial motifs, no conspicuous vertical streaks. Ground should be readable beneath painted props. Output only the four-material atlas.\nMaterial positions: TOP LEFT: quiet charcoal ash soil, fine grey/brown cinders and subtle wind-distributed volcanic dust, no bright lava. TOP RIGHT: walkable cooled volcanic crust, dark umber basalt with sparse very narrow orange-red ember fissures, not a continuous molten pool, no bright red blobs. BOTTOM LEFT: underground cavern floor, muted cool charcoal slate, faint blue-grey mineral flecks and very subtle violet shadows, rough flat rock not paving. BOTTOM RIGHT: fresh soft snow cover, luminous but not blown-out ivory, pale cold blue shaded granular drifts, no tracks or rocks."
+    },
+    {
+      "path": "res://art/overworld/source/generated/terrain/ground_materials_v3/water_source.png",
+      "sha256": "9c02823c02bf78f2fe2bc15659499eff43fe719f3c58086a5144480f1a9ea09d",
+      "size": [
+        1254,
+        1254
+      ],
+      "first_slot": 12,
+      "prompt": "Use case: stylized-concept. Asset type: original painted ground-material texture atlas for the top-down 2D fantasy strategy game Aurelion Reach. Generate a square high-resolution 2048x2048 image divided mathematically into four equal square quadrants, a strict 2x2 atlas. Each quadrant is one completely filled ground material, independently seamless/tileable along its opposite edges. Quadrants meet at exact horizontal and vertical midlines with NO margins, borders, padding, gaps, labels, text or grid strokes. Consistent directly overhead orthographic camera, small-scale hand-painted natural detail, diffuse ambient daylight, no directional lighting gradient, no vignette, no perspective, no horizon. Looks like beautifully painted miniature landscape floor at strategic map scale, not a macro photograph and not plastic/procedural noise. Fine crisp detail with quietly irregular larger patches; moderate restrained contrast, rich nuanced colors. No trees, buildings, characters, large rocks, standalone props, roads, tracks, symbols, shadows cast by offscreen objects, or copied game pixels. No bilateral mirroring or kaleidoscope symmetry, no repeating radial motifs, no conspicuous vertical streaks. Ground should be readable beneath painted props. Output only the four-material atlas.\nMaterial positions: TOP LEFT: deep still blue-teal water from directly overhead, subtle painterly small ripples, rich quiet variation, no white foam stripes. TOP RIGHT: shallow coastal sea, turquoise green-blue water with barely visible softly mottled sand below, no beach edge. BOTTOM LEFT: silty shoreline shallows, pale muted aqua with sand visible beneath transparent water, no land edge or shells or rocks. BOTTOM RIGHT: frost-covered ground, cool pale blue-grey ice and powdery white crystalline frost with subtle earth grey beneath, no large jagged crack grid."
+    }
+  ],
+  "runtime": {
+    "path": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png",
+    "size": [
+      2048,
+      2048
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell_size": 512,
+    "interior_size": 508,
+    "gutter": 2,
+    "sha256": "8478bf21b27dfe95b0d48ac3d00f09d66befe34c77c24434c0cbcbb0042a2374",
+    "preparation": "python3 -B tools/prepare_overworld_ground_materials.py; crop each exact quadrant, Lanczos resize to 508, pack 512 cells with duplicated two-pixel gutters. No mirrored image construction or color edits.",
+    "sampling": "World-space six-tile painted materials with shader overlap at repeat seams and bounded four-neighbor biome splatting; center-of-tile identity protected."
+  }
+}

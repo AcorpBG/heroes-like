@@ -36600,15 +36600,18 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         '"whole_map_fit_scale_policy": "bounded_small_map_fit_extent"',
     ):
         ensure(token in metrics_block, errors, f"View metrics must expose truthful small-map scale policy evidence: {token}")
-    static_matte_order = tuple(static_draw_block.find(token) for token in (
+    ground_background_block = gd_function_block(map_text, "_draw_ground_background_layer")
+    static_matte_order = tuple(ground_background_block.find(token) for token in (
         "var viewport_rect := _map_viewport_rect()",
-        "var board_rect = _board_rect()",
+        "var board_rect := _board_rect()",
         "_canvas_draw_rect(viewport_rect, FRAME_FILL, true)",
         "_draw_small_map_cartographic_matte(viewport_rect, board_rect)",
-        "var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)",
-        "_draw_tile_terrain_surface(tile, rect)",
+        "_ground_surface.sync_layout(board_rect, viewport_rect, _map_size)",
     ))
     ensure(all(index >= 0 for index in static_matte_order) and list(static_matte_order) == sorted(static_matte_order), errors, "Small-map cartographic matte must draw below every authoritative terrain tile")
+    render_layers = gd_function_block(map_text, "_ensure_render_layers")
+    layer_order = [render_layers.find(token) for token in ('"GroundBackgroundLayer"', '_ground_background_layer.add_child(_ground_surface)', '"SessionStaticLayer"', '"StateLayer"')]
+    ensure(all(index >= 0 for index in layer_order) and layer_order == sorted(layer_order), errors, "Original ground must render above the matte and below roads/props/fog")
     for token in (
         '"left": maxf(board_rect.position.x - viewport_rect.position.x, 0.0)',
         '"top": maxf(board_rect.position.y - viewport_rect.position.y, 0.0)',
@@ -45681,14 +45684,14 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     static_draw_block = gd_function_block(map_view_text, "_draw_session_static_layer")
     tile_static_block = gd_function_block(map_view_text, "_draw_tile_session_static_background")
     ensure(
-        tile_static_block.find("_draw_terrain_transitions(tile, rect, terrain)")
+        0 <= tile_static_block.find("_draw_tile_terrain_surface(tile, rect)")
         < tile_static_block.find("_draw_terrain_macro_lighting(tile, rect)")
         < tile_static_block.find("_draw_road_overlay(tile, rect)"),
         errors,
         "Terrain macro-lighting must draw after terrain transitions and before authoritative roads.",
     )
     ensure(
-        static_draw_block.find("_draw_tile_terrain_surface(tile, rect)")
+        0 <= static_draw_block.find("_draw_tile_terrain_surface(tile, _tile_rect(board_rect, tile))")
         < static_draw_block.find("_draw_terrain_grain_overlay(board_rect)")
         < static_draw_block.find("_draw_terrain_macro_lighting_field(board_rect, visible_bounds)")
         < static_draw_block.find("_draw_road_overlay(tile, rect)"),
@@ -45696,7 +45699,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "Live static rendering must batch the macro-light field between complete terrain and road passes.",
     )
     for token in (
-        "var terrain_grain_drawn := _draw_terrain_grain_overlay(board_rect)",
+        "var terrain_grain_drawn := false if painted_ground else _draw_terrain_grain_overlay(board_rect)",
         '_profile_add("terrain_grain_overlay_draws", 1 if terrain_grain_drawn else 0)',
         '"terrain_grain_overlay_draws": 1 if terrain_grain_drawn else 0',
     ):
@@ -84979,6 +84982,8 @@ def main() -> int:
     MISSING_HISTORICAL_SMOKE_REPORTS.clear()
     errors: list[str] = []
     validate_overworld_scenery_animation(errors)
+    from overworld_ground_materials_contract import validate as validate_original_ground_materials
+    errors.extend(validate_original_ground_materials())
     ui_frame_path = ROOT / "art/ui/runtime/shared/hud_frame_ornate.png"
     ensure(ui_frame_path.is_file(), errors, "Scenery-first core UI frame is missing")
     if ui_frame_path.is_file():

@@ -1,0 +1,65 @@
+shader_type canvas_item;
+render_mode unshaded;
+
+uniform sampler2D materials : source_color, filter_linear, repeat_disable;
+// R: exact manifest slot / 255. G: explored bit. Never filtered or gamma corrected.
+uniform sampler2D terrain_data : filter_nearest, repeat_disable;
+uniform vec2 map_size;
+uniform vec2 world_origin;
+uniform vec2 world_span;
+
+vec3 paint(float slot, vec2 uv) {
+	vec2 cell = vec2(mod(slot, 4.0), floor(slot / 4.0));
+	// Half-texel inset plus duplicated gutters prevent cross-material bleed.
+	return texture(materials, (cell * 512.0 + vec2(2.5) + fract(uv) * 507.0) / 2048.0).rgb;
+}
+
+vec3 ground(float slot, vec2 world) {
+	vec2 uv = fract(world / 6.0);
+	// Overlap painted samples near repeat boundaries, without reflected pixels
+	// or synthesized noise. The second sample's wrap is masked by the first.
+	vec2 core = smoothstep(vec2(0.0), vec2(0.18), uv) * (vec2(1.0) - smoothstep(vec2(0.82), vec2(1.0), uv));
+	vec3 top = paint(slot, uv);
+	if (core.x < 1.0) { top = mix(paint(slot, uv + vec2(0.5, 0.0)), top, core.x); }
+	if (core.y < 1.0) {
+		vec3 bottom = paint(slot, uv + vec2(0.0, 0.5));
+		if (core.x < 1.0) { bottom = mix(paint(slot, uv + vec2(0.5)), bottom, core.x); }
+		top = mix(bottom, top, core.y);
+	}
+	return top;
+}
+
+vec2 cell_data(vec2 cell) {
+	return texture(terrain_data, (clamp(cell, vec2(0.0), map_size - vec2(1.0)) + vec2(0.5)) / map_size).rg;
+}
+
+float known_slot(vec2 cell, float own_slot) {
+	vec2 data = cell_data(cell);
+	return data.g > 0.5 ? floor(data.r * 255.0 + 0.5) : own_slot;
+}
+
+void fragment() {
+	vec2 world = world_origin + UV * world_span;
+	vec2 own = cell_data(floor(world));
+	float own_slot = floor(own.r * 255.0 + 0.5);
+	if (own.g < 0.5 || own_slot > 15.0) {
+		// Identity-silent underlay. The authoritative fog layer is above this.
+		COLOR = vec4(0.04, 0.05, 0.06, 1.0);
+	} else {
+		// The painted stone's luminance gives boundaries fine natural variation.
+		// Only blend weights move; source texels remain fixed in world space.
+		vec2 irregularity = clamp((ground(7.0, world * 2.0).rg - vec2(0.38)) * 0.8, vec2(-0.13), vec2(0.13));
+		vec2 sample_position = world - vec2(0.5) + irregularity;
+		vec2 cell = floor(sample_position);
+		vec2 weight = smoothstep(vec2(0.23), vec2(0.77), fract(sample_position));
+		float a = known_slot(cell, own_slot);
+		float b = known_slot(cell + vec2(1.0, 0.0), own_slot);
+		float c = known_slot(cell + vec2(0.0, 1.0), own_slot);
+		float d = known_slot(cell + vec2(1.0), own_slot);
+		vec3 ca = ground(a, world);
+		vec3 cb = b == a ? ca : ground(b, world);
+		vec3 cc = c == a ? ca : ground(c, world);
+		vec3 cd = d == a ? ca : (d == b ? cb : (d == c ? cc : ground(d, world)));
+		COLOR = vec4(mix(mix(ca, cb, weight.x), mix(cc, cd, weight.x), weight.y), 1.0);
+	}
+}

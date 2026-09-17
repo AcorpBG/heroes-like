@@ -11,8 +11,12 @@ const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacement
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 const Motion = preload("res://scenes/overworld/OverworldMotion.gd")
 const SceneryBatch = preload("res://scenes/overworld/OverworldSceneryBatch.gd")
+const GroundSurface = preload("res://scenes/overworld/OverworldGroundSurface.gd")
+var _ground_background_layer: Control
+var _ground_surface: TextureRect
 
 const OVERWORLD_ART_MANIFEST_PATH := "res://art/overworld/manifest.json"
+const GROUND_MATERIAL_MANIFEST_PATH := "res://art/overworld/ground_materials.json"
 const TownBiomeArtRulesScript = preload("res://scripts/core/TownBiomeArtRules.gd")
 const TOWN_BIOME_ART_MANIFEST_PATH := "res://art/overworld/town_biome_sprites.json"
 const OVERWORLD_VFX_MANIFEST_PATH := "res://content/overworld_vfx_manifest.json"
@@ -900,6 +904,10 @@ func set_map_state(
 	var state_changed := state_signature != previous_state_signature
 	_session_static_cache_signature = session_static_signature
 	_state_cache_signature = state_signature
+	if _ground_surface != null and not _homm3_runtime_rendering_enabled():
+		var explored: Array = OverworldRulesScript.fog_for_level(_session, _level).get("explored_tiles", [])
+		_ground_surface.sync_lookup(_map_data, _map_size, session_static_signature, explored, _bool_grid_cache_signature(explored))
+		_ground_surface.sync_layout(_board_rect(), _map_viewport_rect(), _map_size)
 
 	if visibility_changed or viewport_layout_changed:
 		_invalidate_frame_layer("viewport_layout_changed")
@@ -1424,6 +1432,10 @@ func _notification(what: int) -> void:
 func _ensure_render_layers() -> void:
 	if _session_static_layer != null and is_instance_valid(_session_static_layer):
 		return
+	_ground_background_layer = _create_render_layer("GroundBackgroundLayer", Callable(self, "_draw_ground_background_layer"))
+	_ground_surface = GroundSurface.new()
+	_ground_surface.name = "OriginalGroundSurface"
+	_ground_background_layer.add_child(_ground_surface)
 	_session_static_layer = _create_render_layer("SessionStaticLayer", Callable(self, "_draw_session_static_layer"))
 	_terrain_ambient_layer = _create_render_layer("TerrainAmbientLayer", Callable(self, "_draw_terrain_ambient_layer"))
 	_state_layer = _create_render_layer("StateLayer", Callable(self, "_draw_state_layer"))
@@ -1581,6 +1593,8 @@ func _placement_array_cache_signature(values, fields: Array) -> int:
 func _invalidate_session_static_cache(reason: String) -> void:
 	_session_static_cache_generation += 1
 	_session_static_cache_reason = reason
+	if _ground_background_layer != null:
+		_ground_background_layer.queue_redraw()
 	if _session_static_layer != null:
 		_session_static_layer.queue_redraw()
 
@@ -1856,6 +1870,22 @@ func _draw_frame_layer() -> void:
 		_canvas_draw_rect(frame_rect, FRAME_COLOR, false, 3.0)
 	_draw_canvas_item = previous_target
 
+func _draw_ground_background_layer() -> void:
+	if _session == null:
+		return
+	var previous_target = _draw_canvas_item
+	_draw_canvas_item = _ground_background_layer
+	var viewport_rect := _map_viewport_rect()
+	var board_rect := _board_rect()
+	_canvas_draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
+	_canvas_draw_rect(viewport_rect.grow(12.0), Color(0.02, 0.03, 0.04, 0.85), true)
+	_canvas_draw_rect(viewport_rect, FRAME_FILL, true)
+	_draw_small_map_cartographic_matte(viewport_rect, board_rect)
+	_ground_surface.sync_layout(board_rect, viewport_rect, _map_size)
+	if _homm3_runtime_rendering_enabled():
+		_ground_surface.hide()
+	_draw_canvas_item = previous_target
+
 func _draw_session_static_layer() -> void:
 	if _session == null:
 		return
@@ -1866,19 +1896,17 @@ func _draw_session_static_layer() -> void:
 	_draw_canvas_item = _session_static_layer
 	var viewport_rect := _map_viewport_rect()
 	var board_rect = _board_rect()
-	var frame_rect = viewport_rect.grow(12.0)
-	_canvas_draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
-	_canvas_draw_rect(frame_rect, Color(0.02, 0.03, 0.04, 0.85), true)
-	_canvas_draw_rect(viewport_rect, FRAME_FILL, true)
-	_draw_small_map_cartographic_matte(viewport_rect, board_rect)
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
-	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
-		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
-			var tile = Vector2i(x, y)
-			var rect = _tile_rect(board_rect, tile)
-			terrain_draws += 1
-			_draw_tile_terrain_surface(tile, rect)
-	var terrain_grain_drawn := _draw_terrain_grain_overlay(board_rect)
+	var painted_ground := not _homm3_runtime_rendering_enabled()
+	# Production terrain is one original-raster surface. Never silently return
+	# to square edge PNGs/polygon corner hints on an invalid material mapping.
+	if not painted_ground:
+		for y in range(visible_bounds.position.y, visible_bounds.end.y):
+			for x in range(visible_bounds.position.x, visible_bounds.end.x):
+				var tile := Vector2i(x, y)
+				terrain_draws += 1
+				_draw_tile_terrain_surface(tile, _tile_rect(board_rect, tile))
+	var terrain_grain_drawn := false if painted_ground else _draw_terrain_grain_overlay(board_rect)
 	var macro_lighting_polygon_draws := _draw_terrain_macro_lighting_field(board_rect, visible_bounds)
 	var terrain_detail_decal_draws := 0
 	var water_surface_ripple_draws := 0
@@ -1888,7 +1916,7 @@ func _draw_session_static_layer() -> void:
 			var rect = _tile_rect(board_rect, tile)
 			if _draw_terrain_detail_decal(tile, rect):
 				terrain_detail_decal_draws += 1
-			if _draw_water_surface_ripples(tile, rect):
+			if not painted_ground and _draw_water_surface_ripples(tile, rect):
 				water_surface_ripple_draws += 1
 			if not _road_tile_payload(tile).is_empty():
 				road_draws += 1
@@ -10980,6 +11008,9 @@ func _load_overworld_art_manifest() -> void:
 		_town_biome_art_manifest = biome_payload
 	else:
 		push_error("Town biome art manifest is missing or invalid.")
+	var ground_payload = JSON.parse_string(FileAccess.get_file_as_string(GROUND_MATERIAL_MANIFEST_PATH))
+	var ground_config: Dictionary = ground_payload if ground_payload is Dictionary else {}
+	_ground_surface.configure(ground_config, _texture_from_path(str(ground_config.get("atlas", ""))))
 	var terrain_rendering = _overworld_art_manifest.get("terrain_rendering", {})
 	if terrain_rendering is Dictionary:
 		var raster_base = terrain_rendering.get("raster_base_v2", {})

@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Natural Biome Transitions and Ground Materials
+
+`art-overworld-biome-transitions-20260917` — completed, owner-directed Phase 6. Sixteen original painted materials with 23 explicit mappings now blend in world space across biome edges/corners, with fog-safe cached sampling and unchanged map/collision/save authority. Source/Linux rendered probes pass 71 each, Windows package 38, existing scenery 459, blocker coverage, seven Python tests, full repository validation and both official exports/parity pass. Small/wide and shoreline/material fixtures inspected; Large lookup uploads are about 6–7 ms. Requirements/results: `docs/overworld-biome-transitions.md`. Approximately 3.9 GB of disposable test outputs cleaned; originals/provenance/caches/saves and RMG preserved. No next slice selected or release-ready claim.
+
 ### Validation Artifact Lifecycle
 
 `tooling-validation-artifact-lifecycle-20260917` — completed, owner-approved Phase 6 follow-up. The 26 disposable non-RMG historical reports are optional by default and their absence is disclosed without claiming runtime success; strict presence mode remains available. Source/content/provenance and present-report predicates are unchanged. All 11 focused tests, structural preservation review, full repository validation and diff hygiene pass. Requirements/results: `docs/validation-artifact-lifecycle.md`. Retaliation's repository-only blocker is resolved. No runtime, art, native RMG, packaging or unrelated cleanup changes; temporary fixtures self-cleaned and no exports/evidence retained.
