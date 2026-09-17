@@ -20530,6 +20530,7 @@ def validate_confirmation_dialog_visual_surfaces(errors: list[str]) -> None:
             'FrontierVisualKit.apply_confirmation_dialog(_quick_resolve_confirmation_dialog, "primary")',
             'FrontierVisualKit.apply_confirmation_dialog(_withdrawal_confirmation_dialog, "danger")',
             'FrontierVisualKit.apply_confirmation_dialog(_manual_save_overwrite_dialog as ConfirmationDialog, "danger")',
+            'FrontierVisualKit.apply_confirmation_dialog(_spellbook_dialog)',
         ),
         "Map Editor": ('FrontierVisualKit.apply_confirmation_dialog(_dirty_transition_dialog, "danger")',),
         "Outcome": (
@@ -30160,15 +30161,14 @@ def validate_battle_intent_forecast(errors: list[str]) -> None:
     rebuild_spells_block = function_block(battle_shell_text, "_rebuild_spell_actions")
     for required_token in (
         'action_id.begins_with("cast_spell:")',
-        'not child.is_queued_for_deletion()',
-        'String(child.get_meta("battle_action_id", "")) == action_id',
-        "FrontierVisualKit.is_keyboard_focusable(child)",
+        "if is_instance_valid(_spellbook_button): return _spellbook_button",
     ):
-        ensure(required_token in preferred_focus_block, errors, f"BattleShell preferred focus must retain exact forecast spell matching: {required_token}")
+        ensure(required_token in preferred_focus_block, errors, f"BattleShell forecast spell focus must lead to the shared book: {required_token}")
     ensure(
-        'button.set_meta("battle_action_id", String(action.get("id", "")))' in rebuild_spells_block,
+        '_spellbook_button.pressed.connect(_open_spellbook)' in rebuild_spells_block
+        and '_on_spell_action_pressed("cast_spell:" + spell_id)' in function_block(battle_shell_text, "_prepare_book_spell"),
         errors,
-        "BattleShell spell buttons must expose their exact battle action id for forecast focus",
+        "BattleShell forecast launcher must open the shared book and prepare its exact selected spell through targeting",
     )
 
     report_text = BATTLE_INTENT_FORECAST_REPORT_SCRIPT_PATH.read_text(encoding="utf-8")
@@ -36296,7 +36296,7 @@ def validate_town_management_card_height_cap(errors: list[str]) -> None:
     ):
         ensure(token in script_text, errors, f"TownShell owner-directed layout contract is missing: {token}")
     open_catalog = gd_function_block(script_text, "_open_town_catalog")
-    for mode, title in (("build", "Construction Ledger"), ("muster", "Muster Hall"), ("spells", "Spell Study"), ("trade", "Town Market"), ("log", "Town Log & Logistics")):
+    for mode, title in (("build", "Construction Ledger"), ("muster", "Muster Hall"), ("spells", "Spellbook · Town Archives"), ("trade", "Town Market"), ("log", "Town Log & Logistics")):
         ensure(f'"{mode}"' in open_catalog and f'"{title}"' in open_catalog, errors, f"Town direct {mode} dialog must retain its authored title and route")
 
     ensure(stage_text.count("const MAIN_BUILDING_HOTSPOTS := {") == 1, errors, "TownStageView must own one explicit normalized main-building hotspot map")
@@ -48012,7 +48012,16 @@ def validate_spell_school_icon_runtime(errors: list[str]) -> None:
             rebuild_block.find("button.pressed.connect"),
             rebuild_block.find("add_child(button)"),
         ]
-        ensure(all(index >= 0 for index in order) and order == sorted(order), errors, f"{shell_path.name} must apply school icons after existing style and before unchanged binding/order")
+        if shell_path == BATTLE_SCRIPT_PATH:
+            # The shared book replaces an unbounded footer full of individual
+            # spell actions. Its cards retain the same authoritative art resolver.
+            book_text = (ROOT / "scenes/shared/SpellbookView.gd").read_text(encoding="utf-8")
+            ensure("_spellbook_button.pressed.connect(_open_spellbook)" in rebuild_block, errors, "Battle footer must open the shared spellbook")
+            for token in ("Spells.spell_icon_path(spell_id)", "button.icon = load(icon_path)", "Spells.spell_role_categories(spell)", "button.tooltip_text = _description(spell)"):
+                ensure(token in book_text, errors, f"Shared spellbook missing icon/filter/description contract: {token}")
+            ensure("_on_spell_action_pressed(\"cast_spell:\" + spell_id)" in shell_text, errors, "Spellbook must reuse battle targeting authority")
+        else:
+            ensure(all(index >= 0 for index in order) and order == sorted(order), errors, f"{shell_path.name} must apply school icons after existing style and before unchanged binding/order")
         for token in (
             'SpellRules.spell_id_for_action(String(action.get("id", "")))',
             "SpellRules.spell_icon_path(spell_id)",

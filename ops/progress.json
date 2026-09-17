@@ -1,9 +1,15 @@
 {
   "actionableNextTasks": [
     {
+      "id": "ui-shared-spellbook-and-town-learning-20260917",
+      "title": "Shared Spellbook and Automatic Town Learning",
+      "status": "completed",
+      "priority": "top"
+    },
+    {
       "id": "art-overworld-object-scale-coherence-20260917",
       "title": "Coherent Overworld Object Scale",
-      "status": "in_progress",
+      "status": "completed",
       "priority": "top"
     },
     {
@@ -16695,14 +16701,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Completed object-scale presentation slice: compact pickups/artifacts and 35 sharper original-raster states. Source/Linux 6793, Windows 6791, Python 5, Medium scenery 587, current sprite/landmark reports, full repository and official exports/parity pass. Small/wide visuals inspected. Three broader-test exceptions are documented, not counted as passes. Cleaned 1.60 GB disposable outputs; originals/provenance/caches/saves/RMG preserved. No next slice selected or release-ready claim.",
+  "currentNotes": "Shared Town/Battle/Hero spellbook and physically-present automatic archive learning completed. Source 4633, Linux 4629, Windows 4627, hero 528, targeting 95, Town/magic, full repository and export/parity checks pass. Baseline adventure fog-test exception documented. Cleaned 1.52 GB disposable outputs; unrelated files preserved. No next slice selected or release-readiness claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "art-overworld-object-scale-coherence-20260917",
-  "currentSliceId": "art-overworld-object-scale-coherence-20260917",
-  "currentSliceNotes": "Implemented compact footprint-independent pickups and 35 original-raster density repairs. Source/Linux 6793, Windows 6791, five Python tests, Medium scenery 587, sprite/landmark reports, full repository and official exports/parity pass. Visuals inspected; three broader-test exceptions documented. Cleaned 1.60 GB disposable outputs; gameplay/native/save authority unchanged.",
+  "currentSlice": "ui-shared-spellbook-and-town-learning-20260917",
+  "currentSliceId": "ui-shared-spellbook-and-town-learning-20260917",
+  "currentSliceNotes": "Implemented shared Town/Battle/Hero spellbook, filters and local automatic archive learning. Source 4633, Linux package 4629, Windows package 4627, hero 528, targeting 95, Town/magic reports, full repository and platform export/parity gates pass. One baseline-reproduced adventure fog report exception documented. Cleaned 1522735923 disposable bytes; saves/caches/art/RMG/unrelated files preserved.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Coherent Overworld Object Scale",
-  "currentSliceUpdatedAt": "2026-09-17T11:28:54Z",
+  "currentSliceTitle": "Shared Spellbook and Automatic Town Learning",
+  "currentSliceUpdatedAt": "2026-09-17T16:03:09Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22007,7 +22013,7 @@
       }
     }
   },
-  "guardrailNote": "Biome presentation complete; map identities, collision, gameplay, native RMG and saves unchanged.",
+  "guardrailNote": "Shared spellbook and local town learning only. Preserve spell effects, mana, school/tier eligibility, save schema, original artwork and native RMG.",
   "lastValidation": {
     "id": "art-overworld-biome-transitions-20260917",
     "sliceId": "art-overworld-biome-transitions-20260917",
@@ -22341,6 +22347,53 @@
   "nextActionGuardrailNote": "No next slice selected. Preserve gameplay/native/save authority, original art/provenance, caches/saves, RMG recovery and unrelated files. Broader-test exceptions are documented separately; no release-ready claim.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "ui-shared-spellbook-and-town-learning-20260917",
+      "title": "Shared Spellbook and Automatic Town Learning",
+      "phase": "phase-6-production-alpha-layer",
+      "parentId": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/shared-spellbook-and-town-learning.md"
+      ],
+      "targets": [
+        "scenes/shared",
+        "scenes/town/TownShell.gd",
+        "scenes/battle/BattleShell.gd",
+        "scripts/core/SpellRules.gd",
+        "scripts/core/TownRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "tests/spellbook_regression.py"
+      ],
+      "validation": [
+        "Focused spellbook UI/filter/targeting and automatic-learning/save regressions",
+        "Visual inspection at 1280x720 and 1920x1080",
+        "Existing spell/hero/town/battle tests",
+        "python3 -B tests/validate_repo.py",
+        "python3 -B tests/packaging_linux_export_smoke.py",
+        "python3 -B tests/packaging_windows_export_smoke.py",
+        "Isolated packaged spellbook flows on Linux/Windows; payload parity",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Shared icon/name/description spellbook works from all three screens with combined context/role filters",
+        "Eligible town visitors learn all available spells exactly once; remote/wrong-level/other heroes unchanged",
+        "Save and casting authority preserved; responsive source/package validation passes"
+      ],
+      "nonGoals": [
+        "New spell/balance/mastery system",
+        "Native RMG or unrelated UI changes",
+        "Art generation or save-schema migration"
+      ],
+      "createdAt": "2026-09-17T15:29:01Z",
+      "updatedAt": "2026-09-17T16:03:54Z",
+      "startedAt": "2026-09-17T15:29:01Z",
+      "notes": "Implemented shared Town/Battle/Hero spellbook, filters and local automatic archive learning. Source 4633, Linux package 4629, Windows package 4627, hero 528, targeting 95, Town/magic reports, full repository and platform export/parity gates pass. One baseline-reproduced adventure fog report exception documented. Cleaned 1522735923 disposable bytes; saves/caches/art/RMG/unrelated files preserved.",
+      "completedAt": "2026-09-17T16:03:54Z"
+    },
     {
       "id": "art-overworld-object-scale-coherence-20260917",
       "title": "Coherent Overworld Object Scale",
@@ -113081,47 +113134,52 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed object-scale presentation slice: compact pickups/artifacts and 35 sharper original-raster states. Source/Linux 6793, Windows 6791, Python 5, Medium scenery 587, current sprite/landmark reports, full repository and official exports/parity pass. Small/wide visuals inspected. Three broader-test exceptions are documented, not counted as passes. Cleaned 1.60 GB disposable outputs; originals/provenance/caches/saves/RMG preserved. No next slice selected or release-ready claim.",
+  "summary": "Shared spellbook and automatic local town learning completed with source/Linux/Windows coverage, inspected UI, repository validation and package parity. One baseline-reproduced legacy fog-test exception is documented. No release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-17T11:28:53Z",
+  "updatedAt": "2026-09-17T16:03:54Z",
   "validation": {
-    "id": "art-overworld-object-scale-coherence-20260917",
-    "sliceId": "art-overworld-object-scale-coherence-20260917",
+    "id": "ui-shared-spellbook-and-town-learning-20260917",
+    "sliceId": "ui-shared-spellbook-and-town-learning-20260917",
     "status": "completed",
-    "validatedAt": "2026-09-17T11:28:54Z",
-    "sourceReport": "docs/overworld-object-scale-coherence.md",
-    "summary": "Compact portable object sizing and 35 original-raster density corrections verified through real generated-map source and isolated Linux/Windows package paths. Broader-test exceptions are explicit, not passed or silently weakened.",
+    "validatedAt": "2026-09-17T16:03:09Z",
+    "sourceReport": "docs/shared-spellbook-and-town-learning.md",
+    "summary": "Shared icon/filter book and physically-present archive learning pass source/package coverage, full repository validation and platform parity. Current UI contracts replace obsolete footer-button/dialog-count assertions; baseline fog exception remains explicit.",
     "evidence": {
-      "catalogRasterIdentities": 2167,
-      "originalRasterDensityCorrections": 35,
-      "sourceRenderedChecks": 6793,
-      "linuxPackageRenderedChecks": 6793,
-      "windowsPackageHeadlessChecks": 6791,
-      "pythonTests": 5,
-      "existingMediumSceneryChecks": 587,
-      "logicalTerrainCollisionAndSaveAuthority": "Unchanged baseline hashes; all 298 generated resource IDs, positions, asset identities and footprints equal before/after; selection outside reduced sprite still works",
+      "catalogSpells": 119,
+      "sourceRenderedChecks": 4633,
+      "linuxPackageRenderedChecks": 4629,
+      "windowsPackageHeadlessChecks": 4627,
+      "existingHeroSheetChecks": 528,
+      "existingTargetingChecks": 95,
+      "townLayout": "Both resolutions, five dialogs and 18 faction/build-state hotspots pass",
+      "rules": "Existing spell schema, battle behavior, resistance, artifact economy and field-rendezvous sharing reports pass; save version 9 unchanged",
       "repositoryValidation": "VALIDATION PASSED, exit 0; 26 absent historical non-RMG smokes explicitly not run",
       "platformExports": "Both official export/boot smokes pass; Windows 23 generated Overworld/Town steps pass",
-      "packageBytesEach": 646634724,
-      "packageEntryCount": 8861,
-      "packageParity": "Byte-identical except project.binary; density JSON equals source; all four imported atlases present",
-      "visualReview": "23 catalog pages plus 35 corrected states; generated Medium normal fog and diagnostic reveal at 1280x720 and 1920x1080; source and Linux release",
+      "packageBytesEach": 646646424,
+      "packageEntryCount": 8863,
+      "packageParity": "Byte-identical except project.binary",
+      "visualReview": "Town/Hero/Battle books at 1280x720 and 1920x1080, including actual bounded spell hover; fixed controls contained and card scrolling inspected",
       "broaderTestExceptions": [
-        "Legacy visual smoke expects ResourceChip under CommandBand; baseline/current scene uses ResourceStrip",
-        "Legacy small-map report requires town outline >=0.010; baseline/current renderer uses 0.003",
-        "Optional Large scenery run: 573 checks with one zero-eligible-visible-animation failure; animation manifest/selection unchanged, not counted as pass"
+        "Legacy adventure-spell report expects additional Survey Chain exploration but sees 24 tiles before/after; identical failure reproduced with pre-slice HEAD 39aa6e0a OverworldRules. Not counted as pass; fog rules unchanged."
       ],
-      "cleanupRemovedLogicalBytes": 1600974130,
-      "cleanup": "33 disposable targets removed after process/path checks; three Wine prefixes lifecycle-cleaned; originals/provenance/caches/saves/map dependencies, RMG and unrelated files preserved",
+      "cleanupRemovedLogicalBytes": 1522750220,
+      "cleanup": "33 disposable targets removed after exact path/process checks; three Wine prefixes lifecycle-cleaned; user data, source/art/provenance/caches/saves/RMG and unrelated files preserved",
       "limits": "Windows coverage is headless Wine, not physical GPU certification; no full-game release-readiness claim"
     },
     "artifacts": [
-      "docs/overworld-object-scale-coherence.md",
-      "art/overworld/source/generated/object_density_20260917/manifest.json",
-      "tests/overworld_object_scale_regression.py"
+      "docs/shared-spellbook-and-town-learning.md",
+      "tests/spellbook_regression.py"
     ]
   },
   "validationHistory": [
+    {
+      "id": "art-overworld-object-scale-coherence-20260917",
+      "sliceId": "art-overworld-object-scale-coherence-20260917",
+      "status": "completed",
+      "validatedAt": "2026-09-17T11:28:54Z",
+      "sourceReport": "docs/overworld-object-scale-coherence.md",
+      "summary": "Previous slice: source/Linux 6793, Windows 6791, five Python and 587 Medium scenery checks; full repository, official exports and parity pass. Three broader exceptions documented; 1600974130 disposable bytes cleaned. See source report for retained evidence."
+    },
     {
       "id": "native-rmg-final-sweep-class0-selector-20260628",
       "title": "Recovered Final-Sweep Class-0 Terrain Selector",

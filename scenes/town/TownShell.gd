@@ -8,6 +8,8 @@ const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 const SystemSaveWrittenCuePresenterScript = preload("res://scenes/shared/SystemSaveWrittenCuePresenter.gd")
 const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemLoadResumedCuePresenter.gd")
 const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")
+const SpellbookViewScript = preload("res://scenes/shared/SpellbookView.gd")
+var _spellbook_view: VBoxContainer
 
 const UI_ART_TOWN_BANNER_FRAME := "res://art/ui/runtime/town/banner_frame.png"
 const UI_ART_TOWN_CREST_MEDALLION := "res://art/ui/runtime/town/crest_medallion.png"
@@ -226,6 +228,7 @@ func _ready() -> void:
 		AppRouter.go_to_overworld()
 		return
 	_session.game_state = "town"
+	TownRules.teach_visiting_heroes(_session, TownRules.get_active_town(_session))
 	phase_started = ProfileLogScript.begin_usec()
 	_configure_save_slot_picker()
 	buckets["configure_save_surface"] = ProfileLogScript.elapsed_ms(phase_started)
@@ -340,6 +343,9 @@ func _prepare_direct_dialog_surfaces() -> void:
 		if surface != null and surface.get_parent() != _domain_actions:
 			surface.reparent(_domain_actions)
 	_create_building_information_surface()
+	_spellbook_view = SpellbookViewScript.new()
+	_domain_actions.add_child(_spellbook_view)
+	_spellbook_view.controls_changed.connect(func(): call_deferred("_configure_town_keyboard_focus"))
 	_set_direct_dialog_surface_visibility("")
 
 func _create_building_information_surface() -> void:
@@ -388,7 +394,7 @@ func _create_building_information_surface() -> void:
 func _direct_dialog_mode_surfaces(mode: String) -> Array:
 	match mode:
 		"spells":
-			return [_study_label, _study_actions, _spellbook_label]
+			return [_spellbook_view]
 		"trade":
 			return [_market_label, _market_actions]
 		"log":
@@ -575,10 +581,15 @@ func _open_town_catalog(mode: String) -> void:
 		_town_catalog_subtitle_label.text = String(HeroCommandRules.town_recruitment_destination(_session, TownRules.get_active_town(_session)).summary)
 		_rebuild_recruit_actions(catalog)
 	elif mode == "spells":
-		var actions := TownRules.get_spell_learning_actions(_session)
-		_town_catalog_title_label.text = "Spell Study"
-		_town_catalog_subtitle_label.text = "%d study order%s • unavailable study remains explained below" % [actions.size(), "" if actions.size() == 1 else "s"]
-		_rebuild_study_actions(actions)
+		var town := TownRules.get_active_town(_session)
+		var visitor := HeroCommandRules.town_defending_hero(_session, town)
+		_town_catalog_title_label.text = "Spellbook · Town Archives"
+		_town_catalog_subtitle_label.text = "%s · Available spells learned automatically on arrival." % String(visitor.get("name", "Visiting hero")) if not visitor.is_empty() else "No visiting hero · Browse the library; bring a hero to the town entrance to learn."
+		var availability := {}
+		for spell_id in TownRules.accessible_spell_ids(town):
+			availability[spell_id] = {"message": "Learned by %s." % String(visitor.get("name", "Hero")) if not visitor.is_empty() and SpellRules.knows_spell(visitor, spell_id) else "Visit this town to learn this spell. Learning costs no mana or resources."}
+		_spellbook_view.configure(visitor, TownRules.accessible_spell_ids(town), "town", availability)
+		_spellbook_view.custom_minimum_size.y = minf(490.0, get_viewport_rect().size.y - 220.0)
 	elif mode == "trade":
 		var actions := TownRules.get_market_actions(_session)
 		_town_catalog_title_label.text = "Town Market"

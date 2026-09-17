@@ -1348,7 +1348,7 @@ static func get_spell_learning_actions(session: SessionStateStoreScript.SessionD
 	if _read_cache_has(session, "spell_learning_actions"):
 		return _read_cache_get(session, "spell_learning_actions")
 	var town := get_active_town(session)
-	if town.is_empty():
+	if town.is_empty() or not active_hero_can_study(session, town):
 		var empty := []
 		_read_cache_store(session, "spell_learning_actions", empty)
 		return empty
@@ -1411,6 +1411,7 @@ static func switch_active_hero_at_town(session: SessionStateStoreScript.SessionD
 	var result: Dictionary = HeroCommandRulesScript.set_active_hero(session, hero_id)
 	if not bool(result.get("ok", false)):
 		return {"ok": false, "message": String(result.get("message", "Unable to change command."))}
+	teach_visiting_heroes(session, town)
 	return _finalize_town_result(session, true, String(result.get("message", "")))
 
 static func recruit_active_town(session: SessionStateStoreScript.SessionData, unit_id: String, requested_count: int = -1) -> Dictionary:
@@ -1429,6 +1430,7 @@ static func hire_hero_at_active_town(session: SessionStateStoreScript.SessionDat
 	var result: Dictionary = HeroCommandRulesScript.recruit_hero_at_town(session, town, hero_id)
 	if not bool(result.get("ok", false)):
 		return {"ok": false, "message": String(result.get("message", "Hero recruitment failed."))}
+	teach_visiting_heroes(session, town)
 	return _finalize_town_result(session, true, String(result.get("message", "")))
 
 static func transfer_in_active_town(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
@@ -1482,6 +1484,8 @@ static func learn_spell_at_active_town(session: SessionStateStoreScript.SessionD
 	var town := get_active_town(session)
 	if town.is_empty():
 		return {"ok": false, "message": "No town archives are available here."}
+	if not active_hero_can_study(session, town):
+		return {"ok": false, "message": "The hero must visit an owned town's entrance to learn its spells."}
 	if spell_id not in accessible_spell_ids(town):
 		return {"ok": false, "message": "That spell is not catalogued in this town."}
 
@@ -1494,6 +1498,47 @@ static func learn_spell_at_active_town(session: SessionStateStoreScript.SessionD
 	session.overworld["hero"] = result.get("hero", hero)
 	var message := "%s in %s" % [String(result.get("message", "Spell learned.")), _town_name(town)]
 	return _finalize_town_result(session, true, message)
+
+static func active_hero_can_study(session: SessionStateStoreScript.SessionData, town: Dictionary) -> bool:
+	if session == null or town.is_empty() or String(town.get("owner", "")) != "player":
+		return false
+	var hero: Dictionary = HeroCommandRulesScript.hero_inspection_snapshot(session, String(session.overworld.get("active_hero_id", "")))
+	return not hero.is_empty() and HeroCommandRulesScript._hero_is_stationed_at_town(hero, town)
+
+static func teach_visiting_heroes(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	# Explicit arrival/build mutation, never a UI/read-cache side effect. Town
+	# archives define eligibility; learning has no mana, gold or mastery cost.
+	var learned := {}
+	if session == null or town.is_empty() or String(town.get("owner", "")) != "player":
+		return {"learned": learned, "count": 0}
+	var spell_ids := accessible_spell_ids(town)
+	if spell_ids.is_empty():
+		return {"learned": learned, "count": 0}
+	HeroCommandRulesScript.commit_active_hero(session)
+	var active_id := String(session.overworld.get("active_hero_id", ""))
+	var heroes: Array = session.overworld.get("player_heroes", [])
+	var count := 0
+	for index in range(heroes.size()):
+		var hero: Dictionary = heroes[index]
+		if not HeroCommandRulesScript._hero_is_stationed_at_town(hero, town):
+			continue
+		var learned_ids := []
+		for spell_id in spell_ids:
+			if SpellRulesScript.knows_spell(hero, spell_id):
+				continue
+			var result := SpellRulesScript.learn_spell(hero, spell_id)
+			if bool(result.get("ok", false)):
+				hero = result.hero
+				learned_ids.append(spell_id)
+		if learned_ids.is_empty():
+			continue
+		heroes[index] = hero
+		if String(hero.get("id", "")) == active_id:
+			session.overworld["hero"] = hero
+		learned[String(hero.id)] = learned_ids
+		count += learned_ids.size()
+	session.overworld["player_heroes"] = heroes
+	return {"learned": learned, "count": count}
 
 static func manage_artifact_at_active_town(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
 	if action_id.begins_with("commission_artifact:"):

@@ -7,6 +7,7 @@ const Visuals = preload("res://scripts/ui/FrontierVisualKit.gd")
 const Heroes = preload("res://scripts/core/HeroCommandRules.gd")
 const Progression = preload("res://scripts/core/HeroProgressionRules.gd")
 const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
+const SpellbookViewScript = preload("res://scenes/shared/SpellbookView.gd")
 const FRAME := "res://art/ui/runtime/overworld/parchment_panel.png"
 const PORTRAIT_FRAME := "res://art/ui/runtime/overworld/hero_frame.png"
 
@@ -17,6 +18,7 @@ var _tabs: TabContainer
 var _close: Button
 var _return_focus: WeakRef
 var _focusable: Array[Control] = []
+var _spellbook_view: VBoxContainer
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -127,6 +129,10 @@ func _build() -> void:
 	_build_army(_tab("Army"))
 	_build_artifacts(_tab("Artifacts"))
 	_build_specializations(_tab("Specializations"))
+	_spellbook_view = SpellbookViewScript.new()
+	_tabs.add_child(_spellbook_view)
+	_spellbook_view.configure(hero, hero.get("spellbook", {}).get("known_spell_ids", []))
+	_spellbook_view.controls_changed.connect(_focus_cycle)
 	_tabs.get_tab_bar().focus_mode = Control.FOCUS_ALL
 	_tabs.get_tab_bar().accessibility_name = "Hero information tabs"
 	_tabs.tab_changed.connect(func(_index: int): _focus_cycle())
@@ -275,6 +281,8 @@ func _focus_cycle() -> void:
 	var controls: Array[Control] = []
 	for control in _focusable:
 		if control.is_visible_in_tree() and not (control is Button and control.disabled): controls.append(control)
+	if is_instance_valid(_spellbook_view) and _spellbook_view.is_visible_in_tree():
+		controls.append_array(_spellbook_view.focus_controls())
 	for index in range(controls.size()):
 		controls[index].focus_next = controls[index].get_path_to(controls[(index + 1) % controls.size()])
 		controls[index].focus_previous = controls[index].get_path_to(controls[(index - 1 + controls.size()) % controls.size()])

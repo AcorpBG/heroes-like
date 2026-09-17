@@ -1702,6 +1702,7 @@ static func set_active_town_visit(session: SessionStateStoreScript.SessionData, 
 		return {"ok": false, "message": "Only owned towns can be managed remotely.", "town": town}
 	session.flags[ACTIVE_TOWN_PLACEMENT_KEY] = placement_id
 	_active_town_visit_indexes[String(session.session_id)] = int(town_result.get("index", -1))
+	_teach_visiting_town_spells(session, town)
 	return {
 		"ok": true,
 		"message": "%s opens its gates." % _town_name(town),
@@ -1716,6 +1717,11 @@ static func clear_active_town_visit(session: SessionStateStoreScript.SessionData
 
 static func active_town_visit_result(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	return _find_active_town(session)
+
+static func _teach_visiting_town_spells(session: SessionStateStoreScript.SessionData, town: Dictionary) -> void:
+	# TownRules also routes overworld orders: resolve lazily, not as a preload cycle.
+	var town_rules: GDScript = load("res://scripts/core/TownRules.gd")
+	town_rules.teach_visiting_heroes(session, town)
 
 static func _resolve_post_move_interaction(session: SessionStateStoreScript.SessionData) -> Dictionary:
 	if bool(_pathing_debug_profile.get("capture_enabled", false)):
@@ -1760,6 +1766,7 @@ static func _resolve_post_move_interaction(session: SessionStateStoreScript.Sess
 	var town: Dictionary = town_result.get("town", {})
 	if not town.is_empty():
 		if String(town.get("owner", "neutral")) == "player":
+			_teach_visiting_town_spells(session, town)
 			return {
 				"ok": true,
 				"message": "%s opens its gates." % _town_name(town),
@@ -1818,6 +1825,7 @@ static func _resolve_destination_descriptor_interaction(
 			if int(town_result.get("index", -1)) < 0 or town.is_empty():
 				return {"ok": true, "message": "", "route": ""}
 			if String(town.get("owner", "neutral")) == "player":
+				_teach_visiting_town_spells(session, town)
 				_profile_blocked_index_not_applicable(session, "town_visit_does_not_refresh_blocked_index")
 				var town_facts := _town_visit_event_facts(town)
 				_profile_scenario_event_evaluation(session, town_facts)
@@ -1955,6 +1963,8 @@ static func transition_town_control(
 	)
 	towns[int(town_result.get("index", -1))] = town
 	session.overworld["towns"] = towns
+	if new_owner == "player":
+		_teach_visiting_town_spells(session, town)
 	return {
 		"ok": true,
 		"changed": previous_owner != new_owner or previous_controller != PlayerRules.town_controller_id(town),
@@ -2156,6 +2166,8 @@ static func build_in_active_town(session: SessionStateStoreScript.SessionData, b
 	var income_after := _calculate_town_income(town, session)
 	var growth_after := town_weekly_growth(town, session)
 	var message_parts := ["Built %s in %s." % [String(building.get("name", building_id)), _town_name(town)]]
+	if int(building.get("spell_tier", 0)) > 0:
+		_teach_visiting_town_spells(session, town)
 	var cost_summary := _describe_resource_delta(cost)
 	if cost_summary != "":
 		message_parts.append("Spent %s." % cost_summary)

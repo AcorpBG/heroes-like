@@ -96,7 +96,7 @@ func run()->void:
 	check(sheet.hero.movement==session.overworld.movement,"active movement differs from live state")
 	check(sheet.hero.artifacts==ArtifactRules.normalize_hero_artifacts(session.overworld.hero.get("artifacts",{})),"wrong artifact loadout")
 	check(sheet.find_child("HeroPortrait",true,false).texture!=null,"portrait missing")
-	check(sheet._tabs.get_tab_count()==3,"missing information tab")
+	check(sheet._tabs.get_tab_count()==4,"missing information tab including spellbook")
 	check(sheet.find_children("ArmySlot*","Button",true,false).size()==7,"missing seven-slot army")
 	check(shell._overworld_gameplay_movement_blocked_reason()=="hero_sheet_open","map is not blocked")
 	check(shell._overworld_order_input_blocked(),"orders remain enabled")
