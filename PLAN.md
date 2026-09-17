@@ -22,6 +22,12 @@ Rules:
 
 ## Current Tactical State
 
+### Distinct Battle Spell Effects
+
+id: `vfx-spell-effect-variety-20260917`
+
+Status: completed, owner-directed Phase 6 child. All 97 battle spells now map explicitly; 44 former shared-ward spells use 21 original school/effect paintings and seven bounded motion profiles. Existing 53 effects, rules, targeting, timing, accessibility and saves are preserved. Source/Linux 3,960 checks each, Windows 3,897, existing combat/readability/targeting/spellbook, repository and both exports/parity pass; small/wide visuals inspected. The legacy combined report has 122 baseline-reproduced failures and is not counted as green. Cleaned 1.95 GB disposable outputs. Requirements, implementation, commands and limits: `docs/spell-effect-variety.md`. No balance, audio, unit-art, Overworld, Town or native RMG changes; no release-readiness claim.
+
 ### Shared Spellbook and Automatic Town Learning
 
 id: `ui-shared-spellbook-and-town-learning-20260917`

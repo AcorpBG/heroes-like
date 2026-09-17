@@ -16701,14 +16701,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Shared Town/Battle/Hero spellbook and physically-present automatic archive learning completed. Source 4633, Linux 4629, Windows 4627, hero 528, targeting 95, Town/magic, full repository and export/parity checks pass. Baseline adventure fog-test exception documented. Cleaned 1.52 GB disposable outputs; unrelated files preserved. No next slice selected or release-readiness claim.",
+  "currentNotes": "Completed 21 original school/effect paintings and seven bounded motion profiles for 44 formerly shared spells; all 97 battle spells now map explicitly. Source/Linux 3960 checks each, Windows 3897, existing combat/readability/targeting/spellbook, repository and exports/parity pass. Legacy report retains 122 baseline-reproduced failures, not a pass. Removed 1.95 GB disposable outputs; preserved originals, caches, saves, RMG and unrelated files. No next slice selected or release-readiness claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ui-shared-spellbook-and-town-learning-20260917",
-  "currentSliceId": "ui-shared-spellbook-and-town-learning-20260917",
-  "currentSliceNotes": "Implemented shared Town/Battle/Hero spellbook, filters and local automatic archive learning. Source 4633, Linux package 4629, Windows package 4627, hero 528, targeting 95, Town/magic reports, full repository and platform export/parity gates pass. One baseline-reproduced adventure fog report exception documented. Cleaned 1522735923 disposable bytes; saves/caches/art/RMG/unrelated files preserved.",
+  "currentSlice": "vfx-spell-effect-variety-20260917",
+  "currentSliceId": "vfx-spell-effect-variety-20260917",
+  "currentSliceNotes": "Implemented 21 original school/effect paintings and seven motion profiles for all 44 formerly shared spells; all 97 map explicitly. Source/Linux 3960 checks each, Windows 3897, eight asset tests, existing combat/readability/targeting/spellbook, repository and both export/parity gates pass. Small/wide visuals inspected. Legacy combined report has the same 122 baseline failures, not counted as green. Removed 1946244885 disposable bytes; originals/caches/saves/RMG/unrelated files preserved.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Shared Spellbook and Automatic Town Learning",
-  "currentSliceUpdatedAt": "2026-09-17T16:03:09Z",
+  "currentSliceTitle": "Distinct Battle Spell Effects",
+  "currentSliceUpdatedAt": "2026-09-17T18:52:58Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22013,7 +22013,7 @@
       }
     }
   },
-  "guardrailNote": "Shared spellbook and local town learning only. Preserve spell effects, mana, school/tier eligibility, save schema, original artwork and native RMG.",
+  "guardrailNote": "Completed spell visual variety only. Preserve combat rules, targeting, event timing, saves, accessibility, original art/provenance and native RMG.",
   "lastValidation": {
     "id": "art-overworld-biome-transitions-20260917",
     "sliceId": "art-overworld-biome-transitions-20260917",
@@ -22344,9 +22344,59 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "No next slice selected. Preserve gameplay/native/save authority, original art/provenance, caches/saves, RMG recovery and unrelated files. Broader-test exceptions are documented separately; no release-ready claim.",
+  "nextActionGuardrailNote": "No next slice selected. Do not conflate this visual slice with fixing the baseline legacy timing/audio report or full-game release readiness.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "vfx-spell-effect-variety-20260917",
+      "title": "Distinct Battle Spell Effects",
+      "phase": "phase-6-production-alpha-layer",
+      "parentId": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/spell-effect-variety.md"
+      ],
+      "targets": [
+        "content/battle_vfx_manifest.json",
+        "art/battle/source/generated/spell_variety",
+        "art/battle/vfx",
+        "scripts/ui/CombatVfxMotion.gd",
+        "scenes/battle/BattleBoardView.gd",
+        "tools/prepare_spell_variety_assets.py",
+        "tests/spell_effect_variety_regression.py",
+        "tests/test_spell_variety_assets.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": [
+        "python3 -B tests/spell_effect_variety_regression.py --label source --render",
+        "python3 -B tests/combat_vfx_regression.py --label spell-variety --render",
+        "python3 -B tools/prepare_spell_variety_assets.py --check",
+        "python3 -B tests/test_spell_variety_assets.py",
+        "Existing spell/battle/targeting coverage",
+        "Inspect 1280x720 and 1920x1080 combat frames",
+        "python3 -B tests/validate_repo.py",
+        "python3 -B tests/packaging_linux_export_smoke.py",
+        "python3 -B tests/packaging_windows_export_smoke.py",
+        "Focused Linux/Windows package probes and payload parity",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "All 97 spell IDs explicitly resolve; none of the 44 authored shared spells routes to Command Ward",
+        "21 original school/effect families and distinct readable motions integrated without gameplay/save/timing changes",
+        "Art, source and both packages validated; cleanup and commit/push complete"
+      ],
+      "nonGoals": [
+        "Balance, gameplay rules, audio, unit art, unrelated UI, Town/Overworld, native RMG, save-schema migration"
+      ],
+      "createdAt": "2026-09-17T18:08:19Z",
+      "updatedAt": "2026-09-17T18:52:59Z",
+      "startedAt": "2026-09-17T18:08:19Z",
+      "notes": "Implemented 21 original school/effect paintings and seven motion profiles for all 44 formerly shared spells; all 97 map explicitly. Source/Linux 3960 checks each, Windows 3897, eight asset tests, existing combat/readability/targeting/spellbook, repository and both export/parity gates pass. Small/wide visuals inspected. Legacy combined report has the same 122 baseline failures, not counted as green. Removed 1946244885 disposable bytes; originals/caches/saves/RMG/unrelated files preserved.",
+      "completedAt": "2026-09-17T18:52:59Z"
+    },
     {
       "id": "ui-shared-spellbook-and-town-learning-20260917",
       "title": "Shared Spellbook and Automatic Town Learning",
@@ -113033,7 +113083,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "overworld_object_scale_coherence_complete",
+  "result": "spell_effect_variety_complete",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -113134,41 +113184,49 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Shared spellbook and automatic local town learning completed with source/Linux/Windows coverage, inspected UI, repository validation and package parity. One baseline-reproduced legacy fog-test exception is documented. No release-readiness claim.",
+  "summary": "Completed 21 original school/effect paintings and seven bounded motion profiles for 44 formerly shared spells; all 97 battle spells now map explicitly. Source/Linux 3960 checks each, Windows 3897, existing combat/readability/targeting/spellbook, repository and exports/parity pass. Legacy report retains 122 baseline-reproduced failures, not a pass. Removed 1.95 GB disposable outputs; preserved originals, caches, saves, RMG and unrelated files. No next slice selected or release-readiness claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-17T16:03:54Z",
+  "updatedAt": "2026-09-17T18:52:59Z",
   "validation": {
-    "id": "ui-shared-spellbook-and-town-learning-20260917",
-    "sliceId": "ui-shared-spellbook-and-town-learning-20260917",
+    "id": "vfx-spell-effect-variety-20260917",
+    "sliceId": "vfx-spell-effect-variety-20260917",
     "status": "completed",
-    "validatedAt": "2026-09-17T16:03:09Z",
-    "sourceReport": "docs/shared-spellbook-and-town-learning.md",
-    "summary": "Shared icon/filter book and physically-present archive learning pass source/package coverage, full repository validation and platform parity. Current UI contracts replace obsolete footer-button/dialog-count assertions; baseline fog exception remains explicit.",
+    "validatedAt": "2026-09-17T18:52:58Z",
+    "sourceReport": "docs/spell-effect-variety.md",
+    "summary": "Explicit mapping for all 97 battle spells; 44 former shared ward routes now use 21 original school/effect paintings and seven motion profiles. Passing source/package coverage and inspected visuals, with baseline legacy-report exceptions documented.",
     "evidence": {
-      "catalogSpells": 119,
-      "sourceRenderedChecks": 4633,
-      "linuxPackageRenderedChecks": 4629,
-      "windowsPackageHeadlessChecks": 4627,
-      "existingHeroSheetChecks": 528,
-      "existingTargetingChecks": 95,
-      "townLayout": "Both resolutions, five dialogs and 18 faction/build-state hotspots pass",
-      "rules": "Existing spell schema, battle behavior, resistance, artifact economy and field-rendezvous sharing reports pass; save version 9 unchanged",
-      "repositoryValidation": "VALIDATION PASSED, exit 0; 26 absent historical non-RMG smokes explicitly not run",
+      "battleSpells": 97,
+      "updatedSpells": 44,
+      "newOriginalPaintings": 21,
+      "motionProfiles": 7,
+      "sourceRenderedChecks": 3960,
+      "linuxPackageRenderedChecks": 3960,
+      "windowsPackageHeadlessChecks": 3897,
+      "assetMutationTests": 8,
+      "existingCombatVfxChecks": 1831,
+      "readabilityNormalChecks": 64,
+      "readabilityFastReducedChecks": 64,
+      "targetingChecks": 87,
+      "spellbookChecks": 4627,
+      "rules": "Magic schema and battle behavior reports pass; no gameplay, mana, timing, RNG or save changes",
+      "repositoryValidation": "VALIDATION PASSED, exit 0; 26 absent historical disposable smokes explicitly not run or counted as passed",
       "platformExports": "Both official export/boot smokes pass; Windows 23 generated Overworld/Town steps pass",
-      "packageBytesEach": 646646424,
-      "packageEntryCount": 8863,
-      "packageParity": "Byte-identical except project.binary",
-      "visualReview": "Town/Hero/Battle books at 1280x720 and 1920x1080, including actual bounded spell hover; fixed controls contained and card scrolling inspected",
+      "packageBytesEach": 648421008,
+      "packageEntryCount": 8905,
+      "identicalPlatformEntries": 8904,
+      "packageParity": "Only project.binary differs; 21 new imports present and source art excluded",
+      "visualReview": "All 21 source paintings and 1280x720 real-cast families inspected, 1920x1080 frames and 20/50/80-percent samples across seven profiles; target, unit, caption and control readability preserved",
       "broaderTestExceptions": [
-        "Legacy adventure-spell report expects additional Survey Chain exploration but sees 24 tiles before/after; identical failure reproduced with pre-slice HEAD 39aa6e0a OverworldRules. Not counted as pass; fog rules unchanged."
+        "Legacy 32-case combined event report has 122 headless timing/audio/idle-art failures; same failure labels reproduced with pre-slice 60035b51 Board, motion, manifest and report. No new failure labels after updating artwork counts; not counted as green."
       ],
-      "cleanupRemovedLogicalBytes": 1522750220,
-      "cleanup": "33 disposable targets removed after exact path/process checks; three Wine prefixes lifecycle-cleaned; user data, source/art/provenance/caches/saves/RMG and unrelated files preserved",
-      "limits": "Windows coverage is headless Wine, not physical GPU certification; no full-game release-readiness claim"
+      "cleanupRemovedLogicalBytes": 1946244885,
+      "cleanupFreedFilesystemBytes": 1947033600,
+      "cleanup": "43 exact task-owned disposable targets removed after process checks; three Wine prefixes lifecycle-cleaned, their user data retained. Original/generated art, caches/saves/RMG and unrelated files preserved.",
+      "limits": "Windows uses headless Wine, not physical GPU certification. No release-readiness claim."
     },
     "artifacts": [
-      "docs/shared-spellbook-and-town-learning.md",
-      "tests/spellbook_regression.py"
+      "docs/spell-effect-variety.md",
+      "art/battle/source/generated/spell_variety/manifest.json"
     ]
   },
   "validationHistory": [

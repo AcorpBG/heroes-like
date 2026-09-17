@@ -2559,6 +2559,15 @@ func _spell_specific_vfx_cue_ids_for_event(event: Dictionary, base_ids: Array) -
 	var cue_id := _spell_specific_vfx_cue_id(String(event.get("spell_id", "")), String(event.get("resolution_type", "")))
 	if cue_id == "":
 		return base_ids.duplicate(true)
+	var family_spec := _battle_vfx_manifest_cue(cue_id)
+	if String(family_spec.get("motion_profile", "")) in CombatVfxMotion.SPELL_PROFILES:
+		# The authored effect already communicates cast/application. Do not
+		# bury its silhouette beneath the old universal cast/status halos.
+		var remaining := []
+		for base_id in base_ids:
+			if String(base_id) not in ["vfx_placeholder_cast_anchor", "vfx_placeholder_status_residue"]:
+				remaining.append(base_id)
+		return _prepend_unique_string(cue_id, remaining)
 	return _prepend_unique_string(cue_id, base_ids)
 
 func _spell_specific_audio_cue_ids_for_event(event: Dictionary, base_ids: Array) -> Array:

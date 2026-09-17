@@ -1,0 +1,9 @@
+{
+  "family": "furnace_clamps",
+  "generation_mode": "built_in_image_gen_edit",
+  "input_path": "res://art/battle/source/generated/spell_variety/furnace_clamps_initial_source.png",
+  "input_generation_original": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-ffafb9a5-90c4-48b1-82d1-885c8315a2fa.png",
+  "output_path": "res://art/battle/source/generated/spell_variety/furnace_clamps_source.png",
+  "prompt": "Edit the provided battle VFX painting. Keep the two opposing crescent jaws, iron-and-lava material, open center, colors and painterly style. Fix ONLY the clipped external supports: remove the long piston rods running off the left and right edges and give each jaw a compact rounded fully visible end cap. Fit the complete effect well inside the square canvas with at least 12 percent genuinely transparent padding on EVERY side. Nothing touches the canvas edges. No new symbols, backgrounds or text. Preserve genuine RGBA transparency and open space between the jaws.",
+  "reason": "Initial painting clipped the outer piston supports; approved revision uses fully contained capped jaws."
+}
