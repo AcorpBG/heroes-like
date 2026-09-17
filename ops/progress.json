@@ -1,6 +1,12 @@
 {
   "actionableNextTasks": [
     {
+      "id": "art-overworld-biome-transitions-20260917",
+      "title": "Natural Biome Transitions and Ground Materials",
+      "status": "completed",
+      "priority": "top"
+    },
+    {
       "id": "tooling-validation-artifact-lifecycle-20260917",
       "title": "Validation Artifact Lifecycle",
       "status": "completed",
@@ -16683,14 +16689,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Completed owner-approved validator artifact-lifecycle alignment: 26 historical non-RMG reports optional by default with explicit not-run disclosure; strict presence option and all existing present-report/source/content/provenance/native checks retained. 11 focused tests, structural preservation check, full repository validation and diff check pass. Retaliation closure blocker resolved; no runtime/package changes or disposable artifacts retained.",
+  "currentNotes": "Completed original ground-quality and biome-transition slice: 16 painted materials / 23 mappings, continuous world-space fog-safe blending and cached lookups. Source/Linux 71 checks each, Windows 38, scenery 459, blocker report, seven Python tests, full repository exit 0 and official platform exports/parity pass. Small/wide visuals inspected; about 3.9 GB disposable outputs removed. Original art/provenance/caches/saves and RMG preserved. No next slice selected or release-ready claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "tooling-validation-artifact-lifecycle-20260917",
-  "currentSliceId": "tooling-validation-artifact-lifecycle-20260917",
-  "currentSliceNotes": "Completed owner-approved validator artifact-lifecycle alignment: 26 historical non-RMG reports optional by default with explicit not-run disclosure; strict presence option and all existing present-report/source/content/provenance/native checks retained. 11 focused tests, structural preservation check, full repository validation and diff check pass. Retaliation closure blocker resolved; no runtime/package changes or disposable artifacts retained.",
+  "currentSlice": "art-overworld-biome-transitions-20260917",
+  "currentSliceId": "art-overworld-biome-transitions-20260917",
+  "currentSliceNotes": "Completed original ground-quality and biome-transition slice: 16 painted materials / 23 mappings, continuous world-space fog-safe blending and cached lookups. Source/Linux 71 checks each, Windows 38, scenery 459, blocker report, seven Python tests, full repository exit 0 and official platform exports/parity pass. Small/wide visuals inspected; about 3.9 GB disposable outputs removed. Original art/provenance/caches/saves and RMG preserved. No next slice selected or release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Validation Artifact Lifecycle",
-  "currentSliceUpdatedAt": "2026-09-17T08:38:03Z",
+  "currentSliceTitle": "Natural Biome Transitions and Ground Materials",
+  "currentSliceUpdatedAt": "2026-09-17T09:50:12Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21995,33 +22001,42 @@
       }
     }
   },
-  "guardrailNote": "Selected tooling follow-up and retaliation fix are complete; no next slice selected. Preserve native RMG and existing correctness checks.",
+  "guardrailNote": "Biome presentation complete; map identities, collision, gameplay, native RMG and saves unchanged.",
   "lastValidation": {
-    "id": "tooling-validation-artifact-lifecycle-20260917",
-    "sliceId": "tooling-validation-artifact-lifecycle-20260917",
+    "id": "art-overworld-biome-transitions-20260917",
+    "sliceId": "art-overworld-biome-transitions-20260917",
     "status": "completed",
-    "validatedAt": "2026-09-17T08:38:03Z",
-    "sourceReport": "docs/validation-artifact-lifecycle.md",
-    "toolingEvidence": {
-      "focusedPythonTests": 11,
-      "reportBranches": 26,
-      "presentReportPredicates": "unchanged; failed/malformed reports rejected",
-      "sourceChecks": "real owner rejects corrupted campaign content and missing smoke proof tokens",
-      "structuralPreservation": "All existing validator functions unchanged except main and exactly 26 presence guards; report predicates/content/provenance/native RMG checks identical to f42b585b",
-      "repositoryValidation": "python3 tests/validate_repo.py: VALIDATION PASSED, exit 0; explicitly disclosed 26 missing historical reports, no runtime-smoke rerun or pass claims",
-      "strictMode": "--require-historical-smoke-reports; all 26 absent reports rejected in focused strict-mode coverage",
-      "diffCheck": "passed",
-      "runtimeOrPackagingChanges": false,
-      "resolvedSlice": "bugfix-retaliation-casualty-playback-20260917",
-      "cleanup": "Temporary fixture directories self-cleaned; no persistent evidence/export artifacts created; unrelated untracked files unchanged",
-      "limits": "Python tooling validation, not a new gameplay, platform-export or release-readiness claim"
+    "validatedAt": "2026-09-17T09:50:12Z",
+    "sourceReport": "docs/overworld-biome-transitions.md",
+    "summary": "Completed original ground-quality and biome-transition slice: 16 painted materials / 23 mappings, continuous world-space fog-safe blending and cached lookups. Source/Linux 71 checks each, Windows 38, scenery 459, blocker report, seven Python tests, full repository exit 0 and official platform exports/parity pass. Small/wide visuals inspected; about 3.9 GB disposable outputs removed. Original art/provenance/caches/saves and RMG preserved. No next slice selected or release-ready claim.",
+    "evidence": {
+      "sourceRenderedChecks": 71,
+      "linuxPackageRenderedChecks": 71,
+      "windowsPackageHeadlessChecks": 38,
+      "pythonTests": 7,
+      "existingSceneryChecks": 459,
+      "blockerCells": 2324,
+      "uncoveredBlockerCells": 0,
+      "largeLookupUploadUsec": {
+        "source": 6903,
+        "linux": 6000,
+        "windows": 6128
+      },
+      "logicalTerrainCollisionAndSaveAuthority": "unchanged; exact baseline hashes in source report",
+      "repositoryValidation": "VALIDATION PASSED; final direct invocation exit 0; 26 absent historical non-RMG smokes explicitly not run",
+      "platformExports": "Both official export/boot smokes pass; Windows generated Overworld/Town construction flow passes",
+      "packageBytesEach": 645179852,
+      "packageEntryCount": 8852,
+      "packageParity": "Byte-identical except project.binary; ground JSON semantics and shader bytes equal source",
+      "visualReview": "Original sheets; Medium normal-fog and diagnostic reveal; 16 materials; diagonal/shore/island fixtures; Large view; source 1280x720 and Linux package 1920x1080",
+      "cleanup": "Approximately 3.9 GB rebuildable test packages/captures/logs removed; caches/saves/map dependencies, original art/provenance, RMG and unrelated files preserved",
+      "limits": "Windows Wine headless is not physical GPU certification; lookup CPU timings are not frame rates; not a release-readiness claim"
     },
     "artifacts": [
-      "docs/validation-artifact-lifecycle.md",
-      "tests/test_validation_artifact_lifecycle.py",
-      "docs/retaliation-casualty-playback.md"
-    ],
-    "summary": "Completed owner-approved validator artifact-lifecycle alignment: 26 historical non-RMG reports optional by default with explicit not-run disclosure; strict presence option and all existing present-report/source/content/provenance/native checks retained. 11 focused tests, structural preservation check, full repository validation and diff check pass. Retaliation closure blocker resolved; no runtime/package changes or disposable artifacts retained."
+      "docs/overworld-biome-transitions.md",
+      "art/overworld/source/generated/terrain/ground_materials_v3/manifest.json",
+      "tests/overworld_biome_surface_regression.py"
+    ]
   },
   "priorHeroSheetValidation": {
     "id": "ui-owned-hero-screen-20260913",
@@ -22317,9 +22332,57 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "No next slice selected. Preserve source/art/caches/saves and RMG; do not retain disposable non-RMG evidence.",
+  "nextActionGuardrailNote": "No next slice selected. Preserve original art/provenance, caches/saves, RMG recovery and unrelated files; do not retain disposable non-RMG test outputs.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "art-overworld-biome-transitions-20260917",
+      "title": "Natural Biome Transitions and Ground Materials",
+      "phase": "phase-6-production-alpha-layer",
+      "parentId": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/overworld-biome-transitions.md",
+        "docs/overworld-raster-terrain-and-visible-blocker-mass-requirements.md"
+      ],
+      "targets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "scenes/overworld/OverworldGroundSurface.gd",
+        "scenes/overworld/overworld_ground_surface.gdshader",
+        "art/overworld/ground_materials.json",
+        "art/overworld/source/generated/terrain/ground_materials_v3",
+        "art/overworld/runtime/terrain_tiles/ground_materials_v3.png",
+        "tools/prepare_overworld_ground_materials.py",
+        "tests/overworld_biome_surface_regression.py",
+        "tests/overworld_ground_materials_contract.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": [
+        "python3 -B -m unittest discover -s tests -p test_overworld_ground_materials.py -v",
+        "python3 -B tests/overworld_biome_surface_regression.py --label review --render --resolution 1280x720 --timeout-seconds 300",
+        "Existing terrain/blocker/scenery regressions; source and package visual inspection",
+        "python3 tests/validate_repo.py",
+        "Official Linux/Windows exports and isolated generated Medium/Large package gameplay probes; payload parity except project.binary",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Original raster materials improve all supported ground identities without mirrored repetition",
+        "World-space edges/corners/junctions blend naturally without fog leaks or logical terrain changes",
+        "Inspected responsive source/package visuals and performance/authority tests pass"
+      ],
+      "nonGoals": [
+        "Native RMG/topology/placement or gameplay/save changes",
+        "Town/combat/unrelated art changes",
+        "Procedural substitute artwork or copied reference pixels"
+      ],
+      "createdAt": "2026-09-17T08:53:10Z",
+      "startedAt": "2026-09-17T08:53:10Z",
+      "completedAt": "2026-09-17T09:50:12Z",
+      "result": "Completed original ground-quality and biome-transition slice: 16 painted materials / 23 mappings, continuous world-space fog-safe blending and cached lookups. Source/Linux 71 checks each, Windows 38, scenery 459, blocker report, seven Python tests, full repository exit 0 and official platform exports/parity pass. Small/wide visuals inspected; about 3.9 GB disposable outputs removed. Original art/provenance/caches/saves and RMG preserved. No next slice selected or release-ready claim."
+    },
     {
       "id": "tooling-validation-artifact-lifecycle-20260917",
       "title": "Validation Artifact Lifecycle",
@@ -22485,11 +22548,33 @@
       "classification": "implementation_slice",
       "status": "completed",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "docs/combat-layered-vfx.md", "docs/battle-readable-turns-and-melee-approach.md"],
-      "targets": ["scenes/battle/BattleBoardView.gd", "scripts/ui/CombatVfxMotion.gd", "tests/combat_vfx_regression.py", "tests/validate_repo.py"],
-      "validation": ["python3 -B tests/combat_vfx_regression.py --label source --render", "Existing battle readability and VFX reports", "python3 tests/validate_repo.py", "Linux/Windows official exports, same-probe packaged checks and package parity", "Inspect before/after and small/wide combat captures", "git diff --check"],
-      "completionCriteria": ["Noticeable event-aligned layered raster effects in normal combat", "Readouts, input, accessibility, timing, determinism and saves preserved", "Source and both packages validated with inspected visual evidence"],
-      "nonGoals": ["Balance, AI, gameplay RNG, saves, audio, new art generation, native RMG or unrelated UI"],
+      "sourceDocs": [
+        "project.md",
+        "docs/combat-layered-vfx.md",
+        "docs/battle-readable-turns-and-melee-approach.md"
+      ],
+      "targets": [
+        "scenes/battle/BattleBoardView.gd",
+        "scripts/ui/CombatVfxMotion.gd",
+        "tests/combat_vfx_regression.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": [
+        "python3 -B tests/combat_vfx_regression.py --label source --render",
+        "Existing battle readability and VFX reports",
+        "python3 tests/validate_repo.py",
+        "Linux/Windows official exports, same-probe packaged checks and package parity",
+        "Inspect before/after and small/wide combat captures",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Noticeable event-aligned layered raster effects in normal combat",
+        "Readouts, input, accessibility, timing, determinism and saves preserved",
+        "Source and both packages validated with inspected visual evidence"
+      ],
+      "nonGoals": [
+        "Balance, AI, gameplay RNG, saves, audio, new art generation, native RMG or unrelated UI"
+      ],
       "createdAt": "2026-09-13T20:38:05Z",
       "startedAt": "2026-09-13T20:38:05Z",
       "updatedAt": "2026-09-13T20:56:45Z",
@@ -22504,11 +22589,34 @@
       "classification": "implementation_slice",
       "status": "completed",
       "source": "PLAN.md",
-      "sourceDocs": ["project.md", "docs/hero-screen.md"],
-      "targets": ["scenes/overworld/OverworldShell.gd", "scripts/core/HeroCommandRules.gd", "scenes/shared/HeroSheet.gd", "tests/hero_sheet_regression.py", "tests/packaged_menu_and_turn_readability_regression.py", "tests/validate_repo.py"],
-      "validation": ["python3 -B tests/hero_sheet_regression.py --label source --render", "python3 tests/validate_repo.py", "Linux and Windows official export smokes and packaged hero-sheet input/state tests", "Town roster double-click non-regression", "Inspect 1280x720 and 1920x1080 screenshots", "git diff --check"],
-      "completionCriteria": ["Owned hero double-click and accessible entry show exact hero units, artifacts, stats and specializations", "Read-only state, input guards and return focus preserved", "Source and both packaged platforms pass with inspected layout evidence"],
-      "nonGoals": ["Gameplay, balance, save schema, art generation, native RMG or Town changes"],
+      "sourceDocs": [
+        "project.md",
+        "docs/hero-screen.md"
+      ],
+      "targets": [
+        "scenes/overworld/OverworldShell.gd",
+        "scripts/core/HeroCommandRules.gd",
+        "scenes/shared/HeroSheet.gd",
+        "tests/hero_sheet_regression.py",
+        "tests/packaged_menu_and_turn_readability_regression.py",
+        "tests/validate_repo.py"
+      ],
+      "validation": [
+        "python3 -B tests/hero_sheet_regression.py --label source --render",
+        "python3 tests/validate_repo.py",
+        "Linux and Windows official export smokes and packaged hero-sheet input/state tests",
+        "Town roster double-click non-regression",
+        "Inspect 1280x720 and 1920x1080 screenshots",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Owned hero double-click and accessible entry show exact hero units, artifacts, stats and specializations",
+        "Read-only state, input guards and return focus preserved",
+        "Source and both packaged platforms pass with inspected layout evidence"
+      ],
+      "nonGoals": [
+        "Gameplay, balance, save schema, art generation, native RMG or Town changes"
+      ],
       "createdAt": "2026-09-13T19:41:05Z",
       "startedAt": "2026-09-13T19:41:05Z",
       "updatedAt": "2026-09-13T20:14:20Z",
@@ -112282,8 +112390,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "None for artifact lifecycle or retaliation slices; whole-game release readiness remains unproven.",
-  "remainingWork": "No next slice selected.",
+  "remainingGap": "New biome-transition and ground-quality implementation and acceptance pending.",
+  "remainingWork": "Owner-directed biome-boundary and ground-quality improvement: original generated materials and continuous world-space transitions. Preserve terrain/road/blocker/fog/gameplay/native/save authority; inspect deterministic before/after cases and run consolidated source/Linux/Windows acceptance, then clean disposable non-RMG artifacts.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -112922,35 +113030,44 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed owner-approved validator artifact-lifecycle alignment: 26 historical non-RMG reports optional by default with explicit not-run disclosure; strict presence option and all existing present-report/source/content/provenance/native checks retained. 11 focused tests, structural preservation check, full repository validation and diff check pass. Retaliation closure blocker resolved; no runtime/package changes or disposable artifacts retained.",
+  "summary": "Completed original ground-quality and biome-transition slice: 16 painted materials / 23 mappings, continuous world-space fog-safe blending and cached lookups. Source/Linux 71 checks each, Windows 38, scenery 459, blocker report, seven Python tests, full repository exit 0 and official platform exports/parity pass. Small/wide visuals inspected; about 3.9 GB disposable outputs removed. Original art/provenance/caches/saves and RMG preserved. No next slice selected or release-ready claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-17T08:38:03Z",
+  "updatedAt": "2026-09-17T09:50:12Z",
   "validation": {
-    "id": "tooling-validation-artifact-lifecycle-20260917",
-    "sliceId": "tooling-validation-artifact-lifecycle-20260917",
+    "id": "art-overworld-biome-transitions-20260917",
+    "sliceId": "art-overworld-biome-transitions-20260917",
     "status": "completed",
-    "validatedAt": "2026-09-17T08:38:03Z",
-    "sourceReport": "docs/validation-artifact-lifecycle.md",
-    "toolingEvidence": {
-      "focusedPythonTests": 11,
-      "reportBranches": 26,
-      "presentReportPredicates": "unchanged; failed/malformed reports rejected",
-      "sourceChecks": "real owner rejects corrupted campaign content and missing smoke proof tokens",
-      "structuralPreservation": "All existing validator functions unchanged except main and exactly 26 presence guards; report predicates/content/provenance/native RMG checks identical to f42b585b",
-      "repositoryValidation": "python3 tests/validate_repo.py: VALIDATION PASSED, exit 0; explicitly disclosed 26 missing historical reports, no runtime-smoke rerun or pass claims",
-      "strictMode": "--require-historical-smoke-reports; all 26 absent reports rejected in focused strict-mode coverage",
-      "diffCheck": "passed",
-      "runtimeOrPackagingChanges": false,
-      "resolvedSlice": "bugfix-retaliation-casualty-playback-20260917",
-      "cleanup": "Temporary fixture directories self-cleaned; no persistent evidence/export artifacts created; unrelated untracked files unchanged",
-      "limits": "Python tooling validation, not a new gameplay, platform-export or release-readiness claim"
+    "validatedAt": "2026-09-17T09:50:12Z",
+    "sourceReport": "docs/overworld-biome-transitions.md",
+    "summary": "Completed original ground-quality and biome-transition slice: 16 painted materials / 23 mappings, continuous world-space fog-safe blending and cached lookups. Source/Linux 71 checks each, Windows 38, scenery 459, blocker report, seven Python tests, full repository exit 0 and official platform exports/parity pass. Small/wide visuals inspected; about 3.9 GB disposable outputs removed. Original art/provenance/caches/saves and RMG preserved. No next slice selected or release-ready claim.",
+    "evidence": {
+      "sourceRenderedChecks": 71,
+      "linuxPackageRenderedChecks": 71,
+      "windowsPackageHeadlessChecks": 38,
+      "pythonTests": 7,
+      "existingSceneryChecks": 459,
+      "blockerCells": 2324,
+      "uncoveredBlockerCells": 0,
+      "largeLookupUploadUsec": {
+        "source": 6903,
+        "linux": 6000,
+        "windows": 6128
+      },
+      "logicalTerrainCollisionAndSaveAuthority": "unchanged; exact baseline hashes in source report",
+      "repositoryValidation": "VALIDATION PASSED; final direct invocation exit 0; 26 absent historical non-RMG smokes explicitly not run",
+      "platformExports": "Both official export/boot smokes pass; Windows generated Overworld/Town construction flow passes",
+      "packageBytesEach": 645179852,
+      "packageEntryCount": 8852,
+      "packageParity": "Byte-identical except project.binary; ground JSON semantics and shader bytes equal source",
+      "visualReview": "Original sheets; Medium normal-fog and diagnostic reveal; 16 materials; diagonal/shore/island fixtures; Large view; source 1280x720 and Linux package 1920x1080",
+      "cleanup": "Approximately 3.9 GB rebuildable test packages/captures/logs removed; caches/saves/map dependencies, original art/provenance, RMG and unrelated files preserved",
+      "limits": "Windows Wine headless is not physical GPU certification; lookup CPU timings are not frame rates; not a release-readiness claim"
     },
     "artifacts": [
-      "docs/validation-artifact-lifecycle.md",
-      "tests/test_validation_artifact_lifecycle.py",
-      "docs/retaliation-casualty-playback.md"
-    ],
-    "summary": "Completed owner-approved validator artifact-lifecycle alignment: 26 historical non-RMG reports optional by default with explicit not-run disclosure; strict presence option and all existing present-report/source/content/provenance/native checks retained. 11 focused tests, structural preservation check, full repository validation and diff check pass. Retaliation closure blocker resolved; no runtime/package changes or disposable artifacts retained."
+      "docs/overworld-biome-transitions.md",
+      "art/overworld/source/generated/terrain/ground_materials_v3/manifest.json",
+      "tests/overworld_biome_surface_regression.py"
+    ]
   },
   "validationHistory": [
     {

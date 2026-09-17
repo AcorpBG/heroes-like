@@ -1,0 +1,32 @@
+{
+  "schema": "overworld_ground_materials_v3",
+  "model": "original_raster_world_space_splat_v3",
+  "atlas": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png",
+  "source_manifest": "res://art/overworld/source/generated/terrain/ground_materials_v3/manifest.json",
+  "material_span_tiles": 6,
+  "terrain_slots": {
+    "grass": 0,
+    "plains": 1,
+    "forest": 2,
+    "mire": 3,
+    "swamp": 3,
+    "dirt": 4,
+    "badlands": 4,
+    "sand": 5,
+    "rough": 6,
+    "hills": 6,
+    "rock": 7,
+    "ridge": 7,
+    "ash": 8,
+    "lava": 9,
+    "underground": 10,
+    "cavern": 10,
+    "subterranean": 10,
+    "snow": 11,
+    "water": 12,
+    "coast": 13,
+    "shore": 14,
+    "ice": 15,
+    "frost": 15
+  }
+}

@@ -4,9 +4,11 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -21,15 +23,19 @@ def main() -> int:
     if not godot or not xvfb:
         print(f"{REPORT_ID} requires Godot 4 and xvfb-run", file=sys.stderr)
         return 2
-    completed = subprocess.run(
-        [xvfb, "-a", "-s", "-screen 0 1920x1080x24", godot, "--path", str(ROOT), "--scene", SCENE],
-        cwd=ROOT,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        timeout=420,
-        check=False,
-    )
+    with tempfile.TemporaryDirectory(prefix="heroes-terrain-user-") as user:
+        completed = subprocess.run(
+            [xvfb, "-a", "-s", "-screen 0 1920x1080x24", godot, "--path", str(ROOT),
+             "--audio-driver", "Dummy", "--accessibility", "disabled",
+             "--rendering-method", "gl_compatibility", "--scene", SCENE],
+            cwd=ROOT,
+            env=dict(os.environ, XDG_DATA_HOME=user, XDG_CONFIG_HOME=user, XDG_CACHE_HOME=user),
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            timeout=420,
+            check=False,
+        )
     print(completed.stdout, end="")
     if completed.returncode:
         return completed.returncode

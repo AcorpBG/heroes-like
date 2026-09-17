@@ -7,7 +7,7 @@ const SEED := "medium-random-screenshot-10230"
 const SIZE_CLASS_ID := "homm3_medium"
 const PLAYER_COUNT := 4
 const VIEWPORT_SIZES := [Vector2i(1920, 1080), Vector2i(1280, 720)]
-const CAPTURE_DIR := "res://.artifacts/overworld_cohesive_biome_blocker_mass_10232"
+var CAPTURE_DIR: String = OS.get_environment("HEROES_TERRAIN_CAPTURE_DIR") if OS.has_environment("HEROES_TERRAIN_CAPTURE_DIR") else "res://.artifacts/overworld_cohesive_biome_blocker_mass_10232"
 
 var _failures: Array = []
 
