@@ -208,6 +208,8 @@ const ScoutDialog := preload("res://scenes/shared/ScoutInspectionDialog.gd")
 var _highlight_interactions_button: Button
 var _inspect_tile_button: Button
 var _scout_dialog: AcceptDialog
+const Readiness := preload("res://scripts/ui/ReadinessWidgets.gd")
+var _next_movable_hero: Button
 
 func _configure_scout_controls() -> void:
 	var row := HBoxContainer.new()
@@ -234,6 +236,14 @@ func _configure_scout_controls() -> void:
 	_inspect_tile_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_inspect_tile_button.pressed.connect(_open_scout_inspection)
 	row.add_child(_inspect_tile_button)
+	_next_movable_hero = Button.new()
+	_next_movable_hero.name = "NextMovableHero"
+	_next_movable_hero.text = "Next"
+	_next_movable_hero.tooltip_text = "Select and center the next owned hero with movement remaining. Does not move them."
+	_next_movable_hero.accessibility_name = "Next hero with movement"
+	FrontierVisualKit.apply_button(_next_movable_hero, "secondary", 42, 26, 12)
+	_next_movable_hero.pressed.connect(_select_next_movable_hero)
+	row.add_child(_next_movable_hero)
 	SettingsService.settings_changed.connect(func(_settings):
 		FrontierVisualKit.apply_button(_highlight_interactions_button, "secondary", 90, 26, FrontierVisualKit.FONT_CAPTION)
 		FrontierVisualKit.apply_button(_inspect_tile_button, "secondary", 74, 26, FrontierVisualKit.FONT_CAPTION)
@@ -263,6 +273,19 @@ func _open_scout_inspection() -> void:
 	_clear_controller_move_state()
 	var report := Inspection.inspect_tile(_session, _selected_tile, LevelRules.view_level(_session))
 	_scout_dialog.open_report(report, get_viewport_rect().size)
+
+func _select_next_movable_hero() -> void:
+	if _overworld_gameplay_movement_blocked_reason() != "" or _overworld_order_input_blocked(): return
+	var roster: Array = _session.overworld.get("player_heroes", [])
+	var active := String(_session.overworld.get("active_hero_id", ""))
+	var start := -1
+	for index in range(roster.size()):
+		if String(roster[index].get("id", "")) == active: start = index
+	for offset in range(1, roster.size() + 1):
+		var hero: Dictionary = roster[(start + offset) % roster.size()]
+		if int(hero.get("movement", {}).get("current", 0)) <= 0: continue
+		_on_hero_roster_pressed(String(hero.get("id", "")))
+		if String(_session.overworld.get("active_hero_id", "")) == String(hero.get("id", "")): return
 var _hovered_tile := Vector2i(-1, -1)
 var _last_message := ""
 var _last_enemy_activity_text := ""
@@ -4883,10 +4906,20 @@ func _rebuild_hero_actions() -> void:
 		button.set_meta("visual_model", "ornamental_art_card")
 		button.set_meta("art_path", portrait_path)
 		button.set_meta("active", is_active)
+		var movement: Dictionary = hero.get("movement", {})
+		var mana: Dictionary = hero.get("spellbook", {}).get("mana", {})
+		Readiness.meter(button, "Movement", int(movement.get("current", 0)), int(movement.get("max", 0)), Color("89c276"), 10)
+		Readiness.meter(button, "Mana", int(mana.get("current", 0)), int(mana.get("max", 0)), Color("83b9e4"), 5)
+		var ready_text := "Movement %d / %d; mana %d / %d" % [int(movement.get("current", 0)), int(movement.get("max", 0)), int(mana.get("current", 0)), int(mana.get("max", 0))]
+		button.tooltip_text = ready_text + "\n" + button.tooltip_text
+		button.accessibility_description = ready_text + ". " + button.accessibility_description
 		retained.append(button)
 		displayed_hero_count += 1
 	_reconcile_roster_buttons(_hero_actions, retained)
 	_hero_roster_title_label.text = "Heroes  %d" % displayed_hero_count
+	if _next_movable_hero != null:
+		_next_movable_hero.disabled = not _session.overworld.get("player_heroes", []).any(func(hero): return int(hero.get("movement", {}).get("current", 0)) > 0)
+		_next_movable_hero.tooltip_text = "All owned heroes have spent their movement." if _next_movable_hero.disabled else "Select and center the next owned hero with movement remaining. Does not move them."
 
 func _existing_roster_button(container: Container, identity_key: String, identity: String) -> Button:
 	for child in container.get_children():
@@ -4950,6 +4983,9 @@ func _rebuild_town_actions() -> void:
 		button.set_meta("x", town_tile.x)
 		button.set_meta("y", town_tile.y)
 		button.set_meta("level", level)
+		var defenders := int(HeroCommandRules.town_defense_force(_session, town).get("troops", 0))
+		Readiness.town_badge(button, defenders)
+		button.accessibility_description += " %d actual defending troops%s." % [defenders, "; undefended" if defenders == 0 else ""]
 		retained.append(button)
 		displayed_town_count += 1
 	_reconcile_roster_buttons(_town_actions, retained)
@@ -8887,6 +8923,7 @@ func _configure_overworld_keyboard_focus(force: bool = false) -> void:
 	var surfaces := [
 		_highlight_interactions_button,
 		_inspect_tile_button,
+		_next_movable_hero,
 		_army_management,
 		_primary_action_button,
 		_minimap,

@@ -10,6 +10,9 @@ var toggle: Button
 var latest: Label
 var expanded := false
 var _refresh_pending := false
+var search: LineEdit
+var jump_latest: Button
+var unread := 0
 
 func _ready() -> void:
 	custom_minimum_size.y = 36
@@ -43,6 +46,23 @@ func _ready() -> void:
 	latest.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	VisualKit.apply_label(latest, "body", 13)
 	row.add_child(latest)
+	search = LineEdit.new()
+	search.name = "SearchBattleHistory"
+	search.placeholder_text = "Find in log…"
+	search.clear_button_enabled = true
+	search.custom_minimum_size.x = 160
+	search.accessibility_name = "Search retained battle messages"
+	search.text_changed.connect(func(_text): _refresh_history())
+	search.hide()
+	row.add_child(search)
+	jump_latest = Button.new()
+	jump_latest.name = "JumpToLatest"
+	jump_latest.text = "Latest"
+	jump_latest.tooltip_text = "Clear search and jump to the newest battle message."
+	VisualKit.apply_button(jump_latest, "secondary", 80, 24, 12)
+	jump_latest.pressed.connect(show_latest)
+	jump_latest.hide()
+	row.add_child(jump_latest)
 	history = RichTextLabel.new()
 	history.name = "BattleHistory"
 	history.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -67,12 +87,17 @@ func set_expanded(value: bool) -> void:
 	toggle.text = "Log ▾" if value else "Log ▸"
 	toggle.accessibility_name = "Collapse battle message history" if value else "Expand battle message history"
 	history.visible = value
+	search.visible = value
+	jump_latest.visible = value
 	custom_minimum_size.y = 128 if value else 36
-	if not value and history.has_focus(): toggle.grab_focus()
+	if not value and (history.has_focus() or search.has_focus() or jump_latest.has_focus()): toggle.grab_focus()
+	if value and _following_latest(): unread = 0
+	_sync_unread()
 	expanded_changed.emit(value)
 
 func append_message(message: String) -> void:
 	if message.strip_edges().is_empty(): return
+	if not expanded or not _following_latest(): unread = mini(MAX_ENTRIES, unread + 1)
 	entries.append(message)
 	if entries.size() > MAX_ENTRIES: entries.pop_front()
 	if not _refresh_pending:
@@ -89,10 +114,41 @@ func _refresh_history() -> void:
 	var follow := bar.value >= bar.max_value - bar.page - 2
 	var previous_scroll := bar.value
 	history.scroll_following = follow
-	history.text = "\n".join(entries)
+	history.text = "\n".join(filtered_entries())
+	_sync_unread()
 	# Let text wrapping finish before moving the scrollbar. Do not pull a
 	# reader away from older messages whenever another unit acts.
 	if not follow: call_deferred("_restore_scroll", previous_scroll)
+
+func filtered_entries() -> Array[String]:
+	var result: Array[String] = []
+	var query := search.text.strip_edges().to_lower() if search != null else ""
+	for entry in entries:
+		if query.is_empty() or entry.to_lower().contains(query): result.append(entry)
+	return result
+
+func _following_latest() -> bool:
+	if history == null or (search != null and not search.text.is_empty()): return false
+	var bar := history.get_v_scroll_bar()
+	return bar.value >= bar.max_value - bar.page - 2
+
+func _sync_unread() -> void:
+	toggle.custom_minimum_size.x = 104 if unread > 0 else 80
+	toggle.text = "Log %s%s" % ["▾" if expanded else "▸", " · %d" % unread if unread > 0 else ""]
+	jump_latest.text = "Latest (%d)" % unread if unread > 0 else "Latest"
+	jump_latest.accessibility_name = "Jump to latest; %d unread messages" % unread
+
+func show_latest() -> void:
+	search.text = ""
+	unread = 0
+	history.scroll_following = true
+	_refresh_history()
+	call_deferred("_scroll_to_latest")
+
+func _scroll_to_latest() -> void:
+	if not is_inside_tree(): return
+	history.get_v_scroll_bar().value = history.get_v_scroll_bar().max_value
+	_sync_unread()
 
 func _restore_scroll(previous: float) -> void:
 	if not is_inside_tree(): return

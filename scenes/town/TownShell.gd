@@ -125,6 +125,13 @@ const RETURN_TO_MENU_FAILURE_MESSAGE := "Save failed. The expedition remains ope
 @onready var _town_catalog_close_button: Button = %TownCatalogClose
 var _construction_peek_button: Button
 var _construction_scene_only := false
+const DecisionDetails := preload("res://scripts/ui/DecisionDetails.gd")
+var _construction_filters: HBoxContainer
+var _construction_search: LineEdit
+var _construction_status: OptionButton
+var _construction_catalog_rows: Array = []
+var _construction_requirements: HFlowContainer
+var _construction_shortfall: Label
 
 func _configure_construction_peek() -> void:
 	_construction_peek_button = Button.new()
@@ -138,6 +145,34 @@ func _configure_construction_peek() -> void:
 	catalog_box.add_child(_construction_peek_button)
 	catalog_box.move_child(_construction_peek_button, 2)
 	_construction_peek_button.hide()
+	_construction_filters = HBoxContainer.new()
+	catalog_box.add_child(_construction_filters)
+	catalog_box.move_child(_construction_filters, 3)
+	_construction_search = LineEdit.new()
+	_construction_search.name = "FindBuilding"
+	_construction_search.placeholder_text = "Find building…"
+	_construction_search.clear_button_enabled = true
+	_construction_search.accessibility_name = "Search construction plans"
+	_construction_search.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_construction_search.text_changed.connect(func(_text): _filter_construction_cards())
+	_construction_filters.add_child(_construction_search)
+	_construction_status = OptionButton.new()
+	_construction_status.name = "ConstructionStatus"
+	for status in ["All", "Ready", "Trade", "Locked", "Built"]: _construction_status.add_item(status)
+	FrontierVisualKit.apply_button(_construction_status, "secondary", 92, 28, 12)
+	_construction_status.accessibility_name = "Filter construction status"
+	_construction_status.item_selected.connect(func(_index): _filter_construction_cards())
+	_construction_filters.add_child(_construction_status)
+	_construction_shortfall = Label.new()
+	_construction_shortfall.name = "ConstructionShortfall"
+	_construction_shortfall.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	FrontierVisualKit.apply_label(_construction_shortfall, "gold", 12)
+	catalog_box.add_child(_construction_shortfall)
+	catalog_box.move_child(_construction_shortfall, _confirm_build_button.get_index())
+	_construction_requirements = HFlowContainer.new()
+	_construction_requirements.name = "ConstructionPrerequisites"
+	catalog_box.add_child(_construction_requirements)
+	catalog_box.move_child(_construction_requirements, _confirm_build_button.get_index())
 	SettingsService.settings_changed.connect(func(_settings): FrontierVisualKit.apply_button(_construction_peek_button, "secondary", 180, 28, FrontierVisualKit.FONT_CAPTION))
 
 func _toggle_construction_peek() -> void:
@@ -146,6 +181,59 @@ func _toggle_construction_peek() -> void:
 	_apply_responsive_layout()
 	_configure_town_keyboard_focus(false)
 	_construction_peek_button.grab_focus()
+
+func _filter_construction_cards() -> void:
+	var visible_rows: Array = []
+	var status := _construction_status.get_item_text(_construction_status.selected)
+	for row in _construction_catalog_rows:
+		if not _construction_search.text.strip_edges().is_empty() and not String(row.get("name", "")).to_lower().contains(_construction_search.text.strip_edges().to_lower()): continue
+		if status != "All" and String(row.get("catalog_status", "")) != status: continue
+		visible_rows.append(row)
+	var ids := visible_rows.map(func(row): return String(row.get("id", "")))
+	for card in _build_actions.get_children():
+		if card.has_meta("construction_id"): card.visible = String(card.get_meta("construction_id")) in ids
+	_ensure_selected_build_action(visible_rows)
+	for card in _build_actions.get_children():
+		if not card.has_meta("construction_id"): continue
+		var button := card.get_child(0).get_child(0) as Button
+		button.button_pressed = String(card.get_meta("construction_id")) == _selected_build_action_id
+		_style_action_button(button, button.button_pressed)
+		button.custom_minimum_size = Vector2(190, 72)
+	_refresh_build_plan_surface(visible_rows)
+	_restore_selected_construction_preview()
+	_configure_town_keyboard_focus(false)
+
+func _jump_to_prerequisite(building_id: String) -> void:
+	_construction_search.set_block_signals(true)
+	_construction_search.text = ""
+	_construction_search.set_block_signals(false)
+	_construction_status.select(0)
+	_selected_build_action_id = "build:" + building_id
+	_filter_construction_cards()
+	for card in _build_actions.get_children():
+		if String(card.get_meta("construction_id", "")) == _selected_build_action_id:
+			_town_catalog_scroll.ensure_control_visible(card)
+			card.get_child(0).get_child(0).grab_focus()
+	_preview_construction(building_id)
+
+func _refresh_construction_decision(action: Dictionary) -> void:
+	if _construction_requirements == null: return
+	for child in _construction_requirements.get_children():
+		_construction_requirements.remove_child(child)
+		child.queue_free()
+	var missing := DecisionDetails.resource_shortfall(action.get("cost", {}), _session.overworld.get("resources", {})) if _session != null else {}
+	_construction_shortfall.text = "Missing: " + TownRules._describe_resources(missing) if not missing.is_empty() else "Resources covered"
+	if action.is_empty() or bool(action.get("built", false)): _construction_shortfall.text = ""
+	var building := ContentService.get_building(String(action.get("building_id", "")))
+	for required in building.get("requires", []):
+		var button := Button.new()
+		button.text = "Requires: " + String(ContentService.get_building(required).get("name", required))
+		button.tooltip_text = button.text + ". Inspect this prerequisite plan; does not construct it."
+		button.accessibility_name = button.text
+		FrontierVisualKit.apply_button(button, "secondary", 190, 26, 11)
+		button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		button.pressed.connect(_jump_to_prerequisite.bind(String(required)))
+		_construction_requirements.add_child(button)
 @onready var _domain_actions: VBoxContainer = %DomainActions
 @onready var _guide_overlay: Control = %TownGuideOverlay
 @onready var _guide_panel: PanelContainer = %TownGuidePanel
@@ -343,6 +431,10 @@ func _apply_responsive_layout() -> void:
 		_town_catalog_scroll.custom_minimum_size.y = 250.0 if preview_layout else 340.0
 		_town_catalog_subtitle_label.visible = not peek
 		_build_plan_label.visible = _town_catalog_mode == "build" and not peek
+		if _construction_filters != null:
+			_construction_filters.visible = _town_catalog_mode == "build" and not peek
+			_construction_shortfall.visible = _town_catalog_mode == "build" and not peek
+			_construction_requirements.visible = _town_catalog_mode == "build" and not peek
 		if _construction_peek_button != null:
 			_construction_peek_button.visible = _town_catalog_mode == "build"
 			_construction_peek_button.text = "Back to construction plans" if peek else "View placement in town"
@@ -612,6 +704,13 @@ func _open_town_catalog(mode: String) -> void:
 	if not _town_catalog_is_open() and focus_owner is Control:
 		_town_catalog_previous_focus = focus_owner
 	_town_catalog_mode = mode
+	_construction_search.set_block_signals(true)
+	_construction_search.text = ""
+	_construction_search.set_block_signals(false)
+	_construction_status.select(0)
+	_construction_filters.visible = mode == "build"
+	_construction_requirements.visible = mode == "build"
+	_construction_shortfall.visible = mode == "build"
 	_construction_scene_only = false
 	_town_stage_view.set_construction_preview("")
 	_apply_responsive_layout()
@@ -1294,7 +1393,7 @@ func _configure_town_keyboard_focus(force: bool = false) -> void:
 	if _town_catalog_is_open():
 		var catalog_surfaces := [_town_catalog_close_button]
 		if _town_catalog_mode == "build":
-			catalog_surfaces.append_array([_construction_peek_button, _build_actions, _confirm_build_button])
+			catalog_surfaces.append_array([_construction_peek_button, _construction_filters, _build_actions, _construction_requirements, _confirm_build_button])
 		elif _town_catalog_mode == "muster":
 			catalog_surfaces.append(_recruit_actions)
 		else:
@@ -3785,9 +3884,11 @@ func _rebuild_hero_actions(actions_override: Variant = null) -> void:
 
 func _rebuild_build_actions(actions_override: Variant = null) -> void:
 	for child in _build_actions.get_children():
+		_build_actions.remove_child(child)
 		child.queue_free()
 
 	var actions = actions_override if actions_override is Array and _catalog_rows_are_complete(actions_override, "building_id") else TownRules.get_build_catalog(_session)
+	_construction_catalog_rows = actions
 	if actions.is_empty():
 		_selected_build_action_id = ""
 		_build_actions.add_child(_make_placeholder_label("No construction orders"))
@@ -3807,6 +3908,7 @@ func _rebuild_build_actions(actions_override: Variant = null) -> void:
 		card.add_child(card_box)
 		var button := Button.new()
 		var action_id := String(action.get("id", ""))
+		card.set_meta("construction_id", action_id)
 		button.text = "%s\n%s • %s" % [
 			_short_text(String(action.get("name", action.get("label", "Construction"))).trim_prefix("Build "), 25),
 			String(action.get("category", "support")).capitalize(),
@@ -3837,6 +3939,7 @@ func _rebuild_build_actions(actions_override: Variant = null) -> void:
 		card_box.add_child(cost_label)
 		_build_actions.add_child(card)
 	_refresh_build_plan_surface(actions)
+	if _construction_search != null and (not _construction_search.text.is_empty() or _construction_status.selected > 0): _filter_construction_cards()
 
 func _catalog_rows_are_complete(rows: Variant, identity_key: String) -> bool:
 	if not (rows is Array) or rows.is_empty():
@@ -3919,6 +4022,7 @@ func _build_plan_option_label(action: Dictionary) -> String:
 
 func _refresh_build_plan_surface(actions: Array) -> void:
 	var action := _selected_build_action(actions)
+	_refresh_construction_decision(action)
 	if action.is_empty():
 		_set_compact_label(_build_plan_label, "No construction plan is available.", 2)
 		_build_plan_label.tooltip_text = ""

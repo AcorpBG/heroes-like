@@ -8,6 +8,7 @@ const Heroes = preload("res://scripts/core/HeroCommandRules.gd")
 const Progression = preload("res://scripts/core/HeroProgressionRules.gd")
 const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
 const SpellbookViewScript = preload("res://scenes/shared/SpellbookView.gd")
+const DecisionDetails = preload("res://scripts/ui/DecisionDetails.gd")
 const FRAME := "res://art/ui/runtime/overworld/parchment_panel.png"
 const PORTRAIT_FRAME := "res://art/ui/runtime/overworld/hero_frame.png"
 
@@ -19,6 +20,10 @@ var _close: Button
 var _return_focus: WeakRef
 var _focusable: Array[Control] = []
 var _spellbook_view: VBoxContainer
+var _artifact_search: LineEdit
+var _artifact_rows: Array[Control] = []
+var _artifact_empty_slots: Array[Control] = []
+var _artifact_empty: Label
 
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -48,6 +53,8 @@ func open_hero(snapshot: Dictionary, return_control: Control) -> void:
 		_body.remove_child(child)
 		child.queue_free()
 	_focusable.clear()
+	_artifact_rows.clear()
+	_artifact_empty_slots.clear()
 	_build()
 	show()
 	move_to_front()
@@ -103,6 +110,15 @@ func _build() -> void:
 	portrait_frame.add_child(portrait)
 	_label(identity, Heroes.hero_identity_context_line(hero), 17, "gold")
 	_label(identity, "Level %d  ·  Experience %d / %d" % [int(hero.get("level", 1)), int(hero.get("experience", 0)), int(hero.get("next_level_experience", 250))], 15)
+	var experience := ProgressBar.new()
+	experience.name = "HeroExperienceProgress"
+	experience.custom_minimum_size.y = 12
+	experience.show_percentage = false
+	experience.max_value = maxi(1, int(hero.get("next_level_experience", 250)))
+	experience.value = int(hero.get("experience", 0))
+	experience.tooltip_text = "%d experience remaining to level %d" % [maxi(0, int(experience.max_value) - int(experience.value)), int(hero.get("level", 1)) + 1]
+	experience.accessibility_name = experience.tooltip_text
+	identity.add_child(experience)
 	_label(identity, "Movement %d / %d\nMana %d / %d\nScouting radius %d" % [int(hero.get("movement", {}).get("current", 0)), int(hero.get("movement", {}).get("max", 0)), int(hero.get("spellbook", {}).get("mana", {}).get("current", 0)), int(hero.get("spellbook", {}).get("mana", {}).get("max", 0)), Heroes.scouting_radius_for_hero(hero)], 16)
 	var right := VBoxContainer.new()
 	right.add_theme_constant_override("separation", 14)
@@ -192,11 +208,22 @@ func _build_army(box: VBoxContainer) -> void:
 
 func _unit_description(unit: Dictionary, count: int) -> String:
 	var text := "%s  × %d\nTier %d · %s\n\nAttack %d   Defense %d   Health %d\nDamage %d–%d   Speed %d   Initiative %d" % [String(unit.get("name", "Unit")), count, int(unit.get("tier", 1)), String(unit.get("role", "")).capitalize(), int(unit.get("attack", 0)), int(unit.get("defense", 0)), int(unit.get("hp", 0)), int(unit.get("min_damage", 0)), int(unit.get("max_damage", 0)), int(unit.get("speed", 0)), int(unit.get("initiative", 0))]
+	var body: Dictionary = ContentService.load_json("res://content/unit_battle_size_manifest.json").get("units", {}).get(String(unit.get("id", "")), {})
+	var width := 2 if int(body.get("footprint", 1)) == 2 else 1
+	text += "\n%s · Occupies %d hex%s" % ["Ranged · %d shots" % int(unit.get("shots", 0)) if bool(unit.get("ranged", false)) else "Melee", width, "es" if width == 2 else ""]
 	for ability in unit.get("abilities", []):
 		if ability is Dictionary: text += "\n\n%s · %s" % [String(ability.get("name", "Ability")), String(ability.get("description", ""))]
 	return text
 
 func _build_artifacts(box: VBoxContainer) -> void:
+	_artifact_search = LineEdit.new()
+	_artifact_search.name = "FindHeroArtifact"
+	_artifact_search.placeholder_text = "Find artifact…"
+	_artifact_search.clear_button_enabled = true
+	_artifact_search.accessibility_name = "Search equipped and backpack artifacts"
+	_artifact_search.text_changed.connect(func(_text): _filter_artifacts())
+	box.add_child(_artifact_search)
+	_focusable.append(_artifact_search)
 	_label(box, "Equipped", 18, "gold")
 	var equipped: Dictionary = hero.get("artifacts", {}).get("equipped", {})
 	for slot in Artifacts.EQUIPMENT_SLOTS:
@@ -205,23 +232,48 @@ func _build_artifacts(box: VBoxContainer) -> void:
 	var inventory: Array = hero.get("artifacts", {}).get("inventory", [])
 	if inventory.is_empty(): _label(box, "No carried artifacts.", 15, "muted")
 	for artifact_id in inventory: _artifact_row(box, String(artifact_id), "Carried")
+	_artifact_empty = _label(box, "No artifacts match this search.", 15, "muted")
+	_artifact_empty.hide()
 	_label(box, Artifacts.describe_impact_summary(hero.duplicate(true)), 15)
 	_label(box, "Equipment changes remain in the Overworld command drawer. Inspecting an artifact does not equip it.", 14, "muted")
 
 func _artifact_row(box: VBoxContainer, artifact_id: String, slot: String) -> void:
 	if artifact_id == "":
-		_label(box, "%s · Empty" % slot, 15, "muted")
+		_artifact_empty_slots.append(_label(box, "%s · Empty" % slot, 15, "muted"))
 		return
 	var entry := VBoxContainer.new()
+	entry.set_meta("artifact_name", Artifacts.artifact_name(artifact_id))
+	_artifact_rows.append(entry)
 	box.add_child(entry)
 	var button := _button(entry, "%s · %s" % [slot, Artifacts.artifact_name(artifact_id)], "Show artifact effects", Vector2(0, 48))
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.icon = _texture(Artifacts.artifact_icon_path(artifact_id))
 	button.set_meta("artifact_id", artifact_id)
 	button.accessibility_name = button.text
-	var detail := _label(entry, Artifacts.describe_artifact(artifact_id), 15)
+	var detail := _label(entry, DecisionDetails.artifact_comparison(hero, artifact_id) + "\n\n" + Artifacts.describe_artifact(artifact_id), 15)
 	detail.hide()
-	button.pressed.connect(func(): detail.visible = not detail.visible)
+	button.pressed.connect(func():
+		detail.visible = not detail.visible
+		if detail.visible: call_deferred("_reveal_artifact_entry", entry))
+
+func _reveal_artifact_entry(entry: Control) -> void:
+	if not is_inside_tree(): return
+	await get_tree().process_frame
+	if not is_instance_valid(entry) or not entry.is_inside_tree(): return
+	var ancestor := entry.get_parent()
+	while ancestor != null and ancestor != self:
+		if ancestor is ScrollContainer:
+			ancestor.scroll_vertical += int(entry.global_position.y - ancestor.global_position.y - 12)
+			return
+		ancestor = ancestor.get_parent()
+
+func _filter_artifacts() -> void:
+	var query := _artifact_search.text.strip_edges().to_lower()
+	for row in _artifact_empty_slots: row.visible = query.is_empty()
+	for row in _artifact_rows:
+		row.visible = query.is_empty() or String(row.get_meta("artifact_name", "")).to_lower().contains(query)
+	_artifact_empty.visible = not query.is_empty() and not _artifact_rows.any(func(row): return row.visible)
+	_focus_cycle()
 
 func _build_specializations(box: VBoxContainer) -> void:
 	_label(box, "Learned specializations", 18, "gold")

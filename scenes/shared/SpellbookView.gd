@@ -22,6 +22,10 @@ var _grid: GridContainer
 var _details: RichTextLabel
 var _prepare: Button
 var _empty: Label
+var _search: LineEdit
+var _school: OptionButton
+var _sort: OptionButton
+var _affordable: CheckButton
 
 func _ready() -> void:
 	name = "Spellbook"
@@ -33,8 +37,33 @@ func _ready() -> void:
 	add_child(filters)
 	_context = _filter(filters, "SpellContext", "Spell context", ["All spells", "Battle spells", "Overworld spells"])
 	_role = _filter(filters, "SpellRole", "Spell effect", ["All effects", "Damage", "Buff", "Debuff"])
+	_school = _filter(filters, "SpellSchool", "Magic school", ["All schools"])
+	_school.set_item_metadata(0, "")
+	_school.tooltip_text = "Filter the current spell library by magic school. Combines with search, context, effect and mana filters."
+	_school.item_selected.connect(func(_index): _rebuild())
 	_context.item_selected.connect(func(_index: int): _rebuild())
 	_role.item_selected.connect(func(_index: int): _rebuild())
+	var discovery := HBoxContainer.new()
+	add_child(discovery)
+	_search = LineEdit.new()
+	_search.name = "SpellSearch"
+	_search.placeholder_text = "Find spell…"
+	_search.clear_button_enabled = true
+	_search.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_search.accessibility_name = "Search spell names"
+	_search.text_changed.connect(func(_text): _rebuild())
+	discovery.add_child(_search)
+	_sort = _filter(discovery, "SpellSort", "Spell order", ["Name", "Mana ↑", "Mana ↓"])
+	_sort.custom_minimum_size = Vector2(90, 30)
+	_sort.tooltip_text = "Order by spell name, lowest mana first, or highest mana first. Costs include this hero's spell modifiers."
+	_sort.item_selected.connect(func(_index): _rebuild())
+	_affordable = CheckButton.new()
+	_affordable.name = "AffordableSpells"
+	_affordable.text = "Mana ready"
+	_affordable.tooltip_text = "Only spells within current mana. Targets, context and other casting requirements still apply."
+	_affordable.accessibility_name = "Filter spells affordable with current mana"
+	_affordable.toggled.connect(func(_enabled): _rebuild())
+	discovery.add_child(_affordable)
 	_count = Label.new()
 	Visuals.apply_label(_count, "gold", 15)
 	add_child(_count)
@@ -44,6 +73,8 @@ func _ready() -> void:
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_scroll.follow_focus = true
+	_scroll.resized.connect(_layout_columns)
+	visibility_changed.connect(func(): call_deferred("_layout_columns"))
 	add_child(_scroll)
 	_grid = GridContainer.new()
 	_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -99,6 +130,21 @@ func configure(hero: Dictionary, spell_ids: Array, mode: String = "inspect", ava
 	if is_node_ready():
 		_context.select(1 if mode == "battle" else 0)
 		_role.select(0)
+		_search.text = ""
+		_affordable.set_pressed_no_signal(false)
+		_affordable.disabled = hero.is_empty()
+		_school.clear()
+		_school.add_item("All schools")
+		_school.set_item_metadata(0, "")
+		var schools: Array = []
+		for spell in _spells:
+			var school := String(spell.get("school_id", ""))
+			if not school.is_empty() and school not in schools: schools.append(school)
+		schools.sort()
+		for school in schools:
+			_school.add_item(String(school).capitalize())
+			_school.set_item_metadata(_school.item_count - 1, school)
+		_school.select(0)
 		_rebuild()
 
 func visible_spell_ids() -> Array:
@@ -106,11 +152,23 @@ func visible_spell_ids() -> Array:
 	for spell in _spells:
 		if _context != null and CONTEXTS[_context.selected] != "" and String(spell.get("context", "")) != CONTEXTS[_context.selected]: continue
 		if _role != null and ROLES[_role.selected] != "" and ROLES[_role.selected] not in Spells.spell_role_categories(spell): continue
+		if _search != null and not _search.text.strip_edges().is_empty() and not String(spell.get("name", "")).to_lower().contains(_search.text.strip_edges().to_lower()): continue
+		if _school != null and _school.selected > 0 and String(spell.get("school_id", "")) != String(_school.get_selected_metadata()): continue
+		if _affordable != null and _affordable.button_pressed and Spells.adjusted_spell_mana_cost(_hero, spell) > int(_hero.get("spellbook", {}).get("mana", {}).get("current", 0)): continue
 		ids.append(String(spell.id))
+	if _sort != null and _sort.selected > 0:
+		ids.sort_custom(func(a, b):
+			var left := ContentService.get_spell(a)
+			var right := ContentService.get_spell(b)
+			var x := Spells.adjusted_spell_mana_cost(_hero, left)
+			var y := Spells.adjusted_spell_mana_cost(_hero, right)
+			if x == y: return String(left.name).naturalnocasecmp_to(String(right.name)) < 0
+			return x < y if _sort.selected == 1 else x > y)
 	return ids
 
 func focus_controls() -> Array[Control]:
-	var controls: Array[Control] = [_context, _role]
+	var controls: Array[Control] = [_context, _role, _school, _search, _sort]
+	if not _affordable.disabled: controls.append(_affordable)
 	for child in _grid.get_children():
 		if child is Button: controls.append(child)
 	controls.append(_details)

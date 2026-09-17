@@ -129,6 +129,7 @@ var _action_playback_frames: Array = []
 var _action_playback_result := {}
 var _action_playback_feedback := {}
 var _action_playback_speed := BattleRules.PRESENTATION_SPEED_NORMAL
+var _compact_speed_picker: OptionButton
 var _battle_presentation_stream_text := ""
 var _pending_withdrawal_action := ""
 var _withdrawal_focus_origin: Button = null
@@ -206,6 +207,14 @@ func _ready() -> void:
 	var content := $ContentMargin/Content
 	content.add_child(_message_log)
 	_message_log.expanded_changed.connect(func(_expanded): call_deferred("_configure_battle_keyboard_focus", false))
+	_compact_speed_picker = OptionButton.new()
+	_compact_speed_picker.name = "BattlePlaybackSpeed"
+	for label in ["Speed · Normal", "Speed · Fast", "Speed · Instant"]: _compact_speed_picker.add_item(label)
+	FrontierVisualKit.apply_button(_compact_speed_picker, "secondary", 120, 26, 12)
+	_compact_speed_picker.accessibility_name = "Battle animation playback speed"
+	_compact_speed_picker.tooltip_text = "Changes presentation speed only, using the saved playback setting."
+	_compact_speed_picker.item_selected.connect(func(index): _set_battle_presentation_speed(["normal", "fast", "instant"][index]))
+	_message_log.latest.get_parent().add_child(_compact_speed_picker)
 	content.move_child(_message_log, $ContentMargin/Content/Footer.get_index())
 	var profile_started := ProfileLogScript.begin_usec()
 	var buckets := {}
@@ -2159,6 +2168,7 @@ func _configure_battle_keyboard_focus(force: bool = false) -> void:
 		_retreat_button,
 		_surrender_button,
 		_speed_normal_button,
+		_compact_speed_picker,
 		_speed_fast_button,
 		_speed_instant_button,
 		_save_slot_picker,
@@ -2328,6 +2338,7 @@ func _refresh_action_buttons() -> void:
 
 func _refresh_speed_buttons() -> void:
 	var speed := BattleRules.battle_presentation_speed(_session)
+	if _compact_speed_picker != null: _compact_speed_picker.select(maxi(0, ["normal", "fast", "instant"].find(speed)))
 	var buttons := {
 		BattleRules.PRESENTATION_SPEED_NORMAL: _speed_normal_button,
 		BattleRules.PRESENTATION_SPEED_FAST: _speed_fast_button,
@@ -4108,6 +4119,7 @@ func _apply_responsive_layout() -> void:
 	_system_pad.add_theme_constant_override("margin_bottom", 0 if compact_layout else 6)
 	_system_body_label.visible = not compact_layout and not _system_body_label.text.strip_edges().is_empty()
 	_speed_bar.visible = not compact_layout
+	if _compact_speed_picker != null: _compact_speed_picker.visible = compact_layout
 	_prev_target_button.visible = true
 	_next_target_button.visible = true
 	_battle_board_view.custom_minimum_size = Vector2(520.0, 240.0) if compact_layout else Vector2(620.0, 300.0)
