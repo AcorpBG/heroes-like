@@ -22,9 +22,13 @@ Rules:
 
 ## Current Tactical State
 
+### Validation Artifact Lifecycle
+
+`tooling-validation-artifact-lifecycle-20260917` — completed, owner-approved Phase 6 follow-up. The 26 disposable non-RMG historical reports are optional by default and their absence is disclosed without claiming runtime success; strict presence mode remains available. Source/content/provenance and present-report predicates are unchanged. All 11 focused tests, structural preservation review, full repository validation and diff hygiene pass. Requirements/results: `docs/validation-artifact-lifecycle.md`. Retaliation's repository-only blocker is resolved. No runtime, art, native RMG, packaging or unrelated cleanup changes; temporary fixtures self-cleaned and no exports/evidence retained.
+
 ### Retaliation Casualty Playback
 
-`bugfix-retaliation-casualty-playback-20260917` — blocked on full repository validation; runtime fix and focused/platform acceptance implemented. Both attack paths now capture retaliation before damage: alive → one death → persistent corpse, with unchanged deterministic combat/save state. Source/Windows 660 checks each, rendered Linux 685, Fast/reduced 682, existing readability 39 and both official exports/parity pass. `validate_repo.py` fails only on 26 historical smoke reports removed under the owner retention rule; resolving that validator/report-lifecycle conflict is a separate follow-up, not a combat change. Targets: `BattleRules.gd`, Python-owned regression. Requirements/results: `docs/retaliation-casualty-playback.md`. No art, balance, RNG, save schema or RMG changes. Remove disposable non-RMG test artifacts; preserve caches/saves and their map dependencies.
+`bugfix-retaliation-casualty-playback-20260917` — completed. Both attack paths capture retaliation before damage: alive → one death → persistent corpse, with unchanged deterministic combat/save state. Source/Windows 660 checks each, rendered Linux 685, Fast/reduced 682, existing readability 39 and both official exports/parity pass. Full repository validation now passes after the owner-approved artifact-lifecycle follow-up above. Targets: `BattleRules.gd`, Python-owned regression. Requirements/results: `docs/retaliation-casualty-playback.md`. No art, balance, RNG, save schema or RMG changes. Disposable outputs cleaned; caches/saves and their map dependencies preserved.
 
 ### Complete Battle Unit Animation and Size
 

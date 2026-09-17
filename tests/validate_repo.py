@@ -18,6 +18,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT_DIR = ROOT / "content"
 PROGRESS_PATH = ROOT / "ops" / "progress.json"
+REQUIRE_HISTORICAL_SMOKE_REPORTS = False
+MISSING_HISTORICAL_SMOKE_REPORTS: set[Path] = set()
 CONTENT_SERVICE_PATH = ROOT / "scripts" / "autoload" / "ContentService.gd"
 CONTENT_RUNTIME_OVERWORLD_FAMILY_ALLOWLIST_DOC_PATH = ROOT / "docs" / "content-runtime-overworld-family-allowlist-report.md"
 NEUTRAL_DWELLINGS_PATH = CONTENT_DIR / "neutral_dwellings.json"
@@ -2089,6 +2091,32 @@ OVERWORLD_OBJECT_SAFE_REFRESH_RULES = {"none", "daily_income", "weekly_growth", 
 def load_json(path: Path) -> dict:
     with path.open("r", encoding="utf-8") as handle:
         return json.load(handle)
+
+
+def historical_smoke_report_available(path: Path, errors: list[str], missing_message: str) -> bool:
+    """Only disposable historical output is optional, never its source checks.
+
+    A missing report is not evidence of a passing runtime test. Present reports
+    still enter their original result assertions; invalid paths fail closed.
+    Native RMG recovery evidence does not use this policy.
+    """
+    if path.is_file():
+        return True
+    if path.exists() or path.is_symlink():
+        errors.append(f"Historical smoke report is not a readable regular file: {path}")
+        return False
+    MISSING_HISTORICAL_SMOKE_REPORTS.add(path)
+    if REQUIRE_HISTORICAL_SMOKE_REPORTS:
+        errors.append(missing_message)
+    return False
+
+
+def print_historical_smoke_report_summary() -> None:
+    if MISSING_HISTORICAL_SMOKE_REPORTS:
+        print(f"Historical smoke reports absent: {len(MISSING_HISTORICAL_SMOKE_REPORTS)}. "
+              "Disposable outputs need not be retained; their runtime smokes were NOT run "
+              "or counted as passed by this validator. "
+              "Use --require-historical-smoke-reports to require these outputs.")
 
 
 def load_python_module(path: Path, module_name: str):
@@ -80146,8 +80174,7 @@ def validate_six_marchland_seats(errors: list[str]) -> None:
             ensure(token in text, errors, f"Six Marchland Seats consolidated smoke is missing proof token: {token}")
     if smoke_scene.is_file():
         ensure("res://tests/six_marchland_seats_smoke.gd" in smoke_scene.read_text(encoding="utf-8"), errors, "Six Marchland Seats smoke scene lost its exact script")
-    ensure(smoke_report.is_file(), errors, "Six Marchland Seats consolidated smoke report is missing")
-    if smoke_report.is_file():
+    if historical_smoke_report_available(smoke_report, errors, "Six Marchland Seats consolidated smoke report is missing"):
         report = load_json(smoke_report)
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("direct_battle_victory_count") == 24 and report.get("counterstroke_battle_victory_count") == 6 and report.get("named_rival_count") == 6 and report.get("town_build_count") == 6 and report.get("town_recruit_count") == 6 and report.get("exact_scenic_art_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_round_trip_count") == 6 and report.get("map_capture_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(report.get("rows", [])) == 6, errors, "Six Marchland Seats consolidated smoke report is not fully green")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
@@ -80234,8 +80261,7 @@ def validate_six_marchland_local_retinues(errors: list[str]) -> None:
             ensure(token in smoke_text, errors, f"Marchland Local Retinues smoke is missing proof token: {token}")
     if smoke_scene.is_file():
         ensure("res://tests/six_marchland_local_retinues_smoke.gd" in smoke_scene.read_text(encoding="utf-8"), errors, "Marchland Local Retinues smoke scene lost its exact script")
-    ensure(smoke_report.is_file(), errors, "Marchland Local Retinues consolidated smoke report is missing")
-    if smoke_report.is_file():
+    if historical_smoke_report_available(smoke_report, errors, "Marchland Local Retinues consolidated smoke report is missing"):
         report = load_json(smoke_report)
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exclusive_route_count") == 6 and report.get("five_stack_company_count") == 6 and report.get("town_build_count") == 6 and report.get("town_recruit_count") == 6 and report.get("battle_victory_count") == 6 and report.get("battle_art_count") == 6 and report.get("save_round_trip_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(report.get("rows", [])) == 6, errors, "Marchland Local Retinues consolidated smoke report is not fully green")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
@@ -80329,8 +80355,7 @@ def validate_six_marchland_warworks(errors: list[str]) -> None:
     for token in ("SIX_MARCHLAND_WARWORKS_SMOKE", "TownRules.build_active_town", "TownRules.recruit_active_town", "BattleRulesScript.create_battle_payload", "validation_unit_art_summary", "ScenarioRulesScript.evaluate_session", "warworks_contact_sheet.png", '"single_consolidated_smoke":true'):
         ensure(token in smoke_text, errors, f"Marchland Warworks smoke is missing proof token: {token}")
     ensure_scene_nodes(smoke_scene.read_text(encoding="utf-8"), errors, smoke_scene.name, [("SixMarchlandWarworksSmoke", "Node")])
-    ensure(smoke_report.is_file(), errors, "Marchland Warworks consolidated smoke report is missing")
-    if smoke_report.is_file():
+    if historical_smoke_report_available(smoke_report, errors, "Marchland Warworks consolidated smoke report is missing"):
         report = load_json(smoke_report)
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exclusive_route_count") == 6 and report.get("five_stack_company_count") == 6 and report.get("town_build_count") == 6 and report.get("weekly_growth_count") == 6 and report.get("town_recruit_count") == 6 and report.get("battle_victory_count") == 18 and report.get("battle_art_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_round_trip_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(report.get("rows", [])) == 6, errors, "Marchland Warworks consolidated smoke report is not fully green")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
@@ -80423,8 +80448,7 @@ def validate_six_marchland_retinue_heirloom_trials(errors: list[str]) -> None:
     for token in ("SIX_MARCHLAND_RETINUE_HEIRLOOM_TRIALS_SMOKE", "BattleAutoResolveRulesScript.resolve_active_battle", "TownRules.build_active_town", "TownRules.recruit_active_town", "OverworldRules.collect_active_artifact", "ArtifactRulesScript.aggregate_bonuses", "validation_tile_presentation", "heirloom_contact_sheet.png", '"single_consolidated_smoke":true'):
         ensure(token in smoke_text, errors, f"Marchland heirloom consolidated smoke is missing proof token: {token}")
     ensure_scene_nodes(smoke_scene.read_text(encoding="utf-8"), errors, smoke_scene.name, [("SixMarchlandRetinueHeirloomTrialsSmoke", "Node")])
-    ensure(smoke_report.is_file(), errors, "Marchland heirloom consolidated smoke report is missing")
-    if smoke_report.is_file():
+    if historical_smoke_report_available(smoke_report, errors, "Marchland heirloom consolidated smoke report is missing"):
         report = load_json(smoke_report)
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exact_launch_count") == 6 and report.get("battle_victory_count") == 18 and report.get("dwelling_build_count") == 6 and report.get("local_recruit_count") == 6 and report.get("artifact_collection_count") == 6 and report.get("artifact_auto_equip_count") == 6 and report.get("artifact_bonus_exact_count") == 6 and report.get("exact_inventory_art_count") == 6 and report.get("exact_field_art_count") == 6 and report.get("objective_victory_count") == 6 and report.get("save_round_trip_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(report.get("rows", [])) == 6, errors, "Marchland heirloom consolidated smoke report is not fully green")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
@@ -80516,8 +80540,7 @@ def validate_twelve_command_relic_marches(errors: list[str]) -> None:
     for token in ("TWELVE_COMMAND_RELIC_MARCHES_SMOKE", "BattleAutoResolveRulesScript.resolve_active_battle", "OverworldRules.collect_active_artifact", "ArtifactRulesScript.aggregate_bonuses", "validation_tile_presentation", "command_relic_contact_sheet.png", '"single_consolidated_smoke":true'):
         ensure(token in smoke_text, errors, f"Command relic consolidated smoke is missing proof token: {token}")
     ensure_scene_nodes(smoke_scene.read_text(encoding="utf-8"), errors, smoke_scene.name, [("TwelveCommandRelicMarchesSmoke", "Node")])
-    ensure(smoke_report.is_file(), errors, "Command relic consolidated smoke report is missing")
-    if smoke_report.is_file():
+    if historical_smoke_report_available(smoke_report, errors, "Command relic consolidated smoke report is missing"):
         report = load_json(smoke_report)
         ensure(report.get("ok") is True and report.get("case_count") == 12 and report.get("exact_launch_count") == 12 and report.get("battle_victory_count") == 36 and report.get("artifact_collection_count") == 12 and report.get("artifact_auto_equip_count") == 12 and report.get("artifact_bonus_exact_count") == 12 and report.get("exact_inventory_art_count") == 12 and report.get("exact_field_art_count") == 12 and report.get("objective_victory_count") == 12 and report.get("save_round_trip_count") == 12 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(report.get("rows", [])) == 12, errors, "Command relic consolidated smoke report is not fully green")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
@@ -82291,8 +82314,7 @@ def validate_six_field_muster_commission_skirmishes(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_FIELD_MUSTER_COMMISSIONS_ATLAS_NAME" in packaging_text and "field_muster_commissions/field_muster_commissions_atlas.png.import" in packaging_text and "== 21" in packaging_text, errors, f"{packaging_path.name} must audit the field-muster commission atlas inside the expanded eighteen-atlas package set")
-    ensure(report_path.is_file(), errors, "Field-muster commission consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Field-muster commission consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("direct_lead_count") == 6 and report.get("muster_claim_count") == 6 and report.get("battle_victory_count") == 6 and report.get("exact_encounter_art_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("deterministic") and row.get("save_round_trip_exact") for row in rows), errors, "Field-muster commission consolidated smoke report is not fully green")
@@ -82386,8 +82408,7 @@ def validate_six_twin_hold_defense_vigils(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_TWIN_HOLD_DEFENSE_VIGILS_ATLAS_NAME" in packaging_text and "twin_hold_defense_vigils/twin_hold_defense_vigils_atlas.png.import" in packaging_text and "== 21" in packaging_text, errors, f"{packaging_path.name} must audit the compact twin-hold defense atlas")
-    ensure(report_path.is_file(), errors, "Twin-hold consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Twin-hold consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("direct_lead_count") == 6 and report.get("twin_hold_count") == 6 and report.get("pressure_chain_count") == 6 and report.get("battle_victory_count") == 18 and report.get("exact_encounter_art_count") == 6 and report.get("day_twelve_victory_count") == 6 and report.get("lost_hold_defeat_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") for row in rows), errors, "Twin-hold consolidated smoke report is not fully green")
@@ -82487,8 +82508,7 @@ def validate_six_three_relic_pilgrimages(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_THREE_RELIC_PILGRIMAGES_ATLAS_NAME" in packaging_text and "three_relic_pilgrimages/three_relic_pilgrimages_atlas.png.import" in packaging_text and "three_relic_pilgrimages_artifacts/three_relic_pilgrimages_artifacts_atlas.png.import" not in packaging_text and "objects/artifacts/three_relic_pilgrimages/three_relic_pilgrimages_artifacts_atlas.png.import" in packaging_text and "== 21" in packaging_text, errors, f"{packaging_path.name} must audit both compact pilgrimage atlases in the nineteen-atlas package set")
-    ensure(report_path.is_file(), errors, "Three-relic consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Three-relic consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("direct_lead_count") == 6 and report.get("artifact_collection_count") == 18 and report.get("scoped_dependency_count") == 18 and report.get("battle_victory_count") == 18 and report.get("exact_guardian_art_count") == 6 and report.get("exact_artifact_art_count") == 18 and report.get("missing_relic_control_count") == 6 and report.get("transferred_relic_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") for row in rows), errors, "Three-relic consolidated smoke report is not fully green")
@@ -82594,8 +82614,7 @@ def validate_six_triune_arcanum_trials(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_TRIUNE_ARCANUM_TRIALS_ATLAS_NAME" in packaging_text and "triune_arcanum_trials_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the compact triune academy atlas in the expanded resource-site atlas set")
-    ensure(report_path.is_file(), errors, "Triune consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Triune consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("lesson_count") == 18 and report.get("scoped_dependency_count") == 18 and report.get("spell_resolution_count") == 18 and report.get("exact_art_count") == 6 and report.get("missing_spell_control_count") == 6 and report.get("transferred_spell_count") == 6 and report.get("battle_victory_count") == 18 and report.get("scenario_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") for row in rows), errors, "Triune consolidated smoke report is not fully green")
@@ -82662,8 +82681,7 @@ def validate_six_grand_arcanum_convocations(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_UNCROWNED_SOVEREIGN_ROADS_ATLAS_NAME" in text and "uncrowned_sovereign_roads_atlas.png.import" in text and "== 50" in text, errors, f"{packaging_path.name} must audit the Uncrowned Sovereign Roads atlas in the 50-atlas resource-site set")
-    ensure(report_path.is_file(), errors, "Grand Arcanum consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Grand Arcanum consolidated smoke report is missing"):
         report = load_json(report_path)
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("lesson_count") == 18 and report.get("spell_resolution_count") == 18 and report.get("battle_victory_count") == 18 and report.get("scenario_victory_count") == 6 and report.get("single_consolidated_smoke") is True and all(row.get("save_round_trip_exact") for row in report.get("rows", [])), errors, "Grand Arcanum consolidated smoke report is not fully green")
 
@@ -82753,8 +82771,7 @@ def validate_six_great_work_charter_races(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_GREAT_WORK_CHARTER_RACES_ATLAS_NAME" in packaging_text and "great_work_charter_races_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the Great-Work atlas in the expanded resource-site atlas set")
-    ensure(report_path.is_file(), errors, "Great-Work consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Great-Work consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exact_art_count") == 6 and report.get("missing_building_control_count") == 6 and report.get("wrong_owner_control_count") == 6 and report.get("survey_claim_count") == 6 and report.get("survey_guard_victory_count") == 6 and report.get("scoped_dependency_count") == 6 and report.get("production_build_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") and int(row.get("completion_day", 99)) < 24 for row in rows), errors, "Great-Work consolidated smoke report is not fully green")
@@ -82850,8 +82867,7 @@ def validate_six_grand_muster_assemblies(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_GRAND_MUSTER_ASSEMBLIES_ATLAS_NAME" in packaging_text and "grand_muster_assemblies_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the Grand Muster atlas in the expanded resource-site atlas set")
-    ensure(report_path.is_file(), errors, "Grand Muster consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Grand Muster consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exact_art_count") == 6 and report.get("wrong_hero_control_count") == 6 and report.get("below_threshold_control_count") == 6 and report.get("production_recruit_count") == 6 and report.get("production_battle_count") == 18 and report.get("rally_claim_count") == 6 and report.get("split_merge_exact_count") == 6 and report.get("scoped_dependency_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") and int(row.get("completion_day", 99)) < 18 for row in rows), errors, "Grand Muster consolidated smoke report is not fully green")
@@ -82949,8 +82965,7 @@ def validate_six_field_mastery_convocations(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_FIELD_MASTERY_CONVOCATIONS_ATLAS_NAME" in packaging_text and "field_mastery_convocations_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the Field Mastery atlas in the expanded resource-site atlas set")
-    ensure(report_path.is_file(), errors, "Field Mastery consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Field Mastery consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exact_art_count") == 6 and report.get("wrong_hero_control_count") == 6 and report.get("level_three_control_count") == 6 and report.get("pending_choice_control_count") == 6 and report.get("production_claim_count") == 6 and report.get("production_battle_count") == 18 and report.get("specialty_choice_count") == 18 and report.get("scoped_dependency_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") and int(row.get("completion_day", 99)) < 16 for row in rows), errors, "Field Mastery consolidated smoke report is not fully green")
@@ -83043,8 +83058,7 @@ def validate_six_twin_command_field_councils(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_TWIN_COMMAND_FIELD_COUNCILS_ATLAS_NAME" in packaging_text and "twin_command_field_councils_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the Twin Command atlas in the expanded resource-site atlas set")
-    ensure(report_path.is_file(), errors, "Twin Command consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Twin Command consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exact_art_count") == 6 and report.get("missing_partner_control_count") == 6 and report.get("wrong_town_control_count") == 6 and report.get("enemy_owned_town_control_count") == 6 and report.get("wrong_hero_control_count") == 6 and report.get("production_hire_count") == 6 and report.get("production_transfer_count") == 12 and report.get("production_battle_count") == 18 and report.get("production_claim_count") == 6 and report.get("production_capture_count") == 6 and report.get("paired_station_count") == 6 and report.get("scoped_dependency_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") and int(row.get("completion_day", 99)) < 18 for row in rows), errors, "Twin Command consolidated smoke report is not fully green")
@@ -83132,8 +83146,7 @@ def validate_six_relief_route_convoy_runs(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_RELIEF_ROUTE_CONVOY_RELAYS_ATLAS_NAME" in packaging_text and "relief_route_convoy_relays_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the relief-route atlas in the expanded resource-site atlas set")
-    ensure(report_path.is_file(), errors, "Relief-route consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Relief-route consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exact_art_count") == 6 and report.get("initially_pending_count") == 6 and report.get("wrong_site_control_count") == 6 and report.get("wrong_target_control_count") == 6 and report.get("production_claim_count") == 6 and report.get("production_dispatch_count") == 6 and report.get("interception_block_count") == 6 and report.get("production_battle_count") == 18 and report.get("delivery_receipt_count") == 6 and report.get("scoped_dependency_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") and int(row.get("completion_day", 99)) < 16 for row in rows), errors, "Relief-route consolidated smoke report is not fully green")
@@ -83223,8 +83236,7 @@ def validate_six_fogbreak_survey_expeditions(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_FOGBREAK_SURVEY_INSTRUMENTS_ATLAS_NAME" in packaging_text and "fogbreak_survey_instruments_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the Fogbreak atlas in the expanded resource-site atlas set")
-    ensure(report_path.is_file(), errors, "Fogbreak consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Fogbreak consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exact_art_count") == 6 and report.get("initially_pending_count") == 6 and report.get("malformed_fog_control_count") == 6 and report.get("partial_two_instrument_control_count") == 6 and report.get("scoped_dependency_count") == 6 and report.get("production_battle_count") == 18 and report.get("production_claim_count") == 18 and report.get("exploration_threshold_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") and int(row.get("completion_day", 99)) < 15 for row in rows), errors, "Fogbreak consolidated smoke report is not fully green")
@@ -83307,8 +83319,7 @@ def validate_six_frontier_treasury_commissions(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_FRONTIER_TREASURY_OFFICES_ATLAS_NAME" in packaging_text and "frontier_treasury_offices_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the treasury atlas in the expanded resource-site atlas set")
-    ensure(report_path.is_file(), errors, "Frontier treasury consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Frontier treasury consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exact_art_count") == 6 and report.get("initially_pending_count") == 6 and report.get("gold_only_control_count") == 6 and report.get("rare_only_control_count") == 6 and report.get("wrong_rare_control_count") == 6 and report.get("scoped_dependency_count") == 6 and report.get("unrelated_resource_skip_count") == 6 and report.get("production_battle_count") == 18 and report.get("production_claim_count") == 18 and report.get("after_claim_pending_count") == 6 and report.get("controlled_income_crossing_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") and int(row.get("completion_day", 99)) < 12 for row in rows), errors, "Frontier treasury consolidated smoke report is not fully green")
@@ -83390,8 +83401,7 @@ def validate_six_border_oath_standard_seizures(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH,PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_BORDER_OATH_STANDARDS_ATLAS_NAME" in packaging_text and "REQUIRED_BORDER_OATH_CORDONS_ATLAS_NAME" in packaging_text and "border_oath_standards_atlas.png.import" in packaging_text and "border_oath_cordons_atlas.png.import" in packaging_text and "== 47" in packaging_text and "== 21" in packaging_text, errors, f"{packaging_path.name} must audit both Border Oath atlases")
-    ensure(report_path.is_file(), errors, "Border Oath consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Border Oath consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows",[])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exact_standard_art_count") == 6 and report.get("exact_cordon_art_count") == 6 and report.get("initially_pending_count") == 6 and report.get("wrong_site_control_count") == 6 and report.get("two_of_three_pending_count") == 6 and report.get("enemy_recapture_pending_count") == 6 and report.get("scoped_dependency_count") == 6 and report.get("unrelated_resource_skip_count") == 6 and report.get("production_battle_count") == 18 and report.get("production_claim_count") == 18 and report.get("control_objective_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") for row in rows), errors, "Border Oath consolidated smoke report is not fully green")
@@ -83471,8 +83481,7 @@ def validate_six_garrison_warrant_musters(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH,PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_GARRISON_WARRANT_MUSTERS_ATLAS_NAME" in packaging_text and "garrison_warrant_musters_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the expanded resource-site atlas set")
-    ensure(report_path.is_file(), errors, "Garrison Warrant consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Garrison Warrant consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows",[])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exact_art_count") == 6 and report.get("wrong_town_control_count") == 6 and report.get("enemy_owned_town_control_count") == 6 and report.get("hero_carried_control_count") == 6 and report.get("partial_garrison_control_count") == 6 and report.get("production_battle_count") == 18 and report.get("production_claim_count") == 6 and report.get("production_transfer_count") == 18 and report.get("scoped_dependency_count") == 6 and report.get("unrelated_event_skip_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") for row in rows), errors, "Garrison Warrant consolidated smoke report is not fully green")
@@ -83561,8 +83570,7 @@ def validate_six_setbound_regalia_assemblies(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH,PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_SETBOUND_REGALIA_RELIQUARIES_ATLAS_NAME" in packaging_text and "setbound_regalia_reliquaries_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the Setbound Regalia atlas")
-    ensure(report_path.is_file(), errors, "Setbound Regalia consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Setbound Regalia consolidated smoke report is missing"):
         report = load_json(report_path)
         rows = report.get("rows",[])
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("exact_art_count") == 6 and report.get("initially_pending_count") == 6 and report.get("wrong_hero_control_count") == 6 and report.get("inventory_only_control_count") == 6 and report.get("wrong_set_control_count") == 6 and report.get("partial_set_control_count") == 6 and report.get("production_battle_count") == 18 and report.get("artifact_pickup_claim_count") == 12 and report.get("reliquary_claim_count") == 6 and report.get("production_stow_count") == 18 and report.get("production_equip_count") == 18 and report.get("active_set_count") == 6 and report.get("scoped_dependency_count") == 6 and report.get("unrelated_event_skip_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 6 and all(row.get("save_round_trip_exact") for row in rows), errors, "Setbound Regalia consolidated smoke report is not fully green")
@@ -83659,8 +83667,7 @@ def validate_eight_commanders_proving_roads(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_EIGHT_COMMANDERS_PROVING_ROADS_ATLAS_NAME" in packaging_text and "eight_commanders_proving_roads_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the packaged Eight Commanders atlas")
-    ensure(smoke_report_path.is_file(), errors, "Eight Commanders consolidated smoke report is missing")
-    if smoke_report_path.is_file():
+    if historical_smoke_report_available(smoke_report_path, errors, "Eight Commanders consolidated smoke report is missing"):
         report = load_json(smoke_report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 8 and report.get("exact_art_count") == 8 and report.get("wrong_hero_control_count") == 8 and report.get("level_three_control_count") == 8 and report.get("pending_choice_control_count") == 8 and report.get("production_claim_count") == 8 and report.get("production_battle_count") == 24 and report.get("specialty_choice_count") == 24 and report.get("scoped_dependency_count") == 8 and report.get("scenario_victory_count") == 8 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 8 and all(row.get("save_round_trip_exact") and int(row.get("completion_day", 99)) < 16 for row in rows), errors, "Eight Commanders consolidated smoke report is not fully green")
@@ -83749,8 +83756,7 @@ def validate_eight_commander_doctrine_expeditions(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_COMMANDER_DOCTRINE_EXPEDITIONS_ATLAS_NAME" in packaging_text and "commander_doctrine_expeditions_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the packaged Commander Doctrine atlas")
-    ensure(smoke_report_path.is_file(), errors, "Commander Doctrine consolidated smoke report is missing")
-    if smoke_report_path.is_file():
+    if historical_smoke_report_available(smoke_report_path, errors, "Commander Doctrine consolidated smoke report is missing"):
         report = load_json(smoke_report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 8 and report.get("exact_launch_count") == 8 and report.get("production_battle_count") == 32 and report.get("production_claim_count") == 8 and report.get("exact_art_count") == 8 and report.get("objective_victory_count") == 8 and report.get("save_round_trip_count") == 8 and report.get("capture_count") == 8 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 8 and all(row.get("save_round_trip") and int(row.get("completion_day", 99)) < 19 for row in rows), errors, "Commander Doctrine consolidated smoke report is not fully green")
@@ -83845,8 +83851,7 @@ def validate_twelve_marchland_warband_musters(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text = packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_MARCHLAND_WARBAND_MUSTERS_ATLAS_NAME" in packaging_text and "marchland_warband_musters_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the packaged Marchland Warband atlas")
-    ensure(smoke_report_path.is_file(), errors, "Marchland Warband consolidated smoke report is missing")
-    if smoke_report_path.is_file():
+    if historical_smoke_report_available(smoke_report_path, errors, "Marchland Warband consolidated smoke report is missing"):
         report = load_json(smoke_report_path)
         rows = report.get("rows", [])
         ensure(report.get("ok") is True and report.get("case_count") == 12 and report.get("exact_launch_count") == 12 and report.get("production_battle_count") == 48 and report.get("production_claim_count") == 12 and report.get("exact_art_count") == 12 and report.get("objective_victory_count") == 12 and report.get("save_round_trip_count") == 12 and report.get("capture_count") == 12 and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True and len(rows) == 12 and all(row.get("save_round_trip") and int(row.get("completion_day", 99)) < 21 for row in rows), errors, "Marchland Warband consolidated smoke report is not fully green")
@@ -83917,8 +83922,7 @@ def validate_twelve_marchland_grand_route_operations(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH,PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text=packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_MARCHLAND_GRAND_ROUTE_OPERATIONS_ATLAS_NAME" in packaging_text and "marchland_grand_route_operations_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the packaged grand-route atlas")
-    ensure(smoke_report_path.is_file(), errors, "Grand-route consolidated smoke report is missing")
-    if smoke_report_path.is_file():
+    if historical_smoke_report_available(smoke_report_path, errors, "Grand-route consolidated smoke report is missing"):
         report=load_json(smoke_report_path); smoke_rows=report.get("rows",[])
         ensure(report.get("ok") is True and report.get("case_count")==12 and report.get("exact_launch_count")==12 and report.get("production_battle_count")==12 and report.get("production_claim_count")==12 and report.get("exact_art_count")==12 and report.get("objective_victory_count")==12 and report.get("save_round_trip_count")==12 and report.get("capture_count")==12 and report.get("save_version")==9 and report.get("single_consolidated_smoke") is True and len(smoke_rows)==12 and all(row.get("save_round_trip") and int(row.get("completion_day",99))<28 for row in smoke_rows), errors, "Grand-route consolidated smoke report is not fully green")
 
@@ -83991,8 +83995,7 @@ def validate_ten_commander_dominion_sieges(errors: list[str]) -> None:
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH,PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
         packaging_text=packaging_path.read_text(encoding="utf-8")
         ensure("REQUIRED_COMMANDER_DOMINION_SIEGES_ATLAS_NAME" in packaging_text and "commander_dominion_sieges_atlas.png.import" in packaging_text and "== 47" in packaging_text, errors, f"{packaging_path.name} must audit the packaged commander dominion atlas")
-    ensure(smoke_report_path.is_file(), errors, "Commander dominion consolidated smoke report is missing")
-    if smoke_report_path.is_file():
+    if historical_smoke_report_available(smoke_report_path, errors, "Commander dominion consolidated smoke report is missing"):
         report=load_json(smoke_report_path); smoke_rows=report.get("rows",[])
         ensure(report.get("ok") is True and report.get("case_count")==10 and report.get("exact_launch_count")==10 and report.get("production_battle_count")==10 and report.get("production_claim_count")==10 and report.get("town_capture_count")==10 and report.get("exact_art_count")==10 and report.get("objective_victory_count")==10 and report.get("save_round_trip_count")==10 and report.get("capture_count")==10 and report.get("save_version")==9 and report.get("single_consolidated_smoke") is True and len(smoke_rows)==10 and all(row.get("save_round_trip") and int(row.get("completion_day",99))<26 for row in smoke_rows), errors, "Commander dominion consolidated smoke report is not fully green")
 
@@ -84527,8 +84530,7 @@ def validate_uncrowned_circuit_campaign(errors: list[str]) -> None:
         ensure(token in smoke_text, errors, f"Uncrowned consolidated smoke is missing exact proof: {token}")
     for token in ('"live_build_count": 6', '"live_recruit_count": 6', '"production_battle_count": 18', '"live_throne_claim_count": 6', '"save_round_trip_count": 6'):
         ensure(token in launcher_text, errors, f"Uncrowned smoke launcher is missing exact expectation: {token}")
-    ensure(report_path.is_file(), errors, "Uncrowned Circuit consolidated smoke report is missing")
-    if report_path.is_file():
+    if historical_smoke_report_available(report_path, errors, "Uncrowned Circuit consolidated smoke report is missing"):
         report = load_json(report_path)
         ensure(report.get("ok") is True and report.get("case_count") == 6 and report.get("live_build_count") == 6 and report.get("live_recruit_count") == 6 and report.get("production_battle_count") == 18 and report.get("live_throne_claim_count") == 6 and report.get("witness_handoff_count") == 6 and report.get("scenario_victory_count") == 6 and report.get("save_round_trip_count") == 6 and report.get("campaign_complete") is True and report.get("save_version") == 9 and report.get("single_consolidated_smoke") is True, errors, "Uncrowned Circuit consolidated gameplay/art/campaign/save smoke is not fully green")
     for packaging_path in (PACKAGING_LINUX_EXPORT_SMOKE_SCRIPT_PATH, PACKAGING_WINDOWS_EXPORT_SMOKE_SCRIPT_PATH):
@@ -84941,7 +84943,9 @@ def validate_overworld_scenery_animation(errors: list[str]) -> None:
 
 
 def main() -> int:
+    global REQUIRE_HISTORICAL_SMOKE_REPORTS
     parser = argparse.ArgumentParser(description="Validate repository content and scaffolding.")
+    parser.add_argument("--require-historical-smoke-reports", action="store_true", help="Require the 26 legacy non-RMG content smoke outputs; does not execute their runtime tests.")
     parser.add_argument("--economy-resource-report", action="store_true", help="Print the opt-in economy/resource compatibility report.")
     parser.add_argument("--economy-resource-report-json", type=str, default="", help="Write the opt-in economy/resource compatibility report as JSON.")
     parser.add_argument("--market-faction-cost-report", action="store_true", help="Print the opt-in bounded market/faction-cost hook report.")
@@ -84971,6 +84975,8 @@ def main() -> int:
     parser.add_argument("--animation-validation-smoke-report-json", type=str, default="", help="Write the opt-in consolidated animation validation smoke harness report as JSON.")
     args = parser.parse_args()
 
+    REQUIRE_HISTORICAL_SMOKE_REPORTS = args.require_historical_smoke_reports
+    MISSING_HISTORICAL_SMOKE_REPORTS.clear()
     errors: list[str] = []
     validate_overworld_scenery_animation(errors)
     ui_frame_path = ROOT / "art/ui/runtime/shared/hud_frame_ornate.png"
@@ -85360,11 +85366,13 @@ def main() -> int:
         errors.extend(strict_neutral_encounter_errors)
 
     if errors:
+        print_historical_smoke_report_summary()
         print("VALIDATION FAILED")
         for error in errors:
             print(f"- {error}")
         return 1
 
+    print_historical_smoke_report_summary()
     print("VALIDATION PASSED")
     print("- content graph is internally consistent")
     print("- campaign content files, chapter wiring, and multi-arc breadth are present")
