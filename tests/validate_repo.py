@@ -64182,6 +64182,23 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         "spell_veil_drowned_bell_verdict": "vfx_spell_veil_drowned_bell_verdict",
         "spell_old_measure_unbroken_meridian": "vfx_spell_old_measure_unbroken_meridian",
     }
+    # The original 53 exact identities remain locked above. The owner-directed
+    # batch adds 44 explicit spell owners backed by 21 school/effect paintings.
+    try:
+        variety_spec = importlib.util.spec_from_file_location("spell_variety_validation", ROOT / "tools/prepare_spell_variety_assets.py")
+        variety_module = importlib.util.module_from_spec(variety_spec)
+        variety_spec.loader.exec_module(variety_module)
+        variety_module.prepare(check=True)
+        variety_briefs = json.loads((ROOT / "art/battle/source/generated/spell_variety/briefs.json").read_text())
+        ensure(variety_briefs.get("generation_mode") == "built_in_image_gen", errors, "spell variety must retain original built-in generation provenance")
+        for family in variety_briefs["families"]:
+            for spell_id in family["spell_ids"]:
+                cue_id = "vfx_" + spell_id
+                ensure(spell_id not in expected_spell_vfx_cues, errors, f"spell variety must not replace prior exact identity {spell_id}")
+                expected_spell_vfx_cues[spell_id] = cue_id
+                required_battle_vfx_cues[cue_id] = (f"family_{family['id']}.png", "spell_target")
+    except (OSError, ValueError, KeyError, TypeError, ImportError) as exc:
+        errors.append(f"Spell variety source/runtime/provenance validation failed: {exc}")
     battle_vfx_cues = {}
     if BATTLE_VFX_MANIFEST_PATH.exists():
         battle_vfx_manifest = json.loads(BATTLE_VFX_MANIFEST_PATH.read_text(encoding="utf-8"))
@@ -64190,8 +64207,8 @@ def validate_unit_art_assets(errors: list[str]) -> None:
         ensure(isinstance(battle_vfx_cues, dict), errors, "battle_vfx_manifest.json cues must be an object")
         spell_vfx_cues = battle_vfx_manifest.get("spell_cues", {})
         ensure(isinstance(spell_vfx_cues, dict), errors, "battle_vfx_manifest.json spell_cues must be an object")
-        ensure(spell_vfx_cues == expected_spell_vfx_cues, errors, "battle_vfx_manifest.json must map exactly fifty-three Battle spells to exact VFX cues")
-        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must map exactly the selected eight core, fifty-four spell, and six state/path Battle cues")
+        ensure(spell_vfx_cues == expected_spell_vfx_cues and len(spell_vfx_cues) == 97, errors, "battle_vfx_manifest.json must map all 97 Battle spells explicitly with no authored Command Ward fallback")
+        ensure(set(battle_vfx_cues) == set(required_battle_vfx_cues), errors, "battle_vfx_manifest.json must retain core/state cues and all 97 exact spell owners")
         observed_vfx_paths = set()
         observed_vfx_hashes = set()
         for cue_id, (filename, render_mode) in required_battle_vfx_cues.items():
@@ -64202,7 +64219,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
             ensure(cue.get("render_mode") == render_mode, errors, f"battle VFX cue {cue_id} must use render mode {render_mode}")
             ensure(float(cue.get("scale", 0.0)) > 0.0, errors, f"battle VFX cue {cue_id} needs a positive scale")
             observed_vfx_paths.add(expected_path)
-        ensure(len(observed_vfx_paths) == 68, errors, "battle VFX asset layer must use exactly eight core, fifty-four spell, and six distinct state/path textures")
+        ensure(len(observed_vfx_paths) == 89, errors, "battle VFX must retain 68 original textures and add 21 distinct school/effect-family paintings")
         for texture_path in sorted(observed_vfx_paths):
             disk_path = ROOT / texture_path.removeprefix("res://")
             ensure(disk_path.exists(), errors, f"battle VFX texture is missing: {texture_path}")
@@ -64213,7 +64230,7 @@ def validate_unit_art_assets(errors: list[str]) -> None:
                 observed_vfx_hashes.add(hashlib.sha256(disk_path.read_bytes()).hexdigest())
                 import_path = Path(str(disk_path) + ".import")
                 ensure(import_path.exists(), errors, f"battle VFX texture import metadata is missing: {texture_path}")
-        ensure(len(observed_vfx_hashes) == 68, errors, "all 68 Battle VFX textures must remain byte-distinct")
+        ensure(len(observed_vfx_hashes) == 89, errors, "all 89 Battle VFX textures must remain byte-distinct")
         for spell_id, cue_id in expected_spell_vfx_cues.items():
             cue = battle_vfx_cues.get(cue_id, {}) if isinstance(battle_vfx_cues, dict) else {}
             ensure(cue.get("spell_id") == spell_id, errors, f"battle spell VFX cue {cue_id} must retain exact owner {spell_id}")

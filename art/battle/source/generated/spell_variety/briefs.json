@@ -1,0 +1,241 @@
+{
+  "schema": "spell_variety_briefs_v1",
+  "slice_id": "vfx-spell-effect-variety-20260917",
+  "generation_mode": "built_in_image_gen",
+  "shared_prompt": "Use case: stylized-concept. Asset type: original transparent 2D tactical battle spell VFX sprite for Aurelion Reach. Hand-painted high-quality fantasy effect, crisp material silhouettes readable when reduced to 96 pixels. One centered effect only, square canvas, all tips contained within the central 75 percent and generous fully transparent margins. Genuinely transparent RGBA background, preserve fine alpha. Keep the central target area substantially open so a unit remains readable beneath it. No characters, landscape, ground plane, solid backdrop, UI icon medallion, decorative frame, lettering, numbers, readable runes, logos, checkerboard or watermark. Original design, no copied game art. Subject: ",
+  "families": [
+    {
+      "id": "beacon_advance",
+      "school_id": "beacon",
+      "effect_type": "attack_buff",
+      "motion_profile": "empower",
+      "spell_ids": [
+        "spell_lantern_phalanx",
+        "spell_beacon_column_charge_11",
+        "spell_beacon_roadward_charge_23"
+      ],
+      "prompt_subject": "Three upright spectral bronze pike tips with tiny hooded amber signal lanterns form a forward-opening wedge; short gold pennant-like light trails flare upward at either side. This is a temporary strengthening spell apparition, not a physical object or heraldic badge."
+    },
+    {
+      "id": "beacon_signal",
+      "school_id": "beacon",
+      "effect_type": "initiative_buff",
+      "motion_profile": "haste",
+      "spell_ids": [
+        "spell_beacon_roadward_signal_07",
+        "spell_beacon_crown_signal_19"
+      ],
+      "prompt_subject": "A flowing diagonal relay of three tiny gold-white lantern flares connected by tapered warm luminous ribbons, like a command signal speeding from one company to the next. Dynamic open-ended sweep, no enclosing ring."
+    },
+    {
+      "id": "beacon_protection",
+      "school_id": "beacon",
+      "effect_type": "defense_buff",
+      "motion_profile": "protection",
+      "spell_ids": [
+        "spell_beacon_bell_ward_09",
+        "spell_beacon_dawn_ward_21"
+      ],
+      "prompt_subject": "Three translucent bronze-and-ivory shield segments assemble into an open protective half-shell; small hooded lanterns along its rim illuminate the edges, leaving the central protected space mostly transparent. Distinct tall defensive silhouette."
+    },
+    {
+      "id": "mire_drum",
+      "school_id": "mire",
+      "effect_type": "initiative_buff",
+      "motion_profile": "haste",
+      "spell_ids": [
+        "spell_mire_dusk_drum_06",
+        "spell_mire_bog_drum_18"
+      ],
+      "prompt_subject": "A low reed-bound spectral war drum sends three broken ripples of teal-black fen water sweeping upward and outward, with a few gold wet reed flecks. Open traveling rhythm trails, no circular magic seal or solid ground."
+    },
+    {
+      "id": "mire_frenzy",
+      "school_id": "mire",
+      "effect_type": "attack_buff",
+      "motion_profile": "empower",
+      "spell_ids": [
+        "spell_mire_brine_frenzy_08",
+        "spell_mire_silt_frenzy_20"
+      ],
+      "prompt_subject": "Two crescent tusk-like surges of dark teal water rise fiercely around an empty center, with copper-red swamp sparks and torn reed tips. A contained predatory strengthening surge; no monster, face, skull or solid base."
+    },
+    {
+      "id": "mire_snare",
+      "school_id": "mire",
+      "effect_type": "control_enemy",
+      "motion_profile": "binding",
+      "spell_ids": [
+        "spell_mire_leech_snare_10",
+        "spell_mire_dusk_snare_22"
+      ],
+      "prompt_subject": "Wet black-green reeds with hooked root ends twist into a low open snare, three flexible tendrils reaching inward around an empty space; pale marsh droplets hang from the bends. An irregular restraining silhouette, not a round shield or spell icon."
+    },
+    {
+      "id": "lens_facets",
+      "school_id": "lens",
+      "effect_type": "defense_buff",
+      "motion_profile": "protection",
+      "spell_ids": [
+        "spell_lens_glass_facet_08"
+      ],
+      "prompt_subject": "Five large translucent blue-white cut-glass facets form an open protective shell around a clear hollow center; brushed silver edge highlights and a few fine amber refractions. Shields made of light and glass, no gems on pedestals, no opaque center."
+    },
+    {
+      "id": "lens_focus",
+      "school_id": "lens",
+      "effect_type": "attack_buff",
+      "motion_profile": "empower",
+      "spell_ids": [
+        "spell_lens_focus_array_14",
+        "spell_lens_aurora_array_26"
+      ],
+      "prompt_subject": "Three slender silver crystal wedges focus converging white-blue rays into an upward striking flare, with a few violet aurora ribbons along the outer edges. An open angular strengthening effect with large transparent gaps, no enclosing circle."
+    },
+    {
+      "id": "lens_harmonics",
+      "school_id": "lens",
+      "effect_type": "initiative_buff",
+      "motion_profile": "haste",
+      "spell_ids": [
+        "spell_lens_array_chorus_22"
+      ],
+      "prompt_subject": "Three sweeping parallel ribbons of blue-white refracted light climb diagonally through suspended thin glass shards; the ribbons have staggered crests like a rising musical rhythm. Elegant flowing motion silhouette, no notes or symbols."
+    },
+    {
+      "id": "root_growth",
+      "school_id": "root",
+      "effect_type": "attack_buff",
+      "motion_profile": "empower",
+      "spell_ids": [
+        "spell_root_branch_bloom_14",
+        "spell_root_loam_bloom_26"
+      ],
+      "prompt_subject": "Two living brown-green branch arcs bend upward around an empty center, budding leaves and warm golden sap sparks opening at their tips, conveying a surge of elastic strength. No tree trunk, soil, pot, floor or emblem."
+    },
+    {
+      "id": "root_briars",
+      "school_id": "root",
+      "effect_type": "control_enemy",
+      "motion_profile": "binding",
+      "spell_ids": [
+        "spell_root_bloom_briar_04",
+        "spell_root_wild_briar_16",
+        "spell_root_green_briar_28"
+      ],
+      "prompt_subject": "Four hooked thorny briar tendrils spring upward and inward from the outer corners of a low open cage, with tiny moss-green buds and warm bark edges. Sharp irregular grasping silhouette and a clear hollow target space, no tree or solid ground."
+    },
+    {
+      "id": "furnace_heat",
+      "school_id": "furnace",
+      "effect_type": "attack_buff",
+      "motion_profile": "empower",
+      "spell_ids": [
+        "spell_heat_rite",
+        "spell_furnace_brass_rite_07",
+        "spell_furnace_kiln_rite_19"
+      ],
+      "prompt_subject": "Two narrow controlled red-orange tongues of forge heat and white-hot sparks climb around floating brass slivers, opening upward from a hollow center. Crisp molten edge accents and charcoal cinders; no circular seal, furnace machine or full-canvas smoke."
+    },
+    {
+      "id": "furnace_armor",
+      "school_id": "furnace",
+      "effect_type": "defense_buff",
+      "motion_profile": "protection",
+      "spell_ids": [
+        "spell_furnace_ash_mantle_09",
+        "spell_furnace_rivet_mantle_21"
+      ],
+      "prompt_subject": "Three curved quenched iron armor plates with bronze rivets assemble into an open protective half-shell, thin dull orange heat remaining only along their seams; a few falling gray ash flecks. Hollow center, clearly protective rather than a clamp."
+    },
+    {
+      "id": "furnace_bellows",
+      "school_id": "furnace",
+      "effect_type": "initiative_buff",
+      "motion_profile": "haste",
+      "spell_ids": [
+        "spell_furnace_foundry_bellows_11",
+        "spell_furnace_brass_bellows_23"
+      ],
+      "prompt_subject": "Three narrow tapered jets of white steam and warm gold sparks issue diagonally from two small hovering brass vent slivers; a quick staggered rhythm of pressure pulses. Open sweeping silhouette, no complete machine or thick smoke backdrop."
+    },
+    {
+      "id": "furnace_clamps",
+      "school_id": "furnace",
+      "effect_type": "control_enemy",
+      "motion_profile": "clamp",
+      "spell_ids": [
+        "spell_furnace_slag_clamp_15",
+        "spell_furnace_foundry_clamp_27"
+      ],
+      "prompt_subject": "Two heavy crescent-shaped black iron pressure jaws approach an empty central gap from opposite sides; glowing molten-orange inner seams, small broken slag chips and subtle steam wisps. Readable opposing mechanical restraint, no closed circle or whole machine."
+    },
+    {
+      "id": "veil_undertow",
+      "school_id": "veil",
+      "effect_type": "initiative_buff",
+      "motion_profile": "haste",
+      "spell_ids": [
+        "spell_veil_salt_step_06",
+        "spell_veil_obituary_step_18"
+      ],
+      "prompt_subject": "Three long thin flowing silver-blue sea-mist streamers trail diagonally, their edges breaking into pale salt droplets and tiny spectral bell glimmers. An open fast undertow sweep with a transparent wake, no water plane or ghost character."
+    },
+    {
+      "id": "veil_fogbind",
+      "school_id": "veil",
+      "effect_type": "control_enemy",
+      "motion_profile": "fogbind",
+      "spell_ids": [
+        "spell_veil_tide_fogbind_08",
+        "spell_veil_mourning_fogbind_20"
+      ],
+      "prompt_subject": "Two narrow smoky blue-gray sea-fog coils wind inward around a hollow center, carrying small dark anchor-hook silhouettes and a single tiny hanging mourning bell. Restrictive curling strands, not full-canvas haze, no ghost face or solid ring."
+    },
+    {
+      "id": "veil_shroud",
+      "school_id": "veil",
+      "effect_type": "defense_buff",
+      "motion_profile": "protection",
+      "spell_ids": [
+        "spell_veil_mist_shroud_10",
+        "spell_veil_salt_shroud_22"
+      ],
+      "prompt_subject": "Two translucent pearly silver-blue folds of sea mist arc like a protective open cloak around a clear central space, with a few crystalline salt flecks on the outer hem. Delicate visible folds, no actual cloak wearer, no opaque cloud background."
+    },
+    {
+      "id": "veil_false_strike",
+      "school_id": "veil",
+      "effect_type": "attack_buff",
+      "motion_profile": "empower",
+      "spell_ids": [
+        "spell_veil_wraith_duel_14",
+        "spell_veil_mist_duel_26"
+      ],
+      "prompt_subject": "Two slender opposing spectral cutlass-like blue-white light strokes create a feint and answering strike, with short curling silver mist trails and salt flecks. Hollow angular duelist apparition, no person, skull, shield or enclosing ring."
+    },
+    {
+      "id": "measure_axiom",
+      "school_id": "old_measure",
+      "effect_type": "defense_buff",
+      "motion_profile": "protection",
+      "spell_ids": [
+        "spell_old_measure_tally_axiom_04",
+        "spell_old_measure_measure_axiom_16",
+        "spell_old_measure_proof_axiom_28"
+      ],
+      "prompt_subject": "Three ancient bronze measuring-arm fragments with ivory inlays interlock into a tall open buttress around a hollow center, small warm ivory alignment glints along their edges. A protective architectural proof, no readable marks, text or modern ruler numbers."
+    },
+    {
+      "id": "measure_boundary",
+      "school_id": "old_measure",
+      "effect_type": "control_enemy",
+      "motion_profile": "boundary",
+      "spell_ids": [
+        "spell_old_measure_compass_boundary_06",
+        "spell_old_measure_survey_boundary_18"
+      ],
+      "prompt_subject": "Four antique brass survey stakes with ivory tips lean inward toward an empty center, connected by taut spectral amber measuring threads to imply a closing boundary; irregular chips and patinated edges. Open angular restraint, no flat icon border, readable marks or floor."
+    }
+  ]
+}

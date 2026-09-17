@@ -113,6 +113,9 @@ func run()->void:
 	SettingsService.set_battle_playback_speed_id(OS.get_environment("BATTLE_READABILITY_SPEED"))
 	SettingsService.set_reduced_motion_enabled(false)
 	SettingsService.set_reduced_flashes_enabled(false)
+	# Settings toggles reapply the saved resolution; keep it aligned with captures.
+	SettingsService.set_presentation_mode("windowed")
+	SettingsService.set_presentation_resolution(OS.get_environment("TOWN_OVERLAY_RESOLUTION"))
 	var session=SessionState.set_active_session(fixture())
 	var shell=load("res://scenes/battle/BattleShell.tscn").instantiate()
 	add_child(shell)

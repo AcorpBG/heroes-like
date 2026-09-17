@@ -90,9 +90,9 @@ func _validate_core_vfx_asset_manifest() -> void:
 	var summary: Dictionary = view.validation_vfx_asset_summary()
 	_expect_equal("battle vfx manifest schema", String(summary.get("schema_id", "")), "battle_vfx_manifest_v1")
 	_expect_equal("battle vfx manifest path", String(summary.get("manifest_path", "")), "res://content/battle_vfx_manifest.json")
-	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 68)
-	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 68)
-	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 68)
+	_expect_int("battle vfx mapped cue count", int(summary.get("mapped_cue_count", -1)), 112)
+	_expect_int("battle vfx unique texture count", int(summary.get("unique_texture_count", -1)), 89)
+	_expect_int("battle vfx loaded texture count", int(summary.get("loaded_texture_count", -1)), 89)
 	_expect_equal("battle vfx missing texture paths", JSON.stringify(summary.get("missing_texture_paths", [])), "[]")
 	var core_cue_paths := {
 		"vfx_placeholder_projectile_path": "res://art/battle/vfx/core_projectile_path.png",
@@ -890,8 +890,8 @@ func _validate_spell_specific_cue_identity_fail_closed() -> void:
 			explicit_vfx_count += 1
 			_expect_equal("explicit spell vfx identity %s" % spell_id, actual_vfx, String(explicit_vfx.get(spell_id, "")))
 		elif resolution_type == "effect":
-			shared_effect_vfx_count += 1
-			_expect_equal("shared effect vfx identity %s" % spell_id, actual_vfx, "vfx_spell_command_ward")
+			explicit_vfx_count += 1
+			_expect_equal("school family spell vfx identity %s" % spell_id, actual_vfx, "vfx_" + spell_id)
 		else:
 			generic_only_vfx_count += 1
 			_expect_equal("generic-only spell vfx identity %s" % spell_id, actual_vfx, "")
@@ -905,8 +905,8 @@ func _validate_spell_specific_cue_identity_fail_closed() -> void:
 			generic_only_audio_count += 1
 			_expect_equal("generic-only spell audio identity %s" % spell_id, actual_audio, "")
 	_expect_int("battle spell identity catalog count", battle_spell_ids.size(), 97)
-	_expect_int("battle spell explicit vfx identity count", explicit_vfx_count, 53)
-	_expect_int("battle spell shared effect vfx identity count", shared_effect_vfx_count, 44)
+	_expect_int("battle spell explicit vfx identity count", explicit_vfx_count, 97)
+	_expect_int("battle spell shared effect vfx identity count", shared_effect_vfx_count, 0)
 	_expect_int("battle spell generic-only vfx identity count", generic_only_vfx_count, 0)
 	_expect_int("battle spell explicit audio identity count", explicit_audio_count, 7)
 	_expect_int("battle spell shared effect audio identity count", shared_effect_audio_count, 55)

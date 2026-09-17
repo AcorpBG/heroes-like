@@ -53,7 +53,51 @@
     "spell_root_heartwood_renewal": "vfx_spell_root_heartwood_renewal",
     "spell_furnace_redline_overdrive": "vfx_spell_furnace_redline_overdrive",
     "spell_veil_drowned_bell_verdict": "vfx_spell_veil_drowned_bell_verdict",
-    "spell_old_measure_unbroken_meridian": "vfx_spell_old_measure_unbroken_meridian"
+    "spell_old_measure_unbroken_meridian": "vfx_spell_old_measure_unbroken_meridian",
+    "spell_lantern_phalanx": "vfx_spell_lantern_phalanx",
+    "spell_beacon_column_charge_11": "vfx_spell_beacon_column_charge_11",
+    "spell_beacon_roadward_charge_23": "vfx_spell_beacon_roadward_charge_23",
+    "spell_beacon_roadward_signal_07": "vfx_spell_beacon_roadward_signal_07",
+    "spell_beacon_crown_signal_19": "vfx_spell_beacon_crown_signal_19",
+    "spell_beacon_bell_ward_09": "vfx_spell_beacon_bell_ward_09",
+    "spell_beacon_dawn_ward_21": "vfx_spell_beacon_dawn_ward_21",
+    "spell_mire_dusk_drum_06": "vfx_spell_mire_dusk_drum_06",
+    "spell_mire_bog_drum_18": "vfx_spell_mire_bog_drum_18",
+    "spell_mire_brine_frenzy_08": "vfx_spell_mire_brine_frenzy_08",
+    "spell_mire_silt_frenzy_20": "vfx_spell_mire_silt_frenzy_20",
+    "spell_mire_leech_snare_10": "vfx_spell_mire_leech_snare_10",
+    "spell_mire_dusk_snare_22": "vfx_spell_mire_dusk_snare_22",
+    "spell_lens_glass_facet_08": "vfx_spell_lens_glass_facet_08",
+    "spell_lens_focus_array_14": "vfx_spell_lens_focus_array_14",
+    "spell_lens_aurora_array_26": "vfx_spell_lens_aurora_array_26",
+    "spell_lens_array_chorus_22": "vfx_spell_lens_array_chorus_22",
+    "spell_root_branch_bloom_14": "vfx_spell_root_branch_bloom_14",
+    "spell_root_loam_bloom_26": "vfx_spell_root_loam_bloom_26",
+    "spell_root_bloom_briar_04": "vfx_spell_root_bloom_briar_04",
+    "spell_root_wild_briar_16": "vfx_spell_root_wild_briar_16",
+    "spell_root_green_briar_28": "vfx_spell_root_green_briar_28",
+    "spell_heat_rite": "vfx_spell_heat_rite",
+    "spell_furnace_brass_rite_07": "vfx_spell_furnace_brass_rite_07",
+    "spell_furnace_kiln_rite_19": "vfx_spell_furnace_kiln_rite_19",
+    "spell_furnace_ash_mantle_09": "vfx_spell_furnace_ash_mantle_09",
+    "spell_furnace_rivet_mantle_21": "vfx_spell_furnace_rivet_mantle_21",
+    "spell_furnace_foundry_bellows_11": "vfx_spell_furnace_foundry_bellows_11",
+    "spell_furnace_brass_bellows_23": "vfx_spell_furnace_brass_bellows_23",
+    "spell_furnace_slag_clamp_15": "vfx_spell_furnace_slag_clamp_15",
+    "spell_furnace_foundry_clamp_27": "vfx_spell_furnace_foundry_clamp_27",
+    "spell_veil_salt_step_06": "vfx_spell_veil_salt_step_06",
+    "spell_veil_obituary_step_18": "vfx_spell_veil_obituary_step_18",
+    "spell_veil_tide_fogbind_08": "vfx_spell_veil_tide_fogbind_08",
+    "spell_veil_mourning_fogbind_20": "vfx_spell_veil_mourning_fogbind_20",
+    "spell_veil_mist_shroud_10": "vfx_spell_veil_mist_shroud_10",
+    "spell_veil_salt_shroud_22": "vfx_spell_veil_salt_shroud_22",
+    "spell_veil_wraith_duel_14": "vfx_spell_veil_wraith_duel_14",
+    "spell_veil_mist_duel_26": "vfx_spell_veil_mist_duel_26",
+    "spell_old_measure_tally_axiom_04": "vfx_spell_old_measure_tally_axiom_04",
+    "spell_old_measure_measure_axiom_16": "vfx_spell_old_measure_measure_axiom_16",
+    "spell_old_measure_proof_axiom_28": "vfx_spell_old_measure_proof_axiom_28",
+    "spell_old_measure_compass_boundary_06": "vfx_spell_old_measure_compass_boundary_06",
+    "spell_old_measure_survey_boundary_18": "vfx_spell_old_measure_survey_boundary_18"
   },
   "cues": {
     "vfx_placeholder_projectile_path": {
@@ -65,25 +109,25 @@
     "vfx_placeholder_damage_tick": {
       "texture_path": "res://art/battle/vfx/core_damage_impact.png",
       "render_mode": "impact",
-      "scale": 1.30,
+      "scale": 1.3,
       "base_rotation_degrees": 0.0
     },
     "vfx_placeholder_melee_arc": {
       "texture_path": "res://art/battle/vfx/core_melee_arc.png",
       "render_mode": "slash",
-      "scale": 1.90,
+      "scale": 1.9,
       "base_rotation_degrees": -45.0
     },
     "vfx_placeholder_retaliation_arc": {
       "texture_path": "res://art/battle/vfx/core_retaliation_arc.png",
       "render_mode": "slash",
-      "scale": 1.90,
+      "scale": 1.9,
       "base_rotation_degrees": 135.0
     },
     "vfx_placeholder_cast_anchor": {
       "texture_path": "res://art/battle/vfx/core_cast_anchor.png",
       "render_mode": "ward",
-      "scale": 1.50,
+      "scale": 1.5,
       "base_rotation_degrees": 0.0
     },
     "vfx_placeholder_status_residue": {
@@ -143,7 +187,7 @@
       "spell_id": "spell_prism_bastion",
       "texture_path": "res://art/battle/vfx/spell_prism_bastion.png",
       "render_mode": "spell_target",
-      "scale": 1.60,
+      "scale": 1.6,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_resonant_chorus": {
@@ -183,7 +227,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_bloodwake_drum_source.png",
       "alt_text": "A hide war drum stands inside a crescent surge of dark red bog water and reeds.",
       "render_mode": "spell_target",
-      "scale": 2.20,
+      "scale": 2.2,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_relay_drum": {
@@ -246,7 +290,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_pressure_clause_source.png",
       "alt_text": "Opposing brass piston jaws crush a red-hot riveted core through steam and ember shards.",
       "render_mode": "spell_target",
-      "scale": 2.20,
+      "scale": 2.2,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_obituary_mark": {
@@ -255,7 +299,7 @@
       "source_path": "res://art/battle/source/generated/spell_vfx_school_batch/spell_obituary_mark_source.png",
       "alt_text": "Four black salt-flecked ink strokes close around a cold lantern flame.",
       "render_mode": "spell_target",
-      "scale": 2.10,
+      "scale": 2.1,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_fogwake_step": {
@@ -309,7 +353,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_mire_lowtide_rot_16_source.png",
       "alt_text": "A drained marsh basin cracks around rotten reeds and decay blisters.",
       "render_mode": "spell_target",
-      "scale": 2.20,
+      "scale": 2.2,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_mire_leech_poultice_26": {
@@ -318,7 +362,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_mire_leech_poultice_26_source.png",
       "alt_text": "A glowing herbal poultice draws dark droplets through three curled leech shapes.",
       "render_mode": "spell_target",
-      "scale": 2.10,
+      "scale": 2.1,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_lens_array_ray_06": {
@@ -327,7 +371,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_lens_array_ray_06_source.png",
       "alt_text": "Three aligned prism lenses converge into a sharp white-blue ray.",
       "render_mode": "spell_projectile",
-      "scale": 3.10,
+      "scale": 3.1,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_lens_crown_prism_16": {
@@ -345,7 +389,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_root_canopy_graft_06_source.png",
       "alt_text": "Split branches knit with golden sap beneath unfolding leaves.",
       "render_mode": "spell_target",
-      "scale": 2.10,
+      "scale": 2.1,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_root_canopy_thorn_22": {
@@ -381,7 +425,7 @@
       "source_path": "res://art/battle/source/generated/generic_spell_vfx_batch/spell_veil_lantern_mark_16_source.png",
       "alt_text": "A hooded harbor lantern stamps a dark salt ring with a hard beam.",
       "render_mode": "spell_target",
-      "scale": 2.10,
+      "scale": 2.1,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_veil_moon_mark_28": {
@@ -417,7 +461,7 @@
       "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_beacon_bell_lance_25_source.png",
       "alt_text": "A split bronze bell fires an ivory sound spear through angular shock rings.",
       "render_mode": "spell_projectile",
-      "scale": 3.20,
+      "scale": 3.2,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_mire_silt_rot_04": {
@@ -462,7 +506,7 @@
       "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_lens_halo_ray_18_source.png",
       "alt_text": "A narrow ray passes through a segmented brass halo and crystal lens.",
       "render_mode": "spell_projectile",
-      "scale": 3.10,
+      "scale": 3.1,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_lens_starlens_prism_28": {
@@ -480,7 +524,7 @@
       "source_path": "res://art/battle/source/generated/final_generic_spell_vfx_batch/spell_root_loam_thorn_10_source.png",
       "alt_text": "A root-wood thorn spear drags loam, torn roots, and stones behind it.",
       "render_mode": "spell_projectile",
-      "scale": 3.20,
+      "scale": 3.2,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_root_graft_graft_18": {
@@ -552,7 +596,7 @@
       "source_path": "res://art/battle/source/generated/seven_school_signature_vfx/spell_furnace_redline_overdrive_source.png",
       "alt_text": "Twin brass pressure cylinders drive two horizontal furnace jets through a red-hot limit ring.",
       "render_mode": "spell_target",
-      "scale": 2.30,
+      "scale": 2.3,
       "base_rotation_degrees": 0.0
     },
     "vfx_spell_veil_drowned_bell_verdict": {
@@ -608,6 +652,490 @@
       "render_mode": "path_follow",
       "scale": 1.18,
       "base_rotation_degrees": 180.0
+    },
+    "vfx_spell_lantern_phalanx": {
+      "texture_path": "res://art/battle/vfx/family_beacon_advance.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_lantern_phalanx",
+      "effect_family": "beacon_advance",
+      "motion_profile": "empower",
+      "visual_variant": 0,
+      "visual_strength": 0.99
+    },
+    "vfx_spell_beacon_column_charge_11": {
+      "texture_path": "res://art/battle/vfx/family_beacon_advance.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_beacon_column_charge_11",
+      "effect_family": "beacon_advance",
+      "motion_profile": "empower",
+      "visual_variant": 1,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_beacon_roadward_charge_23": {
+      "texture_path": "res://art/battle/vfx/family_beacon_advance.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_beacon_roadward_charge_23",
+      "effect_family": "beacon_advance",
+      "motion_profile": "empower",
+      "visual_variant": 2,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_beacon_roadward_signal_07": {
+      "texture_path": "res://art/battle/vfx/family_beacon_signal.png",
+      "render_mode": "spell_target",
+      "scale": 2.15,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_beacon_roadward_signal_07",
+      "effect_family": "beacon_signal",
+      "motion_profile": "haste",
+      "visual_variant": 0,
+      "visual_strength": 0.99
+    },
+    "vfx_spell_beacon_crown_signal_19": {
+      "texture_path": "res://art/battle/vfx/family_beacon_signal.png",
+      "render_mode": "spell_target",
+      "scale": 2.15,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_beacon_crown_signal_19",
+      "effect_family": "beacon_signal",
+      "motion_profile": "haste",
+      "visual_variant": 1,
+      "visual_strength": 1.04
+    },
+    "vfx_spell_beacon_bell_ward_09": {
+      "texture_path": "res://art/battle/vfx/family_beacon_protection.png",
+      "render_mode": "spell_target",
+      "scale": 2.55,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_beacon_bell_ward_09",
+      "effect_family": "beacon_protection",
+      "motion_profile": "protection",
+      "visual_variant": 0,
+      "visual_strength": 1.04
+    },
+    "vfx_spell_beacon_dawn_ward_21": {
+      "texture_path": "res://art/battle/vfx/family_beacon_protection.png",
+      "render_mode": "spell_target",
+      "scale": 2.55,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_beacon_dawn_ward_21",
+      "effect_family": "beacon_protection",
+      "motion_profile": "protection",
+      "visual_variant": 1,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_mire_dusk_drum_06": {
+      "texture_path": "res://art/battle/vfx/family_mire_drum.png",
+      "render_mode": "spell_target",
+      "scale": 2.15,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_mire_dusk_drum_06",
+      "effect_family": "mire_drum",
+      "motion_profile": "haste",
+      "visual_variant": 0,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_mire_bog_drum_18": {
+      "texture_path": "res://art/battle/vfx/family_mire_drum.png",
+      "render_mode": "spell_target",
+      "scale": 2.15,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_mire_bog_drum_18",
+      "effect_family": "mire_drum",
+      "motion_profile": "haste",
+      "visual_variant": 1,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_mire_brine_frenzy_08": {
+      "texture_path": "res://art/battle/vfx/family_mire_frenzy.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_mire_brine_frenzy_08",
+      "effect_family": "mire_frenzy",
+      "motion_profile": "empower",
+      "visual_variant": 0,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_mire_silt_frenzy_20": {
+      "texture_path": "res://art/battle/vfx/family_mire_frenzy.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_mire_silt_frenzy_20",
+      "effect_family": "mire_frenzy",
+      "motion_profile": "empower",
+      "visual_variant": 1,
+      "visual_strength": 1.065
+    },
+    "vfx_spell_mire_leech_snare_10": {
+      "texture_path": "res://art/battle/vfx/family_mire_snare.png",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_mire_leech_snare_10",
+      "effect_family": "mire_snare",
+      "motion_profile": "binding",
+      "visual_variant": 0,
+      "visual_strength": 1.065
+    },
+    "vfx_spell_mire_dusk_snare_22": {
+      "texture_path": "res://art/battle/vfx/family_mire_snare.png",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_mire_dusk_snare_22",
+      "effect_family": "mire_snare",
+      "motion_profile": "binding",
+      "visual_variant": 1,
+      "visual_strength": 0.99
+    },
+    "vfx_spell_lens_glass_facet_08": {
+      "texture_path": "res://art/battle/vfx/family_lens_facets.png",
+      "render_mode": "spell_target",
+      "scale": 2.55,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_lens_glass_facet_08",
+      "effect_family": "lens_facets",
+      "motion_profile": "protection",
+      "visual_variant": 0,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_lens_focus_array_14": {
+      "texture_path": "res://art/battle/vfx/family_lens_focus.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_lens_focus_array_14",
+      "effect_family": "lens_focus",
+      "motion_profile": "empower",
+      "visual_variant": 0,
+      "visual_strength": 1.04
+    },
+    "vfx_spell_lens_aurora_array_26": {
+      "texture_path": "res://art/battle/vfx/family_lens_focus.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_lens_aurora_array_26",
+      "effect_family": "lens_focus",
+      "motion_profile": "empower",
+      "visual_variant": 1,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_lens_array_chorus_22": {
+      "texture_path": "res://art/battle/vfx/family_lens_harmonics.png",
+      "render_mode": "spell_target",
+      "scale": 2.15,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_lens_array_chorus_22",
+      "effect_family": "lens_harmonics",
+      "motion_profile": "haste",
+      "visual_variant": 0,
+      "visual_strength": 0.99
+    },
+    "vfx_spell_root_branch_bloom_14": {
+      "texture_path": "res://art/battle/vfx/family_root_growth.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_root_branch_bloom_14",
+      "effect_family": "root_growth",
+      "motion_profile": "empower",
+      "visual_variant": 0,
+      "visual_strength": 1.04
+    },
+    "vfx_spell_root_loam_bloom_26": {
+      "texture_path": "res://art/battle/vfx/family_root_growth.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_root_loam_bloom_26",
+      "effect_family": "root_growth",
+      "motion_profile": "empower",
+      "visual_variant": 1,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_root_bloom_briar_04": {
+      "texture_path": "res://art/battle/vfx/family_root_briars.png",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_root_bloom_briar_04",
+      "effect_family": "root_briars",
+      "motion_profile": "binding",
+      "visual_variant": 0,
+      "visual_strength": 1.04
+    },
+    "vfx_spell_root_wild_briar_16": {
+      "texture_path": "res://art/battle/vfx/family_root_briars.png",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_root_wild_briar_16",
+      "effect_family": "root_briars",
+      "motion_profile": "binding",
+      "visual_variant": 1,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_root_green_briar_28": {
+      "texture_path": "res://art/battle/vfx/family_root_briars.png",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_root_green_briar_28",
+      "effect_family": "root_briars",
+      "motion_profile": "binding",
+      "visual_variant": 2,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_heat_rite": {
+      "texture_path": "res://art/battle/vfx/family_furnace_heat.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_heat_rite",
+      "effect_family": "furnace_heat",
+      "motion_profile": "empower",
+      "visual_variant": 0,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_furnace_brass_rite_07": {
+      "texture_path": "res://art/battle/vfx/family_furnace_heat.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_furnace_brass_rite_07",
+      "effect_family": "furnace_heat",
+      "motion_profile": "empower",
+      "visual_variant": 1,
+      "visual_strength": 0.99
+    },
+    "vfx_spell_furnace_kiln_rite_19": {
+      "texture_path": "res://art/battle/vfx/family_furnace_heat.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_furnace_kiln_rite_19",
+      "effect_family": "furnace_heat",
+      "motion_profile": "empower",
+      "visual_variant": 2,
+      "visual_strength": 1.04
+    },
+    "vfx_spell_furnace_ash_mantle_09": {
+      "texture_path": "res://art/battle/vfx/family_furnace_armor.png",
+      "render_mode": "spell_target",
+      "scale": 2.55,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_furnace_ash_mantle_09",
+      "effect_family": "furnace_armor",
+      "motion_profile": "protection",
+      "visual_variant": 0,
+      "visual_strength": 1.04
+    },
+    "vfx_spell_furnace_rivet_mantle_21": {
+      "texture_path": "res://art/battle/vfx/family_furnace_armor.png",
+      "render_mode": "spell_target",
+      "scale": 2.55,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_furnace_rivet_mantle_21",
+      "effect_family": "furnace_armor",
+      "motion_profile": "protection",
+      "visual_variant": 1,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_furnace_foundry_bellows_11": {
+      "texture_path": "res://art/battle/vfx/family_furnace_bellows.png",
+      "render_mode": "spell_target",
+      "scale": 2.15,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_furnace_foundry_bellows_11",
+      "effect_family": "furnace_bellows",
+      "motion_profile": "haste",
+      "visual_variant": 0,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_furnace_brass_bellows_23": {
+      "texture_path": "res://art/battle/vfx/family_furnace_bellows.png",
+      "render_mode": "spell_target",
+      "scale": 2.15,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_furnace_brass_bellows_23",
+      "effect_family": "furnace_bellows",
+      "motion_profile": "haste",
+      "visual_variant": 1,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_furnace_slag_clamp_15": {
+      "texture_path": "res://art/battle/vfx/family_furnace_clamps.png",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_furnace_slag_clamp_15",
+      "effect_family": "furnace_clamps",
+      "motion_profile": "clamp",
+      "visual_variant": 0,
+      "visual_strength": 1.065
+    },
+    "vfx_spell_furnace_foundry_clamp_27": {
+      "texture_path": "res://art/battle/vfx/family_furnace_clamps.png",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_furnace_foundry_clamp_27",
+      "effect_family": "furnace_clamps",
+      "motion_profile": "clamp",
+      "visual_variant": 1,
+      "visual_strength": 0.99
+    },
+    "vfx_spell_veil_salt_step_06": {
+      "texture_path": "res://art/battle/vfx/family_veil_undertow.png",
+      "render_mode": "spell_target",
+      "scale": 2.15,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_veil_salt_step_06",
+      "effect_family": "veil_undertow",
+      "motion_profile": "haste",
+      "visual_variant": 0,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_veil_obituary_step_18": {
+      "texture_path": "res://art/battle/vfx/family_veil_undertow.png",
+      "render_mode": "spell_target",
+      "scale": 2.15,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_veil_obituary_step_18",
+      "effect_family": "veil_undertow",
+      "motion_profile": "haste",
+      "visual_variant": 1,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_veil_tide_fogbind_08": {
+      "texture_path": "res://art/battle/vfx/family_veil_fogbind.png",
+      "render_mode": "spell_target",
+      "scale": 2.5,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_veil_tide_fogbind_08",
+      "effect_family": "veil_fogbind",
+      "motion_profile": "fogbind",
+      "visual_variant": 0,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_veil_mourning_fogbind_20": {
+      "texture_path": "res://art/battle/vfx/family_veil_fogbind.png",
+      "render_mode": "spell_target",
+      "scale": 2.5,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_veil_mourning_fogbind_20",
+      "effect_family": "veil_fogbind",
+      "motion_profile": "fogbind",
+      "visual_variant": 1,
+      "visual_strength": 1.065
+    },
+    "vfx_spell_veil_mist_shroud_10": {
+      "texture_path": "res://art/battle/vfx/family_veil_shroud.png",
+      "render_mode": "spell_target",
+      "scale": 2.55,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_veil_mist_shroud_10",
+      "effect_family": "veil_shroud",
+      "motion_profile": "protection",
+      "visual_variant": 0,
+      "visual_strength": 1.065
+    },
+    "vfx_spell_veil_salt_shroud_22": {
+      "texture_path": "res://art/battle/vfx/family_veil_shroud.png",
+      "render_mode": "spell_target",
+      "scale": 2.55,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_veil_salt_shroud_22",
+      "effect_family": "veil_shroud",
+      "motion_profile": "protection",
+      "visual_variant": 1,
+      "visual_strength": 0.99
+    },
+    "vfx_spell_veil_wraith_duel_14": {
+      "texture_path": "res://art/battle/vfx/family_veil_false_strike.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_veil_wraith_duel_14",
+      "effect_family": "veil_false_strike",
+      "motion_profile": "empower",
+      "visual_variant": 0,
+      "visual_strength": 1.04
+    },
+    "vfx_spell_veil_mist_duel_26": {
+      "texture_path": "res://art/battle/vfx/family_veil_false_strike.png",
+      "render_mode": "spell_target",
+      "scale": 2.35,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_veil_mist_duel_26",
+      "effect_family": "veil_false_strike",
+      "motion_profile": "empower",
+      "visual_variant": 1,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_old_measure_tally_axiom_04": {
+      "texture_path": "res://art/battle/vfx/family_measure_axiom.png",
+      "render_mode": "spell_target",
+      "scale": 2.55,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_old_measure_tally_axiom_04",
+      "effect_family": "measure_axiom",
+      "motion_profile": "protection",
+      "visual_variant": 0,
+      "visual_strength": 1.04
+    },
+    "vfx_spell_old_measure_measure_axiom_16": {
+      "texture_path": "res://art/battle/vfx/family_measure_axiom.png",
+      "render_mode": "spell_target",
+      "scale": 2.55,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_old_measure_measure_axiom_16",
+      "effect_family": "measure_axiom",
+      "motion_profile": "protection",
+      "visual_variant": 1,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_old_measure_proof_axiom_28": {
+      "texture_path": "res://art/battle/vfx/family_measure_axiom.png",
+      "render_mode": "spell_target",
+      "scale": 2.55,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_old_measure_proof_axiom_28",
+      "effect_family": "measure_axiom",
+      "motion_profile": "protection",
+      "visual_variant": 2,
+      "visual_strength": 1.015
+    },
+    "vfx_spell_old_measure_compass_boundary_06": {
+      "texture_path": "res://art/battle/vfx/family_measure_boundary.png",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_old_measure_compass_boundary_06",
+      "effect_family": "measure_boundary",
+      "motion_profile": "boundary",
+      "visual_variant": 0,
+      "visual_strength": 0.965
+    },
+    "vfx_spell_old_measure_survey_boundary_18": {
+      "texture_path": "res://art/battle/vfx/family_measure_boundary.png",
+      "render_mode": "spell_target",
+      "scale": 2.45,
+      "base_rotation_degrees": 0.0,
+      "spell_id": "spell_old_measure_survey_boundary_18",
+      "effect_family": "measure_boundary",
+      "motion_profile": "boundary",
+      "visual_variant": 1,
+      "visual_strength": 1.015
     }
   }
 }
