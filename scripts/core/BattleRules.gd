@@ -6214,14 +6214,16 @@ static func _resolve_attack_action(
 		var attacker_after = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		var attacker_before_retaliation = attacker_after.duplicate(true)
 		var retaliation_damage = _calculate_damage(defender_after, attacker_after, session.battle, rng, false, true, attack_distance)
-		_apply_damage_to_stack(session.battle, String(attacker.get("battle_id", "")), retaliation_damage)
 		_consume_retaliation(session.battle, String(defender_after.get("battle_id", "")))
+		# Capture the windup with its target still alive. Applying damage first
+		# exposes a corpse before the following hit/death playback snapshot.
 		_mark_stack_animation_event(
 			session.battle,
 			String(defender_after.get("battle_id", "")),
 			"battle_retaliation",
 			{"target_battle_id": String(attacker.get("battle_id", ""))}
 		)
+		_apply_damage_to_stack(session.battle, String(attacker.get("battle_id", "")), retaliation_damage)
 		_append_presentation_event(
 			session.battle,
 			"retaliation",
@@ -6790,14 +6792,15 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 		var attacker_after = _get_stack_by_id(session.battle, String(attacker.get("battle_id", "")))
 		var attacker_before_retaliation = attacker_after.duplicate(true)
 		var retaliation_damage = _calculate_damage(defender_after, attacker_after, session.battle, rng, false, true, attack_distance)
-		_apply_damage_to_stack(session.battle, String(attacker.get("battle_id", "")), retaliation_damage)
 		_consume_retaliation(session.battle, String(defender_after.get("battle_id", "")))
+		# Match the player path: the retaliation snapshot precedes its damage.
 		_mark_stack_animation_event(
 			session.battle,
 			String(defender_after.get("battle_id", "")),
 			"battle_retaliation",
 			{"target_battle_id": String(attacker.get("battle_id", ""))}
 		)
+		_apply_damage_to_stack(session.battle, String(attacker.get("battle_id", "")), retaliation_damage)
 		_append_presentation_event(
 			session.battle,
 			"retaliation",
