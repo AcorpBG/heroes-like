@@ -530,3 +530,59 @@ the four superseded `final-{linux,windows}-export/export` and
 open-file checks. These are rebuildable outputs, not saves or source. The final
 `portal-final-*` packages, all required reports/screenshots, live checkpoint
 histories, caches, RMG recovery material and unrelated untracked files remain.
+
+### Complete-match continuation: one intent must not activate two objects
+
+The accepted Medium continuation's day-60 action trace distinguishes a test
+driver defect from the fixed game handoff. Actions 881–885 defeat the original
+98-unit raid and 80-unit guard at the actual exit (59,46). Action 886 then sends
+an extra activation and travels back to (39,30). `perform_target` treated the
+post-report return to the same square as an unhandled first click, even though
+the selected defender was gone and the underlying portal was now active.
+
+Both second-click and arrival-primary activation now require that no battle
+has completed since the first click. A new interaction requires the next
+observed target selection. This changes the test driver only; no runtime,
+troops, coordinates, rewards, guards or saved gameplay fields change.
+
+Stopped the exact owned engines with verified retained End Turn checkpoints:
+Medium day 66/action 989 (`722aae96…e758d`) and Large day 50/action 800
+(`e193518b…e1da8`). The complete matching prefixes, unsuccessful/interrupted
+receipts and saves remain. `quality-{medium,large}-single-intent-20260918`
+continue those checkpoints with the corrected driver. Existing acceptance and
+resume unit tests pass 15; the ongoing matches are not terminal acceptance.
+
+The exact same-square guard case now passes in the rendered
+`rmg_quality_continuation_20260918/portal-real-single-intent` replay. It loads
+the genuine day-56 save, walks to the portal, fights both original armies and
+uses **`perform_target`** for the remaining exit guard. After that report the
+hero remains at (59,46), day 57, 16/22 movement; the driver does not send the
+unintended return trip. The complete earned state saves/restores unchanged.
+The actual normal-fog exit screenshot was visually inspected.
+
+### Medium complete-match acceptance
+
+`generated_full_match_quality_20260906/quality-medium-single-intent-20260918`
+passes the unchanged terminal acceptance gate: **victory on day 68** at the
+enemy town entrance (60,39), real `ScenarioOutcomeShell`, no runtime errors,
+19 battles and 19 casualty reports, 69 builds, 223 recruitment orders and 43
+physical garrison transfers. All **1,035** recorded actions have valid army
+capacity observations, with zero violations. Opening, three mid-match and
+terminal complete-state save/resume checks pass. This is one match continued
+through verified checkpoints, not multiple fresh matches or a speedrun.
+
+The final save contains 110 player-claimed resource/site identities and two
+collected loose artifacts (Trailsinger Boots and Drowned Star Astrolabe).
+Those are earned identities, not whole-map inventory totals or repeated-service
+counts. The final enemy approach defeats the 187-unit field army before the
+ordinary town-assault battle and outcome. Day 68 is this test policy's result,
+**not a claim about minimum human completion time or universal pacing**.
+
+The terminal file SHA-256 is `5f81e1ac4891afac6b3ccf17d481b5d27c07e2307e5d5b13e7590da2f23e7438`.
+`rmg_quality_continuation_20260918/medium-real-victory-1280` restores that exact
+save through production and captures the actual 1280x720 victory screen; its
+edge/navigation controls pass bounds checks and visual inspection. The Large
+match remains active and is not covered by this Medium result. Shipped runtime
+is unchanged from the final accepted Linux/Windows portal packages above.
+The consolidated `single-intent-validate-repo.log` passes; its 26 absent
+historical smokes remain explicitly not run, not implicitly accepted.

@@ -507,15 +507,19 @@ func perform_target(target: Dictionary) -> void:
 		return
 	# Actual pointer selection/activation path, not the omniscient validation BFS.
 	active_target = {"id":target.id,"kind":target.kind}
+	var battles_before := int(counts.get("battle", 0))
 	scene._on_map_tile_pressed(target.tile)
 	await resolve_routes()
-	if scene_path().ends_with("OverworldShell.tscn") and OverworldRules.hero_position(session) == origin:
+	# A battle can finish on the same square with a different interaction now
+	# beneath the hero. Do not turn the second activation into an unintended
+	# portal return (or claim) after the selected defender has been defeated.
+	if int(counts.get("battle", 0)) == battles_before and scene_path().ends_with("OverworldShell.tscn") and OverworldRules.hero_position(session) == origin:
 		get_tree().current_scene._on_map_tile_pressed(target.tile)
 		await resolve_routes()
 	# Arrival can reveal a guard or an interaction rather than auto-executing it.
 	# Activate the same enabled primary order a player sees; do not mark arrival
 	# as collection or victory, and do not bypass the guarded-site context.
-	if scene_path().ends_with("OverworldShell.tscn") and OverworldRules.hero_position(session) == target.tile:
+	if int(counts.get("battle", 0)) == battles_before and scene_path().ends_with("OverworldShell.tscn") and OverworldRules.hero_position(session) == target.tile:
 		var current = get_tree().current_scene
 		var primary: Dictionary = current._current_primary_action()
 		if String(primary.get("id","")) in ["enter_battle","visit_town","capture_town","collect_resource","collect_artifact"] and not bool(primary.get("disabled",false)):
