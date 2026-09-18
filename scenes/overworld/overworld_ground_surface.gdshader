@@ -8,6 +8,8 @@ uniform vec2 map_size;
 uniform vec2 world_origin;
 uniform vec2 world_span;
 uniform float material_span_tiles = 4.0;
+uniform float beach_slot = 5.0;
+uniform vec3 water_slots = vec3(12.0, 13.0, 14.0);
 
 vec3 paint(float slot, vec2 uv) {
 	vec2 cell = vec2(mod(slot, 4.0), floor(slot / 4.0));
@@ -41,6 +43,10 @@ float known_slot(vec2 cell, float own_slot) {
 	return data.g > 0.5 ? floor(data.r * 255.0 + 0.5) : own_slot;
 }
 
+float water_coverage(float slot) {
+	return any(lessThan(abs(water_slots - vec3(slot)), vec3(0.5))) ? 1.0 : 0.0;
+}
+
 void fragment() {
 	vec2 world = world_origin + UV * world_span;
 	vec2 own = cell_data(floor(world));
@@ -63,6 +69,18 @@ void fragment() {
 		vec3 cb = b == a ? ca : ground(b, world);
 		vec3 cc = c == a ? ca : ground(c, world);
 		vec3 cd = d == a ? ca : (d == b ? cb : (d == c ? cc : ground(d, world)));
-		COLOR = vec4(mix(mix(ca, cb, weight.x), mix(cc, cd, weight.x), weight.y), 1.0);
+		vec3 surface = mix(mix(ca, cb, weight.x), mix(cc, cd, weight.x), weight.y);
+		// A coastal material band, not new terrain: the same fog-safe four
+		// samples join straight shores, concave inlets and diagonal islands.
+		float water = mix(mix(water_coverage(a), water_coverage(b), weight.x),
+			mix(water_coverage(c), water_coverage(d), weight.x), weight.y);
+		if (water > 0.0 && water < 1.0) {
+			vec3 sand = ground(beach_slot, world);
+			float wet = smoothstep(0.38, 0.82, water);
+			sand *= mix(vec3(1.0), vec3(0.68, 0.75, 0.78), wet);
+			float beach = smoothstep(0.015, 0.16, water) * (1.0 - smoothstep(0.52, 0.94, water));
+			surface = mix(surface, sand, beach);
+		}
+		COLOR = vec4(surface, 1.0);
 	}
 }

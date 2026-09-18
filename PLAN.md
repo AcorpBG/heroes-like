@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Sandy shore transitions
+
+`art-sandy-shores-20260918` — completed. The live world-space shader now blends land through original sand and a wet edge into water, including islands/inlets/diagonals. Native terrain/movement are unchanged. 53 off-screen Windows render checks and the ground-art contract pass; straight/coastal fixtures visually inspected. Linux uses the same shader but was not rerun. Temporary render evidence removed under owner retention policy.
+
 ### Audio CI scheduling
 
 `remove-audio-ci-20260918` — completed. Removed the Linux audio GitHub Actions workflow at owner request. Audio validation tools remain available for deliberate manual checks; release workflows are unchanged.
