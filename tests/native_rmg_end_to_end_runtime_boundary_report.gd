@@ -128,11 +128,11 @@ const CREATURE_GENERATOR_ROWS := {
 	},
 }
 const LOOSE_RESOURCE_PRESENTATION_ROWS := [
-	{"site_id": "site_peatwax_reed_yard", "object_id": "object_marsh_peat_yard", "resource_id": "peatwax", "asset_id": "resource_pickup_peatwax", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/peatwax_reed_bundle.png", "rewards": {"gold": 120, "peatwax": 1}, "current_small": false},
-	{"site_id": "site_embergrain_warm_granary", "object_id": "object_floodplain_sluice_camp", "resource_id": "embergrain", "asset_id": "resource_pickup_embergrain", "mine_asset_id": "mapobj_floodplain_sluice_camp", "expected_footprint": {"width": 2, "height": 3}, "texture_path": "res://art/overworld/runtime/objects/pickups/embergrain_sack.png", "rewards": {"gold": 120, "embergrain": 1}, "current_small": true},
-	{"site_id": "site_aetherglass_lens_house", "object_id": "object_cinder_ore_face", "resource_id": "aetherglass", "asset_id": "resource_pickup_aetherglass", "mine_asset_id": "mapobj_cinder_ore_face", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/aetherglass_lens_crate.png", "rewards": {"gold": 120, "aetherglass": 1}, "current_small": true},
-	{"site_id": "site_memory_salt_pan", "object_id": "object_badlands_coin_sluice", "resource_id": "memory_salt", "asset_id": "resource_pickup_memory_salt", "mine_asset_id": "mapobj_badlands_coin_sluice", "expected_footprint": {"width": 3, "height": 3}, "texture_path": "res://art/overworld/runtime/objects/pickups/memory_salt_reliquary.png", "rewards": {"gold": 120, "memory_salt": 1}, "current_small": true},
-	{"site_id": "site_reef_coin_assay", "object_id": "object_reef_coin_assay", "resource_id": "gold", "asset_id": "resource_pickup_gold", "mine_asset_id": "mapobj_reef_coin_assay", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/reef_coin_coffer.png", "rewards": {"gold": 220}, "current_small": true},
+	{"site_id": "site_peatwax_votive_bundle", "object_id": "object_peatwax_votive_bundle", "resource_id": "peatwax", "asset_id": "mapobj_peatwax_votive_bundle", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_peatwax_votive_bundle.png", "rewards": {"peatwax": 1}, "current_small": false, "mine_site_id": "site_peatwax_reed_yard"},
+	{"site_id": "site_embergrain_sample_sack", "object_id": "object_embergrain_sample_sack", "resource_id": "embergrain", "asset_id": "mapobj_embergrain_sample_sack", "mine_asset_id": "mapobj_floodplain_sluice_camp", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_embergrain_sample_sack.png", "rewards": {"embergrain": 1}, "current_small": true, "mine_site_id": "site_embergrain_warm_granary"},
+	{"site_id": "site_aetherglass_splinter_lot", "object_id": "object_aetherglass_splinter_lot", "resource_id": "aetherglass", "asset_id": "mapobj_aetherglass_splinter_lot", "mine_asset_id": "mapobj_cinder_ore_face", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_aetherglass_splinter_lot.png", "rewards": {"aetherglass": 1}, "current_small": true, "mine_site_id": "site_aetherglass_lens_house"},
+	{"site_id": "site_memory_salt_jar", "object_id": "object_memory_salt_jar", "resource_id": "memory_salt", "asset_id": "mapobj_memory_salt_jar", "mine_asset_id": "mapobj_badlands_coin_sluice", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_memory_salt_jar.png", "rewards": {"memory_salt": 1}, "current_small": true, "mine_site_id": "site_memory_salt_pan"},
+	{"site_id": "site_road_writ_purse", "object_id": "object_road_writ_purse", "resource_id": "gold", "asset_id": "mapobj_road_writ_purse", "mine_asset_id": "mapobj_reef_coin_assay", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_road_writ_purse.png", "rewards": {"gold": 250}, "current_small": true, "mine_site_id": "site_reef_coin_assay"},
 ]
 
 func _ready() -> void:
@@ -433,13 +433,13 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		68: "rare",
 	}
 	var expected_resources := {
-		0: {"object_id": "object_wood_wagon", "site_id": "site_wood_wagon", "resource_id": "wood", "catalog_id": "reward_resource_wood_build_proxy"},
-		1: {"object_id": "object_marsh_peat_yard", "site_id": "site_peatwax_reed_yard", "resource_id": "peatwax", "catalog_id": "reward_resource_mercury_peatwax_proxy"},
-		2: {"object_id": "object_ore_crates", "site_id": "site_ore_crates", "resource_id": "ore", "catalog_id": "reward_resource_ore_build_proxy"},
-		3: {"object_id": "object_floodplain_sluice_camp", "site_id": "site_embergrain_warm_granary", "resource_id": "embergrain", "catalog_id": "reward_resource_sulfur_embergrain_proxy"},
-		4: {"object_id": "object_cinder_ore_face", "site_id": "site_aetherglass_lens_house", "resource_id": "aetherglass", "catalog_id": "reward_resource_crystal_aetherglass_proxy"},
-		5: {"object_id": "object_badlands_coin_sluice", "site_id": "site_memory_salt_pan", "resource_id": "memory_salt", "catalog_id": "reward_resource_gems_memory_salt_proxy"},
-		6: {"object_id": "object_reef_coin_assay", "site_id": "site_reef_coin_assay", "resource_id": "gold", "catalog_id": "reward_resource_gold_reef_coin_proxy"},
+		0: {"object_id": "object_split_wood_pile", "site_id": "site_split_wood_pile", "resource_id": "wood", "catalog_id": "reward_resource_wood_build_proxy"},
+		1: {"object_id": "object_peatwax_votive_bundle", "site_id": "site_peatwax_votive_bundle", "resource_id": "peatwax", "catalog_id": "reward_resource_mercury_peatwax_proxy"},
+		2: {"object_id": "object_quarry_chip_hod", "site_id": "site_quarry_chip_hod", "resource_id": "ore", "catalog_id": "reward_resource_ore_build_proxy"},
+		3: {"object_id": "object_embergrain_sample_sack", "site_id": "site_embergrain_sample_sack", "resource_id": "embergrain", "catalog_id": "reward_resource_sulfur_embergrain_proxy"},
+		4: {"object_id": "object_aetherglass_splinter_lot", "site_id": "site_aetherglass_splinter_lot", "resource_id": "aetherglass", "catalog_id": "reward_resource_crystal_aetherglass_proxy"},
+		5: {"object_id": "object_memory_salt_jar", "site_id": "site_memory_salt_jar", "resource_id": "memory_salt", "catalog_id": "reward_resource_gems_memory_salt_proxy"},
+		6: {"object_id": "object_road_writ_purse", "site_id": "site_road_writ_purse", "resource_id": "gold", "catalog_id": "reward_resource_gold_reef_coin_proxy"},
 	}
 	for object_index in range(int(map_document.get_object_count())):
 		var object: Dictionary = map_document.get_object_by_index(object_index)
@@ -496,10 +496,12 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 						or not _live_proxy_provenance_exact(object):
 					creature_bank_rows_exact = false
 			elif subtype == 6:
+				var candidate := ContentService.get_map_object(String(object.get("object_id", "")))
 				if String(object.get("placement_id", "")) != "native_h3maped_457dba6b_object_0258" \
 						or String(object.get("kind", "")) != "resource_site" \
-						or String(object.get("object_id", "")) != "object_chainboom_fort" \
-						or String(object.get("site_id", "")) != "site_chainboom_fort" \
+						or candidate.get("primary_class", "") != "guarded_reward_site" \
+						or candidate.get("resource_site_id", "") != String(object.get("site_id", "")) \
+						or int(object.get("native_authored_pool_candidate_count", -1)) != 32 \
 						or String(object.get("native_authored_pool_id", "")) != "guarded_reward" \
 						or String(object.get("homm3_re_reward_object_catalog_id", "")) != "authored_pool_proxy_16_6_guarded_reward" \
 						or object.get("primary_tile", {}) != {"x": 14, "y": 16, "level": 0} \
@@ -592,7 +594,7 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 					live_mine_sites_exact = false
 				var mine_site_id := String(node.get("site_id", ""))
 				for presentation_row in LOOSE_RESOURCE_PRESENTATION_ROWS:
-					if presentation_row is Dictionary and String(presentation_row.get("site_id", "")) == mine_site_id and not loose_resource_mine_nodes_by_site.has(mine_site_id):
+					if presentation_row is Dictionary and String(presentation_row.get("mine_site_id", "")) == mine_site_id and not loose_resource_mine_nodes_by_site.has(mine_site_id):
 						loose_resource_mine_nodes_by_site[mine_site_id] = node.duplicate(true)
 			elif int(source.get("h3m_type_id", -1)) == 12:
 				live_campfires.append({"index": node_index, "node": node.duplicate(true)})
@@ -708,7 +710,7 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		rare_resource_interaction = {
 			"ok": bool(claim.get("ok", false)) \
 					and int(resources_after.get("embergrain", 0)) == int(resources_before.get("embergrain", 0)) + 1 \
-					and int(resources_after.get("gold", 0)) == int(resources_before.get("gold", 0)) + 120 \
+					and int(resources_after.get("gold", 0)) == int(resources_before.get("gold", 0)) \
 					and other_rare_exact \
 					and restored_node == claimed_node \
 					and restored.overworld.get("resources", {}) == resources_after,
@@ -905,17 +907,7 @@ func _validate_creature_bank_interaction(adoption: Dictionary, placement_id: Str
 	var guard: Dictionary = linked_guards[0]
 	var expected_body := [{"x": 20, "y": 28, "level": 0}, {"x": 21, "y": 28, "level": 0}]
 	var expected_visit := [{"x": 20, "y": 28, "level": 0}]
-	var expected_engagement := [
-		{"x": 20, "y": 28, "level": 0},
-		{"x": 19, "y": 27, "level": 0},
-		{"x": 20, "y": 27, "level": 0},
-		{"x": 21, "y": 27, "level": 0},
-		{"x": 19, "y": 28, "level": 0},
-		{"x": 21, "y": 28, "level": 0},
-		{"x": 19, "y": 29, "level": 0},
-		{"x": 20, "y": 29, "level": 0},
-		{"x": 21, "y": 29, "level": 0},
-	]
+	var expected_engagement := expected_visit.duplicate(true)
 	var guard_link: Dictionary = guard.get("guard_link", {}) if guard.get("guard_link", {}) is Dictionary else {}
 	var guard_exact: bool = String(guard.get("placement_id", "")) == "generated_guarded_reward_%s" % placement_id \
 			and String(guard.get("encounter_id", "")) == "encounter_tidepool_skiffyard_watch" \
@@ -1523,7 +1515,8 @@ func _validate_loose_resource_presentation(
 				and bool(permanently_explored.get("visible", false)) \
 				and not bool(permanently_explored.get("draws_remembered_object", true)) \
 				and remembered_asset_ids.count(String(row.get("asset_id", ""))) == 1
-		var mine_node: Dictionary = live_mine_nodes_by_site.get(site_id, {}) if live_mine_nodes_by_site.get(site_id, {}) is Dictionary else {}
+		var mine_site_id := String(row.get("mine_site_id", ""))
+		var mine_node: Dictionary = live_mine_nodes_by_site.get(mine_site_id, {}) if live_mine_nodes_by_site.get(mine_site_id, {}) is Dictionary else {}
 		var mine_session := SessionStateStoreScript.SessionData.new()
 		mine_session.from_dict(session_authority_before)
 		mine_session.overworld["resource_nodes"] = [mine_node.duplicate(true)]

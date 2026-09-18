@@ -535,7 +535,8 @@ Dictionary runtime_authored_pool_definition(const Dictionary &registry, const St
 bool runtime_map_object_matches_pool(
 		const Dictionary &item,
 		const Dictionary &pool,
-		const std::unordered_set<std::string> &resource_site_ids) {
+		const std::unordered_set<std::string> &resource_site_ids,
+		const Dictionary &sites_by_id) {
 	const String item_id = String(item.get("id", ""));
 	const String primary_class = String(item.get("primary_class", ""));
 	const bool explicit_match = runtime_string_array_contains(pool.get("explicit_object_ids", Variant()), item_id);
@@ -562,6 +563,21 @@ bool runtime_map_object_matches_pool(
 			return false;
 		}
 	}
+	if (bool(pool.get("require_live_guard_contract", false))) {
+		// Site contracts own executable rewards/defenders. Older map-object
+		// metadata can still say metadata_only after its site was implemented.
+		const String site_id = String(item.get("resource_site_id", ""));
+		Dictionary site = sites_by_id.get(site_id, Dictionary());
+		Dictionary boundary = site.get("runtime_boundary", Dictionary());
+		Dictionary contract = site.get("guarded_reward_contract", Dictionary());
+		if (!bool(boundary.get("guard_resolution_runtime_adopted", false))
+				|| bool(contract.get("metadata_only_guard_contract", true))
+				|| String(contract.get("resource_site_id", "")) != site_id
+				|| String(contract.get("guard_encounter_id", "")).is_empty()
+				|| String(contract.get("guard_army_group_id", "")).is_empty()) {
+			return false;
+		}
+	}
 	return !item_id.is_empty();
 }
 
@@ -574,6 +590,7 @@ Dictionary runtime_authored_pool_candidates(const Dictionary &registry) {
 	Array site_items = site_catalog.get("items", Array());
 	Array artifact_items = artifact_catalog.get("items", Array());
 	std::unordered_set<std::string> resource_site_ids;
+	Dictionary sites_by_id;
 	for (int64_t index = 0; index < site_items.size(); ++index) {
 		if (site_items[index].get_type() != Variant::DICTIONARY) {
 			continue;
@@ -581,6 +598,7 @@ Dictionary runtime_authored_pool_candidates(const Dictionary &registry) {
 		const String site_id = String(Dictionary(site_items[index]).get("id", ""));
 		if (!site_id.is_empty()) {
 			resource_site_ids.insert(std::string(site_id.utf8().get_data()));
+			sites_by_id[site_id] = site_items[index];
 		}
 	}
 	Array pools = registry.get("authored_pools", Array());
@@ -598,7 +616,7 @@ Dictionary runtime_authored_pool_candidates(const Dictionary &registry) {
 					continue;
 				}
 				Dictionary item = map_items[item_index];
-				if (runtime_map_object_matches_pool(item, pool, resource_site_ids)) {
+				if (runtime_map_object_matches_pool(item, pool, resource_site_ids, sites_by_id)) {
 					candidates.append(item.duplicate(true));
 				}
 			}
@@ -761,11 +779,32 @@ Dictionary runtime_authored_pool_proxy_entry(
 	}
 	// A random artifact class is a rarity band, not one fixed legacy proxy.
 	// Likewise a creature bank must remain a guarded site, not a free artifact.
-	const bool catalog_domain_matches = domain == "artifact"
+	bool catalog_domain_matches = domain == "artifact"
 			? runtime_proxy_entry_has_live_artifact_surface(catalog_entry)
 			: !runtime_proxy_entry_has_live_artifact_surface(catalog_entry);
+	Dictionary fixed_site_candidate;
+	if (bool(pool.get("require_live_guard_contract", false))) {
+		catalog_domain_matches = false;
+		for (int64_t index = 0; index < candidates.size(); ++index) {
+			Dictionary candidate = candidates[index];
+			if (String(candidate.get("id", "")) == String(catalog_entry.get("native_proxy_object_id", ""))) {
+				fixed_site_candidate = candidate;
+				catalog_domain_matches = true;
+				break;
+			}
+		}
+	}
 	if (!catalog_entry.is_empty() && catalog_domain_matches && rarity.is_empty()) {
 		Dictionary entry = catalog_entry.duplicate(true);
+		if (!fixed_site_candidate.is_empty()) {
+			// Keep the established original object identity but not its obsolete
+			// free-cache proxy. The same site's real contract owns art and combat.
+			entry["generated_kind"] = pool.get("generated_kind", "resource_site");
+			entry["semantic_category"] = pool.get("semantic_category", "guarded_reward");
+			entry["native_proxy_site_id"] = fixed_site_candidate.get("resource_site_id", "");
+			entry["native_proxy_family"] = fixed_site_candidate.get("family", "");
+			entry["native_proxy_category"] = fixed_site_candidate.get("primary_class", "");
+		}
 		entry["native_authored_pool_id"] = pool_id;
 		entry["native_authored_pool_candidate_count"] = candidates.size();
 		entry["native_authored_pool_candidate_id"] = entry.get("native_proxy_object_id", "");

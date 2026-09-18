@@ -49,5 +49,59 @@ class ExplorationContract(unittest.TestCase):
             self.assertEqual(registry['source_type_pools'][source], 'artifact_reward')
         self.assertEqual(registry['source_type_pools']['16'], 'guarded_reward')
 
+    def test_scenery_families_are_explicit_and_fully_backed(self):
+        manifest = json.loads((ROOT / 'art/overworld/native_scenery.json').read_text())
+        assets = json.loads((ROOT / 'art/overworld/manifest.json').read_text())['object_assets']
+        self.assertEqual(manifest['presentation_version'], 2)
+        self.assertEqual(manifest['source_types']['134']['landscape_family'], 'rock')
+        self.assertEqual(manifest['source_types']['135']['landscape_family'], 'woods')
+        self.assertEqual(manifest['source_types']['137']['landscape_family'], 'conifers')
+        for policy in manifest['source_types'].values():
+            if 'landscape_family' not in policy:
+                self.assertTrue(policy['asset_ids'])
+                continue
+            palettes = manifest['landscape_palettes'][policy['landscape_family']]
+            self.assertEqual(len(palettes), 9)
+            for biome, candidates in palettes.items():
+                self.assertTrue(candidates, biome)
+                for asset in candidates:
+                    entry = assets[asset]
+                    self.assertTrue((ROOT / entry['path'].removeprefix('res://')).is_file())
+                    self.assertTrue(entry.get('source_manifest') or entry.get('source_generated_atlas'))
+
+    def test_portable_resource_proxies_are_one_time_not_production_sites(self):
+        catalog = json.loads((ROOT / 'content/homm3_re_reward_object_proxy_catalog.json').read_text())['entries']
+        objects = {o['id']:o for o in json.loads((ROOT / 'content/map_objects.json').read_text())['items']}
+        sites = {s['id']:s for s in json.loads((ROOT / 'content/resource_sites.json').read_text())['items']}
+        pickups = [row for row in catalog if row['homm3_re_object_type_id'] == 79]
+        self.assertEqual({row['homm3_re_object_subtype'] for row in pickups}, set(range(7)))
+        for row in pickups:
+            obj, site = objects[row['native_proxy_object_id']], sites[row['native_proxy_site_id']]
+            self.assertEqual(obj['resource_site_id'], site['id'])
+            self.assertTrue(obj['visitable'])
+            self.assertEqual(obj['interaction']['cadence'], 'one_time')
+            self.assertFalse(obj['interaction']['remains_after_visit'])
+            self.assertEqual(set(site['rewards']), {row['native_resource_id']})
+            self.assertFalse(site.get('persistent_control') or site.get('control_income') or site.get('resource_outputs'))
+        for site_id in ['site_wood_wagon', 'site_ore_crates', 'site_aetherglass_lens_house', 'site_peatwax_reed_yard', 'site_embergrain_warm_granary', 'site_memory_salt_pan', 'site_reef_coin_assay']:
+            self.assertTrue(sites[site_id]['persistent_control'], site_id)
+
+    def test_live_site_contracts_not_stale_object_summaries_decide_eligibility(self):
+        registry = json.loads((ROOT / 'content/random_map_object_eligibility.json').read_text())
+        pool = next(p for p in registry['authored_pools'] if p['id'] == 'guarded_reward')
+        self.assertTrue(pool['require_live_guard_contract'])
+        self.assertNotIn('exclude_runtime_statuses', pool)
+        objects = json.loads((ROOT / 'content/map_objects.json').read_text())['items']
+        sites = {s['id']:s for s in json.loads((ROOT / 'content/resource_sites.json').read_text())['items']}
+        eligible = [o for o in objects if o.get('primary_class') == 'guarded_reward_site']
+        self.assertEqual(len(eligible), 32)
+        for obj in eligible:
+            site = sites[obj['resource_site_id']]
+            contract = site['guarded_reward_contract']
+            self.assertTrue(site['runtime_boundary']['guard_resolution_runtime_adopted'])
+            self.assertFalse(contract['metadata_only_guard_contract'])
+            self.assertEqual(contract['resource_site_id'], site['id'])
+            self.assertTrue(contract['guard_encounter_id'] and contract['guard_army_group_id'])
+
 
 if __name__ == '__main__': unittest.main()

@@ -1,5 +1,14 @@
 # Native RMG Authored Object Pool Adoption (#10223)
 
+Validated correction (2026-09-18): the historical 336/86 totals
+below are superseded by 356 eligible / 66 excluded. All 32 guarded sites have
+live resource-site contracts; 16 were still excluded by obsolete object-summary
+flags. Fixed guarded proxies now use their matching live site; four original
+rare pickups now have one-time reward contracts. See
+`docs/generated-overworld-quality-closure.md` for implementation, evidence and
+remaining limits. The historical validation below is not validation of that
+new correction.
+
 ## Scope
 
 This owner-directed slice answers whether every authored Overworld object is in the random-map pool. The answer is now explicit and machine-checked: every one of the 422 authored map-object ids has exactly one eligibility decision. Compatible objects are selectable through a data-driven post-projection pool; scenario-owned, metadata-only, or currently unsafe objects carry a concrete exclusion reason.

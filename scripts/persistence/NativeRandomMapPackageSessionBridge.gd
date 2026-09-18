@@ -536,7 +536,11 @@ static func _supplemental_guarded_reward_site_guard(node: Dictionary, site: Dict
 		return {}
 	var level := int(visit_tile.get("level", node.get("level", 0)))
 	visit_tile["level"] = level
-	var engagement_tiles := _generated_guarded_reward_engagement_tiles(visit_tile, map_size)
+	var engagement_tiles := []
+	for entrance in visit_tiles:
+		if entrance is Dictionary:
+			for tile in _generated_guarded_reward_engagement_tiles(entrance, map_size):
+				if tile not in engagement_tiles: engagement_tiles.append(tile)
 	if engagement_tiles.is_empty():
 		return {}
 	var body_tiles: Array = node.get("package_body_tiles", []) if node.get("package_body_tiles", []) is Array else []
@@ -561,6 +565,7 @@ static func _supplemental_guarded_reward_site_guard(node: Dictionary, site: Dict
 		"object_id": encounter_id,
 		"enemy_group_id": army_group_id,
 		"generated_package_guard_policy": "live_guarded_reward_contract",
+		"generated_guard_engagement_policy": "site_entrances_only_v1",
 		"target_kind": "resource",
 		"target_placement_id": placement_id,
 		"guard_link": guard_link,
@@ -584,11 +589,10 @@ static func _generated_guarded_reward_engagement_tiles(visit_tile: Dictionary, m
 	var center := Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1)))
 	if not _generated_source_in_bounds(center, map_size):
 		return []
-	var result := [{"x": center.x, "y": center.y, "level": int(visit_tile.get("level", 0))}]
-	for neighbor in _generated_source_route_neighbors(center):
-		if _generated_source_in_bounds(neighbor, map_size):
-			result.append({"x": neighbor.x, "y": neighbor.y, "level": int(visit_tile.get("level", 0))})
-	return result
+	# These are the site's internal defenders, not an extra roaming stack.
+	# Entry still starts their battle, and loot still requires clearance, but
+	# a synthetic surrounding ring must not override native road/guard control.
+	return [{"x": center.x, "y": center.y, "level": int(visit_tile.get("level", 0))}]
 
 static func _generated_resource_node_is_rare_source(node: Dictionary) -> bool:
 	var placement_id := String(node.get("placement_id", ""))
@@ -701,7 +705,7 @@ static func _map_objects_from_document(map_document: Variant) -> Array:
 		var node: Dictionary = object.duplicate(true)
 		if scenery or kind == "decorative_obstacle" or family == "decorative_obstacle":
 			node["runtime_object_role"] = "decorative_blocker_sprite"
-			if scenery: node["native_scenery_art_version"] = 1
+			if scenery: node["native_scenery_art_version"] = NativeScenery.PRESENTATION_VERSION
 		node["collected"] = false
 		objects.append(node)
 	return objects

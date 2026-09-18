@@ -3,7 +3,8 @@
   "model": "original_raster_world_space_splat_v3",
   "atlas": "res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png",
   "source_manifest": "res://art/overworld/source/generated/terrain/ground_materials_v3/manifest.json",
-  "material_span_tiles": 6,
+  "material_span_tiles": 4,
+  "sampling": "bounded_mip_detail_with_cross_material_safe_inset",
   "terrain_slots": {
     "grass": 0,
     "plains": 1,

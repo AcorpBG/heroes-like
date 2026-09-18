@@ -33,7 +33,16 @@ func raster_controls(config: Dictionary, atlas: Texture2D) -> void:
 	add_child(viewport)
 	var surface = load("res://scenes/overworld/OverworldGroundSurface.gd").new()
 	viewport.add_child(surface)
-	surface.configure(config, atlas)
+	# A fresh Godot texture import can have no mip chain. Exercise that path,
+	# not only this workstation's already imported/mipmapped cache.
+	var clean_pixels := atlas.get_image()
+	if clean_pixels.is_compressed(): clean_pixels.decompress()
+	clean_pixels.clear_mipmaps()
+	var clean_atlas := ImageTexture.create_from_image(clean_pixels)
+	surface.configure(config, clean_atlas)
+	check(surface.texture.get_image().has_mipmaps(), "clean import did not gain bounded terrain detail levels")
+	check(not clean_atlas.get_image().has_mipmaps(), "terrain sampling mutated the borrowed original texture")
+	check(is_equal_approx(float(surface.material.get_shader_parameter("material_span_tiles")),float(config.material_span_tiles)), "ground ignored manifest sampling span")
 	var rows: Array = []
 	var fog: Array = []
 	for y in range(4):
@@ -95,7 +104,7 @@ func raster_controls(config: Dictionary, atlas: Texture2D) -> void:
 	rows[1][5] = "rock"
 	var corners := await shader_image(surface, Vector2i(6, 4), rows, fog, 107)
 	corners.save_png(out.path_join("shore-island-diagonal-fixture.png"))
-	# Painted-repeat joins must not create a vertical stripe every six tiles.
+	# Check the actual manifest repeat join, not a stale fixed six-tile sample.
 	var seamless_rows: Array = []
 	var seamless_fog: Array = []
 	for y in range(4):
@@ -110,9 +119,10 @@ func raster_controls(config: Dictionary, atlas: Texture2D) -> void:
 	var seamless := await shader_image(surface, Vector2i(12, 4), seamless_rows, seamless_fog, 108)
 	var seam_delta := 0.0
 	var interior_delta := 0.0
+	var seam_x := roundi(768.0*float(config.material_span_tiles)/12.0)
 	for y in range(0, 512, 4):
-		seam_delta += color_distance(seamless.get_pixel(383, y), seamless.get_pixel(384, y))
-		interior_delta += color_distance(seamless.get_pixel(379, y), seamless.get_pixel(380, y))
+		seam_delta += color_distance(seamless.get_pixel(seam_x-1, y), seamless.get_pixel(seam_x, y))
+		interior_delta += color_distance(seamless.get_pixel(seam_x-5, y), seamless.get_pixel(seam_x-4, y))
 	metrics["repeat_seam_mean_delta"] = seam_delta / 128.0
 	metrics["repeat_interior_mean_delta"] = interior_delta / 128.0
 	check(seam_delta <= interior_delta * 2.0 + 0.64, "painted material repeats leave hard stripe seams")
@@ -149,6 +159,10 @@ func run() -> void:
 	if not bool(setup.get("ok", false)): return finish()
 	var session = Select.start_random_map_skirmish_session_from_setup(setup)
 	OverworldRules.normalize_overworld_state(session)
+	# Rendering must preserve current authoritative collision. The old literal
+	# snapshot predates the restored native scenery masks (2026-09-18) and
+	# therefore encodes missing blockers, not a valid rendering invariant.
+	var collision_before: Dictionary = OverworldRules._blocked_tile_index(session).duplicate(true)
 	session = SessionState.set_active_session(session)
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
 	add_child(shell)
@@ -158,9 +172,10 @@ func run() -> void:
 	metrics["terrain_hash"] = var_to_str(session.overworld.map).sha256_text()
 	metrics["blocked_hash"] = var_to_str(OverworldRules._blocked_tile_index(session)).sha256_text()
 	check(metrics.terrain_hash == "0b87a3d85a5cb77e7b1fe7117215a28ab4383724178079d3dc259249e5836f4d", "Medium terrain differs from pre-change baseline")
-	check(metrics.blocked_hash == "10567142109b668531b348088ae1de74fbb0d0786de699efdae284bca29d7e91", "Medium collision differs from pre-change baseline")
+	check(OverworldRules._blocked_tile_index(session) == collision_before, "opening the view changed authoritative collision")
 	await capture("generated-gameplay")
 	check(saved == session.to_dict(), "gameplay drawing mutated session")
+	check(OverworldRules._blocked_tile_index(session) == collision_before, "ground drawing changed authoritative collision")
 	var surface = view._ground_surface
 	check(surface.configured and surface.visible and surface.missing_terrain_ids.is_empty(), "generated map bypasses original ground")
 	metrics["medium_lookup"] = surface.validation_snapshot()

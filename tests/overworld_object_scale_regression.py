@@ -184,6 +184,10 @@ func run() -> void:
 	var session = Select.start_random_map_skirmish_session_from_setup(setup)
 	OverworldRules.normalize_overworld_state(session)
 	session = SessionState.set_active_session(session)
+	# Source masks are separately checked against every generated record by
+	# the exploration regression. Here rendering must preserve the current
+	# collision surface, including scenery restored after the original fixture.
+	var collision_before := var_to_str(OverworldRules._blocked_tile_index(session)).sha256_text()
 	var shell = load("res://scenes/overworld/OverworldShell.tscn").instantiate()
 	add_child(shell)
 	DisplayServer.window_set_size(resolution)
@@ -195,9 +199,10 @@ func run() -> void:
 	metrics["terrain_hash"] = var_to_str(session.overworld.map).sha256_text()
 	metrics["blocked_hash"] = var_to_str(OverworldRules._blocked_tile_index(session)).sha256_text()
 	check(metrics.terrain_hash == "0b87a3d85a5cb77e7b1fe7117215a28ab4383724178079d3dc259249e5836f4d", "Medium terrain changed")
-	check(metrics.blocked_hash == "10567142109b668531b348088ae1de74fbb0d0786de699efdae284bca29d7e91", "Medium collision changed")
+	check(metrics.blocked_hash == collision_before, "opening the map changed Medium collision")
 	await capture("generated-gameplay")
 	check(before == session.to_dict(), "drawing changed session")
+	check(var_to_str(OverworldRules._blocked_tile_index(session)).sha256_text() == collision_before, "drawing changed Medium collision")
 	# Same diagnostic viewpoint as the owner-reviewed screenshot, not normal fog.
 	for row in session.overworld.fog.explored_tiles: row.fill(true)
 	for row in session.overworld.fog.visible_tiles: row.fill(true)
@@ -219,8 +224,10 @@ func run() -> void:
 	scale_contracts(view, session)
 	var authority: Dictionary = session.to_dict().duplicate(true)
 	var focused_pickups := 0
+	var selected_kinds := {}
 	for node in session.overworld.resource_nodes:
-		if view._resource_asset_id(node) not in ["resource_pickup_gold", "resource_pickup_memory_salt"]: continue
+		var asset_id: String = view._resource_asset_id(node)
+		if asset_id not in ["mapobj_road_writ_purse", "mapobj_memory_salt_jar"] or selected_kinds.has(asset_id): continue
 		var tile := Vector2i(int(node.x), int(node.y))
 		shell.validation_minimap_recenter(tile.x, tile.y)
 		var tile_rect: Rect2 = view._tile_rect(view._board_rect(), tile)
@@ -235,6 +242,7 @@ func run() -> void:
 		view._gui_input(event)
 		check(shell._selected_tile == tile, "pickup lost generous tile click target")
 		check(view._resource_node_at(tile) == node, "pickup action identity/index changed")
+		selected_kinds[asset_id] = true
 		focused_pickups += 1
 		if focused_pickups == 2: break
 	check(focused_pickups == 2, "representative pickup selection cases missing")

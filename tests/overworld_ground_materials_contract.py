@@ -24,7 +24,7 @@ def validate(root=ROOT, config=None, source=None):
     require(required <= set(slots), 'missing terrain identities: ' + ', '.join(sorted(required - set(slots))))
     require(all(type(value) is int and 0 <= value < 16 for value in slots.values()), 'out-of-range/non-integer material slot')
     require(set(slots.values()) == set(range(16)), 'all sixteen original materials must remain reachable')
-    require(config.get('material_span_tiles') == 6, 'material sampling scale differs from shader')
+    require(config.get('material_span_tiles') == 4, 'material sampling scale differs from the readable world scale')
     require(source.get('generation_mode') == 'built_in_image_gen', 'original generation provenance absent')
     require(len(source.get('sources', [])) == 4, 'four original sheets required')
     require(source.get('runtime', {}).get('path') == config.get('atlas'), 'runtime/source manifest path mismatch')
@@ -40,6 +40,9 @@ def validate(root=ROOT, config=None, source=None):
             require(len(entry.get('prompt', '')) > 200, f'original prompt missing: {path.name}')
     require(source.get('runtime', {}).get('size') == [2048, 2048], 'runtime atlas must match shader layout')
     shader = (root / 'scenes/overworld/overworld_ground_surface.gdshader').read_text()
+    owner = (root / 'scenes/overworld/OverworldGroundSurface.gd').read_text()
+    require('world / material_span_tiles' in shader and 'config.get("material_span_tiles"' in owner, 'manifest sampling scale is not consumed')
+    require('textureLod' in shader and 'generate_mipmaps' in owner, 'bounded detail sampling must work on a clean import')
     require('filter_nearest' in shader and 'known_slot' in shader and 'own.g < 0.5' in shader, 'fog-safe exact lookup missing')
     require('TIME' not in shader, 'ground sampling must not swim/animate')
     return errors

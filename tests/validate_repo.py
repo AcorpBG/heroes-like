@@ -5163,6 +5163,8 @@ def build_overworld_object_content_batch_001_section(map_objects: dict[str, dict
         "passable_scenic_decoration_count": 0,
         "blocking_or_edge_decoration_count": 0,
         "common_live_pickup_count": 0,
+        "rare_live_pickup_count": 0,
+        "rare_live_resource_ids": [],
         "staged_rare_pickup_count": 0,
         "footprints": {},
         "biome_ids": [],
@@ -5226,12 +5228,20 @@ def build_overworld_object_content_batch_001_section(map_objects: dict[str, dict
                 site = resource_sites.get(site_id, {})
                 rewards = site.get("rewards", {}) if isinstance(site.get("rewards", {}), dict) else {}
                 reward_ids = {str(resource_id) for resource_id, amount in rewards.items() if int(amount) > 0}
-                if reward_ids and reward_ids.issubset(ECONOMY_STOCKPILE_RESOURCE_IDS):
+                if reward_ids and reward_ids.issubset({"gold", "wood", "ore"}):
                     section["common_live_pickup_count"] += 1
                     for resource_id in sorted(reward_ids):
                         append_unique(section["common_live_resource_ids"], resource_id)
-                elif reward_ids.intersection(ECONOMY_RARE_RESOURCE_IDS):
-                    add_error(f"{object_id}: live pickup must not grant staged rare resources")
+                elif reward_ids and reward_ids.issubset(ECONOMY_RARE_RESOURCE_IDS):
+                    section["rare_live_pickup_count"] += 1
+                    for resource_id in sorted(reward_ids):
+                        append_unique(section["rare_live_resource_ids"], resource_id)
+                    if not bool(obj.get("visitable", False)) or passability_class != "passable_visit_on_enter":
+                        add_error(f"{object_id}: live rare pickup must support legal visit-on-enter")
+                    if bool(site.get("persistent_control", False)) or site.get("control_income") or site.get("resource_outputs"):
+                        add_error(f"{object_id}: loose rare pickup must not produce recurring income")
+                    if any(int(amount) != 1 for amount in rewards.values()):
+                        add_error(f"{object_id}: live rare pickup must retain its authored planned amount of one")
     section["footprints"] = sorted_counts(section["footprints"])
     section["biome_ids"] = sorted(section["biome_ids"])
     section["common_live_resource_ids"] = sorted(section["common_live_resource_ids"])
@@ -5245,8 +5255,8 @@ def build_overworld_object_content_batch_001_section(map_objects: dict[str, dict
             add_error("Batch 001 must include at least 8 blocking or edge-blocker decorations")
         if section["common_live_pickup_count"] < 6:
             add_error("Batch 001 must include at least 6 live common pickups")
-        if section["staged_rare_pickup_count"] < 4:
-            add_error("Batch 001 must include at least 4 staged rare-resource pickups")
+        if section["rare_live_pickup_count"] != 4 or set(section["rare_live_resource_ids"]) != {"aetherglass", "embergrain", "peatwax", "memory_salt"}:
+            add_error("Batch 001 must expose the four original one-time rare-resource pickups")
         for resource_id in ("gold", "wood", "ore"):
             if resource_id not in section["common_live_resource_ids"]:
                 add_error(f"Batch 001 live common pickups must include {resource_id}")
@@ -45452,7 +45462,8 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "ROAD_LAND_SHOULDER_COLOR",
         "ROAD_LAND_EARTH_COLOR",
         "ROAD_LAND_DUST_COLOR",
-        "var path_points := _road_land_path_points(tile, direction, start, end, width)",
+        "_road_land_path_points(tile, direction, _road_connector_start(rect, direction), _road_connector_end(rect, direction), width)",
+        "var corner := _road_land_corner_points(rect, neighbor_directions)",
         "_draw_road_land_ruts(path_points, width)",
     ):
         ensure(token in road_land_block, errors, f"Land roads must retain layered shoulders, earth, dust, and wheel ruts: {token}")
@@ -68023,7 +68034,17 @@ def validate_native_rmg_authored_object_pool_eligibility(errors: list[str]) -> N
         return
     registry = load_json(registry_path)
     authored = load_json(CONTENT_DIR / "map_objects.json").get("items", [])
-    site_ids = set(items_index(load_json(CONTENT_DIR / "resource_sites.json")))
+    sites = items_index(load_json(CONTENT_DIR / "resource_sites.json"))
+    site_ids = set(sites)
+    def live_guard_contract(item):
+        site_id = str(item.get("resource_site_id", ""))
+        site = sites.get(site_id, {})
+        contract = site.get("guarded_reward_contract", {})
+        return (site.get("runtime_boundary", {}).get("guard_resolution_runtime_adopted", False)
+                and not contract.get("metadata_only_guard_contract", True)
+                and contract.get("resource_site_id") == site_id
+                and bool(contract.get("guard_encounter_id"))
+                and bool(contract.get("guard_army_group_id")))
     artifact_ids = set(items_index(load_json(CONTENT_DIR / "artifacts.json")))
     ensure(registry.get("schema_id") == "aurelion_random_map_object_eligibility_v1", errors, "Native RMG authored-object eligibility schema drifted")
     ensure(
@@ -68059,6 +68080,8 @@ def validate_native_rmg_authored_object_pool_eligibility(errors: list[str]) -> N
                     continue
                 if pool.get("require_resource_site") and str(item.get("resource_site_id", "")) not in site_ids:
                     continue
+                if pool.get("require_live_guard_contract") and not live_guard_contract(item):
+                    continue
                 object_id = str(item.get("id", ""))
                 candidates.add(object_id)
                 eligible_decisions[object_id] = pool_id
@@ -68083,13 +68106,16 @@ def validate_native_rmg_authored_object_pool_eligibility(errors: list[str]) -> N
                 continue
             if exclusion.get("require_missing_resource_site") and str(item.get("resource_site_id", "")) in site_ids:
                 continue
+            if exclusion.get("require_missing_live_guard_contract") and live_guard_contract(item):
+                continue
             exclusion_id = str(exclusion.get("id", ""))
             decisions.append(f"excluded:{exclusion_id}")
             excluded_decisions[object_id] = exclusion_id
         ensure(len(decisions) == 1, errors, f"Authored map object {object_id} must have exactly one native-RMG eligibility decision, got {decisions}")
     ensure(len(authored) == 422, errors, "Native RMG eligibility baseline must cover all 422 authored map objects")
-    ensure(len(eligible_decisions) == 336, errors, "Native RMG eligibility must expose the 336 compatible authored map objects")
-    ensure(len(excluded_decisions) == 86, errors, "Native RMG eligibility must retain 86 explicit safety/scenario exclusions")
+    ensure(len(eligible_decisions) == 356, errors, "Native RMG eligibility must expose all 356 compatible authored map objects, including guarded sites and rare pickups")
+    ensure(len(excluded_decisions) == 66, errors, "Native RMG eligibility must retain 66 explicit safety/scenario exclusions")
+    ensure(len(candidate_ids_by_pool.get("guarded_reward", set())) == 32, errors, "All 32 executable guarded sites must be eligible; stale object summaries cannot exclude them")
     source_type_pools = registry.get("source_type_pools", {})
     for type_id, pool_id in source_type_pools.items():
         ensure(str(pool_id) in candidate_ids_by_pool and bool(candidate_ids_by_pool.get(str(pool_id))), errors, f"Native RMG source type {type_id} points to missing or empty authored pool {pool_id}")
@@ -68201,13 +68227,13 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         proxy_entries = proxy_catalog.get("entries", [])
         ensure(isinstance(proxy_entries, list), errors, "H3M reward object proxy catalog entries must be an array")
         expected_resource_proxies = {
-            0: (945, "AVTwood0.def", "object_wood_wagon", "site_wood_wagon", "wood", "reward_resource_wood_build_proxy"),
-            1: (940, "AVTmerc0.def", "object_marsh_peat_yard", "site_peatwax_reed_yard", "peatwax", "reward_resource_mercury_peatwax_proxy"),
-            2: (942, "AVTore0.def", "object_ore_crates", "site_ore_crates", "ore", "reward_resource_ore_build_proxy"),
-            3: (943, "AVTsulf0.def", "object_floodplain_sluice_camp", "site_embergrain_warm_granary", "embergrain", "reward_resource_sulfur_embergrain_proxy"),
-            4: (937, "AVTcrys0.def", "object_cinder_ore_face", "site_aetherglass_lens_house", "aetherglass", "reward_resource_crystal_aetherglass_proxy"),
-            5: (938, "AVTgems0.def", "object_badlands_coin_sluice", "site_memory_salt_pan", "memory_salt", "reward_resource_gems_memory_salt_proxy"),
-            6: (939, "AVTgold0.def", "object_reef_coin_assay", "site_reef_coin_assay", "gold", "reward_resource_gold_reef_coin_proxy"),
+            0: (945, "AVTwood0.def", "object_split_wood_pile", "site_split_wood_pile", "wood", "reward_resource_wood_build_proxy"),
+            1: (940, "AVTmerc0.def", "object_peatwax_votive_bundle", "site_peatwax_votive_bundle", "peatwax", "reward_resource_mercury_peatwax_proxy"),
+            2: (942, "AVTore0.def", "object_quarry_chip_hod", "site_quarry_chip_hod", "ore", "reward_resource_ore_build_proxy"),
+            3: (943, "AVTsulf0.def", "object_embergrain_sample_sack", "site_embergrain_sample_sack", "embergrain", "reward_resource_sulfur_embergrain_proxy"),
+            4: (937, "AVTcrys0.def", "object_aetherglass_splinter_lot", "site_aetherglass_splinter_lot", "aetherglass", "reward_resource_crystal_aetherglass_proxy"),
+            5: (938, "AVTgems0.def", "object_memory_salt_jar", "site_memory_salt_jar", "memory_salt", "reward_resource_gems_memory_salt_proxy"),
+            6: (939, "AVTgold0.def", "object_road_writ_purse", "site_road_writ_purse", "gold", "reward_resource_gold_reef_coin_proxy"),
         }
         type79_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 79]
         ensure(len(type79_entries) == 7, errors, "H3M loose-resource proxy catalog must contain exactly seven type-79 rows")
@@ -68227,6 +68253,10 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             )
             ensure(actual == expected, errors, f"H3M loose-resource subtype {subtype} proxy identity drifted: {actual}")
             ensure(str(row.get("generated_kind", "")) == "reward_reference", errors, f"H3M loose-resource subtype {subtype} must remain a reward_reference")
+            pickup_site = load_json(CONTENT_DIR / "resource_sites.json")
+            pickup_site = next((site for site in pickup_site.get("items", []) if site.get("id") == row.get("native_proxy_site_id")), {})
+            ensure(set(pickup_site.get("rewards", {})) == {expected[4]}, errors, f"Loose resource {subtype} must grant only its original resource")
+            ensure(not pickup_site.get("persistent_control") and not pickup_site.get("control_income") and not pickup_site.get("resource_outputs"), errors, f"Loose resource {subtype} must not become a mine")
         type93_entries = [entry for entry in proxy_entries if isinstance(entry, dict) and int(entry.get("homm3_re_object_type_id", -1)) == 93]
         ensure(len(type93_entries) == 1, errors, "H3M Spell Scroll proxy catalog must contain exactly one type-93 row")
         if len(type93_entries) == 1:
@@ -68850,12 +68880,12 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'creature_bank_rows_exact = false',
             '67: "uncommon"',
             '68: "rare"',
-            '0: {"object_id": "object_wood_wagon", "site_id": "site_wood_wagon", "resource_id": "wood", "catalog_id": "reward_resource_wood_build_proxy"}',
-            '1: {"object_id": "object_marsh_peat_yard", "site_id": "site_peatwax_reed_yard", "resource_id": "peatwax", "catalog_id": "reward_resource_mercury_peatwax_proxy"}',
-            '3: {"object_id": "object_floodplain_sluice_camp", "site_id": "site_embergrain_warm_granary", "resource_id": "embergrain", "catalog_id": "reward_resource_sulfur_embergrain_proxy"}',
-            '4: {"object_id": "object_cinder_ore_face", "site_id": "site_aetherglass_lens_house", "resource_id": "aetherglass", "catalog_id": "reward_resource_crystal_aetherglass_proxy"}',
-            '5: {"object_id": "object_badlands_coin_sluice", "site_id": "site_memory_salt_pan", "resource_id": "memory_salt", "catalog_id": "reward_resource_gems_memory_salt_proxy"}',
-            '6: {"object_id": "object_reef_coin_assay", "site_id": "site_reef_coin_assay", "resource_id": "gold", "catalog_id": "reward_resource_gold_reef_coin_proxy"}',
+            '0: {"object_id": "object_split_wood_pile", "site_id": "site_split_wood_pile", "resource_id": "wood", "catalog_id": "reward_resource_wood_build_proxy"}',
+            '1: {"object_id": "object_peatwax_votive_bundle", "site_id": "site_peatwax_votive_bundle", "resource_id": "peatwax", "catalog_id": "reward_resource_mercury_peatwax_proxy"}',
+            '3: {"object_id": "object_embergrain_sample_sack", "site_id": "site_embergrain_sample_sack", "resource_id": "embergrain", "catalog_id": "reward_resource_sulfur_embergrain_proxy"}',
+            '4: {"object_id": "object_aetherglass_splinter_lot", "site_id": "site_aetherglass_splinter_lot", "resource_id": "aetherglass", "catalog_id": "reward_resource_crystal_aetherglass_proxy"}',
+            '5: {"object_id": "object_memory_salt_jar", "site_id": "site_memory_salt_jar", "resource_id": "memory_salt", "catalog_id": "reward_resource_gems_memory_salt_proxy"}',
+            '6: {"object_id": "object_road_writ_purse", "site_id": "site_road_writ_purse", "resource_id": "gold", "catalog_id": "reward_resource_gold_reef_coin_proxy"}',
             'elif type_id in [67, 68]:',
             'artifact_proxy_placement_ids[String(object.get("placement_id", ""))] = true',
             'or String(object.get("native_authored_pool_candidate_id", "")) != artifact_id',
@@ -68898,7 +68928,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             '"save_round_trip_exact": restored_node == claimed_node',
             'var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, selected_rare_resource, false)',
             'and int(resources_after.get("embergrain", 0)) == int(resources_before.get("embergrain", 0)) + 1',
-            'and int(resources_after.get("gold", 0)) == int(resources_before.get("gold", 0)) + 120',
+            'and int(resources_after.get("gold", 0)) == int(resources_before.get("gold", 0))',
             'for resource_id in ["aetherglass", "brass_scrip", "memory_salt", "peatwax", "verdant_grafts"]:',
             'and mine_count == 18',
             'and mine_subtypes.size() == 7',
@@ -68969,11 +68999,11 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'and bool(fallback_art.get("fallback_procedural_marker", false))',
             'and bool(spell_scroll_interaction.get("ok", false))',
             'const LOOSE_RESOURCE_PRESENTATION_ROWS := [',
-            '{"site_id": "site_peatwax_reed_yard", "object_id": "object_marsh_peat_yard", "resource_id": "peatwax", "asset_id": "resource_pickup_peatwax", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/peatwax_reed_bundle.png", "rewards": {"gold": 120, "peatwax": 1}, "current_small": false}',
-            '{"site_id": "site_embergrain_warm_granary", "object_id": "object_floodplain_sluice_camp", "resource_id": "embergrain", "asset_id": "resource_pickup_embergrain", "mine_asset_id": "mapobj_floodplain_sluice_camp", "expected_footprint": {"width": 2, "height": 3}, "texture_path": "res://art/overworld/runtime/objects/pickups/embergrain_sack.png", "rewards": {"gold": 120, "embergrain": 1}, "current_small": true}',
-            '{"site_id": "site_aetherglass_lens_house", "object_id": "object_cinder_ore_face", "resource_id": "aetherglass", "asset_id": "resource_pickup_aetherglass", "mine_asset_id": "mapobj_cinder_ore_face", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/aetherglass_lens_crate.png", "rewards": {"gold": 120, "aetherglass": 1}, "current_small": true}',
-            '{"site_id": "site_memory_salt_pan", "object_id": "object_badlands_coin_sluice", "resource_id": "memory_salt", "asset_id": "resource_pickup_memory_salt", "mine_asset_id": "mapobj_badlands_coin_sluice", "expected_footprint": {"width": 3, "height": 3}, "texture_path": "res://art/overworld/runtime/objects/pickups/memory_salt_reliquary.png", "rewards": {"gold": 120, "memory_salt": 1}, "current_small": true}',
-            '{"site_id": "site_reef_coin_assay", "object_id": "object_reef_coin_assay", "resource_id": "gold", "asset_id": "resource_pickup_gold", "mine_asset_id": "mapobj_reef_coin_assay", "expected_footprint": {"width": 2, "height": 2}, "texture_path": "res://art/overworld/runtime/objects/pickups/reef_coin_coffer.png", "rewards": {"gold": 220}, "current_small": true}',
+            '{"site_id": "site_peatwax_votive_bundle", "object_id": "object_peatwax_votive_bundle", "resource_id": "peatwax", "asset_id": "mapobj_peatwax_votive_bundle", "mine_asset_id": "mapobj_marsh_peat_yard", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_peatwax_votive_bundle.png", "rewards": {"peatwax": 1}, "current_small": false, "mine_site_id": "site_peatwax_reed_yard"}',
+            '{"site_id": "site_embergrain_sample_sack", "object_id": "object_embergrain_sample_sack", "resource_id": "embergrain", "asset_id": "mapobj_embergrain_sample_sack", "mine_asset_id": "mapobj_floodplain_sluice_camp", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_embergrain_sample_sack.png", "rewards": {"embergrain": 1}, "current_small": true, "mine_site_id": "site_embergrain_warm_granary"}',
+            '{"site_id": "site_aetherglass_splinter_lot", "object_id": "object_aetherglass_splinter_lot", "resource_id": "aetherglass", "asset_id": "mapobj_aetherglass_splinter_lot", "mine_asset_id": "mapobj_cinder_ore_face", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_aetherglass_splinter_lot.png", "rewards": {"aetherglass": 1}, "current_small": true, "mine_site_id": "site_aetherglass_lens_house"}',
+            '{"site_id": "site_memory_salt_jar", "object_id": "object_memory_salt_jar", "resource_id": "memory_salt", "asset_id": "mapobj_memory_salt_jar", "mine_asset_id": "mapobj_badlands_coin_sluice", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_memory_salt_jar.png", "rewards": {"memory_salt": 1}, "current_small": true, "mine_site_id": "site_memory_salt_pan"}',
+            '{"site_id": "site_road_writ_purse", "object_id": "object_road_writ_purse", "resource_id": "gold", "asset_id": "mapobj_road_writ_purse", "mine_asset_id": "mapobj_reef_coin_assay", "expected_footprint": {"width": 1, "height": 1}, "texture_path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_road_writ_purse.png", "rewards": {"gold": 250}, "current_small": true, "mine_site_id": "site_reef_coin_assay"}',
             'func _validate_loose_resource_presentation(',
             'var session_authority_before: Dictionary = session.to_dict()',
             'if actual_current_sites != expected_current_sites or live_nodes_by_site.size() != expected_current_sites.size():',
@@ -69357,7 +69387,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             '"army_neutral_tidepool_skiffyard_watch"',
             'expected_body := [{"x": 20, "y": 28, "level": 0}, {"x": 21, "y": 28, "level": 0}]',
             'expected_visit := [{"x": 20, "y": 28, "level": 0}]',
-            'var expected_engagement := [',
+            'var expected_engagement := expected_visit.duplicate(true)',
             'and guard.get("package_guard_engagement_tiles", []) == expected_engagement',
             'and guard.get("package_block_tiles", [{}]) == []',
             'and not bool(guard.get("blocking_body", true))',
@@ -69451,12 +69481,11 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         engagement_order = tuple(engagement_block.find(token) for token in (
             'var center := Vector2i(int(visit_tile.get("x", -1)), int(visit_tile.get("y", -1)))',
             'if not _generated_source_in_bounds(center, map_size):',
-            'var result := [{"x": center.x, "y": center.y, "level": int(visit_tile.get("level", 0))}]',
-            'for neighbor in _generated_source_route_neighbors(center):',
-            'if _generated_source_in_bounds(neighbor, map_size):',
-            'result.append({"x": neighbor.x, "y": neighbor.y, "level": int(visit_tile.get("level", 0))})',
+            'return [{"x": center.x, "y": center.y, "level": int(visit_tile.get("level", 0))}]',
         ))
-        ensure(all(index >= 0 for index in engagement_order) and list(engagement_order) == sorted(engagement_order), errors, "Generated guarded-reward engagement must expand the exact source visit tile through the established ordered eight-neighbor surface and clip to map bounds")
+        ensure(all(index >= 0 for index in engagement_order) and list(engagement_order) == sorted(engagement_order), errors, "Internal guarded-site defenders must control their exact bounded entrances")
+        ensure('_generated_source_route_neighbors' not in engagement_block, errors, "Internal site defenders must not invent surrounding roaming-monster control")
+        ensure('for entrance in visit_tiles:' in guarded_guard_block and '"generated_guard_engagement_policy": "site_entrances_only_v1"' in guarded_guard_block, errors, "All site entrances must retain explicit internal-defender policy")
 
     ensure(h3maped_catalog_path.exists(), errors, "Missing recovered H3MapEd RMG template catalog source")
     if native_core_path.exists():
@@ -79908,7 +79937,7 @@ def validate_six_sovereign_wild_habitats(errors: list[str]) -> None:
     encounter_sprites = art.get("encounter_identity_sprites", {})
     unit_art = {str(row.get("unit_id", "")): row for row in load_json(CONTENT_DIR / "unit_art_manifest.json").get("items", []) if isinstance(row, dict)}
     unit_animation = {str(row.get("unit_id", "")): row for row in load_json(CONTENT_DIR / "unit_animation_manifest.json").get("items", []) if isinstance(row, dict)}
-    ensure(len(units) >= 136 and (len(groups),len(encounters),len(dwellings),len(sites),len(objects)) == (437,203,49,377,422), errors, "Sovereign-wild batch catalogs changed")
+    ensure(len(units) >= 136 and (len(groups),len(encounters),len(dwellings),len(sites),len(objects)) == (437,203,49,381,422), errors, "Sovereign-wild batch catalogs changed")
     atlas_payload = atlas_path.read_bytes()
     repair_res = "res://art/overworld/source/generated/cutout_recovery_20260909/legacy_families/manifest.json"
     repair_manifest = load_json(res_path_to_disk(repair_res))
@@ -80046,7 +80075,7 @@ def validate_six_unbound_wild_concords(errors: list[str]) -> None:
     object_assets = art.get("object_assets", {})
     site_sprites = art.get("resource_site_sprites", {})
     encounter_sprites = art.get("encounter_identity_sprites", {})
-    ensure((len(units),len(groups),len(encounters),len(dwellings),len(sites),len(objects),len(scenarios)) == (160,437,203,49,377,422,299), errors, "Unbound-wild concord catalog counts changed")
+    ensure((len(units),len(groups),len(encounters),len(dwellings),len(sites),len(objects),len(scenarios)) == (160,437,203,49,381,422,299), errors, "Unbound-wild concord catalog counts changed")
     campaign = campaigns.get(campaign_id, {})
     campaign_chapters = campaign.get("scenarios", []) if isinstance(campaign.get("scenarios", []), list) else []
     expected_scenario_order = [row[2] for row in expected.values()]
@@ -82209,7 +82238,7 @@ def validate_six_veteran_company_musters(errors: list[str]) -> None:
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_path = res_path_to_disk(atlas_res)
     historical_atlas_path = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/recruitment_sites/before_runtime" / atlas_path.relative_to(ROOT / "art/overworld/runtime")
-    ensure((len(scenarios), len(groups), len(sites), len(objects), len(encounters)) == (299,437,377,422,203), errors, "Veteran musters must remain present in the expanded production catalogs")
+    ensure((len(scenarios), len(groups), len(sites), len(objects), len(encounters)) == (299,437,381,422,203), errors, "Veteran musters must remain present in the expanded production catalogs")
     ensure(int(scenario_payload.get("player_facing_active_scenario_count", 0)) == 299, errors, "Veteran muster scenarios are missing from the active player-facing scenario count")
     ensure(atlas_path.is_file() and png_size(atlas_path) == (2304,192) and historical_atlas_path.is_file() and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha, errors, "Veteran company muster runtime atlas bytes or size changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Veteran company muster runtime atlas import sidecar is missing")
@@ -82847,7 +82876,7 @@ def validate_six_grand_muster_assemblies(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
 
-    ensure((len(scenarios), len(sites), len(groups)) == (299,377,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Grand Musters must remain present inside the expanded production catalogs")
+    ensure((len(scenarios), len(sites), len(groups)) == (299,381,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Grand Musters must remain present inside the expanded production catalogs")
     atlas_sha = "175f2028ef2517dc9f482eb03020ab2aceb13b3369dfe4be31d28da7511e22a2"
     ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == atlas_sha and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Grand Muster runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_grand_muster_assemblies_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 120, errors, "Grand Muster generated-source provenance or prompt set changed")
@@ -82941,7 +82970,7 @@ def validate_six_field_mastery_convocations(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
 
-    ensure((len(scenarios), len(sites), len(groups)) == (299,377,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Field Mastery must remain present inside the expanded production catalogs")
+    ensure((len(scenarios), len(sites), len(groups)) == (299,381,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Field Mastery must remain present inside the expanded production catalogs")
     atlas_sha = "0af3c4e0de1553cb835d0f0ca78a85cf82aad237299ee84795f7379e54597afa"
     ensure(png_size(atlas_path) == (1152,192), errors, "Recovered training runtime atlas dimensions changed")
     ensure(png_size(historical_atlas_path) == (288,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha and historical_atlas_path.read_bytes()[25] == 6, errors, "Field Mastery runtime atlas size, alpha, or hash changed")
@@ -83039,7 +83068,7 @@ def validate_six_twin_command_field_councils(errors: list[str]) -> None:
     site_sprites = art.get("resource_site_sprites", {})
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
-    ensure((len(scenarios), len(sites), len(groups)) == (299,377,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Twin Command must remain present inside the expanded production catalogs")
+    ensure((len(scenarios), len(sites), len(groups)) == (299,381,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Twin Command must remain present inside the expanded production catalogs")
     atlas_sha = "bee234907c874f816bc057f64bf3e3de0bac1b5d7add5a99edda3688132a7a1a"
     ensure(png_size(atlas_path) == (1152,192), errors, "Recovered training runtime atlas dimensions changed")
     ensure(png_size(historical_atlas_path) == (288,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha and historical_atlas_path.read_bytes()[25] == 6, errors, "Twin Command runtime atlas size, alpha, or hash changed")
@@ -83129,7 +83158,7 @@ def validate_six_relief_route_convoy_runs(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_sha = "d13071e3816cca9567205b7010933418e874b22057602d89ed4c6646f50086ee"
-    ensure((len(scenarios), len(sites), len(groups)) == (299,377,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Relief routes must remain present inside the expanded production catalogs")
+    ensure((len(scenarios), len(sites), len(groups)) == (299,381,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Relief routes must remain present inside the expanded production catalogs")
     ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == atlas_sha and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Relief-route runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_relief_route_convoy_relays_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 220, errors, "Relief-route generated-source provenance or prompt set changed")
     source_payloads: list[bytes] = []
@@ -83217,7 +83246,7 @@ def validate_six_fogbreak_survey_expeditions(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_sha = "4a084c26ae82b38476bd3f0a27aab615d4c7b5db6c7eb91a8860060e962767b2"
-    ensure((len(scenarios), len(sites), len(groups)) == (299,377,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Fogbreak surveys must remain present inside the expanded production catalogs")
+    ensure((len(scenarios), len(sites), len(groups)) == (299,381,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Fogbreak surveys must remain present inside the expanded production catalogs")
     ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == atlas_sha and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Fogbreak survey runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_fogbreak_survey_instruments_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 220, errors, "Fogbreak survey generated-source provenance or prompt set changed")
     source_payloads: list[bytes] = []
@@ -83307,7 +83336,7 @@ def validate_six_frontier_treasury_commissions(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     atlas_sha = "6cbc67fac5e474d5ffaacb5794babe9166bceb4b55bd67b5a0921ebb995cea2c"
-    ensure((len(scenarios), len(sites), len(groups)) == (299,377,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Frontier treasury commissions must remain present inside the expanded production catalogs")
+    ensure((len(scenarios), len(sites), len(groups)) == (299,381,437) and int(scenario_payload.get("player_facing_active_scenario_count", 0)) >= 299, errors, "Frontier treasury commissions must remain present inside the expanded production catalogs")
     ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == atlas_sha and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Frontier treasury runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_frontier_treasury_offices_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [288,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 220, errors, "Frontier treasury generated-source provenance or prompt set changed")
     source_payloads: list[bytes] = []
@@ -83390,7 +83419,7 @@ def validate_six_border_oath_standard_seizures(errors: list[str]) -> None:
     assets = art.get("object_assets", {})
     standard_sources = {row.get("site_id"):row for row in load_json(standard_manifest_path).get("items", [])}
     cordon_sources = {row.get("encounter_id"):row for row in load_json(cordon_manifest_path).get("items", [])}
-    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,377,299), errors, "Current content catalogs must retain the expanded frontier-mythic totals")
+    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,381,299), errors, "Current content catalogs must retain the expanded frontier-mythic totals")
     historical_standard = ROOT / "art/overworld/source/generated/cutout_recovery_20260909/landmark_states/before_runtime/objects/resource_sites/border_oath_standards_atlas.png"
     ensure(png_size(historical_standard) == (288,48) and hashlib.sha256(historical_standard.read_bytes()).hexdigest() == "b8b2cdc1c9cd9fb575e24e715577a1073a27ac5a0447622f2ac675aa677bc10e", errors, "Historical Border Oath standards atlas changed")
     ensure(png_size(encounter_historical_raster(required[1])) == (288,48) and hashlib.sha256(encounter_historical_raster(required[1]).read_bytes()).hexdigest() == "eadd48c1e705e1cb33f5828fd17cd17eb2e8c40f79d927fb6324e9ad83f5b92c", errors, "Border Oath cordons atlas changed")
@@ -83473,7 +83502,7 @@ def validate_six_garrison_warrant_musters(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     encounter_uses = Counter(str(front.get("encounter_id", "")) for scenario in scenarios.values() for front in scenario.get("encounters", []) if isinstance(front, dict))
-    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,377,299), errors, "Current content catalogs must retain the expanded frontier-mythic totals")
+    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,381,299), errors, "Current content catalogs must retain the expanded frontier-mythic totals")
     ensure(png_size(atlas_path) == (1152,192), errors, "Recovered training runtime atlas dimensions changed")
     ensure(png_size(historical_atlas_path) == (288,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == "29b2d37dea33ae0d919d7d98496279fc41fbd37459150be4062d2c96bf138056" and historical_atlas_path.read_bytes()[25] == 6, errors, "Garrison Warrant runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_garrison_warrant_musters_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 180, errors, "Garrison Warrant source provenance changed")
@@ -83555,7 +83584,7 @@ def validate_six_setbound_regalia_assemblies(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
     encounter_uses = Counter(str(front.get("encounter_id", "")) for scenario in scenarios.values() for front in scenario.get("encounters", []) if isinstance(front, dict))
-    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,377,299), errors, "Current content catalogs must retain the expanded frontier-mythic totals")
+    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,381,299), errors, "Current content catalogs must retain the expanded frontier-mythic totals")
     ensure(png_size(remaining_site_historical_raster(atlas_path)) == (288,48) and hashlib.sha256(remaining_site_historical_raster(atlas_path).read_bytes()).hexdigest() == "2188bf5c9713e07728b1e5a9a79feee2737a255fd9546c7b1f664c2747e6e949" and remaining_site_historical_raster(atlas_path).read_bytes()[25] == 6, errors, "Setbound Regalia runtime atlas size, alpha, or hash changed")
     ensure(source_manifest.get("source_model") == "built_in_image_gen_original_setbound_regalia_reliquaries_atlas" and source_manifest.get("generation_mode") == "built_in_image_gen" and source_manifest.get("runtime_atlas") == atlas_res and len(source_rows) == 6 and len(str(source_manifest.get("prompt_set_summary", ""))) >= 240, errors, "Setbound Regalia source provenance changed")
     table = reward_tables.get("artifact_source_setbound_regalia_reliquaries", {})
@@ -83647,7 +83676,7 @@ def validate_eight_commanders_proving_roads(errors: list[str]) -> None:
     site_sprites = art.get("resource_site_sprites", {})
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
-    ensure((len(scenarios),len(groups),len(sites),len(encounters),len(heroes),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,377,203,66,299), errors, "Eight Commanders Proving Roads must remain present in the exact expanded catalogs")
+    ensure((len(scenarios),len(groups),len(sites),len(encounters),len(heroes),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,381,203,66,299), errors, "Eight Commanders Proving Roads must remain present in the exact expanded catalogs")
     lead_counts: dict[str, int] = {hero_id: 0 for hero_id in heroes}
     for scenario in scenarios.values():
         hero_id = str(scenario.get("hero_id", ""))
@@ -83743,7 +83772,7 @@ def validate_eight_commander_doctrine_expeditions(errors: list[str]) -> None:
     site_sprites = art.get("resource_site_sprites", {})
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
-    ensure((len(scenarios),len(groups),len(sites),len(encounters),len(heroes),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,377,203,66,299), errors, "Commander Doctrine Expeditions must own the exact expanded catalogs")
+    ensure((len(scenarios),len(groups),len(sites),len(encounters),len(heroes),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,381,203,66,299), errors, "Commander Doctrine Expeditions must own the exact expanded catalogs")
     lead_counts = {hero_id: sum(1 for scenario in scenarios.values() if scenario.get("hero_id") == hero_id) for hero_id in heroes}
     ensure(all(lead_counts[row[2]] >= 4 for row in expected.values()) and min(lead_counts.values()) >= 4, errors, "The eight selected commanders must retain at least four direct lead scenarios while the catalog-wide lead floor stays at four")
     atlas_sha = "702a3be7bd912de2c929cc00a9d7af7e2f9607c8f0afd9b096df321f78b5f70b"
@@ -83837,7 +83866,7 @@ def validate_twelve_marchland_warband_musters(errors: list[str]) -> None:
     site_sprites = art.get("resource_site_sprites", {})
     source_manifest = load_json(source_manifest_path)
     source_rows = {str(row.get("site_id", "")): row for row in source_manifest.get("items", []) if isinstance(row, dict)}
-    ensure((len(scenarios),len(groups),len(sites),len(encounters),len(heroes),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,377,203,66,299), errors, "Marchland Warband Musters must own the exact expanded catalogs")
+    ensure((len(scenarios),len(groups),len(sites),len(encounters),len(heroes),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,381,203,66,299), errors, "Marchland Warband Musters must own the exact expanded catalogs")
     lead_counts = {hero_id: sum(1 for scenario in scenarios.values() if scenario.get("hero_id") == hero_id) for hero_id in heroes}
     ensure(all(lead_counts[row[2]] >= 4 for row in expected.values()) and min(lead_counts.values()) >= 4, errors, "The twelve selected heroes must retain at least four direct leads while the catalog-wide lead floor stays at four")
     atlas_sha = "1d10aeb8be99da25bf5bcbd8e685feed2e0e3587d5c5952db1620fa12d08fea0"
@@ -83919,7 +83948,7 @@ def validate_twelve_marchland_grand_route_operations(errors: list[str]) -> None:
     source_manifest = load_json(source_manifest_path)
     source_rows = source_manifest.get("items", [])
     rows = [row for row in scenarios.values() if row.get("content_batch_id") == slice_id]
-    ensure((len(scenarios),len(groups),len(sites),len(encounters),len(heroes),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,377,203,66,299), errors, "Grand-route operations must own the exact expanded catalogs")
+    ensure((len(scenarios),len(groups),len(sites),len(encounters),len(heroes),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,381,203,66,299), errors, "Grand-route operations must own the exact expanded catalogs")
     atlas_sha = "c0e680445282434154bd5019a4dda81f9153cc4a43538e7ebeaf062507e2c360"
     ensure(png_size(historical_atlas_path) == (576,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha and historical_atlas_path.read_bytes()[25] == 6 and Path(f"{atlas_path}.import").is_file(), errors, "Grand-route runtime atlas dimensions, alpha, hash, or import changed")
     ensure(source_manifest.get("schema_id") == "twelve_marchland_grand_route_operations_art_v1" and source_manifest.get("content_batch_id") == slice_id and source_manifest.get("generation_mode") == "built_in_imagegen" and source_manifest.get("source_model") == "built_in_imagegen_original_marchland_grand_route_operations_atlas" and source_manifest.get("runtime_atlas") == atlas_res and source_manifest.get("runtime_atlas_size") == [576,48] and source_manifest.get("runtime_atlas_sha256") == atlas_sha and len(source_rows) == 12, errors, "Grand-route generated-source provenance changed")
@@ -83986,7 +84015,7 @@ def validate_ten_commander_dominion_sieges(errors: list[str]) -> None:
     assets = art.get("object_assets", {}); site_sprites = art.get("resource_site_sprites", {})
     source_manifest = load_json(source_manifest_path); source_rows = source_manifest.get("items", [])
     rows = [row for row in scenarios.values() if row.get("content_batch_id") == slice_id]
-    ensure((len(scenarios),len(groups),len(sites),len(encounters),len(heroes),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,377,203,66,299), errors, "Commander dominion sieges must own the exact expanded catalogs")
+    ensure((len(scenarios),len(groups),len(sites),len(encounters),len(heroes),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,381,203,66,299), errors, "Commander dominion sieges must own the exact expanded catalogs")
     atlas_sha = "c494c021ff746de7a38d06e0e2f93f7a79f000ea4b071f2e874cba2ad8d08d06"
     ensure(png_size(historical_atlas_path)==(480,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest()==atlas_sha and historical_atlas_path.read_bytes()[25]==6 and Path(f"{atlas_path}.import").is_file(), errors, "Commander dominion runtime atlas dimensions, alpha, hash, or import changed")
     ensure(source_manifest.get("schema_id")=="ten_commander_dominion_sieges_art_v1" and source_manifest.get("content_batch_id")==slice_id and source_manifest.get("generation_mode")=="built_in_imagegen" and source_manifest.get("source_model")=="built_in_imagegen_original_commander_dominion_sieges_atlas" and source_manifest.get("runtime_atlas")==atlas_res and source_manifest.get("runtime_atlas_size")==[480,48] and source_manifest.get("runtime_atlas_sha256")==atlas_sha and len(source_rows)==10, errors, "Commander dominion generated-source provenance changed")
@@ -84070,7 +84099,7 @@ def validate_six_named_rival_banner_challenges(errors: list[str]) -> None:
     site_sprites = art.get("resource_site_sprites", {})
     encounter_sprites = art.get("encounter_identity_sprites", {})
     hero_sprites = art.get("hero_identity_sprites", {})
-    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,377,299), errors, "Named-rival batch must remain present in the exact current content catalog counts")
+    ensure((len(scenarios),len(groups),len(encounters),len(sites),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (299,437,203,381,299), errors, "Named-rival batch must remain present in the exact current content catalog counts")
     ensure(png_size(atlas_path) == (1152,192), errors, "Recovered training runtime atlas dimensions changed")
     ensure(png_size(historical_atlas_path) == (288,48) and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == "e43708681a0196da508b07ae7a4e7a48c38623f927603a8a8be253acf068615c", errors, "Named-rival banner atlas dimensions or bytes changed")
     ensure(Path(f"{atlas_path}.import").is_file(), errors, "Named-rival banner atlas import metadata is missing")
@@ -84485,7 +84514,7 @@ def validate_uncrowned_circuit_campaign(errors: list[str]) -> None:
     if not all(path.is_file() for path in required):
         return
 
-    ensure((len(scenarios), len(groups), len(sites), int(scenarios_payload.get("player_facing_active_scenario_count", 0))) == (299, 437, 377, 299), errors, "Uncrowned Circuit must own the current production catalog totals")
+    ensure((len(scenarios), len(groups), len(sites), int(scenarios_payload.get("player_facing_active_scenario_count", 0))) == (299, 437, 381, 299), errors, "Uncrowned Circuit must own the current production catalog totals")
     ensure(len(campaigns) == 25 and int(campaigns_payload.get("player_facing_active_campaign_count", 0)) == 25, errors, "The Uncrowned Circuit must be present in the twenty-five-campaign catalog")
     ensure(campaign.get("content_batch_id") == slice_id and campaign.get("content_status") == "uncrowned_circuit_campaign_live" and campaign.get("starting_scenario_id") == expected[0][0] and campaign.get("emblem_id") == "campaign_emblem_uncrowned_circuit", errors, "The Uncrowned Circuit lost campaign ownership, opening, or emblem identity")
     ensure([row.get("scenario_id") for row in chapters if isinstance(row, dict)] == [row[0] for row in expected], errors, "The Uncrowned Circuit chapter order changed")
@@ -84609,7 +84638,7 @@ def validate_six_frontier_mythic_habitats(errors: list[str]) -> None:
     object_assets = art.get("object_assets", {})
     unit_art = {str(row.get("unit_id", "")):row for row in load_json(CONTENT_DIR / "unit_art_manifest.json").get("items", []) if isinstance(row, dict)}
     animations = {str(row.get("unit_id", "")):row for row in load_json(CONTENT_DIR / "unit_animation_manifest.json").get("items", []) if isinstance(row, dict)}
-    ensure((len(units),len(dwellings),len(sites),len(objects),len(groups),len(encounters),len(scenarios),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (160,49,377,422,437,203,299,299), errors, "Frontier-mythic batch must own the exact expanded catalogs")
+    ensure((len(units),len(dwellings),len(sites),len(objects),len(groups),len(encounters),len(scenarios),int(scenario_payload.get("player_facing_active_scenario_count",0))) == (160,49,381,422,437,203,299,299), errors, "Frontier-mythic batch must own the exact expanded catalogs")
 
     atlas_sha = "8c5f7670e572de06079a22cae409d573a2d3a8342ff43ca30da256ec7a032b07"
     ensure(png_size(atlas_path) == (2304,192) and historical_atlas_path.is_file() and hashlib.sha256(historical_atlas_path.read_bytes()).hexdigest() == atlas_sha and Path(f"{atlas_path}.import").is_file(), errors, "Frontier-mythic habitat atlas bytes, dimensions, or import changed")

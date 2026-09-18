@@ -100,7 +100,7 @@ func _validate_registry(registry: Dictionary, authored: Dictionary, sites: Dicti
 		if decisions.size() != 1:
 			_fail("Authored object %s has %d eligibility decisions: %s" % [object_id, decisions.size(), JSON.stringify(decisions)])
 			return {}
-	if authored.get("items", []).size() != 422 or eligible_ids.size() != 336 or excluded_ids.size() != 86:
+	if authored.get("items", []).size() != 422 or eligible_ids.size() != 356 or excluded_ids.size() != 66:
 		_fail("Eligibility totals drifted: authored=%d eligible=%d excluded=%d" % [authored.get("items", []).size(), eligible_ids.size(), excluded_ids.size()])
 		return {}
 	for source_type in registry.get("source_type_pools", {}).keys():
@@ -112,8 +112,8 @@ func _validate_registry(registry: Dictionary, authored: Dictionary, sites: Dicti
 		"candidate_ids_by_pool": candidate_ids_by_pool,
 		"public_summary": {
 			"authored_object_count": 422,
-			"eligible_object_count": 336,
-			"excluded_object_count": 86,
+			"eligible_object_count": eligible_ids.size(),
+			"excluded_object_count": excluded_ids.size(),
 			"artifact_candidate_count": artifact_ids.size(),
 			"source_type_pool_count": registry.get("source_type_pools", {}).size(),
 			"pool_candidate_counts": _set_sizes(candidate_ids_by_pool),
@@ -227,7 +227,19 @@ func _matches_pool(item: Dictionary, pool: Dictionary, site_ids: Dictionary) -> 
 		return false
 	if String(item.get("runtime_boundary", {}).get("status", "")) in pool.get("exclude_runtime_statuses", []):
 		return false
+	if bool(pool.get("require_live_guard_contract", false)) and not _has_live_guard_contract(item):
+		return false
 	return not bool(pool.get("require_resource_site", false)) or site_ids.has(String(item.get("resource_site_id", "")))
+
+func _has_live_guard_contract(item: Dictionary) -> bool:
+	var site_id := String(item.get("resource_site_id", ""))
+	var site := ContentService.get_resource_site(site_id)
+	var contract: Dictionary = site.get("guarded_reward_contract", {})
+	return bool(site.get("runtime_boundary", {}).get("guard_resolution_runtime_adopted", false)) \
+		and not bool(contract.get("metadata_only_guard_contract", true)) \
+		and String(contract.get("resource_site_id", "")) == site_id \
+		and not String(contract.get("guard_encounter_id", "")).is_empty() \
+		and not String(contract.get("guard_army_group_id", "")).is_empty()
 
 func _matches_exclusion(item: Dictionary, exclusion: Dictionary, site_ids: Dictionary) -> bool:
 	if exclusion.has("primary_classes") and String(item.get("primary_class", "")) not in exclusion.get("primary_classes", []):
@@ -237,6 +249,8 @@ func _matches_exclusion(item: Dictionary, exclusion: Dictionary, site_ids: Dicti
 	if exclusion.has("runtime_statuses") and String(item.get("runtime_boundary", {}).get("status", "")) not in exclusion.get("runtime_statuses", []):
 		return false
 	if bool(exclusion.get("require_missing_resource_site", false)) and site_ids.has(String(item.get("resource_site_id", ""))):
+		return false
+	if bool(exclusion.get("require_missing_live_guard_contract", false)) and _has_live_guard_contract(item):
 		return false
 	return true
 
