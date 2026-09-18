@@ -4418,5 +4418,79 @@
       "biome_component_v2_sandstone_rock_18",
       "biome_component_v2_sandstone_rock_21"
     ]
+  },
+  "terrain_mountain_palettes": {
+    "sand": [
+      "native_mountain_sand_00",
+      "native_mountain_sand_01",
+      "native_mountain_sand_02",
+      "native_mountain_sand_03",
+      "native_mountain_sand_04"
+    ]
+  },
+  "mountain_palettes": {
+    "biome_grasslands": [
+      "native_mountain_grasslands_00",
+      "native_mountain_grasslands_01",
+      "native_mountain_grasslands_02",
+      "native_mountain_grasslands_03",
+      "native_mountain_grasslands_04"
+    ],
+    "biome_deep_forest": [
+      "native_mountain_deep_forest_00",
+      "native_mountain_deep_forest_01",
+      "native_mountain_deep_forest_02",
+      "native_mountain_deep_forest_03",
+      "native_mountain_deep_forest_04"
+    ],
+    "biome_mire_fen": [
+      "native_mountain_mire_fen_00",
+      "native_mountain_mire_fen_01",
+      "native_mountain_mire_fen_02",
+      "native_mountain_mire_fen_03",
+      "native_mountain_mire_fen_04"
+    ],
+    "biome_highland_ridge": [
+      "native_mountain_highland_ridge_00",
+      "native_mountain_highland_ridge_01",
+      "native_mountain_highland_ridge_02",
+      "native_mountain_highland_ridge_03",
+      "native_mountain_highland_ridge_04"
+    ],
+    "biome_coast_archipelago": [
+      "native_mountain_coast_archipelago_00",
+      "native_mountain_coast_archipelago_01",
+      "native_mountain_coast_archipelago_02",
+      "native_mountain_coast_archipelago_03",
+      "native_mountain_coast_archipelago_04"
+    ],
+    "biome_rough_badlands": [
+      "native_mountain_rough_badlands_00",
+      "native_mountain_rough_badlands_01",
+      "native_mountain_rough_badlands_02",
+      "native_mountain_rough_badlands_03",
+      "native_mountain_rough_badlands_04"
+    ],
+    "biome_snow_frost_marches": [
+      "native_mountain_snow_frost_marches_00",
+      "native_mountain_snow_frost_marches_01",
+      "native_mountain_snow_frost_marches_02",
+      "native_mountain_snow_frost_marches_03",
+      "native_mountain_snow_frost_marches_04"
+    ],
+    "biome_ash_lava_wastes": [
+      "native_mountain_ash_lava_wastes_00",
+      "native_mountain_ash_lava_wastes_01",
+      "native_mountain_ash_lava_wastes_02",
+      "native_mountain_ash_lava_wastes_03",
+      "native_mountain_ash_lava_wastes_04"
+    ],
+    "biome_subterranean_underways": [
+      "native_mountain_subterranean_underways_00",
+      "native_mountain_subterranean_underways_01",
+      "native_mountain_subterranean_underways_02",
+      "native_mountain_subterranean_underways_03",
+      "native_mountain_subterranean_underways_04"
+    ]
   }
 }

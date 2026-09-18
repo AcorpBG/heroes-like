@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Original mountain masses
+
+`art-mountain-masses-20260919` — completed. Fifty original irregular mountain masses replace paired boulders on broad rock footprints. Separate visual coverage supports overlapping sides and tall peaks with stable depth order, fog clipping and unchanged collision. Focused render/content/import checks passed; see `docs/biome-source-component-expansion.md`.
+
 ### Sand geology and connected rock bases
 
 `art-sand-rock-cohesion-20260919` — completed. Sand has 25 original pale sandstone components and 25 assembled outcrops; dirt retains red badlands rock. Adjacent same-terrain rock bodies share low rubble foundations across source records, preserving exact blocked cells and fog. Focused dense rendering and content checks passed; see `docs/biome-source-component-expansion.md`.

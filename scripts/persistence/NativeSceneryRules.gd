@@ -43,6 +43,15 @@ static func asset_candidates(object: Dictionary, biome_id: String, terrain_id: S
 			return candidates
 	return entry.get("asset_ids", [])
 
+static func mountain_candidates(object: Dictionary, biome_id: String, terrain_id: String) -> Array:
+	var manifest := ContentService.load_json(MANIFEST)
+	var entry := policy(object)
+	var art_biome := String(entry.get("variation_biome", biome_id))
+	if not entry.has("variation_biome"):
+		var terrain_pool: Array = manifest.get("terrain_mountain_palettes", {}).get(terrain_id, [])
+		if not terrain_pool.is_empty(): return terrain_pool
+	return manifest.get("mountain_palettes", {}).get(art_biome, [])
+
 static func policy(object: Dictionary) -> Dictionary:
 	return ContentService.load_json(MANIFEST).get("source_types", {}).get(str(int(object.get("h3m_type_id", -1))), {})
 

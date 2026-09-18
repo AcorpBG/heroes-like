@@ -726,6 +726,7 @@ var _encounters_by_tile: Dictionary = {}
 var _rememberable_encounters_by_tile: Dictionary = {}
 var _decorative_objects_by_tile: Dictionary = {}
 var _generated_decorative_bodies_by_tile: Dictionary = {}
+var _native_mountains_by_tile: Dictionary = {}
 var _standalone_map_objects_by_tile: Dictionary = {}
 var _heroes_by_tile: Dictionary = {}
 var _decorative_object_asset_ids: Dictionary = {}
@@ -3738,6 +3739,8 @@ func _draw_tile_scenery_icon(tile: Vector2i, rect: Rect2) -> void:
 			if not bool(decorative_object.get("generated_decorative_body_cell", false)):
 				_draw_decorative_object_marker(decorative_object, decorative_rect, remembered, tile)
 
+	_draw_native_mountains_at(tile, rect, remembered)
+
 func _draw_tile_state_icon(tile: Vector2i, rect: Rect2, include_scenery: bool = true) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 		return
@@ -4443,6 +4446,9 @@ func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, rem
 	else:
 		sprite_extent = tile_extent * 0.98
 		sprite_center = rect.get_center()
+		if _native_mountains_by_tile.has(_tile_key(tile)):
+			sprite_extent = tile_extent * 0.55
+			sprite_center.y += tile_extent * 0.18
 	var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)
 	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
 	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent)))
@@ -4460,8 +4466,15 @@ func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, rem
 	return true
 
 func _draw_native_scenery_formation(object: Dictionary, cell_rect: Rect2, remembered: bool, tile: Vector2i) -> void:
-	var formation: Dictionary = object.get("generated_body_formation", {})
-	if formation.is_empty(): return
+	var own: Dictionary = object.get("generated_body_formation", {})
+	if not own.is_empty() and not bool(own.get("mountain", false)):
+		_draw_native_formation_layer(object, own, cell_rect, remembered, tile)
+
+func _draw_native_mountains_at(tile: Vector2i, cell_rect: Rect2, remembered: bool) -> void:
+	for formation in _native_mountains_by_tile.get(_tile_key(tile), []):
+		_draw_native_formation_layer(formation.presentation, formation, cell_rect, remembered, tile)
+
+func _draw_native_formation_layer(object: Dictionary, formation: Dictionary, cell_rect: Rect2, remembered: bool, tile: Vector2i) -> void:
 	var asset_id := String(formation.get("asset_id", ""))
 	var texture = _object_texture_for_asset(asset_id)
 	if not texture is Texture2D: return
@@ -4470,7 +4483,7 @@ func _draw_native_scenery_formation(object: Dictionary, cell_rect: Rect2, rememb
 	var payload := preload("res://scripts/persistence/NativeSceneryFormation.gd").slice(formation, tile, cell_rect, painted_texture.get_size())
 	if payload.is_empty(): return
 	var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
-	tint *= _native_scenery_modulate(object, tile, asset_id)
+	tint *= _native_scenery_modulate(object, formation.anchor, asset_id)
 	_canvas_draw_texture_rect_region(painted_texture, payload.rect, payload.source, tint)
 
 func _draw_native_rock_contacts(object: Dictionary, cell_rect: Rect2, remembered: bool, tile: Vector2i) -> void:
@@ -10594,6 +10607,7 @@ func _rebuild_object_indexes() -> void:
 		_rememberable_encounters_by_tile.clear()
 		_decorative_objects_by_tile.clear()
 		_generated_decorative_bodies_by_tile.clear()
+		_native_mountains_by_tile.clear()
 		_standalone_map_objects_by_tile.clear()
 		_heroes_by_tile.clear()
 		_object_index_signature = 0
@@ -10699,6 +10713,7 @@ func _rebuild_static_object_indexes() -> void:
 	_scenery_index_valid = true
 	_decorative_objects_by_tile.clear()
 	_generated_decorative_bodies_by_tile.clear()
+	_native_mountains_by_tile.clear()
 	_standalone_map_objects_by_tile.clear()
 	_profile_add("scenery_index_rebuilds", 1)
 	for object_value in _session.overworld.get("map_objects", []):
@@ -10852,6 +10867,48 @@ func _index_native_rock_contacts() -> void:
 			var contact := {"asset_id": rock.pool[seed % rock.pool.size()], "rect": Rect2(Vector2(tile) + (Vector2(0.4,0.18) if horizontal else Vector2(0.1,0.5)), Vector2(1.2,0.75) if horizontal else Vector2(0.8,1.1)), "tiles": [tile,neighbor]}
 			rock.cell.generated_body_rock_contacts.append(contact)
 			rocks[neighbor].cell.generated_body_rock_contacts.append(contact)
+	_index_native_mountain_layers()
+
+func _index_native_mountain_layers() -> void:
+	# Visual coverage is distinct from collision: peaks can rise above their
+	# bases and overlap. Every explored tile samples the same sorted stack;
+	# the scenery caller clips unexplored cells before drawing any layers.
+	_native_mountains_by_tile.clear()
+	var formations := {}
+	for cell in _generated_decorative_bodies_by_tile.values():
+		var formation: Dictionary = cell.get("generated_body_formation", {})
+		if not bool(formation.get("mountain", false)): continue
+		formations[String(formation.source_placement_id) + "|" + _tile_key(formation.anchor)] = formation
+	var ordered: Array = formations.values()
+	ordered.sort_custom(func(a: Dictionary, b: Dictionary):
+		var a_bottom: int = a.mass_origin.y + a.mass_size.y
+		var b_bottom: int = b.mass_origin.y + b.mass_size.y
+		if a_bottom != b_bottom: return a_bottom < b_bottom
+		if a.origin.x != b.origin.x: return a.origin.x < b.origin.x
+		return String(a.source_placement_id) < String(b.source_placement_id))
+	for formation in ordered:
+		var mass := Rect2i(formation.mass_origin, formation.mass_size)
+		var margins := [0.0, 0.0]
+		for side in range(2):
+			var x: int = mass.position.x - 1 if side == 0 else mass.end.x
+			var joins_rock := true
+			for y in range(mass.position.y, mass.end.y):
+				var tile := Vector2i(x,y)
+				var neighbor: Dictionary = _generated_decorative_bodies_by_tile.get(_tile_key(tile), {})
+				if neighbor.is_empty() or _terrain_at(tile) != _terrain_at(formation.anchor):
+					joins_rock = false
+					break
+				if not bool(neighbor.get("generated_body_formation", {}).get("mountain", false)) and not String(neighbor.get("overworld_sprite_asset_id", "")).contains("_rock_"):
+					joins_rock = false
+					break
+			if joins_rock: margins[side] = 0.45
+		formation["paint_bounds"] = Rect2(Vector2(mass.position) - Vector2(margins[0],1.4), Vector2(mass.size) + Vector2(margins[0]+margins[1],1.4))
+		var bounds: Rect2 = formation.paint_bounds
+		for y in range(maxi(0, floori(bounds.position.y)), mini(_map_size.y, ceili(bounds.end.y))):
+			for x in range(maxi(0, floori(bounds.position.x)), mini(_map_size.x, ceili(bounds.end.x))):
+				var key := _tile_key(Vector2i(x,y))
+				if not _native_mountains_by_tile.has(key): _native_mountains_by_tile[key] = []
+				_native_mountains_by_tile[key].append(formation)
 
 func _index_native_scenery_formations(object: Dictionary, body_tiles: Array) -> void:
 	if int(object.get("native_scenery_art_version", 0)) < 2: return
@@ -10877,6 +10934,19 @@ func _index_native_scenery_formations(object: Dictionary, body_tiles: Array) -> 
 			var key := "formation|" + _generated_decorative_body_motif_key(object, anchor)
 			formation["asset_id"] = _generated_decorative_body_asset_id(object, anchor) if candidates.is_empty() else String(candidates[key.sha256_buffer().decode_u32(0) % candidates.size()])
 			formation["source_placement_id"] = source_id
+			# A mountain is dedicated large-scale artwork, never an enlarged pair
+			# of boulders. Preserve the plains wooded substitutions.
+			if family == "rock" and not String(formation.asset_id).begins_with("plains_grove_v2_"):
+				var biome := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(_terrain_at(anchor), ""))
+				var mountains: Array = preload("res://scripts/persistence/NativeSceneryRules.gd").mountain_candidates(object, biome, _terrain_at(anchor))
+				if not mountains.is_empty():
+					formation["asset_id"] = mountains[key.sha256_buffer().decode_u32(0) % mountains.size()]
+					formation["mountain"] = true
+					# Keep the base on the fully blocked interior; height is a visual
+					# overhang. Widen into neighboring rock cells only, joining ranges.
+					var mass: Rect2i = Rect2i(formation.mass_origin, formation.mass_size)
+					formation["paint_bounds"] = Rect2(Vector2(mass.position) - Vector2(0,1.4), Vector2(mass.size) + Vector2(0,1.4))
+					formation["presentation"] = {"native_scenery_art_version": 2, "h3m_type_id": object.get("h3m_type_id", -1)}
 			for tile in formation.tiles:
 				_generated_decorative_bodies_by_tile[_tile_key(tile)]["generated_body_formation"] = formation
 

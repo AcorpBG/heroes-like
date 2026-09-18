@@ -22302,6 +22302,15 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "art-mountain-masses-20260919",
+      "title": "Original multi-tile mountain scenery",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "notes": "Delivered 50 original irregular mountain masses across nine biomes plus sand. Broad rock footprints select mountain artwork; smaller bodies and plains groves remain. Separate visual coverage preserves intact peaks and overlapping transparent contours with stable back-to-front order; bases stay on blocked interiors and sides widen into neighboring rock bodies only. Source masks, generation and legacy saves unchanged. Focused sand/dirt/mire render: 1585 checks passed; all 50 mountain IDs selectable, overlaps/overhangs, deterministic order, masks and fog checked. All 2912 generated blocker content contracts passed. Final Windows Godot import clean; wiki rebuilt. No full suite, gameplay, Linux or package run. Temporary renders/logs/profile removed; original art/prompts/recipes and tools retained."
+    },
+    {
       "id": "art-sand-rock-cohesion-20260919",
       "title": "Distinct sand geology and connected rock foundations",
       "phase": "phase-6-production-alpha-layer",

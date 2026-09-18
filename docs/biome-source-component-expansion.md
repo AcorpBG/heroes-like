@@ -158,3 +158,39 @@ contracts passed, and normal Windows Godot editor import completed without
 errors. The wiki catalog includes the new art. No full suite, gameplay, Linux
 or package run was performed. Temporary render/log/profile outputs are removed
 after review; original art, recipes and build tools remain.
+
+## Irregular mountain masses and overlapping silhouettes
+
+The broad-rock renderer now selects actual original mountain artwork instead
+of enlarging two-component boulder clusters. Fifty 512px runtime sprites cover
+nine biome palettes plus a separate sand palette (five each). The selected
+source sheets use crooked ridges, open crescents, jagged spines, forked massifs
+and winding escarpments with transparent, irregular contours. The initial
+compact studies remain as provenance; the irregular revision is shipped.
+`tools/build_mountain_scenery.py` reproduces extraction and registration from
+the source sheets, prompts and recipes in `mountain_masses_20260919`.
+
+Mountain visual coverage is now indexed separately from collision coverage.
+The base is anchored to an entirely blocked interior of the original source
+footprint. Peaks can rise up to 1.4 tiles above that region; adjoining rock
+bodies allow their sides to overlap by 0.45 tiles. A stable back-to-front order
+is shared by every drawn tile. This preserves the complete transparent outline
+instead of cutting peaks or contours at source-object rectangles. Per-cell
+render slicing remains solely for fog and viewport clipping. Mountain tint
+comes from its anchor terrain even when a peak projects above another terrain.
+Interactable objects and armies retain the existing foreground pass.
+
+No collision tiles, native placement records or generation rules change.
+Small bodies retain small rocks, and the wooded plains substitutions remain.
+Existing version 2 maps update on restart/reload; version 1 retains its prior
+appearance. This is original art and presentation, not native RMG parity work.
+
+The focused overlapping sand/dirt/mire render passed 1,585 checks, including
+all 50 selectable mountains, overlap ordering, visual overhang, deterministic
+reindexing, original masks, legacy presentation and fog pixels. The irregular
+render was visually reviewed. All 2,912 generated-blocker provenance, canvas
+and import contracts passed. Windows Godot import completed without errors
+after correcting a reset-path indentation error; the wiki includes all new art.
+No full suite, gameplay session, Linux or package run was performed. Temporary
+renders, logs and the isolated editor profile are removed after review; art,
+provenance and rebuild tools remain.
