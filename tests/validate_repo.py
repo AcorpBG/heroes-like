@@ -43631,6 +43631,14 @@ def validate_generated_blocker_contracts(object_assets: dict, errors: list[str])
         assert len({r["sha256"] for r in recipes}) == 900
         rows = [(r["asset_id"], r["runtime"], r["source"], r["sha256"], (1254, 1254), r["biome_ids"]) for r in originals]
         rows += [(r["id"], r["runtime_path"], None, r["sha256"], (256, 256), [r["biome"]]) for r in recipes]
+        component_library = load_json(base / "biome_components_20260919/recipes.json")
+        components = component_library["components"]
+        clusters = component_library["clusters"]
+        assert Counter(r["biome"] for r in components) == Counter({b: 100 for b in palette["generated_body_palette"]})
+        assert len({(r["atlas"], r["cell"]) for r in components}) == 900
+        assert {layer["component"] for r in clusters for layer in r["layers"]} == {r["id"] for r in components}
+        assert all(len({layer["component"] for layer in r["layers"]}) >= 2 for r in clusters)
+        rows += [(r["id"], r["runtime_path"], None, r["sha256"], (256, 256), [r["biome"]]) for r in components + clusters]
         for asset_id, path, source, digest, size, biomes in rows:
             entry = object_assets.get(asset_id, {})
             runtime = res_path_to_disk(path)

@@ -2,7 +2,16 @@
 
 Status: completed. The owner approved a mix of separately generated sprites and assembled original-art clusters, with at least 100 new blockers per biome and an emphasis on asset production.
 
-## Live semantic palette adoption
+## Current source-component expansion
+
+The September 19 expansion supersedes the small-source library as the primary
+version 2 semantic palette: each biome now has 100 original components and 100
+paired clusters. See [Distinct biome source components](biome-source-component-expansion.md)
+for the delivered art, runtime adoption and focused checks. The older 900
+appearances and provenance below remain preserved; their counts describe the
+earlier delivery.
+
+## September 18 semantic palette adoption
 
 The September 18 semantic scenery selector had bypassed this library: most
 families used only a few older sprites, and lava barriers used one fixed raster.
