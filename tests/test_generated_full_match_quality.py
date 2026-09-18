@@ -6,7 +6,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from generated_full_match_quality import acceptance_failures, army_capacity_trace, resume_prefix
+from generated_full_match_quality import CASES, acceptance_failures, army_capacity_trace, resume_prefix
 
 
 class FullMatchAcceptanceTests(unittest.TestCase):
@@ -87,6 +87,47 @@ class FullMatchAcceptanceTests(unittest.TestCase):
             self.assertNotIn('battle', metadata['counts'])
             self.assertEqual(metadata['last_progress_day'], 5)
             self.assertEqual(metadata['active_target'], {'id': 'still_travelling'})
+
+    def test_current_quality_cases_do_not_replace_historical_setup(self):
+        for name, seed in [('medium', '10'), ('large', '11')]:
+            current = CASES['quality_' + name]
+            self.assertEqual(current['seed'], seed)
+            self.assertEqual(current['size'], 'homm3_' + name)
+            self.assertEqual(current['template_selection_mode'], 'native_catalog_auto')
+            self.assertEqual(current['monster_strength'], 'normal')
+            self.assertNotIn('template_selection_mode', CASES[name])
+            self.assertNotIn('monster_strength', CASES[name])
+
+    def test_current_resume_rejects_historical_or_mismatched_map_settings(self):
+        for key, expected, mismatch in [('template_selection_mode', 'native_catalog_auto', 'size_default'),
+                                        ('monster_strength', 'normal', 'weak')]:
+            with self.subTest(key=key), tempfile.TemporaryDirectory() as temporary:
+                source, case = self.resume_fixture(Path(temporary))
+                case[key] = expected
+                with self.assertRaisesRegex(ValueError, key):
+                    resume_prefix(source, case)
+                path = source / 'actions.jsonl'
+                rows = [json.loads(line) for line in path.read_text().splitlines()]
+                for value in [mismatch, expected]:
+                    rows[0]['result'][key] = value
+                    path.write_text(''.join(json.dumps(row) + '\n' for row in rows))
+                    if value == mismatch:
+                        with self.assertRaisesRegex(ValueError, key):
+                            resume_prefix(source, case)
+                    else:
+                        self.assertEqual(len(resume_prefix(source, case)[1]), 3)
+
+    def test_historical_case_cannot_resume_a_current_catalog_checkpoint(self):
+        for key, value in [('template_selection_mode', 'native_catalog_auto'),
+                           ('monster_strength', 'normal')]:
+            with self.subTest(key=key), tempfile.TemporaryDirectory() as temporary:
+                source, case = self.resume_fixture(Path(temporary))
+                path = source / 'actions.jsonl'
+                rows = [json.loads(line) for line in path.read_text().splitlines()]
+                rows[0]['result'][key] = value
+                path.write_text(''.join(json.dumps(row) + '\n' for row in rows))
+                with self.assertRaisesRegex(ValueError, key):
+                    resume_prefix(source, case)
 
     def test_resume_rejects_unproven_checkpoint_or_different_setup(self):
         for change in ['config', 'day', 'terminal', 'error', 'missing_log']:

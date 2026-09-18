@@ -120,6 +120,21 @@ class NativeTransitValidationTests(unittest.TestCase):
         report["portals"]["multihero_credit"] = {"ok": True}
         self.assertNotIn("multihero_pending_credit_not_preserved", MODULE.portal_failures(report, 2))
 
+    def test_multi_exit_requires_hostile_arrival_and_paid_cost_evidence(self):
+        report = self.good_portal_report()
+        report['gates'][0]['native_transit']['destinations'].append({'target_placement_id': 'c'})
+        portals = report['portals']
+        portals.update(ends=[], representatives_only=True, multihero_credit={'ok': True})
+        multi = copy.deepcopy(portals['representatives'][0])
+        multi['shape'] = '45:2'
+        portals['representatives'].append(multi)
+        key = 'paid_choice_enters_hostile_exit_without_second_charge'
+        for value in [None, False, 1]:
+            multi['checks'][key] = value
+            self.assertIn('45:2: ' + key, MODULE.portal_failures(report, 2, True))
+        multi['checks'][key] = True
+        self.assertEqual(MODULE.portal_failures(report, 2, True), [])
+
     def test_continuous_journey_requires_real_towns_steps_turns_and_battle(self):
         report = {"checks": {"disk_package_roundtrip": True, "native_navigation_field_unit_edges": True},
                   "objects": [{"kind": "town", "placement_id": name} for name in ("home", "target")],

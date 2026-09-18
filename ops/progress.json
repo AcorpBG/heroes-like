@@ -16684,14 +16684,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Object-presence/readability and guard-targeting corrections are validated. Source/Linux/rendered Windows 7195 guard checks each, 81295 exploration checks, four-size density with unchanged thresholds, repository and official exports/parity pass. Current child rmg-guarded-exploration-closure-20260918 remains active for broader actual enemy/portal routes and whole-match pacing acceptance. No native generation edits or whole-goal completion claim. Cleaned 3.024GB of superseded rebuildable exports/captures; caches/saves/RMG/unrelated files retained.",
+  "currentNotes": "Guarded portal runtime correction validated: 2104 source/Linux/Windows checks each, real day56-to57 walk and two original defender victories with correct arrival/save state, native multi-exit/cave compatibility, eight movement/battle/save regressions, repository, exports and exact PCK parity pass. Prior object/readability/guard-targeting fixes remain validated. Resumed complete-match Medium day59 and Large day45 remain in progress; no terminal or full-goal acceptance claim. No native generation tuning. Removed 2.971GB superseded exports; final packages, saves, caches, RMG and unrelated files retained.",
   "currentPhase": "phase-6-production-alpha-layer",
   "currentSlice": "rmg-guarded-exploration-closure-20260918",
   "currentSliceId": "rmg-guarded-exploration-closure-20260918",
-  "currentSliceNotes": "Fixed monster-center nearest legal same-guard targeting and encounter-first cached entry at guarded sites, preserving legacy no-placement-ID encounters. Source/Linux/rendered Windows each pass 7195 checks: 221 guards, 7 genuine starting-army battle commits, 2 partial routes, 4 real input/save flows. Exploration 81295; four-size density and existing controller/movement/cache checks pass. Exports/parity/repository/visuals validated, 3.024GB obsolete outputs cleaned. Next: broader actual enemy/portal routes and pacing; no native generation tuning or whole-goal completion.",
+  "currentSliceNotes": "Hostile portal arrival and commander aftermath corrected; 2104 source/Linux/Windows checks each and actual day56-to57 28-step journey defeat original 98-unit raid plus 80-unit guard, preserving destination/movement through reports and save. Native multi-exit/cave compatibility and eight related regressions pass. Medium day59 and Large day45 complete-match continuations active; no whole-match or parent completion claim.",
   "currentSliceStatus": "in_progress",
   "currentSliceTitle": "Guarded Exploration Closure",
-  "currentSliceUpdatedAt": "2026-09-18T07:24:16Z",
+  "currentSliceUpdatedAt": "2026-09-18T09:06:54Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22520,9 +22520,9 @@
       "nonGoals": [
         "No blanket guard multiplier, day lock, cache reinjection, retry search or guessed native placement"
       ],
-      "updatedAt": "2026-09-18T07:24:16Z",
+      "updatedAt": "2026-09-18T09:06:54Z",
       "startedAt": "2026-09-18T05:25:05Z",
-      "notes": "Fixed monster-center nearest legal same-guard targeting and encounter-first cached entry at guarded sites, preserving legacy no-placement-ID encounters. Source/Linux/rendered Windows each pass 7195 checks: 221 guards, 7 genuine starting-army battle commits, 2 partial routes, 4 real input/save flows. Exploration 81295; four-size density and existing controller/movement/cache checks pass. Exports/parity/repository/visuals validated, 3.024GB obsolete outputs cleaned. Next: broader actual enemy/portal routes and pacing; no native generation tuning or whole-goal completion."
+      "notes": "Hostile portal arrival and commander aftermath corrected; 2104 source/Linux/Windows checks each and actual day56-to57 28-step journey defeat original 98-unit raid plus 80-unit guard, preserving destination/movement through reports and save. Native multi-exit/cave compatibility and eight related regressions pass. Medium day59 and Large day45 complete-match continuations active; no whole-match or parent completion claim."
     },
     {
       "id": "rmg-overworld-quality-acceptance-20260918",
@@ -22556,9 +22556,9 @@
       "nonGoals": [
         "No treating missing historical evidence as passed or new reports as gameplay implementation"
       ],
-      "updatedAt": "2026-09-18T07:24:15Z",
+      "updatedAt": "2026-09-18T09:06:04Z",
       "startedAt": "2026-09-18T05:41:38Z",
-      "notes": "Guard targeting/cache correction validated: source/Linux/rendered Windows 7195 checks each, same probe SHA 57c0a764; 81295 exploration checks, all four density sizes and movement/controller/cache tests pass. Official exports plus 26-step Windows generated flow, exact PCK parity, repository and 1280/1920 visuals pass. Removed 3.024GB superseded rebuildable exports/captures; caches/saves/RMG/unrelated files retained. Fresh broader enemy/portal progression and whole-match pacing acceptance remain open; no full-goal claim."
+      "notes": "Portal batch platform validation passes: 2104 identical focused checks on source/Linux/rendered Windows, source guard/barrier coverage 7195, eight movement/battle/save regressions, 15 full-match and 13 transit validator unit tests, repository, official exports with 26-step Windows generated flow, exact PCK parity and 1280/1920 visual inspection. Real original-defender portal journey passes. Freed 2.971GB obsolete exports, preserving final packages/caches/saves/RMG. Remaining Medium/Large terminal runs are active, not accepted."
     },
     {
       "phase": "phase-6-production-alpha-layer",
@@ -114060,9 +114060,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Owner-directed generated-overworld quality closure remains active. Restored guarded-site eligibility/identity and portable pickups, improved scenery/readability, corrected monster-center targeting and cached guarded-site battle entry. These batches are validated on both platforms; broader actual enemy/portal routes and whole-match pacing acceptance remain open. Corrected density measurement passes unchanged thresholds; no native generation tuning or release-ready claim.",
+  "summary": "Owner-directed generated-overworld quality closure remains active. Restored guarded sites/portable pickups and readable scenery, corrected guard targeting and cached battle entry, and fixed mandatory hostile-portal arrival including post-battle position/movement. Platform validation and a real original-defender portal journey pass. Medium/Large complete-match continuations remain active; no terminal, native-generator-parity or release-ready claim from these focused checks.",
   "taskId": "10236",
-  "updatedAt": "2026-09-18T07:24:16Z",
+  "updatedAt": "2026-09-18T09:06:54Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",

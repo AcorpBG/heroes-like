@@ -37,6 +37,76 @@ func pointer(shell, tile: Vector2i) -> void:
 		event.position=center
 		map._gui_input(event)
 	await settle()
+func guard_free_reachability(session) -> Dictionary:
+	# Conservative no-battle reachability: ignore fog and treat every unguarded
+	# visitable site as usable. This is a structural barrier check, not a played
+	# route or proof of how long a player needs to win. Preserve source bodies.
+	var Transit=preload("res://scripts/core/NativeTransitRules.gd")
+	var size:=OverworldRules.derive_map_size(session)
+	var level:=OverworldRules.hero_level(session)
+	var open:= {}
+	for y in range(size.y):
+		for x in range(size.x):
+			if not OverworldRules.guard_engagement_encounter_at_tile(session,x,y,level).is_empty():continue
+			if not OverworldRules.tile_is_blocked(session,x,y,level) or OverworldRules.tile_is_actionable_route_destination(session,x,y,level):
+				open[Vector2i(x,y)]=true
+	# Legacy/non-native armies without an engagement mask are still combat.
+	for guard in session.overworld.encounters:
+		if not OverworldRules.is_encounter_resolved(session,guard) and int(guard.get("level",0))==level:
+			open.erase(Vector2i(int(guard.x),int(guard.y)))
+	var links:={}
+	var actor:=String(session.overworld.active_hero_id)
+	for node in session.overworld.resource_nodes:
+		if not Transit.is_native(node):continue
+		var source: Vector3i=Transit.point(Transit.link_of(node).get("entry",{}))
+		if source.z!=level:continue
+		for destination in Transit.destinations(node):
+			var exit: Vector3i=Transit.point(destination.get("exit",{}))
+			if exit.z!=level:continue
+			var check_result:=OverworldRules.native_passage_travel_check(session,node,source,actor,String(destination.get("target_placement_id","")))
+			if not bool(check_result.get("ok",false)):continue
+			var entry:=Vector2i(source.x,source.y)
+			if not links.has(entry):links[entry]=[]
+			links[entry].append(Vector2i(exit.x,exit.y))
+	var start:=OverworldRules.hero_position(session)
+	var authored_links:=OverworldRules.active_linked_transit_edges(session,level)
+	var queue:=[start]
+	var distances:={start:0}
+	var cursor:=0
+	while cursor<queue.size():
+		var current: Vector2i=queue[cursor]
+		cursor+=1
+		var next_tiles: Array=links.get(current,[]).duplicate()
+		next_tiles.append_array(OverworldRules.linked_transit_neighbors_from_edges(authored_links,current))
+		for delta in Transit.NAVIGATION_DELTAS:
+			var next: Vector2i=current+delta
+			if not OverworldRules.tile_step_cuts_blocked_corner(session,current,next,level):next_tiles.append(next)
+		for next in next_tiles:
+			if not open.has(next) or distances.has(next):continue
+			distances[next]=int(distances[current])+1
+			queue.append(next)
+	var enemies:=[]
+	for town in session.overworld.towns:
+		if String(town.get("owner",""))!="enemy":continue
+		var entry: Dictionary=town.get("visit_tile",town)
+		if int(entry.get("level",0))!=level:continue
+		enemies.append({"id":town.placement_id,"guard_free_steps":distances.get(Vector2i(int(entry.x),int(entry.y)),-1)})
+	return {"guard_free_tiles":distances.size(),"safe_passage_entrances":links.size(),"active_authored_links":authored_links.size(),"enemy_towns":enemies}
+func verify_opening_guard_barrier(session, label: String) -> Dictionary:
+	var before: Dictionary=normalized(session.to_dict())
+	var guarded:=guard_free_reachability(session)
+	check(not guarded.enemy_towns.is_empty(),label+": no enemy-town barrier target")
+	check(guarded.enemy_towns.all(func(town):return int(town.guard_free_steps)<0),label+": enemy town has a potential guard-free approach; reproduce before changing native placement")
+	check(normalized(session.to_dict())==before,label+": barrier observation changed gameplay")
+	# Explicit graph control only: never promote this clone to a live journey.
+	var cleared=clone(session)
+	for encounter in cleared.overworld.encounters:
+		cleared.overworld.resolved_encounters.append(OverworldRules.encounter_key(encounter))
+	OverworldRules.invalidate_spatial_lookup(cleared)
+	OverworldRules._refresh_blocked_tile_index(cleared)
+	var control:=guard_free_reachability(cleared)
+	check(control.enemy_towns.all(func(town):return int(town.guard_free_steps)>=0),label+": clear-guard graph control cannot reach enemy town")
+	return {"opening":guarded,"cleared_guard_graph_control":control,"scope":"potential static paths, including safe native passages; not actual battles or day-count proof"}
 func guard_routes(session, label: String) -> Dictionary:
 	var shell=load("res://scenes/overworld/OverworldShell.gd").new()
 	shell._session=session
@@ -199,6 +269,7 @@ func run() -> void:
 		var session=persisted(service,adoption,generated,config,1 if row[0]=="medium" else 2)
 		verify(session,adoption,row[0])
 		cases.append(guard_routes(session,row[0]+"-"+row[1]+"-normal"))
+		cases[-1]["opening_guard_barrier"]=verify_opening_guard_barrier(session,row[0])
 		if row[0]=="large":large=session
 	for mode in ["pointer","keyboard","controller"]:await live_input(small,mode)
 	if large!=null:
