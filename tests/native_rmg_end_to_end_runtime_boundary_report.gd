@@ -429,8 +429,8 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		6: {"object_id": "object_reef_coin_assay", "resource_id": "gold", "catalog_id": "mine_gold_proxy"},
 	}
 	var expected_artifacts := {
-		67: {"artifact_id": "artifact_waymark_compass", "catalog_id": "reward_random_minor_artifact_proxy"},
-		68: {"artifact_id": "artifact_warcrest_pennon", "catalog_id": "reward_random_major_artifact_proxy"},
+		67: "uncommon",
+		68: "rare",
 	}
 	var expected_resources := {
 		0: {"object_id": "object_wood_wagon", "site_id": "site_wood_wagon", "resource_id": "wood", "catalog_id": "reward_resource_wood_build_proxy"},
@@ -511,15 +511,21 @@ func _validate_live_proxy_site_projection(service: Variant) -> Dictionary:
 		elif type_id in [67, 68]:
 			artifact_proxy_count += 1
 			artifact_proxy_placement_ids[String(object.get("placement_id", ""))] = true
-			var expected_artifact: Dictionary = expected_artifacts.get(type_id, {}) if expected_artifacts.get(type_id, {}) is Dictionary else {}
-			if expected_artifact.is_empty() \
+			var artifact_id := String(object.get("artifact_id", ""))
+			var artifact: Dictionary = ContentService.get_artifact(artifact_id)
+			if artifact.is_empty() or String(artifact.get("rarity", "")) != String(expected_artifacts.get(type_id, "")) \
 					or String(object.get("kind", "")) != "reward_reference" \
-					or String(object.get("artifact_id", "")) != String(expected_artifact.get("artifact_id", "")) \
-					or String(object.get("object_id", "")) != String(expected_artifact.get("artifact_id", "")) \
-					or String(object.get("native_proxy_object_id", "")) != String(expected_artifact.get("artifact_id", "")) \
+					or String(object.get("object_id", "")) != artifact_id \
+					or String(object.get("native_proxy_object_id", "")) != artifact_id \
+					or String(object.get("native_authored_pool_candidate_id", "")) != artifact_id \
+					or String(object.get("native_authored_pool_selection_mode", "")) != "stable_source_ordinal_pool_index" \
 					or String(object.get("site_id", "")) != "" \
-					or String(object.get("homm3_re_reward_object_catalog_id", "")) != String(expected_artifact.get("catalog_id", "")) \
-					or not _live_proxy_provenance_exact(object):
+					or String(object.get("homm3_re_reward_object_catalog_id", "")) != "authored_pool_proxy_%d_%d_artifact_reward" % [type_id, subtype] \
+					or String(object.get("native_authored_pool_registry_path", "")) != "res://content/random_map_object_eligibility.json" \
+					or String(object.get("native_authored_pool_registry_schema", "")) != "aurelion_random_map_object_eligibility_v1" \
+					or not bool(object.get("native_authored_pool_source_placement_unchanged", false)) \
+					or not bool(object.get("native_authored_pool_final_payload_unchanged", false)) \
+					or String(object.get("homm3_re_art_asset_policy", "")) != "provenance_only_original_proxy_art":
 				artifact_proxy_rows_exact = false
 		elif type_id == 79:
 			resource_proxy_count += 1
@@ -1300,6 +1306,8 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 	if live_rows.map(func(row: Dictionary) -> int: return int(row.get("subtype", -1))) != expected_subtypes:
 		return {"ok": false, "reason": "ordered_creature_generator_rows_mismatch", "rows": live_rows}
 	var expected_recruits := {}
+	var actual_recruits := {}
+	var baseline_army_counts := _army_stack_counts(army_before)
 	var expected_gold := 0
 	var claim_rows := []
 	var repeat_rejected := true
@@ -1314,7 +1322,20 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 		var node_index := int(row.get("index", -1))
 		var current_nodes: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
 		var current_node: Dictionary = current_nodes[node_index] if node_index >= 0 and node_index < current_nodes.size() and current_nodes[node_index] is Dictionary else {}
+		# Each dwelling is an isolated reward fixture. Do not accumulate twenty
+		# different unit types into one seven-slot army across unrelated visits.
+		session.overworld.army = army_before.duplicate(true)
+		session.overworld.hero.army = army_before.duplicate(true)
+		# Recruitment is deliberately local: this isolated interaction fixture
+		# must put the active hero at the native visit tile before collecting.
+		var visits: Array = current_node.get("package_visit_tiles", [])
+		var visit: Dictionary = visits[0] if not visits.is_empty() else current_node
+		OverworldRulesScript._set_active_hero_position(session, Vector2i(int(visit.x), int(visit.y)), int(visit.get("level", 0)))
 		var claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, {"index": node_index, "node": current_node}, false)
+		var received := _army_stack_counts(session.overworld.army)
+		for unit_id in received:
+			var delta := int(received[unit_id]) - int(baseline_army_counts.get(unit_id, 0))
+			if delta != 0: actual_recruits[unit_id] = int(actual_recruits.get(unit_id, 0)) + delta
 		current_nodes = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
 		var claimed_node: Dictionary = current_nodes[node_index] if node_index >= 0 and node_index < current_nodes.size() and current_nodes[node_index] is Dictionary else {}
 		var authority_before_repeat: Dictionary = session.to_dict()
@@ -1327,6 +1348,7 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 			"object_id": claimed_node.get("object_id", ""),
 			"site_id": claimed_node.get("site_id", ""),
 			"claim_ok": claim.get("ok", false),
+			"claim_message": claim.get("message", ""),
 			"controller": claimed_node.get("collected_by_faction_id", ""),
 			"persistent": claimed_node.get("collected", false),
 			"repeat_rejected": not bool(repeat_claim.get("ok", false)),
@@ -1336,12 +1358,6 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 	var expected_resources: Dictionary = resources_before.duplicate(true)
 	expected_resources["gold"] = int(expected_resources.get("gold", 0)) + expected_gold
 	var army_after: Dictionary = session.overworld.get("army", {}).duplicate(true)
-	var army_counts_before := _army_stack_counts(army_before)
-	var army_counts_after := _army_stack_counts(army_after)
-	var expected_army_counts: Dictionary = army_counts_before.duplicate(true)
-	for unit_id_value in expected_recruits.keys():
-		var unit_id := String(unit_id_value)
-		expected_army_counts[unit_id] = int(expected_army_counts.get(unit_id, 0)) + int(expected_recruits.get(unit_id, 0))
 	var nodes_after: Array = session.overworld.get("resource_nodes", []) if session.overworld.get("resource_nodes", []) is Array else []
 	var unrelated_nodes_exact := nodes_after.size() == nodes_before.size()
 	if unrelated_nodes_exact:
@@ -1367,7 +1383,7 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 	return {
 		"ok": all_claims_exact \
 				and resources_after == expected_resources \
-				and army_counts_after == expected_army_counts \
+				and actual_recruits == expected_recruits \
 				and session.overworld.get("hero", {}).get("army", {}) == army_after \
 				and owned_artifacts_after == owned_artifacts_before \
 				and session.overworld.get("artifact_nodes", []) == artifacts_before \
@@ -1382,7 +1398,7 @@ func _validate_creature_generator_interaction(adoption: Dictionary, expected_sub
 		"gold_delta": int(resources_after.get("gold", 0)) - int(resources_before.get("gold", 0)),
 		"expected_gold_delta": expected_gold,
 		"army_deltas": expected_recruits,
-		"army_exact": army_counts_after == expected_army_counts,
+		"army_exact": actual_recruits == expected_recruits,
 		"artifacts_exact": owned_artifacts_after == owned_artifacts_before and session.overworld.get("artifact_nodes", []) == artifacts_before,
 		"unrelated_nodes_exact": unrelated_nodes_exact,
 		"encounters_exact": session.overworld.get("encounters", []) == encounters_before,

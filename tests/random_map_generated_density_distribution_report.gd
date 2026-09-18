@@ -196,6 +196,9 @@ func _package_projection_metrics(session) -> Dictionary:
 			if by_id.has(placement_id):
 				adopted_ids[placement_id] = true
 	var missing_visitable := []
+	var missing_source := []
+	for placement_id in by_id.keys():
+		if not adopted_ids.has(String(placement_id)): missing_source.append(placement_id)
 	for placement_id in visitable_ids.keys():
 		if not adopted_ids.has(placement_id):
 			missing_visitable.append(placement_id)
@@ -205,6 +208,7 @@ func _package_projection_metrics(session) -> Dictionary:
 		"package_source_visitable_count": visitable_count,
 		"adopted_source_object_count": adopted_ids.size(),
 		"missing_visitable_source_count": missing_visitable.size(),
+		"missing_source_count": missing_source.size(),
 		"missing_visitable_source_ids": missing_visitable.slice(0, min(12, missing_visitable.size())),
 		"resolution_counts": _sorted_dict(resolution_counts),
 		"kind_counts": _sorted_dict(kind_counts),
@@ -255,8 +259,8 @@ func _distribution_failures(metrics: Dictionary) -> Array:
 	if not native_package and int(metrics.get("materialized_route_reward_resource_count", 0)) <= 0:
 		failures.append("%s materialized no route reward resource nodes" % label)
 	var projection: Dictionary = metrics.get("package_projection", {}) if metrics.get("package_projection", {}) is Dictionary else {}
-	if native_package and int(projection.get("missing_visitable_source_count", -1)) != 0:
-		failures.append("%s dropped visitable package objects during live session adoption" % label)
+	if native_package and int(projection.get("missing_source_count", -1)) != 0:
+		failures.append("%s dropped package objects, including nonvisitable scenery, during live session adoption" % label)
 	return failures
 
 func _interactables(session, distances: Dictionary, road_cells: Array, ring_policy: Dictionary) -> Array:

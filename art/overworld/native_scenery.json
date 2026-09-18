@@ -1,0 +1,156 @@
+{
+  "schema_id": "aurelion_native_scenery_art_v1",
+  "source": "Recovered group-zero object-template inventory; original-game art translation only. No source pixels, placements or mask changes.",
+  "default_policy": "biome_palette: original cohesive landscape masses, not source sprite reproduction",
+  "source_types": {
+    "116": {
+      "mode": "biome_palette"
+    },
+    "117": {
+      "mode": "biome_palette"
+    },
+    "118": {
+      "mode": "biome_palette"
+    },
+    "119": {
+      "mode": "biome_palette"
+    },
+    "120": {
+      "mode": "biome_palette"
+    },
+    "121": {
+      "mode": "semantic_raster",
+      "original_name": "Frozen shelf",
+      "asset_ids": [
+        "decor_frozen_pool_shelf"
+      ]
+    },
+    "124": {
+      "mode": "biome_palette"
+    },
+    "125": {
+      "mode": "biome_palette"
+    },
+    "126": {
+      "mode": "semantic_raster",
+      "original_name": "Reed-choked shoreline",
+      "asset_ids": [
+        "cohesive_wet_cold_01",
+        "cohesive_wet_cold_10"
+      ]
+    },
+    "127": {
+      "mode": "semantic_raster",
+      "original_name": "Cooled lava barrier",
+      "asset_ids": [
+        "decor_cooling_lava_rope_wall"
+      ]
+    },
+    "128": {
+      "mode": "semantic_raster",
+      "original_name": "Molten basalt basin",
+      "asset_ids": [
+        "decor_cooling_lava_rope_wall",
+        "cohesive_variety_basalt_chimneys"
+      ]
+    },
+    "129": {
+      "mode": "biome_palette"
+    },
+    "130": {
+      "mode": "semantic_raster",
+      "original_name": "Fallen forest giant",
+      "asset_ids": [
+        "cohesive_library_deep_forest_000"
+      ]
+    },
+    "131": {
+      "mode": "biome_palette"
+    },
+    "132": {
+      "mode": "biome_palette"
+    },
+    "133": {
+      "mode": "biome_palette"
+    },
+    "134": {
+      "mode": "biome_palette"
+    },
+    "135": {
+      "mode": "biome_palette"
+    },
+    "136": {
+      "mode": "biome_palette"
+    },
+    "137": {
+      "mode": "biome_palette"
+    },
+    "143": {
+      "mode": "biome_palette"
+    },
+    "147": {
+      "mode": "biome_palette"
+    },
+    "148": {
+      "mode": "biome_palette"
+    },
+    "149": {
+      "mode": "biome_palette"
+    },
+    "150": {
+      "mode": "biome_palette"
+    },
+    "151": {
+      "mode": "biome_palette"
+    },
+    "153": {
+      "mode": "semantic_raster",
+      "original_name": "Hollow stump",
+      "asset_ids": [
+        "decor_hollow_stump_mass"
+      ]
+    },
+    "155": {
+      "mode": "biome_palette"
+    },
+    "158": {
+      "mode": "semantic_raster",
+      "original_name": "Volcanic basalt spires",
+      "asset_ids": [
+        "cohesive_variety_basalt_chimneys"
+      ]
+    },
+    "161": {
+      "mode": "biome_palette"
+    },
+    "177": {
+      "mode": "semantic_raster",
+      "original_name": "Reed-choked shoreline",
+      "asset_ids": [
+        "cohesive_wet_cold_01",
+        "cohesive_wet_cold_10"
+      ]
+    },
+    "199": {
+      "mode": "biome_palette"
+    },
+    "206": {
+      "mode": "biome_palette"
+    },
+    "207": {
+      "mode": "biome_palette"
+    },
+    "208": {
+      "mode": "biome_palette"
+    },
+    "209": {
+      "mode": "biome_palette"
+    },
+    "210": {
+      "mode": "biome_palette"
+    },
+    "211": {
+      "mode": "biome_palette"
+    }
+  }
+}

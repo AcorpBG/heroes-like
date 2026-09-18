@@ -16701,14 +16701,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Audit complete, defects not fixed: partial scenery classification and adoption filtering drop 126-197 native objects per sampled map, opening 207-427 blocked source cells. Three production movement fixtures confirm guard bypasses; extra site guards also overlap native control. Six Python tests, 11293 rendered diagnostic checks and two retained native/original byte comparisons pass. No runtime/content/native changes or broad parity claim; 200.57 MB disposable outputs cleaned, recovery evidence retained.",
+  "currentNotes": "Completed source-adoption correction: all 38 scenery families retain masks and original art, three reproduced bypasses close, random artifacts use rarity pools, banks remain guarded, new catalog-auto games explicitly use Normal strength, cleared-site/replay state persists. Source/Linux 81237 checks each, Windows 81227, existing boundary/neutral/art, repository and final exports/parity pass. Two Small opening-density thresholds still fail and broader full-match pacing is not claimed. Cleaned 4.51 GB disposable outputs; caches/RMG/unrelated files preserved.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "audit-rmg-guards-and-empty-space-20260918",
-  "currentSliceId": "audit-rmg-guards-and-empty-space-20260918",
-  "currentSliceNotes": "Audit complete, defects not fixed: partial scenery classification and adoption filtering drop 126-197 native objects per sampled map, opening 207-427 blocked source cells. Three production movement fixtures confirm guard bypasses; extra site guards also overlap native control. Six Python tests, 11293 rendered diagnostic checks and two retained native/original byte comparisons pass. No runtime/content/native changes or broad parity claim; 200.57 MB disposable outputs cleaned, recovery evidence retained.",
+  "currentSlice": "rmg-exploration-and-guarded-routes-20260918",
+  "currentSliceId": "rmg-exploration-and-guarded-routes-20260918",
+  "currentSliceNotes": "Completed source-adoption correction: all 38 scenery families retain masks and original art, three reproduced bypasses close, random artifacts use rarity pools, banks remain guarded, new catalog-auto games explicitly use Normal strength, cleared-site/replay state persists. Source/Linux 81237 checks each, Windows 81227, existing boundary/neutral/art, repository and final exports/parity pass. Two Small opening-density thresholds still fail and broader full-match pacing is not claimed. Cleaned 4.51 GB disposable outputs; caches/RMG/unrelated files preserved.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "RMG Guard Placement and Empty-Space Diagnosis",
-  "currentSliceUpdatedAt": "2026-09-18T01:30:15Z",
+  "currentSliceTitle": "Generated Exploration and Guarded Routes",
+  "currentSliceUpdatedAt": "2026-09-18T02:52:20Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22013,63 +22013,53 @@
       }
     }
   },
-  "guardrailNote": "No corrective slice active. Restore missing source-owned bodies at the adoption boundary before density tuning; no native phase changes without private-state proof.",
+  "guardrailNote": "Correction complete. Source placements, masks, RNG and final payloads unchanged. Existing saves retain old topology; start a new generated game. Small density limits remain visible; no broad quality or release-ready claim.",
   "lastValidation": {
-    "id": "audit-rmg-guards-and-empty-space-20260918",
-    "sliceId": "audit-rmg-guards-and-empty-space-20260918",
-    "classification": "audit_slice",
+    "id": "rmg-exploration-and-guarded-routes-20260918",
+    "sliceId": "rmg-exploration-and-guarded-routes-20260918",
+    "classification": "implementation_slice",
     "status": "completed",
-    "validatedAt": "2026-09-18T01:30:15Z",
-    "sourceReport": "docs/rmg-guards-and-empty-space-audit.md",
-    "summary": "Audit complete, defects not fixed: partial scenery classification and adoption filtering drop 126-197 native objects per sampled map, opening 207-427 blocked source cells. Three production movement fixtures confirm guard bypasses; extra site guards also overlap native control. Six Python tests, 11293 rendered diagnostic checks and two retained native/original byte comparisons pass. No runtime/content/native changes or broad parity claim; 200.57 MB disposable outputs cleaned, recovery evidence retained.",
+    "validatedAt": "2026-09-18T02:52:20Z",
+    "sourceReport": "docs/rmg-exploration-and-guarded-routes.md",
+    "summary": "Completed source-adoption correction: all 38 scenery families retain masks and original art, three reproduced bypasses close, random artifacts use rarity pools, banks remain guarded, new catalog-auto games explicitly use Normal strength, cleared-site/replay state persists. Source/Linux 81237 checks each, Windows 81227, existing boundary/neutral/art, repository and final exports/parity pass. Two Small opening-density thresholds still fail and broader full-match pacing is not claimed. Cleaned 4.51 GB disposable outputs; caches/RMG/unrelated files preserved.",
     "evidence": {
-      "diagnosticOnly": true,
-      "runtimeChanged": false,
-      "pythonTests": 6,
-      "initialRenderedChecks": 11240,
-      "finalRenderedChecks": 11293,
-      "runtimeErrors": 0,
-      "repeatedSourceAndBlockedGridsExact": true,
-      "cases": [
-        {
-          "case": "medium-10",
-          "sourceObjects": 1326,
-          "droppedScenery": 197,
-          "missingBodyCells": 745,
-          "openedSourceCells": 427,
-          "nativeGuards": 41,
-          "extraGuards": 16,
-          "extraInsideNativeControl": 7
-        },
-        {
-          "case": "large-11",
-          "sourceObjects": 2860,
-          "droppedScenery": 161,
-          "missingBodyCells": 846,
-          "openedSourceCells": 340,
-          "nativeGuards": 58,
-          "extraGuards": 22,
-          "extraInsideNativeControl": 4
-        },
-        {
-          "case": "large-1",
-          "sourceObjects": 2878,
-          "droppedScenery": 126,
-          "missingBodyCells": 510,
-          "openedSourceCells": 207,
-          "nativeGuards": 129,
-          "extraGuards": 37,
-          "extraInsideNativeControl": 11
-        }
+      "runtimeChanged": true,
+      "nativeGenerationChanged": false,
+      "pythonTests": 9,
+      "sourceChecks": 81237,
+      "packagedLinuxChecks": 81237,
+      "packagedWindowsChecks": 81227,
+      "exactProbeSha256": "1e419df81bb3e84571fb0967bf7498623e85b19012b935347c836a7d0f11b05b",
+      "fiveCaseNativeAndGameplayPlatformParity": true,
+      "missingSourceRecords": 0,
+      "restoredBypassRoutes": 3,
+      "neutralFocusedChecks": 7471,
+      "neutralMediumChecks": 451,
+      "neutralLargeChecks": 1348,
+      "townSupplyRemovalChecks": 9421,
+      "nativeRuntimeBoundary": "passed actual bank battle/reward and local capacity-valid dwelling fixtures",
+      "additionalWaterLevelCases": 4,
+      "retainedNativePayloadsExact": [
+        "medium_1_land_10",
+        "large_1_land_11"
       ],
-      "movement": "Three isolated-start production route fixtures complete without battle through omitted source bodies. Not journeys from starting towns.",
-      "nativeComparison": "Medium seed10 and Large seed11 unassisted output matches retained original bytes; runtime sizes/FNV identities match. Standalone same-run authority package refusal preserved. No private-state or Large seed1 original-executable parity claim.",
-      "nativeRecoveryEvidence": ".artifacts/rmg_start_audit_20260905/guard_space_retained_20260918/summary.json",
-      "visualReview": "1920x1080 source/Linux OpenGL start, empty-region, guard overlap and lost-body bypass captures inspected; inspection-only reveal distinguished from normal fog",
-      "cleanupAllocatedBytes": 200568832,
-      "cleanup": "Disposed task-owned runtime snapshots/logs/screenshots; retained 307200 bytes native recovery comparison and all prior recovery/source/art/caches/saves/unrelated items",
-      "validationScope": "Focused Python/Godot audit and tracker/diff checks only; no runtime change, Windows export or whole-repository gameplay rerun",
-      "probeSha256": "0270c3df181338920c7d0ecadc43b484d72ba14dba32608353f86204d3d2761a"
+      "nativeRecoveryEvidence": ".artifacts/rmg_start_audit_20260905/exploration_retained_20260918/summary.json",
+      "fullRepositoryValidation": "passed; 26 absent historical smokes not executed or counted",
+      "densityReport": "Medium/Large/Extra Large pass; Small early 2<4 and mid 7<8 fail. All sizes retain all source records. Not counted as a green density report.",
+      "officialExports": "Linux and Windows pass; Windows generated growth includes real day-ten assault victory and all 26 steps",
+      "pckBytesEach": 648455080,
+      "pckEntriesEach": 8918,
+      "pckPlatformDifferences": [
+        "project.binary"
+      ],
+      "visualReview": [
+        "1280x720 source start and guard areas",
+        "1920x1080 packaged Linux start and guard areas"
+      ],
+      "cleanupAllocatedBytes": 4512436224,
+      "cleanupApparentBytes": 4509948303,
+      "cleanupTargets": 14,
+      "cachesAndRmgAndUnrelatedFilesPreserved": true
     }
   },
   "priorHeroSheetValidation": {
@@ -22398,7 +22388,7 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "No corrective slice active. Restore missing source-owned bodies at the adoption boundary before density tuning; no native phase changes without private-state proof.",
+  "nextActionGuardrailNote": "Correction complete. Source placements, masks, RNG and final payloads unchanged. Existing saves retain old topology; start a new generated game. Small density limits remain visible; no broad quality or release-ready claim.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
@@ -113198,6 +113188,60 @@
       "completedAt": "2026-09-18T01:30:15Z",
       "evidence": "docs/rmg-guards-and-empty-space-audit.md",
       "completionSummary": "Audit complete, defects not fixed: partial scenery classification and adoption filtering drop 126-197 native objects per sampled map, opening 207-427 blocked source cells. Three production movement fixtures confirm guard bypasses; extra site guards also overlap native control. Six Python tests, 11293 rendered diagnostic checks and two retained native/original byte comparisons pass. No runtime/content/native changes or broad parity claim; 200.57 MB disposable outputs cleaned, recovery evidence retained."
+    },
+    {
+      "id": "rmg-exploration-and-guarded-routes-20260918",
+      "title": "Generated Exploration and Guarded Routes",
+      "phase": "phase-6-production-alpha-layer",
+      "parentId": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/lessons-learned.md",
+        "docs/rmg-guards-and-empty-space-audit.md",
+        "docs/rmg-exploration-and-guarded-routes.md"
+      ],
+      "status": "completed",
+      "createdAt": "2026-09-18T01:48:47Z",
+      "startedAt": "2026-09-18T01:48:47Z",
+      "updatedAt": "2026-09-18T02:52:20Z",
+      "targets": [
+        "src/gdextension/include/runtime_object_classification.hpp",
+        "src/gdextension/src/map_package_service.cpp",
+        "src/gdextension/src/rmg_native_batch_export_cli.cpp",
+        "scripts/persistence/NativeSceneryRules.gd",
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "scripts/core/ScenarioSelectRules.gd",
+        "scripts/core/OverworldRules.gd",
+        "scenes/overworld/OverworldMapView.gd",
+        "art/overworld/native_scenery.json",
+        "content/random_map_object_eligibility.json",
+        "scripts/autoload/LiveValidationHarness.gd",
+        "tests/rmg_exploration_regression.py",
+        "tests/test_rmg_exploration_contract.py"
+      ],
+      "validation": [
+        "Focused source and Linux/Windows packaged regression",
+        "Deterministic Medium/Large source-body, artifact and guard routes",
+        "Original raster visual inspection",
+        "Retained native payload comparisons",
+        "python3 tests/validate_repo.py",
+        "Official Linux/Windows export/package smokes and parity",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "All supported source scenery survives adoption with exact collision and original art",
+        "Confirmed bypass routes blocked through gameplay",
+        "Artifact/reward and guard translation defects corrected with measured remaining limits",
+        "Determinism/save/platform compatibility validated and disposable outputs cleaned"
+      ],
+      "nonGoals": [
+        "No native phase/density/RNG/mask tuning, invented gates/filler or unrelated UI/balance"
+      ],
+      "completedAt": "2026-09-18T02:52:20Z",
+      "evidence": "docs/rmg-exploration-and-guarded-routes.md",
+      "completionSummary": "Completed source-adoption correction: all 38 scenery families retain masks and original art, three reproduced bypasses close, random artifacts use rarity pools, banks remain guarded, new catalog-auto games explicitly use Normal strength, cleared-site/replay state persists. Source/Linux 81237 checks each, Windows 81227, existing boundary/neutral/art, repository and final exports/parity pass. Two Small opening-density thresholds still fail and broader full-match pacing is not claimed. Cleaned 4.51 GB disposable outputs; caches/RMG/unrelated files preserved."
     }
   ],
   "project": "heroes-like",
@@ -113207,8 +113251,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "Confirmed live scenery/collision loss and guard bypasses remain unfixed; audit completion is not implementation completion.",
-  "remainingWork": "Recommended next correction: complete nonvisitable scenery classification/adoption with exact source masks and original art; then review site-guard presentation/link policy. Not started.",
+  "remainingGap": "Small seed generated-density-distribution-10184-homm3_small still has 2 early and 7 mid interactions, below 4/8 thresholds. Full-match pacing, portals and overlapping internal/native guard art remain unproven or separate quality work. No native private-state parity claim.",
+  "remainingWork": "Design/source-backed investigation of opening reward distribution and full-match guard pacing; no filler injection, threshold weakening, native density scalars or removed Town Supply Cache restoration. No next slice selected.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -113746,7 +113790,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "rmg_guard_space_audit_complete_defects_unfixed",
+  "result": "rmg_exploration_adoption_correction_complete_density_limits_retained",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -113847,72 +113891,56 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Audit complete, defects not fixed: partial scenery classification and adoption filtering drop 126-197 native objects per sampled map, opening 207-427 blocked source cells. Three production movement fixtures confirm guard bypasses; extra site guards also overlap native control. Six Python tests, 11293 rendered diagnostic checks and two retained native/original byte comparisons pass. No runtime/content/native changes or broad parity claim; 200.57 MB disposable outputs cleaned, recovery evidence retained.",
+  "summary": "Completed source-adoption correction: all 38 scenery families retain masks and original art, three reproduced bypasses close, random artifacts use rarity pools, banks remain guarded, new catalog-auto games explicitly use Normal strength, cleared-site/replay state persists. Source/Linux 81237 checks each, Windows 81227, existing boundary/neutral/art, repository and final exports/parity pass. Two Small opening-density thresholds still fail and broader full-match pacing is not claimed. Cleaned 4.51 GB disposable outputs; caches/RMG/unrelated files preserved.",
   "taskId": "10236",
-  "updatedAt": "2026-09-18T01:30:15Z",
+  "updatedAt": "2026-09-18T02:52:20Z",
   "validation": {
-    "id": "audit-rmg-guards-and-empty-space-20260918",
-    "sliceId": "audit-rmg-guards-and-empty-space-20260918",
-    "classification": "audit_slice",
+    "id": "rmg-exploration-and-guarded-routes-20260918",
+    "sliceId": "rmg-exploration-and-guarded-routes-20260918",
+    "classification": "implementation_slice",
     "status": "completed",
-    "validatedAt": "2026-09-18T01:30:15Z",
-    "sourceReport": "docs/rmg-guards-and-empty-space-audit.md",
-    "summary": "Audit complete, defects not fixed: partial scenery classification and adoption filtering drop 126-197 native objects per sampled map, opening 207-427 blocked source cells. Three production movement fixtures confirm guard bypasses; extra site guards also overlap native control. Six Python tests, 11293 rendered diagnostic checks and two retained native/original byte comparisons pass. No runtime/content/native changes or broad parity claim; 200.57 MB disposable outputs cleaned, recovery evidence retained.",
+    "validatedAt": "2026-09-18T02:52:20Z",
+    "sourceReport": "docs/rmg-exploration-and-guarded-routes.md",
+    "summary": "Completed source-adoption correction: all 38 scenery families retain masks and original art, three reproduced bypasses close, random artifacts use rarity pools, banks remain guarded, new catalog-auto games explicitly use Normal strength, cleared-site/replay state persists. Source/Linux 81237 checks each, Windows 81227, existing boundary/neutral/art, repository and final exports/parity pass. Two Small opening-density thresholds still fail and broader full-match pacing is not claimed. Cleaned 4.51 GB disposable outputs; caches/RMG/unrelated files preserved.",
     "evidence": {
-      "diagnosticOnly": true,
-      "runtimeChanged": false,
-      "pythonTests": 6,
-      "initialRenderedChecks": 11240,
-      "finalRenderedChecks": 11293,
-      "runtimeErrors": 0,
-      "repeatedSourceAndBlockedGridsExact": true,
-      "cases": [
-        {
-          "case": "medium-10",
-          "sourceObjects": 1326,
-          "droppedScenery": 197,
-          "missingBodyCells": 745,
-          "openedSourceCells": 427,
-          "nativeGuards": 41,
-          "extraGuards": 16,
-          "extraInsideNativeControl": 7
-        },
-        {
-          "case": "large-11",
-          "sourceObjects": 2860,
-          "droppedScenery": 161,
-          "missingBodyCells": 846,
-          "openedSourceCells": 340,
-          "nativeGuards": 58,
-          "extraGuards": 22,
-          "extraInsideNativeControl": 4
-        },
-        {
-          "case": "large-1",
-          "sourceObjects": 2878,
-          "droppedScenery": 126,
-          "missingBodyCells": 510,
-          "openedSourceCells": 207,
-          "nativeGuards": 129,
-          "extraGuards": 37,
-          "extraInsideNativeControl": 11
-        }
+      "runtimeChanged": true,
+      "nativeGenerationChanged": false,
+      "pythonTests": 9,
+      "sourceChecks": 81237,
+      "packagedLinuxChecks": 81237,
+      "packagedWindowsChecks": 81227,
+      "exactProbeSha256": "1e419df81bb3e84571fb0967bf7498623e85b19012b935347c836a7d0f11b05b",
+      "fiveCaseNativeAndGameplayPlatformParity": true,
+      "missingSourceRecords": 0,
+      "restoredBypassRoutes": 3,
+      "neutralFocusedChecks": 7471,
+      "neutralMediumChecks": 451,
+      "neutralLargeChecks": 1348,
+      "townSupplyRemovalChecks": 9421,
+      "nativeRuntimeBoundary": "passed actual bank battle/reward and local capacity-valid dwelling fixtures",
+      "additionalWaterLevelCases": 4,
+      "retainedNativePayloadsExact": [
+        "medium_1_land_10",
+        "large_1_land_11"
       ],
-      "movement": "Three isolated-start production route fixtures complete without battle through omitted source bodies. Not journeys from starting towns.",
-      "nativeComparison": "Medium seed10 and Large seed11 unassisted output matches retained original bytes; runtime sizes/FNV identities match. Standalone same-run authority package refusal preserved. No private-state or Large seed1 original-executable parity claim.",
-      "nativeRecoveryEvidence": ".artifacts/rmg_start_audit_20260905/guard_space_retained_20260918/summary.json",
-      "visualReview": "1920x1080 source/Linux OpenGL start, empty-region, guard overlap and lost-body bypass captures inspected; inspection-only reveal distinguished from normal fog",
-      "cleanupAllocatedBytes": 200568832,
-      "cleanup": "Disposed task-owned runtime snapshots/logs/screenshots; retained 307200 bytes native recovery comparison and all prior recovery/source/art/caches/saves/unrelated items",
-      "validationScope": "Focused Python/Godot audit and tracker/diff checks only; no runtime change, Windows export or whole-repository gameplay rerun",
-      "probeSha256": "0270c3df181338920c7d0ecadc43b484d72ba14dba32608353f86204d3d2761a"
-    },
-    "artifacts": [
-      "docs/rmg-guards-and-empty-space-audit.md",
-      "tools/rmg_guard_space_audit.py",
-      "tests/test_rmg_guard_space_audit.py",
-      ".artifacts/rmg_start_audit_20260905/guard_space_retained_20260918/summary.json"
-    ]
+      "nativeRecoveryEvidence": ".artifacts/rmg_start_audit_20260905/exploration_retained_20260918/summary.json",
+      "fullRepositoryValidation": "passed; 26 absent historical smokes not executed or counted",
+      "densityReport": "Medium/Large/Extra Large pass; Small early 2<4 and mid 7<8 fail. All sizes retain all source records. Not counted as a green density report.",
+      "officialExports": "Linux and Windows pass; Windows generated growth includes real day-ten assault victory and all 26 steps",
+      "pckBytesEach": 648455080,
+      "pckEntriesEach": 8918,
+      "pckPlatformDifferences": [
+        "project.binary"
+      ],
+      "visualReview": [
+        "1280x720 source start and guard areas",
+        "1920x1080 packaged Linux start and guard areas"
+      ],
+      "cleanupAllocatedBytes": 4512436224,
+      "cleanupApparentBytes": 4509948303,
+      "cleanupTargets": 14,
+      "cachesAndRmgAndUnrelatedFilesPreserved": true
+    }
   },
   "validationHistory": [
     {

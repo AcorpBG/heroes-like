@@ -68032,9 +68032,9 @@ def validate_native_rmg_authored_object_pool_eligibility(errors: list[str]) -> N
         "Native RMG authored-object eligibility must remain post-projection only",
     )
     ensure(
-        registry.get("exact_catalog_precedence") == "existing_live_type_subtype_proxy_rows_retain_their_established_runtime_identity_before_broader_pool_selection",
+        registry.get("exact_catalog_precedence") == "compatible_fixed_catalog_identities_retained_except_random_artifact_rarity_bands_and_cross_domain_proxies",
         errors,
-        "Native RMG authored-object eligibility must preserve established exact catalog identities",
+        "Native RMG exact catalog precedence must preserve compatible fixed identities without collapsing random artifacts or guarded sites",
     )
     candidate_ids_by_pool: dict[str, set[str]] = {}
     eligible_decisions: dict[str, str] = {}
@@ -68848,8 +68848,8 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'elif subtype == 6:',
             '"native_h3maped_457dba6b_object_0258"',
             'creature_bank_rows_exact = false',
-            '67: {"artifact_id": "artifact_waymark_compass", "catalog_id": "reward_random_minor_artifact_proxy"}',
-            '68: {"artifact_id": "artifact_warcrest_pennon", "catalog_id": "reward_random_major_artifact_proxy"}',
+            '67: "uncommon"',
+            '68: "rare"',
             '0: {"object_id": "object_wood_wagon", "site_id": "site_wood_wagon", "resource_id": "wood", "catalog_id": "reward_resource_wood_build_proxy"}',
             '1: {"object_id": "object_marsh_peat_yard", "site_id": "site_peatwax_reed_yard", "resource_id": "peatwax", "catalog_id": "reward_resource_mercury_peatwax_proxy"}',
             '3: {"object_id": "object_floodplain_sluice_camp", "site_id": "site_embergrain_warm_granary", "resource_id": "embergrain", "catalog_id": "reward_resource_sulfur_embergrain_proxy"}',
@@ -68858,7 +68858,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             '6: {"object_id": "object_reef_coin_assay", "site_id": "site_reef_coin_assay", "resource_id": "gold", "catalog_id": "reward_resource_gold_reef_coin_proxy"}',
             'elif type_id in [67, 68]:',
             'artifact_proxy_placement_ids[String(object.get("placement_id", ""))] = true',
-            'or String(object.get("artifact_id", "")) != String(expected_artifact.get("artifact_id", ""))',
+            'or String(object.get("native_authored_pool_candidate_id", "")) != artifact_id',
             'or String(object.get("site_id", "")) != ""',
             'elif type_id == 79:',
             'resource_proxy_subtypes[subtype] = true',
@@ -68879,7 +68879,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
             'var repeat_claim: Dictionary = OverworldRulesScript._collect_resource_node_result(session, {"index": node_index, "node": claimed_node}, false)',
             'var expected_resources: Dictionary = resources_before.duplicate(true)',
             'expected_resources["gold"] = int(expected_resources.get("gold", 0)) + expected_gold',
-            'var expected_army_counts: Dictionary = army_counts_before.duplicate(true)',
+            'and actual_recruits == expected_recruits',
             'and owned_artifacts_after == owned_artifacts_before',
             'and session.overworld.get("artifact_nodes", []) == artifacts_before',
             'and session.overworld.get("encounters", []) == encounters_before',

@@ -1526,7 +1526,9 @@ def run_smoke() -> tuple[dict, dict]:
         and generated_flow_report.get("generated_hero_id") == "hero_veilmourn_orso_nightchart"
         and generated_flow_report.get("town_building_id") == "building_market_square"
         and generated_flow_report.get("town_building_sequence") == ["building_market_square", "building_veilmourn_fog_signal_buoys", "building_veilmourn_salvage_ledger", "building_veilmourn_ransom_exchange", "building_veilmourn_mirror_drydock", "building_veilmourn_salt_counting_house", "building_veilmourn_mourner_pilot_guild", "building_veilmourn_saltwake_factor", "building_veilmourn_bell_chain_watch", "building_veilmourn_harpoon_gantry"]
-        and generated_step_ids == [
+        # Genuine growth-time assaults add the existing battle/report/return
+        # steps; retain the exact complete construction sequence around them.
+        and [step for step in generated_step_ids if not step.startswith(("generated_growth_battle_", "battle_report_"))] == [
             "generated_map_setup",
             "generated_overworld_entered",
             "generated_player_town_entered",

@@ -186,6 +186,13 @@ func _object_rows(map_document: Variant, candidate_ids_by_pool: Dictionary, case
 		var source_token := "%s:%d:%d:%d:%s" % [map_document.get_map_id(), source_index, int(object.get("h3m_type_id", -1)), int(object.get("h3m_subtype", -1)), pool_id]
 		var expected_selection_token := _hash32_hex(source_token)
 		var sorted_candidates: Array = candidate_ids_by_pool[pool_id].keys()
+		var rarity := String(_load_json(ELIGIBILITY_PATH).get("artifact_rarities_by_source_type", {}).get(str(int(object.get("h3m_type_id", -1))), ""))
+		if pool_id == "artifact_reward" and rarity != "":
+			var artifacts: Array = _load_json(ARTIFACTS_PATH).get("items", [])
+			var matching := {}
+			for artifact in artifacts:
+				if artifact.get("rarity", "") == rarity: matching[String(artifact.id)] = true
+			sorted_candidates = sorted_candidates.filter(func(id): return matching.has(id))
 		sorted_candidates.sort()
 		var expected_candidate_id := String(sorted_candidates[_hash32_int(expected_selection_token) % sorted_candidates.size()])
 		if String(object.get("object_id", "")) != candidate_id \

@@ -895,6 +895,10 @@ static func build_random_map_player_config(
 	var result := {
 		"generator_version": RandomMapGeneratorRulesScript.GENERATOR_VERSION,
 		"seed": normalized_seed,
+		# The player-facing catalog profile below says normal. Send the actual
+		# native setup option too; omitting it aliases random to weak (-1).
+		# Explicit historical size profiles retain their prior weak setting.
+		"monster_strength": "normal" if auto_catalog_selection else "weak",
 		"seed_identity": seed_record,
 		"size": {
 			"preset": "player_facing_skirmish_setup",
@@ -2825,7 +2829,7 @@ static func _random_map_replay_metadata(provenance: Dictionary, identity: Dictio
 		"schema_id": "generated_random_map_replay_contract_v2",
 		"replay_contract_version": 2,
 		"source": "skirmish_random_map_seed_config_export_stream",
-		"generator_config": provenance.get("generator_config", {}),
+		"generator_config": provenance.get("generator_config", provenance.get("input_config", {})).duplicate(true),
 		"generated_identity": identity,
 		"materialization": provenance.get("materialization", {}),
 		"generated_export": provenance.get("generated_export", {}),

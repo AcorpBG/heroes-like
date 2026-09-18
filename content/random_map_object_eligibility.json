@@ -5,7 +5,7 @@
   "resource_site_path": "res://content/resource_sites.json",
   "artifact_path": "res://content/artifacts.json",
   "selection_policy": "stable_final_payload_identity_and_serialized_object_ordinal_choose_sorted_compatible_original_candidates",
-  "exact_catalog_precedence": "existing_live_type_subtype_proxy_rows_retain_their_established_runtime_identity_before_broader_pool_selection",
+  "exact_catalog_precedence": "compatible_fixed_catalog_identities_retained_except_random_artifact_rarity_bands_and_cross_domain_proxies",
   "native_generation_boundary": "classification_and_runtime_proxy_selection_only_no_phase_placement_topology_footprint_mask_rng_or_final_payload_changes",
   "art_policy": "original_manifest_backed_runtime_assets_only",
   "authored_pools": [
@@ -108,6 +108,12 @@
       "reason": "Identity depends on authored scenario hooks, encounter payload, or objective state and is not safe for generic RMG use."
     }
   ],
+  "artifact_rarities_by_source_type": {
+    "66": "common",
+    "67": "uncommon",
+    "68": "rare",
+    "69": "epic"
+  },
   "source_type_pools": {
     "2": "guarded_reward",
     "4": "interactable_site",

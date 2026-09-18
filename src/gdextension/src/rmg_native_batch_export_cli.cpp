@@ -1,3 +1,4 @@
+#include "runtime_object_classification.hpp"
 #include "rmg_native_core.hpp"
 
 #include <algorithm>
@@ -2111,47 +2112,7 @@ void append_runtime_tile_points_json(
 }
 
 const char *runtime_object_kind_for_h3m_type(int32_t type_id) {
-	switch (type_id) {
-		case 5:
-			return "artifact";
-		case 53:
-			return "mine";
-		case 54:
-		case 71:
-			return "guard";
-		case 98:
-			return "town";
-		case 66:
-		case 67:
-		case 68:
-		case 69:
-		case 76:
-		case 79:
-		case 83:
-		case 88:
-		case 89:
-		case 90:
-		case 93:
-		case 101:
-			return "reward_reference";
-		case 118:
-		case 119:
-		case 120:
-		case 124:
-		case 134:
-		case 135:
-		case 136:
-		case 137:
-		case 147:
-		case 150:
-		case 155:
-		case 199:
-		case 207:
-		case 210:
-			return "decorative_obstacle";
-		default:
-			return "h3m_object";
-	}
+	return aurelion::runtime_object_kind(type_id);
 }
 
 const aurelion::h3maped_rmg_core::FinalHeaderPlayerSlot4ac857 *runtime_player_slot_for_town(
