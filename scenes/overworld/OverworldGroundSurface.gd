@@ -36,6 +36,8 @@ func configure(config: Dictionary, atlas: Texture2D) -> void:
 	shader_material.shader = GROUND_SHADER
 	shader_material.set_shader_parameter("materials", texture)
 	shader_material.set_shader_parameter("material_span_tiles", float(config.get("material_span_tiles", 4.0)))
+	shader_material.set_shader_parameter("beach_slot", float(slots.get("sand", 5)))
+	shader_material.set_shader_parameter("water_slots", Vector3(float(slots.get("water", 12)), float(slots.get("coast", 13)), float(slots.get("shore", 14))))
 	material = shader_material
 	map_signature = -1
 	fog_signature = -1
