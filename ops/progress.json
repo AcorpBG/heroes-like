@@ -22302,6 +22302,17 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "remove-audio-ci-20260918",
+      "title": "Remove automatic Linux audio workflow",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "tooling_implementation_slice",
+      "source": "PLAN.md",
+      "createdAt": "2026-09-18T16:31:24.726897+00:00",
+      "notes": "Removed audio-integration.yml and its push, pull_request and manual Actions triggers at owner request. Local audio validation tools and release workflows retained. Focused file/reference checks passed; no game or broad suite run. No temporary artifacts created.",
+      "completedAt": "2026-09-18T16:31:29.531342+00:00"
+    },
+    {
       "id": "rmg-overworld-quality-closure-20260918",
       "title": "Generated Overworld Quality Closure",
       "phase": "phase-6-production-alpha-layer",
