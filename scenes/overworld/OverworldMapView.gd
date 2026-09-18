@@ -6532,6 +6532,16 @@ func validation_placement_debug_overlay_snapshot() -> Dictionary:
 
 func validation_generated_object_visual_summary() -> Dictionary:
 	var expected_body_keys: Dictionary = {}
+	var missing_source_scenery_ids: Array = []
+	if _session != null:
+		var live_ids := {}
+		for object in _session.overworld.get("map_objects", []): live_ids[String(object.get("placement_id", ""))] = true
+		var source_types: Dictionary = ContentService.load_json("res://art/overworld/native_scenery.json").get("source_types", {})
+		for object in _session.overworld.get("package_source_objects_by_id", {}).values():
+			if not LevelRules.on_level(object, _level) or not source_types.has(str(int(object.get("h3m_type_id", -1)))): continue
+			if not live_ids.has(String(object.get("placement_id", ""))): missing_source_scenery_ids.append(object.get("placement_id", ""))
+			for tile in _tiles_from_payloads(object.get("package_block_tiles", [])):
+				if tile.x >= 0 and tile.y >= 0 and tile.x < _map_size.x and tile.y < _map_size.y: expected_body_keys[_tile_key(tile)] = true
 	var generated_record_count := 0
 	var legacy_primary_marker_candidates: Array = []
 	var indexed_legacy_primary_marker_count := 0
@@ -6540,6 +6550,7 @@ func validation_generated_object_visual_summary() -> Dictionary:
 			if not (object_value is Dictionary):
 				continue
 			var object: Dictionary = object_value
+			if not LevelRules.on_level(object, _level): continue
 			if String(object.get("runtime_object_role", "")).strip_edges() != "decorative_blocker_sprite":
 				continue
 			var package_block_tiles = object.get("package_block_tiles", null)
@@ -6599,6 +6610,8 @@ func validation_generated_object_visual_summary() -> Dictionary:
 		var terrain_id := _terrain_at(presentation_tile)
 		var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id, ""))
 		var terrain_asset_ids: Array = _generated_decorative_blocker_asset_ids_by_biome.get(biome_id, [])
+		var semantic_assets := _native_scenery_assets(presentation)
+		if not semantic_assets.is_empty(): terrain_asset_ids = semantic_assets
 		var terrain_matched := not terrain_asset_ids.is_empty() and asset_id in terrain_asset_ids
 		if visual_anchor:
 			visual_anchor_count += 1
@@ -6708,6 +6721,8 @@ func validation_generated_object_visual_summary() -> Dictionary:
 		"legacy_primary_markers_suppressed": indexed_legacy_primary_marker_count == 0,
 		"legacy_primary_marker_candidates": legacy_primary_marker_candidates,
 		"expected_body_tile_count": expected_keys.size(),
+		"missing_source_scenery_ids": missing_source_scenery_ids,
+		"all_source_scenery_adopted": missing_source_scenery_ids.is_empty(),
 		"indexed_body_tile_count": indexed_keys.size(),
 		"body_tile_keys_exact": indexed_keys == expected_keys,
 		"loaded_body_asset_count": loaded_asset_count,
@@ -10755,6 +10770,10 @@ func _index_generated_decorative_body_cells(object: Dictionary) -> void:
 		_generated_decorative_bodies_by_tile[key] = presentation
 
 func _generated_decorative_body_asset_id(object: Dictionary, tile: Vector2i) -> String:
+	var semantic_assets := _native_scenery_assets(object)
+	if not semantic_assets.is_empty():
+		var key := "%s|%s" % [object.get("h3m_type_id", -1), _generated_decorative_body_motif_key(object, tile)]
+		return String(semantic_assets[absi(key.hash()) % semantic_assets.size()])
 	var terrain_id := _terrain_at(tile)
 	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id, ""))
 	var candidates: Array = _generated_decorative_blocker_asset_ids_by_biome.get(biome_id, [])
@@ -10764,6 +10783,13 @@ func _generated_decorative_body_asset_id(object: Dictionary, tile: Vector2i) -> 
 		return ""
 	var stable_key := _generated_decorative_body_motif_key(object, tile)
 	return String(candidates[absi(stable_key.hash()) % candidates.size()])
+
+func _native_scenery_assets(object: Dictionary) -> Array:
+	# Old saved maps retain their established presentation and topology. New
+	# adoption explicitly opts into semantic art for pools, lava and deadwood.
+	if int(object.get("native_scenery_art_version", 0)) != 1: return []
+	var entry: Dictionary = ContentService.load_json("res://art/overworld/native_scenery.json").get("source_types", {}).get(str(int(object.get("h3m_type_id", -1))), {})
+	return entry.get("asset_ids", [])
 
 func _generated_decorative_body_motif_key(object: Dictionary, tile: Vector2i) -> String:
 	var terrain_id := _terrain_at(tile)

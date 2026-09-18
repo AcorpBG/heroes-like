@@ -22,11 +22,17 @@ Rules:
 
 ## Current Tactical State
 
+### Generated Exploration and Guarded Routes
+
+id: `rmg-exploration-and-guarded-routes-20260918`
+
+Status: completed correction, owner-directed Phase 6 child. Restored all 38 scenery families with exact source collision; closed the three reproduced guard bypasses, diversified random artifacts, restored guarded banks, and made new catalog-auto games actually use Normal strength. Cleared-site save state and replay options persist. Source/Linux 81,237 checks each, Windows 81,227, native reference bytes, existing boundary/neutral/art, repository and both exports/parity pass. Small opening-ring density still fails two thresholds; no blanket pacing or native parity claim. Existing saves retain old topology; no filler/native generation changes. Cleaned 4.51 GB disposable outputs; caches/RMG/unrelated files preserved. Requirements/results: `docs/rmg-exploration-and-guarded-routes.md`.
+
 ### RMG Guard Placement and Empty-Space Diagnosis
 
 id: `audit-rmg-guards-and-empty-space-20260918`
 
-Status: completed audit, owner-directed Phase 6 child. Three deterministic maps lose 126–197 native scenery records and open 207–427 source-blocked tiles during adoption; production movement confirms three guard bypasses. Extra guarded-site stacks also overlap native guard control. Two retained original payloads still match native output. Six Python tests and 11,293 rendered diagnostic assertions pass, not gameplay quality; 200.57 MB disposable outputs cleaned, RMG recovery evidence retained. Findings and recommended classification/adoption correction: `docs/rmg-guards-and-empty-space-audit.md`. No generator, gameplay, art or save changes; defects remain unfixed and no corrective slice is active.
+Status: completed audit, owner-directed Phase 6 child. Three deterministic maps lose 126–197 native scenery records and open 207–427 source-blocked tiles during adoption; production movement confirms three guard bypasses. Extra guarded-site stacks also overlap native guard control. Two retained original payloads still match native output. Six Python tests and 11,293 rendered diagnostic assertions pass, not gameplay quality; 200.57 MB disposable outputs cleaned, RMG recovery evidence retained. Findings: `docs/rmg-guards-and-empty-space-audit.md`. The corrective implementation is selected above; this audit itself changed no gameplay.
 
 ### Remove Generated Town Supply Support
 

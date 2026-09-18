@@ -1,6 +1,8 @@
 class_name NativeRandomMapPackageSessionBridge
 extends RefCounted
 
+const NativeScenery = preload("res://scripts/persistence/NativeSceneryRules.gd")
+
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
 const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
@@ -78,6 +80,10 @@ static func build_session_from_adoption(
 				town["team_id"] = String(player.get("team_id", ""))
 				break
 	var resource_nodes := _resource_nodes_from_document(map_document)
+	var scenery_validation := NativeScenery.validate(_document_objects(map_document))
+	if not bool(scenery_validation.get("ok", false)):
+		push_error("Generated scenery adoption failed: %s" % JSON.stringify(scenery_validation))
+		return SessionStateStoreScript.new_session_data()
 	var artifact_nodes := _artifact_nodes_from_document(map_document)
 	var encounters := _ensure_generated_guarded_reward_site_guards(
 		resource_nodes,
@@ -689,11 +695,13 @@ static func _map_objects_from_document(map_document: Variant) -> Array:
 		if kind in ["resource_site", "mine", "neutral_dwelling", "reward_reference"] or native_kind in ["resource_site", "mine", "neutral_dwelling", "reward_reference"]:
 			continue
 		var family := String(object.get("object_family_id", object.get("family_id", "")))
-		if kind != "decorative_obstacle" and family != "decorative_obstacle" and String(object.get("object_id", "")) == "":
+		var scenery := NativeScenery.is_scenery(object)
+		if not scenery and kind != "decorative_obstacle" and family != "decorative_obstacle" and String(object.get("object_id", "")) == "":
 			continue
 		var node: Dictionary = object.duplicate(true)
-		if kind == "decorative_obstacle" or family == "decorative_obstacle":
+		if scenery or kind == "decorative_obstacle" or family == "decorative_obstacle":
 			node["runtime_object_role"] = "decorative_blocker_sprite"
+			if scenery: node["native_scenery_art_version"] = 1
 		node["collected"] = false
 		objects.append(node)
 	return objects

@@ -276,8 +276,18 @@ func _execute_boot_to_generated_skirmish_town_flow() -> bool:
 				turn = overworld.call("validation_confirm_end_turn")
 			await _settle_frames(6)
 			session = SessionState.ensure_active_session()
-			if not _require(bool(turn.get("ok", false)) and session.day == prior_day + 1 and session.battle.is_empty() and session.scenario_status == "in_progress", "Packaged growth did not complete one normal confirmed End Turn.", turn):
+			if not _require(bool(turn.get("ok", false)) and session.day == prior_day + 1 and session.scenario_status == "in_progress", "Packaged growth did not complete one normal confirmed End Turn.", turn):
 				return false
+			# Normal generated games can be attacked during the growth smoke.
+			# Exercise the existing shipped battle flow; never erase the raid or
+			# force victory just to continue testing Town construction.
+			if not session.battle.is_empty():
+				var battle = await _wait_for_scene(BATTLE_SCENE, 10000)
+				if battle == null: return _fail("Packaged growth assault did not enter Battle.", turn)
+				var defense := await _play_battle_to_scene(battle, "generated_growth_battle_%d_progressed" % index, "generated_growth_battle_%d_resolved" % index, OVERWORLD_SCENE, true)
+				if not bool(defense.get("ok", false)): return false
+				session = SessionState.ensure_active_session()
+				if not _require(session.battle.is_empty() and session.day == prior_day + 1 and session.scenario_status == "in_progress", "Packaged growth defense did not return a live unchanged-day session.", defense): return false
 			visit_result = OverworldRules.set_active_town_visit(session, String(player_town.get("placement_id", "")))
 			if not _require(bool(visit_result.get("ok", false)), "Packaged growth cannot re-enter the same Town.", visit_result):
 				return false

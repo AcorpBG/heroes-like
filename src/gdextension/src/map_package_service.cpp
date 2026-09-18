@@ -1,3 +1,4 @@
+#include "runtime_object_classification.hpp"
 #include "map_package_service.hpp"
 
 #include "h3maped_rmg_core.hpp"
@@ -470,23 +471,7 @@ Dictionary build_h3maped_small_package_session_adoption(const Dictionary &genera
 }
 
 const char *runtime_object_kind(int32_t type_id) {
-	switch (type_id) {
-		case 5: return "artifact";
-		case 53: return "mine";
-		case 54:
-		case 71: case 72: case 73: case 74: case 75:
-		case 162: case 163: case 164:
-			return "guard";
-		case 77: case 98: return "town";
-		case 66: case 67: case 68: case 69: case 76: case 79:
-		case 83: case 88: case 89: case 90: case 93: case 101:
-			return "reward_reference";
-		case 118: case 119: case 120: case 124: case 134: case 135:
-		case 136: case 137: case 147: case 150: case 155: case 199:
-		case 207: case 210:
-			return "decorative_obstacle";
-		default: return "h3m_object";
-	}
+	return aurelion::runtime_object_kind(type_id);
 }
 
 Dictionary runtime_json_dictionary(const String &path) {
@@ -759,10 +744,27 @@ Dictionary runtime_authored_pool_proxy_entry(
 		return Dictionary();
 	}
 	Array candidates = candidates_value;
+	const String domain = String(pool.get("content_domain", ""));
+	const Dictionary artifact_rarities = registry.get("artifact_rarities_by_source_type", Dictionary());
+	const String rarity = String(artifact_rarities.get(source_type_key, ""));
+	if (domain == "artifact" && !rarity.is_empty()) {
+		Array filtered;
+		for (int64_t index = 0; index < candidates.size(); ++index) {
+			if (String(Dictionary(candidates[index]).get("rarity", "")) == rarity) {
+				filtered.append(candidates[index]);
+			}
+		}
+		candidates = filtered;
+	}
 	if (candidates.is_empty()) {
 		return Dictionary();
 	}
-	if (!catalog_entry.is_empty()) {
+	// A random artifact class is a rarity band, not one fixed legacy proxy.
+	// Likewise a creature bank must remain a guarded site, not a free artifact.
+	const bool catalog_domain_matches = domain == "artifact"
+			? runtime_proxy_entry_has_live_artifact_surface(catalog_entry)
+			: !runtime_proxy_entry_has_live_artifact_surface(catalog_entry);
+	if (!catalog_entry.is_empty() && catalog_domain_matches && rarity.is_empty()) {
 		Dictionary entry = catalog_entry.duplicate(true);
 		entry["native_authored_pool_id"] = pool_id;
 		entry["native_authored_pool_candidate_count"] = candidates.size();
@@ -782,7 +784,6 @@ Dictionary runtime_authored_pool_proxy_entry(
 	const int64_t candidate_index = int64_t(hash32_int(selection_token)) % candidates.size();
 	Dictionary candidate = candidates[candidate_index];
 	Dictionary entry = catalog_entry.duplicate(true);
-	const String domain = String(pool.get("content_domain", ""));
 	const String candidate_id = String(candidate.get("id", ""));
 	entry.erase("native_proxy_site_id");
 	entry.erase("native_resource_id");
@@ -1248,20 +1249,20 @@ Dictionary runtime_objects(
 			} else if (source_type_exclusions.has(source_type_key)) {
 				resolution_status = "unsupported_source_type";
 				object["native_authored_pool_exclusion_reason"] = source_type_exclusions.get(source_type_key, "");
-			} else if (kind == "decorative_obstacle" || visit_tiles.is_empty()) {
+			} else if (kind == "decorative_obstacle") {
 				resolution_status = "renderer_managed_nonvisitable_body";
 			} else if (source_type_pools.has(source_type_key)) {
 				resolution_status = "mapped_pool_resolution_failed";
 			} else {
-				resolution_status = "unclassified_visitable_source_type";
+				resolution_status = visit_tiles.is_empty() ? "unclassified_nonvisitable_source_type" : "unclassified_visitable_source_type";
 			}
 			object["native_authored_pool_resolution_status"] = resolution_status;
 		}
 		resolution_counts[resolution_status] = int64_t(resolution_counts.get(resolution_status, 0)) + 1;
-		if (!visit_tiles.is_empty()
-				&& (resolution_status == "unsupported_source_type"
+		if (resolution_status == "unclassified_nonvisitable_source_type"
+				|| (!visit_tiles.is_empty() && (resolution_status == "unsupported_source_type"
 						|| resolution_status == "mapped_pool_resolution_failed"
-						|| resolution_status == "unclassified_visitable_source_type")) {
+						|| resolution_status == "unclassified_visitable_source_type"))) {
 			Dictionary failure;
 			failure["code"] = resolution_status;
 			failure["type_id"] = source.type_id;

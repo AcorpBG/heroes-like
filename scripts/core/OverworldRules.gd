@@ -6311,6 +6311,8 @@ static func _normalize_resource_nodes(nodes: Array) -> Array:
 
 static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
 	for key in [
+		"route_state_id",
+		"state_id",
 		"native_transit",
 		"h3m_type_id",
 		"h3m_subtype",

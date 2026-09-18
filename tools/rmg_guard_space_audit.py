@@ -80,6 +80,8 @@ func run() -> void:
 		var label := "%s-%s" % [row[0],row[1]]
 		print("AUDIT_START " + label)
 		var config := Select.build_random_map_player_config(row[1],"","",2,"land",false,"homm3_"+row[0],Select.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO,"faction_embercourt","")
+		# Historical known-bug cases used the prior menu's weak native setup.
+		config["monster_strength"] = "weak"
 		var generated: Dictionary = service.generate_random_map(config)
 		check(bool(generated.get("ok",false)), label+": generation failed " + String(generated.get("error_code","")))
 		if not generated.get("ok",false): continue
