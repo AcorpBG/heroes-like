@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Audio CI scheduling
+
+`remove-audio-ci-20260918` — completed. Removed the Linux audio GitHub Actions workflow at owner request. Audio validation tools remain available for deliberate manual checks; release workflows are unchanged.
+
 ### Generated Overworld Quality Closure
 
 id: `rmg-overworld-quality-closure-20260918`
