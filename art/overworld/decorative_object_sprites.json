@@ -1625,7 +1625,57 @@
       "biome_cluster_v2_coast_archipelago_undergrowth_21",
       "biome_cluster_v2_coast_archipelago_undergrowth_22",
       "biome_cluster_v2_coast_archipelago_undergrowth_23",
-      "biome_cluster_v2_coast_archipelago_undergrowth_24"
+      "biome_cluster_v2_coast_archipelago_undergrowth_24",
+      "biome_component_v2_sandstone_rock_00",
+      "biome_component_v2_sandstone_rock_01",
+      "biome_component_v2_sandstone_rock_02",
+      "biome_component_v2_sandstone_rock_03",
+      "biome_component_v2_sandstone_rock_04",
+      "biome_component_v2_sandstone_rock_05",
+      "biome_component_v2_sandstone_rock_06",
+      "biome_component_v2_sandstone_rock_07",
+      "biome_component_v2_sandstone_rock_08",
+      "biome_component_v2_sandstone_rock_09",
+      "biome_component_v2_sandstone_rock_10",
+      "biome_component_v2_sandstone_rock_11",
+      "biome_component_v2_sandstone_rock_12",
+      "biome_component_v2_sandstone_rock_13",
+      "biome_component_v2_sandstone_rock_14",
+      "biome_component_v2_sandstone_rock_15",
+      "biome_component_v2_sandstone_rock_16",
+      "biome_component_v2_sandstone_rock_17",
+      "biome_component_v2_sandstone_rock_18",
+      "biome_component_v2_sandstone_rock_19",
+      "biome_component_v2_sandstone_rock_20",
+      "biome_component_v2_sandstone_rock_21",
+      "biome_component_v2_sandstone_rock_22",
+      "biome_component_v2_sandstone_rock_23",
+      "biome_component_v2_sandstone_rock_24",
+      "biome_cluster_v2_sandstone_rock_00",
+      "biome_cluster_v2_sandstone_rock_01",
+      "biome_cluster_v2_sandstone_rock_02",
+      "biome_cluster_v2_sandstone_rock_03",
+      "biome_cluster_v2_sandstone_rock_04",
+      "biome_cluster_v2_sandstone_rock_05",
+      "biome_cluster_v2_sandstone_rock_06",
+      "biome_cluster_v2_sandstone_rock_07",
+      "biome_cluster_v2_sandstone_rock_08",
+      "biome_cluster_v2_sandstone_rock_09",
+      "biome_cluster_v2_sandstone_rock_10",
+      "biome_cluster_v2_sandstone_rock_11",
+      "biome_cluster_v2_sandstone_rock_12",
+      "biome_cluster_v2_sandstone_rock_13",
+      "biome_cluster_v2_sandstone_rock_14",
+      "biome_cluster_v2_sandstone_rock_15",
+      "biome_cluster_v2_sandstone_rock_16",
+      "biome_cluster_v2_sandstone_rock_17",
+      "biome_cluster_v2_sandstone_rock_18",
+      "biome_cluster_v2_sandstone_rock_19",
+      "biome_cluster_v2_sandstone_rock_20",
+      "biome_cluster_v2_sandstone_rock_21",
+      "biome_cluster_v2_sandstone_rock_22",
+      "biome_cluster_v2_sandstone_rock_23",
+      "biome_cluster_v2_sandstone_rock_24"
     ],
     "biome_highland_ridge": [
       "cohesive_wet_cold_02",
@@ -42201,6 +42251,806 @@
       "availability": "Live semantic RMG scenery palette.",
       "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
       "production_kind": "assembled_plains_grove",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_00": {
+      "name": "Wind-scooped sandstone dome",
+      "description": "Wind-scooped sandstone dome is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_00.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_01": {
+      "name": "Leaning tapered chalk fin",
+      "description": "Leaning tapered chalk fin is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_01.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_02": {
+      "name": "Split buff sandstone twins",
+      "description": "Split buff sandstone twins is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_02.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_03": {
+      "name": "Low rippled limestone ledge",
+      "description": "Low rippled limestone ledge is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_03.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_04": {
+      "name": "Three unequal desert hoodoos",
+      "description": "Three unequal desert hoodoos is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_04.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_05": {
+      "name": "Eroded squat sandstone mesa",
+      "description": "Eroded squat sandstone mesa is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_05.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_06": {
+      "name": "Pale honeycomb weathered tower",
+      "description": "Pale honeycomb weathered tower is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_06.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_07": {
+      "name": "Long fallen sediment slab",
+      "description": "Long fallen sediment slab is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_07.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_08": {
+      "name": "Low bank of small cream sandstone pebbles",
+      "description": "Low bank of small cream sandstone pebbles is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_08.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_09": {
+      "name": "Asymmetric wind-carved arch",
+      "description": "Asymmetric wind-carved arch is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_09.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_10": {
+      "name": "Stepped broken sandstone butte",
+      "description": "Stepped broken sandstone butte is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_10.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_11": {
+      "name": "Half buried ammonite-like eroded stone",
+      "description": "Half buried ammonite-like eroded stone is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_11.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_12": {
+      "name": "Veined cream desert boulder",
+      "description": "Veined cream desert boulder is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_12.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_13": {
+      "name": "Low flat fan of sandy gravel chips",
+      "description": "Low flat fan of sandy gravel chips is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_13.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_14": {
+      "name": "Rounded bleached double boulder",
+      "description": "Rounded bleached double boulder is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_14.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_15": {
+      "name": "Overhanging hooked sandstone crag",
+      "description": "Overhanging hooked sandstone crag is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_15.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_16": {
+      "name": "Shallow eroded sandstone bowl",
+      "description": "Shallow eroded sandstone bowl is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_16.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_17": {
+      "name": "Folded undulating sandstone ridge",
+      "description": "Folded undulating sandstone ridge is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_17.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_18": {
+      "name": "Low tumbled pile of buff scree",
+      "description": "Low tumbled pile of buff scree is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_18.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_19": {
+      "name": "Fluted wind-carved tapering pinnacle",
+      "description": "Fluted wind-carved tapering pinnacle is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_19.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_20": {
+      "name": "Broken chalk column with scattered base",
+      "description": "Broken chalk column with scattered base is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_20.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_21": {
+      "name": "Low elongated beige cobble bank",
+      "description": "Low elongated beige cobble bank is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_21.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_22": {
+      "name": "Wind-pitted buff sandstone lump",
+      "description": "Wind-pitted buff sandstone lump is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_22.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_23": {
+      "name": "Two leaning interlocked pale sandstone slabs",
+      "description": "Two leaning interlocked pale sandstone slabs is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_23.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_component_v2_sandstone_rock_24": {
+      "name": "Horizontal dune-polished ribbed outcrop",
+      "description": "Horizontal dune-polished ribbed outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_24.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "original_atlas_component",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_00": {
+      "name": "Wind-scooped sandstone dome outcrop",
+      "description": "Wind-scooped sandstone dome outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_00.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_01": {
+      "name": "Leaning tapered chalk fin outcrop",
+      "description": "Leaning tapered chalk fin outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_01.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_02": {
+      "name": "Split buff sandstone twins outcrop",
+      "description": "Split buff sandstone twins outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_02.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_03": {
+      "name": "Low rippled limestone ledge outcrop",
+      "description": "Low rippled limestone ledge outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_03.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_04": {
+      "name": "Three unequal desert hoodoos outcrop",
+      "description": "Three unequal desert hoodoos outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_04.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_05": {
+      "name": "Eroded squat sandstone mesa outcrop",
+      "description": "Eroded squat sandstone mesa outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_05.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_06": {
+      "name": "Pale honeycomb weathered tower outcrop",
+      "description": "Pale honeycomb weathered tower outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_06.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_07": {
+      "name": "Long fallen sediment slab outcrop",
+      "description": "Long fallen sediment slab outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_07.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_08": {
+      "name": "Low bank of small cream sandstone pebbles outcrop",
+      "description": "Low bank of small cream sandstone pebbles outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_08.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_09": {
+      "name": "Asymmetric wind-carved arch outcrop",
+      "description": "Asymmetric wind-carved arch outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_09.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_10": {
+      "name": "Stepped broken sandstone butte outcrop",
+      "description": "Stepped broken sandstone butte outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_10.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_11": {
+      "name": "Half buried ammonite-like eroded stone outcrop",
+      "description": "Half buried ammonite-like eroded stone outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_11.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_12": {
+      "name": "Veined cream desert boulder outcrop",
+      "description": "Veined cream desert boulder outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_12.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_13": {
+      "name": "Low flat fan of sandy gravel chips outcrop",
+      "description": "Low flat fan of sandy gravel chips outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_13.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_14": {
+      "name": "Rounded bleached double boulder outcrop",
+      "description": "Rounded bleached double boulder outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_14.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_15": {
+      "name": "Overhanging hooked sandstone crag outcrop",
+      "description": "Overhanging hooked sandstone crag outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_15.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_16": {
+      "name": "Shallow eroded sandstone bowl outcrop",
+      "description": "Shallow eroded sandstone bowl outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_16.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_17": {
+      "name": "Folded undulating sandstone ridge outcrop",
+      "description": "Folded undulating sandstone ridge outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_17.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_18": {
+      "name": "Low tumbled pile of buff scree outcrop",
+      "description": "Low tumbled pile of buff scree outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_18.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_19": {
+      "name": "Fluted wind-carved tapering pinnacle outcrop",
+      "description": "Fluted wind-carved tapering pinnacle outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_19.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_20": {
+      "name": "Broken chalk column with scattered base outcrop",
+      "description": "Broken chalk column with scattered base outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_20.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_21": {
+      "name": "Low elongated beige cobble bank outcrop",
+      "description": "Low elongated beige cobble bank outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_21.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_22": {
+      "name": "Wind-pitted buff sandstone lump outcrop",
+      "description": "Wind-pitted buff sandstone lump outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_22.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_23": {
+      "name": "Two leaning interlocked pale sandstone slabs outcrop",
+      "description": "Two leaning interlocked pale sandstone slabs outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_23.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
+      "contains_dead_tree": false
+    },
+    "biome_cluster_v2_sandstone_rock_24": {
+      "name": "Horizontal dune-polished ribbed outcrop outcrop",
+      "description": "Horizontal dune-polished ribbed outcrop outcrop is impassable pale sandstone scenery. It has no interaction or reward; native body masks determine blocked cells.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "terrain_ids": [
+        "sand"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_24.png",
+      "source_path": "res://art/overworld/source/generated/terrain/sandstone_20260919/recipes.json",
+      "availability": "Live sand-only RMG rock palette.",
+      "placement_authority": "Native generated obstacle body masks; art does not change footprint.",
+      "production_kind": "assembled_original_components",
       "contains_dead_tree": false
     }
   }

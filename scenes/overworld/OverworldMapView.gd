@@ -252,7 +252,7 @@ const GENERATED_DECORATIVE_BIOME_BY_TERRAIN := {
 	"rough": "biome_highland_ridge",
 	"rock": "biome_highland_ridge",
 	"badlands": "biome_rough_badlands",
-	"sand": "biome_rough_badlands",
+	"sand": "biome_coast_archipelago",
 	"dirt": "biome_rough_badlands",
 	"ash": "biome_ash_lava_wastes",
 	"lava": "biome_ash_lava_wastes",
@@ -4436,7 +4436,8 @@ func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, rem
 		grounding_center - Vector2(sprite_extent * 0.54, tile_extent * 0.24),
 		Vector2(sprite_extent * 1.08, tile_extent * 0.48)
 	)
-	var has_formation: bool = not object.get("generated_body_formation", {}).is_empty()
+	_draw_native_rock_contacts(object, rect, remembered, tile)
+	var has_formation: bool = not object.get("generated_body_formation", {}).is_empty() or not object.get("generated_body_rock_contacts", []).is_empty()
 	if not has_formation:
 		_draw_mapped_sprite_grounding_anchor(grounding_rect, tile, "blocker", footprint, remembered)
 	else:
@@ -4471,6 +4472,23 @@ func _draw_native_scenery_formation(object: Dictionary, cell_rect: Rect2, rememb
 	var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
 	tint *= _native_scenery_modulate(object, tile, asset_id)
 	_canvas_draw_texture_rect_region(painted_texture, payload.rect, payload.source, tint)
+
+func _draw_native_rock_contacts(object: Dictionary, cell_rect: Rect2, remembered: bool, tile: Vector2i) -> void:
+	for contact in object.get("generated_body_rock_contacts", []):
+		var asset_id := String(contact.asset_id)
+		var texture = _object_texture_for_asset(asset_id)
+		if not texture is Texture2D: continue
+		var region := _object_texture_visible_region(asset_id, texture)
+		var raster: Texture2D = region.get("draw_texture", texture)
+		var target: Rect2 = contact.rect
+		target = Rect2(cell_rect.position + (target.position - Vector2(tile)) * cell_rect.size, target.size * cell_rect.size)
+		var scale := minf(target.size.x / raster.get_width(), target.size.y / raster.get_height())
+		var painted := Rect2(target.get_center() - raster.get_size() * scale * 0.5, raster.get_size() * scale)
+		var part := preload("res://scripts/persistence/NativeSceneryFormation.gd").clip(painted, cell_rect, raster.get_size())
+		if part.is_empty(): continue
+		var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
+		tint *= _native_scenery_modulate(object, tile, asset_id)
+		_canvas_draw_texture_rect_region(raster, part.rect, part.source, tint)
 
 func _draw_standalone_map_object_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_object_sprite(_standalone_map_object_asset_id(object), rect, remembered, _standalone_map_object_profile(object), tile)
@@ -10712,6 +10730,7 @@ func _rebuild_static_object_indexes() -> void:
 			_index_generated_decorative_body_cells(object)
 			continue
 		_decorative_objects_by_tile[_tile_key(tile)] = object
+	_index_native_rock_contacts()
 
 func _index_generated_decorative_body_cells(object: Dictionary) -> void:
 	if String(object.get("runtime_object_role", "")).strip_edges() != "decorative_blocker_sprite":
@@ -10799,6 +10818,41 @@ func _index_generated_decorative_body_cells(object: Dictionary) -> void:
 		_generated_decorative_bodies_by_tile[key] = presentation
 	_index_native_scenery_formations(object, body_tiles)
 
+func _index_native_rock_contacts() -> void:
+	# Presentation joins can cross source-record boundaries, but never a free
+	# tile or a terrain boundary. They add no placement or collision data.
+	var rocks := {}
+	var palettes: Dictionary = ContentService.load_json("res://art/overworld/native_scenery.json").get("rock_contact_palettes", {})
+	var terrain_palettes: Dictionary = ContentService.load_json("res://art/overworld/native_scenery.json").get("terrain_rock_contact_palettes", {})
+	for key in _generated_decorative_bodies_by_tile:
+		var cell: Dictionary = _generated_decorative_bodies_by_tile[key]
+		cell.erase("generated_body_rock_contacts")
+		if int(cell.get("native_scenery_art_version", 0)) < 2: continue
+		if not String(cell.get("overworld_sprite_asset_id", "")).contains("_rock_"): continue
+		var tile := Vector2i(int(cell.x), int(cell.y))
+		var biome := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(_terrain_at(tile), ""))
+		var pool: Array = terrain_palettes.get(_terrain_at(tile), palettes.get(biome, []))
+		if pool.is_empty(): continue
+		rocks[tile] = {"cell": cell, "pool": pool, "terrain": _terrain_at(tile)}
+	for tile in rocks:
+		var rock: Dictionary = rocks[tile]
+		var connected := false
+		for offset in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+			if rocks.has(tile + offset) and rocks[tile + offset].terrain == rock.terrain: connected = true
+		if not connected: continue
+		var seed := ("rock-base|" + _tile_key(tile)).sha256_buffer().decode_u32(0)
+		rock.cell["generated_body_rock_contacts"] = [{"asset_id": rock.pool[seed % rock.pool.size()], "rect": Rect2(Vector2(tile) + Vector2(0.06,0.27), Vector2(0.88,0.66)), "tiles": [tile]}]
+	for tile in rocks:
+		var rock: Dictionary = rocks[tile]
+		for offset in [Vector2i.RIGHT, Vector2i.DOWN]:
+			var neighbor: Vector2i = tile + offset
+			if not rocks.has(neighbor) or rocks[neighbor].terrain != rock.terrain: continue
+			var seed := ("rock-join|" + _tile_key(tile) + "|" + _tile_key(neighbor)).sha256_buffer().decode_u32(0)
+			var horizontal: bool = offset == Vector2i.RIGHT
+			var contact := {"asset_id": rock.pool[seed % rock.pool.size()], "rect": Rect2(Vector2(tile) + (Vector2(0.4,0.18) if horizontal else Vector2(0.1,0.5)), Vector2(1.2,0.75) if horizontal else Vector2(0.8,1.1)), "tiles": [tile,neighbor]}
+			rock.cell.generated_body_rock_contacts.append(contact)
+			rocks[neighbor].cell.generated_body_rock_contacts.append(contact)
+
 func _index_native_scenery_formations(object: Dictionary, body_tiles: Array) -> void:
 	if int(object.get("native_scenery_art_version", 0)) < 2: return
 	var policy := preload("res://scripts/persistence/NativeSceneryRules.gd").policy(object)
@@ -10850,7 +10904,7 @@ func _generated_decorative_body_asset_id(object: Dictionary, tile: Vector2i) -> 
 
 func _native_scenery_assets(object: Dictionary, tile: Vector2i) -> Array:
 	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(_terrain_at(tile), ""))
-	return preload("res://scripts/persistence/NativeSceneryRules.gd").asset_candidates(object, biome_id)
+	return preload("res://scripts/persistence/NativeSceneryRules.gd").asset_candidates(object, biome_id, _terrain_at(tile))
 
 func _native_scenery_modulate(object: Dictionary, tile: Vector2i, asset_id: String) -> Color:
 	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(_terrain_at(tile), ""))

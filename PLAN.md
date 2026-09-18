@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Sand geology and connected rock bases
+
+`art-sand-rock-cohesion-20260919` — completed. Sand has 25 original pale sandstone components and 25 assembled outcrops; dirt retains red badlands rock. Adjacent same-terrain rock bodies share low rubble foundations across source records, preserving exact blocked cells and fog. Focused dense rendering and content checks passed; see `docs/biome-source-component-expansion.md`.
+
 ### Native-sized scenery formations
 
 `art-native-sized-formations-20260919` — completed. Broad native forest/rock footprints now render a dominant multi-tile original cluster with small edge details, preserving exact masks, holes, overlap ownership and per-cell fog. Native generation and version 1 saves unchanged. 213 focused live-method/render checks and Windows import pass; no full suite or gameplay session. See `docs/biome-source-component-expansion.md`.

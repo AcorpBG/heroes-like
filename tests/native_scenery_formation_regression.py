@@ -2,7 +2,7 @@
 import re
 import native_scenery_variety_regression as harness
 
-names = ['_index_generated_decorative_body_cells', '_index_native_scenery_formations',
+names = ['_index_generated_decorative_body_cells', '_index_native_scenery_formations', '_index_native_rock_contacts', '_draw_native_rock_contacts',
          '_generated_decorative_body_asset_id', '_native_scenery_assets', '_native_scenery_modulate',
          '_generated_decorative_body_motif_key', '_generated_decorative_body_composition',
          '_stable_unit_fraction', '_tile_key', '_tiles_from_payloads',
@@ -64,6 +64,7 @@ func run():
             _index_generated_decorative_body_cells(object)
             check(object==before,"source record mutated")
             originals.append(object)
+    _index_native_rock_contacts()
     var expected := {}
     for object in originals:
         for tile in _tiles_from_payloads(object.package_block_tiles): expected[_tile_key(tile)] = true

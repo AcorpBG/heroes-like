@@ -131,3 +131,30 @@ rendered grass/rough/forest fixture was visually reviewed. Normal Windows Godot
 import completed without errors. No full suite, gameplay session, native parity,
 Linux or package run was performed. Temporary previews/logs/profiles were removed
 under the retention policy; source art and reproducible tooling were retained.
+
+## Distinct sand geology and joined rock foundations
+
+Sand and dirt previously resolved to the same badlands palette. Sand now uses
+25 newly painted pale sandstone components and 25 two-component outcrops, with
+terrain-specific selection in `NativeSceneryRules.gd`. Dirt and badlands retain
+their red weathered rock. Sand foliage uses the coastal component library.
+The source atlas, exact prompt, recipes and `tools/build_sand_scenery.py` retain
+provenance and reproducibility. These are 25 new stone shapes plus compositions,
+not another claim of 100 new source components.
+
+Adjacent version 2 rock cells now share low rubble foundations, including across
+separate native source records. Each cell draws its slice of the shared stone
+bed beneath the existing large formation and smaller members. Foundations stop
+at free cells and terrain boundaries; clipping preserves fog and passages. The
+change affects presentation only, with no new blocked tiles or source records.
+Existing version 2 maps update after restarting and loading; version 1 stays
+unchanged. No native-generation parity claim is made.
+
+The focused sand/dirt/mire render passed 1,429 checks across 69 body cells and
+nine large formations, covering cross-record joins, exact masks, holes,
+determinism, legacy appearance and fog pixels. The rendered terrain contrast
+and connected bases were visually reviewed. All 2,862 generated blocker content
+contracts passed, and normal Windows Godot editor import completed without
+errors. The wiki catalog includes the new art. No full suite, gameplay, Linux
+or package run was performed. Temporary render/log/profile outputs are removed
+after review; original art, recipes and build tools remain.

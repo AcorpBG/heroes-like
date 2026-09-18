@@ -6,16 +6,20 @@ const MANIFEST := "res://art/overworld/native_scenery.json"
 const PRESENTATION_VERSION := 2
 static var _candidate_cache: Dictionary = {}
 
-static func asset_candidates(object: Dictionary, biome_id: String) -> Array:
+static func asset_candidates(object: Dictionary, biome_id: String, terrain_id: String = "") -> Array:
 	var version := int(object.get("native_scenery_art_version", 0))
 	if version < 1: return []
-	var cache_key := "%d|%s|%s" % [version, object.get("h3m_type_id", -1), biome_id]
+	var cache_key := "%d|%s|%s|%s" % [version, object.get("h3m_type_id", -1), biome_id, terrain_id]
 	if _candidate_cache.has(cache_key): return _candidate_cache[cache_key]
 	var manifest := ContentService.load_json(MANIFEST)
 	var entry := policy(object)
 	if version >= PRESENTATION_VERSION:
 		var family := String(entry.get("landscape_family", entry.get("variation_family", "")))
 		if family != "":
+			var terrain_pool: Array = manifest.get("terrain_component_palettes", {}).get(terrain_id, {}).get(family, [])
+			if not entry.has("variation_biome") and not terrain_pool.is_empty():
+				_candidate_cache[cache_key] = terrain_pool
+				return terrain_pool
 			var art_biome := String(entry.get("variation_biome", biome_id))
 			# Production component palettes replace the old few-source clusters.
 			# Every family now owns independently painted source silhouettes.

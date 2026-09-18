@@ -4298,5 +4298,125 @@
       "base": "d7dee6",
       "rock": "bccad8"
     }
+  },
+  "rock_contact_palettes": {
+    "biome_mire_fen": [
+      "biome_component_v2_mire_fen_rock_08",
+      "biome_component_v2_mire_fen_rock_13",
+      "biome_component_v2_mire_fen_rock_18",
+      "biome_component_v2_mire_fen_rock_21"
+    ],
+    "biome_grasslands": [
+      "biome_component_v2_grasslands_rock_08",
+      "biome_component_v2_grasslands_rock_13",
+      "biome_component_v2_grasslands_rock_18",
+      "biome_component_v2_grasslands_rock_21"
+    ],
+    "biome_deep_forest": [
+      "biome_component_v2_deep_forest_rock_08",
+      "biome_component_v2_deep_forest_rock_13",
+      "biome_component_v2_deep_forest_rock_18",
+      "biome_component_v2_deep_forest_rock_21"
+    ],
+    "biome_coast_archipelago": [
+      "biome_component_v2_coast_archipelago_rock_08",
+      "biome_component_v2_coast_archipelago_rock_13",
+      "biome_component_v2_coast_archipelago_rock_18",
+      "biome_component_v2_coast_archipelago_rock_21"
+    ],
+    "biome_highland_ridge": [
+      "biome_component_v2_highland_ridge_rock_08",
+      "biome_component_v2_highland_ridge_rock_13",
+      "biome_component_v2_highland_ridge_rock_18",
+      "biome_component_v2_highland_ridge_rock_21"
+    ],
+    "biome_rough_badlands": [
+      "biome_component_v2_rough_badlands_rock_08",
+      "biome_component_v2_rough_badlands_rock_13",
+      "biome_component_v2_rough_badlands_rock_18",
+      "biome_component_v2_rough_badlands_rock_21"
+    ],
+    "biome_snow_frost_marches": [
+      "biome_component_v2_snow_frost_marches_rock_08",
+      "biome_component_v2_snow_frost_marches_rock_13",
+      "biome_component_v2_snow_frost_marches_rock_18",
+      "biome_component_v2_snow_frost_marches_rock_21"
+    ],
+    "biome_ash_lava_wastes": [
+      "biome_component_v2_ash_lava_wastes_rock_08",
+      "biome_component_v2_ash_lava_wastes_rock_13",
+      "biome_component_v2_ash_lava_wastes_rock_18",
+      "biome_component_v2_ash_lava_wastes_rock_21"
+    ],
+    "biome_subterranean_underways": [
+      "biome_component_v2_subterranean_underways_rock_08",
+      "biome_component_v2_subterranean_underways_rock_13",
+      "biome_component_v2_subterranean_underways_rock_18",
+      "biome_component_v2_subterranean_underways_rock_21"
+    ]
+  },
+  "terrain_component_palettes": {
+    "sand": {
+      "rock": [
+        "biome_component_v2_sandstone_rock_00",
+        "biome_component_v2_sandstone_rock_01",
+        "biome_component_v2_sandstone_rock_02",
+        "biome_component_v2_sandstone_rock_03",
+        "biome_component_v2_sandstone_rock_04",
+        "biome_component_v2_sandstone_rock_05",
+        "biome_component_v2_sandstone_rock_06",
+        "biome_component_v2_sandstone_rock_07",
+        "biome_component_v2_sandstone_rock_08",
+        "biome_component_v2_sandstone_rock_09",
+        "biome_component_v2_sandstone_rock_10",
+        "biome_component_v2_sandstone_rock_11",
+        "biome_component_v2_sandstone_rock_12",
+        "biome_component_v2_sandstone_rock_13",
+        "biome_component_v2_sandstone_rock_14",
+        "biome_component_v2_sandstone_rock_15",
+        "biome_component_v2_sandstone_rock_16",
+        "biome_component_v2_sandstone_rock_17",
+        "biome_component_v2_sandstone_rock_18",
+        "biome_component_v2_sandstone_rock_19",
+        "biome_component_v2_sandstone_rock_20",
+        "biome_component_v2_sandstone_rock_21",
+        "biome_component_v2_sandstone_rock_22",
+        "biome_component_v2_sandstone_rock_23",
+        "biome_component_v2_sandstone_rock_24",
+        "biome_cluster_v2_sandstone_rock_00",
+        "biome_cluster_v2_sandstone_rock_01",
+        "biome_cluster_v2_sandstone_rock_02",
+        "biome_cluster_v2_sandstone_rock_03",
+        "biome_cluster_v2_sandstone_rock_04",
+        "biome_cluster_v2_sandstone_rock_05",
+        "biome_cluster_v2_sandstone_rock_06",
+        "biome_cluster_v2_sandstone_rock_07",
+        "biome_cluster_v2_sandstone_rock_08",
+        "biome_cluster_v2_sandstone_rock_09",
+        "biome_cluster_v2_sandstone_rock_10",
+        "biome_cluster_v2_sandstone_rock_11",
+        "biome_cluster_v2_sandstone_rock_12",
+        "biome_cluster_v2_sandstone_rock_13",
+        "biome_cluster_v2_sandstone_rock_14",
+        "biome_cluster_v2_sandstone_rock_15",
+        "biome_cluster_v2_sandstone_rock_16",
+        "biome_cluster_v2_sandstone_rock_17",
+        "biome_cluster_v2_sandstone_rock_18",
+        "biome_cluster_v2_sandstone_rock_19",
+        "biome_cluster_v2_sandstone_rock_20",
+        "biome_cluster_v2_sandstone_rock_21",
+        "biome_cluster_v2_sandstone_rock_22",
+        "biome_cluster_v2_sandstone_rock_23",
+        "biome_cluster_v2_sandstone_rock_24"
+      ]
+    }
+  },
+  "terrain_rock_contact_palettes": {
+    "sand": [
+      "biome_component_v2_sandstone_rock_08",
+      "biome_component_v2_sandstone_rock_13",
+      "biome_component_v2_sandstone_rock_18",
+      "biome_component_v2_sandstone_rock_21"
+    ]
   }
 }
