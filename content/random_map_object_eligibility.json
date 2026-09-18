@@ -51,7 +51,7 @@
       "content_domain": "map_object",
       "generated_kind": "resource_site",
       "primary_classes": ["guarded_reward_site"],
-      "exclude_runtime_statuses": ["metadata_only"],
+      "require_live_guard_contract": true,
       "require_resource_site": true,
       "runtime_selection_owner": "MapPackageService_runtime_live_proxy_entry",
       "semantic_category": "guarded_reward"
@@ -93,8 +93,8 @@
     {
       "id": "metadata_only_guarded_reward",
       "primary_classes": ["guarded_reward_site"],
-      "runtime_statuses": ["metadata_only"],
-      "reason": "Authored reward/guard runtime contract is explicitly metadata-only."
+      "require_missing_live_guard_contract": true,
+      "reason": "The authoritative resource-site defender/reward contract is not executable; stale map-object summary flags do not decide eligibility."
     },
     {
       "id": "pickup_without_live_resource_site",

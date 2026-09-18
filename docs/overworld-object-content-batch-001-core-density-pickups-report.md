@@ -1,5 +1,11 @@
 # Overworld Object Content Batch 001 Core Density And Pickups Report
 
+2026-09-18 superseding implementation: the four original rare pickups now have
+live, one-time resource-site contracts at their planned amount of one, matching
+the already-live rare-resource economy. They no longer remain staged metadata.
+See `docs/generated-overworld-quality-closure.md`; historical results below are
+the original batch's status, not the current pickup activation boundary.
+
 Status: implementation evidence.
 Date: 2026-04-27.
 Slice: `overworld-object-content-batch-001-core-density-pickups-10184`.

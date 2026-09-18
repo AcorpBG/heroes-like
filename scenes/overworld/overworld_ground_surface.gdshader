@@ -1,21 +1,24 @@
 shader_type canvas_item;
 render_mode unshaded;
 
-uniform sampler2D materials : source_color, filter_linear, repeat_disable;
+uniform sampler2D materials : source_color, filter_linear_mipmap, repeat_disable;
 // R: exact manifest slot / 255. G: explored bit. Never filtered or gamma corrected.
 uniform sampler2D terrain_data : filter_nearest, repeat_disable;
 uniform vec2 map_size;
 uniform vec2 world_origin;
 uniform vec2 world_span;
+uniform float material_span_tiles = 4.0;
 
 vec3 paint(float slot, vec2 uv) {
 	vec2 cell = vec2(mod(slot, 4.0), floor(slot / 4.0));
-	// Half-texel inset plus duplicated gutters prevent cross-material bleed.
-	return texture(materials, (cell * 512.0 + vec2(2.5) + fract(uv) * 507.0) / 2048.0).rgb;
+	// A bounded mip level calms high-frequency grass/pebbles behind small
+	// rewards. Inset past the mip footprint: no neighboring biome can bleed in.
+	float detail_lod = slot < 12.0 ? 1.25 : 0.5;
+	return textureLod(materials, (cell * 512.0 + vec2(6.5) + fract(uv) * 499.0) / 2048.0, detail_lod).rgb;
 }
 
 vec3 ground(float slot, vec2 world) {
-	vec2 uv = fract(world / 6.0);
+	vec2 uv = fract(world / material_span_tiles);
 	// Overlap painted samples near repeat boundaries, without reflected pixels
 	// or synthesized noise. The second sample's wrap is masked by the first.
 	vec2 core = smoothstep(vec2(0.0), vec2(0.18), uv) * (vec2(1.0) - smoothstep(vec2(0.82), vec2(1.0), uv));

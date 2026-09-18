@@ -2113,7 +2113,14 @@ func _draw_state_layer() -> void:
 				object_presentations += _visible_object_presentation_count(tile)
 			_draw_tile_state_overlay(tile, rect)
 			_draw_town_footprint_underlay(tile, rect)
-			_draw_tile_state_icon(tile, rect)
+			_draw_tile_scenery_icon(tile, rect)
+	# Scenery is landscape, not a foreground curtain over pickups or armies.
+	# Keep its exact collision/painted coverage, then draw visitable identities
+	# above it in their usual row order. Both passes share the cached batches.
+	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
+		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
+			var tile := Vector2i(x, y)
+			_draw_tile_state_icon(tile, _tile_rect(board_rect, tile), false)
 	_scenery_batches.finish()
 	_draw_canvas_item = previous_target
 	_profile_add("state_tile_checks", tile_checks)
@@ -3288,10 +3295,14 @@ func _draw_road_land_path(tile: Vector2i, rect: Rect2) -> void:
 	var center := rect.get_center()
 	var width := maxf(5.0, extent * ROAD_LAND_WIDTH_FACTOR)
 	var neighbor_directions := _road_neighbor_directions(tile)
-	for direction in neighbor_directions:
-		var start := _road_connector_start(rect, direction)
-		var end := _road_connector_end(rect, direction)
-		var path_points := _road_land_path_points(tile, direction, start, end, width)
+	var corner := _road_land_corner_points(rect, neighbor_directions)
+	var paths := []
+	if not corner.is_empty():
+		paths.append(corner)
+	else:
+		for direction in neighbor_directions:
+			paths.append(_road_land_path_points(tile, direction, _road_connector_start(rect, direction), _road_connector_end(rect, direction), width))
+	for path_points in paths:
 		_canvas_draw_polyline(path_points, ROAD_LAND_SHADOW_COLOR, width * 1.34, true)
 		_canvas_draw_polyline(path_points, ROAD_LAND_SHOULDER_COLOR, width * 1.12, true)
 		_canvas_draw_polyline(path_points, ROAD_LAND_EARTH_COLOR, width, true)
@@ -3301,10 +3312,26 @@ func _draw_road_land_path(tile: Vector2i, rect: Rect2) -> void:
 		_canvas_draw_circle(center, width * 0.57, ROAD_LAND_SHOULDER_COLOR)
 		_canvas_draw_circle(center, width * 0.48, ROAD_LAND_EARTH_COLOR)
 		_canvas_draw_line(center - Vector2(width * 0.26, 0.0), center + Vector2(width * 0.26, 0.0), ROAD_LAND_RUT_COLOR, maxf(1.0, width * 0.09), true)
-	elif _road_needs_joint_cap(neighbor_directions):
+	elif corner.is_empty() and _road_needs_joint_cap(neighbor_directions):
 		_canvas_draw_circle(center, width * 0.52, ROAD_LAND_SHOULDER_COLOR)
 		_canvas_draw_circle(center, width * 0.43, ROAD_LAND_EARTH_COLOR)
 		_canvas_draw_circle(center, width * 0.19, ROAD_LAND_DUST_COLOR)
+
+func _road_land_corner_points(rect: Rect2, neighbors: Array) -> PackedVector2Array:
+	# The native edges/topology stay exact; only the join within this tile bends.
+	if neighbors.size() != 2: return PackedVector2Array()
+	var a: Vector2i = neighbors[0]
+	var b: Vector2i = neighbors[1]
+	if absi(a.x)+absi(a.y)!=1 or absi(b.x)+absi(b.y)!=1 or a+b==Vector2i.ZERO:
+		return PackedVector2Array()
+	var start := _road_connector_end(rect, a)
+	var end := _road_connector_end(rect, b)
+	var control := Vector2(rect.get_center().x, _road_horizontal_lane_y(rect))
+	var points := PackedVector2Array()
+	for index in range(13):
+		var t := float(index)/12.0
+		points.append(start.lerp(control,t).lerp(control.lerp(end,t),t))
+	return points
 
 func _road_land_path_points(tile: Vector2i, direction: Vector2i, start: Vector2, end: Vector2, width: float) -> PackedVector2Array:
 	var delta := end - start
@@ -3322,12 +3349,13 @@ func _draw_road_land_ruts(path_points: PackedVector2Array, width: float) -> void
 	var delta := path_points[path_points.size() - 1] - path_points[0]
 	if delta.length_squared() <= 0.001:
 		return
-	var normal := Vector2(-delta.y, delta.x).normalized()
-	var offset := normal * width * 0.23
 	var rut_width := maxf(1.0, width * 0.085)
 	var left_rut := PackedVector2Array()
 	var right_rut := PackedVector2Array()
-	for point in path_points:
+	for index in range(path_points.size()):
+		var point := path_points[index]
+		var tangent := path_points[mini(index+1,path_points.size()-1)] - path_points[maxi(0,index-1)]
+		var offset := Vector2(-tangent.y,tangent.x).normalized()*width*0.23
 		left_rut.append(point + offset)
 		right_rut.append(point - offset)
 	_canvas_draw_polyline(left_rut, ROAD_LAND_RUT_COLOR, rut_width, true)
@@ -3720,12 +3748,10 @@ func _draw_tile_icon(tile: Vector2i, rect: Rect2) -> void:
 	_draw_tile_state_icon(tile, rect)
 	_draw_tile_dynamic_icon(tile, rect)
 
-func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
+func _draw_tile_scenery_icon(tile: Vector2i, rect: Rect2) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 		return
-	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
-	var remembered := not visible
-
+	var remembered := not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
 	var decorative_object := _decorative_object_at(tile)
 	if not decorative_object.is_empty():
 		var decorative_rect := _decorative_object_footprint_rect(decorative_object, rect)
@@ -3734,6 +3760,13 @@ func _draw_tile_state_icon(tile: Vector2i, rect: Rect2) -> void:
 			# validation failure, never permission to expose a procedural ruin.
 			if not bool(decorative_object.get("generated_decorative_body_cell", false)):
 				_draw_decorative_object_marker(decorative_object, decorative_rect, remembered, tile)
+
+func _draw_tile_state_icon(tile: Vector2i, rect: Rect2, include_scenery: bool = true) -> void:
+	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+		return
+	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
+	var remembered := not visible
+	if include_scenery: _draw_tile_scenery_icon(tile, rect)
 	var standalone_map_object := _standalone_map_object_at(tile)
 	if not standalone_map_object.is_empty():
 		var object_rect := _decorative_object_footprint_rect(standalone_map_object, rect)
@@ -4269,13 +4302,15 @@ func _draw_encounter_commander_sprite(encounter: Dictionary, rect: Rect2, rememb
 	return true
 
 func _draw_encounter_identity_landmark(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
-	var texture = _object_texture_for_asset(_encounter_identity_asset_id(encounter))
+	var asset_id := _encounter_identity_asset_id(encounter)
+	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
 		return false
 	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
 	var layout := _hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered, OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES)
 	var icon_rect: Rect2 = layout.get("icon_rect", Rect2())
-	_canvas_draw_texture_rect(texture, icon_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	var painted := _object_painted_sprite_draw_payload(asset_id, texture, icon_rect.get_center(), icon_rect.size.x)
+	_canvas_draw_texture_rect(painted.draw_texture, painted.draw_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	_draw_hostile_actor_marker(layout.get("marker_profile", {}))
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)
 	return true
@@ -6610,7 +6645,7 @@ func validation_generated_object_visual_summary() -> Dictionary:
 		var terrain_id := _terrain_at(presentation_tile)
 		var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id, ""))
 		var terrain_asset_ids: Array = _generated_decorative_blocker_asset_ids_by_biome.get(biome_id, [])
-		var semantic_assets := _native_scenery_assets(presentation)
+		var semantic_assets := _native_scenery_assets(presentation, presentation_tile)
 		if not semantic_assets.is_empty(): terrain_asset_ids = semantic_assets
 		var terrain_matched := not terrain_asset_ids.is_empty() and asset_id in terrain_asset_ids
 		if visual_anchor:
@@ -10770,10 +10805,13 @@ func _index_generated_decorative_body_cells(object: Dictionary) -> void:
 		_generated_decorative_bodies_by_tile[key] = presentation
 
 func _generated_decorative_body_asset_id(object: Dictionary, tile: Vector2i) -> String:
-	var semantic_assets := _native_scenery_assets(object)
+	var semantic_assets := _native_scenery_assets(object, tile)
 	if not semantic_assets.is_empty():
 		var key := "%s|%s" % [object.get("h3m_type_id", -1), _generated_decorative_body_motif_key(object, tile)]
 		return String(semantic_assets[absi(key.hash()) % semantic_assets.size()])
+	if int(object.get("native_scenery_art_version", 0)) >= 2:
+		# A missing semantic family is a validation error, not a forest fallback.
+		return ""
 	var terrain_id := _terrain_at(tile)
 	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id, ""))
 	var candidates: Array = _generated_decorative_blocker_asset_ids_by_biome.get(biome_id, [])
@@ -10784,16 +10822,18 @@ func _generated_decorative_body_asset_id(object: Dictionary, tile: Vector2i) -> 
 	var stable_key := _generated_decorative_body_motif_key(object, tile)
 	return String(candidates[absi(stable_key.hash()) % candidates.size()])
 
-func _native_scenery_assets(object: Dictionary) -> Array:
-	# Old saved maps retain their established presentation and topology. New
-	# adoption explicitly opts into semantic art for pools, lava and deadwood.
-	if int(object.get("native_scenery_art_version", 0)) != 1: return []
-	var entry: Dictionary = ContentService.load_json("res://art/overworld/native_scenery.json").get("source_types", {}).get(str(int(object.get("h3m_type_id", -1))), {})
-	return entry.get("asset_ids", [])
+func _native_scenery_assets(object: Dictionary, tile: Vector2i) -> Array:
+	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(_terrain_at(tile), ""))
+	return preload("res://scripts/persistence/NativeSceneryRules.gd").asset_candidates(object, biome_id)
 
 func _generated_decorative_body_motif_key(object: Dictionary, tile: Vector2i) -> String:
 	var terrain_id := _terrain_at(tile)
 	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(terrain_id, ""))
+	if int(object.get("native_scenery_art_version", 0)) >= 2:
+		var family := str(preload("res://scripts/persistence/NativeSceneryRules.gd").policy(object).get("landscape_family", object.get("h3m_type_id", -1)))
+		# Local variation removes repeated rectangular bands without consuming
+		# simulation RNG or changing source placement/collision.
+		return "%s|%s|%s|%d,%d" % [biome_id, terrain_id, family, tile.x, tile.y]
 	var cluster_x := floori(float(tile.x) / float(GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES))
 	var cluster_y := floori(float(tile.y) / float(GENERATED_DECORATIVE_BODY_ASSET_CLUSTER_TILES))
 	# Package placement ids split one physical ridge or forest into many legacy

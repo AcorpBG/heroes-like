@@ -22,6 +22,21 @@ Rules:
 
 ## Current Tactical State
 
+### Generated Overworld Quality Closure
+
+id: `rmg-overworld-quality-closure-20260918`
+
+Status: in_progress, owner-directed Phase 6 parent. Fix the insufficient playable/visible artifacts, interactable sites and guards/neutral armies as well as the comparison's weak scale hierarchy, repetitive scenery, busy ground and angular roads. Previous scenery-adoption completion is not closure of these requirements. Requirements, targets, validation and boundaries: `docs/generated-overworld-quality-closure.md`. No native density tuning without recovered phase/private-state proof; preserve original art, masks, determinism and old saves. Consolidate validation after coherent implementation batches.
+
+| Child slice | Work | Status |
+| --- | --- | --- |
+| `rmg-playable-object-presence-20260918` | Correct actual source-to-visible/playable artifact/site/monster gaps | completed |
+| `art-overworld-comparison-readability-20260918` | Object hierarchy, varied scenery, quieter ground and road presentation | completed |
+| `rmg-guarded-exploration-closure-20260918` | Real reward/enemy routes, guards, neutral compositions and pacing defects | in_progress |
+| `rmg-overworld-quality-acceptance-20260918` | Integrated play/save/platform/visual acceptance and cleanup | in_progress |
+
+Current: guarded exploration. The content/readability correction is validated on both platforms; the historical Small opening still fails two density thresholds with no dropped source objects. Obtain the matching original placement-phase proof before any native change, then complete broader route/pacing acceptance. Details and exact evidence: the requirements doc above.
+
 ### Generated Exploration and Guarded Routes
 
 id: `rmg-exploration-and-guarded-routes-20260918`

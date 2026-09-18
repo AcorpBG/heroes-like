@@ -14,6 +14,14 @@ var configured := false
 
 func configure(config: Dictionary, atlas: Texture2D) -> void:
 	texture = atlas
+	# Clean imports and lossless packages need not contain mip levels. Build
+	# them once from the original raster, owned by this view (no static GPU
+	# lifetime), so source and both platform packages sample identically.
+	if atlas != null:
+		var pixels := atlas.get_image()
+		if pixels != null and not pixels.has_mipmaps():
+			if pixels.is_compressed(): pixels.decompress()
+			if pixels.generate_mipmaps() == OK: texture = ImageTexture.create_from_image(pixels)
 	slots = config.get("terrain_slots", {}).duplicate()
 	configured = atlas != null and atlas.get_size() == Vector2(2048, 2048) and not slots.is_empty()
 	for slot in slots.values():
@@ -26,7 +34,8 @@ func configure(config: Dictionary, atlas: Texture2D) -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	var shader_material := ShaderMaterial.new()
 	shader_material.shader = GROUND_SHADER
-	shader_material.set_shader_parameter("materials", atlas)
+	shader_material.set_shader_parameter("materials", texture)
+	shader_material.set_shader_parameter("material_span_tiles", float(config.get("material_span_tiles", 4.0)))
 	material = shader_material
 	map_signature = -1
 	fog_signature = -1

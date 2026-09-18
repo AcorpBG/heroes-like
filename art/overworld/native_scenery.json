@@ -3,154 +3,124 @@
   "source": "Recovered group-zero object-template inventory; original-game art translation only. No source pixels, placements or mask changes.",
   "default_policy": "biome_palette: original cohesive landscape masses, not source sprite reproduction",
   "source_types": {
-    "116": {
-      "mode": "biome_palette"
+    "116": {"mode":"biome_palette","landscape_family":"scrub"},
+    "117": {"mode":"biome_palette","landscape_family":"rock"},
+    "118": {"mode":"biome_palette","landscape_family":"rock"},
+    "119": {"mode":"biome_palette","landscape_family":"deadwood"},
+    "120": {"mode":"biome_palette","landscape_family":"scrub"},
+    "121": {"mode":"semantic_raster","original_name":"Frozen shelf","asset_ids":["decor_frozen_pool_shelf"]},
+    "124": {"mode":"biome_palette","landscape_family":"rock"},
+    "125": {"mode":"biome_palette","landscape_family":"wetland"},
+    "126": {"mode":"semantic_raster","original_name":"Reed-choked shoreline","asset_ids":["cohesive_wet_cold_01","cohesive_wet_cold_10"]},
+    "127": {"mode":"semantic_raster","original_name":"Cooled lava barrier","asset_ids":["decor_cooling_lava_rope_wall"]},
+    "128": {"mode":"semantic_raster","original_name":"Molten basalt basin","asset_ids":["decor_cooling_lava_rope_wall","cohesive_variety_basalt_chimneys"]},
+    "129": {"mode":"biome_palette","landscape_family":"fungi"},
+    "130": {"mode":"semantic_raster","original_name":"Fallen forest giant","asset_ids":["cohesive_library_deep_forest_000"]},
+    "131": {"mode":"biome_palette","landscape_family":"scrub"},
+    "132": {"mode":"biome_palette","landscape_family":"scrub"},
+    "133": {"mode":"biome_palette","landscape_family":"rock"},
+    "134": {"mode":"biome_palette","landscape_family":"rock"},
+    "135": {"mode":"biome_palette","landscape_family":"woods"},
+    "136": {"mode":"biome_palette","landscape_family":"rock"},
+    "137": {"mode":"biome_palette","landscape_family":"conifers"},
+    "143": {"mode":"biome_palette","landscape_family":"wetland"},
+    "147": {"mode":"biome_palette","landscape_family":"rock"},
+    "148": {"mode":"biome_palette","landscape_family":"rock"},
+    "149": {"mode":"biome_palette","landscape_family":"rock"},
+    "150": {"mode":"biome_palette","landscape_family":"scrub"},
+    "151": {"mode":"biome_palette","landscape_family":"deadwood"},
+    "153": {"mode":"semantic_raster","original_name":"Hollow stump","asset_ids":["decor_hollow_stump_mass"]},
+    "155": {"mode":"biome_palette","landscape_family":"woods"},
+    "158": {"mode":"semantic_raster","original_name":"Volcanic basalt spires","asset_ids":["cohesive_variety_basalt_chimneys"]},
+    "161": {"mode":"biome_palette","landscape_family":"wetland"},
+    "177": {"mode":"semantic_raster","original_name":"Reed-choked shoreline","asset_ids":["cohesive_wet_cold_01","cohesive_wet_cold_10"]},
+    "199": {"mode":"biome_palette","landscape_family":"woods"},
+    "206": {"mode":"biome_palette","landscape_family":"rock"},
+    "207": {"mode":"biome_palette","landscape_family":"rock"},
+    "208": {"mode":"biome_palette","landscape_family":"rock"},
+    "209": {"mode":"biome_palette","landscape_family":"rock"},
+    "210": {"mode":"biome_palette","landscape_family":"rock"},
+    "211": {"mode":"biome_palette","landscape_family":"wetland"}
+  },
+  "presentation_version": 2,
+  "version_policy": "New sessions use semantic biome palettes and cell-local art variation. Version 1 saves retain their prior explicit assets and biome-cluster presentation. No masks, placement or RNG changes.",
+  "landscape_palettes": {
+    "rock": {
+      "biome_grasslands": ["cohesive_temperate_03","cohesive_temperate_06","cohesive_temperate_14"],
+      "biome_deep_forest": ["cohesive_temperate_08","cohesive_temperate_14","cohesive_temperate_03"],
+      "biome_mire_fen": ["cohesive_wet_cold_02","cohesive_wet_cold_06","cohesive_wet_cold_13"],
+      "biome_snow_frost_marches": ["cohesive_wet_cold_07","cohesive_wet_cold_11","cohesive_wet_cold_15","cohesive_variety_blue_ice_crag"],
+      "biome_rough_badlands": ["cohesive_harsh_00","cohesive_harsh_03","cohesive_harsh_07","cohesive_variety_redstone_hoodoos"],
+      "biome_highland_ridge": ["cohesive_wet_cold_02","cohesive_wet_cold_13","cohesive_variety_shattered_slate"],
+      "biome_coast_archipelago": ["cohesive_wet_cold_02","cohesive_wet_cold_06","cohesive_wet_cold_13"],
+      "biome_subterranean_underways": ["cohesive_harsh_02","cohesive_harsh_07","cohesive_variety_cavern_crystal_crag"],
+      "biome_ash_lava_wastes": ["cohesive_harsh_00","cohesive_harsh_05","cohesive_harsh_09","cohesive_variety_basalt_chimneys"]
     },
-    "117": {
-      "mode": "biome_palette"
+    "woods": {
+      "biome_grasslands": ["cohesive_temperate_00","cohesive_temperate_02","cohesive_temperate_05","cohesive_temperate_10","cohesive_variety_ancient_oak_grove"],
+      "biome_deep_forest": ["cohesive_temperate_00","cohesive_temperate_02","cohesive_temperate_05","cohesive_temperate_10","cohesive_variety_ancient_oak_grove"],
+      "biome_mire_fen": ["cohesive_wet_cold_00","cohesive_wet_cold_04","cohesive_wet_cold_08","cohesive_wet_cold_14"],
+      "biome_snow_frost_marches": ["cohesive_wet_cold_03","cohesive_wet_cold_09","cohesive_variety_snowbound_deadfall"],
+      "biome_rough_badlands": ["cohesive_library_rough_badlands_000"],
+      "biome_highland_ridge": ["cohesive_temperate_01","cohesive_temperate_07","cohesive_temperate_12"],
+      "biome_coast_archipelago": ["cohesive_wet_cold_00","cohesive_wet_cold_04","cohesive_library_coast_archipelago_000"],
+      "biome_subterranean_underways": ["cohesive_library_subterranean_underways_000","cohesive_variety_giant_shelf_fungi"],
+      "biome_ash_lava_wastes": ["cohesive_library_ash_lava_wastes_000"]
     },
-    "118": {
-      "mode": "biome_palette"
+    "conifers": {
+      "biome_grasslands": ["cohesive_temperate_01","cohesive_temperate_07","cohesive_temperate_09","cohesive_temperate_12"],
+      "biome_deep_forest": ["cohesive_temperate_01","cohesive_temperate_07","cohesive_temperate_09","cohesive_temperate_12"],
+      "biome_mire_fen": ["cohesive_wet_cold_00","cohesive_wet_cold_04","cohesive_wet_cold_08","cohesive_wet_cold_14"],
+      "biome_snow_frost_marches": ["cohesive_wet_cold_03","cohesive_wet_cold_09","cohesive_variety_snowbound_deadfall"],
+      "biome_rough_badlands": ["cohesive_library_rough_badlands_000"],
+      "biome_highland_ridge": ["cohesive_temperate_01","cohesive_temperate_07","cohesive_temperate_09","cohesive_temperate_12"],
+      "biome_coast_archipelago": ["cohesive_wet_cold_00","cohesive_wet_cold_04","cohesive_library_coast_archipelago_000"],
+      "biome_subterranean_underways": ["cohesive_library_subterranean_underways_000","cohesive_variety_giant_shelf_fungi"],
+      "biome_ash_lava_wastes": ["cohesive_library_ash_lava_wastes_000"]
     },
-    "119": {
-      "mode": "biome_palette"
+    "scrub": {
+      "biome_grasslands": ["cohesive_temperate_13","cohesive_temperate_15","cohesive_variety_wild_rose_barrier","cohesive_variety_thornroot_thicket"],
+      "biome_deep_forest": ["cohesive_temperate_04","cohesive_temperate_13","cohesive_variety_thornroot_thicket"],
+      "biome_mire_fen": ["cohesive_wet_cold_01","cohesive_wet_cold_10","cohesive_variety_tangled_marsh_roots"],
+      "biome_snow_frost_marches": ["cohesive_wet_cold_05","cohesive_wet_cold_12"],
+      "biome_rough_badlands": ["cohesive_library_rough_badlands_000","cohesive_harsh_03"],
+      "biome_highland_ridge": ["cohesive_temperate_13","cohesive_wet_cold_06","cohesive_library_highland_ridge_000"],
+      "biome_coast_archipelago": ["cohesive_wet_cold_01","cohesive_wet_cold_10","cohesive_variety_saltworn_driftwood"],
+      "biome_subterranean_underways": ["cohesive_variety_giant_shelf_fungi","cohesive_library_subterranean_underways_000"],
+      "biome_ash_lava_wastes": ["cohesive_library_ash_lava_wastes_000","cohesive_harsh_08"]
     },
-    "120": {
-      "mode": "biome_palette"
+    "wetland": {
+      "biome_grasslands": ["cohesive_wet_cold_01","cohesive_wet_cold_06","cohesive_wet_cold_10","cohesive_variety_tangled_marsh_roots"],
+      "biome_deep_forest": ["cohesive_wet_cold_01","cohesive_wet_cold_06","cohesive_wet_cold_10","cohesive_variety_tangled_marsh_roots"],
+      "biome_mire_fen": ["cohesive_wet_cold_01","cohesive_wet_cold_06","cohesive_wet_cold_10","cohesive_variety_tangled_marsh_roots"],
+      "biome_snow_frost_marches": ["cohesive_wet_cold_07","cohesive_wet_cold_11","cohesive_wet_cold_15","cohesive_variety_blue_ice_crag"],
+      "biome_rough_badlands": ["cohesive_harsh_00","cohesive_harsh_03","cohesive_harsh_07","cohesive_variety_redstone_hoodoos"],
+      "biome_highland_ridge": ["cohesive_wet_cold_01","cohesive_wet_cold_06","cohesive_wet_cold_10","cohesive_variety_tangled_marsh_roots"],
+      "biome_coast_archipelago": ["cohesive_wet_cold_01","cohesive_wet_cold_06","cohesive_wet_cold_10","cohesive_variety_tangled_marsh_roots"],
+      "biome_subterranean_underways": ["cohesive_harsh_02","cohesive_harsh_07","cohesive_variety_cavern_crystal_crag"],
+      "biome_ash_lava_wastes": ["cohesive_harsh_00","cohesive_harsh_05","cohesive_harsh_09","cohesive_variety_basalt_chimneys"]
     },
-    "121": {
-      "mode": "semantic_raster",
-      "original_name": "Frozen shelf",
-      "asset_ids": [
-        "decor_frozen_pool_shelf"
-      ]
+    "fungi": {
+      "biome_grasslands": ["cohesive_variety_giant_shelf_fungi","cohesive_variety_tangled_marsh_roots"],
+      "biome_deep_forest": ["cohesive_variety_giant_shelf_fungi","cohesive_variety_tangled_marsh_roots"],
+      "biome_mire_fen": ["cohesive_variety_giant_shelf_fungi","cohesive_variety_tangled_marsh_roots"],
+      "biome_snow_frost_marches": ["cohesive_wet_cold_05","cohesive_wet_cold_12"],
+      "biome_rough_badlands": ["cohesive_library_rough_badlands_000","cohesive_harsh_03"],
+      "biome_highland_ridge": ["cohesive_variety_giant_shelf_fungi","cohesive_variety_tangled_marsh_roots"],
+      "biome_coast_archipelago": ["cohesive_variety_giant_shelf_fungi","cohesive_variety_tangled_marsh_roots"],
+      "biome_subterranean_underways": ["cohesive_variety_giant_shelf_fungi","cohesive_variety_tangled_marsh_roots"],
+      "biome_ash_lava_wastes": ["cohesive_library_ash_lava_wastes_000","cohesive_harsh_08"]
     },
-    "124": {
-      "mode": "biome_palette"
-    },
-    "125": {
-      "mode": "biome_palette"
-    },
-    "126": {
-      "mode": "semantic_raster",
-      "original_name": "Reed-choked shoreline",
-      "asset_ids": [
-        "cohesive_wet_cold_01",
-        "cohesive_wet_cold_10"
-      ]
-    },
-    "127": {
-      "mode": "semantic_raster",
-      "original_name": "Cooled lava barrier",
-      "asset_ids": [
-        "decor_cooling_lava_rope_wall"
-      ]
-    },
-    "128": {
-      "mode": "semantic_raster",
-      "original_name": "Molten basalt basin",
-      "asset_ids": [
-        "decor_cooling_lava_rope_wall",
-        "cohesive_variety_basalt_chimneys"
-      ]
-    },
-    "129": {
-      "mode": "biome_palette"
-    },
-    "130": {
-      "mode": "semantic_raster",
-      "original_name": "Fallen forest giant",
-      "asset_ids": [
-        "cohesive_library_deep_forest_000"
-      ]
-    },
-    "131": {
-      "mode": "biome_palette"
-    },
-    "132": {
-      "mode": "biome_palette"
-    },
-    "133": {
-      "mode": "biome_palette"
-    },
-    "134": {
-      "mode": "biome_palette"
-    },
-    "135": {
-      "mode": "biome_palette"
-    },
-    "136": {
-      "mode": "biome_palette"
-    },
-    "137": {
-      "mode": "biome_palette"
-    },
-    "143": {
-      "mode": "biome_palette"
-    },
-    "147": {
-      "mode": "biome_palette"
-    },
-    "148": {
-      "mode": "biome_palette"
-    },
-    "149": {
-      "mode": "biome_palette"
-    },
-    "150": {
-      "mode": "biome_palette"
-    },
-    "151": {
-      "mode": "biome_palette"
-    },
-    "153": {
-      "mode": "semantic_raster",
-      "original_name": "Hollow stump",
-      "asset_ids": [
-        "decor_hollow_stump_mass"
-      ]
-    },
-    "155": {
-      "mode": "biome_palette"
-    },
-    "158": {
-      "mode": "semantic_raster",
-      "original_name": "Volcanic basalt spires",
-      "asset_ids": [
-        "cohesive_variety_basalt_chimneys"
-      ]
-    },
-    "161": {
-      "mode": "biome_palette"
-    },
-    "177": {
-      "mode": "semantic_raster",
-      "original_name": "Reed-choked shoreline",
-      "asset_ids": [
-        "cohesive_wet_cold_01",
-        "cohesive_wet_cold_10"
-      ]
-    },
-    "199": {
-      "mode": "biome_palette"
-    },
-    "206": {
-      "mode": "biome_palette"
-    },
-    "207": {
-      "mode": "biome_palette"
-    },
-    "208": {
-      "mode": "biome_palette"
-    },
-    "209": {
-      "mode": "biome_palette"
-    },
-    "210": {
-      "mode": "biome_palette"
-    },
-    "211": {
-      "mode": "biome_palette"
+    "deadwood": {
+      "biome_grasslands": ["cohesive_library_grasslands_000"],
+      "biome_deep_forest": ["cohesive_library_deep_forest_000"],
+      "biome_mire_fen": ["cohesive_library_mire_fen_000"],
+      "biome_snow_frost_marches": ["cohesive_library_snow_frost_marches_000"],
+      "biome_rough_badlands": ["cohesive_library_rough_badlands_000"],
+      "biome_highland_ridge": ["cohesive_library_highland_ridge_000"],
+      "biome_coast_archipelago": ["cohesive_library_coast_archipelago_000"],
+      "biome_subterranean_underways": ["cohesive_library_subterranean_underways_000"],
+      "biome_ash_lava_wastes": ["cohesive_library_ash_lava_wastes_000"]
     }
   }
 }

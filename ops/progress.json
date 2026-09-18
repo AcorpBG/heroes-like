@@ -1,93 +1,76 @@
 {
   "actionableNextTasks": [
     {
-      "id": "ui-shared-spellbook-and-town-learning-20260917",
-      "title": "Shared Spellbook and Automatic Town Learning",
-      "status": "completed",
-      "priority": "top"
+      "id": "rmg-guarded-exploration-closure-20260918",
+      "title": "Guarded Exploration Closure",
+      "phase": "phase-6-production-alpha-layer",
+      "parentSliceId": "rmg-overworld-quality-closure-20260918",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/lessons-learned.md",
+        "docs/generated-overworld-quality-closure.md"
+      ],
+      "status": "in_progress",
+      "targets": [
+        "scripts/core/OverworldRules.gd",
+        "scripts/persistence/GeneratedNeutralEncounterRules.gd",
+        "native/source-backed generation owners if proved necessary"
+      ],
+      "validation": [
+        "Real reward and enemy routes including portals/cleared objects",
+        "Neutral composition and combat tests",
+        "Native retained payload/private-state checks for affected scope",
+        "Deterministic save replay"
+      ],
+      "completionCriteria": [
+        "Concrete neutral/guard progression defects corrected",
+        "Artifacts/sites are reachable through intended challenges",
+        "No hidden native recovery gaps or unsupported universal pacing claims"
+      ],
+      "nonGoals": [
+        "No blanket guard multiplier, day lock, cache reinjection, retry search or guessed native placement"
+      ],
+      "updatedAt": "2026-09-18T06:33:16Z",
+      "startedAt": "2026-09-18T05:25:05Z",
+      "notes": "Internal site defenders now control exact entrances; native guards/source masks unchanged. Real battle and 81295-check exploration coverage passes. Next: same-configuration original/private-state proof for historical Weak three-player Small seed generated-density-distribution-10184-homm3_small at 0x4a9f1c/0x4aa9b7/0x4aa3e9 and candidate vector +0x10f4/+0x10f8, then broader portal/enemy progression. Two Small density thresholds still fail; no heuristic fill."
     },
     {
-      "id": "art-overworld-object-scale-coherence-20260917",
-      "title": "Coherent Overworld Object Scale",
-      "status": "completed",
-      "priority": "top"
-    },
-    {
-      "id": "art-overworld-biome-transitions-20260917",
-      "title": "Natural Biome Transitions and Ground Materials",
-      "status": "completed",
-      "priority": "top"
-    },
-    {
-      "id": "tooling-validation-artifact-lifecycle-20260917",
-      "title": "Validation Artifact Lifecycle",
-      "status": "completed",
-      "priority": "top"
-    },
-    {
-      "id": "bugfix-retaliation-casualty-playback-20260917",
-      "title": "Retaliation Casualty Playback",
-      "status": "completed",
-      "priority": "top"
-    },
-    {
-      "id": "combat-unit-animation-and-size-20260913",
-      "title": "Complete Battle Unit Animation and Size",
-      "status": "completed",
-      "priority": "top"
-    },
-    {
-      "id": "vfx-combat-layered-feedback-20260913",
-      "title": "Layered Combat Visual Effects",
-      "status": "completed",
-      "priority": "top"
-    },
-    {
-      "id": "ui-owned-hero-screen-20260913",
-      "title": "Owned Hero Screen",
-      "status": "completed",
-      "priority": "top"
-    },
-    {
-      "id": "art-overworld-town-biome-fit-20260913",
-      "title": "Biome-aware Overworld Town Artwork",
-      "status": "completed",
-      "priority": "top"
-    },
-    {
-      "id": "ux-combat-consequence-preview-20260912",
-      "title": "Combat Consequences Before Commitment",
-      "priority": "top",
-      "priorityOrder": 1,
-      "status": "completed"
-    },
-    {
-      "id": "ux-bounded-contextual-tooltips-20260912",
-      "title": "Bounded Contextual Tooltips",
-      "priority": "top",
-      "priorityOrder": 2,
-      "status": "completed"
-    },
-    {
-      "id": "ux-accurate-town-garrison-20260912",
-      "title": "Actual Town Garrisons and Exposed-town Warnings",
-      "priority": "top",
-      "priorityOrder": 3,
-      "status": "completed"
-    },
-    {
-      "id": "ux-consistent-targeting-commit-20260912",
-      "title": "Consistent Targeting and Commitment",
-      "priority": "top",
-      "priorityOrder": 4,
-      "status": "completed"
-    },
-    {
-      "id": "gameplay-recruitment-logistics-clarity-20260912",
-      "title": "Recruitment Logistics and Identity Clarity",
-      "priority": "top",
-      "priorityOrder": 5,
-      "status": "completed"
+      "id": "rmg-overworld-quality-acceptance-20260918",
+      "title": "Integrated Overworld Quality Acceptance",
+      "phase": "phase-6-production-alpha-layer",
+      "parentSliceId": "rmg-overworld-quality-closure-20260918",
+      "classification": "validation_and_adoption_gate",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/generated-overworld-quality-closure.md"
+      ],
+      "status": "in_progress",
+      "targets": [
+        "Python-owned focused gameplay regression",
+        "Linux/Windows export and package acceptance",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": [
+        "Medium/Large actual play and Small/water/level regression",
+        "python3 -B tests/validate_repo.py",
+        "python3 -B tests/packaging_linux_export_smoke.py",
+        "python3 -B tests/packaging_windows_export_smoke.py",
+        "Package parity, visual inspection, git diff --check and git status --short"
+      ],
+      "completionCriteria": [
+        "All implementation requirements pass consolidated source/platform/gameplay/visual gates",
+        "Validated coherent work pushed and disposable task outputs cleaned"
+      ],
+      "nonGoals": [
+        "No treating missing historical evidence as passed or new reports as gameplay implementation"
+      ],
+      "updatedAt": "2026-09-18T06:33:16Z",
+      "startedAt": "2026-09-18T05:41:38Z",
+      "notes": "Correction batch passes source/Linux/Windows gameplay, real rendered Windows ground, exploration, scale/scenery/neutral, native boundary/pool, repository and both exports/parity. Four water/layer cases and two retained native payload references pass. Parent acceptance remains open: two Small opening density thresholds, matching private-state proof and broader enemy/portal pacing. No full-goal or release-ready claim."
     }
   ],
   "historicalNativeRmgRecoverySnapshot": {
@@ -16701,13 +16684,13 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Completed source-adoption correction: all 38 scenery families retain masks and original art, three reproduced bypasses close, random artifacts use rarity pools, banks remain guarded, new catalog-auto games explicitly use Normal strength, cleared-site/replay state persists. Source/Linux 81237 checks each, Windows 81227, existing boundary/neutral/art, repository and final exports/parity pass. Two Small opening-density thresholds still fail and broader full-match pacing is not claimed. Cleaned 4.51 GB disposable outputs; caches/RMG/unrelated files preserved.",
+  "currentNotes": "Object-presence correction validated: 356 eligible objects, all 32 guarded sites, seven one-time pickup contracts; source/Linux/Windows and existing exploration/save/neutral tests pass. Current child: rmg-guarded-exploration-closure-20260918. Small historical-profile opening still fails two density thresholds with zero dropped source objects; matching original private-state proof and broader route acceptance remain open. Parent is not complete.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "rmg-exploration-and-guarded-routes-20260918",
-  "currentSliceId": "rmg-exploration-and-guarded-routes-20260918",
-  "currentSliceNotes": "Completed source-adoption correction: all 38 scenery families retain masks and original art, three reproduced bypasses close, random artifacts use rarity pools, banks remain guarded, new catalog-auto games explicitly use Normal strength, cleared-site/replay state persists. Source/Linux 81237 checks each, Windows 81227, existing boundary/neutral/art, repository and final exports/parity pass. Two Small opening-density thresholds still fail and broader full-match pacing is not claimed. Cleaned 4.51 GB disposable outputs; caches/RMG/unrelated files preserved.",
-  "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generated Exploration and Guarded Routes",
+  "currentSlice": "rmg-guarded-exploration-closure-20260918",
+  "currentSliceId": "rmg-guarded-exploration-closure-20260918",
+  "currentSliceNotes": "Internal site defenders now control exact entrances; native guards/source masks unchanged. Real battle and 81295-check exploration coverage passes. Next: same-configuration original/private-state proof for historical Weak three-player Small seed generated-density-distribution-10184-homm3_small at 0x4a9f1c/0x4aa9b7/0x4aa3e9 and candidate vector +0x10f4/+0x10f8, then broader portal/enemy progression. Two Small density thresholds still fail; no heuristic fill.",
+  "currentSliceStatus": "in_progress",
+  "currentSliceTitle": "Guarded Exploration Closure",
   "currentSliceUpdatedAt": "2026-09-18T02:52:20Z",
   "deferredRiskRegister": [
     {
@@ -22013,7 +21996,7 @@
       }
     }
   },
-  "guardrailNote": "Correction complete. Source placements, masks, RNG and final payloads unchanged. Existing saves retain old topology; start a new generated game. Small density limits remain visible; no broad quality or release-ready claim.",
+  "guardrailNote": "Owner-selected quality closure is unfinished. Trace actual playable/visible artifacts, sites and neutrals before correcting adoption or presentation; native phase changes require recovered private-state proof, not density tuning.",
   "lastValidation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",
@@ -22388,9 +22371,192 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Correction complete. Source placements, masks, RNG and final payloads unchanged. Existing saves retain old topology; start a new generated game. Small density limits remain visible; no broad quality or release-ready claim.",
+  "nextActionGuardrailNote": "Owner-selected quality closure is unfinished. Trace actual playable/visible artifacts, sites and neutrals before correcting adoption or presentation; native phase changes require recovered private-state proof, not density tuning.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "rmg-overworld-quality-closure-20260918",
+      "title": "Generated Overworld Quality Closure",
+      "phase": "phase-6-production-alpha-layer",
+      "parentId": "phase-6-production-alpha-layer",
+      "classification": "parent_implementation_goal",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/lessons-learned.md",
+        "docs/generated-overworld-quality-closure.md",
+        "docs/rmg-exploration-and-guarded-routes.md"
+      ],
+      "status": "in_progress",
+      "childSliceIds": [
+        "rmg-playable-object-presence-20260918",
+        "art-overworld-comparison-readability-20260918",
+        "rmg-guarded-exploration-closure-20260918",
+        "rmg-overworld-quality-acceptance-20260918"
+      ],
+      "targets": [
+        "native/runtime object adoption and interaction",
+        "original overworld presentation",
+        "generated-map progression"
+      ],
+      "validation": [
+        "Integrated source/Linux/Windows gameplay and visual acceptance described in docs/generated-overworld-quality-closure.md"
+      ],
+      "completionCriteria": [
+        "All four implementation/acceptance children complete with real behavior and validated evidence"
+      ],
+      "nonGoals": [
+        "No native density/RNG/topology tuning without recovered phase/private-state proof",
+        "No unrelated UI, copied assets or release-ready claims"
+      ]
+    },
+    {
+      "id": "rmg-playable-object-presence-20260918",
+      "title": "Playable Generated Object Presence",
+      "phase": "phase-6-production-alpha-layer",
+      "parentSliceId": "rmg-overworld-quality-closure-20260918",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/lessons-learned.md",
+        "docs/generated-overworld-quality-closure.md"
+      ],
+      "status": "completed",
+      "targets": [
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "scripts/core/OverworldRules.gd",
+        "src/gdextension/src/map_package_service.cpp",
+        "content/random_map_object_eligibility.json",
+        "scenes/overworld/OverworldMapView.gd"
+      ],
+      "validation": [
+        "Focused source and packaged real artifact/site/neutral interaction checks",
+        "Existing exploration/boundary/neutral reports",
+        "python3 -B tests/validate_repo.py",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "Source identities survive as correct visible and usable objects",
+        "Actual collection/site/battle/save routes verified",
+        "Remaining native distribution limits explicitly resolved or blocked"
+      ],
+      "nonGoals": [
+        "No arbitrary filler, placement/mask changes or metadata-only completion"
+      ],
+      "updatedAt": "2026-09-18T06:31:50Z",
+      "startedAt": "2026-09-18T04:57:08Z",
+      "notes": "Implemented 356/66 authored eligibility, all 32 guarded contracts, matching fixed sites and seven one-time portable resource contracts. Source/Linux 19166 and Windows 19160 focused checks, 81295 exploration, native boundary/pool, neutral, saves, full repository and both exports/parity pass. Small native opening density remains a named proof gap in the guarded-exploration child; no source placement changes.",
+      "completedAt": "2026-09-18T06:31:50Z"
+    },
+    {
+      "id": "art-overworld-comparison-readability-20260918",
+      "title": "Generated World Comparison Readability",
+      "phase": "phase-6-production-alpha-layer",
+      "parentSliceId": "rmg-overworld-quality-closure-20260918",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/generated-overworld-quality-closure.md",
+        "docs/overworld-object-scale-coherence.md"
+      ],
+      "status": "completed",
+      "targets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "scenes/overworld/OverworldGroundSurface.gd",
+        "art/overworld presentation manifests"
+      ],
+      "validation": [
+        "Normal-zoom/fog small/wide visual review",
+        "Existing object-scale, scenery, ground and road regressions",
+        "Linux/Windows rendered package acceptance"
+      ],
+      "completionCriteria": [
+        "Readable rewards/sites/armies",
+        "Distinct non-repetitive blocker masses and quieter ground",
+        "Natural road presentation with unchanged topology"
+      ],
+      "nonGoals": [
+        "No oversized portable items, copied pixels, procedural object stand-ins or altered collision"
+      ],
+      "updatedAt": "2026-09-18T06:33:15Z",
+      "startedAt": "2026-09-18T05:16:02Z",
+      "notes": "Implemented semantic biome scenery palettes, foreground reward/army visibility, painted-alpha neutral sizing, quieter mip-safe ground and curved road joins. Source/Linux focused 19166 each; Windows focused 19160; 75 source and 75 rendered Windows ground checks, 6836 scale and 459 living-scenery checks pass. Inspected 1280x720 Windows/source and 1920x1080 Linux scenes. Native masks, quantities, RNG and old save topology preserved; broader density goal remains open.",
+      "completedAt": "2026-09-18T06:33:15Z"
+    },
+    {
+      "id": "rmg-guarded-exploration-closure-20260918",
+      "title": "Guarded Exploration Closure",
+      "phase": "phase-6-production-alpha-layer",
+      "parentSliceId": "rmg-overworld-quality-closure-20260918",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/lessons-learned.md",
+        "docs/generated-overworld-quality-closure.md"
+      ],
+      "status": "in_progress",
+      "targets": [
+        "scripts/core/OverworldRules.gd",
+        "scripts/persistence/GeneratedNeutralEncounterRules.gd",
+        "native/source-backed generation owners if proved necessary"
+      ],
+      "validation": [
+        "Real reward and enemy routes including portals/cleared objects",
+        "Neutral composition and combat tests",
+        "Native retained payload/private-state checks for affected scope",
+        "Deterministic save replay"
+      ],
+      "completionCriteria": [
+        "Concrete neutral/guard progression defects corrected",
+        "Artifacts/sites are reachable through intended challenges",
+        "No hidden native recovery gaps or unsupported universal pacing claims"
+      ],
+      "nonGoals": [
+        "No blanket guard multiplier, day lock, cache reinjection, retry search or guessed native placement"
+      ],
+      "updatedAt": "2026-09-18T06:33:16Z",
+      "startedAt": "2026-09-18T05:25:05Z",
+      "notes": "Internal site defenders now control exact entrances; native guards/source masks unchanged. Real battle and 81295-check exploration coverage passes. Next: same-configuration original/private-state proof for historical Weak three-player Small seed generated-density-distribution-10184-homm3_small at 0x4a9f1c/0x4aa9b7/0x4aa3e9 and candidate vector +0x10f4/+0x10f8, then broader portal/enemy progression. Two Small density thresholds still fail; no heuristic fill."
+    },
+    {
+      "id": "rmg-overworld-quality-acceptance-20260918",
+      "title": "Integrated Overworld Quality Acceptance",
+      "phase": "phase-6-production-alpha-layer",
+      "parentSliceId": "rmg-overworld-quality-closure-20260918",
+      "classification": "validation_and_adoption_gate",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/generated-overworld-quality-closure.md"
+      ],
+      "status": "in_progress",
+      "targets": [
+        "Python-owned focused gameplay regression",
+        "Linux/Windows export and package acceptance",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "validation": [
+        "Medium/Large actual play and Small/water/level regression",
+        "python3 -B tests/validate_repo.py",
+        "python3 -B tests/packaging_linux_export_smoke.py",
+        "python3 -B tests/packaging_windows_export_smoke.py",
+        "Package parity, visual inspection, git diff --check and git status --short"
+      ],
+      "completionCriteria": [
+        "All implementation requirements pass consolidated source/platform/gameplay/visual gates",
+        "Validated coherent work pushed and disposable task outputs cleaned"
+      ],
+      "nonGoals": [
+        "No treating missing historical evidence as passed or new reports as gameplay implementation"
+      ],
+      "updatedAt": "2026-09-18T06:33:16Z",
+      "startedAt": "2026-09-18T05:41:38Z",
+      "notes": "Correction batch passes source/Linux/Windows gameplay, real rendered Windows ground, exploration, scale/scenery/neutral, native boundary/pool, repository and both exports/parity. Four water/layer cases and two retained native payload references pass. Parent acceptance remains open: two Small opening density thresholds, matching private-state proof and broader enemy/portal pacing. No full-goal or release-ready claim."
+    },
     {
       "phase": "phase-6-production-alpha-layer",
       "source": "PLAN.md",
@@ -113791,7 +113957,7 @@
     }
   ],
   "result": "rmg_exploration_adoption_correction_complete_density_limits_retained",
-  "status": "completed",
+  "status": "in_progress",
   "statusTaxonomy": {
     "classificationRules": {
       "completed": "Implementation or documentation-only governance work satisfies the PLAN completion criteria and has validation/evidence.",
@@ -113891,9 +114057,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed source-adoption correction: all 38 scenery families retain masks and original art, three reproduced bypasses close, random artifacts use rarity pools, banks remain guarded, new catalog-auto games explicitly use Normal strength, cleared-site/replay state persists. Source/Linux 81237 checks each, Windows 81227, existing boundary/neutral/art, repository and final exports/parity pass. Two Small opening-density thresholds still fail and broader full-match pacing is not claimed. Cleaned 4.51 GB disposable outputs; caches/RMG/unrelated files preserved.",
+  "summary": "Owner-directed generated-overworld quality closure is active: playable artifact/site/neutral presence, readable scenery and object hierarchy, and guarded exploration. Confirmed live guarded sites excluded by stale metadata and fixed proxies demoted to free caches; implementation and focused validation are in progress. Prior slice results do not establish completion of this broader goal.",
   "taskId": "10236",
-  "updatedAt": "2026-09-18T02:52:20Z",
+  "updatedAt": "2026-09-18T06:33:53Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",

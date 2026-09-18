@@ -2,8 +2,8 @@
 """Run the existing paid Town/save/input probe using only an isolated release pack.
 
 The loose files contain only the Python-owned probe, never game scripts or art.
-Windows/Wine uses the same assertions without screenshot operations because its
-headless display cannot draw. Linux retains the rendered visual evidence.
+Windows/Wine defaults to headless; --render-windows preserves the complete
+probe and captures through a virtual display for changed rendering paths.
 """
 import argparse
 import hashlib
@@ -46,6 +46,16 @@ def headless_script(script):
     return '\n'.join(result) + '\n', removed
 
 
+def windows_command(binary, arguments, rendered=False):
+    command = ['wine', str(binary)]
+    if not rendered:
+        command += ['--headless']
+    command += ['--rendering-method', 'gl_compatibility'] + arguments
+    if rendered:
+        command = ['dbus-run-session', '--', 'xvfb-run', '-a', '-s', '-screen 0 2200x1200x24'] + command
+    return command
+
+
 def run(command, env, log, cwd, timeout):
     process = subprocess.Popen(command, cwd=cwd, env=env, stdout=log,
                                stderr=subprocess.STDOUT, start_new_session=True)
@@ -67,6 +77,7 @@ def main():
     parser.add_argument('--pack', type=Path, required=True)
     parser.add_argument('--platform', choices=('linux', 'windows'), required=True)
     parser.add_argument('--wine-prefix', type=Path)
+    parser.add_argument('--render-windows', action='store_true', help='Render Windows/Wine through Xvfb instead of headless execution')
     parser.add_argument('--bootstrap-controls', action='store_true', help='Also prove inert normal startup and rejected path/hash/base-type controls')
     args, forwarded = parser.parse_known_args()
     binary, pack = args.binary.resolve(strict=True), args.pack.resolve(strict=True)
@@ -97,7 +108,7 @@ def main():
                    pack_sha256=hashes[str(pack)], current_manifest_equal=True,
                    packed_runtime_owner_sha256=packed_owners,
                    isolated_export_inventory=[p.name for p in inventory],
-                   entry_count=len(entries), visual_capture=args.platform=='linux')
+                   entry_count=len(entries), visual_capture=args.platform=='linux' or args.render_windows)
     wine_env = None
     if args.platform == 'windows':
         if args.wine_prefix is None or args.wine_prefix.exists():
@@ -147,7 +158,7 @@ def main():
         original_scene = layers.ROOT / command[-1].removeprefix('res://')
         script = (original_scene.parent/'probe.gd').read_text()
         details['original_probe_sha256'] = hashlib.sha256(script.encode()).hexdigest()
-        if args.platform == 'windows':
+        if args.platform == 'windows' and not args.render_windows:
             script, details['omitted_headless_capture_operations'] = headless_script(script)
         details['packaged_probe_sha256'] = hashlib.sha256(script.encode()).hexdigest()
         with tempfile.TemporaryDirectory(prefix='_town_scene_probe_', dir=export) as temporary:
@@ -169,7 +180,7 @@ def main():
                 for initial in (['wineboot', '-u'], ['wineserver', '-k'], ['wineserver', '-w']):
                     if run(initial, env, log, export, 90) != 0:
                         raise RuntimeError('Fresh Wine prefix initialization failed')
-                command = ['wine', str(binary), '--headless', '--rendering-method', 'gl_compatibility'] + arguments
+                command = windows_command(binary, arguments, args.render_windows)
             try:
                 if args.bootstrap_controls:
                     bootstrap_controls(work, script, env, Path(log.name).parent)
