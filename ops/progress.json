@@ -16701,14 +16701,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
+  "currentNotes": "Removed automatic town supply caches and linked guards from fresh generated sessions. Native sources/guards, authored scenarios and legacy saves remain intact. Source/Linux 9360 checks each, Windows 9359, full repository, official exports and package parity pass. Cleaned 1.51 GB disposable outputs; user data, caches, art and RMG recovery preserved. No native parity or release-ready claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "ux-usability-expansion-20-20260917",
-  "currentSliceId": "ux-usability-expansion-20-20260917",
-  "currentSliceNotes": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
+  "currentSlice": "rmg-remove-town-supply-support-20260918",
+  "currentSliceId": "rmg-remove-town-supply-support-20260918",
+  "currentSliceNotes": "Removed automatic town supply caches and linked guards from fresh generated sessions. Native sources/guards, authored scenarios and legacy saves remain intact. Source/Linux 9360 checks each, Windows 9359, full repository, official exports and package parity pass. Cleaned 1.51 GB disposable outputs; user data, caches, art and RMG recovery preserved. No native parity or release-ready claim.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Twenty Further Usability Improvements",
-  "currentSliceUpdatedAt": "2026-09-17T21:47:53Z",
+  "currentSliceTitle": "Remove Generated Town Supply Support",
+  "currentSliceUpdatedAt": "2026-09-18T00:57:11Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22013,39 +22013,36 @@
       }
     }
   },
-  "guardrailNote": "Only the 20 requirements in docs/usability-expansion-20.md are selected; no new art, rules/save/native RMG changes.",
+  "guardrailNote": "Completed owner-directed runtime adoption removal; preserve native generation, normal sources/guards, authored scenarios and legacy saves.",
   "lastValidation": {
-    "id": "ux-usability-expansion-20-20260917",
-    "sliceId": "ux-usability-expansion-20-20260917",
+    "id": "rmg-remove-town-supply-support-20260918",
+    "sliceId": "rmg-remove-town-supply-support-20260918",
     "status": "completed",
-    "validatedAt": "2026-09-17T21:47:53Z",
-    "sourceReport": "docs/usability-expansion-20.md",
-    "summary": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
+    "validatedAt": "2026-09-18T00:57:11Z",
+    "sourceReport": "docs/rmg-town-supply-support-removal.md",
+    "summary": "Removed automatic town supply caches and linked guards from fresh generated sessions. Native sources/guards, authored scenarios and legacy saves remain intact. Source/Linux 9360 checks each, Windows 9359, full repository, official exports and package parity pass. Cleaned 1.51 GB disposable outputs; user data, caches, art and RMG recovery preserved. No native parity or release-ready claim.",
     "evidence": {
-      "sourceRenderedChecks": 985,
-      "linuxPackageRenderedChecks": 985,
-      "windowsPackageHeadlessChecks": 977,
-      "implementedImprovements": 20,
-      "existingChecks": {
-        "graphicalUsability": 4197,
-        "townPreviewPlacements": 804,
-        "spellbook": 4633,
-        "heroSheet": 528,
-        "battleHistory": 87,
-        "targeting": 95
-      },
-      "repository": "VALIDATION PASSED, exit 0; 26 absent historical smokes explicitly unexecuted",
-      "exports": "Official Linux/Windows export/startup pass; Windows 23-step generated-map/Town construction-information flow passed",
-      "packageBytesEach": 648459312,
-      "packageParity": "8915 entries, 8914 identical, only project.binary differs; 16 compiled UI owners present; final exports unchanged",
-      "probeSha256": "69f0caf66be71f7abe5fd67ba6d3d43709df43c17f5c1142cc3d00e72678fd5b",
-      "pythonProbeSha256": "68e029e7b982cf2375df78757ac503b78ef937fe6794d610db9cec643f36fac5",
-      "linuxPackSha256": "178f6987411f798073a8372f607c2aa38c6034a1d9bdbf2cb66a956edacaadb1",
-      "windowsPackSha256": "c8688cca717495a05606efdee948a8abbd8dc08d94c4bb137097f5cc98bef10f",
-      "visualReview": "1280x720 source and actual 1920x1080 Linux export; battle/ledger/roster/hero/spell discovery inspected",
-      "cleanupAllocatedBytes": 3042623488,
-      "cleanup": "Removed all task-owned disposable outputs after recording results; 3.09 MB Wine user data retained; source/art/caches/saves/RMG/unrelated files preserved",
-      "limits": "Windows headless Wine, not GPU certification; no historical smoke inference or whole-game release-ready claim"
+      "sourceRenderedChecks": 9360,
+      "linuxPackageRenderedChecks": 9360,
+      "windowsPackageHeadlessChecks": 9359,
+      "nativeCases": [
+        "Small seed165429308 one level: 306 objects, 76 resources, 20 guards",
+        "Medium seed10 one level: 1326 objects, 306 resources, 57 guards",
+        "Medium seed10 two levels: 1302 objects, 383 resources, 79 guards"
+      ],
+      "compatibility": "Exact native source records, terrain/layers, repeat adoption and new/legacy SaveService restore pass; normal resource/guard constructors unchanged",
+      "repository": "Completed rerun: VALIDATION PASSED; 26 historical smokes absent and explicitly unexecuted. Initial process exited 143 without verdict and is not acceptance.",
+      "exports": "Official Linux/Windows export/startup and Windows 23-step generated-map/Town construction-information flow pass",
+      "packageBytesEach": 648449360,
+      "packageParity": "8915 entries; 8914 identical, only project.binary differs; four compiled adoption/rules owners match; final exports unchanged",
+      "probeSha256": "313db7e16388c627518597343172ef797a03863aab878074a652821830d7b57e",
+      "pythonProbeSha256": "2578b54b1a7b477eab1e72e4fd6c27a46fabfe3e893f72901ad14d97ba6d3955",
+      "linuxPackSha256": "758e86c8b6b8aacb7aa79e6d55f1309ed5cada53fb7e43954d6ac64affb1aeea",
+      "windowsPackSha256": "2656ebb44f615c8a1f897b8b4b3c8d70a26a5a663956ee7e3fdc5e6573965838",
+      "visualReview": "Source and immutable Linux Medium Overworld captures inspected at 1920x1080",
+      "cleanupAllocatedBytes": 1509302272,
+      "cleanup": "Removed task-owned rebuildable exports/captures/reports/logs; Wine lifecycle helpers removed prefixes; 26.55 MB user data retained. No source/art/cache/save/RMG/unrelated deletions.",
+      "limits": "Windows headless Wine, not physical GPU certification; no native parity or historical universal economy-route/pacing claim"
     }
   },
   "priorHeroSheetValidation": {
@@ -22245,45 +22242,42 @@
     ]
   },
   "latestEvidence": {
-    "id": "ux-usability-expansion-20-20260917",
-    "sliceId": "ux-usability-expansion-20-20260917",
+    "id": "rmg-remove-town-supply-support-20260918",
+    "sliceId": "rmg-remove-town-supply-support-20260918",
     "status": "completed",
-    "validatedAt": "2026-09-17T21:47:53Z",
-    "sourceReport": "docs/usability-expansion-20.md",
-    "summary": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
+    "validatedAt": "2026-09-18T00:57:11Z",
+    "sourceReport": "docs/rmg-town-supply-support-removal.md",
+    "summary": "Removed automatic town supply caches and linked guards from fresh generated sessions. Native sources/guards, authored scenarios and legacy saves remain intact. Source/Linux 9360 checks each, Windows 9359, full repository, official exports and package parity pass. Cleaned 1.51 GB disposable outputs; user data, caches, art and RMG recovery preserved. No native parity or release-ready claim.",
     "evidence": {
-      "sourceRenderedChecks": 985,
-      "linuxPackageRenderedChecks": 985,
-      "windowsPackageHeadlessChecks": 977,
-      "implementedImprovements": 20,
-      "existingChecks": {
-        "graphicalUsability": 4197,
-        "townPreviewPlacements": 804,
-        "spellbook": 4633,
-        "heroSheet": 528,
-        "battleHistory": 87,
-        "targeting": 95
-      },
-      "repository": "VALIDATION PASSED, exit 0; 26 absent historical smokes explicitly unexecuted",
-      "exports": "Official Linux/Windows export/startup pass; Windows 23-step generated-map/Town construction-information flow passed",
-      "packageBytesEach": 648459312,
-      "packageParity": "8915 entries, 8914 identical, only project.binary differs; 16 compiled UI owners present; final exports unchanged",
-      "probeSha256": "69f0caf66be71f7abe5fd67ba6d3d43709df43c17f5c1142cc3d00e72678fd5b",
-      "pythonProbeSha256": "68e029e7b982cf2375df78757ac503b78ef937fe6794d610db9cec643f36fac5",
-      "linuxPackSha256": "178f6987411f798073a8372f607c2aa38c6034a1d9bdbf2cb66a956edacaadb1",
-      "windowsPackSha256": "c8688cca717495a05606efdee948a8abbd8dc08d94c4bb137097f5cc98bef10f",
-      "visualReview": "1280x720 source and actual 1920x1080 Linux export; battle/ledger/roster/hero/spell discovery inspected",
-      "cleanupAllocatedBytes": 3042623488,
-      "cleanup": "Removed all task-owned disposable outputs after recording results; 3.09 MB Wine user data retained; source/art/caches/saves/RMG/unrelated files preserved",
-      "limits": "Windows headless Wine, not GPU certification; no historical smoke inference or whole-game release-ready claim"
+      "sourceRenderedChecks": 9360,
+      "linuxPackageRenderedChecks": 9360,
+      "windowsPackageHeadlessChecks": 9359,
+      "nativeCases": [
+        "Small seed165429308 one level: 306 objects, 76 resources, 20 guards",
+        "Medium seed10 one level: 1326 objects, 306 resources, 57 guards",
+        "Medium seed10 two levels: 1302 objects, 383 resources, 79 guards"
+      ],
+      "compatibility": "Exact native source records, terrain/layers, repeat adoption and new/legacy SaveService restore pass; normal resource/guard constructors unchanged",
+      "repository": "Completed rerun: VALIDATION PASSED; 26 historical smokes absent and explicitly unexecuted. Initial process exited 143 without verdict and is not acceptance.",
+      "exports": "Official Linux/Windows export/startup and Windows 23-step generated-map/Town construction-information flow pass",
+      "packageBytesEach": 648449360,
+      "packageParity": "8915 entries; 8914 identical, only project.binary differs; four compiled adoption/rules owners match; final exports unchanged",
+      "probeSha256": "313db7e16388c627518597343172ef797a03863aab878074a652821830d7b57e",
+      "pythonProbeSha256": "2578b54b1a7b477eab1e72e4fd6c27a46fabfe3e893f72901ad14d97ba6d3955",
+      "linuxPackSha256": "758e86c8b6b8aacb7aa79e6d55f1309ed5cada53fb7e43954d6ac64affb1aeea",
+      "windowsPackSha256": "2656ebb44f615c8a1f897b8b4b3c8d70a26a5a663956ee7e3fdc5e6573965838",
+      "visualReview": "Source and immutable Linux Medium Overworld captures inspected at 1920x1080",
+      "cleanupAllocatedBytes": 1509302272,
+      "cleanup": "Removed task-owned rebuildable exports/captures/reports/logs; Wine lifecycle helpers removed prefixes; 26.55 MB user data retained. No source/art/cache/save/RMG/unrelated deletions.",
+      "limits": "Windows headless Wine, not physical GPU certification; no native parity or historical universal economy-route/pacing claim"
     }
   },
   "latestEvidenceArtifacts": [
-    "docs/usability-expansion-20.md",
-    "tests/usability_expansion_regression.py"
+    "docs/rmg-town-supply-support-removal.md",
+    "tests/rmg_town_supply_removal_regression.py"
   ],
-  "latestEvidenceId": "ux-usability-expansion-20-20260917",
-  "latestFinding": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
+  "latestEvidenceId": "rmg-remove-town-supply-support-20260918",
+  "latestFinding": "Removed automatic town supply caches and linked guards from fresh generated sessions. Native sources/guards, authored scenarios and legacy saves remain intact. Source/Linux 9360 checks each, Windows 9359, full repository, official exports and package parity pass. Cleaned 1.51 GB disposable outputs; user data, caches, art and RMG recovery preserved. No native parity or release-ready claim.",
   "metrics": {
     "scope": "Historical full-match checkpoint metrics retained below; these are not current release metrics. Current UI-goal acceptance is in latestEvidence and validation.",
     "audit_only": false,
@@ -22348,7 +22342,7 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "No next slice selected. Preserve original art, rules, fog, saves and native RMG; completion of this bounded batch is not release readiness.",
+  "nextActionGuardrailNote": "No next slice selected; wait for owner direction. Do not compensate for cache removal with native density, topology or balance changes.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
@@ -113065,6 +113059,44 @@
       ],
       "completedAt": "2026-09-17T21:47:53Z",
       "notes": "Implemented and accepted in the coordinated 20-feature batch; see docs/usability-expansion-20.md for behavior, actual source/package checks, corrected probe wiring and platform limits."
+    },
+    {
+      "id": "rmg-remove-town-supply-support-20260918",
+      "title": "Remove Generated Town Supply Support",
+      "phase": "phase-6-production-alpha-layer",
+      "parentId": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/lessons-learned.md",
+        "docs/rmg-town-supply-support-removal.md"
+      ],
+      "status": "completed",
+      "createdAt": "2026-09-18T00:35:59Z",
+      "startedAt": "2026-09-18T00:35:59Z",
+      "updatedAt": "2026-09-18T00:57:11Z",
+      "targets": [
+        "scripts/persistence/NativeRandomMapPackageSessionBridge.gd",
+        "tests/rmg_town_supply_removal_regression.py"
+      ],
+      "validation": [
+        "python3 -B tests/rmg_town_supply_removal_regression.py --label source --render --timeout-seconds 300",
+        "python3 -B tests/validate_repo.py",
+        "Official Linux/Windows export/startup and immutable focused probes",
+        "git diff --check"
+      ],
+      "completionCriteria": [
+        "No automatic town supply cache/guard on fresh generated maps",
+        "Native objects, normal guards, entrances and legacy saves preserved",
+        "Source/platform validation, cleanup, coherent commit/push"
+      ],
+      "nonGoals": [
+        "Native generation/recovery, topology/density/placement tuning, authored scenarios, normal guards, art, UI, save migration, filesystem cache cleanup"
+      ],
+      "completedAt": "2026-09-18T00:57:11Z",
+      "evidence": "docs/rmg-town-supply-support-removal.md",
+      "completionSummary": "Removed automatic town supply caches and linked guards from fresh generated sessions. Native sources/guards, authored scenarios and legacy saves remain intact. Source/Linux 9360 checks each, Windows 9359, full repository, official exports and package parity pass. Cleaned 1.51 GB disposable outputs; user data, caches, art and RMG recovery preserved. No native parity or release-ready claim."
     }
   ],
   "project": "heroes-like",
@@ -113074,8 +113106,8 @@
     "implementationTruth": "Many archived Phase 2 docs, reports, tooling, UI, terrain/editor, object metadata, economy proof, and strategic AI report harness slices were completed. They are grouped below as evidence and do not automatically complete broad Phase 2 parents.",
     "sourceOfTruth": "project.md, PLAN.md, and ops/progress.json after progress architecture reconciliation on 2026-04-27."
   },
-  "remainingGap": "None for this bounded 20-feature UI batch. No next slice selected; broader release readiness is not claimed.",
-  "remainingWork": "None for this bounded 20-feature UI batch. No next slice selected; broader release readiness is not claimed.",
+  "remainingGap": "Selected removal complete; no whole-game release-readiness or native parity claim.",
+  "remainingWork": "No next slice selected.",
   "reportOnlyEvidence": [
     {
       "entries": [
@@ -113613,7 +113645,7 @@
       "runtimeImplementationCredit": false
     }
   ],
-  "result": "twenty_usability_improvements_complete",
+  "result": "generated_town_supply_injection_removed",
   "status": "completed",
   "statusTaxonomy": {
     "classificationRules": {
@@ -113714,45 +113746,42 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
+  "summary": "Removed automatic town supply caches and linked guards from fresh generated sessions. Native sources/guards, authored scenarios and legacy saves remain intact. Source/Linux 9360 checks each, Windows 9359, full repository, official exports and package parity pass. Cleaned 1.51 GB disposable outputs; user data, caches, art and RMG recovery preserved. No native parity or release-ready claim.",
   "taskId": "10236",
-  "updatedAt": "2026-09-17T21:47:53Z",
+  "updatedAt": "2026-09-18T00:57:11Z",
   "validation": {
-    "id": "ux-usability-expansion-20-20260917",
-    "sliceId": "ux-usability-expansion-20-20260917",
+    "id": "rmg-remove-town-supply-support-20260918",
+    "sliceId": "rmg-remove-town-supply-support-20260918",
     "status": "completed",
-    "validatedAt": "2026-09-17T21:47:53Z",
-    "sourceReport": "docs/usability-expansion-20.md",
-    "summary": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
+    "validatedAt": "2026-09-18T00:57:11Z",
+    "sourceReport": "docs/rmg-town-supply-support-removal.md",
+    "summary": "Removed automatic town supply caches and linked guards from fresh generated sessions. Native sources/guards, authored scenarios and legacy saves remain intact. Source/Linux 9360 checks each, Windows 9359, full repository, official exports and package parity pass. Cleaned 1.51 GB disposable outputs; user data, caches, art and RMG recovery preserved. No native parity or release-ready claim.",
     "evidence": {
-      "sourceRenderedChecks": 985,
-      "linuxPackageRenderedChecks": 985,
-      "windowsPackageHeadlessChecks": 977,
-      "implementedImprovements": 20,
-      "existingChecks": {
-        "graphicalUsability": 4197,
-        "townPreviewPlacements": 804,
-        "spellbook": 4633,
-        "heroSheet": 528,
-        "battleHistory": 87,
-        "targeting": 95
-      },
-      "repository": "VALIDATION PASSED, exit 0; 26 absent historical smokes explicitly unexecuted",
-      "exports": "Official Linux/Windows export/startup pass; Windows 23-step generated-map/Town construction-information flow passed",
-      "packageBytesEach": 648459312,
-      "packageParity": "8915 entries, 8914 identical, only project.binary differs; 16 compiled UI owners present; final exports unchanged",
-      "probeSha256": "69f0caf66be71f7abe5fd67ba6d3d43709df43c17f5c1142cc3d00e72678fd5b",
-      "pythonProbeSha256": "68e029e7b982cf2375df78757ac503b78ef937fe6794d610db9cec643f36fac5",
-      "linuxPackSha256": "178f6987411f798073a8372f607c2aa38c6034a1d9bdbf2cb66a956edacaadb1",
-      "windowsPackSha256": "c8688cca717495a05606efdee948a8abbd8dc08d94c4bb137097f5cc98bef10f",
-      "visualReview": "1280x720 source and actual 1920x1080 Linux export; battle/ledger/roster/hero/spell discovery inspected",
-      "cleanupAllocatedBytes": 3042623488,
-      "cleanup": "Removed all task-owned disposable outputs after recording results; 3.09 MB Wine user data retained; source/art/caches/saves/RMG/unrelated files preserved",
-      "limits": "Windows headless Wine, not GPU certification; no historical smoke inference or whole-game release-ready claim"
+      "sourceRenderedChecks": 9360,
+      "linuxPackageRenderedChecks": 9360,
+      "windowsPackageHeadlessChecks": 9359,
+      "nativeCases": [
+        "Small seed165429308 one level: 306 objects, 76 resources, 20 guards",
+        "Medium seed10 one level: 1326 objects, 306 resources, 57 guards",
+        "Medium seed10 two levels: 1302 objects, 383 resources, 79 guards"
+      ],
+      "compatibility": "Exact native source records, terrain/layers, repeat adoption and new/legacy SaveService restore pass; normal resource/guard constructors unchanged",
+      "repository": "Completed rerun: VALIDATION PASSED; 26 historical smokes absent and explicitly unexecuted. Initial process exited 143 without verdict and is not acceptance.",
+      "exports": "Official Linux/Windows export/startup and Windows 23-step generated-map/Town construction-information flow pass",
+      "packageBytesEach": 648449360,
+      "packageParity": "8915 entries; 8914 identical, only project.binary differs; four compiled adoption/rules owners match; final exports unchanged",
+      "probeSha256": "313db7e16388c627518597343172ef797a03863aab878074a652821830d7b57e",
+      "pythonProbeSha256": "2578b54b1a7b477eab1e72e4fd6c27a46fabfe3e893f72901ad14d97ba6d3955",
+      "linuxPackSha256": "758e86c8b6b8aacb7aa79e6d55f1309ed5cada53fb7e43954d6ac64affb1aeea",
+      "windowsPackSha256": "2656ebb44f615c8a1f897b8b4b3c8d70a26a5a663956ee7e3fdc5e6573965838",
+      "visualReview": "Source and immutable Linux Medium Overworld captures inspected at 1920x1080",
+      "cleanupAllocatedBytes": 1509302272,
+      "cleanup": "Removed task-owned rebuildable exports/captures/reports/logs; Wine lifecycle helpers removed prefixes; 26.55 MB user data retained. No source/art/cache/save/RMG/unrelated deletions.",
+      "limits": "Windows headless Wine, not physical GPU certification; no native parity or historical universal economy-route/pacing claim"
     },
     "artifacts": [
-      "docs/usability-expansion-20.md",
-      "tests/usability_expansion_regression.py"
+      "docs/rmg-town-supply-support-removal.md",
+      "tests/rmg_town_supply_removal_regression.py"
     ]
   },
   "validationHistory": [
@@ -127832,40 +127861,71 @@
         "docs/spell-effect-variety.md",
         "art/battle/source/generated/spell_variety/manifest.json"
       ]
+    },
+    {
+      "id": "ux-usability-expansion-20-20260917",
+      "sliceId": "ux-usability-expansion-20-20260917",
+      "status": "completed",
+      "validatedAt": "2026-09-17T21:47:53Z",
+      "sourceReport": "docs/usability-expansion-20.md",
+      "summary": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
+      "evidence": {
+        "sourceRenderedChecks": 985,
+        "linuxPackageRenderedChecks": 985,
+        "windowsPackageHeadlessChecks": 977,
+        "implementedImprovements": 20,
+        "existingChecks": {
+          "graphicalUsability": 4197,
+          "townPreviewPlacements": 804,
+          "spellbook": 4633,
+          "heroSheet": 528,
+          "battleHistory": 87,
+          "targeting": 95
+        },
+        "repository": "VALIDATION PASSED, exit 0; 26 absent historical smokes explicitly unexecuted",
+        "exports": "Official Linux/Windows export/startup pass; Windows 23-step generated-map/Town construction-information flow passed",
+        "packageBytesEach": 648459312,
+        "packageParity": "8915 entries, 8914 identical, only project.binary differs; 16 compiled UI owners present; final exports unchanged",
+        "probeSha256": "69f0caf66be71f7abe5fd67ba6d3d43709df43c17f5c1142cc3d00e72678fd5b",
+        "pythonProbeSha256": "68e029e7b982cf2375df78757ac503b78ef937fe6794d610db9cec643f36fac5",
+        "linuxPackSha256": "178f6987411f798073a8372f607c2aa38c6034a1d9bdbf2cb66a956edacaadb1",
+        "windowsPackSha256": "c8688cca717495a05606efdee948a8abbd8dc08d94c4bb137097f5cc98bef10f",
+        "visualReview": "1280x720 source and actual 1920x1080 Linux export; battle/ledger/roster/hero/spell discovery inspected",
+        "cleanupAllocatedBytes": 3042623488,
+        "cleanup": "Removed all task-owned disposable outputs after recording results; 3.09 MB Wine user data retained; source/art/caches/saves/RMG/unrelated files preserved",
+        "limits": "Windows headless Wine, not GPU certification; no historical smoke inference or whole-game release-ready claim"
+      }
     }
   ],
   "validationResults": {
-    "id": "ux-usability-expansion-20-20260917",
-    "sliceId": "ux-usability-expansion-20-20260917",
+    "id": "rmg-remove-town-supply-support-20260918",
+    "sliceId": "rmg-remove-town-supply-support-20260918",
     "status": "completed",
-    "validatedAt": "2026-09-17T21:47:53Z",
-    "sourceReport": "docs/usability-expansion-20.md",
-    "summary": "Completed all 20 presentation/usability improvements. Source/Linux 985 checks each, actual Windows package 977, existing UI regressions, full repository and official exports/parity pass. Small/wide visuals inspected. Corrected early probe-launcher wiring; those mislabeled source runs are not packaged evidence. Removed 3.04 GB disposable outputs; saves/caches/source/art/RMG/unrelated files preserved. Windows headless only; no release-ready claim.",
+    "validatedAt": "2026-09-18T00:57:11Z",
+    "sourceReport": "docs/rmg-town-supply-support-removal.md",
+    "summary": "Removed automatic town supply caches and linked guards from fresh generated sessions. Native sources/guards, authored scenarios and legacy saves remain intact. Source/Linux 9360 checks each, Windows 9359, full repository, official exports and package parity pass. Cleaned 1.51 GB disposable outputs; user data, caches, art and RMG recovery preserved. No native parity or release-ready claim.",
     "evidence": {
-      "sourceRenderedChecks": 985,
-      "linuxPackageRenderedChecks": 985,
-      "windowsPackageHeadlessChecks": 977,
-      "implementedImprovements": 20,
-      "existingChecks": {
-        "graphicalUsability": 4197,
-        "townPreviewPlacements": 804,
-        "spellbook": 4633,
-        "heroSheet": 528,
-        "battleHistory": 87,
-        "targeting": 95
-      },
-      "repository": "VALIDATION PASSED, exit 0; 26 absent historical smokes explicitly unexecuted",
-      "exports": "Official Linux/Windows export/startup pass; Windows 23-step generated-map/Town construction-information flow passed",
-      "packageBytesEach": 648459312,
-      "packageParity": "8915 entries, 8914 identical, only project.binary differs; 16 compiled UI owners present; final exports unchanged",
-      "probeSha256": "69f0caf66be71f7abe5fd67ba6d3d43709df43c17f5c1142cc3d00e72678fd5b",
-      "pythonProbeSha256": "68e029e7b982cf2375df78757ac503b78ef937fe6794d610db9cec643f36fac5",
-      "linuxPackSha256": "178f6987411f798073a8372f607c2aa38c6034a1d9bdbf2cb66a956edacaadb1",
-      "windowsPackSha256": "c8688cca717495a05606efdee948a8abbd8dc08d94c4bb137097f5cc98bef10f",
-      "visualReview": "1280x720 source and actual 1920x1080 Linux export; battle/ledger/roster/hero/spell discovery inspected",
-      "cleanupAllocatedBytes": 3042623488,
-      "cleanup": "Removed all task-owned disposable outputs after recording results; 3.09 MB Wine user data retained; source/art/caches/saves/RMG/unrelated files preserved",
-      "limits": "Windows headless Wine, not GPU certification; no historical smoke inference or whole-game release-ready claim"
+      "sourceRenderedChecks": 9360,
+      "linuxPackageRenderedChecks": 9360,
+      "windowsPackageHeadlessChecks": 9359,
+      "nativeCases": [
+        "Small seed165429308 one level: 306 objects, 76 resources, 20 guards",
+        "Medium seed10 one level: 1326 objects, 306 resources, 57 guards",
+        "Medium seed10 two levels: 1302 objects, 383 resources, 79 guards"
+      ],
+      "compatibility": "Exact native source records, terrain/layers, repeat adoption and new/legacy SaveService restore pass; normal resource/guard constructors unchanged",
+      "repository": "Completed rerun: VALIDATION PASSED; 26 historical smokes absent and explicitly unexecuted. Initial process exited 143 without verdict and is not acceptance.",
+      "exports": "Official Linux/Windows export/startup and Windows 23-step generated-map/Town construction-information flow pass",
+      "packageBytesEach": 648449360,
+      "packageParity": "8915 entries; 8914 identical, only project.binary differs; four compiled adoption/rules owners match; final exports unchanged",
+      "probeSha256": "313db7e16388c627518597343172ef797a03863aab878074a652821830d7b57e",
+      "pythonProbeSha256": "2578b54b1a7b477eab1e72e4fd6c27a46fabfe3e893f72901ad14d97ba6d3955",
+      "linuxPackSha256": "758e86c8b6b8aacb7aa79e6d55f1309ed5cada53fb7e43954d6ac64affb1aeea",
+      "windowsPackSha256": "2656ebb44f615c8a1f897b8b4b3c8d70a26a5a663956ee7e3fdc5e6573965838",
+      "visualReview": "Source and immutable Linux Medium Overworld captures inspected at 1920x1080",
+      "cleanupAllocatedBytes": 1509302272,
+      "cleanup": "Removed task-owned rebuildable exports/captures/reports/logs; Wine lifecycle helpers removed prefixes; 26.55 MB user data retained. No source/art/cache/save/RMG/unrelated deletions.",
+      "limits": "Windows headless Wine, not physical GPU certification; no native parity or historical universal economy-route/pacing claim"
     }
   },
   "blockedReason": null,

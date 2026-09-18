@@ -2,6 +2,14 @@
 
 Slice: `economy-town-goal-scorecard-20260524-10184`
 
+Owner policy update, 2026-09-18: newly generated sessions no longer receive the
+automatic per-town all-resource cache and its guard. This report's historical
+universal nearby-source/day-window guarantees are not current acceptance for
+fresh maps. The old scorecard and fixtures remain historical coverage, not a
+reason to reinsert supplies or claim present-day balance. See
+`docs/rmg-town-supply-support-removal.md`; ordinary native sources, guards and
+legacy saved maps remain intact.
+
 This scorecard is the top-level regression surface for the economy and town-development goal. It consolidates the explicit objective requirements, while focused reports remain the source of detailed evidence.
 
 ## Current Scope
