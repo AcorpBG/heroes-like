@@ -1,17 +1,36 @@
 extends RefCounted
 
 # Original-game presentation of recovered nonvisitable bodies. This never
-# invents placements or masks, and is only applied while starting a new session.
+# invents placements or masks. Versioned appearance selection also works on reload.
 const MANIFEST := "res://art/overworld/native_scenery.json"
 const PRESENTATION_VERSION := 2
+static var _candidate_cache: Dictionary = {}
 
 static func asset_candidates(object: Dictionary, biome_id: String) -> Array:
 	var version := int(object.get("native_scenery_art_version", 0))
 	if version < 1: return []
+	var cache_key := "%d|%s|%s" % [version, object.get("h3m_type_id", -1), biome_id]
+	if _candidate_cache.has(cache_key): return _candidate_cache[cache_key]
 	var manifest := ContentService.load_json(MANIFEST)
 	var entry := policy(object)
-	if version >= PRESENTATION_VERSION and entry.has("landscape_family"):
-		return manifest.get("landscape_palettes", {}).get(String(entry.landscape_family), {}).get(biome_id, [])
+	if version >= PRESENTATION_VERSION:
+		var family := String(entry.get("landscape_family", entry.get("variation_family", "")))
+		if family != "":
+			var art_biome := String(entry.get("variation_biome", biome_id))
+			var seeds: Array = manifest.get("landscape_palettes", {}).get(family, {}).get(art_biome, [])
+			var candidates: Array = entry.get("asset_ids", []).duplicate()
+			var additions: Array = seeds.duplicate()
+			additions.append_array(manifest.get("library_palettes", {}).get(family, {}).get(art_biome, []))
+			# Harsh-biome woods intentionally use their native dead trees. Include
+			# the assembled deadwood too, rather than repeating the lone master.
+			for asset in seeds:
+				if String(asset).begins_with("cohesive_library_") and String(asset).ends_with("_000"):
+					additions.append_array(manifest.get("library_palettes", {}).get("deadwood", {}).get(art_biome, []))
+					break
+			for asset in additions:
+				if asset not in candidates: candidates.append(asset)
+			_candidate_cache[cache_key] = candidates
+			return candidates
 	return entry.get("asset_ids", [])
 
 static func policy(object: Dictionary) -> Dictionary:
@@ -47,6 +66,8 @@ static func validate(objects: Array) -> Dictionary:
 				candidates.append_array(palettes[biome_id])
 		elif candidates.is_empty():
 			return {"ok":false,"error":"native_scenery_semantic_art_missing","type_id":type_id}
+		for biome_id in ContentService.load_json(MANIFEST).get("landscape_palettes", {}).get("rock", {}):
+			candidates.append_array(asset_candidates(object, biome_id))
 		for asset_id in candidates:
 			var path := String(assets.get(asset_id, {}).get("path", ""))
 			if path == "" or not ResourceLoader.exists(path):

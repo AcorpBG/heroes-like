@@ -10774,6 +10774,10 @@ func _generated_decorative_body_asset_id(object: Dictionary, tile: Vector2i) -> 
 	var semantic_assets := _native_scenery_assets(object, tile)
 	if not semantic_assets.is_empty():
 		var key := "%s|%s" % [object.get("h3m_type_id", -1), _generated_decorative_body_motif_key(object, tile)]
+		if int(object.get("native_scenery_art_version", 0)) >= 2:
+			# Avalanche neighboring coordinates instead of letting the linear
+			# String hash and palette size produce repeating rows/diagonals.
+			return String(semantic_assets[key.sha256_buffer().decode_u32(0) % semantic_assets.size()])
 		return String(semantic_assets[absi(key.hash()) % semantic_assets.size()])
 	if int(object.get("native_scenery_art_version", 0)) >= 2:
 		# A missing semantic family is a validation error, not a forest fallback.

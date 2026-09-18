@@ -2,6 +2,31 @@
 
 Status: completed. The owner approved a mix of separately generated sprites and assembled original-art clusters, with at least 100 new blockers per biome and an emphasis on asset production.
 
+## Live semantic palette adoption
+
+The September 18 semantic scenery selector had bypassed this library: most
+families used only a few older sprites, and lava barriers used one fixed raster.
+The correction connects all 900 appearances through `native_scenery.json`'s
+`library_palettes`. `tools/build_native_scenery_palettes.py` rebuilds those lists
+from each recipe's largest layer and its original component family. This keeps
+rock, woods, wetland and deadwood clusters appropriate to their scenery roles.
+Special scenery such as lava barriers, frozen shelves and fallen trees now has
+compatible variation families while retaining its original raster candidates.
+
+Version 2 scenery uses a stable coordinate hash with well-distributed values;
+palettes are cached, and no simulation RNG, placement, collision mask or saved
+object is changed. Reloading a version 2 map applies the corrected appearance
+selection. Version 1 saves retain their old presentation contract. Existing
+generated art and provenance are unchanged; this correction adds no new sprites.
+
+`tests/native_scenery_variety_regression.py` exercises the actual map selection
+methods and scenery module in an isolated Godot project. Windows checks cover
+all 38 source scenery types across nine biomes, all 900 library appearances,
+stable reload selection, legacy palettes and unchanged input masks. All nine
+biome renders were reviewed. This is a focused selector/render check, not a full
+gameplay, native parity, repository or Linux validation run. Temporary render
+evidence is removed after review under the owner's retention policy.
+
 ## Delivered content
 
 900 new transparent 256px blocker PNGs: 100 for each of the nine biomes, additional to the previous batch. Each biome receives one newly generated dead-tree design and 99 distinct assembled clusters. Of those clusters, 45 include its new dead tree and 54 combine existing biome-compatible original art. Total: 9 new source designs, 891 clusters, and 414 dead-tree appearances.
