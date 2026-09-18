@@ -1,0 +1,62 @@
+{
+  "generator": "OpenAI built-in image generation",
+  "grid": [
+    5,
+    5
+  ],
+  "sheets": [
+    {
+      "file": "temperate_irregular.png",
+      "prompt": "Original fantasy strategy game MOUNTAIN RANGE SPRITE ATLAS, transparent RGBA, 5 by 5 cells, exactly 25 isolated sprites. This revision MUST BREAK THE SQUARE / PYRAMID look: NO regular triangular mountains, NO pyramids, NO conical mound, NO rectangular platform, NO centered symmetrical island, NO same outline in every row. Use strongly asymmetric irregular cutout silhouettes. Each subject is a HUGE multi-tile natural mountain formation, joined craggy slopes with jagged spurs trailing in different directions, tapering fragmented foothills. Elevated three-quarter map perspective, rich handpainted late 1990s pre-rendered strategy-game detail, fixed light upper-left. Five composition categories by column: 1 long crooked diagonal S-shaped ridge with three unequal offset peaks and low trailing spur; 2 crescent-shaped broken mountain wall, open concave side, tall peak at far left and sprawling low right shoulder; 3 narrow jagged zigzag mountain spine, two tall off-center peaks, very unequal length branches; 4 sprawling forked Y-shaped massif with uneven front fingers and a tall rear crag; 5 broad low winding escarpment with steep fractured cliff at one end and a single tall offset peak behind, long tapering tail. Make every row's rendition different in its silhouette, proportions and orientation without changing camera or light. Wide subjects should be wide and low, tall subjects narrow and high; do not force them into square compact piles. Jagged irregular alpha contour including concave notches, some slopes nearly touch edge of adjacent imaginary footprints when used in game; absolutely no flat tile-shaped ground pad. BUT all 25 sprites MUST remain separated in this atlas: each subject wholly inside its own equal cell, at least 20px entirely transparent gutter between subjects, no touching rows/columns. No text, no labels, no scenery behind. Not a terrain tilemap, these are alpha cutout mountains.\nTerrain palette by row, exactly: ROW1 grassy plains gray limestone with only olive foothill grass; ROW2 forest dark gray mountains with tiny dense trees along lower slopes; ROW3 mire dark mossy slate mountains with muted olive wet foothills; ROW4 highland gray-brown bare granite with lichen; ROW5 coastal gray-beige pale limestone with sparse scrub.",
+      "rows": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_coast_archipelago"
+      ]
+    },
+    {
+      "file": "extreme_irregular.png",
+      "prompt": "Original fantasy strategy game MOUNTAIN RANGE SPRITE ATLAS, transparent RGBA, 5 by 5 cells, exactly 25 isolated sprites. This revision MUST BREAK THE SQUARE / PYRAMID look: NO regular triangular mountains, NO pyramids, NO conical mound, NO rectangular platform, NO centered symmetrical island, NO same outline in every row. Use strongly asymmetric irregular cutout silhouettes. Each subject is a HUGE multi-tile natural mountain formation, joined craggy slopes with jagged spurs trailing in different directions, tapering fragmented foothills. Elevated three-quarter map perspective, rich handpainted late 1990s pre-rendered strategy-game detail, fixed light upper-left. Five composition categories by column: 1 long crooked diagonal S-shaped ridge with three unequal offset peaks and low trailing spur; 2 crescent-shaped broken mountain wall, open concave side, tall peak at far left and sprawling low right shoulder; 3 narrow jagged zigzag mountain spine, two tall off-center peaks, very unequal length branches; 4 sprawling forked Y-shaped massif with uneven front fingers and a tall rear crag; 5 broad low winding escarpment with steep fractured cliff at one end and a single tall offset peak behind, long tapering tail. Make every row's rendition different in its silhouette, proportions and orientation without changing camera or light. Wide subjects should be wide and low, tall subjects narrow and high; do not force them into square compact piles. Jagged irregular alpha contour including concave notches, some slopes nearly touch edge of adjacent imaginary footprints when used in game; absolutely no flat tile-shaped ground pad. BUT all 25 sprites MUST remain separated in this atlas: each subject wholly inside its own equal cell, at least 20px entirely transparent gutter between subjects, no touching rows/columns. No text, no labels, no scenery behind. Not a terrain tilemap, these are alpha cutout mountains.\nTerrain palette by row, exactly: ROW1 sand desert PALE CREAM BUFF sandstone, wind-eroded, NO red; ROW2 rusty terracotta badlands mountains and canyon escarpments; ROW3 snow alpine dark gray jagged stone with snowcaps; ROW4 volcanic black basalt with thin subtle orange fissures NO smoke; ROW5 underground dark muted purple-gray crags, restrained pale mineral veins NO glow.",
+      "rows": [
+        "sand",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ]
+    }
+  ],
+  "columns": [
+    "Crooked ridge",
+    "Open crescent",
+    "Jagged spine",
+    "Forked massif",
+    "Winding escarpment"
+  ],
+  "initial_sheets": [
+    {
+      "file": "temperate.png",
+      "prompt": "Original fantasy strategy adventure-map sprite atlas on TRUE TRANSPARENT RGBA background. EXACTLY 5 rows and 5 columns, 25 separate LARGE MOUNTAIN MASS sprites with empty transparent gutters around every subject, no touching between cells. Painterly pre-rendered late-1990s strategy art, elevated three-quarter view, light upper-left, detailed craggy slopes at small game resolution. These are impressive multi-tile MOUNTAINS and connected mountain ranges, NOT individual boulders or stones. Each sprite one cohesive massive landform with many ridges extending from peaks continuously to broad rocky foothills, triangular skyline, considerable height, wide base, silhouette occupies 78% cell width and 80% height. No isolated floating bits, no square ground tile, no background, no text, no frame, no snow except where requested. Five distinct compositions repeated in concept but independently drawn for each row: column1 asymmetric towering single summit with long buttresses; column2 twin summits connected by a rugged saddle; column3 three-peak compact mountain chain; column4 sheer mountainous escarpment with ridged flanks; column5 broad high massif with subsidiary spurs. Palette by row: row1 grassy plains gray limestone mountains with olive grass only along foothills; row2 deep forest dark gray mountains with dense tiny green tree canopy climbing lower slopes; row3 mire mountains of moss-darkened slate, damp olive-green foothills, sparse stunted trees; row4 highland monumental gray-brown granite mountains with bare jagged tops and subdued lichen; row5 coastal mountains pale weathered gray-beige limestone, sparse scrub at base. All five different shapes per biome, strong vertical scale, not little rocks, continuous solid mountain surfaces. Original designs, do not copy any existing game art.",
+      "rows": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_coast_archipelago"
+      ]
+    },
+    {
+      "file": "extreme.png",
+      "prompt": "Original fantasy strategy adventure-map sprite atlas on TRUE TRANSPARENT RGBA background. EXACTLY 5 rows and 5 columns, 25 separate LARGE MOUNTAIN MASS sprites with generous empty transparent gutters around every subject, no touching between cells. Painterly pre-rendered late-1990s strategy art, elevated three-quarter view, light upper-left, detailed craggy slopes at small game resolution. These are impressive multi-tile MOUNTAINS and connected mountain ranges, NOT individual boulders or stones. Each sprite one cohesive massive landform with many ridges extending from peaks continuously to broad rocky foothills, triangular skyline, considerable height, wide base. Fit each sprite inside central 78% of its cell, absolutely no touching adjacent sprites. No isolated floating bits, no square ground tile, no background, no text, no frame. Five distinct compositions for each row: column1 asymmetric towering single summit with long buttresses; column2 twin summits connected by rugged saddle; column3 three-peak compact mountain chain; column4 sheer mountainous escarpment with ridged flanks; column5 broad high massif with subsidiary spurs. Palette by row: row1 pale sand desert mountains CREAM AND BUFF sandstone with sweeping tall wind-eroded peaks, light beige foothills NO RED; row2 red dirt badlands rusty terracotta mountain ranges and monumental rugged desert mesas; row3 alpine mountains dark blue-gray rock heavily capped with white snow, snowy foot slopes; row4 volcanic waste mountains black basalt with subtle thin glowing orange fissures, dramatic jagged cooled lava ridges NO SMOKE; row5 subterranean mountain masses dark purple-gray towering stone ridges and huge pointed cavern crags with restrained pale mineral veins NO GLOW. All five different shapes per biome, strong vertical scale, continuous solid mountain surfaces. Original designs, do not copy any existing game art.",
+      "rows": [
+        "sand",
+        "biome_rough_badlands",
+        "biome_snow_frost_marches",
+        "biome_ash_lava_wastes",
+        "biome_subterranean_underways"
+      ]
+    }
+  ]
+}

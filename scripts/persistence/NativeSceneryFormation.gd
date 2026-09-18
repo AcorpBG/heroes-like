@@ -53,6 +53,9 @@ static func slice(formation: Dictionary, tile: Vector2i, cell_rect: Rect2, image
 	var origin: Vector2i = formation.get("mass_origin", formation.origin)
 	var size: Vector2i = formation.get("mass_size", formation.size)
 	var bounds := Rect2(cell_rect.position + Vector2(origin - tile) * cell_rect.size, Vector2(size) * cell_rect.size)
+	if formation.has("paint_bounds"):
+		var art: Rect2 = formation.paint_bounds
+		bounds = Rect2(cell_rect.position + (art.position - Vector2(tile)) * cell_rect.size, art.size * cell_rect.size)
 	# Aspect-preserved art spans its native body instead of resetting at each
 	# cell. Bottom alignment leaves natural upper silhouette/negative space.
 	var scale := minf(bounds.size.x / maxf(image_size.x, 1.0), bounds.size.y / maxf(image_size.y, 1.0))
