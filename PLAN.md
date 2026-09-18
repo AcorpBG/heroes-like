@@ -35,7 +35,7 @@ Status: in_progress, owner-directed Phase 6 parent. Fix the insufficient playabl
 | `rmg-guarded-exploration-closure-20260918` | Real reward/enemy routes, guards, neutral compositions and pacing defects | in_progress |
 | `rmg-overworld-quality-acceptance-20260918` | Integrated play/save/platform/visual acceptance and cleanup | in_progress |
 
-Current: guarded exploration. The content/readability correction is validated on both platforms; the historical Small opening still fails two density thresholds with no dropped source objects. Obtain the matching original placement-phase proof before any native change, then complete broader route/pacing acceptance. Details and exact evidence: the requirements doc above.
+Current: guarded exploration. Content/readability corrections and monster-center/guarded-site battle entry are validated on both platforms. The historical Small threshold failures came from a stale cardinal/body-distance report; live movement/guard approaches pass without added objects or lowered thresholds. Next: broader actual enemy/portal routes and whole-match pacing acceptance. Native generation remains unchanged and still requires private-state proof before any future tuning. Details: the requirements doc above.
 
 ### Generated Exploration and Guarded Routes
 

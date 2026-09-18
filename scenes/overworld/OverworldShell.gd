@@ -6806,6 +6806,14 @@ func _selected_route_destination_execution_descriptor(tile: Vector2i) -> Diction
 	if not _tile_in_bounds(tile):
 		descriptor["kind"] = "invalid"
 		return descriptor
+	# Combat owns a guarded entrance before the resource/town beneath it,
+	# matching OverworldRules' non-cached post-move interaction ordering.
+	var encounter := _encounter_at(tile.x, tile.y)
+	if not encounter.is_empty():
+		descriptor["kind"] = "encounter"
+		descriptor["placement_id"] = String(encounter.get("placement_id", encounter.get("id", "")))
+		descriptor["encounter_id"] = String(encounter.get("encounter_id", encounter.get("id", "")))
+		return descriptor
 	var town := _town_at(tile.x, tile.y)
 	if not town.is_empty():
 		var owner := String(town.get("owner", "neutral"))
@@ -6827,12 +6835,6 @@ func _selected_route_destination_execution_descriptor(tile: Vector2i) -> Diction
 		descriptor["kind"] = "artifact"
 		descriptor["placement_id"] = String(artifact_node.get("placement_id", ""))
 		descriptor["artifact_id"] = String(artifact_node.get("artifact_id", ""))
-		return descriptor
-	var encounter := _encounter_at(tile.x, tile.y)
-	if not encounter.is_empty():
-		descriptor["kind"] = "encounter"
-		descriptor["placement_id"] = String(encounter.get("placement_id", encounter.get("id", "")))
-		descriptor["encounter_id"] = String(encounter.get("encounter_id", encounter.get("id", "")))
 		return descriptor
 	var reserve_hero := _reserve_hero_entry_at(tile.x, tile.y)
 	if not reserve_hero.is_empty():
@@ -9798,6 +9800,19 @@ func _active_resource_nodes() -> Array:
 
 func _selection_route_tile(tile: Vector2i) -> Vector2i:
 	var selection_started_usec := _debug_phase_begin("tile_object_selection_resolution")
+	# Clicking an explored monster's painted center means approach that army,
+	# not walk through its surrounding terminal combat entries to its center.
+	if _viewing_hero_level() and OverworldRules.is_tile_explored(_session, tile.x, tile.y, LevelRules.view_level(_session)):
+		var encounter := _encounter_at(tile.x, tile.y)
+		if not encounter.is_empty() and Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1))) == tile:
+			var approach := OverworldRules.guard_engagement_approach_route(_session, encounter)
+			if not approach.is_empty():
+				var entry: Vector2i = approach[-1]
+				_debug_phase_end("tile_object_selection_resolution", selection_started_usec, {
+					"raw": _debug_tile_payload(tile), "resolved": _debug_tile_payload(entry),
+					"object": true, "object_kind": "guard_anchor", "placement_id": encounter.get("placement_id", ""),
+				})
+				return entry
 	if _tile_has_exact_selection_target(tile):
 		_debug_phase_end("tile_object_selection_resolution", selection_started_usec, {
 			"raw": _debug_tile_payload(tile), "resolved": _debug_tile_payload(tile),

@@ -76,6 +76,7 @@ RMG_SCENES = [
     "native_rmg_end_to_end_runtime_boundary_report",
     "native_random_map_homm3_re_object_table_proxy_report",
     "random_map_object_pool_value_weighting_report",
+    "random_map_generated_density_distribution_report",
     "overworld_map_object_sprite_asset_report",
     "overworld_decorative_sprite_asset_report",
     "battle_quick_resolve_runtime_report",
@@ -83,6 +84,9 @@ RMG_SCENES = [
     "battle_deterministic_rng_state_report",
     "overworld_gameplay_movement_input_ownership_regression",
     "overworld_full_route_movement_regression",
+    "overworld_controller_route_selection_regression",
+    "overworld_selected_route_context_actions_cache_regression",
+    "overworld_interactable_confirmation_optimization_regression",
     "fog_of_war_homm_style_regression",
     "save_transactional_commit_regression",
     "save_summary_deferred_payload_report",
@@ -167,6 +171,42 @@ def report_scene(name: str, source: str, out: Path):
         if setup.count(save_anchor) != 1:
             raise ValueError(name + ": legacy fixed-slot entry changed")
         setup = setup.replace(save_anchor, save_setup)
+    elif name == "overworld_full_route_movement_regression":
+        # Ground steps now select original production-bank variants. Preserve
+        # the exact event/source/imported-playback assertion, resolving the
+        # expected raster-independent audio identity from its live manifest.
+        anchor = '\treturn records.size() == 1 and String(record.get("cue_id", "")) == cue_id'
+        setup = '''\tif cue_id == "audio_placeholder_map_step":
+\t\tvar banks := ContentService.load_json("res://content/audio_production_banks.json")
+\t\tvar selected := String(record.get("cue_id", ""))
+\t\tvar cues: Dictionary = banks.get("cues", {})
+\t\treturn records.size() == 1 and selected in banks.get("banks", {}).get("move_grass", []) and String(record.get("asset_path", "")) == String(cues.get(selected, {}).get("path", "missing")) and String(record.get("source", "")) == source and String(record.get("playback_source", "")) == "imported_wav" and bool(record.get("played", false)) and int(record.get("generated_fallback_count", -1)) == 0
+\tif cue_id == "audio_placeholder_invalid_route":
+\t\tvar manifest := ContentService.load_json("res://content/presentation_sfx_manifest.json")
+\t\tvar expected: Dictionary = manifest.get("cues", {}).get(cue_id, {})
+\t\treturn records.size() == 1 and String(record.get("cue_id", "")) == cue_id and not expected.is_empty() and String(record.get("asset_path", "")) == String(expected.get("path", "missing")) and String(record.get("source", "")) == source and String(record.get("playback_source", "")) == "imported_wav" and bool(record.get("played", false)) and int(record.get("generated_fallback_count", -1)) == 0
+''' + anchor
+    elif name == "overworld_controller_route_selection_regression":
+        # Like the Town save-surface adapter below, separate derived recap
+        # caching from canonical files/summary/session authority; validate the
+        # derived fields themselves instead of silently dropping arbitrary keys.
+        anchor = source
+        snapshot = 'SaveService.validation_summary_cache_snapshot()'
+        if source.count(snapshot) != 3:
+            raise ValueError(name + ": review controller summary snapshot owners")
+        setup = source.replace(snapshot, '_canonical_summary_cache_snapshot()')
+        setup += '''
+func _canonical_summary_cache_snapshot() -> Dictionary:
+\tvar snapshot: Dictionary = SaveService.validation_summary_cache_snapshot()
+\tfor entry in snapshot.values():
+\t\tif entry.has("resume_recap") or entry.has("recap_content_revision"):
+\t\t\tif not (entry.get("resume_recap") is String) or String(entry.get("resume_recap", "")).is_empty() or not (entry.get("recap_content_revision") is int) or int(entry.get("recap_content_revision", -1)) < 0:
+\t\t\t\t_fail("Stored recap derived cache has malformed fields.")
+\t\t\t\treturn {}
+\t\t\tentry.erase("resume_recap")
+\t\t\tentry.erase("recap_content_revision")
+\treturn snapshot
+'''
     elif name == "generated_large_town_explicit_save_surface_regression":
         # The recap optimization deliberately adds private derived text to a
         # verified entry. Keep all canonical summary/file/session comparisons;
