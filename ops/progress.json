@@ -1,78 +1,5 @@
 {
-  "actionableNextTasks": [
-    {
-      "id": "rmg-guarded-exploration-closure-20260918",
-      "title": "Guarded Exploration Closure",
-      "phase": "phase-6-production-alpha-layer",
-      "parentSliceId": "rmg-overworld-quality-closure-20260918",
-      "classification": "implementation_slice",
-      "source": "PLAN.md",
-      "sourceDocs": [
-        "project.md",
-        "docs/lessons-learned.md",
-        "docs/generated-overworld-quality-closure.md"
-      ],
-      "status": "in_progress",
-      "targets": [
-        "scripts/core/OverworldRules.gd",
-        "scripts/persistence/GeneratedNeutralEncounterRules.gd",
-        "native/source-backed generation owners if proved necessary"
-      ],
-      "validation": [
-        "Real reward and enemy routes including portals/cleared objects",
-        "Neutral composition and combat tests",
-        "Native retained payload/private-state checks for affected scope",
-        "Deterministic save replay"
-      ],
-      "completionCriteria": [
-        "Concrete neutral/guard progression defects corrected",
-        "Artifacts/sites are reachable through intended challenges",
-        "No hidden native recovery gaps or unsupported universal pacing claims"
-      ],
-      "nonGoals": [
-        "No blanket guard multiplier, day lock, cache reinjection, retry search or guessed native placement"
-      ],
-      "updatedAt": "2026-09-18T06:33:16Z",
-      "startedAt": "2026-09-18T05:25:05Z",
-      "notes": "Internal site defenders now control exact entrances; native guards/source masks unchanged. Real battle and 81295-check exploration coverage passes. Next: same-configuration original/private-state proof for historical Weak three-player Small seed generated-density-distribution-10184-homm3_small at 0x4a9f1c/0x4aa9b7/0x4aa3e9 and candidate vector +0x10f4/+0x10f8, then broader portal/enemy progression. Two Small density thresholds still fail; no heuristic fill."
-    },
-    {
-      "id": "rmg-overworld-quality-acceptance-20260918",
-      "title": "Integrated Overworld Quality Acceptance",
-      "phase": "phase-6-production-alpha-layer",
-      "parentSliceId": "rmg-overworld-quality-closure-20260918",
-      "classification": "validation_and_adoption_gate",
-      "source": "PLAN.md",
-      "sourceDocs": [
-        "project.md",
-        "docs/generated-overworld-quality-closure.md"
-      ],
-      "status": "in_progress",
-      "targets": [
-        "Python-owned focused gameplay regression",
-        "Linux/Windows export and package acceptance",
-        "PLAN.md",
-        "ops/progress.json"
-      ],
-      "validation": [
-        "Medium/Large actual play and Small/water/level regression",
-        "python3 -B tests/validate_repo.py",
-        "python3 -B tests/packaging_linux_export_smoke.py",
-        "python3 -B tests/packaging_windows_export_smoke.py",
-        "Package parity, visual inspection, git diff --check and git status --short"
-      ],
-      "completionCriteria": [
-        "All implementation requirements pass consolidated source/platform/gameplay/visual gates",
-        "Validated coherent work pushed and disposable task outputs cleaned"
-      ],
-      "nonGoals": [
-        "No treating missing historical evidence as passed or new reports as gameplay implementation"
-      ],
-      "updatedAt": "2026-09-18T06:33:16Z",
-      "startedAt": "2026-09-18T05:41:38Z",
-      "notes": "Correction batch passes source/Linux/Windows gameplay, real rendered Windows ground, exploration, scale/scenery/neutral, native boundary/pool, repository and both exports/parity. Four water/layer cases and two retained native payload references pass. Parent acceptance remains open: two Small opening density thresholds, matching private-state proof and broader enemy/portal pacing. No full-goal or release-ready claim."
-    }
-  ],
+  "actionableNextTasks": [],
   "historicalNativeRmgRecoverySnapshot": {
     "alignmentCheckpoints": [
       {
@@ -16684,14 +16611,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Guarded portal runtime correction remains platform-validated at 936b772c. Medium Normal catalog-auto full match now accepted: day68 victory, 19 battles/reports, 1035 capacity-safe actions, actual artifacts/sites and complete opening/mid/terminal save-resume. Corrected test-driver extra post-battle activation; exact real saved-state replay and 1280px victory visual pass, as do 15 unit tests and repository validation. No shipped runtime/native generation change in this continuation. Large same-save match remains active; no parent completion claim. Final packages, saves, caches, RMG and unrelated files retained.",
+  "currentNotes": "Generated-overworld quality parent and all four children completed against the source-backed final audit. Corrected playable content/artifact rewards, original-art readability and ordinary/portal guard routing are platform-validated. Medium day68 and Large day87 real victories have 52 battles/reports, 2694 capacity-safe actions and complete saves. Exact Windows1280/Linux1920 terminal replays inspected. Final repository validation and 30 Python tests pass; cleanup preserves final packages/evidence, saves, caches, RMG and unrelated files. No next slice selected; no whole-generator parity or release-ready claim.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "rmg-guarded-exploration-closure-20260918",
-  "currentSliceId": "rmg-guarded-exploration-closure-20260918",
-  "currentSliceNotes": "Medium real match now wins day68 after original portal defenders, rival field army and enemy town assault; 19 real battles/reports. Corrected test-driver extra activation after battle, with exact same-square real saved-state replay passing. Runtime/native generation unchanged from platform-validated correction. Large ongoing through additional artifacts and sites; full parent still open.",
-  "currentSliceStatus": "in_progress",
-  "currentSliceTitle": "Guarded Exploration Closure",
-  "currentSliceUpdatedAt": "2026-09-18T09:27:55Z",
+  "currentSlice": "rmg-overworld-quality-closure-20260918",
+  "currentSliceId": "rmg-overworld-quality-closure-20260918",
+  "currentSliceNotes": "All four implemented children accepted: corrected guarded-site/artifact rewards and portable pickups, original-art/scenery/ground/road readability, real guard/portal battle routing and persistent aftermath, Medium/Large complete-match and Linux/Windows acceptance. No native placement/quantity/RNG changes, arbitrary density tuning, universal parity or release-ready claim. Source-backed final audit: docs/generated-overworld-quality-closure.md.",
+  "currentSliceStatus": "completed",
+  "currentSliceTitle": "Generated Overworld Quality Closure",
+  "currentSliceUpdatedAt": "2026-09-18T10:46:09Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -21996,7 +21923,7 @@
       }
     }
   },
-  "guardrailNote": "Owner-selected quality closure is unfinished. Trace actual playable/visible artifacts, sites and neutrals before correcting adoption or presentation; native phase changes require recovered private-state proof, not density tuning.",
+  "guardrailNote": "Owner-selected generated-overworld quality closure is complete for the documented source/platform/full-match scope, not universal seed pacing or release readiness. Any future native phase changes still require recovered private-state proof, not density tuning.",
   "lastValidation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",
@@ -22387,7 +22314,7 @@
         "docs/generated-overworld-quality-closure.md",
         "docs/rmg-exploration-and-guarded-routes.md"
       ],
-      "status": "in_progress",
+      "status": "completed",
       "childSliceIds": [
         "rmg-playable-object-presence-20260918",
         "art-overworld-comparison-readability-20260918",
@@ -22408,7 +22335,10 @@
       "nonGoals": [
         "No native density/RNG/topology tuning without recovered phase/private-state proof",
         "No unrelated UI, copied assets or release-ready claims"
-      ]
+      ],
+      "updatedAt": "2026-09-18T10:46:09Z",
+      "completedAt": "2026-09-18T10:46:09Z",
+      "notes": "All four implemented children accepted: corrected guarded-site/artifact rewards and portable pickups, original-art/scenery/ground/road readability, real guard/portal battle routing and persistent aftermath, Medium/Large complete-match and Linux/Windows acceptance. No native placement/quantity/RNG changes, arbitrary density tuning, universal parity or release-ready claim. Source-backed final audit: docs/generated-overworld-quality-closure.md."
     },
     {
       "id": "rmg-playable-object-presence-20260918",
@@ -22497,7 +22427,7 @@
         "docs/lessons-learned.md",
         "docs/generated-overworld-quality-closure.md"
       ],
-      "status": "in_progress",
+      "status": "completed",
       "targets": [
         "scripts/core/OverworldRules.gd",
         "scenes/overworld/OverworldShell.gd",
@@ -22520,9 +22450,10 @@
       "nonGoals": [
         "No blanket guard multiplier, day lock, cache reinjection, retry search or guessed native placement"
       ],
-      "updatedAt": "2026-09-18T09:27:55Z",
+      "updatedAt": "2026-09-18T10:44:01Z",
       "startedAt": "2026-09-18T05:25:05Z",
-      "notes": "Medium real match now wins day68 after original portal defenders, rival field army and enemy town assault; 19 real battles/reports. Corrected test-driver extra activation after battle, with exact same-square real saved-state replay passing. Runtime/native generation unchanged from platform-validated correction. Large ongoing through additional artifacts and sites; full parent still open."
+      "notes": "Implemented ordinary guard targeting/cached battle entry and hostile portal arrival/aftermath; exact source/Linux/Windows regressions pass. Actual Medium victory day68 (19 battles/reports) and Large victory day87 (33 battles/reports), original portal/entrance guards, rival field hosts and town assaults, earned artifacts/sites and complete save/resume. No injected outcome or native generation changes. Evidence: docs/generated-overworld-quality-closure.md.",
+      "completedAt": "2026-09-18T10:44:01Z"
     },
     {
       "id": "rmg-overworld-quality-acceptance-20260918",
@@ -22535,7 +22466,7 @@
         "project.md",
         "docs/generated-overworld-quality-closure.md"
       ],
-      "status": "in_progress",
+      "status": "completed",
       "targets": [
         "Python-owned focused gameplay regression",
         "Linux/Windows export and package acceptance",
@@ -22556,9 +22487,10 @@
       "nonGoals": [
         "No treating missing historical evidence as passed or new reports as gameplay implementation"
       ],
-      "updatedAt": "2026-09-18T09:27:55Z",
+      "updatedAt": "2026-09-18T10:46:09Z",
       "startedAt": "2026-09-18T05:41:38Z",
-      "notes": "Medium Normal catalog-auto complete match accepted: day68 victory, 19 battles/reports, 1035 capacity-safe actions, actual artifacts/sites and complete opening/mid/terminal saves. Rendered terminal and exact guard single-intent replay pass; 15 unit tests and repository validation pass. Runtime unchanged from accepted Linux/Windows packages. Large same-save continuation remains active; no parent completion claim."
+      "notes": "Final acceptance passed: real Medium day68/Large day87 victories, 19/33 battles and casualty reports, 1035/1659 capacity-safe actions, complete opening/mid/terminal save-resume. Exact Windows1280/ Linux1920 terminal replays inspected. Final exports/generated gameplay/parity and existing content/guard/scenery/Small/water/layer regressions pass. Final validate_repo exit0; 30 Python tests and diff check pass. Cleanup found no further safe disposable files; required evidence, saves/caches/RMG and unrelated files preserved. See docs/generated-overworld-quality-closure.md.",
+      "completedAt": "2026-09-18T10:46:09Z"
     },
     {
       "phase": "phase-6-production-alpha-layer",
@@ -114060,9 +113992,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Owner-directed generated-overworld quality closure remains active. Restored guarded sites/portable pickups and readable scenery, corrected guard targeting/cached battle entry and hostile portal arrival/aftermath. Platform validation passes. Medium Normal catalog-auto now has a genuine day68 victory with complete save/resume and 19 battles/reports; its driver no longer double-activates after combat. Large same-save continuation remains active; no whole-parent, native-generator-parity or release-ready claim.",
+  "summary": "Owner-directed generated-overworld quality closure completed: restored guarded-site/artifact rewards and portable pickups, improved original-art scenery/ground/road readability, fixed guard targeting/cached battle entry and hostile portal arrival/aftermath. Real Medium/Large victories, complete saves, 52 battles/reports, source/Linux/Windows and visual acceptance, repository validation and cleanup pass. Native generation is unchanged; broader pre-alpha/release and universal parity limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-09-18T09:27:55Z",
+  "updatedAt": "2026-09-18T10:46:09Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",
