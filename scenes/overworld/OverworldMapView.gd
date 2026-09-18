@@ -44,6 +44,9 @@ const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 const Motion = preload("res://scenes/overworld/OverworldMotion.gd")
 const SceneryBatch = preload("res://scenes/overworld/OverworldSceneryBatch.gd")
 const GroundSurface = preload("res://scenes/overworld/OverworldGroundSurface.gd")
+const ActorStyle = preload("res://scenes/overworld/OverworldActorStyle.gd")
+var _actor_style := ActorStyle.new()
+var _actor_asset_ids: Dictionary = {}
 var _ground_background_layer: Control
 var _ground_surface: TextureRect
 
@@ -283,13 +286,13 @@ const HERO_GROUNDING_MODEL := "hero_foot_contact_without_base_ellipse"
 const HERO_ANCHOR_STYLE := "hero_foot_contact_shadow"
 const HERO_DEPTH_CUE_MODEL := "hero_foot_contact_shadow_with_boot_occlusion"
 const HERO_FIELD_LAYOUT_MODE := "full_tile_world_hero"
-const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "compact_town_footprint_visitor"
-const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.86
-const HERO_SPRITE_LIFT_FACTOR := 0.25
+const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "full_size_town_entrance_visitor"
+const HERO_FIELD_SPRITE_EXTENT_FACTOR := 1.0
+const HERO_SPRITE_LIFT_FACTOR := 0.50
 const HERO_GROUND_ANCHOR_Y_FACTOR := 0.72
-const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 0.76
-const HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR := 0.68
-const HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR := 0.61
+const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 1.0
+const HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR := HERO_FIELD_SPRITE_EXTENT_FACTOR
+const HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR := 0.50
 const WORLD_SPRITE_SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"
 const TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR := 0.003
 const TOWN_SPRITE_SILHOUETTE_MIN_PX := 0.55
@@ -4226,6 +4229,23 @@ func _draw_sprite_silhouette_outline(texture: Texture2D, rect: Rect2, color: Col
 	]:
 		_canvas_draw_texture_rect(texture, Rect2(rect.position + direction * width, rect.size), false, color)
 
+func _actor_sprite_payload(asset_id: String, texture: Texture2D, ground: Vector2, extent: float) -> Dictionary:
+	return ActorStyle.layout(_object_texture_visible_region(asset_id, texture), ground, extent)
+
+func _draw_actor_art(payload: Dictionary, remembered: bool) -> void:
+	var texture: Texture2D = payload.draw_texture
+	var rect: Rect2 = payload.draw_rect
+	var mask := _actor_style.alpha_mask(texture)
+	if mask != null:
+		var width := ActorStyle.edge_width(maxf(rect.size.x, rect.size.y))
+		var dark := Color(0.055, 0.065, 0.060, 0.62 if remembered else 0.82)
+		var light := Color(0.55, 0.66, 0.66, 0.36) if remembered else Color(0.94, 0.89, 0.73, 0.55)
+		for direction in ActorStyle.DIRECTIONS:
+			_canvas_draw_texture_rect(mask, Rect2(rect.position + direction * width, rect.size), false, dark)
+		for direction in ActorStyle.DIRECTIONS:
+			_canvas_draw_texture_rect(mask, Rect2(rect.position + direction * width * 0.50, rect.size), false, light)
+	_canvas_draw_texture_rect(texture, rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+
 func _town_sprite_draw_payload(asset_id: String, texture: Texture2D, footprint_rect: Rect2, single_tile_extent_override: float = 0.0) -> Dictionary:
 	var footprint := _object_profile_footprint(_town_object_profile())
 	var footprint_extent := minf(footprint_rect.size.x, footprint_rect.size.y)
@@ -4289,14 +4309,15 @@ func _draw_preferred_encounter_landmark(encounter: Dictionary, rect: Rect2, reme
 
 func _draw_encounter_commander_sprite(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	var hero := _enemy_commander_hero_template(encounter)
-	var texture = _object_texture_for_asset(_hero_sprite_asset_id(hero))
+	var asset_id := _hero_sprite_asset_id(hero)
+	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
 		return false
 	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
 	var layout := _hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)
-	var icon_rect: Rect2 = layout.get("icon_rect", Rect2())
-	icon_rect.position += _moving_sprite_offset
-	_canvas_draw_texture_rect(texture, icon_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	var ground: Vector2 = anchor.get("center", rect.get_center())
+	_draw_actor_art(_actor_sprite_payload(asset_id, texture, ground + _moving_sprite_offset,
+		minf(rect.size.x, rect.size.y) * HERO_FIELD_SPRITE_EXTENT_FACTOR), remembered)
 	_draw_hostile_actor_marker(layout.get("marker_profile", {}))
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)
 	return true
@@ -4309,20 +4330,22 @@ func _draw_encounter_identity_landmark(encounter: Dictionary, rect: Rect2, remem
 	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
 	var layout := _hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered, OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES)
 	var icon_rect: Rect2 = layout.get("icon_rect", Rect2())
-	var painted := _object_painted_sprite_draw_payload(asset_id, texture, icon_rect.get_center(), icon_rect.size.x)
-	_canvas_draw_texture_rect(painted.draw_texture, painted.draw_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	# Creature feet use the ground anchor; authored camps/landmarks retain their layout.
+	var painted := _actor_sprite_payload(asset_id, texture, anchor.get("center", rect.get_center()), icon_rect.size.x) if _actor_asset_ids.has(asset_id) else _object_painted_sprite_draw_payload(asset_id, texture, icon_rect.get_center(), icon_rect.size.x)
+	_draw_actor_art(painted, remembered)
 	_draw_hostile_actor_marker(layout.get("marker_profile", {}))
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)
 	return true
 
 func _draw_encounter_faction_landmark(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
-	var texture = _object_texture_for_asset(_encounter_faction_asset_id(encounter))
+	var asset_id := _encounter_faction_asset_id(encounter)
+	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
 		return false
 	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
 	var layout := _hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered, OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES)
 	var icon_rect: Rect2 = layout.get("icon_rect", Rect2())
-	_canvas_draw_texture_rect(texture, icon_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	_draw_actor_art(_actor_sprite_payload(asset_id, texture, anchor.get("center", rect.get_center()), icon_rect.size.x), remembered)
 	_draw_hostile_actor_marker(layout.get("marker_profile", {}))
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)
 	return true
@@ -4337,7 +4360,7 @@ func _draw_encounter_unit_icon(encounter: Dictionary, rect: Rect2, remembered: b
 	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
 	var layout := _hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)
 	var icon_rect: Rect2 = layout.get("icon_rect", Rect2())
-	_canvas_draw_texture_rect(texture, icon_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	_draw_actor_art(_actor_sprite_payload(path, texture, anchor.get("center", rect.get_center()), icon_rect.size.x), remembered)
 	_draw_hostile_actor_marker(layout.get("marker_profile", {}))
 	_draw_procedural_contact_marks(anchor, "encounter", remembered)
 	return true
@@ -5140,7 +5163,8 @@ func _draw_hero_marker(rect: Rect2, tile: Vector2i, show_reserve_count: bool = t
 	_draw_hero_reserve_badge(rect, tile, show_reserve_count)
 
 func _draw_hero_sprite(hero: Dictionary, rect: Rect2, tile: Vector2i) -> bool:
-	var texture = _object_texture_for_asset(_hero_sprite_asset_id(hero))
+	var asset_id := _hero_sprite_asset_id(hero)
+	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
 		return false
 	var anchor := _draw_hero_grounding_anchor(rect, tile)
@@ -5150,17 +5174,8 @@ func _draw_hero_sprite(hero: Dictionary, rect: Rect2, tile: Vector2i) -> bool:
 	if _moving_sprite_factor >= 0.0:
 		sprite_factor = _moving_sprite_factor
 	var sprite_extent := maxf(16.0, extent * sprite_factor)
-	var sprite_center := ground_center + Vector2(0.0, -extent * HERO_SPRITE_LIFT_FACTOR)
-	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
-	sprite_rect.position += _moving_sprite_offset
 	_draw_hero_command_pennant(_hero_command_pennant_profile(rect, bool(hero.get("is_active", false))))
-	_draw_sprite_silhouette_outline(
-		texture,
-		sprite_rect,
-		HERO_SPRITE_SILHOUETTE_COLOR,
-		maxf(HERO_SPRITE_SILHOUETTE_MIN_PX, extent * HERO_SPRITE_SILHOUETTE_WIDTH_FACTOR)
-	)
-	_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_VISIBLE_MODULATE)
+	_draw_actor_art(_actor_sprite_payload(asset_id, texture, ground_center + _moving_sprite_offset, sprite_extent), false)
 	_draw_hero_foreground_contact(anchor)
 	return true
 
@@ -5292,8 +5307,12 @@ func _hero_draw_layout_payload(rect: Rect2, tile: Vector2i, allow_town_footprint
 	var sprite_extent := maxf(16.0, hero_extent * sprite_factor)
 	var sprite_center := ground_center + Vector2(0.0, -hero_extent * HERO_SPRITE_LIFT_FACTOR)
 	var sprite_rect := Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent))
-	var silhouette_width := maxf(HERO_SPRITE_SILHOUETTE_MIN_PX, hero_extent * HERO_SPRITE_SILHOUETTE_WIDTH_FACTOR)
+	var silhouette_width := ActorStyle.edge_width(sprite_extent)
 	var hero := _hero_presentation_entry(tile)
+	var asset_id := _hero_sprite_asset_id(hero)
+	var texture: Texture2D = _object_texture_for_asset(asset_id)
+	if texture != null:
+		sprite_rect = _actor_sprite_payload(asset_id, texture, ground_center, sprite_extent).draw_rect
 	var command_pennant := _hero_command_pennant_validation_payload(_hero_command_pennant_profile(hero_rect, bool(hero.get("is_active", false))), rect)
 	return {
 		"mode": HERO_TOWN_FOOTPRINT_LAYOUT_MODE if uses_town_footprint_layout else HERO_FIELD_LAYOUT_MODE,
@@ -5303,7 +5322,9 @@ func _hero_draw_layout_payload(rect: Rect2, tile: Vector2i, allow_town_footprint
 		"hero_rect_extent_fraction": hero_extent / tile_extent if tile_extent > 0.0 else 0.0,
 		"sprite_extent_fraction": sprite_extent / tile_extent if tile_extent > 0.0 else 0.0,
 		"sprite_contained_in_tile": rect.encloses(sprite_rect),
-		"sprite_silhouette_model": WORLD_SPRITE_SILHOUETTE_MODEL,
+		"sprite_grounded": is_equal_approx(sprite_rect.end.y, ground_center.y),
+		"sprite_visual_envelope_valid": maxf(sprite_rect.size.x, sprite_rect.size.y) <= tile_extent + 0.001 and is_equal_approx(sprite_rect.get_center().x, ground_center.x) and is_equal_approx(sprite_rect.end.y, ground_center.y),
+		"sprite_silhouette_model": ActorStyle.MODEL,
 		"sprite_silhouette_width_px": silhouette_width,
 		"sprite_silhouette_contained_in_tile": rect.encloses(sprite_rect.grow(silhouette_width)),
 		"command_pennant": command_pennant,
@@ -8013,7 +8034,7 @@ func _hero_presentation_payload(tile: Vector2i, explored: bool) -> Dictionary:
 		"reserve_count": _reserve_hero_count(tile),
 		"grounding_model": HERO_GROUNDING_MODEL,
 		"depth_cue_model": HERO_DEPTH_CUE_MODEL,
-		"sprite_silhouette_model": WORLD_SPRITE_SILHOUETTE_MODEL,
+		"sprite_silhouette_model": ActorStyle.MODEL,
 		"command_pennant_model": HERO_COMMAND_PENNANT_MODEL,
 		"layout": layout,
 	}
@@ -11086,6 +11107,8 @@ func _road_tile_payload(tile: Vector2i) -> Dictionary:
 	return _road_tiles.get(_tile_key(tile), {})
 
 func _load_overworld_art_manifest() -> void:
+	_actor_style.clear()
+	_actor_asset_ids.clear()
 	_scenery_index_valid = false
 	_invalidate_state_cache("art_manifest_reloaded")
 	_overworld_art_manifest.clear()
@@ -11258,6 +11281,32 @@ func _load_overworld_art_manifest() -> void:
 	_load_decorative_object_sprite_manifest(String(_overworld_art_manifest.get("decorative_object_sprite_manifest", "")))
 	_load_map_object_sprite_manifest(String(_overworld_art_manifest.get("map_object_sprite_manifest", "")))
 	_load_object_raster_density()
+	_load_actor_sprites()
+
+func _load_actor_sprites() -> void:
+	# Explicit presentation replacement: historical source records remain intact.
+	var data := ContentService.load_json("res://art/overworld/actor_sprites.json")
+	if data.get("schema_id", "") != "overworld_actor_sprites_v1":
+		push_error("Missing or invalid overworld actor manifest.")
+		return
+	var assets: Dictionary = data.get("assets", {})
+	if assets.is_empty():
+		push_error("Overworld actor manifest has no original sprites.")
+		return
+	for asset_id in assets:
+		var entry: Dictionary = assets[asset_id]
+		# Resolve the immutable source identity, before other presentation layers.
+		var original: Dictionary = _overworld_art_manifest.get("object_assets", {}).get(asset_id, {})
+		if original.get("path", "") != entry.get("original_path", "") or original.get("atlas_region", []) != entry.get("original_region", []):
+			push_error("Actor art identity mismatch: " + str(asset_id))
+			continue
+		var path := String(entry.get("path", ""))
+		if not path.begins_with("res://art/overworld/runtime/actors_20260918/") or not ResourceLoader.exists(path):
+			push_error("Missing original actor art: " + str(asset_id))
+			continue
+		_object_asset_paths[asset_id] = path
+		_object_asset_regions.erase(asset_id)
+		_actor_asset_ids[asset_id] = true
 
 func _load_object_raster_density() -> void:
 	# Historical atlases keep their source/provenance contracts. This explicit

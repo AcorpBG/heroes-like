@@ -36708,7 +36708,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         "const TOWN_SPRITE_WIDTH_CAP_TILES := 2.90",
         "const TOWN_SPRITE_HEIGHT_CAP_TILES := 3.72",
         "const TOWN_SPRITE_GROUND_CLEARANCE_TILES := 0.18",
-        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.86",
+        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 1.0",
         "const OBJECT_SPRITE_EXTENT_FACTOR := 0.88",
         'const TOWN_PRESENTATION_MODEL := "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry"',
     ):
@@ -36723,8 +36723,8 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         "const SMALL_MAP_MATTE_MIN_GUTTER := 48.0",
         'const SCALE_HIERARCHY_MODEL := "classic_readable_semantic_landmark_bands_v6"',
         "const TOWN_VISUAL_EXTENT_TILES := 3.72",
-        "const HERO_FIELD_VISUAL_EXTENT_TILES := 0.86",
-        "const HERO_TOWN_VISITOR_VISUAL_EXTENT_TILES := 0.5168",
+        "const HERO_FIELD_VISUAL_EXTENT_TILES := 1.0",
+        "const HERO_TOWN_VISITOR_VISUAL_EXTENT_TILES := 1.0",
         'var metrics: Dictionary = map_view.call("validation_view_metrics")',
         "var expected_capped := uncapped_extent > MAX_SMALL_MAP_TILE_EXTENT",
         "viewport_rect.get_center().distance_to(board_rect.get_center()) <= 1.5",
@@ -36763,7 +36763,7 @@ def validate_overworld_small_map_visual_scale(errors: list[str]) -> None:
         'sprite_rect.size.x > tile_extent + 0.01',
         'var expected_extent := HERO_TOWN_VISITOR_VISUAL_EXTENT_TILES if bool(layout.get("town_footprint_colocated", false)) else HERO_FIELD_VISUAL_EXTENT_TILES',
         'float(layout.get("sprite_extent_fraction", 0.0)), expected_extent',
-        'String(layout.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline"',
+        'String(layout.get("sprite_silhouette_model", "")) != "painted_bounds_grounded_actor_dual_alpha_edge"',
         'String(layout.get("command_pennant", {}).get("model", "")) != "compact_player_command_flag"',
     ):
         ensure(token in report_text, errors, f"Focused scale report must retain exact logical/object hierarchy gate: {token}")
@@ -37382,7 +37382,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_DEPTH_CAP_STEP_TILES := 0.16",
         "const MULTI_TILE_INTERACTIVE_SPRITE_EXTENT_ABSOLUTE_CAP_TILES := 1.35",
         "const OBJECT_VISIBLE_FOOTPRINT_INSET_TILES := 0.02",
-        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.86",
+        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 1.0",
         "const TOWN_SPRITE_EXTENT_FACTOR := 1.24",
         "const TOWN_SPRITE_GROUND_CLEARANCE_TILES := 0.18",
     ):
@@ -37657,7 +37657,7 @@ def validate_generated_map_object_visual_coherence(errors: list[str]) -> None:
         'float(encounter.get("visible_extent_tiles", 0.0)), 0.88',
         'float(blocker.get("visible_extent_tiles", 0.0)), 0.92',
         'float(waypoint.get("visible_extent_tiles", 0.0)), 0.78',
-        'float(hero.get("sprite_extent_fraction", 0.0)), 0.86',
+        'float(hero.get("sprite_extent_fraction", 0.0)), 1.0',
         'float(service.get("visible_extent_tiles", 0.0)), 0.82',
         'float(objective.get("visible_extent_tiles", 0.0)), 0.94',
         'float(wide_service.get("min_tiles", 0.0)), 0.88',
@@ -49817,11 +49817,13 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ensure(town_sprite_block.find("_draw_sprite_silhouette_outline(") < town_sprite_block.find("_canvas_draw_texture_rect(draw_texture, sprite_rect, false"), errors, "Town silhouette must draw immediately behind the unchanged town sprite")
     for token in (
         "_draw_hero_command_pennant(_hero_command_pennant_profile(rect, bool(hero.get(\"is_active\", false))))",
-        "_draw_sprite_silhouette_outline(",
-        "HERO_SPRITE_SILHOUETTE_COLOR",
+        "_draw_actor_art(_actor_sprite_payload(",
+        "ground_center + _moving_sprite_offset",
     ):
         ensure(token in sprite_block, errors, f"Hero sprite is missing command-flag/silhouette readability: {token}")
-    ensure(sprite_block.find("_draw_hero_command_pennant(") < sprite_block.find("_draw_sprite_silhouette_outline(") < sprite_block.find("_canvas_draw_texture_rect(texture, sprite_rect, false"), errors, "Hero command flag and silhouette must draw behind the unchanged sprite")
+    ensure(sprite_block.find("_draw_hero_command_pennant(") < sprite_block.find("_draw_actor_art("), errors, "Hero command flag must draw behind the outlined original actor")
+    actor_draw = function_block(map_text, "_draw_actor_art")
+    ensure(actor_draw.find("_actor_style.alpha_mask(texture)") < actor_draw.find("_canvas_draw_texture_rect(texture, rect"), errors, "Alpha-derived contrast edge must draw behind the original actor")
     ensure("_draw_hero_command_pennant(_hero_command_pennant_profile(hero_rect, bool(hero.get(\"is_active\", false))))" in marker_block, errors, "Procedural hero fallback must retain the same command flag")
     for token in (
         "var owner_color := FrontierVisualKitScript.semantic_color(\"player\", PLAYER_TOWN_COLOR)",
@@ -49874,20 +49876,20 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     ensure('var hero_rect := _hero_draw_rect(rect, tile, hero_override.is_empty())' in marker_block, errors, "Hero draw path must derive town-entry compaction only for static indexed heroes")
     ensure(marker_block.find("var hero_rect :=") < marker_block.find("if _draw_hero_sprite(hero, hero_rect, tile):") < marker_block.find("var anchor := _draw_hero_grounding_anchor(hero_rect, tile)"), errors, "Hero draw path must apply the same resolved visitor rect to imported and procedural heroes before grounding")
     for token in (
-        "_object_texture_for_asset(_hero_sprite_asset_id(hero))", "_draw_hero_grounding_anchor(rect, tile)",
+        "_object_texture_for_asset(asset_id)", "_draw_hero_grounding_anchor(rect, tile)",
         "var sprite_factor := HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR if not _town_presentation_at(tile).is_empty() else HERO_FIELD_SPRITE_EXTENT_FACTOR",
         "var sprite_extent := maxf(16.0, extent * sprite_factor)",
-        "_canvas_draw_texture_rect(texture, sprite_rect, false, OBJECT_SPRITE_VISIBLE_MODULATE)",
+        "_draw_actor_art(_actor_sprite_payload(asset_id, texture, ground_center + _moving_sprite_offset, sprite_extent), false)",
         "_draw_hero_foreground_contact(anchor)", "return true",
     ):
         ensure(token in sprite_block, errors, f"Faction hero sprite must retain existing grounding/contact ownership: {token}")
     for token in (
         'const HERO_FIELD_LAYOUT_MODE := "full_tile_world_hero"',
-        'const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "compact_town_footprint_visitor"',
-        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 0.86",
-        "const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 0.76",
-        "const HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR := 0.68",
-        "const HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR := 0.61",
+        'const HERO_TOWN_FOOTPRINT_LAYOUT_MODE := "full_size_town_entrance_visitor"',
+        "const HERO_FIELD_SPRITE_EXTENT_FACTOR := 1.0",
+        "const HERO_TOWN_FOOTPRINT_VISITOR_RECT_EXTENT_FACTOR := 1.0",
+        "const HERO_TOWN_FOOTPRINT_VISITOR_SPRITE_EXTENT_FACTOR := HERO_FIELD_SPRITE_EXTENT_FACTOR",
+        "const HERO_TOWN_FOOTPRINT_VISITOR_RECT_CENTER_Y_FACTOR := 0.50",
     ):
         ensure(token in map_text, errors, f"Town-footprint hero composition constant drifted: {token}")
     for token in (
@@ -49907,7 +49909,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         '"mode": HERO_TOWN_FOOTPRINT_LAYOUT_MODE if uses_town_footprint_layout else HERO_FIELD_LAYOUT_MODE',
         '"town_footprint_colocated": uses_town_footprint_layout', '"hero_rect": _rect_payload(hero_rect)',
         '"sprite_rect": _rect_payload(sprite_rect)', '"sprite_contained_in_tile": rect.encloses(sprite_rect)',
-        '"sprite_silhouette_model": WORLD_SPRITE_SILHOUETTE_MODEL',
+        '"sprite_silhouette_model": ActorStyle.MODEL',
         '"sprite_silhouette_contained_in_tile": rect.encloses(sprite_rect.grow(silhouette_width))',
         '"command_pennant": command_pennant',
     ):
@@ -50015,7 +50017,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         '"uses_identity_sprite": hero_id != "" and String(_hero_identity_asset_ids.get(hero_id, "")) == sprite_asset_id',
         '"uses_faction_sprite": faction_id != ""', '"uses_procedural_fallback": sprite_asset_id == ""',
         '"reserve_count": _reserve_hero_count(tile)', '"grounding_model": HERO_GROUNDING_MODEL', '"depth_cue_model": HERO_DEPTH_CUE_MODEL',
-        '"sprite_silhouette_model": WORLD_SPRITE_SILHOUETTE_MODEL', '"command_pennant_model": HERO_COMMAND_PENNANT_MODEL',
+        '"sprite_silhouette_model": ActorStyle.MODEL', '"command_pennant_model": HERO_COMMAND_PENNANT_MODEL',
         '"tile": {"x": tile.x, "y": tile.y}', '"layout": layout',
     ):
         ensure(token in payload_block, errors, f"Hero faction validation payload is missing detached evidence: {token}")
@@ -50027,7 +50029,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     for token in (
         'const SCENARIO_ID := "river-pass"',
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
-        'const SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"',
+        'const SILHOUETTE_MODEL := "painted_bounds_grounded_actor_dual_alpha_edge"',
         'const COMMAND_PENNANT_MODEL := "compact_player_command_flag"',
         'const EXPECTED_HERO_ASSETS := {', 'const PRESENTATION_HERO_IDS := [', 'const ALL_SCENARIO_STARTS := {', 'const TAVERN_VANGUARD_CASES := [', 'const TAVERN_SPECIALIST_CASES := [', 'const TAVERN_FIELD_COMMANDER_CASES := [', 'const TAVERN_STRATEGIC_OFFICER_CASES := [', 'const TAVERN_RITUAL_SCHOLAR_CASES := [', 'const TAVERN_ARCANE_CONTROLLER_CASES := [', 'const TAVERN_FINAL_ROSTER_CASES := [',
         'var scenario_starts := _validate_signature_scenario_starts()',
@@ -50053,7 +50055,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'seen_factions.size() == 6 and seen_assets.size() == PRESENTATION_HERO_IDS.size() and active_count == 1',
         'var moving_layout: Dictionary = map_view.call("validation_hero_draw_layout", active_tile, true)',
         'String(moving_layout.get("mode", "")) == "full_tile_world_hero"',
-        'is_equal_approx(float(moving_layout.get("sprite_extent_fraction", 0.0)), 0.64)',
+        'is_equal_approx(float(moving_layout.get("sprite_extent_fraction", 0.0)), 1.0)',
         'String(moving_layout.get("sprite_silhouette_model", "")) == SILHOUETTE_MODEL',
         'String(moving_pennant.get("model", "")) == COMMAND_PENNANT_MODEL',
         'var focus_exact: Dictionary = _validate_focus_layouts(map_view, exact)',
@@ -50087,11 +50089,11 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'String(profile.get("sprite_silhouette_model", "")) == SILHOUETTE_MODEL',
         'String(command_pennant.get("shape_id", "")) == ("active_square_fold" if bool(profile.get("is_active", false)) else "reserve_swallowtail")',
         'bool(command_pennant.get("active", false)) == bool(profile.get("is_active", false))',
-        'String(layout.get("mode", "")) == "compact_town_footprint_visitor"',
-        'is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 0.76)',
-        'is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.4484)',
-        'is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.64)',
-        'tile_rect.encloses(hero_rect) and tile_rect.encloses(sprite_rect)',
+        'String(layout.get("mode", "")) == "full_size_town_entrance_visitor"',
+        'is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 1.0)',
+        'is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 1.0)',
+        'is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 1.0)',
+        'tile_rect.encloses(hero_rect) and is_equal_approx(sprite_rect.end.y, tile_rect.position.y + tile_rect.size.y * 0.72)',
         'String(town_presentation.get("presentation_model", "")) == "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry"',
         'bool(tile_presentation.get("has_town_non_entry", false))',
         'String(town_presentation.get("tile_role", "")) == "blocked_non_entry_footprint"',
@@ -50101,7 +50103,7 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
         'first_hero["id"] = "hero_missing_faction_sprite_fixture"',
         'String(fallback.get("sprite_asset_id", "")) == ""', 'bool(fallback.get("uses_procedural_fallback", false))',
         'String(fallback.get("command_pennant_model", "")) == COMMAND_PENNANT_MODEL',
-        'String(fallback.get("layout", {}).get("mode", "")) == "compact_town_footprint_visitor"',
+        'String(fallback.get("layout", {}).get("mode", "")) == "full_size_town_entrance_visitor"',
         'session.from_dict(authority_before)', 'restored_profiles == profiles and restored_focus_exact and session.to_dict() == authority_before',
         'var viewport_rect: Rect2 = get_viewport().get_visible_rect()', 'viewport_rect.encloses(shell_rect)',
         'SessionStateStore.SAVE_VERSION', 'print("OVERWORLD_FACTION_HERO_SPRITE_RUNTIME_REPORT %s"',
@@ -50128,19 +50130,19 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
     for token in (
         'var hero_on_town_footprint := bool(hero_presentation.get("has_town_footprint", false))',
         "if hero_on_town_footprint:",
-        'String(hero_layout.get("mode", "")) != "compact_town_footprint_visitor"',
+        'String(hero_layout.get("mode", "")) != "full_size_town_entrance_visitor"',
         'not bool(hero_layout.get("town_footprint_colocated", false))',
-        'not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 0.76)',
-        'not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 0.4484)',
-        'not bool(hero_layout.get("sprite_contained_in_tile", false))',
+        'not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 1.0)',
+        'not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 1.0)',
+        'not bool(hero_layout.get("sprite_grounded", false))',
         'String(hero_layout.get("mode", "")) != "full_tile_world_hero"',
         'bool(hero_layout.get("town_footprint_colocated", true))',
         'not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 1.0)',
-        'not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 0.64)',
-        'not bool(hero_layout.get("sprite_contained_in_tile", false))',
-        'String(hero_sprite.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline"',
+        'not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 1.0)',
+        'not bool(hero_layout.get("sprite_grounded", false))',
+        'String(hero_sprite.get("sprite_silhouette_model", "")) != "painted_bounds_grounded_actor_dual_alpha_edge"',
         'String(hero_sprite.get("command_pennant_model", "")) != "compact_player_command_flag"',
-        'not bool(hero_layout.get("sprite_silhouette_contained_in_tile", false))',
+        'not bool(hero_layout.get("sprite_visual_envelope_valid", false))',
         'String(hero_command_pennant.get("model", "")) != "compact_player_command_flag"',
         'not bool(hero_command_pennant.get("cloth_contained", false))',
         'map_view.call("validation_tile_focus_layout", hero_tile)',
@@ -54587,11 +54589,12 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
     ensure(all(index >= 0 for index in draw_order) and draw_order == sorted(draw_order), errors, "Encounter drawing must prefer exact commander sprite, exact encounter landmark, faction landmark, unit icon, then mapped/default encounter fallback")
     for token in (
         "_enemy_commander_hero_template(encounter)",
-        "_object_texture_for_asset(_hero_sprite_asset_id(hero))",
+        "var asset_id := _hero_sprite_asset_id(hero)",
+        "_object_texture_for_asset(asset_id)",
         'if not (texture is Texture2D):',
         '_draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)',
         '_hostile_actor_layout(rect, anchor.get("center", rect.get_center()), remembered)',
-        "OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE",
+        "_draw_actor_art(_actor_sprite_payload(asset_id, texture, ground + _moving_sprite_offset,",
         '_draw_hostile_actor_marker(layout.get("marker_profile", {}))',
         '_draw_procedural_contact_marks(anchor, "encounter", remembered)',
         "return true",
@@ -54726,11 +54729,11 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
     for token in (
         'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
         'const EXPECTED_FACTION_ASSETS := {', 'const REPRESENTATIVE_HERO_IDS := {',
-        'const EXPECTED_COMMANDER_ASSETS := {', 'const EXPECTED_COMMANDER_PATHS := {',
+        'const EXPECTED_COMMANDER_ASSETS := {',
         'const EXPECTED_FACTION_ENCOUNTER_ASSETS := {', 'const EXPECTED_FACTION_ENCOUNTER_PATHS := {',
         'const FALLBACK_CASES := ["commanderless", "unknown_hero", "commander_faction_mismatch", "spawned_faction_mismatch"]',
         '"faction_mireclaw": "hero_roster_mireclaw_pell_reedscript"',
-        '"faction_mireclaw": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_mireclaw_pell_reedscript.png"',
+        '"res://art/overworld/runtime/actors_20260918/%s.png" % expected_asset_id',
         'ScenarioFactory.create_session(SCENARIO_ID, "hard", SessionState.LAUNCH_MODE_SKIRMISH)',
         'EnemyAdventureRules.build_raid_commander_state(encounter, hero_id, faction_id, session)',
         'map_view.call("validation_enemy_commander_presentation_profiles")',
@@ -85045,6 +85048,13 @@ def main() -> int:
     errors.extend(validate_original_ground_materials())
     from overworld_object_density_contract import validate as validate_object_raster_density
     errors.extend(validate_object_raster_density())
+    try:
+        actor_spec = importlib.util.spec_from_file_location("overworld_actor_art", ROOT / "tools/prepare_overworld_actor_art.py")
+        actor_module = importlib.util.module_from_spec(actor_spec)
+        actor_spec.loader.exec_module(actor_module)
+        actor_module.validate_assets()
+    except (AssertionError, ValueError, OSError, KeyError) as exc:
+        errors.append(f"Overworld original actor art is incomplete or inconsistent: {exc}")
     ui_frame_path = ROOT / "art/ui/runtime/shared/hud_frame_ornate.png"
     ensure(ui_frame_path.is_file(), errors, "Scenery-first core UI frame is missing")
     if ui_frame_path.is_file():

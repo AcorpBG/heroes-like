@@ -2,7 +2,7 @@ extends Node
 
 const SCENARIO_ID := "river-pass"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
-const SILHOUETTE_MODEL := "eight_direction_alpha_silhouette_outline"
+const SILHOUETTE_MODEL := "painted_bounds_grounded_actor_dual_alpha_edge"
 const COMMAND_PENNANT_MODEL := "compact_player_command_flag"
 const EXPECTED_HERO_ASSETS := {
 	"hero_lyra": "hero_signature_lyra",
@@ -277,9 +277,9 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 	var moving_layout_exact: bool = String(moving_layout.get("mode", "")) == "full_tile_world_hero" \
 		and not bool(moving_layout.get("town_footprint_colocated", true)) \
 		and is_equal_approx(float(moving_layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
-		and is_equal_approx(float(moving_layout.get("sprite_extent_fraction", 0.0)), 0.64) \
+		and is_equal_approx(float(moving_layout.get("sprite_extent_fraction", 0.0)), 1.0) \
 		and String(moving_layout.get("sprite_silhouette_model", "")) == SILHOUETTE_MODEL \
-		and bool(moving_layout.get("sprite_silhouette_contained_in_tile", false)) \
+		and bool(moving_layout.get("sprite_visual_envelope_valid", false)) \
 		and String(moving_pennant.get("model", "")) == COMMAND_PENNANT_MODEL \
 		and bool(moving_pennant.get("active", false)) \
 		and bool(moving_pennant.get("cloth_contained", false)) \
@@ -311,8 +311,8 @@ func _run_viewport(viewport_size: Vector2i) -> Dictionary:
 		and not bool(fallback.get("uses_faction_sprite", true)) \
 		and String(fallback.get("sprite_silhouette_model", "")) == SILHOUETTE_MODEL \
 		and String(fallback.get("command_pennant_model", "")) == COMMAND_PENNANT_MODEL \
-		and String(fallback.get("layout", {}).get("mode", "")) == "compact_town_footprint_visitor" \
-		and bool(fallback.get("layout", {}).get("sprite_contained_in_tile", false))
+		and String(fallback.get("layout", {}).get("mode", "")) == "full_size_town_entrance_visitor" \
+		and bool(fallback.get("layout", {}).get("sprite_grounded", false))
 
 	session.from_dict(authority_before)
 	shell.call("_refresh")
@@ -375,8 +375,7 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 		var hero_id := String(profile.get("hero_id", ""))
 		var faction_id := String(profile.get("faction_id", ""))
 		var expected_asset_id := String(EXPECTED_HERO_ASSETS.get(hero_id, ""))
-		var runtime_group := _hero_runtime_group(expected_asset_id)
-		var expected_path := "res://art/overworld/runtime/heroes/%s/%s.png" % [runtime_group, hero_id]
+		var expected_path := "res://art/overworld/runtime/actors_20260918/%s.png" % expected_asset_id
 		if expected_asset_id == "" or String(profile.get("sprite_asset_id", "")) != expected_asset_id:
 			return {"ok": false, "reason": "identity", "profile": profile}
 		if String(profile.get("sprite_path", "")) != expected_path or not (load(expected_path) is Texture2D):
@@ -398,8 +397,8 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 			and String(profile.get("sprite_silhouette_model", "")) == SILHOUETTE_MODEL \
 			and String(profile.get("command_pennant_model", "")) == COMMAND_PENNANT_MODEL \
 			and String(layout.get("sprite_silhouette_model", "")) == SILHOUETTE_MODEL \
-			and float(layout.get("sprite_silhouette_width_px", 0.0)) >= 1.35 \
-			and bool(layout.get("sprite_silhouette_contained_in_tile", false)) \
+			and float(layout.get("sprite_silhouette_width_px", 0.0)) >= 1.15 \
+			and bool(layout.get("sprite_visual_envelope_valid", false)) \
 			and String(command_pennant.get("model", "")) == COMMAND_PENNANT_MODEL \
 			and bool(command_pennant.get("active", false)) == bool(profile.get("is_active", false)) \
 			and String(command_pennant.get("shape_id", "")) == ("active_square_fold" if bool(profile.get("is_active", false)) else "reserve_swallowtail") \
@@ -423,12 +422,12 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 			var sprite_rect := _rect_from_payload(layout.get("sprite_rect", {}))
 			geometry_exact = geometry_exact \
 				and bool(profile.get("is_active", false)) \
-				and String(layout.get("mode", "")) == "compact_town_footprint_visitor" \
-				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 0.76) \
-				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.4484) \
-				and bool(layout.get("sprite_contained_in_tile", false)) \
-				and tile_rect.encloses(hero_rect) and tile_rect.encloses(sprite_rect) \
-				and float(layout.get("ground_anchor_y_fraction", 0.0)) > 0.75 \
+				and String(layout.get("mode", "")) == "full_size_town_entrance_visitor" \
+				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
+				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 1.0) \
+				and bool(layout.get("sprite_grounded", false)) \
+				and tile_rect.encloses(hero_rect) and is_equal_approx(sprite_rect.end.y, tile_rect.position.y + tile_rect.size.y * 0.72) \
+				and is_equal_approx(float(layout.get("ground_anchor_y_fraction", 0.0)), 0.72) \
 				and bool(tile_presentation.get("has_visible_hero", false)) \
 				and bool(tile_presentation.get("has_town_non_entry", false)) \
 				and String(town_presentation.get("presentation_model", "")) == "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry" \
@@ -440,7 +439,7 @@ func _validate_profiles(profiles: Array, map_view: Node) -> Dictionary:
 			geometry_exact = geometry_exact \
 				and String(layout.get("mode", "")) == "full_tile_world_hero" \
 				and is_equal_approx(float(layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
-				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 0.64)
+				and is_equal_approx(float(layout.get("sprite_extent_fraction", 0.0)), 1.0)
 	return {
 		"ok": seen_factions.size() == 6 and seen_assets.size() == PRESENTATION_HERO_IDS.size() and active_count == 1 and grounding_exact and readability_exact and town_footprint_layout_count == 1 and ordinary_layout_count == PRESENTATION_HERO_IDS.size() - 1 and geometry_exact,
 		"asset_ids": seen_assets.keys(),
@@ -460,7 +459,7 @@ func _validate_identity_mapping(map_view: Node) -> Dictionary:
 		var hero_id := String(hero_id_value)
 		var expected_asset_id := String(EXPECTED_HERO_ASSETS.get(hero_id, ""))
 		var actual_asset_id := String(map_view.call("_hero_sprite_asset_id", ContentService.get_hero(hero_id)))
-		var expected_path := "res://art/overworld/runtime/heroes/%s/%s.png" % [_hero_runtime_group(expected_asset_id), hero_id]
+		var expected_path := "res://art/overworld/runtime/actors_20260918/%s.png" % expected_asset_id
 		if actual_asset_id != expected_asset_id or not (load(expected_path) is Texture2D):
 			return {"ok": false, "hero_id": hero_id, "expected_asset_id": expected_asset_id, "actual_asset_id": actual_asset_id, "expected_path": expected_path}
 		asset_ids.append(actual_asset_id)

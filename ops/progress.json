@@ -16611,14 +16611,14 @@
       "result": "Exact town entrance contract for all 83 sampled native starts; all 21 one-level movement/town/save cases pass. Support placement reserves starts, doorway corner rules preserve exact bodies, and town raster/visitor uses the visit anchor. Native object/terrain/payload hashes and lengths unchanged. Both platform builds/selftests/packages and generated Overworld/Town flows pass; PCK 248377692 bytes. Full level/player/transit/native-water and integrated regression work remains required; legacy boundary still fails later stale XLarge subtype-45 dwelling expectations."
     }
   ],
-  "currentNotes": "Generated-overworld quality parent and all four children completed against the source-backed final audit. Corrected playable content/artifact rewards, original-art readability and ordinary/portal guard routing are platform-validated. Medium day68 and Large day87 real victories have 52 battles/reports, 2694 capacity-safe actions and complete saves. Exact Windows1280/Linux1920 terminal replays inspected. Final repository validation and 30 Python tests pass; cleanup preserves final packages/evidence, saves, caches, RMG and unrelated files. No next slice selected; no whole-generator parity or release-ready claim.",
+  "currentNotes": "Actor-readability slice completed: 112 original paintings, full-size town visitors and cached alpha-edge contrast. Source/Linux/Windows rendered roster checks, Large movement/AI/fog, existing actor/scale reports, repository validation and official exports/parity pass. Removed 3.255 GB disposable outputs while preserving original art/provenance, caches/saves, RMG and unrelated files. No next slice selected; broader project remains in progress.",
   "currentPhase": "phase-6-production-alpha-layer",
-  "currentSlice": "rmg-overworld-quality-closure-20260918",
-  "currentSliceId": "rmg-overworld-quality-closure-20260918",
-  "currentSliceNotes": "All four implemented children accepted: corrected guarded-site/artifact rewards and portable pickups, original-art/scenery/ground/road readability, real guard/portal battle routing and persistent aftermath, Medium/Large complete-match and Linux/Windows acceptance. No native placement/quantity/RNG changes, arbitrary density tuning, universal parity or release-ready claim. Source-backed final audit: docs/generated-overworld-quality-closure.md.",
+  "currentSlice": "art-overworld-actor-readability-20260918",
+  "currentSliceId": "art-overworld-actor-readability-20260918",
+  "currentSliceNotes": "Integrated 112 built-in original sprites: 66 hero appearances and 46 neutral appearances covering 51 profiles. Painted-bound full-size town visitors and cached dual alpha edges preserve identities, fog, movement, save and native generation. Eight art tests, rendered source/Linux/Windows roster checks, Large travel/AI/fog, existing actor/scale reports, full repository and official exports/parity pass. Removed 3.255 GB disposable outputs; original art/provenance, caches/saves, RMG and unrelated files preserved. Results: docs/overworld-actor-readability.md.",
   "currentSliceStatus": "completed",
-  "currentSliceTitle": "Generated Overworld Quality Closure",
-  "currentSliceUpdatedAt": "2026-09-18T10:46:09Z",
+  "currentSliceTitle": "Overworld Hero and Creature Readability",
+  "currentSliceUpdatedAt": "2026-09-18T19:37:00Z",
   "deferredRiskRegister": [
     {
       "id": "asset-import-renderer-sprite-ingestion",
@@ -22298,7 +22298,7 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Owner-selected quality closure is unfinished. Trace actual playable/visible artifacts, sites and neutrals before correcting adoption or presentation; native phase changes require recovered private-state proof, not density tuning.",
+  "nextActionGuardrailNote": "Actor-readability work is completed and validated. No next slice selected; await owner direction rather than expanding into native generation, gameplay or unrelated presentation work.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
@@ -22350,6 +22350,49 @@
       "updatedAt": "2026-09-18T10:46:09Z",
       "completedAt": "2026-09-18T10:46:09Z",
       "notes": "All four implemented children accepted: corrected guarded-site/artifact rewards and portable pickups, original-art/scenery/ground/road readability, real guard/portal battle routing and persistent aftermath, Medium/Large complete-match and Linux/Windows acceptance. No native placement/quantity/RNG changes, arbitrary density tuning, universal parity or release-ready claim. Source-backed final audit: docs/generated-overworld-quality-closure.md."
+    },
+    {
+      "id": "art-overworld-actor-readability-20260918",
+      "title": "Overworld Hero and Creature Readability",
+      "phase": "phase-6-production-alpha-layer",
+      "parentId": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "status": "completed",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "project.md",
+        "docs/overworld-actor-readability.md"
+      ],
+      "targets": [
+        "scenes/overworld/OverworldMapView.gd",
+        "art/overworld/actor_sprites.json",
+        "Original overworld hero/neutral/commander art and provenance",
+        "Python-owned preparation and actor-readability regression"
+      ],
+      "validation": [
+        "All live hero/encounter identity and painted-scale coverage",
+        "Town visitor/movement/fog/input/save invariance",
+        "1280x720 and 1920x1080 biome visual inspection",
+        "Existing hero/encounter/scenery/scale regressions",
+        "python3 -B tests/validate_repo.py",
+        "Linux/Windows official export gameplay smokes and parity",
+        "git diff --check and git status --short"
+      ],
+      "completionCriteria": [
+        "Original replacement art integrated and visually accepted in context",
+        "Town visitor stays readable at consistent scale",
+        "Hostiles separate from dark and light terrain without fog leakage",
+        "Gameplay/save/native identities unchanged",
+        "Consolidated source/platform validation, push and cleanup complete"
+      ],
+      "nonGoals": [
+        "No native generation, topology, quantities, combat, save-schema or unrelated UI changes",
+        "No copied art, procedural replacement actors or paid API fallback"
+      ],
+      "notes": "Integrated 112 built-in original sprites: 66 hero appearances and 46 neutral appearances covering 51 profiles. Painted-bound full-size town visitors and cached dual alpha edges preserve identities, fog, movement, save and native generation. Eight art tests, rendered source/Linux/Windows roster checks, Large travel/AI/fog, existing actor/scale reports, full repository and official exports/parity pass. Removed 3.255 GB disposable outputs; original art/provenance, caches/saves, RMG and unrelated files preserved. Results: docs/overworld-actor-readability.md.",
+      "updatedAt": "2026-09-18T19:37:00Z",
+      "startedAt": "2026-09-18T17:13:29Z",
+      "completedAt": "2026-09-18T19:37:00Z"
     },
     {
       "id": "rmg-playable-object-presence-20260918",
@@ -114003,9 +114046,9 @@
       "title": "HoMM3 Editor Terrain Restamp Behavior"
     }
   ],
-  "summary": "Owner-directed generated-overworld quality closure completed: restored guarded-site/artifact rewards and portable pickups, improved original-art scenery/ground/road readability, fixed guard targeting/cached battle entry and hostile portal arrival/aftermath. Real Medium/Large victories, complete saves, 52 battles/reports, source/Linux/Windows and visual acceptance, repository validation and cleanup pass. Native generation is unchanged; broader pre-alpha/release and universal parity limits remain in project.md.",
+  "summary": "Owner-directed overworld actor readability completed: 112 original generated hero/creature sprites, full-size town visitors, painted-bound scale and cached alpha-edge contrast. Source/Linux/Windows visual/runtime acceptance, Large travel/AI/fog, existing reports, full repository and official exports/parity pass; 3.255 GB disposable outputs cleaned. Prior generated-world quality work remains completed; gameplay/native generation and save schema are unchanged. Broader production/release limits remain in project.md.",
   "taskId": "10236",
-  "updatedAt": "2026-09-18T10:46:09Z",
+  "updatedAt": "2026-09-18T19:37:00Z",
   "validation": {
     "id": "rmg-exploration-and-guarded-routes-20260918",
     "sliceId": "rmg-exploration-and-guarded-routes-20260918",

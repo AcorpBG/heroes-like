@@ -3331,11 +3331,11 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 		return false
 	var hero_layout: Dictionary = hero_sprite.get("layout", {})
 	var hero_command_pennant: Dictionary = hero_layout.get("command_pennant", {})
-	if String(hero_sprite.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
+	if String(hero_sprite.get("sprite_silhouette_model", "")) != "painted_bounds_grounded_actor_dual_alpha_edge" \
 		or String(hero_sprite.get("command_pennant_model", "")) != "compact_player_command_flag" \
-		or String(hero_layout.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
-		or float(hero_layout.get("sprite_silhouette_width_px", 0.0)) < 1.35 \
-		or not bool(hero_layout.get("sprite_silhouette_contained_in_tile", false)) \
+		or String(hero_layout.get("sprite_silhouette_model", "")) != "painted_bounds_grounded_actor_dual_alpha_edge" \
+		or float(hero_layout.get("sprite_silhouette_width_px", 0.0)) < 1.15 \
+		or not bool(hero_layout.get("sprite_visual_envelope_valid", false)) \
 		or String(hero_command_pennant.get("model", "")) != "compact_player_command_flag" \
 		or String(hero_command_pennant.get("asset_id", "")) != "ownership_pennant_player" \
 		or not bool(hero_command_pennant.get("asset_loaded", false)) \
@@ -3378,12 +3378,12 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 	if hero_on_town_footprint:
 		var town_selection_extent := minf(selection_focus_rect.size.x, selection_focus_rect.size.y)
 		var expected_town_selection_inset := maxf(4.0, town_selection_extent * 0.045)
-		if String(hero_layout.get("mode", "")) != "compact_town_footprint_visitor" \
+		if String(hero_layout.get("mode", "")) != "full_size_town_entrance_visitor" \
 			or not bool(hero_layout.get("town_footprint_colocated", false)) \
-			or not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 0.76) \
-			or not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 0.4484) \
-			or not bool(hero_layout.get("sprite_contained_in_tile", false)):
-			push_error("Overworld smoke: active hero on a town footprint did not retain the compact contained visitor composition. presentation=%s" % hero_presentation)
+			or not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
+			or not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 1.0) \
+			or not bool(hero_layout.get("sprite_grounded", false)):
+			push_error("Overworld smoke: active town visitor did not retain full-size grounded composition. presentation=%s" % hero_presentation)
 			get_tree().quit(1)
 			return false
 		var town_presentation: Dictionary = hero_presentation.get("town_presentation", {})
@@ -3415,9 +3415,9 @@ func _assert_marker_readability_contract(shell: Node) -> bool:
 	elif String(hero_layout.get("mode", "")) != "full_tile_world_hero" \
 		or bool(hero_layout.get("town_footprint_colocated", true)) \
 		or not is_equal_approx(float(hero_layout.get("hero_rect_extent_fraction", 0.0)), 1.0) \
-		or not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 0.64) \
-		or not bool(hero_layout.get("sprite_contained_in_tile", false)):
-		push_error("Overworld smoke: active field hero did not retain its exact subordinate contained world-figure composition. presentation=%s" % hero_presentation)
+		or not is_equal_approx(float(hero_layout.get("sprite_extent_fraction", 0.0)), 1.0) \
+		or not bool(hero_layout.get("sprite_grounded", false)):
+		push_error("Overworld smoke: active field hero did not retain its exact grounded world-figure composition. presentation=%s" % hero_presentation)
 		get_tree().quit(1)
 		return false
 	elif bool(focus_layout.get("hero_uses_compact_town_footprint_rect", true)) \
@@ -4433,8 +4433,8 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		push_error("Overworld smoke: compact multi-tile art escaped its visible board-edge footprint. full=%s clipped=%s" % [large_service, clipped_large_service])
 		get_tree().quit(1)
 		return false
-	if not is_equal_approx(float(hero.get("sprite_extent_fraction", 0.0)), 0.86) or not bool(hero.get("sprite_contained_in_tile", false)):
-		push_error("Overworld smoke: field hero art is not contained at its proportional tile rank. payload=%s" % hero)
+	if not is_equal_approx(float(hero.get("sprite_extent_fraction", 0.0)), 1.0) or not bool(hero.get("sprite_grounded", false)):
+		push_error("Overworld smoke: field hero art is not grounded at its proportional tile rank. payload=%s" % hero)
 		get_tree().quit(1)
 		return false
 	var town_center: Dictionary = town.get("sprite_center_tiles", {})
@@ -4495,25 +4495,25 @@ func _assert_visible_sprite_scale_contract(map_node: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	if not (
-		float(decoration.get("visible_extent_tiles", 0.0))
-		< float(artifact.get("visible_extent_tiles", 0.0))
-		and float(artifact.get("visible_extent_tiles", 0.0))
-		< float(generic_object.get("visible_extent_tiles", 0.0))
-		and float(generic_object.get("visible_extent_tiles", 0.0))
+		float(artifact.get("visible_extent_tiles", 0.0))
+		< float(decoration.get("visible_extent_tiles", 0.0))
+		and float(decoration.get("visible_extent_tiles", 0.0))
 		< float(pickup.get("visible_extent_tiles", 0.0))
 		and float(pickup.get("visible_extent_tiles", 0.0))
+		< float(generic_object.get("visible_extent_tiles", 0.0))
+		and float(generic_object.get("visible_extent_tiles", 0.0))
 		< float(waypoint.get("visible_extent_tiles", 0.0))
 		and float(waypoint.get("visible_extent_tiles", 0.0))
 		< float(service.get("visible_extent_tiles", 0.0))
 		and float(service.get("visible_extent_tiles", 0.0))
-		< float(hero.get("sprite_extent_fraction", 0.0))
-		and float(hero.get("sprite_extent_fraction", 0.0))
 		< float(encounter.get("visible_extent_tiles", 0.0))
 		and float(encounter.get("visible_extent_tiles", 0.0))
 		< float(blocker.get("visible_extent_tiles", 0.0))
 		and float(blocker.get("visible_extent_tiles", 0.0))
 		< float(objective.get("visible_extent_tiles", 0.0))
 		and float(objective.get("visible_extent_tiles", 0.0))
+		< float(hero.get("sprite_extent_fraction", 0.0))
+		and float(hero.get("sprite_extent_fraction", 0.0))
 		< float(multi_tile_service.get("visible_extent_tiles", 0.0))
 		and float(multi_tile_service.get("visible_extent_tiles", 0.0))
 		< float(large_service.get("visible_extent_tiles", 0.0))

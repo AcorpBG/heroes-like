@@ -1,0 +1,2695 @@
+{
+  "schema_id": "overworld_actor_sprites_v1",
+  "preparation_tool": "tools/prepare_overworld_actor_art.py",
+  "policy": "original generated actor art; crop and aspect-fit only; immutable gameplay identity",
+  "assets": {
+    "hero_signature_lyra": {
+      "kind": "hero",
+      "identity_id": "hero_lyra",
+      "original_path": "res://art/overworld/runtime/heroes/signature/hero_lyra.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_signature_lyra.png",
+      "runtime_sha256": "e0fe7b0bb74f398c5f32599d5f843dbc92a5d935db1223eb254f6ac9a44fd4a8",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_signature_lyra.png",
+      "source_sha256": "72e94b6bed1d9f14c3ae8f7796f4a592436921d2cc5ff1527fa380c2b7411614",
+      "source_bounds": [
+        49,
+        17,
+        1202,
+        1230
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_signature_lyra.png",
+      "trimmed_sha256": "b5bd57e9ef65ebe601eeec12a98bf7daefbf7dd2c36b118c1515bbda872316fd",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Lyra Emberwell",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_lead_caelen": {
+      "kind": "hero",
+      "identity_id": "hero_caelen",
+      "original_path": "res://art/overworld/runtime/heroes/live_leads/hero_caelen.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_lead_caelen.png",
+      "runtime_sha256": "b750f9b426ceea72b9e9d55bec4ca999aea58f94d4d76fe8cdceab7aa4f2cd9c",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_lead_caelen.png",
+      "source_sha256": "003f5583d60dfc4ce7e4ab4a81cc5f3c6f7c66ed73838db9166bae6d7e0e3c05",
+      "source_bounds": [
+        49,
+        21,
+        1200,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_lead_caelen.png",
+      "trimmed_sha256": "492d993c157f877dd025196693a060d14c99d6b705783741fb0bd9a53df83870",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Caelen Ashgrove",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_lead_mira": {
+      "kind": "hero",
+      "identity_id": "hero_mira",
+      "original_path": "res://art/overworld/runtime/heroes/live_leads/hero_mira.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_lead_mira.png",
+      "runtime_sha256": "adf0f927440c1bb0cc01f3e895d7ae04ce88d24d01cb41650b6dcd1f872466c3",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_lead_mira.png",
+      "source_sha256": "497ee76c289b64e494e7003a8f2ce4ade93b7defc7435bf3931014e6f6282551",
+      "source_bounds": [
+        57,
+        21,
+        1199,
+        1232
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_lead_mira.png",
+      "trimmed_sha256": "909dbeee0e9e63b66eba8b6c916bab7291f890053f88bd2ec800414f0f38546b",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Mira Flintmere",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_lead_seren": {
+      "kind": "hero",
+      "identity_id": "hero_seren",
+      "original_path": "res://art/overworld/runtime/heroes/live_leads/hero_seren.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_lead_seren.png",
+      "runtime_sha256": "db242925bc60fd5f38f1a6c23a77c06c8a21489f2266ee142d341f38582be33e",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_lead_seren.png",
+      "source_sha256": "d86ae7bed42d53c2b14e5a1c6783542df4ad20e1d3f43b4d9230ca0741d3548a",
+      "source_bounds": [
+        25,
+        32,
+        1218,
+        1230
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_lead_seren.png",
+      "trimmed_sha256": "cea093f31bf2673ac58c95db2462477ea70a8b4479e4d5dc53193496968fd9cf",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Seren Valechant",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_specialist_torren": {
+      "kind": "hero",
+      "identity_id": "hero_torren",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_torren.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_specialist_torren.png",
+      "runtime_sha256": "bbb104f8ab0e49d9c589a623ff6026622aec1cee13806640469a5f8b5a4d642c",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_specialist_torren.png",
+      "source_sha256": "57761ae204c2cf9813e41d9856220af93d82a80945e7a7244cb48abe2da95d79",
+      "source_bounds": [
+        49,
+        8,
+        1059,
+        1230
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_specialist_torren.png",
+      "trimmed_sha256": "ff03349f7f8f5c00c9bdb3057c2c7d7399f4369d51cc28c70d10743105f341bf",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Torren Pikeward",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_signature_vaska": {
+      "kind": "hero",
+      "identity_id": "hero_vaska",
+      "original_path": "res://art/overworld/runtime/heroes/signature/hero_vaska.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_signature_vaska.png",
+      "runtime_sha256": "b0ee2af57b287fe343a001d2a6eace0dea9d2158e90bf3aba137fc6d6139402e",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_signature_vaska.png",
+      "source_sha256": "19c28fabf0118c343e87c0e01ccc13088438ad93e0915265ae4dd427b11c829c",
+      "source_bounds": [
+        37,
+        48,
+        1228,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_signature_vaska.png",
+      "trimmed_sha256": "15867122fda454a7e69846592ceac91215ae085b6fe5825754e6c661a2abef9d",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Vaska Reedmaw",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_tavern_sable": {
+      "kind": "hero",
+      "identity_id": "hero_sable",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_sable.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_tavern_sable.png",
+      "runtime_sha256": "ca2547a4f3d3dc022cd67766682e1558dde1345e2294e308f62ec3de8ad92834",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_tavern_sable.png",
+      "source_sha256": "52f0b618c0036a6e74f329c6fc2e7aab3f5dc1f8d57805dd3becec5c701f971f",
+      "source_bounds": [
+        43,
+        21,
+        1192,
+        1238
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_tavern_sable.png",
+      "trimmed_sha256": "d040af21f88e21e79701ba3c367a210202830414d9d3aa18703be41387873f79",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Sable Muckscribe",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_field_tarn": {
+      "kind": "hero",
+      "identity_id": "hero_tarn",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_tarn.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_field_tarn.png",
+      "runtime_sha256": "83971e124deef71ac28d27cd16c61c9a161cf72f2dda9d1ee06eb51b65b33be4",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_field_tarn.png",
+      "source_sha256": "e7242125d953b91ae4c8966c4d0d36d29937d90fc67d29ec5610f4c99c600e47",
+      "source_bounds": [
+        49,
+        59,
+        1192,
+        1236
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_field_tarn.png",
+      "trimmed_sha256": "1ad0fd7f9b6f0b468c48a1b0b97f95d33969f232f29e5e67fa93541a175cf609",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Tarn Fenhook",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_strategic_orrik": {
+      "kind": "hero",
+      "identity_id": "hero_orrik",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_orrik.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_strategic_orrik.png",
+      "runtime_sha256": "2f6d78449d91c16597d7e83dcb2723e0f16edbee1b62ba9f735f259c21826ade",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_strategic_orrik.png",
+      "source_sha256": "705713c7688b10e36a23ffb9f3813cde91ae9eb331338c72bf16a2a5093e3d95",
+      "source_bounds": [
+        33,
+        19,
+        1234,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_strategic_orrik.png",
+      "trimmed_sha256": "d6c2da903609065fab489e753c6e695d72b2a81613e211c7db7b46de1e761bb0",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Orrik Tollreaver",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_signature_solera": {
+      "kind": "hero",
+      "identity_id": "hero_solera",
+      "original_path": "res://art/overworld/runtime/heroes/signature/hero_solera.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_signature_solera.png",
+      "runtime_sha256": "800b58ac965cd2e5ee3bd5954b4cf1a8a078776dd44e5f0a10e1c76f0f24a8fc",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_signature_solera.png",
+      "source_sha256": "cf86882c4592f3de516187719a25351f01d284d2d23885627b946ec957602f1f",
+      "source_bounds": [
+        49,
+        53,
+        1230,
+        1228
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_signature_solera.png",
+      "trimmed_sha256": "eda6691b378e12cb9780658bcf30b7b9599a437d32c6f1a7f8253a40caf67f72",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Solera Prismarch",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_lead_neral": {
+      "kind": "hero",
+      "identity_id": "hero_neral",
+      "original_path": "res://art/overworld/runtime/heroes/live_leads/hero_neral.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_lead_neral.png",
+      "runtime_sha256": "bebbf51876fcf88e1556749b4a351b12f55091aedc8a0af2072508f817c52e80",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_lead_neral.png",
+      "source_sha256": "889568a3e9f9b1944d6c1540798d5dbc6c39949b558d4598ebf79f5334ed9407",
+      "source_bounds": [
+        49,
+        42,
+        1251,
+        1228
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_lead_neral.png",
+      "trimmed_sha256": "a83b2434d087a9c021f1870911ffb3567ccdb00dcc3e2ecca70ad7f72590469e",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Neral Glasswind",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_specialist_varis": {
+      "kind": "hero",
+      "identity_id": "hero_varis",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_varis.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_specialist_varis.png",
+      "runtime_sha256": "22b31905cd1b4c50cd7ebf51e02e6735197d829b113ce59cfb1f7e81159a8ee8",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_specialist_varis.png",
+      "source_sha256": "f970f0dc37439950a946c55faee1f898fd094a1ac3833670be8cbece6da4742d",
+      "source_bounds": [
+        49,
+        15,
+        1164,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_specialist_varis.png",
+      "trimmed_sha256": "5b0efd3d05b68b7a26ed9545149c5d2cdc114bc492bab4e44e62f4177fc893d9",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Varis Mirrorstep",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_strategic_thalen": {
+      "kind": "hero",
+      "identity_id": "hero_thalen",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_thalen.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_strategic_thalen.png",
+      "runtime_sha256": "213d6193b8e75c9f796970472ac48bc1266a02c622e9ce60dc499347be93dd58",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_strategic_thalen.png",
+      "source_sha256": "7898f824501d9414a630933ec72dc8205e61c3543b9d9f2bcdfd304a486e0740",
+      "source_bounds": [
+        49,
+        21,
+        1230,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_strategic_thalen.png",
+      "trimmed_sha256": "1e001e98be66faf777b7c1c7c009188e52450d4826c8972120870f1a19b00863",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Thalen Choirward",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_field_embercourt_helva_tollbrand": {
+      "kind": "hero",
+      "identity_id": "hero_embercourt_helva_tollbrand",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_embercourt_helva_tollbrand.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_field_embercourt_helva_tollbrand.png",
+      "runtime_sha256": "aa21146c9dcc3dbdc0a1bc4e7a88420922bfc900b7d71f2cc03ff10eb42fdc83",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_field_embercourt_helva_tollbrand.png",
+      "source_sha256": "31410f9c22e8aee317b01eee802e84be034fff4362c11a7b05315be7f1db7239",
+      "source_bounds": [
+        49,
+        29,
+        1194,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_field_embercourt_helva_tollbrand.png",
+      "trimmed_sha256": "7ba8772bc3682e578f93d68a8f31db901e9cbbba94d3994f38519beb6a01ca0f",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Helva Tollbrand",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_strategic_embercourt_saren_lockmaster": {
+      "kind": "hero",
+      "identity_id": "hero_embercourt_saren_lockmaster",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_embercourt_saren_lockmaster.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_strategic_embercourt_saren_lockmaster.png",
+      "runtime_sha256": "4ef738e778d60d5739a4c12dd1554aada8fd7673ee38210c7426162a82c9f6c0",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_strategic_embercourt_saren_lockmaster.png",
+      "source_sha256": "6b50d09a2107f1119170be7bcc159400fcad61bc6482342afdcb9e015623da57",
+      "source_bounds": [
+        49,
+        49,
+        1234,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_strategic_embercourt_saren_lockmaster.png",
+      "trimmed_sha256": "4c564f6216941e35d895f171bf8bc7c88450e915309e1bab91a0035fdcaf22cf",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Saren Lockmaster",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_ritual_embercourt_orra_cinderquill": {
+      "kind": "hero",
+      "identity_id": "hero_embercourt_orra_cinderquill",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_embercourt_orra_cinderquill.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_ritual_embercourt_orra_cinderquill.png",
+      "runtime_sha256": "7e679e0e9d999fe5c1a062b18b580688227fb448ae2f1f5680cf83697ed1c638",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_ritual_embercourt_orra_cinderquill.png",
+      "source_sha256": "bd9f1b878442068433dd7678e5bfa57d00adc3a35dec1e214a2a9455515d04fd",
+      "source_bounds": [
+        39,
+        16,
+        1192,
+        1225
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_ritual_embercourt_orra_cinderquill.png",
+      "trimmed_sha256": "cb4cee4cbd4156585140862b532946c5595d5cd1f3bb77370b80a2078cd46c7d",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Orra Cinderquill",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_tavern_embercourt_belis_rainledger": {
+      "kind": "hero",
+      "identity_id": "hero_embercourt_belis_rainledger",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_embercourt_belis_rainledger.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_tavern_embercourt_belis_rainledger.png",
+      "runtime_sha256": "a4ed4057a9a9840dd7f1864432d49828566559dd405b94e4332edd935deacfaa",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_tavern_embercourt_belis_rainledger.png",
+      "source_sha256": "6cda9e2c79d4e8b527fcf4fafbf5963581834685eb001c4426052002fa40c2a6",
+      "source_bounds": [
+        105,
+        21,
+        1192,
+        1206
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_tavern_embercourt_belis_rainledger.png",
+      "trimmed_sha256": "709eed53b719317f82c7e05078c2e1e8b5ced2a469cae84e4b4b757c2b2e8d64",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Belis Rainledger",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_arcane_embercourt_jorun_beaconscribe": {
+      "kind": "hero",
+      "identity_id": "hero_embercourt_jorun_beaconscribe",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_embercourt_jorun_beaconscribe.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_arcane_embercourt_jorun_beaconscribe.png",
+      "runtime_sha256": "9d57c9f2f8956c286b02f814edde79edd7086b577a65e1b3923567ee820c738d",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_arcane_embercourt_jorun_beaconscribe.png",
+      "source_sha256": "d3222b9d9a66ba9edf668dcdd5051d72586f41b3809d1a0151c03901aa998d89",
+      "source_bounds": [
+        57,
+        21,
+        1226,
+        1222
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_arcane_embercourt_jorun_beaconscribe.png",
+      "trimmed_sha256": "fd86f2d588c411d391f354d79ca4b2c021d813609d660b11f6c6caab1739d87a",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Jorun Beaconscribe",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_lead_mireclaw_kessa_chainboom": {
+      "kind": "hero",
+      "identity_id": "hero_mireclaw_kessa_chainboom",
+      "original_path": "res://art/overworld/runtime/heroes/live_leads/hero_mireclaw_kessa_chainboom.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_lead_mireclaw_kessa_chainboom.png",
+      "runtime_sha256": "2ed67fcf3649fb8e253071018c6533bbfea36fdbb52d07fcf77c9890879f60f5",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_lead_mireclaw_kessa_chainboom.png",
+      "source_sha256": "4d61385a5517203b296a168d87153ef4e49d4b04bdd537de9e140f2582addf22",
+      "source_bounds": [
+        49,
+        21,
+        1192,
+        1228
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_lead_mireclaw_kessa_chainboom.png",
+      "trimmed_sha256": "b992e1d61cb80b51e54fa029d98233f8ff6ac95906eecf5a0945a7f7d83aa588",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Kessa Chainboom",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_specialist_mireclaw_brakka_mudkeel": {
+      "kind": "hero",
+      "identity_id": "hero_mireclaw_brakka_mudkeel",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_mireclaw_brakka_mudkeel.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_specialist_mireclaw_brakka_mudkeel.png",
+      "runtime_sha256": "fe276c16820b8206b249ece9720c2376a4c163c524606c3f69183e9d076dd0f9",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_specialist_mireclaw_brakka_mudkeel.png",
+      "source_sha256": "9b09d547e7edada93222967394d22b1d5bdafb466cb318ba5b962d9de660f237",
+      "source_bounds": [
+        27,
+        57,
+        1224,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_specialist_mireclaw_brakka_mudkeel.png",
+      "trimmed_sha256": "ad1aef1ee70b9d33f9c85f8548e611c52d2e22dea5e9ae026d1d4c3c9d694a1f",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Brakka Mudkeel",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_ritual_mireclaw_nix_votivejaw": {
+      "kind": "hero",
+      "identity_id": "hero_mireclaw_nix_votivejaw",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_mireclaw_nix_votivejaw.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_ritual_mireclaw_nix_votivejaw.png",
+      "runtime_sha256": "d4ea69ec423e607d1b210b55dd33698463d08a1015a14ae5e63a5c8de59a27ca",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_ritual_mireclaw_nix_votivejaw.png",
+      "source_sha256": "ceadad5f738637f2b6d1b41f32ca9fb45ee29fd2d4d5662177b7a1df734831e4",
+      "source_bounds": [
+        33,
+        51,
+        1200,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_ritual_mireclaw_nix_votivejaw.png",
+      "trimmed_sha256": "1b9d1dcaee606bc1bf46d1f6e202fab5b3e71e02486f28152d03f4a3ba652cc1",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Nix Votivejaw",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_arcane_mireclaw_edda_rotlamp": {
+      "kind": "hero",
+      "identity_id": "hero_mireclaw_edda_rotlamp",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_mireclaw_edda_rotlamp.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_arcane_mireclaw_edda_rotlamp.png",
+      "runtime_sha256": "f79bee35755e2b98ce6f649fc233b9150222a32a85def07572879f9a6286cf45",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_arcane_mireclaw_edda_rotlamp.png",
+      "source_sha256": "da9bf312e8b968a3e4b98c14625540e6d344ff79ca33efcab01f2874ae2b84cb",
+      "source_bounds": [
+        0,
+        13,
+        1202,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_arcane_mireclaw_edda_rotlamp.png",
+      "trimmed_sha256": "0e8647fb6ee730476a35a2c6eb649c4e306d4fa25770b7e374a1d3f559f4100c",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Edda Rotlamp",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_roster_mireclaw_pell_reedscript": {
+      "kind": "hero",
+      "identity_id": "hero_mireclaw_pell_reedscript",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_mireclaw_pell_reedscript.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_roster_mireclaw_pell_reedscript.png",
+      "runtime_sha256": "7874238d38bff924c7df1448ba5565b7bf01d941c892947ce13da967e39297f5",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_roster_mireclaw_pell_reedscript.png",
+      "source_sha256": "0cd1023ef56a096d770afb11528ca123ae7461508398d00c946663e36a9a3ee9",
+      "source_bounds": [
+        33,
+        21,
+        1236,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_roster_mireclaw_pell_reedscript.png",
+      "trimmed_sha256": "a44cd36a81d693f35b969fbfe23b882298a722c4938ec19f1492865892d2cc84",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Pell Reedscript",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_roster_mireclaw_zhorra_fenwake": {
+      "kind": "hero",
+      "identity_id": "hero_mireclaw_zhorra_fenwake",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_mireclaw_zhorra_fenwake.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_roster_mireclaw_zhorra_fenwake.png",
+      "runtime_sha256": "33abae86e57889bb3c6ab3f58b7ef81d93bf6dfb27db2526ef9f39b9b30e58d7",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_roster_mireclaw_zhorra_fenwake.png",
+      "source_sha256": "986667105d314bf4422e134091d1cfcf3c9f3d91670e39255a09d9949b47e117",
+      "source_bounds": [
+        57,
+        31,
+        1234,
+        1236
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_roster_mireclaw_zhorra_fenwake.png",
+      "trimmed_sha256": "6db56600920c48b82704e8e1a99b33e09ec1d2ad092285e9d2b5c580360c0968",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Zhorra Fenwake",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_field_sunvault_ilyr_glassmarshal": {
+      "kind": "hero",
+      "identity_id": "hero_sunvault_ilyr_glassmarshal",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_sunvault_ilyr_glassmarshal.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_field_sunvault_ilyr_glassmarshal.png",
+      "runtime_sha256": "ec1397502516cfe8070d84ae374b38049f44052942c78b108e81ac0c34869618",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_field_sunvault_ilyr_glassmarshal.png",
+      "source_sha256": "6c37cc3b907c43f7104ace626ecb86d7cc0e79f7d4d6bc43dac9b0cdc8ffc1e4",
+      "source_bounds": [
+        25,
+        10,
+        1198,
+        1222
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_field_sunvault_ilyr_glassmarshal.png",
+      "trimmed_sha256": "3d33e4c44b0bebaba2a666958f06ea7c746bf0e8ed19602c3dbe52de38f69d11",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Ilyr Glassmarshal",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_roster_sunvault_dovan_lenscaptain": {
+      "kind": "hero",
+      "identity_id": "hero_sunvault_dovan_lenscaptain",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_sunvault_dovan_lenscaptain.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_roster_sunvault_dovan_lenscaptain.png",
+      "runtime_sha256": "4389ab79e726e770d91d05b37f1f00581d4e8e0a7eb37f9a4064535877fd0bc5",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_roster_sunvault_dovan_lenscaptain.png",
+      "source_sha256": "1e266f2e3fec59839535d757dc71673ce392f831fa451d6edd8ff8f73bf532b0",
+      "source_bounds": [
+        41,
+        30,
+        1200,
+        1226
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_roster_sunvault_dovan_lenscaptain.png",
+      "trimmed_sha256": "5c9e15b32ba94b8befd7a66b555b8c6c7e6230bbf25883db3079f1de5dbc8868",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Dovan Lens-Captain",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_roster_sunvault_renn_facetlane": {
+      "kind": "hero",
+      "identity_id": "hero_sunvault_renn_facetlane",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_sunvault_renn_facetlane.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_roster_sunvault_renn_facetlane.png",
+      "runtime_sha256": "5b3452488fd3d8721b374bf9a7a108bce80e6eb25072c822afb318627d45d609",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_roster_sunvault_renn_facetlane.png",
+      "source_sha256": "62914320a5adf064a59b59c7f76a145ab2531d3d56d4d57b99723a0f8337ffc3",
+      "source_bounds": [
+        49,
+        34,
+        1192,
+        1224
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_roster_sunvault_renn_facetlane.png",
+      "trimmed_sha256": "299d22cf21cd68ba7c4631e2b504adaa4c9e449ef492f71bf756851dd8dd757d",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Renn Facetlane",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_ritual_sunvault_essa_daynote": {
+      "kind": "hero",
+      "identity_id": "hero_sunvault_essa_daynote",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_sunvault_essa_daynote.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_ritual_sunvault_essa_daynote.png",
+      "runtime_sha256": "52597a74a982ebe541ea0e61e8b664bb4283c6ec6d61cf3483b5760cc17c1021",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_ritual_sunvault_essa_daynote.png",
+      "source_sha256": "2ed7134a96c8a7932698f4794a4b6423404d93418a0296cc48e637b48cadf9c2",
+      "source_bounds": [
+        0,
+        36,
+        1200,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_ritual_sunvault_essa_daynote.png",
+      "trimmed_sha256": "cfee1ac5ac7e70e949609ba581d4406d3eb9029749b289cf3167f0d6f5e3cf68",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Essa Daynote",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_tavern_sunvault_calis_sunvein": {
+      "kind": "hero",
+      "identity_id": "hero_sunvault_calis_sunvein",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_sunvault_calis_sunvein.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_tavern_sunvault_calis_sunvein.png",
+      "runtime_sha256": "8e3d2257df4e1380ee31c34ea892fed898b3ebd11306ae27ecd6b8f2b3b7e3ba",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_tavern_sunvault_calis_sunvein.png",
+      "source_sha256": "5dcb39abc62be21f6c8aa3425342c17089e6faeadfd7b7cdce47f4350ae91d67",
+      "source_bounds": [
+        41,
+        21,
+        1192,
+        1222
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_tavern_sunvault_calis_sunvein.png",
+      "trimmed_sha256": "b9b6c6ec2af733e907e18200268f15d420bb73e6403fe09fa262bd412c8a1c12",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Calis Sunvein",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_arcane_sunvault_mirro_halometer": {
+      "kind": "hero",
+      "identity_id": "hero_sunvault_mirro_halometer",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_sunvault_mirro_halometer.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_arcane_sunvault_mirro_halometer.png",
+      "runtime_sha256": "d8846afbdeee518f553728b5b6ff4d6282790cb3b2b9c6b22c73a6e7d3346c1b",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_arcane_sunvault_mirro_halometer.png",
+      "source_sha256": "96b08c37ba18b46087547d180c159c24e5ae07b2b7b853bdbd67d475652fd343",
+      "source_bounds": [
+        57,
+        21,
+        1196,
+        1236
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_arcane_sunvault_mirro_halometer.png",
+      "trimmed_sha256": "51be797bba9171a02efd26abcdaa3768831b089fcfcff15332a1206c4e390570",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Mirro Halometer",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_tavern_thornwake_ardren_briarmarshal": {
+      "kind": "hero",
+      "identity_id": "hero_thornwake_ardren_briarmarshal",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_thornwake_ardren_briarmarshal.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_tavern_thornwake_ardren_briarmarshal.png",
+      "runtime_sha256": "398227e3d44cdf1eabed4303f72538a3698da64a07bcfb47e4f8fa163149db2c",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_tavern_thornwake_ardren_briarmarshal.png",
+      "source_sha256": "890c6fa9e684689d09a4b86889ebeb26d47bdac53a96fc51f3eddf3056ff5ab6",
+      "source_bounds": [
+        43,
+        21,
+        1236,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_tavern_thornwake_ardren_briarmarshal.png",
+      "trimmed_sha256": "ef5136dae53857c8422a08ed75fb611cb76ab3f3aec87fe58104afd1171bdf1e",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Ardren Briar-Marshal",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_lead_thornwake_tova_rootwright": {
+      "kind": "hero",
+      "identity_id": "hero_thornwake_tova_rootwright",
+      "original_path": "res://art/overworld/runtime/heroes/live_leads/hero_thornwake_tova_rootwright.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_lead_thornwake_tova_rootwright.png",
+      "runtime_sha256": "6ebd9b4020fe07fc26048199e983fb387604cffe58d936bf1ca5bf065e9aacd4",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_lead_thornwake_tova_rootwright.png",
+      "source_sha256": "e9f666376a71b776f04574681e7807d01b472556df5fa48a369970129eb0cda8",
+      "source_bounds": [
+        49,
+        21,
+        1194,
+        1232
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_lead_thornwake_tova_rootwright.png",
+      "trimmed_sha256": "270ad1c0424a7bb9fad70b643380b129456e05fb32901070988d39e8b08f1345",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Tova Rootwright",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_field_thornwake_halen_thorncart": {
+      "kind": "hero",
+      "identity_id": "hero_thornwake_halen_thorncart",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_thornwake_halen_thorncart.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_field_thornwake_halen_thorncart.png",
+      "runtime_sha256": "577ca1829d35e06f964df26f0bf982dbf96accf6942806254f33de104c1e05a0",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_field_thornwake_halen_thorncart.png",
+      "source_sha256": "7aee552fe78ac8ab7c5dcd714c1659f4f4798b790248902956804308c1973cd6",
+      "source_bounds": [
+        0,
+        21,
+        1226,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_field_thornwake_halen_thorncart.png",
+      "trimmed_sha256": "36c9034e68491f5b5a3f9b17c77b09f437664874d3f1fa5d06c3e99a7e0c3a30",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Halen Thorncart",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_roster_thornwake_merek_greenbarrow": {
+      "kind": "hero",
+      "identity_id": "hero_thornwake_merek_greenbarrow",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_thornwake_merek_greenbarrow.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_roster_thornwake_merek_greenbarrow.png",
+      "runtime_sha256": "9a749d4df6edcbc954d91b6519240e42100fe80b80430030adc9e9f5492b3db5",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_roster_thornwake_merek_greenbarrow.png",
+      "source_sha256": "98137282bb344caf6fe4b148266d64ddb768ded901342c886b08b172a777c1ac",
+      "source_bounds": [
+        33,
+        47,
+        1230,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_roster_thornwake_merek_greenbarrow.png",
+      "trimmed_sha256": "e0312010013735bd9ef2d2008b451bd34a4de292e345df291599af5acbffe1b0",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Merek Greenbarrow",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_signature_thornwake_silsa_bramblehound": {
+      "kind": "hero",
+      "identity_id": "hero_thornwake_silsa_bramblehound",
+      "original_path": "res://art/overworld/runtime/heroes/signature/hero_thornwake_silsa_bramblehound.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_signature_thornwake_silsa_bramblehound.png",
+      "runtime_sha256": "ad25e97f1835d4c5866767e39db50e0459fc81429b68be1285b2d82d8cddfc82",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_signature_thornwake_silsa_bramblehound.png",
+      "source_sha256": "d2c6f98486025362ca1cc95f0516720dc5f51011b367f997338646444b6161a5",
+      "source_bounds": [
+        103,
+        53,
+        1194,
+        1206
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_signature_thornwake_silsa_bramblehound.png",
+      "trimmed_sha256": "b1e83e92865465f6e700d7dd127231c46b8eb638836f40d350ecc222b68f858c",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Silsa Bramble-Hound",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_specialist_thornwake_veyra_seedseer": {
+      "kind": "hero",
+      "identity_id": "hero_thornwake_veyra_seedseer",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_thornwake_veyra_seedseer.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_specialist_thornwake_veyra_seedseer.png",
+      "runtime_sha256": "d33632bd318b1fbcfb6f6dbe12af4547f7641361efcb9eafdee364d478841562",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_specialist_thornwake_veyra_seedseer.png",
+      "source_sha256": "e7a05d456ed6ea794e6c03a2bd117060e2a9caf8ea6aeb327092e66de177604a",
+      "source_bounds": [
+        24,
+        21,
+        1228,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_specialist_thornwake_veyra_seedseer.png",
+      "trimmed_sha256": "1df3dcffc7778981c2ea069cd5164106790f452b048afb7218c2aef81d21c1ac",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Veyra Seedseer",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_ritual_thornwake_osmund_pollenglass": {
+      "kind": "hero",
+      "identity_id": "hero_thornwake_osmund_pollenglass",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_thornwake_osmund_pollenglass.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_ritual_thornwake_osmund_pollenglass.png",
+      "runtime_sha256": "46e97014d154b61c973297b858a6bde9e424dee8625bbdb103ce777c2e1f7c72",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_ritual_thornwake_osmund_pollenglass.png",
+      "source_sha256": "29443def1877f7e9287c7f1e8ae102990d73558651074c2481aef9fe2fac3353",
+      "source_bounds": [
+        21,
+        23,
+        1240,
+        1230
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_ritual_thornwake_osmund_pollenglass.png",
+      "trimmed_sha256": "d70699a477382241f3d191e0c2fa4e9cd99327ee587a1a905ff8f4e39e17e016",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Osmund Pollenglass",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_arcane_thornwake_elian_loamchant": {
+      "kind": "hero",
+      "identity_id": "hero_thornwake_elian_loamchant",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_thornwake_elian_loamchant.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_arcane_thornwake_elian_loamchant.png",
+      "runtime_sha256": "a344c429a1bbc5cebc6c571aede6f9731f7cfb9c0e17e929bb8753d3c254b176",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_arcane_thornwake_elian_loamchant.png",
+      "source_sha256": "ec24744883a673a9186205ef12d964280c6e7b6f1480358b18719283d4fd1442",
+      "source_bounds": [
+        41,
+        47,
+        1224,
+        1238
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_arcane_thornwake_elian_loamchant.png",
+      "trimmed_sha256": "f9de1aafab3b2d2ce43f8d198731179c20d54ea73ddbf1b74f0cefe2f527f614",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Elian Loamchant",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_roster_thornwake_ralka_mossvein": {
+      "kind": "hero",
+      "identity_id": "hero_thornwake_ralka_mossvein",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_thornwake_ralka_mossvein.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_roster_thornwake_ralka_mossvein.png",
+      "runtime_sha256": "96a53ba834447b874d8e600ed1aae9659db89c76c6b489fc6ee9e3ad1154296d",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_roster_thornwake_ralka_mossvein.png",
+      "source_sha256": "b0ac15a684e911c75cc90dcdb09f94eeeaac7beaedc24ef404ca39024b224150",
+      "source_bounds": [
+        33,
+        21,
+        1230,
+        1237
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_roster_thornwake_ralka_mossvein.png",
+      "trimmed_sha256": "205bdb0edf1c46f96b34e5df4544749e52746c3d3cc3caa9e2f62c1c9693d659",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Ralka Mossvein",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_strategic_thornwake_nara_graftsibyl": {
+      "kind": "hero",
+      "identity_id": "hero_thornwake_nara_graftsibyl",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_thornwake_nara_graftsibyl.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_strategic_thornwake_nara_graftsibyl.png",
+      "runtime_sha256": "666f01b054f90a04408fae3557adfb10ecadb87a2db90c3090e2f9e89eda04e0",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_strategic_thornwake_nara_graftsibyl.png",
+      "source_sha256": "7a8ef6be36e5bd28b8f3ab1904bb4cf4aae594b6fc598ff70a07f91a2b195eda",
+      "source_bounds": [
+        0,
+        17,
+        1198,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_strategic_thornwake_nara_graftsibyl.png",
+      "trimmed_sha256": "a4a3b60fef9b459be16a788a870ecb0a71d2639dff0148a24b9cbbb350285f58",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Nara Graft-Sibyl",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_signature_brasshollow_marka_ironclause": {
+      "kind": "hero",
+      "identity_id": "hero_brasshollow_marka_ironclause",
+      "original_path": "res://art/overworld/runtime/heroes/signature/hero_brasshollow_marka_ironclause.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_signature_brasshollow_marka_ironclause.png",
+      "runtime_sha256": "c5ac42f58bd4c858a5d99f41ed8753c0f70c6c0109f3b08f82ea897adc9242c9",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_signature_brasshollow_marka_ironclause.png",
+      "source_sha256": "3cbe2dd0991ba8b9d18c2f44c192cec5c694be6d723b376e5af560b95293ae9b",
+      "source_bounds": [
+        57,
+        30,
+        1200,
+        1230
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_signature_brasshollow_marka_ironclause.png",
+      "trimmed_sha256": "ccc543d3df63013e9288875ff700af23f55d397a9f3ac71ecb6e5be17ae7329e",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Marka Ironclause",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_lead_brasshollow_oren_bellfounder": {
+      "kind": "hero",
+      "identity_id": "hero_brasshollow_oren_bellfounder",
+      "original_path": "res://art/overworld/runtime/heroes/live_leads/hero_brasshollow_oren_bellfounder.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_lead_brasshollow_oren_bellfounder.png",
+      "runtime_sha256": "850528dcd154d378373cae3e238996b348b052e6720aaf98b8ce563430574cb0",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_lead_brasshollow_oren_bellfounder.png",
+      "source_sha256": "1b388624f91a25c002a6749ec03c8e00f03d384d61c902795d051dca34a112e7",
+      "source_bounds": [
+        57,
+        21,
+        1200,
+        1230
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_lead_brasshollow_oren_bellfounder.png",
+      "trimmed_sha256": "489e02f715a3f40b2b50418a0dee4cd3179dcc7a6c6101d1afc4b27f6aea4f3d",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Oren Bellfounder",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_field_brasshollow_kuld_varn": {
+      "kind": "hero",
+      "identity_id": "hero_brasshollow_kuld_varn",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_brasshollow_kuld_varn.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_field_brasshollow_kuld_varn.png",
+      "runtime_sha256": "b595d155d38de22f6f4471356e82c0369694f8f5c061ef1d405e9fe48ad90a55",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_field_brasshollow_kuld_varn.png",
+      "source_sha256": "8b532aaf3b22b2a696a6f27a274a2918ee56037c46a59df1a3741c7d0d43f371",
+      "source_bounds": [
+        57,
+        21,
+        1196,
+        1228
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_field_brasshollow_kuld_varn.png",
+      "trimmed_sha256": "50143cc3294e1f99311232616978d58d7bcc90f001321ff116603c8bb11cd6f6",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Kuld Varn",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_specialist_brasshollow_selka_pitmarshal": {
+      "kind": "hero",
+      "identity_id": "hero_brasshollow_selka_pitmarshal",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_brasshollow_selka_pitmarshal.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_specialist_brasshollow_selka_pitmarshal.png",
+      "runtime_sha256": "02488fee5af8d152506ad0f12cf92c500d3d1a92a57b464686d23feb440542e2",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_specialist_brasshollow_selka_pitmarshal.png",
+      "source_sha256": "4f230fa3ddf9c49aa5080ec65648365bb673e4dc6649d81ac7759ce3f5694092",
+      "source_bounds": [
+        57,
+        21,
+        1194,
+        1207
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_specialist_brasshollow_selka_pitmarshal.png",
+      "trimmed_sha256": "2feea33c2dfc020e4b13da64bb3ce7dbcbac741c06de491d40123be2b29a17c8",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Selka Pitmarshal",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_tavern_brasshollow_daxis_chaincaptain": {
+      "kind": "hero",
+      "identity_id": "hero_brasshollow_daxis_chaincaptain",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_brasshollow_daxis_chaincaptain.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_tavern_brasshollow_daxis_chaincaptain.png",
+      "runtime_sha256": "3cbb28fed8d6bfc9e17c78c2b0050cd37f23b25a356e6c2525f7335e70f6eb5c",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_tavern_brasshollow_daxis_chaincaptain.png",
+      "source_sha256": "bad1a442fe185b72c8149f81212598fcfdc297b777947fba9a3e9deb5bcfe353",
+      "source_bounds": [
+        41,
+        21,
+        1236,
+        1230
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_tavern_brasshollow_daxis_chaincaptain.png",
+      "trimmed_sha256": "b1b2f40891b72d522bfdfb34f4d1494b041fd6d8521c26350bf7940838173823",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Daxis Chain-Captain",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_roster_brasshollow_vellum_quench": {
+      "kind": "hero",
+      "identity_id": "hero_brasshollow_vellum_quench",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_brasshollow_vellum_quench.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_roster_brasshollow_vellum_quench.png",
+      "runtime_sha256": "7b4eff2958b9d6be636b0e51742d9b44672049707c6cc22ba917dc8288195445",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_roster_brasshollow_vellum_quench.png",
+      "source_sha256": "904eaae51ce967bfa6cb3cda3dd89b171a942dfb636248004f8341240c2ab3c0",
+      "source_bounds": [
+        25,
+        46,
+        1192,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_roster_brasshollow_vellum_quench.png",
+      "trimmed_sha256": "5c54e7df7dcda162ddaa54b27de90490dc1397d9455006ac214faf4333fd0c1d",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Vellum Quench",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_ritual_brasshollow_odrik_heatpriest": {
+      "kind": "hero",
+      "identity_id": "hero_brasshollow_odrik_heatpriest",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_brasshollow_odrik_heatpriest.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_ritual_brasshollow_odrik_heatpriest.png",
+      "runtime_sha256": "315a79e8dbffb851b5f99b1037bc10851cf048d7cb793289cd11c5d4a0c5dca6",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_ritual_brasshollow_odrik_heatpriest.png",
+      "source_sha256": "9a01c7d68cfd7402a8bf1b086a6a2747577c8a541f9825e00b1c7c228005474a",
+      "source_bounds": [
+        39,
+        21,
+        1224,
+        1228
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_ritual_brasshollow_odrik_heatpriest.png",
+      "trimmed_sha256": "24b88e8505cd5db88e37df22f303c0b777b959f979c7a1911bafb007c88421be",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Odrik Heatpriest",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_arcane_brasshollow_lina_gaugesavant": {
+      "kind": "hero",
+      "identity_id": "hero_brasshollow_lina_gaugesavant",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_brasshollow_lina_gaugesavant.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_arcane_brasshollow_lina_gaugesavant.png",
+      "runtime_sha256": "3a8e7a313cf73bca283b497eb9c032077dd6675b0ff8b2f6e336f5a63206f4d1",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_arcane_brasshollow_lina_gaugesavant.png",
+      "source_sha256": "643353360fcd0f65d86178a75d58484d089c92bc20243159b2fe8cc6c036e555",
+      "source_bounds": [
+        57,
+        20,
+        1199,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_arcane_brasshollow_lina_gaugesavant.png",
+      "trimmed_sha256": "0858edc3e8941f14c3023f0fbc07d50e3be49ef1ff327b780ae9942be0c073dc",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Lina Gauge-Savant",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_strategic_brasshollow_harro_debtrune": {
+      "kind": "hero",
+      "identity_id": "hero_brasshollow_harro_debtrune",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_brasshollow_harro_debtrune.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_strategic_brasshollow_harro_debtrune.png",
+      "runtime_sha256": "7cd52e6a875dea837590ef3668b1922e33adbea05617cc371f49b92e70754931",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_strategic_brasshollow_harro_debtrune.png",
+      "source_sha256": "37e46f68d153a961ea4add1dbd2bb5b561c82fc4d31689b73acd840018db5146",
+      "source_bounds": [
+        49,
+        56,
+        1192,
+        1204
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_strategic_brasshollow_harro_debtrune.png",
+      "trimmed_sha256": "6887c513a3a4ddd9abcacb84a1b5f038eba2cb19033e7fb4bc1aa54736930a78",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Harro Debt-Rune",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_roster_brasshollow_pava_ashmeter": {
+      "kind": "hero",
+      "identity_id": "hero_brasshollow_pava_ashmeter",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_brasshollow_pava_ashmeter.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_roster_brasshollow_pava_ashmeter.png",
+      "runtime_sha256": "5933598bdb12fc04d20a88dbd9ff2c8fdf6cceeb3cfc893d4ab74661a6cc7100",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_roster_brasshollow_pava_ashmeter.png",
+      "source_sha256": "0bcc714399b934bae455b34397082d6bdbc87138a2b5e78cc973fd755a9e5eff",
+      "source_bounds": [
+        57,
+        21,
+        1134,
+        1223
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_roster_brasshollow_pava_ashmeter.png",
+      "trimmed_sha256": "571f6005e7061d7d0ce6e1aabf0086fd387725d10eb7ede03ccddab46cb74ccb",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Pava Ashmeter",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_signature_veilmourn_ivara_blacktide": {
+      "kind": "hero",
+      "identity_id": "hero_veilmourn_ivara_blacktide",
+      "original_path": "res://art/overworld/runtime/heroes/signature/hero_veilmourn_ivara_blacktide.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_signature_veilmourn_ivara_blacktide.png",
+      "runtime_sha256": "1fd63e38f3e7ba595d876fdaaaefbfc0e53f5ac218104b1b58eff64670ce7e1f",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_signature_veilmourn_ivara_blacktide.png",
+      "source_sha256": "8608ebb0387eea9e7a89db864bd1ac2be81a02806470d78592e5a9e8be41cb95",
+      "source_bounds": [
+        0,
+        46,
+        1181,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_signature_veilmourn_ivara_blacktide.png",
+      "trimmed_sha256": "517b7e725c7fdfa986c4f0c708de625d5216c80528eb86cb503acd44203b5efc",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Ivara Blacktide",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_lead_veilmourn_ruln_vanehook": {
+      "kind": "hero",
+      "identity_id": "hero_veilmourn_ruln_vanehook",
+      "original_path": "res://art/overworld/runtime/heroes/live_leads/hero_veilmourn_ruln_vanehook.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_lead_veilmourn_ruln_vanehook.png",
+      "runtime_sha256": "3ba53a4077e1bb0a77b2924b5bee59fe699b505e737d9bd36cec6ceb36f9a315",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_lead_veilmourn_ruln_vanehook.png",
+      "source_sha256": "5c64d0a147a447de472414ac047155c5a12f5342520e1b77ea497b4974abf56d",
+      "source_bounds": [
+        49,
+        34,
+        1199,
+        1238
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_lead_veilmourn_ruln_vanehook.png",
+      "trimmed_sha256": "6b6a505c4c17ea4251a94672a52a96bf4f2b260e66d5dd9253e8f6a81dd16d6c",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Ruln Vanehook",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_tavern_veilmourn_cela_mistcorsair": {
+      "kind": "hero",
+      "identity_id": "hero_veilmourn_cela_mistcorsair",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_veilmourn_cela_mistcorsair.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_tavern_veilmourn_cela_mistcorsair.png",
+      "runtime_sha256": "a1a8e1cac8d3c88fd8eb3b928c30164313373bb3451d1172a637f2ba13d34ee6",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_tavern_veilmourn_cela_mistcorsair.png",
+      "source_sha256": "229c8bba2f1a1c0dece7f08bf18a4e3097fc5fbc882b32e166875a47f58562d6",
+      "source_bounds": [
+        49,
+        39,
+        1192,
+        1223
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_tavern_veilmourn_cela_mistcorsair.png",
+      "trimmed_sha256": "ae4c5ad201398ff82638c6b71eda7c243d12c357b367cfc4e5cb3f5adab8a863",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Cela Mist-Corsair",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_roster_veilmourn_damar_oriflag": {
+      "kind": "hero",
+      "identity_id": "hero_veilmourn_damar_oriflag",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_veilmourn_damar_oriflag.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_roster_veilmourn_damar_oriflag.png",
+      "runtime_sha256": "0c6d8ab055c618f468b9db43764b4c900bfe9bef7f120994a460ce87242de850",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_roster_veilmourn_damar_oriflag.png",
+      "source_sha256": "5170b197b9969eaf7cf428792dffae004e0a027493da35a0cc192b7d49d95a05",
+      "source_bounds": [
+        49,
+        21,
+        1192,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_roster_veilmourn_damar_oriflag.png",
+      "trimmed_sha256": "66fb57dd4dcb7ffa35d4e5ef510db06b6a21a4d5d0bca75244aee3e37accd535",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Damar Oriflag",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_field_veilmourn_jessa_keelwarden": {
+      "kind": "hero",
+      "identity_id": "hero_veilmourn_jessa_keelwarden",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_veilmourn_jessa_keelwarden.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_field_veilmourn_jessa_keelwarden.png",
+      "runtime_sha256": "ddbc1b13eca6d99c1ba41aaa9a04f617f79ca2bd9ab2b1dc7b5b5a2fb0db0b55",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_field_veilmourn_jessa_keelwarden.png",
+      "source_sha256": "80bf9f0b95f9ddadc930ec85005ef89b7ffbf4b91619b980dc8163ffd24c577e",
+      "source_bounds": [
+        49,
+        41,
+        1194,
+        1226
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_field_veilmourn_jessa_keelwarden.png",
+      "trimmed_sha256": "953ad6af0ff2df19eaa6bb4bb08439642ddc21f27f3eefccf5eb7c9ede9d670e",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Jessa Keelwarden",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_specialist_veilmourn_morwen_wakeoracle": {
+      "kind": "hero",
+      "identity_id": "hero_veilmourn_morwen_wakeoracle",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_specialists/hero_veilmourn_morwen_wakeoracle.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_specialist_veilmourn_morwen_wakeoracle.png",
+      "runtime_sha256": "396114df42f314e700c0ee06e69e8d05da58c035cb8974580d4a32b72eb10d15",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_specialist_veilmourn_morwen_wakeoracle.png",
+      "source_sha256": "c9a7cb40c8590b01eeda064bfe67232d85e00c67367edeff9032aa18594a39f3",
+      "source_bounds": [
+        49,
+        23,
+        1222,
+        1224
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_specialist_veilmourn_morwen_wakeoracle.png",
+      "trimmed_sha256": "49e3bb2c3f8e8b846559014ef0fa7bddb29726d55130774d883966ae5a25a0e2",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Morwen Wakeoracle",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_ritual_veilmourn_thir_obituaryink": {
+      "kind": "hero",
+      "identity_id": "hero_veilmourn_thir_obituaryink",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_ritual_scholars/hero_veilmourn_thir_obituaryink.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_ritual_veilmourn_thir_obituaryink.png",
+      "runtime_sha256": "7b65a187427b68f0195d0f58849ebc125996407458d709045ca1063becc7bc84",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_ritual_veilmourn_thir_obituaryink.png",
+      "source_sha256": "a46a0617d65d1ef97895d140daf85745b8f5fb92b088d28c0a0437b35c191a3b",
+      "source_bounds": [
+        49,
+        16,
+        1222,
+        1238
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_ritual_veilmourn_thir_obituaryink.png",
+      "trimmed_sha256": "e0ad46b2f8d64999c7526bae80ea73d235e6420c63c3360037208da26c2a0df6",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Thir Obituary-Ink",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_arcane_veilmourn_sael_mirrorbell": {
+      "kind": "hero",
+      "identity_id": "hero_veilmourn_sael_mirrorbell",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_veilmourn_sael_mirrorbell.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_arcane_veilmourn_sael_mirrorbell.png",
+      "runtime_sha256": "5156a02a97e2db7897c5075812c4c0e4b44357eef119faa2a83bc8142a08e67d",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_arcane_veilmourn_sael_mirrorbell.png",
+      "source_sha256": "c4defcf1c76a96aa06d3bdaa44d051a91ce2217f89f0b22993e6c8a0e8192067",
+      "source_bounds": [
+        136,
+        33,
+        1230,
+        1230
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_arcane_veilmourn_sael_mirrorbell.png",
+      "trimmed_sha256": "cbfc75e9d04552bab7df248dee38d69ed8bda6d661037142800fb22bb1e838b5",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Sael Mirrorbell",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_roster_veilmourn_nacre_vowless": {
+      "kind": "hero",
+      "identity_id": "hero_veilmourn_nacre_vowless",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_veilmourn_nacre_vowless.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_roster_veilmourn_nacre_vowless.png",
+      "runtime_sha256": "d7308b9c43dbfdcae8dec44756026960f6997965ecd2cf91dfcfcb4bab9eb55d",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_roster_veilmourn_nacre_vowless.png",
+      "source_sha256": "6a656003fe81127eb372bf4fa8f62e25028fa0d4360ac41485be9bd7d71b44c3",
+      "source_bounds": [
+        0,
+        47,
+        1194,
+        1238
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_roster_veilmourn_nacre_vowless.png",
+      "trimmed_sha256": "a65b2bc9211841e105f2f7cd835c3276d714ed37f7382deb54b6ee817608a71a",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Nacre Vowless",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_strategic_veilmourn_orso_nightchart": {
+      "kind": "hero",
+      "identity_id": "hero_veilmourn_orso_nightchart",
+      "original_path": "res://art/overworld/runtime/heroes/tavern_strategic_officers/hero_veilmourn_orso_nightchart.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_strategic_veilmourn_orso_nightchart.png",
+      "runtime_sha256": "68da89865f30aced71962f406806a77f0628f94e88bf44b9c4b555023320d980",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_strategic_veilmourn_orso_nightchart.png",
+      "source_sha256": "bd99091a28a32d0d7f31188bea3d875bc7a09c0f73ea6b089a04de3b369b455c",
+      "source_bounds": [
+        57,
+        23,
+        1230,
+        1234
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_strategic_veilmourn_orso_nightchart.png",
+      "trimmed_sha256": "4029e081a77f046f97e3c698ddc755c6a44b733773cbdae716ee10340bdaf49f",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Orso Nightchart",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_faction_embercourt": {
+      "kind": "hero",
+      "identity_id": "hero_embercourt_maela_powderwrit",
+      "original_path": "res://art/overworld/runtime/heroes/factions/embercourt.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_faction_embercourt.png",
+      "runtime_sha256": "27d16a8c384ff6bbcea75cac898751cf3e76a7f9de37db0bf87582df9e15c8e5",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_faction_embercourt.png",
+      "source_sha256": "554229035c872c72f079f52237cc6bb98e3ad3a1d1c250c934e047436eb8faa4",
+      "source_bounds": [
+        0,
+        0,
+        1216,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_faction_embercourt.png",
+      "trimmed_sha256": "4f03b729c86130afc9a209ae766c783c3eb718988ff53ab78ec5cb4938e2a48b",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Maela Powderwrit",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_faction_mireclaw": {
+      "kind": "hero",
+      "identity_id": "hero_mireclaw_rhask_reedcaller",
+      "original_path": "res://art/overworld/runtime/heroes/factions/mireclaw.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_faction_mireclaw.png",
+      "runtime_sha256": "08a018c5694672a8ff3a7748d22552c9ae243bcd110ffe8dbeab153c5e8c466f",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_faction_mireclaw.png",
+      "source_sha256": "52a4f13e14f04716330124bee1f2957329697aa45a39c816299f4ac5bdbb067f",
+      "source_bounds": [
+        0,
+        21,
+        1136,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_faction_mireclaw.png",
+      "trimmed_sha256": "f51ed9db0d5d08dcf8ad932c9411f82767534a1edb94d1cc02b42f8116f23de9",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Rhask Reedcaller",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_faction_sunvault": {
+      "kind": "hero",
+      "identity_id": "hero_sunvault_aven_sevenfold",
+      "original_path": "res://art/overworld/runtime/heroes/factions/sunvault.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_faction_sunvault.png",
+      "runtime_sha256": "709cc9fc7be4227c62bd9e9a368928f498552ca5d30a49738e2625363fba6e19",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_faction_sunvault.png",
+      "source_sha256": "aeecf31e6e6df9e0c2c52de96da90fb75bb5077162bc6511a9b854695651fb14",
+      "source_bounds": [
+        0,
+        26,
+        1224,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_faction_sunvault.png",
+      "trimmed_sha256": "e01a36f020dca677b346798278eb500142f5635cbe35c44f78b33abf8e699178",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Aven Sevenfold",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_faction_thornwake": {
+      "kind": "hero",
+      "identity_id": "hero_thornwake_bryn_boltroot",
+      "original_path": "res://art/overworld/runtime/heroes/factions/thornwake.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_faction_thornwake.png",
+      "runtime_sha256": "5fbfaaa2c0bcdd5dad6f83ec6e7f854c39444816a501446d513b30354f942f8e",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_faction_thornwake.png",
+      "source_sha256": "18f95797901aa60a3f512086a3640429917a897392077680c677ffbdd0709477",
+      "source_bounds": [
+        0,
+        12,
+        1224,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_faction_thornwake.png",
+      "trimmed_sha256": "8d1e9e12d5981ae4faed3b571cdfc44ddf33fd09c522f51083d0b8f87adf9e8e",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Bryn Boltroot",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_faction_brasshollow": {
+      "kind": "hero",
+      "identity_id": "hero_brasshollow_kestra_blackgauge",
+      "original_path": "res://art/overworld/runtime/heroes/factions/brasshollow.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_faction_brasshollow.png",
+      "runtime_sha256": "1ad8b3aa7e114ea3dfa64c74a550ce38775f09e8bfa1a51c53f1689617aaa05a",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_faction_brasshollow.png",
+      "source_sha256": "852984539962c9af439373cffc0f3c2f06706405a994e3afbb2a54d85e19b269",
+      "source_bounds": [
+        24,
+        13,
+        1230,
+        1228
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_faction_brasshollow.png",
+      "trimmed_sha256": "872beb462bd1fcaf88180d655fd142889c8992092bc86b29c99e18b0e625cb5c",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Kestra Blackgauge",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "hero_faction_veilmourn": {
+      "kind": "hero",
+      "identity_id": "hero_veilmourn_olan_tidehook",
+      "original_path": "res://art/overworld/runtime/heroes/factions/veilmourn.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/hero_faction_veilmourn.png",
+      "runtime_sha256": "acfb5c5020f11b1bf2a621313a89834b2c6fa9c971e824d2fb6594ac30ecba1e",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/hero_faction_veilmourn.png",
+      "source_sha256": "e84d03d19bc52f911eae62376db5ec4bbdf06cd945c288872c3fccf7aaed29a3",
+      "source_bounds": [
+        0,
+        21,
+        1196,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/hero_faction_veilmourn.png",
+      "trimmed_sha256": "ac104b88ebc67b71f1e814dc572566799e6c75bdefdac777b3af95aaf2b19245",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Olan Tidehook",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_roadwardens": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_roadwardens",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_roadwardens.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_roadwardens.png",
+      "runtime_sha256": "5b2870df9f2bcd2ade62f2aa51979e06541ac8fbc0ff29bdfdeab7baf268cea5",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_roadwardens.png",
+      "source_sha256": "684d7c3a8091ce93b79ce0f8c8675eafeec83151f482c540d75d11fc497a38ec",
+      "source_bounds": [
+        57,
+        24,
+        1196,
+        1228
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_roadwardens.png",
+      "trimmed_sha256": "1c44e18cd106bbd47091b9fcb384780dde824546f0200da60e4b834c3b704088",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Roadwardens",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_fenhound_runners": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_fenhound_runners",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_fenhound_runners.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_fenhound_runners.png",
+      "runtime_sha256": "e4ba476ba9588d0b2084c062eb6f8154fc57ab952559cf9345a9f02c5d8b125f",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_fenhound_runners.png",
+      "source_sha256": "296051198ff79c5efbd6b51c6490d22707b44cf266d9348107c7bab7c7ff8b23",
+      "source_bounds": [
+        0,
+        49,
+        1238,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_fenhound_runners.png",
+      "trimmed_sha256": "fa26b00030d14d19b683b9f02f15a1c9a3c2e39e03e99dd8b381245be0ac50a6",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Fenhound Runners",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_cliffhawk_wardens": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_cliffhawk_wardens",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_cliffhawk_wardens.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_cliffhawk_wardens.png",
+      "runtime_sha256": "34711ddfe2a28b1328a20fc2bb8126771d7bc85b5eed93f5542af8fe5491a093",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_cliffhawk_wardens.png",
+      "source_sha256": "b43109a1fc785ace18a010ae04eb82a9ecd40e0fb404d7c6600de572a56fdbbb",
+      "source_bounds": [
+        0,
+        64,
+        1253,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_cliffhawk_wardens.png",
+      "trimmed_sha256": "f50f1295f5e31a4350cd3225551e8108d10b3e99abd432df4962bf2574fad08c",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Cliffhawk Wardens",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_reedbarge_poles": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_reedbarge_poles",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_reedbarge_poles.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_reedbarge_poles.png",
+      "runtime_sha256": "c041ecb54941112000e0230b8cfd15442fbea4fa1e71d5ecd97c8b3db6048dc7",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_reedbarge_poles.png",
+      "source_sha256": "2b8fecda6c37f287872e55b81195e3121f2c54a706af7359a3c5cc0444a7aa05",
+      "source_bounds": [
+        29,
+        51,
+        1200,
+        1230
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_reedbarge_poles.png",
+      "trimmed_sha256": "741a2126c124a106dc76a9b61526d1a8b81e2b1ae55f09f392c205eb0ea3e70d",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Reedbarge Poles",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_glowcap_bulwarks": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_glowcap_bulwarks",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_glowcap_bulwarks.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_glowcap_bulwarks.png",
+      "runtime_sha256": "23c757dcbec56820c6512d99aa1ecb023d64117b7ac167ef0ea3c6e14db1456c",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_glowcap_bulwarks.png",
+      "source_sha256": "6859c7eb767a3dc28f032adfc087dd90c8760eea74e363c11815f5f096362cd8",
+      "source_bounds": [
+        31,
+        39,
+        1198,
+        1222
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_glowcap_bulwarks.png",
+      "trimmed_sha256": "f7b309f476cb8129f54f8b14b59be2b7e9bd2105bff990268a13d69db9f7076c",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Glowcap Bulwarks",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_dustjack_blades": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_dustjack_blades",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_dustjack_blades.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_dustjack_blades.png",
+      "runtime_sha256": "daa6ee5dfb8ffca0f5825d85699a7b326aa2388fe066244e091638b10fd912f1",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_dustjack_blades.png",
+      "source_sha256": "7d5f0d753dc05346ce00edd7d262468775b060dc4fa5d65effe9c352515d3036",
+      "source_bounds": [
+        71,
+        63,
+        1192,
+        1206
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_dustjack_blades.png",
+      "trimmed_sha256": "1a7160404625b9c50a42fcf16b489b8b81bc3cfd60b8cb29352c1df44d0ee248",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Dustjack Blades",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_kilnward_mallets": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_kilnward_mallets",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_kilnward_mallets.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_kilnward_mallets.png",
+      "runtime_sha256": "bcfef649cfa211ae6ef0330fa3db7fc94942a54cb282d455113ef6c1f5b43c99",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_kilnward_mallets.png",
+      "source_sha256": "082d83a12799cf7fd9afb09910f5549f80a7910fd9891c705a63f6039bfc85c6",
+      "source_bounds": [
+        49,
+        21,
+        1198,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_kilnward_mallets.png",
+      "trimmed_sha256": "411add640f9347de6c1d3ca24d8f28ac6c3083ab1ae75e1e7754d62a304c6266",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Kilnward Mallets",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_frostbeacon_pikes": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_frostbeacon_pikes",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_frostbeacon_pikes.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_frostbeacon_pikes.png",
+      "runtime_sha256": "14dab05562d0610588ad0433f51446aba94ac7b730fc9d2f2ca43b055a447993",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_frostbeacon_pikes.png",
+      "source_sha256": "8fd269f90d38ffa6279ea8628e261057bdcd0438240a58c18d2414b5a9323ee5",
+      "source_bounds": [
+        33,
+        21,
+        1230,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_frostbeacon_pikes.png",
+      "trimmed_sha256": "694a7d7db9a9234387a6da9d18d54ae3dd18c1aa2c615b3892124c503e2101bb",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Frostbeacon Pikes",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_orchard_halberds": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_orchard_halberds",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_orchard_halberds.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_orchard_halberds.png",
+      "runtime_sha256": "c3fc37969221b6b75bec95ce7ba8ff12c4b6aa1a54a5caa4fd3c0817c2cba21e",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_orchard_halberds.png",
+      "source_sha256": "694599e3f0dec53dd9c0db2373c4931746479af9ddb197eccba02e48a80f94fa",
+      "source_bounds": [
+        25,
+        8,
+        1218,
+        1230
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_orchard_halberds.png",
+      "trimmed_sha256": "3c9baaa6b28c929096e401ed128493c53cc992e2bf42a06512e5eb8a22865d61",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Orchard Halberds",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_hedgehook_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_hedgehook_watch",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_hedgehook_watch.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_hedgehook_watch.png",
+      "runtime_sha256": "0c160d3a80ed662626cc4e25451785a9bc2edcaf30f3c980290f214cac15e41b",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_hedgehook_watch.png",
+      "source_sha256": "c6fc88f9302cedefbf3a1a7c3319ba603187f92ef690f659dfc154c3e5b7678c",
+      "source_bounds": [
+        33,
+        21,
+        1206,
+        1216
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_hedgehook_watch.png",
+      "trimmed_sha256": "118a2d174ce84ca7adb6f1474d1414097c8dc352ae2cbda227ab4a172691e28c",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Hedgehook Watch",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_tidepool_cutters": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_tidepool_cutters",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_tidepool_cutters.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_tidepool_cutters.png",
+      "runtime_sha256": "b1d388f96afb85e2b4cc01997174cb244680412e6fc9d1382c4da784b05e93ec",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_tidepool_cutters.png",
+      "source_sha256": "a24a42d168c44c9d83ce149b976f5ca5cd26d8e5d517fe1961dc4d80a9535c76",
+      "source_bounds": [
+        0,
+        29,
+        1244,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_tidepool_cutters.png",
+      "trimmed_sha256": "8f02c96ba5446694067ee1bef04e679fe211168a83160d5fffcfb9251ea94c3f",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Tidepool Cutters",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_switchback_pikes": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_switchback_pikes",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_switchback_pikes.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_switchback_pikes.png",
+      "runtime_sha256": "b8c295d05ec19e80d791fac83a8a61fc82272c801c8e71c742f80ebafc422ab9",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_switchback_pikes.png",
+      "source_sha256": "676f78e9058423c6da4c2a9a4636db46a4f2c3390139861524258b5d014d3b4a",
+      "source_bounds": [
+        49,
+        8,
+        1196,
+        1232
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_switchback_pikes.png",
+      "trimmed_sha256": "032fcbf6d0e23e075c859c639776fbb75a9dd6dbb99ac04ba151f87640b06ea0",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Switchback Pikes",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_saltpan_bucklers": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_saltpan_bucklers",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_saltpan_bucklers.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_saltpan_bucklers.png",
+      "runtime_sha256": "157517f2780777aef6c77fd86329899b5bcffbf49ae88bbae5e16a6d0ddba067",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_saltpan_bucklers.png",
+      "source_sha256": "106bb6a218d42e0a4ba87cabb5c1e13e78b62a7a83165d016f932c7ed52e9246",
+      "source_bounds": [
+        49,
+        13,
+        1208,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_saltpan_bucklers.png",
+      "trimmed_sha256": "cb1907eefac779e18f3a6caa1bc686d89c8572fe24748f50a06f744c1e82731a",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Saltpan Bucklers",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_sumpstone_guards": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_sumpstone_guards",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_sumpstone_guards.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_sumpstone_guards.png",
+      "runtime_sha256": "6144289ec6d3d038497b27754c05fe169b2db463735f6ec143d22f512c0f8aaf",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_sumpstone_guards.png",
+      "source_sha256": "185a5c22a770a8516d1a74d4f2ea5396450eea26d8378efac837a26ad15e2ecc",
+      "source_bounds": [
+        0,
+        77,
+        1212,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_sumpstone_guards.png",
+      "trimmed_sha256": "5c1a59fd1b11ebb40e1f54b53e3e3d628f186098138f25e3ee714f246becfa27",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Sumpstone Guards",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_icehook_trappers": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_icehook_trappers",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_icehook_trappers.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_icehook_trappers.png",
+      "runtime_sha256": "1da038ef2540964801a7a76e3282b5e7d8460a35abd99b0b1840e285efe63359",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_icehook_trappers.png",
+      "source_sha256": "61b12caf1e38a19033f36c436fd888723c65614146267f7626bcbf42edf37058",
+      "source_bounds": [
+        49,
+        50,
+        1194,
+        1226
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_icehook_trappers.png",
+      "trimmed_sha256": "27570c1ae0c93fa04d0c3eca6830e90fa6afaed06dec4dc1582276f317854f31",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Icehook Trappers",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_unbound_wild_scarshield_breakyard_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_scarshield_veterans",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_scarshield_veterans.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_unbound_wild_scarshield_breakyard_watch.png",
+      "runtime_sha256": "59812a4ec1be957f758b484c4488434512e03981df52e39ee9df8b5fd1b6d3d0",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_unbound_wild_scarshield_breakyard_watch.png",
+      "source_sha256": "c53408a109a2939af36ff5aa331621618735139a72e218499dc6b840868cef7e",
+      "source_bounds": [
+        49,
+        57,
+        1218,
+        1207
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_unbound_wild_scarshield_breakyard_watch.png",
+      "trimmed_sha256": "cc9c26cfd3fd56e2ccb809095dfe595cd84c6c8ac272700d3723b0da58fa8f83",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Scarshield Veterans",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_unbound_wild_sapwhistle_greenward_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_greenbranch_cudgels",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_greenbranch_cudgels.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_unbound_wild_sapwhistle_greenward_watch.png",
+      "runtime_sha256": "f15224b5a997bf61f9b9b80ef9d9466c0e8034dea3b79faa92aef6e1a4c4d4ab",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_unbound_wild_sapwhistle_greenward_watch.png",
+      "source_sha256": "69fe5f8cc5518f3b8c4a81ae078623862b59a884afdfd9fcc2e2f3e7f0bc4e0d",
+      "source_bounds": [
+        0,
+        49,
+        1194,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_unbound_wild_sapwhistle_greenward_watch.png",
+      "trimmed_sha256": "9672faeea21d4a798261ed75a92c25736a316f96d80baac118030fa52a7f9394",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Greenbranch Cudgels",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_unbound_wild_flaremast_pilotage_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_harbor_polearms",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_harbor_polearms.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_unbound_wild_flaremast_pilotage_watch.png",
+      "runtime_sha256": "0285bfc03997a086f9568f4ae81fd8cb1de2f495a8a12870168b4eb05fd6dbe7",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_unbound_wild_flaremast_pilotage_watch.png",
+      "source_sha256": "936d9d1e9cabf7dd8f5dc69af1c998ac8f2909039e25539049ae10b9aa67e347",
+      "source_bounds": [
+        31,
+        25,
+        1240,
+        1225
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_unbound_wild_flaremast_pilotage_watch.png",
+      "trimmed_sha256": "3a44a5e8c2f8c6fcfd26f834387892a6d24e5efe9c87a74d6135cce4f061253b",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Harbor Polearms",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_kitehook_runners": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_kitehook_runners",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_kitehook_runners.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_kitehook_runners.png",
+      "runtime_sha256": "f66fd11454578bc8474761f6b58acb8f424d7cee5f219da3f852cda74717aa00",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_kitehook_runners.png",
+      "source_sha256": "977e747ea37f8ee74cdacd4e63525cf514ba497e934dd3ba8e5585e55504a39e",
+      "source_bounds": [
+        31,
+        75,
+        1194,
+        1222
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_kitehook_runners.png",
+      "trimmed_sha256": "0f88d9049cd24b4c2ef6e49d5599a54dc4c9d9cbbaf9f4df7d6000025a439a46",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Kitehook Runners",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_tunnel_lanterns": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_tunnel_lanterns",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_tunnel_lanterns.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_tunnel_lanterns.png",
+      "runtime_sha256": "8ff14d00dcd39fcbf909cc71eee92057c348f638fa178a1276c866a94b304ffb",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_tunnel_lanterns.png",
+      "source_sha256": "80fc2e5b52d811a8fbc96a01d10548e4e78036ad8b778c9da93c588460273ccb",
+      "source_bounds": [
+        49,
+        72,
+        1174,
+        1207
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_tunnel_lanterns.png",
+      "trimmed_sha256": "4385a2e03017abfa7688975224bd1b192c86fdf08c80b70d047559dbafcd32b8",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Tunnel Lanterns",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_bogbell_mauls": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_bogbell_mauls",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_bogbell_mauls.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_bogbell_mauls.png",
+      "runtime_sha256": "7c05ab8933b8f77d5704ac094a818a2849ee736d780cfc387ad9e1dfade38e3b",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_bogbell_mauls.png",
+      "source_sha256": "6d5449cd719fb9c93cebab98d1f02fb000740fbd658f33202d3828352c14acfa",
+      "source_bounds": [
+        55,
+        45,
+        1213,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_bogbell_mauls.png",
+      "trimmed_sha256": "2e85b4cb7a448bbb734ebb880ff8802388d66ddd053b2c4af823640988605757",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Bogbell Mauls",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_milestone_bucklers": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_milestone_bucklers",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_milestone_bucklers.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_milestone_bucklers.png",
+      "runtime_sha256": "5a1d4139fc59698f8ef95684cbcf642c42e8da015a1a84236c22b9b49ada938c",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_milestone_bucklers.png",
+      "source_sha256": "b5905ce08b69cd951243a159d3ffcdf0f70fa817ef5bde8fd5f9c85c3a39858b",
+      "source_bounds": [
+        49,
+        39,
+        1200,
+        1222
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_milestone_bucklers.png",
+      "trimmed_sha256": "281927c56f253cfa5c8cd864f8f3f30ae9e09efab8e623fd11e6ddefeca5e313",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Milestone Bucklers",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_frostwharf_cutters": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_frostwharf_cutters",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_frostwharf_cutters.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_frostwharf_cutters.png",
+      "runtime_sha256": "0c38173c6bcafc33c8855b06942204f22027fd552f6746829152cf82b4f3d95a",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_frostwharf_cutters.png",
+      "source_sha256": "5ca8892d0fecd0aec424935ef5061073580fdb7d97dadce45fd609178af6923a",
+      "source_bounds": [
+        57,
+        21,
+        1160,
+        1214
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_frostwharf_cutters.png",
+      "trimmed_sha256": "e7ec5251d4982e06bf27b9dafc474d52ee97aa93e8bbfc970340578d4d86da04",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Frostwharf Cutters",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_charcoal_mauls": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_charcoal_mauls",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_charcoal_mauls.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_charcoal_mauls.png",
+      "runtime_sha256": "736dbafc54be6eafac8cb4fc52c71f47d2a2ab01ac26e815d01c0552ebabd0b3",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_charcoal_mauls.png",
+      "source_sha256": "678595b6856423625480050904eb4107afec59990ddd708fc15961fb182d61a2",
+      "source_bounds": [
+        0,
+        64,
+        1200,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_charcoal_mauls.png",
+      "trimmed_sha256": "c6f460ed2e1a2c9ed5629da1d1da010c95a1148e3795cf33265076c4fbce8c60",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Charcoal Mauls",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "generated_neutral_unit_neutral_basalt_wardens": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_basalt_wardens",
+      "original_path": "res://art/overworld/runtime/objects/encounters/generated_neutrals/unit_neutral_basalt_wardens.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/generated_neutral_unit_neutral_basalt_wardens.png",
+      "runtime_sha256": "aa97870f9dc1a5a0b3125a4acdc8bd6d0ebd9ca7b9e33560b30b1f50b3b44eb6",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/generated_neutral_unit_neutral_basalt_wardens.png",
+      "source_sha256": "bf781ff3ef414ebb85fc25811bc3d051ac5f1e2091d1b98a9603e654c979429d",
+      "source_bounds": [
+        49,
+        21,
+        1082,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/generated_neutral_unit_neutral_basalt_wardens.png",
+      "trimmed_sha256": "90a0ef96d0fa5b9386d7d35417d5d2f0dbcc46869b07209c50b13d4cb5759d73",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Basalt Wardens",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_elite_cinderwake_fold_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_cinderwake_aurochs",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_cinderwake_aurochs.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_elite_cinderwake_fold_watch.png",
+      "runtime_sha256": "7f2ac5f8ac4fafb0c5e8450d6265249594f2053825e79a94b344251a19ec0c85",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_elite_cinderwake_fold_watch.png",
+      "source_sha256": "db757f9e13e973079d23a900114bb3d28131051258ee7924450e5e5dca15855e",
+      "source_bounds": [
+        49,
+        57,
+        1224,
+        1238
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_elite_cinderwake_fold_watch.png",
+      "trimmed_sha256": "ae8b9b9421afc9eac9321baee52af616b706d7feb1c65916686477392f59c37e",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Cinderwake Aurochs",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_elite_tideglass_roost_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_tideglass_skyrays",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_tideglass_skyrays.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_elite_tideglass_roost_watch.png",
+      "runtime_sha256": "44b70238ca0e9ed6c64a004a37e73137897f3fceadda85aa85b67f91f718a1bd",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_elite_tideglass_roost_watch.png",
+      "source_sha256": "1735c59fbb460ec8578963de2eee8d0a38afda307f34af5c5a4632bacfcc0277",
+      "source_bounds": [
+        0,
+        19,
+        1240,
+        1228
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_elite_tideglass_roost_watch.png",
+      "trimmed_sha256": "a7b915b6df0ee9fef8d692893d75eb47edbfcc5b20f7704c44b5d40630e6e1ce",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Tideglass Skyrays",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_elder_wild_brambleback_crown_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_brambleback_knucklebears",
+      "original_path": "res://art/overworld/runtime/objects/encounters/elder_wilds/unit_neutral_brambleback_knucklebears.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_elder_wild_brambleback_crown_watch.png",
+      "runtime_sha256": "54d649792e1fe131085ebca19d2ef1afa8798446894e0b732c898e52a2393633",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_elder_wild_brambleback_crown_watch.png",
+      "source_sha256": "506642c0189c45d51a1724f9ff997ce17afeab546b5d93d2a1ec61aad1428372",
+      "source_bounds": [
+        0,
+        0,
+        1234,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_elder_wild_brambleback_crown_watch.png",
+      "trimmed_sha256": "ebbc7d5ef3f02a81fcb00358d2c7000e935e401d5dee0f66267ebd9ade2a8ab9",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Brambleback Knucklebears",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_elder_wild_mireglass_bellbasin_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_mireglass_belltoads",
+      "original_path": "res://art/overworld/runtime/objects/encounters/elder_wilds/unit_neutral_mireglass_belltoads.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_elder_wild_mireglass_bellbasin_watch.png",
+      "runtime_sha256": "e2ec14f690a359e0e0fe77b7f1ba040d0bbe5745812802ac9dd312fca9911e3a",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_elder_wild_mireglass_bellbasin_watch.png",
+      "source_sha256": "01a6b292fa8152c33b538be21ab744e9759b4aea19675b4e541327b5ef3dccc0",
+      "source_bounds": [
+        0,
+        0,
+        1234,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_elder_wild_mireglass_bellbasin_watch.png",
+      "trimmed_sha256": "4e8f487333f11f6e9a4c216a86e7d8ef56b1db968a62f9993f85dcc31349d104",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Mireglass Belltoads",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_elder_wild_galehorn_breakline_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_galehorn_striders",
+      "original_path": "res://art/overworld/runtime/objects/encounters/elder_wilds/unit_neutral_galehorn_striders.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_elder_wild_galehorn_breakline_watch.png",
+      "runtime_sha256": "c80eea5736760bbfb39ed987b333e4e62ec9c56255dfa43c2794861b0f48b1ff",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_elder_wild_galehorn_breakline_watch.png",
+      "source_sha256": "e1776a2b9ccaa57581199c8bfbc1c9d8127ced971be9fd5d1167b41bc128c28a",
+      "source_bounds": [
+        0,
+        25,
+        1218,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_elder_wild_galehorn_breakline_watch.png",
+      "trimmed_sha256": "079a87bb44783b77fc55db3e53383126456b64f953d464d27a76ef2e891b7f53",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Galehorn Striders",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_elder_wild_sunscale_lantern_drift_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_sunscale_lanternmoths",
+      "original_path": "res://art/overworld/runtime/objects/encounters/elder_wilds/unit_neutral_sunscale_lanternmoths.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_elder_wild_sunscale_lantern_drift_watch.png",
+      "runtime_sha256": "50b8d6d25af17086f1efee4abaf4596e354e1599a562e6e02465064e852b1ae2",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_elder_wild_sunscale_lantern_drift_watch.png",
+      "source_sha256": "1962ac9218bc6331ca7934e150edc8362a5679256cd082cea9c9d53db816b698",
+      "source_bounds": [
+        49,
+        19,
+        1238,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_elder_wild_sunscale_lantern_drift_watch.png",
+      "trimmed_sha256": "3f96a179d9d547f213eb5bd7f47b38de379c9b8bbb4c4ec7c245a4fd37b24ef4",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Sunscale Lanternmoths",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_elder_wild_rimebell_whitewake_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_rimebell_skyrakers",
+      "original_path": "res://art/overworld/runtime/objects/encounters/elder_wilds/unit_neutral_rimebell_skyrakers.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_elder_wild_rimebell_whitewake_watch.png",
+      "runtime_sha256": "07c8f68ca00910ae026effef5682e72828b86b61e45c20075a94a61019fa8650",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_elder_wild_rimebell_whitewake_watch.png",
+      "source_sha256": "10217ff163952dfb9d31294ac4a9d74ba7215f931f9e6f4339094dfef4710a21",
+      "source_bounds": [
+        0,
+        0,
+        1238,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_elder_wild_rimebell_whitewake_watch.png",
+      "trimmed_sha256": "593aefd7f453978d81af5703644e5ea62fa466fd398ab92807bd1f13c935b733",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Rimebell Skyrakers",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_elder_wild_deepforge_seventh_seal_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_deepforge_vaultwyrms",
+      "original_path": "res://art/overworld/runtime/objects/encounters/elder_wilds/unit_neutral_deepforge_vaultwyrms.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_elder_wild_deepforge_seventh_seal_watch.png",
+      "runtime_sha256": "2dafb6b43b6274d5d2a1a173a36224d8d2e0e69a0e0ff94129b02c5b4e48b950",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_elder_wild_deepforge_seventh_seal_watch.png",
+      "source_sha256": "545393ff6666e449d593e033eda4bf14918d7471a352a40b39fdbb47cc2e58eb",
+      "source_bounds": [
+        29,
+        19,
+        1239,
+        1236
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_elder_wild_deepforge_seventh_seal_watch.png",
+      "trimmed_sha256": "907eb0f2e21423d549a9b2782eeff4cc792abd4af2858c3cf24870a1e0554e85",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Deepforge Vaultwyrms",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_sovereign_wild_ashcrown_cinderfold_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_ashcrown_kilnelk",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_ashcrown_kilnelk.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_sovereign_wild_ashcrown_cinderfold_watch.png",
+      "runtime_sha256": "f2158e8e1977d6adaa8a7dfd7bad8483c0f738e1fec7a4983f6e1b65d08d80c2",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_sovereign_wild_ashcrown_cinderfold_watch.png",
+      "source_sha256": "2f77c065c61b5242ace53d07d8a9cd0f758dc0d792df587a1197fc1a5b796215",
+      "source_bounds": [
+        0,
+        0,
+        1230,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_sovereign_wild_ashcrown_cinderfold_watch.png",
+      "trimmed_sha256": "6f48854f668ccf2ccbe2df29b3c48692b5ba74f6fb503cd49e0144eee33c26af",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Ashcrown Kilnelk",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_sovereign_wild_miremoon_crownmere_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_miremoon_crownmaws",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_miremoon_crownmaws.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_sovereign_wild_miremoon_crownmere_watch.png",
+      "runtime_sha256": "2a0a3f250a94b02d99b26b49585e30167f58b2d2bc77171814c3e43fb06e67f3",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_sovereign_wild_miremoon_crownmere_watch.png",
+      "source_sha256": "2ed7510697c1f6bce5c49106963071a7f74ddad3ff06a4f9553a8ba8da88b75c",
+      "source_bounds": [
+        0,
+        19,
+        1254,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_sovereign_wild_miremoon_crownmere_watch.png",
+      "trimmed_sha256": "4106acedbeac07a1ffce74b3eee65e2221fa5606e1aeff18144970a06f42d9a9",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Miremoon Crownmaws",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_sovereign_wild_noonshard_prism_aviary_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_noonshard_prism_kites",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_noonshard_prism_kites.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_sovereign_wild_noonshard_prism_aviary_watch.png",
+      "runtime_sha256": "7cfa4525c736160b2d03567fdc34a166a419dc384c989c2d6098f459cf906224",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_sovereign_wild_noonshard_prism_aviary_watch.png",
+      "source_sha256": "52854318207d44fe7ac31080c35b1f504678af555894635df556b8cf83c974a5",
+      "source_bounds": [
+        18,
+        15,
+        1240,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_sovereign_wild_noonshard_prism_aviary_watch.png",
+      "trimmed_sha256": "724a4a316785f6733b64cd0ece45a546660f50d3db6d4a32c693606400eac05c",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Noonshard Prism Kites",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_sovereign_wild_rootvault_heartwood_hollow_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_rootvault_barkhulks",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_rootvault_barkhulks.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_sovereign_wild_rootvault_heartwood_hollow_watch.png",
+      "runtime_sha256": "c9239c4878c88fb6a7e0575b8ca023eac35337a3cf7ea125af8b557172dc8be8",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_sovereign_wild_rootvault_heartwood_hollow_watch.png",
+      "source_sha256": "30811586c410a17996f777978b0d67ccb97a5bd4db03a8de0ebd8f4ede074c78",
+      "source_bounds": [
+        0,
+        8,
+        1254,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_sovereign_wild_rootvault_heartwood_hollow_watch.png",
+      "trimmed_sha256": "8b8618329c3b376d8fecf82e515d3c0bf24ab8f5497cba75acedf1a8eee2fa8c",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Rootvault Barkhulks",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_sovereign_wild_quenchbell_pressure_den_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_quenchbell_ironbacks",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_quenchbell_ironbacks.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_sovereign_wild_quenchbell_pressure_den_watch.png",
+      "runtime_sha256": "b2866f48b2f5538f302c8399205ad41fdac7c4ef30705e1705f8a92b463cea51",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_sovereign_wild_quenchbell_pressure_den_watch.png",
+      "source_sha256": "35df1c5848f430c9d62293c23723341a65b18f94db78627c9505b96003abed4c",
+      "source_bounds": [
+        0,
+        53,
+        1242,
+        1204
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_sovereign_wild_quenchbell_pressure_den_watch.png",
+      "trimmed_sha256": "50009166ac90f72db5105a27e590daf41175d1d6c1b57b116ad305c8933be1c1",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Quenchbell Ironbacks",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_sovereign_wild_saltwake_belldeep_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_saltwake_bellwhales",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_saltwake_bellwhales.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_sovereign_wild_saltwake_belldeep_watch.png",
+      "runtime_sha256": "1f192e215b172b247263601886f3ea074310f2a3e3bb122fb75820b965e30f4e",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_sovereign_wild_saltwake_belldeep_watch.png",
+      "source_sha256": "85bbcc13999dbcb1c96938db12f5e095c60a82bf59a1245b618ef411aebf9480",
+      "source_bounds": [
+        17,
+        21,
+        1243,
+        1222
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_sovereign_wild_saltwake_belldeep_watch.png",
+      "trimmed_sha256": "8ef77aef5c4a3451638c7be856079ad7fa7a7aa0ac21d057b43e0a83c0d82307",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Saltwake Bellwhales",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_unbound_wild_windcairn_wayhouse_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_cairnshield_porters",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_cairnshield_porters.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_unbound_wild_windcairn_wayhouse_watch.png",
+      "runtime_sha256": "e6df16b26cedc7d5510f973e1af6eb6c24805dbe44897a5234f2e924e6b5bca9",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_unbound_wild_windcairn_wayhouse_watch.png",
+      "source_sha256": "0dd4af588a7b0bf9c1d1cd0a6c24ad5256c2e7ebf10b1f6debe7d8b69aad13ed",
+      "source_bounds": [
+        0,
+        39,
+        1230,
+        1228
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_unbound_wild_windcairn_wayhouse_watch.png",
+      "trimmed_sha256": "b2bd6a18af0bfe39b64827c11c650d06894e64ec05daf0a4463027f7635e49ca",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Cairnshield Porters",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_frontier_mythic_cindervane_updraft_roost_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_cindervane_censerwings",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_cindervane_censerwings.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_frontier_mythic_cindervane_updraft_roost_watch.png",
+      "runtime_sha256": "f956811a971ba17e25e4a128e9ae0fb9f199b3494f8cac9636389e02ffd74eb2",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_frontier_mythic_cindervane_updraft_roost_watch.png",
+      "source_sha256": "5dbbdb31086850ffda2cecd722a751875f28caff564f7b4c700af8d434e95463",
+      "source_bounds": [
+        0,
+        32,
+        1237,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_frontier_mythic_cindervane_updraft_roost_watch.png",
+      "trimmed_sha256": "006e6207a79d005c4d84d691b6348cd7dbcc25ee54ee8ec77cdb769698a3a4b3",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Cindervane Censerwings",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_frontier_mythic_fenmirror_shell_basin_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_fenmirror_gallowshells",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_fenmirror_gallowshells.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_frontier_mythic_fenmirror_shell_basin_watch.png",
+      "runtime_sha256": "4782b8b94aff73a4f9e9cdb8c495cc3384b4b3a2008f1666a3f28561cc24b77d",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_frontier_mythic_fenmirror_shell_basin_watch.png",
+      "source_sha256": "a038ccadb93e6ecf06203145c761bb3818da3049a211513bfb1c3d452dfaeea5",
+      "source_bounds": [
+        0,
+        17,
+        1238,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_frontier_mythic_fenmirror_shell_basin_watch.png",
+      "trimmed_sha256": "532282b3c58310e99d90c643c562fd48109b04fe7569c848220c559e2df56715",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Fenmirror Gallowshells",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_frontier_mythic_prismwake_refraction_shelf_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_prismwake_raylings",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_prismwake_raylings.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_frontier_mythic_prismwake_refraction_shelf_watch.png",
+      "runtime_sha256": "71699c4d0b76c62e5bb9dd76f69367e5c4099b2c8387e971d8c021fd023c941d",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_frontier_mythic_prismwake_refraction_shelf_watch.png",
+      "source_sha256": "2c0bf852d21024aca6a6a902e91b2f31453639fabbd55c473baab4a36a58657a",
+      "source_bounds": [
+        0,
+        59,
+        1232,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_frontier_mythic_prismwake_refraction_shelf_watch.png",
+      "trimmed_sha256": "7bc81ddb2b0523ceb7a49de0a1f6c128488df697985a9f40b08b49d784b35ff4",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Prismwake Raylings",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_frontier_mythic_knotstag_root_court_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_rootcrown_knotstags",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_rootcrown_knotstags.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_frontier_mythic_knotstag_root_court_watch.png",
+      "runtime_sha256": "a28b03c8e9196212c607bced11c30f285025d9e14bf7c7669e91c71ca4b1c606",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_frontier_mythic_knotstag_root_court_watch.png",
+      "source_sha256": "7a41a74ae69dd4dbc08c9c97349a100ec7af5e9f5c2f6eab528be32e4bd4d5f8",
+      "source_bounds": [
+        0,
+        32,
+        1212,
+        1254
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_frontier_mythic_knotstag_root_court_watch.png",
+      "trimmed_sha256": "b0eaf6aea4cbbff77bc373144a6b6e4777ea3d72c89bba2fce17514557dd3d5e",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Rootcrown Knotstags",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_frontier_mythic_gaugecoil_pressure_burrow_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_gaugecoil_orewyrms",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_gaugecoil_orewyrms.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_frontier_mythic_gaugecoil_pressure_burrow_watch.png",
+      "runtime_sha256": "e6cb1907f6c6aeae09a3907d11e40e9f1aa00f6609f857d93faeffbce79513ba",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_frontier_mythic_gaugecoil_pressure_burrow_watch.png",
+      "source_sha256": "c5a4ee2e46e7a7b833e4114bd3180d308bb8c1f1cedfe0894fd4a9fd224e6762",
+      "source_bounds": [
+        13,
+        87,
+        1242,
+        1228
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_frontier_mythic_gaugecoil_pressure_burrow_watch.png",
+      "trimmed_sha256": "cd922a1a0555df8dc7aee6c53f93c372126f0947bb6cc331fd6bd2ac7cf547c5",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Gaugecoil Orewyrms",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    },
+    "encounter_frontier_mythic_gloambell_sounding_deep_watch": {
+      "kind": "neutral",
+      "identity_id": "unit_neutral_gloambell_wake_mantas",
+      "original_path": "res://art/overworld/runtime/objects/encounters/creature_silhouettes/unit_neutral_gloambell_wake_mantas.png",
+      "original_region": [],
+      "path": "res://art/overworld/runtime/actors_20260918/encounter_frontier_mythic_gloambell_sounding_deep_watch.png",
+      "runtime_sha256": "e15d89b8bb2bc4cb966cffa8bae882400e45e3490760214151f66002d317071e",
+      "source_generated": "res://art/overworld/source/generated/actor_readability_20260918/encounter_frontier_mythic_gloambell_sounding_deep_watch.png",
+      "source_sha256": "6adefc0a649990685b72f3a01d049396234027ef3a7aded50dae230660e4457b",
+      "source_bounds": [
+        0,
+        31,
+        1241,
+        1196
+      ],
+      "source_trimmed": "res://art/overworld/source/trimmed/actor_readability_20260918/encounter_frontier_mythic_gloambell_sounding_deep_watch.png",
+      "trimmed_sha256": "de9b2d3856bd1bf6a14bd972a8a61edb4d89060ae5b358165fafcd934f1be210",
+      "runtime_canvas": [
+        384,
+        384
+      ],
+      "accessible_description": "Gloambell Wake-Mantas",
+      "generation_manifest": "res://art/overworld/source/generated/actor_readability_20260918/generation.json"
+    }
+  }
+}
