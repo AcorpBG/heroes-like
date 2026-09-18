@@ -22,6 +22,12 @@ Rules:
 
 ## Current Tactical State
 
+### Remove Generated Town Supply Support
+
+id: `rmg-remove-town-supply-support-20260918`
+
+Status: completed, owner-directed Phase 6 child. Fresh generated sessions no longer inject a Generated Town Supply Cache or its linked guard. Native objects/guards, authored scenarios and old saved pairs remain intact. Source/Linux 9,360 checks each, Windows 9,359, full repository and official exports/parity pass; generated-map/Town flow and 1920x1080 visuals verified. Removed 1.51 GB disposable outputs; saves/caches/art/RMG/unrelated files preserved. Requirements/results: `docs/rmg-town-supply-support-removal.md`. No native generator, topology, density, art or unrelated-cache changes; no parity claim. No next slice selected.
+
 ### Twenty Further Usability Improvements
 
 id: `ux-usability-expansion-20-20260917`
