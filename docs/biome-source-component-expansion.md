@@ -97,3 +97,37 @@ project import was clean. Wiki rebuilt to 5,999 entries and 14,256 media records
 No full suite, native parity, package/Linux validation or manual game was run.
 Task-owned preview images and logs were removed after review; original artwork,
 recipes and rebuilding tools remain.
+
+## Native-sized forest and rock formations
+
+The local source packages already contain several obstacle sizes: 1x1, 2x1,
+2x2, 3x2, 3x3, 5x3 and, for some scenery, 7x3 blocked footprints. The previous
+renderer flattened them into a fresh roughly 1.42-tile appearance per blocked
+cell, so source size was lost visually even though collision was correct.
+
+Version 2 rock, woods, conifer and deadwood bodies now retain a connected
+formation per source placement and terrain. Broad formations have a dominant
+original cluster scaled across multiple tiles, with smaller members around its
+edges. The large silhouette fits an entirely blocked interior rectangle so it
+is not cut off by ragged exterior masks; the remaining edge art covers the
+original outline. Small/narrow bodies and other scenery families retain their
+existing treatment. Aspect ratio, biome tints and plains grove choices remain.
+
+`NativeSceneryFormation.gd` owns this presentation geometry. Individual tile
+slices sample the same large image, preserving explored-cell rendering, partial
+viewport visibility, holes/passages, overlapping-source ownership and the exact
+body index. No blocked tiles are added or removed. Native generation, source
+records, save data and simulation randomness remain unchanged; version 1 saves
+retain their previous appearance. Restart/reload updates existing version 2 maps.
+This adopts source-footprint scale using original art; it is not a claim of
+pixel-exact H3MapEd rendering or new native-generation parity.
+
+The focused live-method fixture checked 69 body cells and nine large formations,
+covering 1x1, 2x2, 3x2 and the source-derived irregular 5x3 mask. Its 213 checks
+passed, including unchanged source records, full mask coverage, preserved holes,
+overlap ownership, deterministic grouping, legacy behaviour, per-cell clipping
+and rendered pixels remaining hidden in a partially fogged formation. The
+rendered grass/rough/forest fixture was visually reviewed. Normal Windows Godot
+import completed without errors. No full suite, gameplay session, native parity,
+Linux or package run was performed. Temporary previews/logs/profiles were removed
+under the retention policy; source art and reproducible tooling were retained.

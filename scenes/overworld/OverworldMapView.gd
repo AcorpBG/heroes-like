@@ -4436,14 +4436,41 @@ func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, rem
 		grounding_center - Vector2(sprite_extent * 0.54, tile_extent * 0.24),
 		Vector2(sprite_extent * 1.08, tile_extent * 0.48)
 	)
-	_draw_mapped_sprite_grounding_anchor(grounding_rect, tile, "blocker", footprint, remembered)
+	var has_formation: bool = not object.get("generated_body_formation", {}).is_empty()
+	if not has_formation:
+		_draw_mapped_sprite_grounding_anchor(grounding_rect, tile, "blocker", footprint, remembered)
+	else:
+		sprite_extent = tile_extent * 0.98
+		sprite_center = rect.get_center()
 	var draw_payload := _object_painted_sprite_draw_payload(asset_id, texture, sprite_center, sprite_extent)
 	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
 	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent)))
 	var base_modulate := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
 	base_modulate *= _native_scenery_modulate(object, tile, asset_id)
-	_draw_living_scenery(asset_id, draw_texture, sprite_rect, base_modulate, tile)
+	if has_formation:
+		# Small edge members remain under the dominant mass. Clip both layers
+		# identically so a later cell cannot repaint its neighbor's large feature.
+		var edge := preload("res://scripts/persistence/NativeSceneryFormation.gd").clip(sprite_rect, rect, draw_texture.get_size())
+		if not edge.is_empty():
+			_canvas_draw_texture_rect_region(draw_texture, edge.rect, edge.source, base_modulate)
+	else:
+		_draw_living_scenery(asset_id, draw_texture, sprite_rect, base_modulate, tile)
+	_draw_native_scenery_formation(object, rect, remembered, tile)
 	return true
+
+func _draw_native_scenery_formation(object: Dictionary, cell_rect: Rect2, remembered: bool, tile: Vector2i) -> void:
+	var formation: Dictionary = object.get("generated_body_formation", {})
+	if formation.is_empty(): return
+	var asset_id := String(formation.get("asset_id", ""))
+	var texture = _object_texture_for_asset(asset_id)
+	if not texture is Texture2D: return
+	var region := _object_texture_visible_region(asset_id, texture)
+	var painted_texture: Texture2D = region.get("draw_texture", texture)
+	var payload := preload("res://scripts/persistence/NativeSceneryFormation.gd").slice(formation, tile, cell_rect, painted_texture.get_size())
+	if payload.is_empty(): return
+	var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
+	tint *= _native_scenery_modulate(object, tile, asset_id)
+	_canvas_draw_texture_rect_region(painted_texture, payload.rect, payload.source, tint)
 
 func _draw_standalone_map_object_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_object_sprite(_standalone_map_object_asset_id(object), rect, remembered, _standalone_map_object_profile(object), tile)
@@ -10770,6 +10797,34 @@ func _index_generated_decorative_body_cells(object: Dictionary) -> void:
 		presentation["generated_body_anchor_count"] = selected_anchor_tiles.size()
 		presentation["generated_body_placement_tile_count"] = body_tiles.size()
 		_generated_decorative_bodies_by_tile[key] = presentation
+	_index_native_scenery_formations(object, body_tiles)
+
+func _index_native_scenery_formations(object: Dictionary, body_tiles: Array) -> void:
+	if int(object.get("native_scenery_art_version", 0)) < 2: return
+	var policy := preload("res://scripts/persistence/NativeSceneryRules.gd").policy(object)
+	var family := String(policy.get("landscape_family", policy.get("variation_family", "")))
+	if family not in ["rock", "woods", "conifers", "deadwood"]: return
+	var source_id := String(object.get("placement_id", ""))
+	var by_terrain := {}
+	for tile in body_tiles:
+		var cell: Dictionary = _generated_decorative_bodies_by_tile.get(_tile_key(tile), {})
+		if String(cell.get("generated_body_anchor_placement_id", "")) != source_id: continue
+		var terrain := _terrain_at(tile)
+		if not by_terrain.has(terrain): by_terrain[terrain] = []
+		by_terrain[terrain].append(tile)
+	for tiles in by_terrain.values():
+		for formation in preload("res://scripts/persistence/NativeSceneryFormation.gd").groups(tiles):
+			# Narrow margins retain their small scenery; broad native bodies gain
+			# one continuous dominant silhouette instead of a grid of miniatures.
+			var size: Vector2i = formation.size
+			if size.x < 2 or size.y < 2: continue
+			var anchor: Vector2i = formation.anchor
+			var candidates: Array = _native_scenery_assets(object, anchor).filter(func(id): return String(id).begins_with("biome_cluster_v2_") or String(id).begins_with("plains_grove_v2_"))
+			var key := "formation|" + _generated_decorative_body_motif_key(object, anchor)
+			formation["asset_id"] = _generated_decorative_body_asset_id(object, anchor) if candidates.is_empty() else String(candidates[key.sha256_buffer().decode_u32(0) % candidates.size()])
+			formation["source_placement_id"] = source_id
+			for tile in formation.tiles:
+				_generated_decorative_bodies_by_tile[_tile_key(tile)]["generated_body_formation"] = formation
 
 func _generated_decorative_body_asset_id(object: Dictionary, tile: Vector2i) -> String:
 	var semantic_assets := _native_scenery_assets(object, tile)

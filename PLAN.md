@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Native-sized scenery formations
+
+`art-native-sized-formations-20260919` — completed. Broad native forest/rock footprints now render a dominant multi-tile original cluster with small edge details, preserving exact masks, holes, overlap ownership and per-cell fog. Native generation and version 1 saves unchanged. 213 focused live-method/render checks and Windows import pass; no full suite or gameplay session. See `docs/biome-source-component-expansion.md`.
+
 ### Plains woodland composition
 
 `art-plains-groves-20260919` — completed. Added 100 three-to-five-tree grassland groves at smaller individual scale, replacing about 40% of rock appearances and dominating the tree pools. Biome-specific opaque scenery tints harmonize rocks/vegetation with ground. Native placement/masks and legacy saves unchanged. Focused Windows rendering/contracts/import pass; no full suite or manual gameplay. See `docs/biome-source-component-expansion.md`.

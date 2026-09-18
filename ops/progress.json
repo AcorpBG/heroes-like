@@ -22302,6 +22302,17 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "art-native-sized-formations-20260919",
+      "title": "Restore multi-tile source blocker scale in scenery rendering",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "createdAt": "2026-09-18T22:51:41.073732+00:00",
+      "notes": "Existing source footprints were flattened to per-cell miniatures. Added source/terrain-connected forest/rock formations with a dominant aspect-preserved original cluster fitted inside blocked interior and smaller edge coverage; draw slices preserve exact holes, fog/culling and overlap ownership. Native records/generation/masks/RNG/save data unchanged; v1 presentation retained. Focused extracted live indexing/draw methods passed 213 checks across 69 body cells and nine large formations (1x1/2x2/3x2/irregular 5x3 fixtures); rendered grass/rough/forest sizes visually reviewed, partial fog pixels verified. Normal Windows Godot import clean. No full suite, gameplay, Linux/package or native parity run. Temporary visual evidence/logs/profiles removed; source and tooling retained.",
+      "completedAt": "2026-09-18T23:05:39.799643+00:00"
+    },
+    {
       "id": "art-plains-groves-20260919",
       "title": "Smaller plains trees in patchy woodland compositions",
       "phase": "phase-6-production-alpha-layer",

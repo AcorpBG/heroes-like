@@ -123,7 +123,7 @@ func run() -> void:
 '''.replace('\\t', '\t')
 
 
-def main():
+def main(script=SCRIPT, node_type='Node'):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--godot', required=True)
     parser.add_argument('--output', type=Path, required=True)
@@ -140,18 +140,20 @@ def main():
         for name in ['OverworldGroundSurface.gd','overworld_ground_surface.gdshader']:
             shutil.copyfile(ROOT/'scenes/overworld'/name,work/'scenes/overworld'/name)
         shutil.copyfile(ROOT/'scripts/persistence/NativeSceneryRules.gd', work/'scripts/persistence/NativeSceneryRules.gd')
+        shutil.copyfile(ROOT/'scripts/persistence/NativeSceneryFormation.gd', work/'scripts/persistence/NativeSceneryFormation.gd')
         (work/'content.gd').write_text('extends Node\nvar cache := {}\nfunc local_path(path: String) -> String:\n\treturn '+json.dumps(ROOT.as_posix()+'/')+' + path.trim_prefix("res://")\nfunc load_json(path: String) -> Dictionary:\n\tif not cache.has(path): cache[path]=JSON.parse_string(FileAccess.get_file_as_string(local_path(path)))\n\treturn cache[path]\n', encoding='utf-8')
         (work/'project.godot').write_text('config_version=5\n[application]\nconfig/name="SceneryProbe"\n[autoload]\nContentService="*res://content.gd"\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n', encoding='utf-8')
-        (work/'probe.gd').write_text(SCRIPT, encoding='utf-8')
-        (work/'probe.tscn').write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://probe.gd" id="1"]\n[node name="Probe" type="Node"]\nscript=ExtResource("1")\n', encoding='utf-8')
-        command = [args.godot, '--path', str(work), '--rendering-method', 'gl_compatibility', '--audio-driver', 'Dummy', '--position', '-16000,-16000', '--resolution', '960x720', '--log-file', str(output/'engine.log'), 'res://probe.tscn', '--', str(output)]
+        (work/'probe.gd').write_text(script, encoding='utf-8')
+        (work/'probe.tscn').write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://probe.gd" id="1"]\n[node name="Probe" type="'+node_type+'"]\nscript=ExtResource("1")\n', encoding='utf-8')
+        command = [args.godot, '--path', str(work), '--rendering-method', 'gl_compatibility', '--audio-driver', 'Dummy', '--position', '-16000,-16000', '--resolution', '960x720', '--quit-after', '180', '--log-file', str(output/'engine.log'), 'res://probe.tscn', '--', str(output)]
         if os.name != 'nt': command = ['xvfb-run', '-a'] + command
         env = dict(os.environ, APPDATA=str(work/'profile'), XDG_DATA_HOME=str(work/'profile'))
         with (output/'console.log').open('w', encoding='utf-8') as log:
             subprocess.run([args.godot, '--headless', '--path', str(work), '--editor', '--import', '--quit', '--log-file', str(output/'import.log')], env=env, stdout=log, stderr=subprocess.STDOUT, timeout=30, check=True)
             result = subprocess.run(command, env=env, stdout=log, stderr=subprocess.STDOUT, timeout=90)
-        print((output/'console.log').read_text(encoding='utf-8'))
-        return result.returncode
+        log_text = (output/'console.log').read_text(encoding='utf-8')
+        print(log_text)
+        return result.returncode or int('SCRIPT ERROR' in log_text or 'SCENERY_' not in log_text)
 
 
 if __name__ == '__main__':
