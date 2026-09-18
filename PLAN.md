@@ -26,16 +26,16 @@ Rules:
 
 id: `rmg-overworld-quality-closure-20260918`
 
-Status: in_progress, owner-directed Phase 6 parent. Fix the insufficient playable/visible artifacts, interactable sites and guards/neutral armies as well as the comparison's weak scale hierarchy, repetitive scenery, busy ground and angular roads. Previous scenery-adoption completion is not closure of these requirements. Requirements, targets, validation and boundaries: `docs/generated-overworld-quality-closure.md`. No native density tuning without recovered phase/private-state proof; preserve original art, masks, determinism and old saves. Consolidate validation after coherent implementation batches.
+Status: completed, owner-directed Phase 6 parent. Restored guarded-site/artifact rewards and portable pickups, improved object/scenery/ground/road readability, and corrected ordinary/portal guard battle routing. Medium/10 and Large/11 Normal catalog-auto games reach real victories with complete save/resume; focused source/Linux/Windows, existing regressions, repository validation and inspected small/wide visuals pass. Requirements, implementation and bounded evidence: `docs/generated-overworld-quality-closure.md`. Native placement/quantities/RNG, original art and old-save compatibility are preserved; no arbitrary density tuning, whole-generator parity or release-ready claim.
 
 | Child slice | Work | Status |
 | --- | --- | --- |
 | `rmg-playable-object-presence-20260918` | Correct actual source-to-visible/playable artifact/site/monster gaps | completed |
 | `art-overworld-comparison-readability-20260918` | Object hierarchy, varied scenery, quieter ground and road presentation | completed |
-| `rmg-guarded-exploration-closure-20260918` | Real reward/enemy routes, guards, neutral compositions and pacing defects | in_progress |
-| `rmg-overworld-quality-acceptance-20260918` | Integrated play/save/platform/visual acceptance and cleanup | in_progress |
+| `rmg-guarded-exploration-closure-20260918` | Real reward/enemy routes, guards, neutral compositions and pacing defects | completed |
+| `rmg-overworld-quality-acceptance-20260918` | Integrated play/save/platform/visual acceptance and cleanup | completed |
 
-Current: guarded exploration. Content/readability, ordinary guard entry and the hostile portal correction are platform-validated. Continue the retained Medium/Large games through genuine terminal outcomes; endpoint/cleared-guard fixtures are not full-match acceptance. Correct the driver's observed extra activation after a battle without changing gameplay or native generation. Details: `docs/generated-overworld-quality-closure.md`.
+Current: this parent and all four children are complete; no new slice selected. The test-only continuation uses scouted objectives and real orders, with exact checkpoint history. Required final packages/evidence, saves, caches, native RMG recovery and unrelated files remain preserved.
 
 ### Generated Exploration and Guarded Routes
 

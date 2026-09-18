@@ -7,9 +7,23 @@ import tempfile
 import unittest
 
 from generated_full_match_quality import CASES, acceptance_failures, army_capacity_trace, resume_prefix
+from generated_full_match_guarded_continuation import compose_driver
 
 
 class FullMatchAcceptanceTests(unittest.TestCase):
+    def test_guarded_continuation_keeps_the_original_policy_and_action_body(self):
+        original = 'prefix\nfunc choose_target() -> Dictionary:\n\treturn {}\nfunc perform_target():\n\tactual_order()\n'
+        composed = compose_driver(original)
+        self.assertEqual(composed.count('func choose_target() -> Dictionary:'), 1)
+        self.assertTrue(composed.endswith('func policy_choose_target() -> Dictionary:\n\treturn {}\nfunc perform_target():\n\tactual_order()\n'))
+        self.assertTrue(composed.startswith('prefix\n'))
+
+    def test_guarded_continuation_rejects_missing_duplicate_or_recomposed_policy(self):
+        signature = 'func choose_target() -> Dictionary:'
+        for source in ['', signature + '\n' + signature, compose_driver(signature)]:
+            with self.subTest(source=source[:50]), self.assertRaises(ValueError):
+                compose_driver(source)
+
     def valid(self):
         return {'ok': True, 'returncode': 0, 'runtime_errors': [], 'failures': [],
                 'final': {'status': 'victory', 'scene': 'res://scenes/results/ScenarioOutcomeShell.tscn','army_capacity': {'ok': True}},

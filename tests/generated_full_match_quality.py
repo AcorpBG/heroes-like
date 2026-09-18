@@ -311,6 +311,8 @@ func resource_claim_feasible(node: Dictionary) -> bool:
 func target_precedes(a: Dictionary, b: Dictionary) -> bool:
 	# Intent is only an id, never a stale position or a bypass of today's
 	# visibility, availability, risk, admission and legal-path checks.
+	if int(a.get("priority", 0)) != int(b.get("priority", 0)):
+		return int(a.get("priority", 0)) < int(b.get("priority", 0))
 	var a_current: bool = a.id == active_target.get("id","")
 	var b_current: bool = b.id == active_target.get("id","")
 	if a_current != b_current:
@@ -385,8 +387,16 @@ func choose_target() -> Dictionary:
 					continue
 				if bool(site.get("persistent_control",false)):
 					score -= 4.0
-			candidates.append({"id":id,"kind":kind,"tile":tile,"score":score,"record":target})
+			# Current quality games seek a rival outcome, not an exhaustive sweep
+			# of every nearby supply pile. Admission and the real route still
+			# decide whether a higher-priority target is actually actionable.
+			var priority := 0
+			if String(cfg.get("template_selection_mode", "")) == Setup.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO:
+				priority = {"town":2,"encounter":1,"artifact":3,"resource":4}[kind]
+				if kind == "town" and String(target.get("owner", "")) == "enemy":priority = 0
+			candidates.append({"id":id,"kind":kind,"tile":tile,"score":score,"record":target,"priority":priority})
 	candidates.sort_custom(target_precedes)
+	var optional_target := {}
 	for candidate in candidates:
 		if candidate.tile == origin:
 			return candidate
@@ -400,6 +410,12 @@ func choose_target() -> Dictionary:
 				explored = false
 				break
 		if explored:
+			if String(cfg.get("template_selection_mode", "")) == Setup.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO and int(candidate.get("priority", 0)) > 0:
+				# Scout reachable unknown borders before sweeping optional known
+				# guards/supplies. Enemy towns still win immediately; blocked
+				# frontiers fall back to the same feasible guarded objectives.
+				optional_target = candidate
+				break
 			return candidate
 	# Explore only currently revealed tiles bordering unknown territory.
 	var map_size: Vector2i = OverworldRules.derive_map_size(session)
@@ -423,6 +439,8 @@ func choose_target() -> Dictionary:
 		var path: Array = scene._build_path(origin,target.tile)
 		if not path.is_empty() and path.all(func(tile):return OverworldRules.is_tile_visible(session,tile.x,tile.y)):
 			return target
+	if not optional_target.is_empty():
+		return optional_target
 	# The live planner stops at interactions, including owned mines and signs.
 	# Backtrack through any reachable visited entrance, not only adjacent ones:
 	# a depleted pocket can have its exit several open tiles away.
@@ -754,7 +772,7 @@ def resume_prefix(source: Path, case: dict, autosave: bool = False) -> tuple[byt
     return saved, rows, metadata
 
 
-def main() -> int:
+def main(*, background_entrypoint: Path | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--case', choices=CASES, required=True)
     parser.add_argument('--label', required=True)
@@ -778,7 +796,7 @@ def main() -> int:
         OUTPUT.mkdir(parents=True, exist_ok=True)
         launcher_log = OUTPUT/(args.label+'.launcher.log')
         with launcher_log.open('x') as log:
-            process = subprocess.Popen([sys.executable,'-B',str(Path(__file__).resolve())]+[arg for arg in sys.argv[1:] if arg != '--background'],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+            process = subprocess.Popen([sys.executable,'-B',str(background_entrypoint or Path(__file__).resolve())]+[arg for arg in sys.argv[1:] if arg != '--background'],cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
         print(json.dumps({'pid':process.pid,'output':str(out),'launcher_log':str(launcher_log)}),flush=True)
         return 0
     out.mkdir(parents=True, exist_ok=False)

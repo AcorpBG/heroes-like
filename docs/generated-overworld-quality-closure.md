@@ -70,8 +70,9 @@ private-state fixture within this parent before implementation.
 
 Non-goals: Town/combat presentation redesign, copied H3 pixels/content, arbitrary
 map-count targets, changed source topology hidden in rendering, save-schema
-migration, unrelated cleanup or a broad release-ready claim. The parent remains
-in progress; focused results do not establish integrated or whole-match acceptance.
+migration, unrelated cleanup or a broad release-ready claim. The parent is now
+complete against this bounded scope; the final closure below is authoritative.
+Earlier subsections retain their intermediate results and explicit limitations.
 
 ## Initial concrete findings (not completion)
 
@@ -586,3 +587,151 @@ match remains active and is not covered by this Medium result. Shipped runtime
 is unchanged from the final accepted Linux/Windows portal packages above.
 The consolidated `single-intent-validate-repo.log` passes; its 26 absent
 historical smokes remain explicitly not run, not implicitly accepted.
+
+The identical Medium terminal save also restores with full state equality in
+the compiled Windows release under Wine (`medium-real-victory-windows`). Its
+1280x720 outcome was visually inspected; all edge controls remain visible and
+non-overlapping. The unchanged release PCK and exact probe SHA
+`d7fc6efc5033303ceb674cd2f435e9868e47bc0ffd54eb2c4df438f04d953496`
+are recorded with every assertion retained. This is cross-platform replay of
+the earned terminal state, not a second independently played match. The
+managed temporary Wine prefix was cleaned while preserving its user data.
+
+### Large continuation: win-seeking target order
+
+The Large continuation has genuine resource/artifact-bank progress but its
+nearest-distance-first test policy repeatedly prioritizes minor supplies over
+visible battles. It reached the starting town again on day 59 and legally
+transferred its garrison, then turned back toward previously revealed supplies.
+This is not evidence for changing native placement, combat strength or rewards.
+The exact engine was stopped at recorded day 62/action 1095, save
+`c3506115…ef921`, preserving the complete prefix.
+
+For current catalog-auto quality cases only, rank known enemy towns, feasible
+encounters, neutral towns, artifacts and ordinary sites in that order, then use
+retained intent and distance within each rank. Existing fog, guard strength,
+claim admission, live routes, town management and physical reinforcement rules
+remain mandatory; historical case policies stay unchanged. This is validation
+driver work to exercise the remaining rival route, not gameplay balancing or a
+completed Large match.
+
+That order clears additional real guards but still sweeps already-scouted
+territory. The current quality policy therefore tries a reachable revealed fog
+boundary before an optional known target, unless a reachable enemy town or an
+interaction on the hero's current square is available. If guards or objects
+block all frontiers, it takes the same feasible objective in the priority order
+above. It never routes through unseen tiles, removes blockers, weakens armies
+or manufactures a terminal state. Historical cases retain their prior order.
+The prior run is retained as interrupted, not passing. The new continuation is
+`quality-large-frontier-priority-20260918`, admitted from the exact recorded
+day-69/action-1257 autosave (`a6e7fc41…03a1a`) with the entire matching history.
+
+### Large guarded continuation and rival objective
+
+The exploration policy still spends time in optional pockets. A read-only
+day-75 route diagnosis (`large-remaining-route-diagnosis`) identifies the two
+already-scouted entrance guards; its potential route also contains unknown
+tiles and is **not** a played route. The explicit fixture
+`tests/generated_full_match_guarded_continuation.py` instead plans exclusively
+over revealed cells, splits routes at actual interactions and revalidates each
+click with the live scene. It preserves corner/body masks, the 70% strength-risk
+limit, normal battles/rewards and the unchanged complete-match acceptance gate.
+It is an objective-directed validation player, not an autonomous-AI benchmark.
+
+The retained continuations genuinely defeat native guards `…_1869` (23 units)
+and `…_1868` (45 units) on day 79, at (82,44) and (83,44). On day 83 they defeat
+the 136-unit rival field host at (94,28), then the 257-unit town garrison,
+capturing Duskfen Bastion with ordinary casualty reports. These are recorded
+actions, not cleared-object fixtures. The town capture alone does not satisfy
+the production objective while another rival field commander survives.
+
+`quality-large-rival-hosts-20260918` resumes the exact day-86/action-1624
+checkpoint, SHA-256
+`e569df98fbf96a2c69fa40549a57d5b679a77d45bd9b16aeb5a0ccab637c33a1`.
+After the two guard directives are resolved, the fixture prioritizes known,
+feasible active rival hosts using `EnemyAdventureRules.is_active_pressure_host`;
+it re-reads moving positions and never exposes hidden targets. All route,
+interaction, battle, save and terminal authorities remain production code.
+The prior interrupted receipts remain unsuccessful; the current run is not
+accepted until it reaches an actual outcome and passes the existing gate.
+
+### Large complete-match acceptance
+
+The continuation above now **passes**: victory on day 87 at (103,26), the real
+`ScenarioOutcomeShell`, exit code zero, no runtime errors and no acceptance
+failures. It fought the intervening 12-unit Furnace Vault guard, then the
+remaining moving rival commander; neither was deleted, weakened or marked
+resolved by the fixture. All 33 battles have their required casualty reports.
+
+The complete retained history has **1,659 actions**, 90 builds, 385 recruitment
+orders and 39 physical garrison transfers. Every action has a valid army-capacity
+observation; there are zero violations. Opening, three mid-match and terminal
+complete-state save/resume checks pass. The earned terminal save contains 220
+player-claimed resource/site identities and two loose artifacts (Quarry Tally
+Rod and Tollstone Ring). These are unique saved identities, not a count of
+repeated service orders or an invented density requirement.
+
+Terminal SHA-256:
+`e8340fa8d13b5b5d367a588bce48a8f22df83782325f3164cb4db4cb93b897c1`.
+`large-real-victory-linux` restores that exact state through the compiled Linux
+release and production router at **1920x1080**. The actual screenshot was
+visually inspected: scenic outcome, visible command/navigation controls, no
+overlapping control regions. Full state equality, bounds, unchanged PCK and
+exact source/packaged probe checks all pass. The probe is the same
+`d7fc6efc…3496` used for the Medium Windows terminal replay.
+
+This is **one** genuinely played Large game, continued at eight verified
+checkpoints; not eight new matches, a fresh uninterrupted run or an autonomous
+AI benchmark. Day 87 reflects the explicitly documented validation policy,
+not minimum human victory time. Source-native placement/quantity/RNG are
+unchanged, and no whole-H3MapEd or arbitrary-seed parity is claimed.
+
+### Final requirement audit and handoff
+
+All four child requirements are implemented and validated, not documentation-
+only closure:
+
+- **Playable content:** the shipped registry/adoption repairs expose all 32
+  guarded sites with their real defender/reward contracts and seven portable
+  resource kinds. Artifact-bank and loose-artifact collection/save tests pass;
+  Medium and Large earn 110/220 unique sites and two loose artifacts each.
+- **Readability:** original semantic scenery, object draw order/painted bounds,
+  quieter ground and curved road presentation pass focused/existing tests and
+  inspected 1280x720/1920x1080 captures. No source blocker or road topology is
+  changed. `large-11-normal-inspection.png` is explicitly a revealed inspection
+  view, not a claim about starting fog.
+- **Guarded progression:** actual ordinary, same-square and portal battle
+  routing/aftermath is fixed. Both complete games defeat guards, field hosts and
+  rival town garrisons through production actions; 52 battles have 52 reports.
+  Source quantities/compositions remain authoritative; varied-neutral and
+  Small/water/layer controls pass. This does not establish minimum victory days.
+- **Integrated acceptance:** all 2,694 retained actions have valid capacity
+  observations, and both games pass opening/mid/terminal complete-state saves.
+  Final official Linux/Windows exports, generated gameplay smokes and parity
+  pass; the earned terminal replays were visually inspected in both releases.
+  Windows evidence is Wine/OpenGL, not physical Windows hardware certification.
+
+The current authoritative packages are `portal-final-linux-export/export` and
+`portal-final-windows-export/export` under
+`.artifacts/rmg_quality_continuation_20260918`; their identical 650,610,488-byte
+PCK inventories differ only in expected `project.binary` platform features.
+No shipped runtime changed after `936b772c`; later commits only correct the
+validation player and close evidence. The final Large driver SHA-256
+`334f15cf3715d03a8dbc3019a835990f61ed9d3e633e617e785f68b033ee808a`
+matches the accepted run exactly, including the guarded-continuation fixture.
+
+Final consolidated `guarded-continuation-validate-repo.log`: **VALIDATION
+PASSED**, exit zero. Its 26 absent historical smoke reports remain explicitly
+not run, not counted as passes. All **30** full-match/resume/composition/transit
+Python unit tests and `git diff --check` pass. Existing original native payload
+controls remain bounded final-writeout evidence, not universal private-state
+parity. The broader game retains its pre-alpha/release gaps in `project.md`.
+
+The completion cleanup inspected this task's project/artifact paths and `/tmp`.
+No task-owned frozen driver directories, live engines or disposable temporary
+profiles remained after their managed cleanup. No additional manual deletion
+was needed (0 additional bytes); earlier measured superseded-export cleanup is
+recorded above. Required final packages, reports/screenshots, saves, caches,
+original art/provenance and all native RMG recovery material remain. The three
+pre-existing untracked retention-policy/tool/cache paths are unchanged and are
+excluded from the commit.
