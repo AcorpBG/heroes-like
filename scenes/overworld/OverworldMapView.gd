@@ -43,6 +43,7 @@ const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacement
 const FrontierVisualKitScript = preload("res://scripts/ui/FrontierVisualKit.gd")
 const Motion = preload("res://scenes/overworld/OverworldMotion.gd")
 const SceneryBatch = preload("res://scenes/overworld/OverworldSceneryBatch.gd")
+const RoadStyle = preload("res://scenes/overworld/OverworldRoadStyle.gd")
 const GroundSurface = preload("res://scenes/overworld/OverworldGroundSurface.gd")
 const ActorStyle = preload("res://scenes/overworld/OverworldActorStyle.gd")
 var _actor_style := ActorStyle.new()
@@ -125,15 +126,15 @@ const HERO_COMMAND_FOCUS_GROUND_TICK_LENGTH_FACTOR := 0.18
 const HERO_COMMAND_FOCUS_GROUND_NOTCH_FACTOR := 0.035
 const HERO_COMMAND_FOCUS_ALPHA := 0.82
 const HERO_COMMAND_FOCUS_SHADOW_ALPHA := 0.40
-const HOSTILE_ACTOR_MARKER_MODEL := "open_hostile_flank_chevrons_and_threat_notch"
+const HOSTILE_ACTOR_MARKER_MODEL := "painted_hostile_silhouette_without_arrows"
 const HOSTILE_ACTOR_MARKER_OUTSET_FACTOR := 0.035
 const HOSTILE_ACTOR_MARKER_FLANK_LENGTH_FACTOR := 0.11
 const HOSTILE_ACTOR_MARKER_FLANK_DEPTH_FACTOR := 0.10
 const HOSTILE_ACTOR_MARKER_NOTCH_WIDTH_FACTOR := 0.14
 const HOSTILE_ACTOR_MARKER_NOTCH_DEPTH_FACTOR := 0.07
 const HOSTILE_ACTOR_MARKER_LINE_WIDTH_FACTOR := 0.020
-const HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA := 0.86
-const HOSTILE_ACTOR_MARKER_MEMORY_ALPHA := 0.62
+const HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA := 0.0
+const HOSTILE_ACTOR_MARKER_MEMORY_ALPHA := 0.0
 const HOSTILE_ACTOR_MARKER_SHADOW_ALPHA := 0.42
 const HOVER_COLOR := Color(0.92, 0.95, 0.98, 0.55)
 const HOVER_RETICLE_VISUAL_MODEL := "open_cartographic_hover_corners"
@@ -480,14 +481,9 @@ const ROAD_DEFAULT_SHADOW_COLOR := Color(0.07, 0.05, 0.035, 0.58)
 const ROAD_DEFAULT_CENTER_COLOR := Color(0.86, 0.74, 0.48, 0.55)
 const ROAD_DEFAULT_WIDTH_FACTOR := 0.14
 const ROAD_SOURCE_FRAME_RENDER_MODEL := "explicit_source_frame"
-const ROAD_LAND_RENDER_MODEL := "layered_wheel_rutted_dirt_path"
+const ROAD_LAND_RENDER_MODEL := "original_dirt_raster_feathered_path"
 const ROAD_WATER_RENDER_MODEL := "weathered_cross_planked_causeway"
-const ROAD_LAND_WIDTH_FACTOR := 0.16
-const ROAD_LAND_SHADOW_COLOR := Color(0.10, 0.07, 0.04, 0.22)
-const ROAD_LAND_SHOULDER_COLOR := Color(0.34, 0.23, 0.13, 0.38)
 const ROAD_LAND_EARTH_COLOR := Color(0.57, 0.42, 0.24, 0.58)
-const ROAD_LAND_DUST_COLOR := Color(0.76, 0.62, 0.39, 0.16)
-const ROAD_LAND_RUT_COLOR := Color(0.24, 0.16, 0.09, 0.48)
 const ROAD_CAUSEWAY_WIDTH_FACTOR := 0.22
 const ROAD_CAUSEWAY_SHADOW_COLOR := Color(0.055, 0.045, 0.035, 0.52)
 const ROAD_CAUSEWAY_EDGE_COLOR := Color(0.24, 0.17, 0.10, 0.88)
@@ -3296,7 +3292,7 @@ func _draw_road_overlay(tile: Vector2i, rect: Rect2) -> void:
 func _draw_road_land_path(tile: Vector2i, rect: Rect2) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
 	var center := rect.get_center()
-	var width := maxf(5.0, extent * ROAD_LAND_WIDTH_FACTOR)
+	var width := maxf(5.0, extent * RoadStyle.WIDTH_FACTOR)
 	var neighbor_directions := _road_neighbor_directions(tile)
 	var corner := _road_land_corner_points(rect, neighbor_directions)
 	var paths := []
@@ -3305,20 +3301,16 @@ func _draw_road_land_path(tile: Vector2i, rect: Rect2) -> void:
 	else:
 		for direction in neighbor_directions:
 			paths.append(_road_land_path_points(tile, direction, _road_connector_start(rect, direction), _road_connector_end(rect, direction), width))
-	for path_points in paths:
-		_canvas_draw_polyline(path_points, ROAD_LAND_SHADOW_COLOR, width * 1.34, true)
-		_canvas_draw_polyline(path_points, ROAD_LAND_SHOULDER_COLOR, width * 1.12, true)
-		_canvas_draw_polyline(path_points, ROAD_LAND_EARTH_COLOR, width, true)
-		_draw_road_land_ruts(path_points, width)
-	if neighbor_directions.is_empty():
-		_canvas_draw_circle(center, width * 0.68, ROAD_LAND_SHADOW_COLOR)
-		_canvas_draw_circle(center, width * 0.57, ROAD_LAND_SHOULDER_COLOR)
-		_canvas_draw_circle(center, width * 0.48, ROAD_LAND_EARTH_COLOR)
-		_canvas_draw_line(center - Vector2(width * 0.26, 0.0), center + Vector2(width * 0.26, 0.0), ROAD_LAND_RUT_COLOR, maxf(1.0, width * 0.09), true)
-	elif corner.is_empty() and _road_needs_joint_cap(neighbor_directions):
-		_canvas_draw_circle(center, width * 0.52, ROAD_LAND_SHOULDER_COLOR)
-		_canvas_draw_circle(center, width * 0.43, ROAD_LAND_EARTH_COLOR)
-		_canvas_draw_circle(center, width * 0.19, ROAD_LAND_DUST_COLOR)
+	var texture = _terrain_art_texture(RoadStyle.TEXTURE_PATH)
+	if not texture is Texture2D:
+		for points in paths: _canvas_draw_polyline(points, ROAD_LAND_EARTH_COLOR, width, true)
+		return
+	for points in paths:
+		for band in RoadStyle.strips(points, width, tile, rect):
+			_canvas_draw_textured_polygon(band.points, band.colors, band.uvs, texture)
+	if neighbor_directions.is_empty() or (corner.is_empty() and _road_needs_joint_cap(neighbor_directions)):
+		for band in RoadStyle.cap(center, width, tile, rect):
+			_canvas_draw_textured_polygon(band.points, band.colors, band.uvs, texture)
 
 func _road_land_corner_points(rect: Rect2, neighbors: Array) -> PackedVector2Array:
 	# The native edges/topology stay exact; only the join within this tile bends.
@@ -3345,24 +3337,6 @@ func _road_land_path_points(tile: Vector2i, direction: Vector2i, start: Vector2,
 	var bend_sign := -1.0 if bend_seed % 2 == 0 else 1.0
 	var bend_strength := (0.045 + (float(bend_seed % 4) * 0.012)) * width
 	return PackedVector2Array([start, start.lerp(end, 0.52) + (normal * bend_strength * bend_sign), end])
-
-func _draw_road_land_ruts(path_points: PackedVector2Array, width: float) -> void:
-	if path_points.size() < 2:
-		return
-	var delta := path_points[path_points.size() - 1] - path_points[0]
-	if delta.length_squared() <= 0.001:
-		return
-	var rut_width := maxf(1.0, width * 0.085)
-	var left_rut := PackedVector2Array()
-	var right_rut := PackedVector2Array()
-	for index in range(path_points.size()):
-		var point := path_points[index]
-		var tangent := path_points[mini(index+1,path_points.size()-1)] - path_points[maxi(0,index-1)]
-		var offset := Vector2(-tangent.y,tangent.x).normalized()*width*0.23
-		left_rut.append(point + offset)
-		right_rut.append(point - offset)
-	_canvas_draw_polyline(left_rut, ROAD_LAND_RUT_COLOR, rut_width, true)
-	_canvas_draw_polyline(right_rut, ROAD_LAND_RUT_COLOR, rut_width, true)
 
 func _draw_road_water_causeway(tile: Vector2i, rect: Rect2) -> void:
 	var extent := minf(rect.size.x, rect.size.y)
@@ -4398,47 +4372,18 @@ func _hostile_actor_marker_profile(tile_rect: Rect2, icon_rect: Rect2, tile_exte
 		"shadow_width_px": line_width + 1.5,
 		"marker_alpha": HOSTILE_ACTOR_MARKER_MEMORY_ALPHA if remembered else HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA,
 		"shadow_alpha": HOSTILE_ACTOR_MARKER_SHADOW_ALPHA,
-		"flank_chevron_count": 2,
-		"threat_notch_count": 1,
+		"flank_chevron_count": 0,
+		"threat_notch_count": 0,
 		"continuous_ring": false,
 		"interior_fill_alpha": 0.0,
 		"remembered": remembered,
 		"contained_in_tile": tile_rect.encloses(marker_rect),
 	}
 
-func _draw_hostile_actor_marker(profile: Dictionary) -> void:
-	var marker_rect: Rect2 = profile.get("marker_rect", Rect2())
-	if marker_rect.size.x <= 0.0 or marker_rect.size.y <= 0.0:
-		return
-	var center_y := float(profile.get("center_y", marker_rect.get_center().y))
-	var flank_length := float(profile.get("flank_length_px", 4.0))
-	var flank_depth := float(profile.get("flank_depth_px", 3.5))
-	var notch_width := float(profile.get("threat_notch_width_px", 5.0))
-	var notch_depth := float(profile.get("threat_notch_depth_px", 3.0))
-	var line_width := float(profile.get("line_width_px", 1.25))
-	var shadow_width := float(profile.get("shadow_width_px", line_width + 1.5))
-	var left_flank := PackedVector2Array([
-		Vector2(marker_rect.position.x + flank_length, center_y - flank_depth),
-		Vector2(marker_rect.position.x, center_y),
-		Vector2(marker_rect.position.x + flank_length, center_y + flank_depth),
-	])
-	var right_flank := PackedVector2Array([
-		Vector2(marker_rect.end.x - flank_length, center_y - flank_depth),
-		Vector2(marker_rect.end.x, center_y),
-		Vector2(marker_rect.end.x - flank_length, center_y + flank_depth),
-	])
-	var top_center := Vector2(marker_rect.get_center().x, marker_rect.position.y)
-	var threat_notch := PackedVector2Array([
-		top_center + Vector2(-notch_width * 0.5, 0.0),
-		top_center + Vector2(0.0, notch_depth),
-		top_center + Vector2(notch_width * 0.5, 0.0),
-	])
-	var shadow_color := Color(0.025, 0.018, 0.014, float(profile.get("shadow_alpha", HOSTILE_ACTOR_MARKER_SHADOW_ALPHA)))
-	var base_color := MEMORY_OBJECT_OUTLINE if bool(profile.get("remembered", false)) else ENCOUNTER_COLOR
-	var marker_color := Color(base_color.r, base_color.g, base_color.b, float(profile.get("marker_alpha", HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA)))
-	for points in [left_flank, right_flank, threat_notch]:
-		_canvas_draw_polyline(points, shadow_color, shadow_width, true)
-		_canvas_draw_polyline(points, marker_color, line_width, true)
+func _draw_hostile_actor_marker(_profile: Dictionary) -> void:
+	# Painted actors retain their alpha-edge contrast. Persistent red arrows
+	# are intentionally absent; selection/hover and route previews own feedback.
+	pass
 
 func _hostile_actor_marker_validation_payload(profile: Dictionary) -> Dictionary:
 	var tile_rect: Rect2 = profile.get("tile_rect", Rect2())
@@ -8530,8 +8475,8 @@ func _terrain_visual_payload(tile: Vector2i, explored: bool, visible: bool) -> D
 		"road_explicit_source_frame_rendered": road_explicit_source_frame_rendered,
 		"road_source_frame_path": road_source_frame_path,
 		"road_ordinary_tile_art_bypassed": not road_payload.is_empty() and not road_explicit_source_frame_rendered,
-		"road_surface_material": "weathered_cross_planked_timber" if road_render_model == ROAD_WATER_RENDER_MODEL else ("packed_earth_with_twin_wheel_ruts" if road_render_model == ROAD_LAND_RENDER_MODEL else "source_frame"),
-		"road_surface_detail": "cross_plank_seams_and_longitudinal_grain" if road_render_model == ROAD_WATER_RENDER_MODEL else ("soft_shoulders_twin_ruts_and_dust_center" if road_render_model == ROAD_LAND_RENDER_MODEL else "source_owned"),
+		"road_surface_material": "weathered_cross_planked_timber" if road_render_model == ROAD_WATER_RENDER_MODEL else ("painted_earth_with_soft_shoulders" if road_render_model == ROAD_LAND_RENDER_MODEL else "source_frame"),
+		"road_surface_detail": "cross_plank_seams_and_longitudinal_grain" if road_render_model == ROAD_WATER_RENDER_MODEL else ("original_dirt_grain_and_feathered_shoulders" if road_render_model == ROAD_LAND_RENDER_MODEL else "source_owned"),
 		"road_shape_model": "homm3_4_neighbor_overlay_lookup" if road_explicit_source_frame_rendered else ("terrain_integrated_4_neighbor_surface" if not road_payload.is_empty() else ""),
 		"road_lane_model": ROAD_LANE_MODEL if not road_payload.is_empty() else "",
 		"road_piece_selection_model": String(road_payload.get("piece_selection_model", "")),

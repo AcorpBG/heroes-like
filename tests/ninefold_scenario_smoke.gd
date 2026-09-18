@@ -897,10 +897,10 @@ func _assert_land_road_render_model(terrain: Dictionary, presentation: Dictionar
 	if String(terrain.get("terrain", "")) == "water":
 		_fail("Ninefold smoke: %s land-road fixture unexpectedly uses water terrain: %s." % [label, presentation])
 		return false
-	if String(terrain.get("road_render_model", "")) != "layered_wheel_rutted_dirt_path" or String(terrain.get("road_shape_model", "")) != "terrain_integrated_4_neighbor_surface":
+	if String(terrain.get("road_render_model", "")) != "original_dirt_raster_feathered_path" or String(terrain.get("road_shape_model", "")) != "terrain_integrated_4_neighbor_surface":
 		_fail("Ninefold smoke: %s road did not use the terrain-integrated wheel-rutted surface: %s." % [label, presentation])
 		return false
-	if String(terrain.get("road_surface_material", "")) != "packed_earth_with_twin_wheel_ruts" or String(terrain.get("road_surface_detail", "")) != "soft_shoulders_twin_ruts_and_dust_center":
+	if String(terrain.get("road_surface_material", "")) != "painted_earth_with_soft_shoulders" or String(terrain.get("road_surface_detail", "")) != "original_dirt_grain_and_feathered_shoulders":
 		_fail("Ninefold smoke: %s road did not expose the packed-earth/rut treatment: %s." % [label, presentation])
 		return false
 	if not bool(terrain.get("road_ordinary_tile_art_bypassed", false)) or bool(terrain.get("road_explicit_source_frame_rendered", true)):

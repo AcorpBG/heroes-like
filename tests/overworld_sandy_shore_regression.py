@@ -8,6 +8,7 @@ import subprocess
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
+DEPENDENCIES = ['OverworldGroundSurface.gd', 'overworld_ground_surface.gdshader']
 SCRIPT = r'''extends SceneTree
 var surface
 var viewport: SubViewport
@@ -101,7 +102,7 @@ def main():
         work = Path(tmp)
         folder = work / 'scenes/overworld'
         folder.mkdir(parents=True)
-        for name in ['OverworldGroundSurface.gd', 'overworld_ground_surface.gdshader']:
+        for name in DEPENDENCIES:
             shutil.copyfile(ROOT / 'scenes/overworld' / name, folder / name)
         (work / 'project.godot').write_text('config_version=5\n[application]\nconfig/name="ShoreProbe"\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n', encoding='utf-8')
         (work / 'probe.gd').write_text(SCRIPT, encoding='utf-8')

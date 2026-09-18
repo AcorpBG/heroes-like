@@ -22302,6 +22302,17 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "art-roads-guards-20260918",
+      "title": "Natural roads and quieter guard presentation",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "createdAt": "2026-09-18T20:22:20.577139+00:00",
+      "notes": "Original dirt-raster strips replace flat outlined road bands and continuous ruts; feathered variable-width shoulders, original-texture repeat joins and soft endpoints. Preserved existing connection/corner topology and water causeways. Persistent hostile flank chevrons and top notch no longer draw; actor/selection/route/guard rules unchanged. 250 Windows off-screen live-method render checks and focused enemy-commander presentation contract pass; image inspected. Updated existing expectation metadata, no full suite or Linux/package rerun. Temporary screenshots/logs removed per owner retention policy.",
+      "completedAt": "2026-09-18T20:28:43.266796+00:00"
+    },
+    {
       "id": "art-sandy-shores-20260918",
       "title": "Render sandy land-water transitions",
       "phase": "phase-6-production-alpha-layer",
