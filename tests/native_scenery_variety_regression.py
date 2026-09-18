@@ -37,7 +37,8 @@ func run() -> void:
 \tvar output := OS.get_cmdline_user_args()[0]
 \tvar manifest := ContentService.load_json(Rules.MANIFEST)
 \tvar catalog: Dictionary = ContentService.load_json("res://art/overworld/manifest.json").object_assets
-\tvar recipes: Array = ContentService.load_json("res://art/overworld/source/generated/terrain/biome_blocker_library_20260913/recipes.json").entries
+\tvar library: Dictionary = ContentService.load_json("res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json")
+\tvar recipes: Array = library.components + library.clusters
 \tvar selector := Selector.new()
 \tvar seen := {}
 \tvar counts := {}
@@ -85,13 +86,19 @@ func run() -> void:
 \t\tselector.terrain = terrain
 \t\tvar container := Node2D.new()
 \t\tviewport.add_child(container)
-\t\tvar bg := Polygon2D.new()
-\t\tbg.polygon = PackedVector2Array([Vector2.ZERO,Vector2(960,0),Vector2(960,720),Vector2(0,720)])
-\t\tbg.color = Color("302c29")
-\t\tcontainer.add_child(bg)
-\t\tfor y in range(6):
+\t\tvar ground = load("res://scenes/overworld/OverworldGroundSurface.gd").new()
+\t\tcontainer.add_child(ground)
+\t\tground.configure(ContentService.load_json("res://art/overworld/ground_materials.json"),ImageTexture.create_from_image(Image.load_from_file(ContentService.local_path("res://art/overworld/runtime/terrain_tiles/ground_materials_v3.png"))))
+\t\tvar rows := []
+\t\tvar fog := []
+\t\tfor y in range(7):
+\t\t\tvar row := [];row.resize(8);row.fill(terrain);rows.append(row)
+\t\t\tvar visible := [];visible.resize(8);visible.fill(true);fog.append(visible)
+\t\tground.sync_lookup(rows,Vector2i(8,7),1,fog,1)
+\t\tground.sync_layout(Rect2(0,0,960,720),Rect2(0,0,960,720),Vector2i(8,7))
+\t\tfor y in range(7):
 \t\t\tfor x in range(8):
-\t\t\t\tvar type_id: int = 127 if terrain=="lava" else [117,135,119][y%3]
+\t\t\t\tvar type_id: int = [127 if terrain=="lava" else 117,135,137,119,129,116,125][y]
 \t\t\t\tvar id := selector._generated_decorative_body_asset_id({"h3m_type_id":type_id,"native_scenery_art_version":2},Vector2i(x+12,y+8))
 \t\t\t\tvar entry: Dictionary = catalog[id]
 \t\t\t\tvar image := Image.load_from_file(ContentService.local_path(entry.path))
@@ -100,8 +107,8 @@ func run() -> void:
 \t\t\t\t\timage=image.get_region(Rect2i(r[0],r[1],r[2],r[3]))
 \t\t\t\tvar sprite := Sprite2D.new()
 \t\t\t\tsprite.texture = ImageTexture.create_from_image(image)
-\t\t\t\tsprite.position = Vector2(x*110+80,y*105+85)
-\t\t\t\tsprite.scale = Vector2.ONE*140.0/maxi(image.get_width(),image.get_height())
+\t\t\t\tsprite.position = Vector2(x*110+80,y*98+65)
+\t\t\t\tsprite.scale = Vector2.ONE*130.0/maxi(image.get_width(),image.get_height())
 \t\t\t\tcontainer.add_child(sprite)
 \t\tfor i in range(3): await get_tree().process_frame
 \t\tawait RenderingServer.frame_post_draw
@@ -126,6 +133,9 @@ def main():
     with tempfile.TemporaryDirectory(prefix='scenery-probe-', dir=output) as temporary:
         work = Path(temporary)
         (work/'scripts/persistence').mkdir(parents=True)
+        (work/'scenes/overworld').mkdir(parents=True)
+        for name in ['OverworldGroundSurface.gd','overworld_ground_surface.gdshader']:
+            shutil.copyfile(ROOT/'scenes/overworld'/name,work/'scenes/overworld'/name)
         shutil.copyfile(ROOT/'scripts/persistence/NativeSceneryRules.gd', work/'scripts/persistence/NativeSceneryRules.gd')
         (work/'content.gd').write_text('extends Node\nvar cache := {}\nfunc local_path(path: String) -> String:\n\treturn '+json.dumps(ROOT.as_posix()+'/')+' + path.trim_prefix("res://")\nfunc load_json(path: String) -> Dictionary:\n\tif not cache.has(path): cache[path]=JSON.parse_string(FileAccess.get_file_as_string(local_path(path)))\n\treturn cache[path]\n', encoding='utf-8')
         (work/'project.godot').write_text('config_version=5\n[application]\nconfig/name="SceneryProbe"\n[autoload]\nContentService="*res://content.gd"\n[rendering]\nrenderer/rendering_method="gl_compatibility"\n', encoding='utf-8')

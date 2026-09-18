@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Distinct biome source components
+
+`art-biome-source-components-20260919` — completed. Delivered 100 original source components and 100 paired clusters per biome (900 + 900 total), adopted by live version 2 semantic palettes and the wiki. Nine biome renders reviewed; focused selector/contracts and Windows Godot import pass. Native placement/masks and version 1 saves unchanged. No full suite, Linux run or manual playtest. See `docs/biome-source-component-expansion.md`.
+
 ### Blocker palette adoption
 
 `art-blocker-palette-reconnect-20260918` — completed. Reconnected all 900 existing appearances to semantic scenery, including fixed-raster lava barriers; deterministic coordinate selection avoids patterned rows. Source placements/masks and version 1 saves unchanged. Focused Windows selector checks across 38 types/nine biomes and visual review pass; no full suite or Linux run. See `docs/rmg-biome-blocker-library.md`.

@@ -17,6 +17,12 @@ static func asset_candidates(object: Dictionary, biome_id: String) -> Array:
 		var family := String(entry.get("landscape_family", entry.get("variation_family", "")))
 		if family != "":
 			var art_biome := String(entry.get("variation_biome", biome_id))
+			# Production component palettes replace the old few-source clusters.
+			# Every family now owns independently painted source silhouettes.
+			var components: Array = manifest.get("component_palettes", {}).get(family, {}).get(art_biome, [])
+			if not components.is_empty():
+				_candidate_cache[cache_key] = components
+				return components
 			var seeds: Array = manifest.get("landscape_palettes", {}).get(family, {}).get(art_biome, [])
 			var candidates: Array = entry.get("asset_ids", []).duplicate()
 			var additions: Array = seeds.duplicate()
