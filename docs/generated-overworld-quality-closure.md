@@ -198,7 +198,7 @@ Current reproducible receipts are under
 official packages under `accepted-linux-export` and `accepted-windows-export`.
 Native retained-reference and water/layer receipts are in
 `.artifacts/rmg_start_audit_20260905/{quality_retained_20260918,quality_water_levels_20260918}`;
-the unresolved density receipt is
+the historical density receipt is
 `.artifacts/full_play_runtime_20260905/overworld-quality-density-20260918`.
 All native recovery evidence is retained. Cleanup removed exactly
 **1,535,693,895 bytes (1.54 GB)** of superseded task-created Linux/Windows exports,
@@ -223,25 +223,116 @@ smokes first. Final screenshots are runtime evidence,
 not regenerated concept art. These accepted correction results do not complete
 the remaining parent-level density/progression requirement below.
 
-### Remaining questions, not silently declared fixed
+### Guard-target continuation
 
-The four-size density rerun passes Medium, Large and Extra Large. Small still
-fails two existing thresholds: two early interactions (minimum four) and seven
-in the next band (minimum eight). Its seed is
-`generated-density-distribution-10184-homm3_small`, using the historical Weak,
-three-player profile; native payload identity `bc036d7a`, runtime signature
-`771dec4a`, starting entrance `(26,24)`. All 101 source interactables survive
-adoption: four artifacts, 28 guards, 31 pickups, 34 sites and four towns.
-Zero source objects are dropped. Fixed-body BFS calls 59 unreachable, which is
-not proof that they remain unreachable after battles, portals or water travel.
+Two concrete player-facing defects are corrected without changing native
+placements, armies, masks, topology, movement allowances or save schema:
 
-Before any native density correction, obtain a same-configuration original
+- Clicking the painted center of a generated monster selected its center even
+  when its surrounding combat entries made that center unreachable. The shared
+  target resolver now chooses the nearest legal entry owned by the same guard,
+  with one multi-target search. Unexplored monsters do not retarget; cleared or
+  other-level guards are rejected. The free controller tile cursor stays free,
+  including over town scenery; its existing Accept action uses legal entries.
+- Cached movement prioritized a resource descriptor over the defender sharing
+  its entrance. The hero reached a guarded site but received a refusal to claim
+  it, with no battle. Descriptor selection and execution now follow ordinary
+  movement's encounter-first ordering. Resource-descriptor callers also defer
+  to the active defender, and rewards remain untouched until victory.
+
+Exact reproductions: historical Small seed
+`generated-density-distribution-10184-homm3_small`, Weak/three players,
+`native_h3maped_bc036d7a_object_0269`: click `(24,26)`, walk one step from
+`(26,24)` to `(25,25)`, fight that exact army. Large/11 Normal sites
+`generated_guarded_reward_native_h3maped_c6ffff4f_object_2102` and `_2112`
+previously disagreed between ordinary and cached execution. Both now enter the
+same correct battles with unchanged starting armies. The visible `_2112` site
+is exercised through actual pointer input, movement, battle scene and save.
+
+`tests/generated_guard_approach_regression.py` passes **7,195 checks on each of
+source, packaged Linux and rendered packaged Windows/Wine**:
+221 guards inspected across Small/Medium/Large, seven actual start-to-guard
+commits (isolated copies, not seven victories), two longer partial routes,
+cached/full equality, hidden/resolved/other-level controls, and four real input
+flows (monster pointer, selected keyboard action, controller cursor/Accept,
+guarded-site pointer). Legacy guards without placement IDs remain supported.
+All four resulting battles save/restore exactly. Source/Windows captures at
+1280x720 and packaged Linux at 1920x1080 were inspected. These are bounded
+route/battle-entry checks, not a whole-match or universal pacing claim.
+
+### Corrected density measurement
+
+The old report used four-direction traversal, reconstructed body blocking and
+monster centers. It falsely failed the unchanged Small opening at 2/7 versus
+minimum 4/8. It now uses live eight-direction collision/corner policy and
+same-guard legal interaction points; **thresholds, seeds and objects are
+unchanged**. All four sizes pass. Potential geometric opening/mid counts are
+Small **6/15**, Medium **17/52**, Large **18/69**, Extra Large **76/143**. This
+measure can look beyond uncleared interactions; it is explicitly **not**
+guard-free immediate play. The separate production-route Small diagnostic gives
+**4/10** directly reachable interactions. Starting-town presence is included in
+these established counts. All 101 Small interactables still survive adoption.
+
+Receipts: `.artifacts/rmg_quality_continuation_20260918/guard-final-source` and
+`.artifacts/full_play_runtime_20260905/guard-route-context-20260918`. Existing
+controller selection, selected-route cache, full movement/locomotion and
+interaction-optimization tests pass via the Python runner. Two legacy setup
+expectations were stale: production audio replaced placeholder WAVs, and save
+recap caching added two derived fields. The runner now checks authoritative audio
+manifest identities and validates those derived fields separately, retaining
+canonical save bytes/session/summary comparisons and all movement assertions.
+
+Reproduction:
+
+```sh
+python3 -B tests/generated_guard_approach_regression.py --label guard-review --render --resolution 1280x720 --timeout-seconds 1200
+python3 -B tests/full_play_validation_suite.py --label guard-route-review --only random_map_generated_density_distribution_report overworld_controller_route_selection_regression overworld_selected_route_context_actions_cache_regression overworld_full_route_movement_regression overworld_interactable_confirmation_optimization_regression --accessibility disabled --timeout 1200
+```
+
+### Guard-target final platform evidence and cleanup
+
+Evidence root: `.artifacts/rmg_quality_continuation_20260918`.
+
+- `guard-final-{source,linux,windows}/report.json`: **7,195 checks each**.
+  Both packages run the unchanged Python-owned probe with SHA-256
+  `57c0a764376babdfdf87790e7fad5feb8a00c03a5b98f0732d736158c569b8eb`;
+  compiled owner hashes and unchanged release inventories are recorded.
+- Official `final-linux-export` and `final-windows-export` pass. Windows includes
+  all 26 generated-map/Town/growth/battle-report steps, not only menu startup.
+  `final-package-parity.json` verifies **650,608,744 bytes / 8,918 entries** per
+  PCK; only `project.binary` platform feature flags differ. Final PCK SHA-256:
+  Linux `f79c9fcd140503487a5a3097104dc404928c0420b83996dc45f82efcbd07705e`,
+  Windows `8ad1d49bbd8062ec534fb7c8506072942a452ccc35a46ec54ba5604776c144a9`.
+- Existing exploration rerun passes **81,295 checks** at
+  `.artifacts/rmg-exploration-20260918/guard-routing-followup`. The controller,
+  selected-route cache, full-route/locomotion and interaction-optimization
+  regressions pass in `guard-route-compat-20260918` / `guard-route-final-20260918`
+  under `.artifacts/full_play_runtime_20260905`; the corrected four-size density
+  report passes in `guard-route-context-20260918` there. Earlier stale-fixture
+  failures are retained as failures, not counted as accepted results.
+- `validate-repo.log`: repository validation passes. Its 26 absent historical
+  smokes were explicitly **not** executed or counted as passed. `git diff
+  --check`, tracker PLAN sync and queue checks pass. No native source/library,
+  generated art, save-version, terrain mask, placement or strength edits in this
+  continuation. Windows evidence is Wine/OpenGL, not physical-device approval;
+  the pre-existing Wine fallback-font arrow glyph and MSAA warnings remain.
+- Cleanup verified no active process used the exact targets, then removed four
+  superseded task-owned export directories (**2,971,013,072 apparent bytes**)
+  and 44 obsolete intermediate screenshots (**53,122,829 bytes**). These are
+  rebuildable; final packages/captures, diagnostic logs/reports, caches, saves,
+  all native RMG recovery and unrelated untracked files remain. The earlier
+  `overworld-quality-20260918/accepted-*/export` packages are now superseded by
+  the final exports above; their old validation receipts are retained.
+
+### Remaining acceptance, not silently declared fixed
+
+The stale Small threshold failure is no longer evidence for native density
+tuning. If another actual native placement defect is found, obtain its original
 private-state fixture at `reward_guard_selected_create_dispatch_0x4a9f1c`,
 `reward_guard_coordinate_scan_and_commit_0x4aa9b7_impl` / wrapper `0x4aa3e9`,
 the selected-candidate vector `+0x10f4/+0x10f8`, and relation treasure bands
-`+0xa0..+0xc0`. These native owners exist; the missing proof is this failing
-case's original phase join, not an allegedly unimplemented function. The current
-evidence cannot distinguish a port defect from an original sparse profile/seed.
+`+0xa0..+0xc0` before changing generation. These native owners already exist;
+no unrecovered implementation was invented to explain the old measurement.
 Do not insert filler, remove source masks or lower thresholds to claim closure.
 Whole-match day-three pacing, every portal shortcut and arbitrary seeds remain
 outside the bounded battle/route proofs. The parent goal remains in progress.

@@ -1785,6 +1785,15 @@ static func _resolve_destination_descriptor_interaction(
 ) -> Dictionary:
 	if not _descriptor_matches_hero_level(session, descriptor):
 		return {"ok": false, "message": "The selected object is on another map level.", "route": ""}
+	# A site/artifact and its defender can share an entrance. Cached commands
+	# must preserve the same encounter-first authority as ordinary movement;
+	# trying to claim the guarded reward first strands the hero without combat.
+	if String(descriptor.get("kind", "")) != "encounter":
+		var defender := get_active_encounter(session)
+		if not defender.is_empty():
+			# Older authored encounters may have no placement ID. The ordinary
+			# resolver already supports their coordinate/content identity.
+			return _resolve_post_move_interaction(session)
 	match String(descriptor.get("kind", "")):
 		"resource":
 			var resource_result := _find_resource_node_by_placement(session, String(descriptor.get("placement_id", "")))
@@ -2379,6 +2388,63 @@ static func get_active_encounter(session: SessionStateStoreScript.SessionData) -
 
 static func guard_engagement_encounter_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> Dictionary:
 	return _find_guard_engagement_at_tile(session, x, y, level).get("encounter", {})
+
+static func guard_engagement_approach_route(session: SessionStateStoreScript.SessionData, encounter: Dictionary) -> Array:
+	# The painted stack sits inside its terminal engagement ring. A player
+	# selects the stack, but must walk only to the first legal combat entry.
+	# One multi-target BFS avoids repeating a map-sized search for each entry.
+	if session == null or encounter.is_empty() or is_encounter_resolved(session, encounter):
+		return []
+	var level := hero_level(session)
+	if not OverworldLevelRulesScript.on_level(encounter, level):
+		return []
+	var start := hero_position(session)
+	var anchor := Vector2i(int(encounter.get("x", -1)), int(encounter.get("y", -1)))
+	var targets := {}
+	var identity := encounter_key(encounter)
+	for tile in _guard_engagement_world_tiles(encounter):
+		if tile_is_blocked(session, tile.x, tile.y, level) and tile != anchor:
+			continue
+		var owner := guard_engagement_encounter_at_tile(session, tile.x, tile.y, level)
+		if not owner.is_empty() and encounter_key(owner) == identity:
+			targets[tile] = true
+	if targets.is_empty():
+		return []
+	var size := derive_map_size(session)
+	var queue := [start]
+	var parents := {start: start}
+	var cursor := 0
+	var destination := Vector2i(-1, -1)
+	var links := active_linked_transit_edges(session)
+	while cursor < queue.size():
+		var current: Vector2i = queue[cursor]
+		cursor += 1
+		if targets.has(current):
+			destination = current
+			break
+		var neighbors := []
+		for offset in [Vector2i.UP, Vector2i.DOWN, Vector2i.LEFT, Vector2i.RIGHT, Vector2i(-1,-1), Vector2i(1,-1), Vector2i(-1,1), Vector2i(1,1)]:
+			var next: Vector2i = current + offset
+			if next.x < 0 or next.y < 0 or next.x >= size.x or next.y >= size.y or parents.has(next):
+				continue
+			if tile_step_cuts_blocked_corner(session, current, next, level):
+				continue
+			if tile_is_blocked(session, next.x, next.y, level) and not targets.has(next):
+				continue
+			if tile_has_route_interaction(session, next.x, next.y, level) and not targets.has(next):
+				continue
+			neighbors.append(next)
+		neighbors.append_array(linked_transit_neighbors_from_edges(links, current))
+		for next in neighbors:
+			if parents.has(next): continue
+			parents[next] = current
+			queue.append(next)
+	if destination == Vector2i(-1, -1):
+		return []
+	var path := [destination]
+	while path[0] != start:
+		path.push_front(parents[path[0]])
+	return path
 
 static func _resource_node_at_tile(session: SessionStateStoreScript.SessionData, x: int, y: int) -> Dictionary:
 	var nodes = session.overworld.get("resource_nodes", [])

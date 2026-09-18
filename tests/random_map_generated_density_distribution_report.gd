@@ -155,6 +155,7 @@ func _distribution_metrics(session, generated_map: Dictionary, setup: Dictionary
 		"counts_by_source": counts_by_source,
 		"reachable_counts": reachable_counts,
 		"reachable_tiles": reachable_tiles,
+		"reachability_model": "live_eight_direction_collision_and_guard_approaches; potential_geometry_not_guard_free_play",
 		"reachable_interactables_per_1000_reachable_tiles": _density_per_1000(int(reachable_counts.get("reachable_interactable_count", 0)), reachable_tiles),
 		"distance_rings_from_start": ring_counts,
 		"nearest_interactables": _nearest_interactables(interactables, NEAREST_INTERACTABLE_LIMIT),
@@ -311,7 +312,7 @@ func _interactables(session, distances: Dictionary, road_cells: Array, ring_poli
 			"encounter",
 			String(encounter.get("placement_id", "")),
 			String(encounter.get("encounter_id", "")),
-			_point_dict(int(encounter.get("x", 0)), int(encounter.get("y", 0))),
+			_best_guard_interaction_tile(session, encounter, distances),
 			distances,
 			road_cells,
 			_point_dict(int(encounter.get("x", 0)), int(encounter.get("y", 0))),
@@ -349,6 +350,19 @@ func _resource_kind(node: Dictionary) -> String:
 	if family in ["pickup", "one_shot_pickup", "reward_cache_small"]:
 		return "pickup"
 	return "resource"
+
+func _best_guard_interaction_tile(session, encounter: Dictionary, distances: Dictionary) -> Dictionary:
+	var best := _point_dict(int(encounter.get("x", 0)), int(encounter.get("y", 0)))
+	var best_distance := int(distances.get(_point_key(int(best.x), int(best.y)), -1))
+	for tile in OverworldRules._guard_engagement_world_tiles(encounter):
+		if OverworldRules.tile_is_blocked(session, tile.x, tile.y): continue
+		var owner := OverworldRules.guard_engagement_encounter_at_tile(session, tile.x, tile.y)
+		if owner.is_empty() or OverworldRules.encounter_key(owner) != OverworldRules.encounter_key(encounter): continue
+		var distance := int(distances.get(_point_key(tile.x, tile.y), -1))
+		if distance >= 0 and (best_distance < 0 or distance < best_distance):
+			best = _point_dict(tile.x, tile.y)
+			best_distance = distance
+	return best
 
 func _best_interaction_tile(record: Dictionary) -> Dictionary:
 	var visit: Dictionary = record.get("visit_tile", {}) if record.get("visit_tile", {}) is Dictionary else {}
@@ -399,12 +413,14 @@ func _reachable_distances(session, start: Vector2i) -> Dictionary:
 		var current_distance := int(distances.get(_point_key(current.x, current.y), 0))
 		if blocked.has(_point_key(current.x, current.y)) and terminal_interactions.has(_point_key(current.x, current.y)):
 			continue
-		for offset in [Vector2i(1, 0), Vector2i(0, 1), Vector2i(-1, 0), Vector2i(0, -1)]:
+		for offset in [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP, Vector2i(-1,-1), Vector2i(1,-1), Vector2i(-1,1), Vector2i(1,1)]:
 			var next_tile: Vector2i = current + offset
 			if next_tile.x < 0 or next_tile.y < 0 or next_tile.x >= width or next_tile.y >= height:
 				continue
 			var key := _point_key(next_tile.x, next_tile.y)
 			if distances.has(key):
+				continue
+			if OverworldRules.tile_step_cuts_blocked_corner(session, current, next_tile):
 				continue
 			if blocked.has(key) and not terminal_interactions.has(key):
 				continue
@@ -432,23 +448,10 @@ func _terminal_interaction_keys(session) -> Dictionary:
 
 func _blocked_lookup(session, width: int, height: int, start: Vector2i) -> Dictionary:
 	var blocked := {}
-	var map_rows: Array = session.overworld.get("map", []) if session.overworld.get("map", []) is Array else []
 	for y in range(height):
-		var row: Array = map_rows[y] if y >= 0 and y < map_rows.size() and map_rows[y] is Array else []
 		for x in range(width):
-			var terrain_id: String = String(row[x] if x >= 0 and x < row.size() else "")
-			if terrain_id in ["water", "coast", "shore"]:
+			if OverworldRules.tile_is_blocked(session, x, y):
 				blocked[_point_key(x, y)] = true
-	for collection_name in ["towns", "resource_nodes", "artifact_nodes", "encounters", "map_objects"]:
-		for record_value in session.overworld.get(collection_name, []):
-			if not (record_value is Dictionary):
-				continue
-			var record: Dictionary = record_value
-			if not _record_blocks_body(record):
-				continue
-			for body in _record_body_tiles(record):
-				if body is Dictionary:
-					blocked[_point_key(int(body.get("x", 0)), int(body.get("y", 0)))] = true
 	blocked.erase(_point_key(start.x, start.y))
 	return blocked
 
