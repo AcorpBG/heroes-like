@@ -735,6 +735,13 @@ func exercise_portal_representative(source, gate: Dictionary, shape: String) -> 
 	var chosen := {}
 	if resumed != null and options.size() > 1:
 		chosen = Rules.perform_context_action(resumed, "native_transit:" + String(destination.target_placement_id))
+		var defended = clone(session)
+		defended.overworld.encounters.append({"placement_id":"portal_choice_hostile_probe", "encounter_id":"encounter_mire_raid", "x":expected_exit.x, "y":expected_exit.y, "level":expected_exit.z, "blocking_body":true})
+		Rules.invalidate_spatial_lookup(defended)
+		Rules._refresh_blocked_tile_index(defended)
+		var paid_movement := int(defended.overworld.movement.current)
+		var combat_choice: Dictionary = Rules.perform_context_action(defended, "native_transit:" + String(destination.target_placement_id))
+		checks["paid_choice_enters_hostile_exit_without_second_charge"] = bool(combat_choice.get("ok", false)) and String(combat_choice.get("route", "")) == "battle" and String(defended.battle.get("resolved_key", "")) == "portal_choice_hostile_probe" and int(defended.overworld.movement.current) == paid_movement and Transit.point(defended.overworld.hero_position) == expected_exit
 	checks["real_approach_then_saved_choice_spends_one_total"] = bool(left.get("ok", false)) and bool(arrived.get("ok", false)) and resumed != null and Transit.point(resumed.overworld.hero_position) == expected_exit and int(resumed.overworld.movement.current) == movement_before - 1
 	return {"shape": shape, "placement_id": gate.placement_id, "checks": checks, "ai": ai, "left": left, "arrived": arrived, "chosen": chosen}
 
@@ -830,7 +837,10 @@ func exercise_exit_safety(source, gate: Dictionary) -> Dictionary:
 		place(session, Transit.point(gate.native_transit.entry))
 		var before := int(session.overworld.movement.current)
 		var result: Dictionary = Rules.perform_context_action(session, "collect_resource")
-		checks["exit_%s_blocks_without_spending" % blocker_kind] = not bool(result.get("ok", false)) and int(session.overworld.movement.current) == before and Transit.point(session.overworld.hero_position) == Transit.point(gate.native_transit.entry)
+		if blocker_kind == "army":
+			checks["hostile_exit_enters_battle_with_one_step"] = bool(result.get("ok", false)) and String(result.get("route", "")) == "battle" and String(session.battle.get("resolved_key", "")) == "transit_exit_army_probe" and int(session.overworld.movement.current) == before - 1 and Transit.point(session.overworld.hero_position) == Transit.point(exit)
+		else:
+			checks["exit_%s_blocks_without_spending" % blocker_kind] = not bool(result.get("ok", false)) and int(session.overworld.movement.current) == before and Transit.point(session.overworld.hero_position) == Transit.point(gate.native_transit.entry)
 	return checks
 
 func exercise_ai(source, gate: Dictionary, approach: Vector2i, target_exit_id: String = "") -> Dictionary:
@@ -976,7 +986,7 @@ TRIP_CHECKS = (
     "production_save_preserves_transit_and_fog",
     "ai_routes_to_real_target_through_gate",
     "exit_body_blocks_without_spending", "exit_hero_blocks_without_spending",
-    "exit_army_blocks_without_spending", "ai_uses_exact_native_destination",
+    "hostile_exit_enters_battle_with_one_step", "ai_uses_exact_native_destination",
     "ai_transit_preserves_treasury_and_node", "ai_gate_path_is_reachable",
     "full_ai_advance_uses_gate",
 )
@@ -1051,10 +1061,14 @@ def portal_failures(report, expected_ends, representatives_only=False):
     if any(len(gate.get("native_transit", {}).get("destinations", [])) > 1 for gate in source_ends.values()) and portals.get("multihero_credit", {}).get("ok") is not True:
         failed.append("multihero_pending_credit_not_preserved")
     representatives = portals.get("representatives", [])
+    multi_exit_shapes = {f"{int(gate['h3m_type_id'])}:{len(gate['native_transit'].get('destinations', []))}" for gate in source_ends.values() if len(gate.get("native_transit", {}).get("destinations", [])) > 1}
     if len(representatives) != len(expected_shapes) or {r.get("shape") for r in representatives} != expected_shapes:
         failed.append("missing_portal_shape_gameplay_evidence")
     for representative in representatives:
-        for key in ("ai_exact_selected_destination", "ai_no_claim_rewards", "ai_real_approach_path", "ai_full_advance_uses_gate", "ai_routes_to_real_target_through_gate", "production_save_keeps_position_contracts_and_fog", "real_approach_then_saved_choice_spends_one_total"):
+        keys = ["ai_exact_selected_destination", "ai_no_claim_rewards", "ai_real_approach_path", "ai_full_advance_uses_gate", "ai_routes_to_real_target_through_gate", "production_save_keeps_position_contracts_and_fog", "real_approach_then_saved_choice_spends_one_total"]
+        if representative.get("shape") in multi_exit_shapes:
+            keys.append("paid_choice_enters_hostile_exit_without_second_charge")
+        for key in keys:
             if representative.get("checks", {}).get(key) is not True:
                 failed.append(f"{representative.get('shape')}: {key}")
     return failed

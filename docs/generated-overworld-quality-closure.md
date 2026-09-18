@@ -336,3 +336,197 @@ no unrecovered implementation was invented to explain the old measurement.
 Do not insert filler, remove source masks or lower thresholds to claim closure.
 Whole-match day-three pacing, every portal shortcut and arbitrary seeds remain
 outside the bounded battle/route proofs. The parent goal remains in progress.
+
+### Current Normal-strength progression continuation (in progress)
+
+`tests/generated_full_match_quality.py` now exposes separate `quality_medium`
+(Medium/10/two players) and `quality_large` (Large/11/two players) cases using
+the current catalog-auto **Normal** setup. Historical `medium`/`large` cases
+retain their translated-template setup. Setup records and checkpoint admission
+distinguish both selection mode and monster strength in both directions; a
+historical Weak save cannot masquerade as a current Normal run.
+
+The initial Medium policy collected an artifact and useful sites but then kept
+circling its explored region. Its remote recruitment correctly entered the
+town garrison; the driver never returned for these reinforcements. This was a
+validation-policy limitation, not permission to give remote troops to heroes.
+Current-quality runs now choose a legal revealed return route when compatible
+garrison troops materially strengthen the field army, then use enabled Town
+transfer actions while physically stationed. No soldiers, positions, resources,
+guard resolutions or saved gameplay state are injected. Portal choices use the
+existing destination dialog, and transient presentations must finish before the
+next order. These are test-driver changes, not additional shipped gameplay fixes.
+
+The original Medium and Large diagnostic processes were deliberately stopped
+after real recorded checkpoints, not accepted as complete matches. Continuations
+use hash-verified saves and the exact observed action prefix. Medium's recorded
+day-22 return walked from (45,42) to the town entrance (43,40), transferred its
+garrison through five successful orders, and defeated the 100-unit guard
+`native_h3maped_f8d41ec2_object_0963`, losing five troops. Later actions captured
+a second town. Large's continuation also transferred troops and recovered two
+artifacts. These observations establish actual progression, not terminal
+acceptance; the runs and parent remain in progress.
+
+The Medium portal at (39,30) did not travel after its local guard was defeated.
+Inspection of the real day-24 save showed an unresolved native guard and the
+live enemy `player_2_raid_3` at its (59,46) exit. The refusal therefore preserves
+a genuine occupied/guarded destination; no source mask or guard was removed to
+force passage. Final run receipts and integrated acceptance are still pending.
+
+The extended `generated_guard_approach_regression.py` source run at
+`.artifacts/rmg_quality_continuation_20260918/opening-barriers-source` passes
+7,195 headless checks, including eight new opening-barrier assertions. Its
+conservative static search ignores fog and assumes all unguarded site visits
+are usable: Medium/10 has 122 guard-free reachable cells and Large/11 has 382,
+but neither enemy town is reachable without a guard. Native portal safety is
+included. Explicit cleared-guard **graph-control clones**, never live
+playthroughs, reach those towns in 24 and 84 steps respectively. This proves
+the sampled barriers are guards rather than permanently disconnected terrain;
+it does not turn synthetic guard clearance into earned wins or certify arbitrary
+seeds. The earlier rendered source count also happened to be 7,195, with eight
+screenshot assertions instead of these eight new barrier checks.
+
+### Mandatory guarded portal defect: correction under validation
+
+The later read-only Godot diagnosis at
+`.artifacts/rmg_quality_continuation_20260918/guarded-portal-diagnosis` establishes
+that the occupied Medium portal is more than an optional detour. In the actual
+day-56 save, hero (16,46) has a legal 28-step approach to entrance (39,30),
+`native_h3maped_f8d41ec2_object_0967`. The linked exit is (59,46), object `0965`.
+Its unresolved native guard `0966` contains 80 troops in four stacks; the live
+98-unit, seven-stack `player_2_raid_3` also occupies that exit. Observation leaves
+the complete saved gameplay state unchanged.
+
+The explicit cleared-guard graph control reaches the rival town in 36 steps
+**with** the original portals, but cannot reach it **without** them; both
+surfaces have zero active authored links. Thus the earlier correct observation
+that a real enemy blocks the exit did not establish a usable alternate route.
+Refusing hostile exits can strand the player until the AI clears its own side.
+Before this correction, `OverworldRules.native_passage_travel_check` applied the same strict
+endpoint-safety rejection to source and destination, and
+`travel_native_passage` had no hostile-arrival battle handoff.
+
+Selected correction: keep strict source-side safety, real friendly/terrain/site
+blockers and exact native link contracts. A legal hostile destination must enter
+the existing encounter/battle path instead of deleting its defenders or treating
+them as permanent terrain. Test neutral-only, enemy-occupied, overlapping
+defenders, choice/cost/save handling and rejected noncombat blockers on Linux and
+Windows, plus the real checkpoint-to-portal-to-rival route. No generation,
+placement, quantities, masks, seed retries or day locks may change. Both active
+playthrough engines were stopped at genuine checkpoints before shared runtime
+edits; neither partial run is terminal acceptance.
+
+The runtime correction retains strict source and AI endpoint checks, while a
+player's hostile destination prepares the existing `BattleRules` payload before
+charging movement or moving the hero. It then reveals the real exit and routes
+through the normal Battle/Report flow. Only encounter bodies that can engage
+that exact exit are excluded from its occupancy check; coincident scenery,
+friendly heroes, towns, sites, artifacts and impassable terrain still block.
+No defender is removed or resized. When an occupying army overlaps a separate
+native guard, the army is fought first; attempting to walk away afterward enters
+the surviving guard's battle without spending another movement step. This check
+is limited to native passage entrances, not a new general movement rule.
+The prepared commander's position **and movement budget** are updated from the
+committed arrival, because the existing battle aftermath writes both fields back
+to the hero. The regression invokes that real write-back on a detached control
+and checks that neither the entrance position nor the pre-charge budget returns.
+
+`tests/native_guarded_portal_regression.py` owns focused generated Medium/10
+endpoint, overlap, source-guard, noncombat-blocker, movement, invalid-battle and
+save-resume controls. These explicitly placed endpoint/aftermath fixtures are
+not represented as earned victories or full journeys. Existing native transit
+compatibility coverage now expects a hostile army at an otherwise legal player
+exit to start battle, while friendly/body rejection and AI safety remain strict.
+Validation and real checkpoint continuations are pending until their receipts
+are recorded below.
+
+The first real saved-state walk exposed an additional handoff defect in the
+initial patch: both genuine exit battles ran, but battle aftermath restored the
+preflight commander position at the source, requiring another jump afterward.
+Its initially green journey report did not assert this intermediate position
+and is **not final acceptance**. The prepared commander snapshot now records the
+committed exit before battle entry. Focused saved-payload assertions and the real
+journey's after-each-report assertion cover this specifically. Initial source/
+Linux endpoint receipts and exports predate this final correction and are
+superseded until rerun; no source placement or combat rule changed.
+
+Focused reproduction (fresh labels):
+
+```sh
+python3 -B tests/native_guarded_portal_regression.py --label portal-review --render --resolution 1280x720 --timeout-seconds 600
+python3 -B tests/generated_guard_approach_regression.py --label portal-guard-review --timeout-seconds 1200
+python3 -B tools/rmg_native_transit_validation.py --label portal-choice-review --portal-case large_seed1 --representatives-only
+python3 -B tools/rmg_native_transit_validation.py --label portal-layer-review
+python3 -B -m unittest discover -s tests -p test_generated_full_match_quality.py
+```
+
+The multi-exit representative controls include an already-paid choice into a
+hostile exit; the layer case covers reciprocal caves and hostile exit battle.
+Use the exact release bootstrap (`--platform`, `--binary`, `--pack`, fresh
+`--wine-prefix`, and explicit `--render-windows`) for the same focused probe.
+These commands describe required coverage, not automatically passing results.
+
+### Guarded portal correction: validated batch, parent still open
+
+Final runtime owner SHA-256: `ea9ed8e9ab5c2c1cc217580b6d22f6aee2a2dd76bcfa9a6a014610db4afd8b6b`.
+
+- **2,104 checks pass** in source and the exact Linux/Windows releases under
+  `.artifacts/rmg_quality_continuation_20260918/portal-accepted-{source,linux,windows}`.
+  The packaged probe SHA is identical on both platforms (`3bb7ebed…e95a`), with
+  all assertions retained. This includes source guards, hostile arrival,
+  overlapping defenders and solid bodies, friendly/terrain/site/artifact/town
+  rejection, zero/paid movement, saved battle identity and aftermath write-back.
+- The final real saved-state journey, `portal-accepted-real-journey`, walks
+  **28 legal steps** from day-56 (16,46), spends one End Turn, and defeats the
+  original 98-unit raid followed by the 80-unit native guard. Both ordinary
+  casualty reports return to (59,46), day 57, **16/22 movement**, and the complete
+  session survives production save/resume. The final save and actual action
+  trace are retained. No position, troops, stock or resolved guards are injected.
+  This is an earned portal journey, **not a terminal match**.
+- The existing guard approach/barrier regression passes **7,195** headless
+  checks across Small/Medium/Large (`portal-final-guard-source`), including
+  ordinary pointer/keyboard/controller entry and both opening rival barriers.
+  This run precedes the final explicit-travel commander-budget assignment;
+  that assignment is covered by the final 2,104-check probe above.
+- Native transit compatibility passes four actual portal shapes, both paid
+  multi-exit hostile choices and independent-hero credits
+  (`rmg_start_audit_20260905/guarded_portal_final_choices_20260918`). All eight
+  reciprocal cave endpoints, strict noncombat/AI safety and hostile player
+  arrivals pass in `guarded_portal_accepted_layers_20260918`. Source owners and
+  native generated controls do not change during either run. The earlier cave
+  run's old aggregate key incorrectly required hostile rejection; every new
+  runtime combat assertion already passed, and the corrected checker was rerun.
+- All **eight** selected movement/controller/cache, battle/report/RNG and
+  entry/resolution save-failure regressions pass in
+  `.artifacts/full_play_runtime_20260905/portal-handoff-regressions-20260918`.
+  The intentional save-failure injections are expected controls, not runtime
+  errors. Full-match acceptance unit tests pass **15**, transit validator tests
+  pass **13**, and `portal-final-validate-repo.log` records repository validation
+  passing; its 26 absent historical smoke outputs are explicitly **not run**.
+- Final official exports, `portal-final-{linux,windows}-export`, pass including
+  the **26-step Windows generated Town/growth/battle/report flow**. Each PCK is
+  **650,610,488 bytes / 8,918 entries**; exact content parity passes with only
+  platform `project.binary` differing (`portal-final-package-parity.json`).
+  Windows evidence is Wine, not a claim of physical Windows hardware testing.
+- Visually inspected the final 1280x720 source/Windows and 1920x1080 Linux
+  battles, plus the real 1280x720 overworld/casualty journey. Commands remain
+  accessible, the actual exit is revealed on both maps, and the defenders are
+  real armies rather than removed obstacles. The known Wine optional-arrow
+  glyph and unsupported OpenGL MSAA warnings remain outside this runtime fix.
+
+The longer current-policy games resume from hash-verified **Medium day 59** and
+**Large day 45** under `quality-{medium,large}-portal-accepted-20260918`. Their
+earlier partial/interrupted runs do not count as terminal acceptance. One
+rendered continuation exposed a driver trying Quick Resolve during enemy opening
+playback; the driver now waits for that input owner and records full request
+reasons. Portal anti-shuttling cooldown now applies only after an actual arrival,
+not partial approach movement. These driver corrections do not change gameplay.
+The parent and both remaining child slices stay **in progress** until the real
+remaining exploration/enemy progression and complete-match acceptance finish.
+
+Completion cleanup for this batch removed **2,971,020,400 bytes (2.97 GB)** from
+the four superseded `final-{linux,windows}-export/export` and
+`portal-{linux,windows}-export/export` directories after exact ownership/type and
+open-file checks. These are rebuildable outputs, not saves or source. The final
+`portal-final-*` packages, all required reports/screenshots, live checkpoint
+histories, caches, RMG recovery material and unrelated untracked files remain.

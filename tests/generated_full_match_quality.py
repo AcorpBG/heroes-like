@@ -20,6 +20,10 @@ OUTPUT = ROOT / '.artifacts/generated_full_match_quality_20260906'
 CASES = {
     'medium': {'seed': '10', 'size': 'homm3_medium', 'players': 2, 'faction': 'faction_embercourt', 'hero': ''},
     'large': {'seed': 'large-runtime-profile-10225', 'size': 'homm3_large', 'players': 4, 'faction': 'faction_veilmourn', 'hero': 'hero_veilmourn_orso_nightchart'},
+    # Current menu defaults; keep the historical translated-template cases
+    # above intact so their recorded checkpoints cannot silently change maps.
+    'quality_medium': {'seed': '10', 'size': 'homm3_medium', 'players': 2, 'faction': 'faction_embercourt', 'hero': '', 'template_selection_mode': 'native_catalog_auto', 'monster_strength': 'normal'},
+    'quality_large': {'seed': '11', 'size': 'homm3_large', 'players': 2, 'faction': 'faction_embercourt', 'hero': '', 'template_selection_mode': 'native_catalog_auto', 'monster_strength': 'normal'},
 }
 MARKER = 'GENERATED_FULL_MATCH_REPORT '
 
@@ -59,11 +63,12 @@ func settle() -> void:
 	while true:
 		var scene = get_tree().current_scene
 		var town_busy: bool = scene != null and scene_path().ends_with("TownShell.tscn") and scene._town_action_input_blocker.visible
-		var battle_busy: bool = scene != null and scene_path().ends_with("BattleShell.tscn") and scene._battle_exit_handoff_in_progress
-		if not town_busy and not battle_busy:
+		var battle_busy: bool = scene != null and scene_path().ends_with("BattleShell.tscn") and (scene._battle_exit_handoff_in_progress or scene._action_playback_in_progress)
+		var field_busy: bool = scene != null and scene_path().ends_with("OverworldShell.tscn") and (is_instance_valid(scene._turn_presenter) or scene._artifact_acquired_input_blocker.visible or scene._spell_cast_input_blocker.visible)
+		if not town_busy and not battle_busy and not field_busy:
 			break
 		if Time.get_ticks_msec() - started > 30000:
-			failures.append("battle exit handoff did not finish" if battle_busy else "town action input blocker did not clear")
+			failures.append("battle presentation/handoff did not finish" if battle_busy else ("overworld presentation did not finish" if field_busy else "town action input blocker did not clear"))
 			break
 		await get_tree().process_frame
 
@@ -135,7 +140,7 @@ func resolve_routes() -> void:
 			await settle()
 			var result: Dictionary = scene.validation_confirm_quick_resolve_confirmation()
 			await settle()
-			record("battle",started,{"request_ok":request.get("ok",false),"performed":result.get("performed",false)})
+			record("battle",started,{"request_ok":request.get("ok",false),"performed":result.get("performed",false),"request":request,"confirmation":result})
 			if not bool(request.get("ok",false)) or not bool(result.get("performed",false)):
 				failures.append("shipped Quick Resolve failed")
 				return
@@ -150,6 +155,30 @@ func resolve_routes() -> void:
 			if not bool(result.get("ok",false)):
 				failures.append("required battle report save failed")
 				return
+		elif scene_path().ends_with("OverworldShell.tscn") and scene._native_destination_dialog != null and scene._native_destination_dialog.visible:
+			# A player must explicitly choose an exit; an open choice is not a
+			# successful trip and must not strand the driver behind a modal.
+			var selected := -1
+			var oldest := 2147483647
+			for index in range(scene._native_destination_actions.size()):
+				var action: Dictionary = scene._native_destination_actions[index]
+				var visited := int(waypoint_visits.get("passage:" + String(action.get("id", "")), 0))
+				if not bool(action.get("disabled", false)) and visited < oldest:
+					selected = index
+					oldest = visited
+			if selected < 0:
+				scene._native_destination_dialog.canceled.emit()
+				await settle()
+				return
+			var started := Time.get_ticks_usec()
+			var before: Dictionary = session.overworld.hero_position.duplicate(true)
+			var action_id := String(scene._native_destination_actions[selected].get("id", ""))
+			scene._native_destination_picker.select(selected)
+			scene._on_native_destination_selected(selected)
+			scene._native_destination_dialog.confirmed.emit()
+			await settle()
+			waypoint_visits["passage:" + action_id] = serial + 1
+			record("passage_choice", started, {"id":action_id,"before":before,"after":session.overworld.hero_position.duplicate(true)})
 		else:
 			return
 	failures.append("battle/outcome routing did not settle")
@@ -211,6 +240,25 @@ func town_orders() -> void:
 			if not bool(result.get("ok",false)):
 				failures.append("enabled town action failed: " + selected)
 				break
+	# Remote recruits correctly belong to the garrison. Only a physically
+	# stationed hero receives these troops through the ordinary transfer flow.
+	for attempt in range(Heroes.ARMY_SLOT_COUNT):
+		var transfer := ""
+		var prefix := "transfer:garrison:%s:" % String(session.overworld.get("active_hero_id", ""))
+		for action in scene.validation_action_catalog().get("transfer", []):
+			var transfer_id := String(action.get("id", ""))
+			if transfer_id.begins_with(prefix) and transfer_id.ends_with(":all") and not bool(action.get("disabled", true)):
+				transfer = transfer_id
+				break
+		if transfer == "":
+			break
+		var started := Time.get_ticks_usec()
+		var result: Dictionary = scene.validation_perform_town_action(transfer)
+		await settle()
+		record("town_transfer", started, {"id":transfer,"ok":result.get("ok",false),"message":result.get("message","")})
+		if not bool(result.get("ok", false)):
+			failures.append("enabled garrison transfer failed: " + transfer)
+			break
 	var started := Time.get_ticks_usec()
 	var leave: Dictionary = scene.validation_leave_town()
 	await resolve_routes()
@@ -291,6 +339,9 @@ func choose_target() -> Dictionary:
 	var managed_town := owned_town_management_target()
 	if not managed_town.is_empty():
 		return managed_town
+	var resupply := reinforcement_target()
+	if not resupply.is_empty():
+		return resupply
 	var candidates := []
 	for kind in ["resource","artifact","encounter","town"]:
 		for target in scene._validation_targets(kind):
@@ -322,7 +373,10 @@ func choose_target() -> Dictionary:
 				if String(target.get("owner","")) == "player":
 					continue
 				else:
-					if session.day < 8 or power(target.get("garrison",[])) > player_power() * 0.70:
+					# Current-quality cases must not manufacture guarded pacing
+					# by refusing early town captures in the test policy itself.
+					var historical_delay: bool = session.day < 8 and String(cfg.get("template_selection_mode", "")) != Setup.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
+					if historical_delay or power(target.get("garrison",[])) > player_power() * 0.70:
 						continue
 					score -= 10.0
 			elif kind == "resource":
@@ -389,6 +443,35 @@ func choose_target() -> Dictionary:
 		return waypoints[0]
 	return {}
 
+func reinforcement_target() -> Dictionary:
+	# Observable owned garrisons only; do not teleport, auto-merge or inject an
+	# army. A return trip must use the same revealed route as a player's click.
+	# Historical driver-policy fixtures retain their original target ordering.
+	if String(cfg.get("template_selection_mode", "")) != Setup.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO:
+		return {}
+	var scene = get_tree().current_scene
+	var origin := OverworldRules.hero_position(session)
+	var stacks: Array = Heroes.active_hero(session).get("army", {}).get("stacks", [])
+	var choices := []
+	for town in scene._validation_targets("town"):
+		if String(town.get("owner", "")) != "player" or not known(town):
+			continue
+		var accepted: Array = stacks.duplicate(true)
+		for stack in town.get("garrison", []):
+			var admission: Dictionary = Heroes.army_addition_plan(accepted, {String(stack.unit_id):int(stack.count)})
+			if bool(admission.get("ok", false)):
+				accepted = admission.stacks
+		if power(accepted) - power(stacks) < maxi(100, int(power(stacks) * 0.5)):
+			continue
+		var entry: Dictionary = town.get("visit_tile", town)
+		var tile := Vector2i(int(entry.x), int(entry.y))
+		var path: Array = scene._build_path(origin, tile)
+		if path.is_empty() or not path.all(func(point):return OverworldRules.is_tile_visible(session, point.x, point.y)):
+			continue
+		choices.append({"id":String(town.placement_id),"kind":"town","tile":tile,"remote":false,"score":float(path.size())})
+	choices.sort_custom(target_precedes)
+	return choices[0] if not choices.is_empty() else {}
+
 func target_progress_state() -> Dictionary:
 	# Observe earned object identities, not rewards, movement or visit dates.
 	# Repeated services and already-owned mines must not keep a stalled run alive.
@@ -409,6 +492,7 @@ func record_target_progress(before: Dictionary, routed: bool) -> void:
 func perform_target(target: Dictionary) -> void:
 	var scene = get_tree().current_scene
 	var origin := OverworldRules.hero_position(session)
+	var origin_level := Levels.hero_level(session)
 	var progress_before := target_progress_state()
 	var started := Time.get_ticks_usec()
 	if bool(target.get("remote",false)):
@@ -448,8 +532,11 @@ func perform_target(target: Dictionary) -> void:
 		active_target.clear()
 	if target.kind == "resource":
 		var node: Dictionary = target.get("record",{})
-		if Transit.is_native(node) and moved:
+		var arrived_through_passage: bool = Transit.is_native(node) and (moved or Levels.hero_level(session) != origin_level) and Transit.destinations(node).any(func(destination):return Transit.point(destination.get("exit",{})) == Transit.point(session.overworld.hero_position))
+		if arrived_through_passage:
 			# Do not spend every turn shuttling between an already explored pair.
+			# Walking partway to a portal is not a trip and must not impose this
+			# test-policy cooldown on the still-unreached destination.
 			failed_targets[target.id] = session.day + 7
 			for destination in Transit.destinations(node):
 				failed_targets[String(destination.get("target_placement_id",""))] = session.day + 7
@@ -501,7 +588,11 @@ func run_match() -> void:
 		await resolve_routes()
 		record("resume_segment",started,{"source":resume.source,"save_sha256":resume.save_sha256})
 	else:
-		var config: Dictionary = Setup.build_random_map_player_config(cfg.seed,"translated_rmg_template_042_v1","translated_rmg_profile_042_v1",cfg.players,"land",false,cfg.size,Setup.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT,cfg.faction,cfg.hero)
+		var selection_mode := String(cfg.get("template_selection_mode", Setup.RANDOM_MAP_TEMPLATE_SELECTION_MODE_SIZE_DEFAULT))
+		var catalog_auto := selection_mode == Setup.RANDOM_MAP_TEMPLATE_SELECTION_MODE_CATALOG_AUTO
+		var config: Dictionary = Setup.build_random_map_player_config(cfg.seed,"" if catalog_auto else "translated_rmg_template_042_v1","" if catalog_auto else "translated_rmg_profile_042_v1",cfg.players,"land",false,cfg.size,selection_mode,cfg.faction,cfg.hero)
+		if cfg.has("monster_strength"):
+			config.monster_strength = cfg.monster_strength
 		var setup: Dictionary = Setup.build_random_map_skirmish_setup_with_retry(config,"normal",Setup.RANDOM_MAP_PLAYER_RETRY_POLICY)
 		if not bool(setup.get("ok",false)):
 			print("GENERATED_FULL_MATCH_REPORT " + JSON.stringify({"ok":false,"failures":["setup failed"],"setup":setup}))
@@ -510,7 +601,7 @@ func run_match() -> void:
 		session = SessionState.set_active_session(Setup.start_random_map_skirmish_session_from_setup(setup))
 		AppRouter.go_to_overworld()
 		await resolve_routes()
-		record("setup",started,{"seed":cfg.seed,"size":cfg.size,"players":cfg.players,"retry_status":setup.get("retry_status",{}),"retry_attempts":setup.get("retry_attempts",[])})
+		record("setup",started,{"seed":cfg.seed,"size":cfg.size,"players":cfg.players,"template_selection_mode":selection_mode,"monster_strength":config.get("monster_strength",""),"retry_status":setup.get("retry_status",{}),"retry_attempts":setup.get("retry_attempts",[])})
 		await screenshot("opening")
 		await checkpoint("opening",1)
 	while session.scenario_status == "in_progress" and failures.is_empty() and session.day <= int(cfg.max_days):
@@ -613,6 +704,10 @@ def resume_prefix(source: Path, case: dict, autosave: bool = False) -> tuple[byt
     setup = next(row['result'] for row in rows if row['kind'] == 'setup')
     if any(setup.get(key) != case[key] for key in ['seed', 'size', 'players']):
         raise ValueError('resume setup does not match selected case')
+    for key, historical_default in [('template_selection_mode', 'size_default'),
+                                    ('monster_strength', 'weak')]:
+        if setup.get(key, historical_default) != case.get(key, historical_default):
+            raise ValueError(f'resume {key} does not match selected case')
     if state.get('difficulty') != 'normal' or case.get('hero') and state.get('hero_id') != case['hero']:
         raise ValueError('resume difficulty or hero does not match selected case')
     players = [p for p in state['overworld'].get('players', []) if p.get('human')]

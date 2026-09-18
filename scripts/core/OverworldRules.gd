@@ -599,19 +599,32 @@ static func native_passage_travel_check(session: SessionStateStoreScript.Session
 	if actor_position != resolved.entry:
 		return {"ok": false, "message": "Move to the passage entrance first."}
 	for endpoint in [node, resolved.peer]:
-		var safety := _native_passage_endpoint_safety(session, endpoint, actor_id)
+		# Player arrivals can engage a hostile destination through BattleRules.
+		# AI movement has its own combat owner; never grant it an unchecked warp.
+		var combat_arrival: bool = endpoint == resolved.peer and actor_id != "" and actor_id == String(session.overworld.get("active_hero_id", ""))
+		var safety := _native_passage_endpoint_safety(session, endpoint, actor_id, null, combat_arrival)
 		if not bool(safety.get("ok", false)):
 			return safety
 	return resolved
 
-static func _native_passage_endpoint_safety(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_id: String, actor_blocked_indexes: Variant = null) -> Dictionary:
+static func _native_passage_endpoint_safety(session: SessionStateStoreScript.SessionData, node: Dictionary, actor_id: String, actor_blocked_indexes: Variant = null, combat_arrival: bool = false) -> Dictionary:
 	var tile := NativeTransit.point(NativeTransit.link_of(node).get("entry"))
 	var local := Vector2i(tile.x, tile.y)
 	var id := String(node.get("placement_id", ""))
 	if tile.z < 0 or tile.z >= OverworldLevelRulesScript.level_count(session) or not terrain_id_is_passable(_terrain_id_at(session, tile.x, tile.y, tile.z)):
 		return {"ok": false, "message": "The passage destination is impassable."}
 	var blocked: Variant = _blocked_tile_index(session, tile.z).get(_tile_key(local), false)
-	if blocked is bool and blocked and actor_id != "":
+	if combat_arrival:
+		# Exclude only armies that this exact arrival can fight. Rebuild from
+		# immutable source masks, so a coincident scenery/site body still blocks.
+		var defenders := {}
+		for encounter in session.overworld.get("encounters", []):
+			if encounter is Dictionary and OverworldLevelRulesScript.on_level(encounter, tile.z) and not is_encounter_resolved(session, encounter):
+				if NativeTransit.point(encounter) == tile or _guard_engagement_world_tiles(encounter).has(local):
+					defenders[encounter_key(encounter)] = true
+		if not defenders.is_empty():
+			blocked = _build_blocked_tile_index(session, tile.z, actor_id, defenders).get(_tile_key(local), false)
+	elif blocked is bool and blocked and actor_id != "":
 		# A moving AI army may itself cover the doorway. Re-evaluate without
 		# only that actor, preserving every other overlapping source body.
 		# AI path construction may supply the exact strict actor-excluded index
@@ -626,12 +639,12 @@ static func _native_passage_endpoint_safety(session: SessionStateStoreScript.Ses
 	if not (blocked is bool and not blocked) and not (blocked is String and blocked == id):
 		return {"ok": false, "message": "Another object blocks the passage entrance."}
 	var guard := _find_guard_engagement_at_tile(session, tile.x, tile.y, tile.z)
-	if int(guard.get("index", -1)) >= 0 and String(guard.get("encounter", {}).get("placement_id", "")) != actor_id:
+	if not combat_arrival and int(guard.get("index", -1)) >= 0 and String(guard.get("encounter", {}).get("placement_id", "")) != actor_id:
 		return {"ok": false, "message": "Clear the guard before using this passage."}
 	for encounter in session.overworld.get("encounters", []):
 		if not (encounter is Dictionary) or String(encounter.get("placement_id", "")) == actor_id or is_encounter_resolved(session, encounter):
 			continue
-		if NativeTransit.point(encounter) == tile:
+		if not combat_arrival and NativeTransit.point(encounter) == tile:
 			return {"ok": false, "message": "An army occupies the passage entrance."}
 	for hero in session.overworld.get("player_heroes", []):
 		if hero is Dictionary and String(hero.get("id", "")) != actor_id and NativeTransit.point(hero.get("position")) == tile:
@@ -697,6 +710,15 @@ static func travel_native_passage(session: SessionStateStoreScript.SessionData, 
 	var movement: Dictionary = session.overworld.get("movement", {})
 	if int(movement.get("current", 0)) < movement_cost:
 		return {"ok": false, "message": "No movement left to use the passage today."}
+	var destination: Vector3i = check.exit
+	var defender := _engaging_encounter_at_tile(session, Vector2i(destination.x, destination.y), destination.z)
+	var arrival_battle := {}
+	if not defender.is_empty():
+		# Prepare before charging or moving; an invalid encounter cannot strand
+		# the hero beyond the passage. This is the ordinary battle payload owner.
+		arrival_battle = _battle_rules().create_battle_payload(session, defender)
+		if arrival_battle.is_empty():
+			return {"ok": false, "message": "The passage is defended, but battle setup failed."}
 	movement["current"] = int(movement.get("current", 0)) - movement_cost
 	session.overworld["movement"] = movement
 	credits.erase(actor_id)
@@ -704,13 +726,20 @@ static func travel_native_passage(session: SessionStateStoreScript.SessionData, 
 		session.overworld.erase("native_transit_pending_arrival")
 	else:
 		session.overworld["native_transit_pending_arrival"] = credits
-	var destination: Vector3i = check.exit
 	_set_active_hero_position(session, Vector2i(destination.x, destination.y), destination.z)
 	session.overworld["view_level"] = destination.z
 	clear_active_town_visit(session)
 	HeroCommandRulesScript.commit_active_hero(session)
 	_reveal_current_fog_sources(session)
 	_mark_runtime_normalized(session)
+	if not arrival_battle.is_empty():
+		# The payload was prepared at the source so failure cannot strand us.
+		# Battle aftermath restores this commander snapshot; position and move
+		# budget must reflect the committed arrival, not refund the preflight.
+		arrival_battle.player_commander_state["position"] = session.overworld.hero_position.duplicate(true)
+		arrival_battle.player_commander_state["movement"] = session.overworld.movement.duplicate(true)
+		session.battle = arrival_battle
+		return {"ok": true, "message": describe_encounter_battle_cue(session, defender), "route": "battle", "native_transit": check.link.duplicate(true), "movement_cost": movement_cost}
 	return {"ok": true, "message": "Travelled through the passage to %s (%d,%d)." % ["the underground" if destination.z > 0 else "the surface", destination.x, destination.y], "native_transit": check.link.duplicate(true), "movement_cost": movement_cost}
 
 static func active_linked_transit_edges(session: SessionStateStoreScript.SessionData, level: int = -1) -> Array:
@@ -912,6 +941,13 @@ static func try_move_along_route(
 	var pos := hero_position(session)
 	if path[0] != pos:
 		return {"ok": false, "message": "The selected route no longer starts at the active hero.", "route_steps": []}
+	# A portal can arrive under both an occupying army and a site's guard.
+	# Defeating one must not allow a walk out of the other's engagement tile.
+	# Discover the remaining encounter instead of replaying the portal itself.
+	if not get_active_encounter(session).is_empty():
+		var origin_site := _find_context_resource_node(session)
+		if NativeTransit.is_native(origin_site.get("node", {})):
+			return _resolve_post_move_interaction(session)
 
 	var map_size := derive_map_size(session)
 	for index in range(1, path.size()):
@@ -2375,13 +2411,16 @@ static func get_active_encounter(session: SessionStateStoreScript.SessionData) -
 	var pos := hero_position(session)
 	if not is_tile_visible(session, pos.x, pos.y):
 		return {}
+	return _engaging_encounter_at_tile(session, pos, hero_level(session))
+
+static func _engaging_encounter_at_tile(session: SessionStateStoreScript.SessionData, pos: Vector2i, level: int) -> Dictionary:
 	var encounters = session.overworld.get("encounters", [])
-	var lookup_index := _spatial_lookup_index(session)
+	var lookup_index := _spatial_lookup_index(session, level)
 	for encounter_index in _spatial_lookup_entries(lookup_index, "encounter_by_tile", pos):
 		var encounter = encounters[int(encounter_index)] if encounters is Array and int(encounter_index) >= 0 and int(encounter_index) < encounters.size() else {}
 		if encounter is Dictionary and not is_encounter_resolved(session, encounter):
 			return encounter
-	var guard_result := _find_guard_engagement_at_tile(session, pos.x, pos.y)
+	var guard_result := _find_guard_engagement_at_tile(session, pos.x, pos.y, level)
 	if int(guard_result.get("index", -1)) >= 0:
 		return guard_result.get("encounter", {})
 	return {}
@@ -3175,7 +3214,7 @@ static func _spatial_lookup_entries(index: Dictionary, name: String, tile: Vecto
 	var table: Dictionary = index.get(name, {}) if index.get(name, {}) is Dictionary else {}
 	return table.get(_tile_key(tile), []) if table.get(_tile_key(tile), []) is Array else []
 
-static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionData, level: int = -1, ignore_actor_id: String = "") -> Dictionary:
+static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionData, level: int = -1, ignore_actor_id: String = "", combat_defenders: Dictionary = {}) -> Dictionary:
 	var index := {}
 	if session == null:
 		return index
@@ -3197,6 +3236,8 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 			continue
 		var encounter: Dictionary = encounter_value
 		if ignore_actor_id != "" and String(encounter.get("placement_id", "")) == ignore_actor_id:
+			continue
+		if combat_defenders.has(encounter_key(encounter)):
 			continue
 		if not OverworldLevelRulesScript.on_level(encounter, level) or is_encounter_resolved(session, encounter):
 			continue

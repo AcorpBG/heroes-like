@@ -1,5 +1,11 @@
 # RMG native transit and connectivity correction
 
+Current follow-up: `docs/generated-overworld-quality-closure.md` records the
+2026-09-18 mandatory hostile-exit correction. The historical evidence below
+predates player arrival combat: source-side and AI safety remain strict, but a
+legal hostile player exit must enter battle rather than become a permanent
+travel obstruction. Native contracts, masks and coordinates are unchanged.
+
 Status: completed 2026-09-06. Phase 6 child `bugfix-rmg-native-transit-navigation-20260905`, parent `bugfix-rmg-audit-corrections-20260905` remains in progress. Requirements: `rmg-audit-corrections-requirements.md` outcome 4; `rmg-start-placement-and-h3maped-audit.md` finding 5; `lessons-learned.md`; `h3maped-rmg-end-to-end-behavior.md`; `rmg-python-validation-workflow.md`.
 
 ## Runtime changes and source ownership
