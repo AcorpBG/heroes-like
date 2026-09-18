@@ -2323,7 +2323,7 @@ func _assert_route_decision_clarity_contract(shell: Node) -> bool:
 		get_tree().quit(1)
 		return false
 	var hostile_marker: Dictionary = interceptor_profile.get("hostile_marker_profile", {})
-	if String(interceptor_profile.get("hostile_treatment", "")) != "open_hostile_flank_chevrons_and_threat_notch" \
+	if String(interceptor_profile.get("hostile_treatment", "")) != "painted_hostile_silhouette_without_arrows" \
 			or int(hostile_marker.get("flank_chevron_count", 0)) != 2 \
 			or int(hostile_marker.get("threat_notch_count", 0)) != 1 \
 			or bool(hostile_marker.get("continuous_ring", true)) \
@@ -3965,7 +3965,7 @@ func _assert_overworld_art_contract(shell: Node) -> bool:
 		push_error("Overworld smoke: authored River Pass road did not retain ordinary art availability while using the terrain-integrated 4-neighbor surface. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
-	if String(grass_terrain.get("road_render_model", "")) != "layered_wheel_rutted_dirt_path" or String(grass_terrain.get("road_surface_material", "")) != "packed_earth_with_twin_wheel_ruts" or String(grass_terrain.get("road_surface_detail", "")) != "soft_shoulders_twin_ruts_and_dust_center":
+	if String(grass_terrain.get("road_render_model", "")) != "original_dirt_raster_feathered_path" or String(grass_terrain.get("road_surface_material", "")) != "painted_earth_with_soft_shoulders" or String(grass_terrain.get("road_surface_detail", "")) != "original_dirt_grain_and_feathered_shoulders":
 		push_error("Overworld smoke: authored River Pass land road did not expose the wheel-rutted packed-earth treatment. presentation=%s" % grass_presentation)
 		get_tree().quit(1)
 		return false
@@ -4902,7 +4902,7 @@ func _capture_road_surface_comparison(shell: Node, map_node: Node, session) -> b
 	var session_authority_before: Dictionary = session.to_dict()
 	var land_presentation: Dictionary = shell.call("validation_tile_presentation", road_tile.x, road_tile.y)
 	var land_terrain: Dictionary = land_presentation.get("terrain_presentation", {})
-	if String(land_terrain.get("road_render_model", "")) != "layered_wheel_rutted_dirt_path":
+	if String(land_terrain.get("road_render_model", "")) != "original_dirt_raster_feathered_path":
 		push_error("Overworld smoke: road-surface capture land fixture is not using the wheel-rutted path.")
 		get_tree().quit(1)
 		return false

@@ -194,7 +194,7 @@ func _validate_profiles(profiles: Array) -> Dictionary:
 		if String(profile.get("primary_unit_id", "")) == "" or String(profile.get("unit_icon_path", "")) == "":
 			return {"ok": false, "reason": "unit_fallback_authority", "profile": profile}
 		hostile_treatment_exact = hostile_treatment_exact \
-			and String(profile.get("hostile_treatment", "")) == "open_hostile_flank_chevrons_and_threat_notch" \
+			and String(profile.get("hostile_treatment", "")) == "painted_hostile_silhouette_without_arrows" \
 			and is_equal_approx(float(profile.get("visible_extent_tiles", 0.0)), 0.88) \
 			and String(profile.get("grounding_model", "")) == "family_specific_contact_scuffs_no_marker_plate" \
 			and String(profile.get("contact_model", "")) == "localized_object_contact_shadow"
@@ -270,15 +270,15 @@ func _hostile_marker_profile_exact(profile_value: Variant, allow_landmark_overfl
 	var tile_rect := _rect_from_payload(profile.get("tile_rect", {}))
 	var icon_rect := _rect_from_payload(profile.get("icon_rect", {}))
 	var marker_rect := _rect_from_payload(profile.get("marker_rect", {}))
-	return String(profile.get("model", "")) == "open_hostile_flank_chevrons_and_threat_notch" \
-		and int(profile.get("flank_chevron_count", 0)) == 2 \
-		and int(profile.get("threat_notch_count", 0)) == 1 \
+	return String(profile.get("model", "")) == "painted_hostile_silhouette_without_arrows" \
+		and int(profile.get("flank_chevron_count", -1)) == 0 \
+		and int(profile.get("threat_notch_count", -1)) == 0 \
 		and not bool(profile.get("continuous_ring", true)) \
 		and is_zero_approx(float(profile.get("interior_fill_alpha", -1.0))) \
 		and bool(profile.get("contained_in_tile", false)) == not allow_landmark_overflow \
 		and bool(profile.get("antialiased", false)) \
-		and is_equal_approx(float(profile.get("visible_alpha", 0.0)), 0.86) \
-		and is_equal_approx(float(profile.get("remembered_alpha", 0.0)), 0.62) \
+		and is_equal_approx(float(profile.get("visible_alpha", -1.0)), 0.0) \
+		and is_equal_approx(float(profile.get("remembered_alpha", -1.0)), 0.0) \
 		and float(profile.get("line_width_px", 0.0)) > 0.0 \
 		and float(profile.get("shadow_width_px", 0.0)) > float(profile.get("line_width_px", 0.0)) \
 		and (tile_rect.has_point(marker_rect.get_center()) and marker_rect.size.x <= tile_rect.size.x * 1.20 and marker_rect.size.y <= tile_rect.size.y * 1.20 if allow_landmark_overflow else tile_rect.encloses(marker_rect)) \

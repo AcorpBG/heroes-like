@@ -45148,7 +45148,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
 	        "ROAD_PIECE_SELECTION_MODEL",
 	        "ROAD_CARDINAL_DIRECTIONS",
 	        'const ROAD_SOURCE_FRAME_RENDER_MODEL := "explicit_source_frame"',
-	        'const ROAD_LAND_RENDER_MODEL := "layered_wheel_rutted_dirt_path"',
+	        'const ROAD_LAND_RENDER_MODEL := "original_dirt_raster_feathered_path"',
 	        'const ROAD_WATER_RENDER_MODEL := "weathered_cross_planked_causeway"',
 	        "func _road_render_model",
 	        "func _road_explicit_source_frame_loaded",
@@ -45414,7 +45414,6 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     road_source_path_block = gd_function_block(map_view_text, "_road_explicit_source_frame_path")
     road_land_block = gd_function_block(map_view_text, "_draw_road_land_path")
     road_land_points_block = gd_function_block(map_view_text, "_road_land_path_points")
-    road_ruts_block = gd_function_block(map_view_text, "_draw_road_land_ruts")
     road_water_block = gd_function_block(map_view_text, "_draw_road_water_causeway")
     road_planks_block = gd_function_block(map_view_text, "_draw_road_causeway_planks")
     for token in (
@@ -45457,23 +45456,15 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         "return homm3_path",
     ):
         ensure(token in road_source_path_block, errors, f"Road source ownership must require and expose a real loaded explicit frame: {token}")
-    for token in (
-        "ROAD_LAND_SHADOW_COLOR",
-        "ROAD_LAND_SHOULDER_COLOR",
-        "ROAD_LAND_EARTH_COLOR",
-        "ROAD_LAND_DUST_COLOR",
-        "_road_land_path_points(tile, direction, _road_connector_start(rect, direction), _road_connector_end(rect, direction), width)",
-        "var corner := _road_land_corner_points(rect, neighbor_directions)",
-        "_draw_road_land_ruts(path_points, width)",
-    ):
-        ensure(token in road_land_block, errors, f"Land roads must retain layered shoulders, earth, dust, and wheel ruts: {token}")
+    for token in ("RoadStyle.TEXTURE_PATH", "RoadStyle.strips(points, width, tile, rect)", "_canvas_draw_textured_polygon", "var corner := _road_land_corner_points(rect, neighbor_directions)"):
+        ensure(token in road_land_block, errors, f"Land roads must use original dirt and soft shoulders: {token}")
+    ensure("_draw_road_land_ruts(" not in road_land_block, errors, "Land roads must not restore the continuous parallel rails")
     for token in (
         "var bend_seed: int = absi((tile.x * 37) + (tile.y * 71)",
         "var bend_sign := -1.0 if bend_seed % 2 == 0 else 1.0",
         "PackedVector2Array([start, start.lerp(end, 0.52)",
     ):
         ensure(token in road_land_points_block, errors, f"Land road meanders must remain bounded and deterministic: {token}")
-    ensure(road_ruts_block.count("ROAD_LAND_RUT_COLOR") == 2, errors, "Land road segments must draw exactly two wheel ruts.")
     for token in (
         "ROAD_CAUSEWAY_SHADOW_COLOR",
         "ROAD_CAUSEWAY_EDGE_COLOR",
@@ -45493,7 +45484,6 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ("road source path", road_source_path_block),
         ("land road", road_land_block),
         ("land path points", road_land_points_block),
-        ("land ruts", road_ruts_block),
         ("water causeway", road_water_block),
         ("causeway planks", road_planks_block),
     ):
@@ -45507,7 +45497,7 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         '"road_explicit_source_frame_rendered": road_explicit_source_frame_rendered',
         '"road_source_frame_path": road_source_frame_path',
         '"road_ordinary_tile_art_bypassed": not road_payload.is_empty() and not road_explicit_source_frame_rendered',
-        '"road_surface_material": "weathered_cross_planked_timber" if road_render_model == ROAD_WATER_RENDER_MODEL else ("packed_earth_with_twin_wheel_ruts" if road_render_model == ROAD_LAND_RENDER_MODEL else "source_frame")',
+        '"road_surface_material": "weathered_cross_planked_timber" if road_render_model == ROAD_WATER_RENDER_MODEL else ("painted_earth_with_soft_shoulders" if road_render_model == ROAD_LAND_RENDER_MODEL else "source_frame")',
         '"road_shape_model": "homm3_4_neighbor_overlay_lookup" if road_explicit_source_frame_rendered else ("terrain_integrated_4_neighbor_surface" if not road_payload.is_empty() else "")',
     ):
         ensure(token in terrain_payload_block, errors, f"Terrain presentation must expose the actual road renderer instead of art availability alone: {token}")
@@ -45518,9 +45508,9 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
     ensure(ninefold_road_block.count("_assert_land_road_render_model") == 4, errors, "Ninefold road topology must validate the real land surface across straight, corner, and isolated cases.")
     ensure('_assert_explicit_road_frame_ownership(shell, session, vertical_tile)' in ninefold_road_block, errors, "Ninefold road topology must retain an enabled exact source-frame control.")
     for token in (
-        'String(terrain.get("road_render_model", "")) != "layered_wheel_rutted_dirt_path"',
+        'String(terrain.get("road_render_model", "")) != "original_dirt_raster_feathered_path"',
         'String(terrain.get("road_shape_model", "")) != "terrain_integrated_4_neighbor_surface"',
-        'String(terrain.get("road_surface_material", "")) != "packed_earth_with_twin_wheel_ruts"',
+        'String(terrain.get("road_surface_material", "")) != "painted_earth_with_soft_shoulders"',
         'not bool(terrain.get("road_ordinary_tile_art_bypassed", false))',
         'bool(terrain.get("road_explicit_source_frame_rendered", true))',
     ):
@@ -46325,11 +46315,11 @@ def validate_overworld_art_asset_slice(errors: list[str]) -> None:
         ensure(token in generated_road_block, errors, f"Generated live road owner must inspect actual explored road presentation and topology: {token}")
     for token in (
         "road_tile_count <= 0",
-        '["layered_wheel_rutted_dirt_path"]',
+        '["original_dirt_raster_feathered_path"]',
         'int(summary.get("ordinary_bypass_count", 0)) != road_tile_count',
         'int(summary.get("explicit_source_count", -1)) != 0',
         'String(tile.get("terrain", "")) == "water"',
-        'String(tile.get("render_model", "")) != "layered_wheel_rutted_dirt_path"',
+        'String(tile.get("render_model", "")) != "original_dirt_raster_feathered_path"',
     ):
         ensure(token in generated_road_assert_block, errors, f"Generated live road owner must fail closed on missing or non-land ordinary road surfaces: {token}")
     for token in (
@@ -54652,15 +54642,15 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         ensure(forbidden not in payload_block, errors, f"Enemy commander validation payload must remain read-only: {forbidden}")
 
     for token in (
-        'const HOSTILE_ACTOR_MARKER_MODEL := "open_hostile_flank_chevrons_and_threat_notch"',
+        'const HOSTILE_ACTOR_MARKER_MODEL := "painted_hostile_silhouette_without_arrows"',
         "const HOSTILE_ACTOR_MARKER_OUTSET_FACTOR := 0.035",
         "const HOSTILE_ACTOR_MARKER_FLANK_LENGTH_FACTOR := 0.11",
         "const HOSTILE_ACTOR_MARKER_FLANK_DEPTH_FACTOR := 0.10",
         "const HOSTILE_ACTOR_MARKER_NOTCH_WIDTH_FACTOR := 0.14",
         "const HOSTILE_ACTOR_MARKER_NOTCH_DEPTH_FACTOR := 0.07",
         "const HOSTILE_ACTOR_MARKER_LINE_WIDTH_FACTOR := 0.020",
-        "const HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA := 0.86",
-        "const HOSTILE_ACTOR_MARKER_MEMORY_ALPHA := 0.62",
+        "const HOSTILE_ACTOR_MARKER_VISIBLE_ALPHA := 0.0",
+        "const HOSTILE_ACTOR_MARKER_MEMORY_ALPHA := 0.0",
         "const HOSTILE_ACTOR_MARKER_SHADOW_ALPHA := 0.42",
     ):
         ensure(map_text.count(token) == 1, errors, f"Open hostile actor marker must own one exact visual constant: {token}")
@@ -54672,8 +54662,8 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         ensure(token in hostile_layout_block, errors, f"Hostile actor layout is missing exact unchanged sprite/marker geometry: {token}")
     for token in (
         '"model": HOSTILE_ACTOR_MARKER_MODEL',
-        '"flank_chevron_count": 2',
-        '"threat_notch_count": 1',
+        '"flank_chevron_count": 0',
+        '"threat_notch_count": 0',
         '"continuous_ring": false',
         '"interior_fill_alpha": 0.0',
         '"contained_in_tile": tile_rect.encloses(marker_rect)',
@@ -54682,15 +54672,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         ensure(token in hostile_profile_block, errors, f"Hostile actor marker profile is missing fill-free contained geometry: {token}")
     for forbidden in ("session", "_session", "Input.", "await ", "create_timer", "queue_redraw", "_canvas_draw_"):
         ensure(forbidden not in hostile_profile_block + hostile_layout_block, errors, f"Hostile actor marker geometry must remain pure and presentation-only: {forbidden}")
-    for token in (
-        "var left_flank := PackedVector2Array([",
-        "var right_flank := PackedVector2Array([",
-        "var threat_notch := PackedVector2Array([",
-        "for points in [left_flank, right_flank, threat_notch]:",
-        "_canvas_draw_polyline(points, shadow_color, shadow_width, true)",
-        "_canvas_draw_polyline(points, marker_color, line_width, true)",
-    ):
-        ensure(token in hostile_draw_block, errors, f"Hostile actor marker draw must retain exact open chevron/notch ownership: {token}")
+    ensure("pass" in hostile_draw_block and "_canvas_draw_" not in hostile_draw_block, errors, "Hostile actors must not draw persistent arrow overlays")
     for forbidden in ("_canvas_draw_circle", "_canvas_draw_rect", "_canvas_draw_colored_polygon", "session", "_session", "await ", "create_timer", "create_tween"):
         ensure(forbidden not in hostile_draw_block + commander_draw_block + faction_draw_block + unit_draw_block, errors, f"Hostile actor presentation must not restore a filled/continuous ring or mutate gameplay/timing: {forbidden}")
     for token in (
@@ -54742,7 +54724,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'String(profile.get("commander_faction_id", "")) != faction_id',
         'String(profile.get("authored_faction_id", "")) != faction_id',
         'String(profile.get("sprite_asset_id", "")) != expected_asset_id',
-        'String(profile.get("hostile_treatment", "")) == "open_hostile_flank_chevrons_and_threat_notch"',
+        'String(profile.get("hostile_treatment", "")) == "painted_hostile_silhouette_without_arrows"',
         '_hostile_marker_profile_exact(profile.get("hostile_marker_profile", {}))',
         'not bool(profile.get("continuous_ring", true))',
         'is_zero_approx(float(profile.get("interior_fill_alpha", -1.0)))',
@@ -54821,7 +54803,7 @@ def validate_overworld_enemy_commander_sprite_runtime(errors: list[str]) -> None
         'String(interceptor_profile.get("sprite_asset_id", "")) != "hero_faction_mireclaw"',
         'not bool(interceptor_profile.get("uses_commander_sprite", false))',
         'float(interceptor_profile.get("visible_extent_tiles", 0.0)), 0.88',
-        'String(interceptor_profile.get("hostile_treatment", "")) != "open_hostile_flank_chevrons_and_threat_notch"',
+        'String(interceptor_profile.get("hostile_treatment", "")) != "painted_hostile_silhouette_without_arrows"',
         'int(hostile_marker.get("flank_chevron_count", 0)) != 2',
         'int(hostile_marker.get("threat_notch_count", 0)) != 1',
         'bool(hostile_marker.get("continuous_ring", true))',

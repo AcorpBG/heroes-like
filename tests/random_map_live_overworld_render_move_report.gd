@@ -1015,7 +1015,7 @@ func _assert_generated_road_surface(summary: Dictionary, label: String) -> bool:
 	if road_tile_count <= 0:
 		_fail("%s generated map exposed no explored road surface fixture: %s" % [label, JSON.stringify(summary)])
 		return false
-	if summary.get("render_models", []) != ["layered_wheel_rutted_dirt_path"]:
+	if summary.get("render_models", []) != ["original_dirt_raster_feathered_path"]:
 		_fail("%s generated land roads did not use only the wheel-rutted terrain surface: %s" % [label, JSON.stringify(summary)])
 		return false
 	if int(summary.get("ordinary_bypass_count", 0)) != road_tile_count or int(summary.get("explicit_source_count", -1)) != 0:
@@ -1026,7 +1026,7 @@ func _assert_generated_road_surface(summary: Dictionary, label: String) -> bool:
 			_fail("%s generated road summary contains a malformed tile: %s" % [label, JSON.stringify(summary)])
 			return false
 		var tile: Dictionary = tile_value
-		if String(tile.get("terrain", "")) == "water" or String(tile.get("render_model", "")) != "layered_wheel_rutted_dirt_path" or int(tile.get("connection_count", -1)) < 0:
+		if String(tile.get("terrain", "")) == "water" or String(tile.get("render_model", "")) != "original_dirt_raster_feathered_path" or int(tile.get("connection_count", -1)) < 0:
 			_fail("%s generated land road tile has invalid terrain/render/topology metadata: %s" % [label, JSON.stringify(tile)])
 			return false
 	return true
