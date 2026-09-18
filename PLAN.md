@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Plains woodland composition
+
+`art-plains-groves-20260919` — completed. Added 100 three-to-five-tree grassland groves at smaller individual scale, replacing about 40% of rock appearances and dominating the tree pools. Biome-specific opaque scenery tints harmonize rocks/vegetation with ground. Native placement/masks and legacy saves unchanged. Focused Windows rendering/contracts/import pass; no full suite or manual gameplay. See `docs/biome-source-component-expansion.md`.
+
 ### Distinct biome source components
 
 `art-biome-source-components-20260919` — completed. Delivered 100 original source components and 100 paired clusters per biome (900 + 900 total), adopted by live version 2 semantic palettes and the wiki. Nine biome renders reviewed; focused selector/contracts and Windows Godot import pass. Native placement/masks and version 1 saves unchanged. No full suite, Linux run or manual playtest. See `docs/biome-source-component-expansion.md`.

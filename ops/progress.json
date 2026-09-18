@@ -22302,6 +22302,17 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "art-plains-groves-20260919",
+      "title": "Smaller plains trees in patchy woodland compositions",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "createdAt": "2026-09-18T22:27:56.431106+00:00",
+      "notes": "Delivered 100 plains groves of 3-5 smaller original tree components. Groves represent 2/3 of grassland tree pools and 34/84 of rock appearance pool; other biome selections, source placement/masks/RNG and v1 saves unchanged. Added opaque biome-specific scenery lighting, with warmer/muted rock highlights and gentler vegetation tint; interactive sites/actors unaffected. Reviewed nine biome renders. Windows focused selector/render check passed 356,744 assertions, all 1,900 component-library appearances reachable; focused blocker contracts passed for 2,812 assets; normal Godot import clean. Wiki rebuilt. No full suite, parity, Linux/package or manual playtest. Task-owned previews/logs removed after review; source and rebuild tooling retained.",
+      "completedAt": "2026-09-18T22:33:35.461890+00:00"
+    },
+    {
       "id": "art-biome-source-components-20260919",
       "title": "One hundred distinct source components per biome and rebuilt clusters",
       "phase": "phase-6-production-alpha-layer",

@@ -62,3 +62,38 @@ they are not screenshots of a played random map. No full repository suite,
 native parity run, package build, Linux run or manual playtest was performed.
 Temporary render images and logs are removed after review; source art, prompts,
 recipes, runtime sprites, imports and reproducible tooling are retained.
+
+## Plains groves and biome lighting follow-up
+
+Owner screenshot feedback requested smaller trees grouped into patchy plains
+forests, fewer rock-heavy appearances, and scenery colours closer to the ground.
+The baker now assembles 100 additional grasslands groves from existing original
+trees: 60 broadleaf and 40 evergreen compositions, each containing three to five
+different components in staggered rows. Individual trees use 47-64% of the
+standalone canvas size while the whole grove keeps its original blocker extent.
+The original 100 source components per biome remain unchanged.
+
+Groves occupy two thirds of the grasslands woods/conifer appearance pools and
+34 of 84 grasslands rock-pool entries (40.5%). These are presentation selection
+shares, not promised map-wide object counts. No native source types, masks,
+placements, quantities or walkable routes were changed. Other biome appearance
+pools remain unchanged. These are assembled clusters, not new source paintings.
+The component library now has 900 source sprites and 1,000 assembled sprites.
+
+`native_scenery.json` also owns `grounding_tints`: opaque per-biome lighting for
+version 2 scenery, with stronger rock adjustments and gentler vegetation tones.
+Warm earth receives warmer stone highlights; forest/mire use muted olive tones;
+caverns use cool slate; snow keeps its pale highlights. Runtime modulation
+preserves original pixels and alpha, and excludes heroes and interactive sites.
+Version 1 scenery keeps its earlier palette and lighting. Restart/reload applies
+the changes to existing version 2 maps.
+
+Focused Windows selector/render checks passed 356,744 assertions, including all
+1,900 reachable appearances, reload stability, opaque tinting and legacy colour
+compatibility. All nine rendered biome samples were reviewed. Focused blocker
+contracts passed for 2,812 assets; normal Godot import completed successfully.
+The sandboxed baker/probe emitted the Windows certificate-store warning; normal
+project import was clean. Wiki rebuilt to 5,999 entries and 14,256 media records.
+No full suite, native parity, package/Linux validation or manual game was run.
+Task-owned preview images and logs were removed after review; original artwork,
+recipes and rebuilding tools remain.
