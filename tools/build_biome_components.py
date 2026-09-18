@@ -219,6 +219,7 @@ def register(components, clusters):
     # Other biomes and the native source object/type/mask remain untouched.
     groves=[c['id'] for c in clusters if c['kind']=='assembled_plains_grove']
     palettes['rock']['biome_grasslands'].extend(groves[::3])
+    native['rock_contact_palettes']={biome:[c['id'] for c in components if c['biome']==biome and c['family']=='rock' and c['cell'] in (8,13,18,21)] for biome in palettes['rock']}
     native['component_palettes']=palettes
     native['component_palette_source']=resource(SOURCE/'recipes.json')
     write(SOURCE/'recipes.json',dict(version=2,canvas=[256,256],production=resource(SOURCE/'production.json'),components=components,clusters=clusters))

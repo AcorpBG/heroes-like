@@ -1,0 +1,1162 @@
+{
+  "version": 2,
+  "canvas": [
+    256,
+    256
+  ],
+  "production": "res://art/overworld/source/generated/terrain/sandstone_20260919/production.json",
+  "components": [
+    {
+      "id": "biome_component_v2_sandstone_rock_00",
+      "name": "Wind-scooped sandstone dome",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 0,
+      "sha256": "fec1e7bf70a2d7d722bbd72de0563da5e0609a330f860484eec6d909197dd0ff",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_00.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_01",
+      "name": "Leaning tapered chalk fin",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 1,
+      "sha256": "687ec0e6b064f33afc0dfa026e557b862ce931df541589d261b8cb735c58a1db",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_01.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_02",
+      "name": "Split buff sandstone twins",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 2,
+      "sha256": "02ad02ee07ad80f804803c93d94ccbca7377bde3a8c0c32ace710d9993c153fc",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_02.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_03",
+      "name": "Low rippled limestone ledge",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 3,
+      "sha256": "8311596b25f5f411542d8477af94a359119152a8afc03ad15fe8f43aae3e1bab",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_03.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_04",
+      "name": "Three unequal desert hoodoos",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 4,
+      "sha256": "512e9fd96101c8ba0fef04eb1a964f233eaa313e7522fb359d8b3e8f2d33b273",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_04.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_05",
+      "name": "Eroded squat sandstone mesa",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 5,
+      "sha256": "55834392a59bd8958909e65f73cc20b872b9e2374600db3a136eb8ec3ae813c0",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_05.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_06",
+      "name": "Pale honeycomb weathered tower",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 6,
+      "sha256": "5768680550f8fff9fc1f084968be66e9cd7431c03c01046319fa1b81258b09ee",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_06.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_07",
+      "name": "Long fallen sediment slab",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 7,
+      "sha256": "265fcde647c8d88180c35e407f5a4b580b2d9516e4f95f46ce8b81d70f6b3da5",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_07.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_08",
+      "name": "Low bank of small cream sandstone pebbles",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 8,
+      "sha256": "4fd2fa6f6da4fc805d3be3d60cee1184278b398289aa60cbaa369e4df02e63f2",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_08.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_09",
+      "name": "Asymmetric wind-carved arch",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 9,
+      "sha256": "7faa3ba9e78746c97fa59992ae8fd4d5c4196d8f3ff547920e47cdc36ca2a3c9",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_09.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_10",
+      "name": "Stepped broken sandstone butte",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 10,
+      "sha256": "2fd2f4d15dcd154882f4688a6107e5f42fa0f58004d11913a9d12bda1f389128",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_10.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_11",
+      "name": "Half buried ammonite-like eroded stone",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 11,
+      "sha256": "a0b14ecbc5a60c7b81f67c439d0207539073bb4e1f5e18cd8ce6693ac18ad415",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_11.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_12",
+      "name": "Veined cream desert boulder",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 12,
+      "sha256": "c6fa917cd0c75987bfce06d73589445c7880eeafdc933e544ee17ec76b93a928",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_12.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_13",
+      "name": "Low flat fan of sandy gravel chips",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 13,
+      "sha256": "29102ecb25ef3265afac7da9ada5f31ceea320387dde1c08e6c6e6056aced905",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_13.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_14",
+      "name": "Rounded bleached double boulder",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 14,
+      "sha256": "78ce07657b66a10bfca9aacb1073c1c4fb16552fc79ab6458badf9f855992566",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_14.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_15",
+      "name": "Overhanging hooked sandstone crag",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 15,
+      "sha256": "7c30fbd1cc3b357ce97fbeea4adc549fdc1d708b65ae3063cdf57768a0e34a51",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_15.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_16",
+      "name": "Shallow eroded sandstone bowl",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 16,
+      "sha256": "3d5405e0ae4e5e897bd4203a5e42136b1ea1c6e765fbb279f7d5e15dac9ff0a5",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_16.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_17",
+      "name": "Folded undulating sandstone ridge",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 17,
+      "sha256": "416f649e01ac06b0acb664f1195097ad7286c552e79b8e8f052ab5c690c3e608",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_17.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_18",
+      "name": "Low tumbled pile of buff scree",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 18,
+      "sha256": "13237182d3ab39eeb398c8865938afb94cd10992baedfafc119be30b9a2b5147",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_18.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_19",
+      "name": "Fluted wind-carved tapering pinnacle",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 19,
+      "sha256": "1b911ec98bd9bacd2b9044f728142d64933647070a2ff59ff487c35f6042c397",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_19.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_20",
+      "name": "Broken chalk column with scattered base",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 20,
+      "sha256": "e4d20143e760ebff4b45bd48fe393404ee5d77a0af09cdf426670b9a59533719",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_20.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_21",
+      "name": "Low elongated beige cobble bank",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 21,
+      "sha256": "c54bc9df03bbd41c78985b321cc555f3ed371e0873abceb0dc1eac07d69dbfa4",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_21.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_22",
+      "name": "Wind-pitted buff sandstone lump",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 22,
+      "sha256": "f8383028721f1f582706742af5453ea36c5f71af9192566ac5696676449d1bae",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_22.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_23",
+      "name": "Two leaning interlocked pale sandstone slabs",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 23,
+      "sha256": "14afdca43081e3439c3c74fd226fe095dd331093570a53259e3da40e650ec4cd",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_23.png"
+    },
+    {
+      "id": "biome_component_v2_sandstone_rock_24",
+      "name": "Horizontal dune-polished ribbed outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "original_atlas_component",
+      "atlas": "res://art/overworld/source/generated/terrain/sandstone_20260919/rock.png",
+      "cell": 24,
+      "sha256": "9e51826d09d046afcaa2a0dd2c54b00ef929719617c3d0b0fab371dec6cd65f7",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_component_v2_sandstone_rock_24.png"
+    }
+  ],
+  "clusters": [
+    {
+      "id": "biome_cluster_v2_sandstone_rock_00",
+      "name": "Wind-scooped sandstone dome outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_00",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_07",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "7609e893773a1ae5284bee0a3b0503e35bc70b97d070357837d121e8303b62bf",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_00.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_01",
+      "name": "Leaning tapered chalk fin outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_01",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_08",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "35031210ab36067059fa3ba6c98ee1b2eafee47477654a521cc171a167219563",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_01.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_02",
+      "name": "Split buff sandstone twins outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_02",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_09",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "92f80f930a38e2e299e239a74c0007da77eeea6fbcf00455d02ec87a18a5f5ab",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_02.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_03",
+      "name": "Low rippled limestone ledge outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_03",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_10",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "008c1e34f696f6a3b54b87fbf41f032c3ce4e37bbfe33c67609fbd3c3266feac",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_03.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_04",
+      "name": "Three unequal desert hoodoos outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_04",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_11",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "e39eb4fb69246fbbb28e68c9f07beda81e163eac630fe9c1904e4cd61b50619f",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_04.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_05",
+      "name": "Eroded squat sandstone mesa outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_05",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_12",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "9578566ddf0248d54eaf41b3b289490ead2b27842dd3c260b2defb59e263f1c5",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_05.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_06",
+      "name": "Pale honeycomb weathered tower outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_06",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_13",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "5d17124e9e7f71a1aa7648fd2efc443c845ee9140f024ded17f977084bc75ab1",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_06.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_07",
+      "name": "Long fallen sediment slab outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_07",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_14",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "b97ee54bbe8e1bba2bef7fa8c3f9027035535270342b1e0dfa1f00109f74eb51",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_07.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_08",
+      "name": "Low bank of small cream sandstone pebbles outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_08",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_15",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "24041648810c09470d44dd00337e1fe090b3195854716cf8509c846191d975dc",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_08.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_09",
+      "name": "Asymmetric wind-carved arch outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_09",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_16",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "fcf0c44720fddcaf4480900f0cb534cafbb84129975b4e783829a1189ff70e2c",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_09.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_10",
+      "name": "Stepped broken sandstone butte outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_10",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_17",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "4b39fee5999e4517798abee5d91e17bbca04e65becd8613ca7f8ffbf47a6e568",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_10.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_11",
+      "name": "Half buried ammonite-like eroded stone outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_11",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_18",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "c85be02c1717da814035fc93d65d61e5409a33fc37ed654e562b3658eaf65b09",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_11.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_12",
+      "name": "Veined cream desert boulder outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_12",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_19",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "4cdc809024a09072a0cd8aacb7a368aca6699bd0b0f48b38efb5537c56d24169",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_12.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_13",
+      "name": "Low flat fan of sandy gravel chips outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_13",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_20",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "2c70d419b6ef82f1d972677b66465c43c7af293e676896d320563fe281f65de1",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_13.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_14",
+      "name": "Rounded bleached double boulder outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_14",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_21",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "d75f18f95776261ecdda451ec0c6eaa24564095dd3d0ffcd028da584ba52b265",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_14.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_15",
+      "name": "Overhanging hooked sandstone crag outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_15",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_22",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "af217c66d2449297bfa7c8fed9ea0666de4a424f5b1fe6add01fdb8068663f53",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_15.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_16",
+      "name": "Shallow eroded sandstone bowl outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_16",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_23",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "2104e439f0939e3c48c1691db095e90bcddeeacd4eb6bb4c24ef5ddf3c23bc99",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_16.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_17",
+      "name": "Folded undulating sandstone ridge outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_17",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_24",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "c802fbbb7f768c9650309af70cb657c24a159a678515baeeede52e08ab132d73",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_17.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_18",
+      "name": "Low tumbled pile of buff scree outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_18",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_00",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "4621ba6b3d1bc40a1af878408e09ce833ace4ff1ce400043796984db51f4d680",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_18.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_19",
+      "name": "Fluted wind-carved tapering pinnacle outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_19",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_01",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "505e03c29b5b6ec2a14633c5c5ba2ebba89f72897bde118a2a9407d3af685cfe",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_19.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_20",
+      "name": "Broken chalk column with scattered base outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_20",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_02",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "0c02e7ef7c177611ff257aa3d612b2bda650386e125cd897a911c0e89037df8a",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_20.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_21",
+      "name": "Low elongated beige cobble bank outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_21",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_03",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "efb5b48dcfd06ac6af407317fd0bf70ec0bf1c93d48a54816b576f8d2c691843",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_21.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_22",
+      "name": "Wind-pitted buff sandstone lump outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_22",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_04",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "ea64ed5154caef20da8679b5a2b89b3ee45ac33f7d2a8552a31609f917d28325",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_22.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_23",
+      "name": "Two leaning interlocked pale sandstone slabs outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_23",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_05",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "2ea327a613a89735e30405cf71aa2ecebb87c44ef76640a22f6708ae31ee98f0",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_23.png"
+    },
+    {
+      "id": "biome_cluster_v2_sandstone_rock_24",
+      "name": "Horizontal dune-polished ribbed outcrop outcrop",
+      "biome": "biome_coast_archipelago",
+      "terrain_ids": [
+        "sand"
+      ],
+      "family": "rock",
+      "kind": "assembled_original_components",
+      "layers": [
+        {
+          "component": "biome_component_v2_sandstone_rock_24",
+          "rect": [
+            0,
+            50,
+            190,
+            190
+          ]
+        },
+        {
+          "component": "biome_component_v2_sandstone_rock_06",
+          "rect": [
+            95,
+            94,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "a4ea8faa6d46867f2afa75e965f085c214c00547bd5a6e281b1dd7e60a607408",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/sandstone_20260919/biome_cluster_v2_sandstone_rock_24.png"
+    }
+  ]
+}

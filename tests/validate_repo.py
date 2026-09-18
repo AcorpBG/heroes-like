@@ -43639,6 +43639,14 @@ def validate_generated_blocker_contracts(object_assets: dict, errors: list[str])
         assert {layer["component"] for r in clusters for layer in r["layers"]} == {r["id"] for r in components}
         assert all(len({layer["component"] for layer in r["layers"]}) >= 2 for r in clusters)
         rows += [(r["id"], r["runtime_path"], None, r["sha256"], (256, 256), [r["biome"]]) for r in components + clusters]
+        sand_library = load_json(base / "sandstone_20260919/recipes.json")
+        sand_components, sand_clusters = sand_library["components"], sand_library["clusters"]
+        assert len(sand_components) == 25 and len(sand_clusters) == 25
+        assert len({r["cell"] for r in sand_components}) == 25
+        assert {layer["component"] for r in sand_clusters for layer in r["layers"]} == {r["id"] for r in sand_components}
+        assert len({r["sha256"] for r in sand_components + sand_clusters}) == 50
+        assert all(r["terrain_ids"] == ["sand"] for r in sand_components + sand_clusters)
+        rows += [(r["id"], r["runtime_path"], None, r["sha256"], (256, 256), [r["biome"]]) for r in sand_components + sand_clusters]
         for asset_id, path, source, digest, size, biomes in rows:
             entry = object_assets.get(asset_id, {})
             runtime = res_path_to_disk(path)
