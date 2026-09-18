@@ -22302,6 +22302,17 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "art-blocker-palette-reconnect-20260918",
+      "title": "Reconnect expanded blocker library to semantic scenery",
+      "phase": "phase-6-production-alpha-layer",
+      "status": "completed",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "createdAt": "2026-09-18T20:52:11.885987+00:00",
+      "notes": "Reconnected 900 existing blocker appearances through largest-layer semantic recipe classification and expanded fixed-raster scenery variation. Cached palettes and coordinate SHA-256 selection preserve simulation RNG, source placement/masks and version 1 palettes. Isolated Windows Godot live-selector/render check passed 354007 assertions for all 38 types/nine biomes and all 900 reachable appearances; nine biome renders visually reviewed. No full suite, native parity, Linux or manual playtest run. Task-owned temporary screenshots/logs removed after review.",
+      "completedAt": "2026-09-18T20:58:21.670427+00:00"
+    },
+    {
       "id": "art-roads-guards-20260918",
       "title": "Natural roads and quieter guard presentation",
       "phase": "phase-6-production-alpha-layer",

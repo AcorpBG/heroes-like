@@ -22,6 +22,11 @@ Rules:
 
 ## Current Tactical State
 
+### Blocker palette adoption
+
+`art-blocker-palette-reconnect-20260918` — completed. Reconnected all 900 existing appearances to semantic scenery, including fixed-raster lava barriers; deterministic coordinate selection avoids patterned rows. Source placements/masks and version 1 saves unchanged. Focused Windows selector checks across 38 types/nine biomes and visual review pass; no full suite or Linux run. See `docs/rmg-biome-blocker-library.md`.
+
+
 ### Natural roads and quieter guards
 
 `art-roads-guards-20260918` — completed. Land roads use original dirt-textured paths with soft irregular shoulders, smooth turns and seamless repeat joins; continuous rails and red hostile flank/top arrows removed. Connections, causeways, guard rules, route previews and selection unchanged. Off-screen Windows rendering (250 checks), visual review and focused guard contract pass. Full suite and Linux/package runs skipped; temporary render evidence removed.
