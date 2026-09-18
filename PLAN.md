@@ -22,6 +22,12 @@ Rules:
 
 ## Current Tactical State
 
+### RMG Guard Placement and Empty-Space Diagnosis
+
+id: `audit-rmg-guards-and-empty-space-20260918`
+
+Status: completed audit, owner-directed Phase 6 child. Three deterministic maps lose 126–197 native scenery records and open 207–427 source-blocked tiles during adoption; production movement confirms three guard bypasses. Extra guarded-site stacks also overlap native guard control. Two retained original payloads still match native output. Six Python tests and 11,293 rendered diagnostic assertions pass, not gameplay quality; 200.57 MB disposable outputs cleaned, RMG recovery evidence retained. Findings and recommended classification/adoption correction: `docs/rmg-guards-and-empty-space-audit.md`. No generator, gameplay, art or save changes; defects remain unfixed and no corrective slice is active.
+
 ### Remove Generated Town Supply Support
 
 id: `rmg-remove-town-supply-support-20260918`
