@@ -36007,6 +36007,4706 @@
       ],
       "sha256": "4c00d89cf56df9e0dc5f43c83b6538e5c3c172029f521b6bdd1b6d2817ec0f9d",
       "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/subterranean_underways/cluster_undergrowth_24.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_00_0",
+      "name": "Wide Ancient Oak Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "a06f3878d9c22308e988ce8e097411399295d036f53e2d85fd4cc6ce4b62ed86",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_00_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_00_1",
+      "name": "Wide Ancient Oak Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_04",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "6e33a7a06f557e9699b63230ae639f2599c0f4030c85989b1f95103f0810a2c4",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_00_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_00_2",
+      "name": "Wide Ancient Oak Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "6d66bf26c0a1c882fe531b41f339ed5cb5b93001e1fd4c3020b76772ede5a73d",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_00_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_00_3",
+      "name": "Wide Ancient Oak Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "71c1a9b6ba19ecfda90be098910225bfc74ab043870617f70f9b0cf31c7dde24",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_00_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_01_0",
+      "name": "Slender Weeping Willow Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "e9d8c41b4cb76f4749d1e310d484a3e8ba2946f286081ee62e3de8d91446b45f",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_01_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_01_1",
+      "name": "Slender Weeping Willow Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_05",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "bde6bab79588e5313882ec363f64040e9cfc9a8af014d32bee53debf4f86e1dc",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_01_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_01_2",
+      "name": "Slender Weeping Willow Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_04",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "ff9962990dc914708a65c1f444d4b61e81365102cd6bdca6c35242ffd3523a65",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_01_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_01_3",
+      "name": "Slender Weeping Willow Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "78fa12693c226dc663e826c8b3d6ac1646cfccd1682884c26d4dacc64fa9b0f6",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_01_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_02_0",
+      "name": "Forked Silver Birch Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_05",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "0c2a9eb215c9c8567798be773aa5ef3624ddb7be23f88b4a03ac59c1059941ad",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_02_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_02_1",
+      "name": "Forked Silver Birch Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "0abe114cd22b10adb09f11c6bb4cb67efdc1dde42d7addceb90b8f8e35063d85",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_02_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_02_2",
+      "name": "Forked Silver Birch Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "2554bf9b7cc91b63f4c7f4f4f81c2e9951bd5ca60510a1d215e92dece1bb3a94",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_02_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_02_3",
+      "name": "Forked Silver Birch Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_04",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "edfb0366f8ec2d33d919299c88c652dde0e7f3947bd97a45a939ec9f75bf897b",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_02_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_03_0",
+      "name": "Hollow Squat Elder Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "769f2f8ac8af0c99ff48d56aaa74cf4737c301a905cb56a65e379f0d499d8562",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_03_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_03_1",
+      "name": "Hollow Squat Elder Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "2606f72021bf8d0eb49348203f11f3a7fc77acc4eba0aeed00b04e1dc3479017",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_03_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_03_2",
+      "name": "Hollow Squat Elder Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_04",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "ff9506ac0f0ee4ef8da7f30bb4007c8990c929ce1415d015822223006d800e1f",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_03_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_03_3",
+      "name": "Hollow Squat Elder Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "4cc89a8b7006eb71e2bac848634c5e5f92e37bbd6e8e0acb3aba369a11b415bc",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_03_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_04_0",
+      "name": "Twisted Hawthorn Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_04",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "c17144668fbfd2f12a6227d66e8a863d34108aacb4f6f680a1152dbefbeda0b9",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_04_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_04_1",
+      "name": "Twisted Hawthorn Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_04",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "b4a98167946b33d5dcae5328483eed2411317b25427949a402da0ec944d7c6d6",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_04_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_04_2",
+      "name": "Twisted Hawthorn Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_04",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "4b029bef133ef7822631521082011d74ff062b3a2aaf22b4bf8cea4523ee8ca2",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_04_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_04_3",
+      "name": "Twisted Hawthorn Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_04",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "b6c314539f4d5de644bbc177199233490d096eaa3376e81ee71a3dcc1b486c9d",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_04_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_05_0",
+      "name": "Columnar Poplar Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_05",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "89119a5f0b6ecc0b191df3a064cc201931ee9e0a00d8e952a3e710ba356546ab",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_05_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_05_1",
+      "name": "Columnar Poplar Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_05",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "a6e4bb404c92dbbe3b5903899ad0f8182c04e684b984569434392b705b1f8c7e",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_05_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_05_2",
+      "name": "Columnar Poplar Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_05",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_04",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "69ce9373fba372c62886b056926bd037ebba5ac0c872738b692f21f65a2dad18",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_05_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_05_3",
+      "name": "Columnar Poplar Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_05",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_04",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "664c683d1ba7ea981f88e44840dcff0171a98bdd0204fefd4bfad17aed8a2abf",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_05_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_06_0",
+      "name": "Windswept Bent Rowan Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "6f85a6d72825afaf74ebfe3c5b754cbe1d76d962d9d087b8ae2a0d726eacf0de",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_06_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_06_1",
+      "name": "Windswept Bent Rowan Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_05",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "d03f20b3e5472ae1949c2d9c23fa7ec4738fb616b31a95df7895c1f3abee688b",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_06_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_06_2",
+      "name": "Windswept Bent Rowan Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "739f92e88050ffbc6d79a2adb830e422369700c36e707fb402234665b9d07246",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_06_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_06_3",
+      "name": "Windswept Bent Rowan Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_05",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "b2197294f17e1f5aaf9b6a6b8f9875616f8f82611c946ae5ab50ac156b9c59db",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_06_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_07_0",
+      "name": "Spreading Beech Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "691b2c7a249a4df834c88ba6aefe4848a964734e443996fbd1a95a3718f9b572",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_07_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_07_1",
+      "name": "Spreading Beech Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "a18ef139e8b13f7a9067dd5f735555c1480e6d72f09d778f0811857b4a28a6d4",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_07_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_07_2",
+      "name": "Spreading Beech Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "0f068df7814cdd8dcbfb0500ac29012c370665daff798622470810b2f968a99d",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_07_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_07_3",
+      "name": "Spreading Beech Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "c99457bb86fa0c450fb2695004948ae52375c27cced2da30caa777d45516af36",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_07_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_08_0",
+      "name": "Umbrella-Shaped Acacia Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "1c5c861297453af9fbce0f7a402cd034e4d32d7a3e3a12c579b63be3e2d2a580",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_08_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_08_1",
+      "name": "Umbrella-Shaped Acacia Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "f9b5141ef711382420b0b059dd4ca9b6388fbcd7d943ee3132e101bdb1ed556b",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_08_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_08_2",
+      "name": "Umbrella-Shaped Acacia Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "2c7833a34735ea3b94b54eb85e718579cc350ff5ef1afb07f7a4ccd32843c335",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_08_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_08_3",
+      "name": "Umbrella-Shaped Acacia Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "7d22537383f36bd8a7f8fa112df3a372a0a3b705fab736fbbe72ba06d3357e05",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_08_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_09_0",
+      "name": "Knotted Maple Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "a9981d52a2167ff985837ae6ee7feef0b39d6a714809a137c5727b11a11fa826",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_09_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_09_1",
+      "name": "Knotted Maple Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_05",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "5827ef144d6f8083eaa0005bfa8c30623ee7952228d9a3768037d67a6182e445",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_09_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_09_2",
+      "name": "Knotted Maple Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "dce93628cb916fe5e84cc5b5511368d199808dd6de188c4821e4123ecdbfa161",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_09_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_09_3",
+      "name": "Knotted Maple Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "f2bb386c6d911aedafb91defc3f2cb1ce966405be37baf377f8cc7a7ff5552ab",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_09_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_10_0",
+      "name": "Crooked Alder Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "65ee3a3181957060177f61763a16815057dc61ddfdfcfd8b8ee5093d4efc32fb",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_10_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_10_1",
+      "name": "Crooked Alder Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_04",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "d08c091081459e8136e6d96b287edab3fae313863f8379180859a73b949200c8",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_10_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_10_2",
+      "name": "Crooked Alder Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "b7815f9a410143412e25ec5ca2091372b018de38de0e942d5e8fc1b86e0db77e",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_10_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_10_3",
+      "name": "Crooked Alder Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "be27a77c3fd3a1321f571da160d787d475513b7b4bbda3f4579d444140e0919d",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_10_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_11_0",
+      "name": "Three-Trunk Hazel Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "2f6fb6f82ab2a4235b638c1591b4d9669919bc44f0db473bb8063f59f363ce9b",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_11_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_11_1",
+      "name": "Three-Trunk Hazel Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "b5cba1c143cc6ac47be65c7d5cb5be7aa8abe20517fcc877c945b8d28aed8c5a",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_11_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_11_2",
+      "name": "Three-Trunk Hazel Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "dac0bdcf2ea85f1136109f32867b7aeb0f358799120a676c2d56361a7e524fa9",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_11_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_11_3",
+      "name": "Three-Trunk Hazel Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "c4df7bce9f952a54febb1f278bc02cbb369935d16930f61503f4369f8c4293a1",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_11_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_12_0",
+      "name": "Broad Linden Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "b65bbae4212da40c927568c272b48bcada62e328396509da3f1510c0705f8ff5",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_12_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_12_1",
+      "name": "Broad Linden Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_04",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "f2788109a5ca75856bd3c731cb46d3ce1b749b0ac50e62fdc8822ca146ca62cf",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_12_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_12_2",
+      "name": "Broad Linden Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_11",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "9a0d7f05e2da22d9ed13100608f56158b55db1f1b97dbfb9e74db09825920433",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_12_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_12_3",
+      "name": "Broad Linden Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_05",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "07d00ce99142528b26d02899eeb2fbd3d81f9bad875e189c5d749c626ba5a367",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_12_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_13_0",
+      "name": "Slender Ash Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "96aba5f75301f488441eb2f44e0902f3b0f8d20381948e38d4161d377af560d4",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_13_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_13_1",
+      "name": "Slender Ash Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_07",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_02",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "5cccf43d8abdf889b734c39d3c3f279359e44f55e92305224fbca51a8b27e063",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_13_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_13_2",
+      "name": "Slender Ash Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_03",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "210ebe69abb9b13669d0b2a286b519696565cdad9e37914e691c014e037bf253",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_13_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_13_3",
+      "name": "Slender Ash Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "17968eb9e53ba2cd153aa757d3e9bd2737c5bf6a4cdf5e4a4df4697944556531",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_13_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_14_0",
+      "name": "Gnarled Chestnut Grove 1",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "d64521f880281b2b643bef96011e719d93fd717aa418e5f054ff4771b721e025",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_14_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_14_1",
+      "name": "Gnarled Chestnut Grove 2",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_08",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_10",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "9aa5e6976088976cf93fb8ee8e894ab178474b66dacea562122c2a9519c72382",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_14_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_14_2",
+      "name": "Gnarled Chestnut Grove 3",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_01",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_00",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_09",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "775056e11e21b177d57946a3a89ca8d9119876c39aca5fd5b36b6f82fbbb23c1",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_14_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_14_3",
+      "name": "Gnarled Chestnut Grove 4",
+      "biome": "biome_grasslands",
+      "family": "woods",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_14",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_13",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_12",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_06",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "189370092e253b6cafee8f45fb618a29a7fa0269ad95bef22078d4e631ab0e54",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_14_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_15_0",
+      "name": "Tall Narrow Spruce Grove 1",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "7b46ef76e23ded8f0f94e970cfdbadd78fd2e87fe766a34da7683b6f1c125e97",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_15_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_15_1",
+      "name": "Tall Narrow Spruce Grove 2",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "e95219efc95add8bd71f9efa4bc2315d01a21eb1147897b19dfb9ecd8166b11e",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_15_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_15_2",
+      "name": "Tall Narrow Spruce Grove 3",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_21",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "3c972076adf1aa5718e8fe4ef39482f76bb720b65daa574bcd5a20c4f204f767",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_15_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_15_3",
+      "name": "Tall Narrow Spruce Grove 4",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "66fd83513a5a7257c9382c9ecd5d9a557e36c8e2b8c96fe2e26b99d334a9254d",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_15_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_16_0",
+      "name": "Low Spreading Juniper Grove 1",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_16",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_21",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "a288f3a5bd1f45fd80894372ecbbc91156fe649739a34b85f15ec6104a31881b",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_16_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_16_1",
+      "name": "Low Spreading Juniper Grove 2",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_16",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "b9b78b12f98ebac0c863df98d45371093887afb2936ef0d8f3067ae02686dc0d",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_16_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_16_2",
+      "name": "Low Spreading Juniper Grove 3",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_16",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_21",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "bfe60c43a2424e9f9bf892a2f5c2ae8d3015bfad8a7e82437d6fe612ddfe6415",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_16_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_16_3",
+      "name": "Low Spreading Juniper Grove 4",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_16",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "ce786473e3b985cc43d1b689f659138f4c52b1a5eb47966ad2419cc1099a5dd5",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_16_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_17_0",
+      "name": "Leaning Pine With Asymmetrical Crown Grove 1",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_16",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "9e79d32c5f46afa6da3e610084ea52f826ac46301a41cc27b76639bfdf8f05be",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_17_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_17_1",
+      "name": "Leaning Pine With Asymmetrical Crown Grove 2",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "906a005844dcfba4875409a9d39a09890184ce6eb580e55c0b25bba0ced227b1",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_17_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_17_2",
+      "name": "Leaning Pine With Asymmetrical Crown Grove 3",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "b3f2dad40562c98cf79f9a932be407ebeaf6d83a645c8cdac25f317090e2d55f",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_17_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_17_3",
+      "name": "Leaning Pine With Asymmetrical Crown Grove 4",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "e73b62e2f6baf2e782fbf6ab11cc37930f289efc9139021664a576bf431577c7",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_17_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_18_0",
+      "name": "Tiered Silver Fir Grove 1",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "32edbc2dfa0f9618548cc321e478ad4076af09862529f4786e663a86c8dfa04c",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_18_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_18_1",
+      "name": "Tiered Silver Fir Grove 2",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_16",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "1d0a63bda900a41bc526ae8cb1252c5a4a40ad55d5bd6882a25b12ec4405df5e",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_18_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_18_2",
+      "name": "Tiered Silver Fir Grove 3",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_16",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "21f0ddc6caf9ed95096402ff5f3dd61c547f43a48832e5b9677b88c2245e65eb",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_18_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_18_3",
+      "name": "Tiered Silver Fir Grove 4",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "ca98f14034483e0c77f0251e96392b4bcc7c459dbf5d30234c53b7954f57e38f",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_18_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_19_0",
+      "name": "Round Dwarf Mountain Pine Grove 1",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "659a478012a37cd050e295557bb91e0f6f6372b848996d183e66f4864d5e344d",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_19_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_19_1",
+      "name": "Round Dwarf Mountain Pine Grove 2",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "08dc622eea804cfe4e88a4b1acd416ed070e5c7324d23c6a4ce29f6f6c6fd5ae",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_19_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_19_2",
+      "name": "Round Dwarf Mountain Pine Grove 3",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "de9510261ffc91410d924de3b323db07cb7305fc920882c8aec5846e18a243f3",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_19_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_19_3",
+      "name": "Round Dwarf Mountain Pine Grove 4",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_21",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "4b91d61a2726d82e621eb77d516bd7b414448b3d109e4eeb233a7766c11d2ccd",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_19_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_20_0",
+      "name": "Forked Ancient Cedar Grove 1",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_16",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "dc9cd77fdc5e871dba815ce42ec1b9069587dedd84efc46e4f1fda8f9b916229",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_20_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_20_1",
+      "name": "Forked Ancient Cedar Grove 2",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "6682c24f4fce7d92c3d4f7f3dfa17d0ae8b6bfdcc7093cb0b33a811badc734e9",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_20_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_20_2",
+      "name": "Forked Ancient Cedar Grove 3",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_16",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "883a437f8d65b6af48cf1344986b72b2c8a7ce389863810587570ae919f8a25e",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_20_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_20_3",
+      "name": "Forked Ancient Cedar Grove 4",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "74b91e41e21840afd8c54bead41567ce8a014bcbee13db99b43d25b9c5cec897",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_20_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_21_0",
+      "name": "Spiral Wind-Twisted Larch Grove 1",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_21",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "3dff4c79905432015a07bc3f9c2b3976e10c96358a272ebd42ca3b70a8584ecf",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_21_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_21_1",
+      "name": "Spiral Wind-Twisted Larch Grove 2",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_21",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "4669d51144f8cd0d5d3ad18ccd5568ef20eaacd55801edc46fe7155e4dece304",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_21_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_21_2",
+      "name": "Spiral Wind-Twisted Larch Grove 3",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_21",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "1548d8d098cccdb31a49849c463b788c761bf4d75f2d237f8a2fb9b9c6b9f94c",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_21_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_21_3",
+      "name": "Spiral Wind-Twisted Larch Grove 4",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_21",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "8f03896c1565aab33e7646c7eec249bdfbeed946f0f4538a63ee5e6e3d09d117",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_21_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_22_0",
+      "name": "Broad Umbrella Pine Grove 1",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_17",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "259cffd4ff979ae63bd035bbf84dd7eda0b33803d03574181b75d1c74d1e3461",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_22_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_22_1",
+      "name": "Broad Umbrella Pine Grove 2",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "c9f13e9b611a1eae1dce9664079de2de6936c45c9a988c481185b744d39c43d5",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_22_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_22_2",
+      "name": "Broad Umbrella Pine Grove 3",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_15",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_16",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "f3271c9b7faf86069ad499fe2d77563dddbe679bcd7d4c3dae818f619f6b178c",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_22_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_22_3",
+      "name": "Broad Umbrella Pine Grove 4",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "948fa36266b55aee3999512256c222c84acf9ac8c3e6c3ab001d99e9fd886082",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_22_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_23_0",
+      "name": "Short Dense Yew Grove 1",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "b7f21c9dc19073ea9df372b46e0acfa146fda7358fb8bf045b2fabc7495b31c2",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_23_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_23_1",
+      "name": "Short Dense Yew Grove 2",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_16",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "fa846825e064f2c57224c0b9f1a66989c0ff056c5fe1022771d7c98f9f41d0a9",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_23_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_23_2",
+      "name": "Short Dense Yew Grove 3",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_20",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "a492d9cad1337c2b6484c11d3169063c51203ff65b6115b80c5cad4ca517fe78",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_23_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_23_3",
+      "name": "Short Dense Yew Grove 4",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_21",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "83e23e2a8a6b41f2310e2e40b88a4736efaa773945483fff15a0c1e8c37b89de",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_23_3.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_24_0",
+      "name": "Massive Redwood With Buttress Roots Grove 1",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            24,
+            40,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            105,
+            65,
+            142,
+            142
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_19",
+          "rect": [
+            48,
+            89,
+            164,
+            164
+          ]
+        }
+      ],
+      "sha256": "f22a5d8f95614678666aa19fdedfd0848067dafa0d5b6f8f2fcceb06ce4cd131",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_24_0.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_24_1",
+      "name": "Massive Redwood With Buttress Roots Grove 2",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            81,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_21",
+          "rect": [
+            8,
+            64,
+            144,
+            144
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            125,
+            84,
+            128,
+            128
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            52,
+            100,
+            152,
+            152
+          ]
+        }
+      ],
+      "sha256": "07b05fa591bb1ab61bcd2265e09d8e942665d941082a83426021c28ac755dfe8",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_24_1.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_24_2",
+      "name": "Massive Redwood With Buttress Roots Grove 3",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            26,
+            22,
+            134,
+            134
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_21",
+          "rect": [
+            116,
+            40,
+            124,
+            124
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_23",
+          "rect": [
+            3,
+            81,
+            140,
+            140
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            121,
+            113,
+            120,
+            120
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            48,
+            95,
+            154,
+            154
+          ]
+        }
+      ],
+      "sha256": "3bb14606f470cd457b2bdb49e19cb43c3de19588dcd17335d7d58a0edd686bd5",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_24_2.png"
+    },
+    {
+      "id": "plains_grove_v2_grasslands_woods_24_3",
+      "name": "Massive Redwood With Buttress Roots Grove 4",
+      "biome": "biome_grasslands",
+      "family": "conifers",
+      "kind": "assembled_plains_grove",
+      "layers": [
+        {
+          "component": "biome_component_v2_grasslands_woods_24",
+          "rect": [
+            111,
+            24,
+            138,
+            138
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_16",
+          "rect": [
+            30,
+            63,
+            150,
+            150
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_18",
+          "rect": [
+            116,
+            110,
+            132,
+            132
+          ]
+        },
+        {
+          "component": "biome_component_v2_grasslands_woods_22",
+          "rect": [
+            6,
+            111,
+            128,
+            128
+          ]
+        }
+      ],
+      "sha256": "afa7ab68b9bff27a7bb7d81a58fe74bb54822c988499c1f523f8dd5d8e029a5c",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_24_3.png"
     }
   ]
 }

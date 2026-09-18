@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / 'tools'))
 from build_native_scenery_palettes import library_palettes, MANIFEST, RECIPES
 
 SOURCE = (ROOT / 'scenes/overworld/OverworldMapView.gd').read_text(encoding='utf-8')
-METHODS = ['_generated_decorative_body_asset_id', '_native_scenery_assets', '_generated_decorative_body_motif_key']
+METHODS = ['_generated_decorative_body_asset_id', '_native_scenery_assets', '_native_scenery_modulate', '_generated_decorative_body_motif_key']
 LIVE = '\n'.join('\n'.join('\t' + line for line in re.search(
     rf'^func {name}\(.*?(?=^func |\Z)', SOURCE, re.M | re.S).group().rstrip().splitlines()) for name in METHODS)
 CONSTANT = re.search(r'const GENERATED_DECORATIVE_BIOME_BY_TERRAIN := \{.*?\n\}', SOURCE, re.S).group()
@@ -67,10 +67,12 @@ func run() -> void:
 \t\t\tcheck(selected.size() >= mini(10,candidates.size()),"insufficient visible variety: "+terrain+"/"+type_id)
 \t\t\tif candidates.size() >= 10: check(repeated<160,"repeated horizontal bands: "+terrain+"/"+type_id)
 \t\t\tvar id := selector._generated_decorative_body_asset_id(object,Vector2i(9,12))
+\t\t\tcheck(selector._native_scenery_modulate(object,Vector2i(9,12),id).a==1.0,"scenery lighting faded blocker silhouette")
 \t\t\tRules._candidate_cache.clear()
 \t\t\tcheck(id==selector._generated_decorative_body_asset_id(object.duplicate(true),Vector2i(9,12)),"reload changes appearance")
 \t\t\tcheck(object==before,"selector mutated authoritative object/mask")
 \t\t\tobject.native_scenery_art_version = 1
+\t\t\tcheck(selector._native_scenery_modulate(object,Vector2i(9,12),id)==Color.WHITE,"legacy scenery lighting changed")
 \t\t\tcheck(Rules.asset_candidates(object,biome)==manifest.source_types[type_id].get("asset_ids",[]),"legacy save palette changed")
 \t\tcounts[terrain] = biome_seen.size()
 \tfor recipe in recipes:
@@ -107,6 +109,7 @@ func run() -> void:
 \t\t\t\t\timage=image.get_region(Rect2i(r[0],r[1],r[2],r[3]))
 \t\t\t\tvar sprite := Sprite2D.new()
 \t\t\t\tsprite.texture = ImageTexture.create_from_image(image)
+\t\t\t\tsprite.modulate = selector._native_scenery_modulate({"h3m_type_id":type_id,"native_scenery_art_version":2},Vector2i(x+12,y+8),id)
 \t\t\t\tsprite.position = Vector2(x*110+80,y*98+65)
 \t\t\t\tsprite.scale = Vector2.ONE*130.0/maxi(image.get_width(),image.get_height())
 \t\t\t\tcontainer.add_child(sprite)

@@ -39617,6 +39617,706 @@
       "source_model": "assembled_distinct_components",
       "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
       "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_00_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_00_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_00_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_00_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_00_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_00_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_00_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_00_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_01_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_01_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_01_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_01_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_01_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_01_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_01_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_01_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_02_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_02_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_02_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_02_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_02_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_02_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_02_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_02_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_03_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_03_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_03_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_03_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_03_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_03_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_03_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_03_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_04_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_04_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_04_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_04_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_04_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_04_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_04_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_04_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_05_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_05_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_05_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_05_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_05_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_05_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_05_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_05_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_06_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_06_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_06_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_06_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_06_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_06_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_06_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_06_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_07_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_07_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_07_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_07_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_07_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_07_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_07_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_07_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_08_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_08_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_08_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_08_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_08_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_08_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_08_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_08_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_09_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_09_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_09_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_09_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_09_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_09_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_09_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_09_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_10_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_10_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_10_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_10_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_10_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_10_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_10_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_10_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_11_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_11_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_11_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_11_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_11_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_11_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_11_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_11_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_12_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_12_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_12_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_12_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_12_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_12_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_12_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_12_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_13_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_13_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_13_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_13_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_13_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_13_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_13_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_13_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_14_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_14_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_14_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_14_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_14_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_14_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_14_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_14_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_15_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_15_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_15_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_15_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_15_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_15_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_15_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_15_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_16_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_16_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_16_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_16_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_16_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_16_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_16_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_16_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_17_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_17_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_17_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_17_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_17_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_17_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_17_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_17_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_18_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_18_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_18_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_18_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_18_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_18_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_18_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_18_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_19_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_19_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_19_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_19_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_19_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_19_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_19_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_19_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_20_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_20_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_20_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_20_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_20_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_20_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_20_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_20_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_21_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_21_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_21_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_21_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_21_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_21_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_21_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_21_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_22_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_22_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_22_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_22_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_22_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_22_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_22_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_22_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_23_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_23_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_23_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_23_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_23_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_23_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_23_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_23_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_24_0": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_24_0.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_24_1": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_24_1.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_24_2": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_24_2.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "plains_grove_v2_grasslands_woods_24_3": {
+      "path": "res://art/overworld/runtime/objects/decorations/biome_components_20260919/grasslands/grove_woods_24_3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "source_model": "assembled_plains_grove",
+      "source_manifest": "res://art/overworld/source/generated/terrain/biome_components_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
     }
   },
   "resource_site_sprites": {

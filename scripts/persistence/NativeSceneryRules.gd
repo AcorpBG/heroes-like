@@ -42,6 +42,17 @@ static func asset_candidates(object: Dictionary, biome_id: String) -> Array:
 static func policy(object: Dictionary) -> Dictionary:
 	return ContentService.load_json(MANIFEST).get("source_types", {}).get(str(int(object.get("h3m_type_id", -1))), {})
 
+static func ground_modulate(object: Dictionary, biome_id: String, asset_id: String) -> Color:
+	if int(object.get("native_scenery_art_version", 0)) < PRESENTATION_VERSION:
+		return Color.WHITE
+	var tones: Dictionary = ContentService.load_json(MANIFEST).get("grounding_tints", {}).get(biome_id, {})
+	var entry := policy(object)
+	var family := String(entry.get("landscape_family", entry.get("variation_family", "")))
+	if asset_id.begins_with("plains_grove_v2_"): family = "woods"
+	# Opaque lighting modulation ties scenery to its ground without fading
+	# collision silhouettes, repainting source art or tinting interactable sites.
+	return Color(String(tones.get(family, tones.get("base", "ffffff"))))
+
 static func is_scenery(object: Dictionary) -> bool:
 	return not policy(object).is_empty()
 

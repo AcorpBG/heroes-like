@@ -4441,6 +4441,7 @@ func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, rem
 	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
 	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(sprite_center - Vector2(sprite_extent, sprite_extent) * 0.5, Vector2(sprite_extent, sprite_extent)))
 	var base_modulate := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
+	base_modulate *= _native_scenery_modulate(object, tile, asset_id)
 	_draw_living_scenery(asset_id, draw_texture, sprite_rect, base_modulate, tile)
 	return true
 
@@ -10795,6 +10796,10 @@ func _generated_decorative_body_asset_id(object: Dictionary, tile: Vector2i) -> 
 func _native_scenery_assets(object: Dictionary, tile: Vector2i) -> Array:
 	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(_terrain_at(tile), ""))
 	return preload("res://scripts/persistence/NativeSceneryRules.gd").asset_candidates(object, biome_id)
+
+func _native_scenery_modulate(object: Dictionary, tile: Vector2i, asset_id: String) -> Color:
+	var biome_id := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(_terrain_at(tile), ""))
+	return preload("res://scripts/persistence/NativeSceneryRules.gd").ground_modulate(object, biome_id, asset_id)
 
 func _generated_decorative_body_motif_key(object: Dictionary, tile: Vector2i) -> String:
 	var terrain_id := _terrain_at(tile)

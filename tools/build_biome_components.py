@@ -161,7 +161,33 @@ def entries(production, partial=False):
         clusters.append(dict(id=aid,name=component['name']+' Cluster',biome=component['biome'],family=component['family'],
                              kind='assembled_distinct_components',output=str(output),
                              layers=[dict(component=member,rect=rect) for member,rect in zip(members,layouts[index%len(layouts)])]))
+    clusters.extend(plains_groves(components))
     return components,clusters
+
+
+def plains_groves(components):
+    """Small, staggered trees read as woodland patches within one blocked body."""
+    trees=[c for c in components if c['biome']=='biome_grasslands' and c['family'] in ('woods','conifers')]
+    if not trees: return []
+    # Back-to-front rows with open edges, rather than two full-size trees.
+    # Individual crowns use 47-64% of a standalone component's linear size.
+    layouts=[[(24,40,144),(105,65,142),(48,89,164)],
+             [(81,24,138),(8,64,144),(125,84,128),(52,100,152)],
+             [(26,22,134),(116,40,124),(3,81,140),(121,113,120),(48,95,154)],
+             [(111,24,138),(30,63,150),(116,110,132),(6,111,128)]]
+    groves=[]
+    for tree in trees:
+        # Keep each patch coherent: broadleaf groves and evergreen groves.
+        partners=[c for c in trees if c['family']==tree['family'] and c['id']!=tree['id']]
+        for variant,layout in enumerate(layouts):
+            rng=random.Random(tree['id']+'|grove|'+str(variant))
+            members=[tree]+rng.sample(partners,len(layout)-1)
+            aid=tree['id'].replace(PREFIX,'plains_grove_v2_',1)+f'_{variant}'
+            output=Path(tree['output']).with_name(f'grove_{Path(tree["output"]).stem}_{variant}.png')
+            groves.append(dict(id=aid,name=tree['name']+f' Grove {variant+1}',biome=tree['biome'],family=tree['family'],
+                               kind='assembled_plains_grove',output=str(output),
+                               layers=[dict(component=c['id'],rect=[x,y,size,size]) for c,(x,y,size) in zip(members,layout)]))
+    return groves
 
 
 def register(components, clusters):
@@ -188,6 +214,11 @@ def register(components, clusters):
         if aid not in pool: pool.append(aid)
         if not path.with_suffix('.png.import').exists():
             path.with_suffix('.png.import').write_text('[remap]\nimporter="texture"\ntype="CompressedTexture2D"\n[deps]\nsource_file="'+resource(path)+'"\n[params]\ncompress/mode=0\nmipmaps/generate=true\nprocess/fix_alpha_border=true\nprocess/size_limit=256\n',encoding='utf-8')
+    # Owner-directed plains art mix. Rock-shaped source bodies stay impassable,
+    # but about 40% can be dressed as wooded patches instead of bare stone.
+    # Other biomes and the native source object/type/mask remain untouched.
+    groves=[c['id'] for c in clusters if c['kind']=='assembled_plains_grove']
+    palettes['rock']['biome_grasslands'].extend(groves[::3])
     native['component_palettes']=palettes
     native['component_palette_source']=resource(SOURCE/'recipes.json')
     write(SOURCE/'recipes.json',dict(version=2,canvas=[256,256],production=resource(SOURCE/'production.json'),components=components,clusters=clusters))
