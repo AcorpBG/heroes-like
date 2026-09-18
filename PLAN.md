@@ -39,7 +39,13 @@ Status: completed, owner-directed Phase 6 parent. Restored guarded-site/artifact
 | `rmg-guarded-exploration-closure-20260918` | Real reward/enemy routes, guards, neutral compositions and pacing defects | completed |
 | `rmg-overworld-quality-acceptance-20260918` | Integrated play/save/platform/visual acceptance and cleanup | completed |
 
-Current: this parent and all four children are complete; no new slice selected. The test-only continuation uses scouted objectives and real orders, with exact checkpoint history. Required final packages/evidence, saves, caches, native RMG recovery and unrelated files remain preserved.
+This parent and all four children are complete. The test-only continuation uses scouted objectives and real orders, with exact checkpoint history. The next owner-directed actor presentation slice is recorded below; this does not reopen native generation work.
+
+### Overworld Hero and Creature Readability
+
+id: `art-overworld-actor-readability-20260918`
+
+Status: completed, owner-directed Phase 6 child. Integrated 112 original generated sprites (66 heroes, 46 neutral appearances covering 51 profiles), full-size town visitors, aspect-preserved painted scale and cached alpha-edge contrast. Eight art tests, rendered source/Linux/Windows checks, Large travel/fog/AI, existing actor/scale reports, repository and both official exports/parity pass; small/wide visuals inspected. Removed 3.255 GB disposable outputs, preserving originals/provenance, caches/saves, RMG and unrelated files. Requirements/results: `docs/overworld-actor-readability.md`. No gameplay, native generation, save-schema, battle-art or unrelated UI changes. No next slice selected.
 
 ### Generated Exploration and Guarded Routes
 

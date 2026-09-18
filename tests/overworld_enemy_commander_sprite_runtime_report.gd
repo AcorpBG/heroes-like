@@ -26,14 +26,6 @@ const EXPECTED_COMMANDER_ASSETS := {
 	"faction_brasshollow": "hero_tavern_brasshollow_daxis_chaincaptain",
 	"faction_veilmourn": "hero_lead_veilmourn_ruln_vanehook",
 }
-const EXPECTED_COMMANDER_PATHS := {
-	"faction_embercourt": "res://art/overworld/runtime/heroes/tavern_arcane_controllers/hero_embercourt_jorun_beaconscribe.png",
-	"faction_mireclaw": "res://art/overworld/runtime/heroes/tavern_final_roster/hero_mireclaw_pell_reedscript.png",
-	"faction_sunvault": "res://art/overworld/runtime/heroes/tavern_field_commanders/hero_sunvault_ilyr_glassmarshal.png",
-	"faction_thornwake": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_thornwake_ardren_briarmarshal.png",
-	"faction_brasshollow": "res://art/overworld/runtime/heroes/tavern_vanguard/hero_brasshollow_daxis_chaincaptain.png",
-	"faction_veilmourn": "res://art/overworld/runtime/heroes/live_leads/hero_veilmourn_ruln_vanehook.png",
-}
 const EXPECTED_FACTION_ENCOUNTER_ASSETS := {
 	"faction_embercourt": "encounter_faction_embercourt",
 	"faction_mireclaw": "encounter_faction_mireclaw",
@@ -185,7 +177,7 @@ func _validate_profiles(profiles: Array) -> Dictionary:
 		var faction_id := String(profile.get("spawned_by_faction_id", ""))
 		var expected_hero_id := String(REPRESENTATIVE_HERO_IDS.get(faction_id, ""))
 		var expected_asset_id := String(EXPECTED_COMMANDER_ASSETS.get(faction_id, ""))
-		var expected_path := String(EXPECTED_COMMANDER_PATHS.get(faction_id, ""))
+		var expected_path := "res://art/overworld/runtime/actors_20260918/%s.png" % expected_asset_id
 		if String(profile.get("hero_id", "")) != expected_hero_id \
 			or String(profile.get("commander_faction_id", "")) != faction_id \
 			or String(profile.get("authored_faction_id", "")) != faction_id \
@@ -248,7 +240,11 @@ func _validate_faction_landmark_profiles(profiles: Array) -> Dictionary:
 	return {"ok": seen_assets.size() == EXPECTED_FACTION_ENCOUNTER_ASSETS.size(), "rows": rows}
 
 func _validate_non_faction_fallbacks(map_view: Node) -> Dictionary:
-	var neutral: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_roadward_lodge_watch"})
+	# Authored encounters now have exact paintings. Keep that priority check;
+	# exercise the lower unit fallback with an explicitly unmapped identity.
+	var authored: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_roadward_lodge_watch"})
+	var authored_exact: bool = bool(authored.get("uses_identity_encounter_sprite", false)) and String(authored.get("identity_encounter_asset_id", "")) == "encounter_waywatch_roadward_lodge_watch"
+	var neutral: Dictionary = map_view.call("validation_encounter_presentation_payload", {"encounter_id": "encounter_unit_fallback_fixture", "unit_id": "unit_mire_slinger"})
 	var neutral_exact: bool = String(neutral.get("identity_encounter_asset_id", "")) == "" \
 		and String(neutral.get("faction_encounter_asset_id", "")) == "" \
 		and not bool(neutral.get("uses_identity_encounter_sprite", true)) \
@@ -265,7 +261,7 @@ func _validate_non_faction_fallbacks(map_view: Node) -> Dictionary:
 		and not bool(unknown.get("uses_unit_icon_fallback", true)) \
 		and bool(unknown.get("uses_encounter_sprite_fallback", false)) \
 		and String(unknown.get("encounter_asset_id", "")) == "hostile_camp"
-	return {"ok": neutral_exact and unknown_exact, "neutral_unit_icon_exact": neutral_exact, "unknown_default_exact": unknown_exact}
+	return {"ok": authored_exact and neutral_exact and unknown_exact, "authored_identity_exact": authored_exact, "neutral_unit_icon_exact": neutral_exact, "unknown_default_exact": unknown_exact}
 
 func _hostile_marker_profile_exact(profile_value: Variant, allow_landmark_overflow: bool = false) -> bool:
 	if not (profile_value is Dictionary):
@@ -319,6 +315,9 @@ func _configure_commander_fixture(session) -> void:
 			"enemy_commander_state": {"roster_hero_id": hero_id, "faction_id": faction_id},
 		}
 		encounter["enemy_commander_state"] = EnemyAdventureRules.build_raid_commander_state(encounter, hero_id, faction_id, session)
+		# This fixture isolates commander -> faction fallback. Town Assault has
+		# its own exact landmark and would correctly take priority after removal.
+		encounter["encounter_id"] = "encounter_faction_fallback_fixture"
 		encounters.append(encounter)
 	session.overworld["encounters"] = encounters
 	session.overworld["resolved_encounters"] = []
