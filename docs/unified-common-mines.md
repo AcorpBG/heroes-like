@@ -8,7 +8,7 @@ Owner direction: 2026-09-19; option B, Stonework Guilds, selected on 2026-09-20.
 | Ore | Ore Mine | 2 | Traveling cart, lifting bucket and winding drum |
 | Gold | Gold Mine | 1,000 | Lifting bucket and winding drum |
 
-Each chimney emits rising, drifting smoke. Lanterns flicker independently, with placement-specific timing. Walls, roofs and foundations stay stationary. The existing reduced-motion setting freezes machinery and lights and removes smoke. GPU animation runs in cached scenery batches without changing simulation or saved state; every painted cell, including smoke, is clipped to explored fog.
+Each chimney emits a continuous plume of overlapping, rising billows. Ash-grey cores and darker soft edges keep it visible against both vegetation and pale terrain at normal map scale. Lanterns independently brighten and dim their glass and the surrounding doorway stonework, with placement-specific timing. Walls, roofs and foundations stay stationary. The existing reduced-motion setting freezes machinery and lights and removes smoke. GPU animation runs in cached scenery batches without changing simulation or saved state; every painted cell, including smoke, is clipped to explored fog.
 
 ## Ground footprint and compatibility
 
@@ -26,4 +26,4 @@ Run `python tools/pack_unified_mines.py` with Pillow to rebuild the three buildi
 
 ## Focused verification
 
-`tests/unified_mines_regression.py --godot <executable> --output <temporary directory inside repo>` checks all twelve aliases, controlled daily production, ownership, five solid cells plus entrance, runtime-mask precedence, rare-site routing, immutable package/save state, fog clipping, cached drawing, moving pixels in every mechanism and lamp, chimney smoke, stationary foundations and reduced motion. It uses a short isolated render scene and disposable settings profile; it does not launch a full playtest or run the full repository suite. Generated captures and logs are disposable after visual review.
+`tests/unified_mines_regression.py --godot <executable> --output <temporary directory inside repo>` checks all twelve aliases, controlled daily production, ownership, five solid cells plus entrance, runtime-mask precedence, rare-site routing, immutable package/save state, fog clipping, cached drawing, moving pixels in every mechanism and lamp, chimney smoke, stationary foundations and reduced motion. Smoke contrast and lamp variation must cover a visible area, not merely change a pixel. The gallery uses actual grass, sand and snow textures, including 58- and 36-pixel tiles. The owner-feedback visibility revision passes 191 focused checks and was visually inspected at those scales. It uses a short isolated render scene and disposable settings profile; it does not launch a full playtest or run the full repository suite. Generated captures and logs are disposable after visual review.

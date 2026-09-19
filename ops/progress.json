@@ -113556,7 +113556,7 @@
       "sourceDocs": [
         "docs/unified-common-mines.md"
       ],
-      "notes": "Implemented approved option B: three original biome-neutral buildings replace twelve common-site art identities; daily production is 2 wood, 2 ore and 1000 gold. Shared game geometry reserves a 3x2 footprint with five solid cells and a south-middle entrance while preserving source package records and live rare-mine routing. GPU layers animate saw/flywheel, cart/hoists/drums, chimney smoke and independent lights; fog and reduced motion are respected. Focused imported-texture render regression passed 163 checks on 2026-09-20; full repository suite intentionally not run. See docs/unified-common-mines.md for existing-placement scope."
+      "notes": "Approved option B implemented as three shared animated mine buildings with 3x2 footprints and daily production of 2 wood, 2 ore and 1000 gold. Owner-feedback visibility revision replaces the faint haze with denser overlapping ash-grey billows and darker edges, and broadens independent lantern flicker onto doorway stonework. Reviewed over actual grass/sand/snow at 58- and 36-pixel tile scales. Focused render regression passes 191 checks, including contrast/visible-area requirements, fog, stationary foundations, reduced motion, ownership and unchanged saves. Full suite not run. See docs/unified-common-mines.md for geometry and existing-placement scope."
     }
   ],
   "project": "heroes-like",
