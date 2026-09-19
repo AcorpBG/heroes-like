@@ -2500,7 +2500,7 @@
     },
     {
       "id": "site_brightwood_sawmill",
-      "name": "Brightwood Sawmill",
+      "name": "Sawmill",
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -2556,11 +2556,12 @@
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
       },
-      "normalized_content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184"
+      "normalized_content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "common_mine_resource": "wood"
     },
     {
       "id": "site_ridge_quarry",
-      "name": "Ridge Quarry",
+      "name": "Ore Mine",
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -2616,11 +2617,12 @@
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
       },
-      "normalized_content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184"
+      "normalized_content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "common_mine_resource": "ore"
     },
     {
       "id": "site_marsh_peat_yard",
-      "name": "Marsh Peat Yard",
+      "name": "Gold Mine",
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -2676,7 +2678,8 @@
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
       },
-      "normalized_content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184"
+      "normalized_content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "common_mine_resource": "gold"
     },
     {
       "id": "site_watchtower_beacon",
@@ -3033,7 +3036,7 @@
     },
     {
       "id": "site_greenbough_wood_yard",
-      "name": "Greenbough Wood Yard",
+      "name": "Sawmill",
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3088,11 +3091,12 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "common_mine_resource": "wood"
     },
     {
       "id": "site_floodplain_sluice_camp",
-      "name": "Floodplain Sluice Camp",
+      "name": "Gold Mine",
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3146,11 +3150,12 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "common_mine_resource": "gold"
     },
     {
       "id": "site_ironstep_ore_pit",
-      "name": "Ironstep Ore Pit",
+      "name": "Ore Mine",
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3205,11 +3210,12 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "common_mine_resource": "ore"
     },
     {
       "id": "site_reef_coin_assay",
-      "name": "Reef Coin Assay",
+      "name": "Gold Mine",
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3263,11 +3269,12 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "common_mine_resource": "gold"
     },
     {
       "id": "site_cinder_ore_face",
-      "name": "Cinder Ore Face",
+      "name": "Ore Mine",
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3322,11 +3329,12 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "common_mine_resource": "ore"
     },
     {
       "id": "site_frostwood_cutting_yard",
-      "name": "Frostwood Cutting Yard",
+      "name": "Sawmill",
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3381,7 +3389,8 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "common_mine_resource": "wood"
     },
     {
       "id": "site_aetherglass_lens_house",
@@ -4296,7 +4305,7 @@
     },
     {
       "id": "site_badlands_coin_sluice",
-      "name": "Badlands Coin Sluice",
+      "name": "Gold Mine",
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -4350,11 +4359,12 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "common_mine_resource": "gold"
     },
     {
       "id": "site_underway_ore_counterfort",
-      "name": "Underway Ore Counterfort",
+      "name": "Ore Mine",
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -4409,11 +4419,12 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "common_mine_resource": "ore"
     },
     {
       "id": "site_grassland_plank_grove",
-      "name": "Grassland Plank Grove",
+      "name": "Sawmill",
       "family": "mine",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -4468,7 +4479,8 @@
         "watch_days": 3,
         "readiness_bonus": 1,
         "pressure_guard_bonus": 1
-      }
+      },
+      "common_mine_resource": "wood"
     },
     {
       "id": "site_wayfarer_menders_tent",

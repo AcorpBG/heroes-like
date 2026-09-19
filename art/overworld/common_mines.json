@@ -1,0 +1,248 @@
+{
+  "schema_id": "unified_common_mines_v1",
+  "canvas_size": [
+    512,
+    640
+  ],
+  "ground_anchor": [
+    256,
+    604
+  ],
+  "painted_width": 448,
+  "mines": {
+    "wood": {
+      "asset_id": "mapobj_common_wood_mine",
+      "base": "res://art/overworld/runtime/objects/mines/wood-base.png",
+      "parts_texture": "res://art/overworld/runtime/objects/mines/wood-parts.png",
+      "static": "res://art/overworld/runtime/objects/mines/wood.png",
+      "chimney": [
+        140.185,
+        182.85
+      ],
+      "lights": [
+        [
+          239.781,
+          502.507
+        ]
+      ],
+      "parts": [
+        {
+          "rect": [
+            137.101,
+            310.901,
+            68.769,
+            103.391
+          ],
+          "source": [
+            18,
+            2,
+            91,
+            124
+          ],
+          "mode": 1,
+          "speed": 1.3,
+          "travel": [
+            0.0,
+            0.0
+          ],
+          "rope": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "rect": [
+            285.074,
+            337.935,
+            49.798,
+            67.346
+          ],
+          "source": [
+            148,
+            2,
+            87,
+            124
+          ],
+          "mode": 1,
+          "speed": -3.0,
+          "travel": [
+            0.0,
+            0.0
+          ],
+          "rope": [
+            -1,
+            -1
+          ]
+        }
+      ]
+    },
+    "ore": {
+      "asset_id": "mapobj_common_ore_mine",
+      "base": "res://art/overworld/runtime/objects/mines/ore-base.png",
+      "parts_texture": "res://art/overworld/runtime/objects/mines/ore-parts.png",
+      "static": "res://art/overworld/runtime/objects/mines/ore.png",
+      "chimney": [
+        159.46,
+        179.883
+      ],
+      "lights": [
+        [
+          241.602,
+          406.479
+        ]
+      ],
+      "parts": [
+        {
+          "rect": [
+            408.953,
+            286.808,
+            50.512,
+            70.339
+          ],
+          "source": [
+            21,
+            2,
+            86,
+            124
+          ],
+          "mode": 2,
+          "speed": 0.8,
+          "travel": [
+            0.0,
+            33.045
+          ],
+          "rope": [
+            427.6,
+            212.456
+          ]
+        },
+        {
+          "rect": [
+            141.994,
+            456.755,
+            108.577,
+            92.999
+          ],
+          "source": [
+            130,
+            5,
+            124,
+            117
+          ],
+          "mode": 3,
+          "speed": 0.65,
+          "travel": [
+            22.66,
+            -21.243
+          ],
+          "rope": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "rect": [
+            324.215,
+            268.397,
+            54.761,
+            35.406
+          ],
+          "source": [
+            258,
+            26,
+            124,
+            76
+          ],
+          "mode": 4,
+          "speed": 1.1,
+          "travel": [
+            0.0,
+            0.0
+          ],
+          "rope": [
+            -1,
+            -1
+          ]
+        }
+      ]
+    },
+    "gold": {
+      "asset_id": "mapobj_common_gold_mine",
+      "base": "res://art/overworld/runtime/objects/mines/gold-base.png",
+      "parts_texture": "res://art/overworld/runtime/objects/mines/gold-parts.png",
+      "static": "res://art/overworld/runtime/objects/mines/gold.png",
+      "chimney": [
+        360.17,
+        185.142
+      ],
+      "lights": [
+        [
+          53.787,
+          431.156
+        ],
+        [
+          117.787,
+          489.709
+        ],
+        [
+          228.085,
+          496.064
+        ],
+        [
+          194.043,
+          468.83
+        ]
+      ],
+      "parts": [
+        {
+          "rect": [
+            207.66,
+            313.596,
+            48.113,
+            55.376
+          ],
+          "source": [
+            8,
+            2,
+            111,
+            124
+          ],
+          "mode": 2,
+          "speed": 0.7,
+          "travel": [
+            0.0,
+            24.057
+          ],
+          "rope": [
+            232.624,
+            278.191
+          ]
+        },
+        {
+          "rect": [
+            177.929,
+            242.107,
+            111.206,
+            61.277
+          ],
+          "source": [
+            130,
+            22,
+            124,
+            84
+          ],
+          "mode": 4,
+          "speed": 1.0,
+          "travel": [
+            0.0,
+            0.0
+          ],
+          "rope": [
+            -1,
+            -1
+          ]
+        }
+      ]
+    }
+  }
+}

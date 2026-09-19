@@ -1,23 +1,29 @@
 # Unified common mines
 
-Owner direction: 2026-09-19. Implementation is in progress; final artwork requires owner selection from the proposals.
+Owner direction: 2026-09-19; option B, Stonework Guilds, selected on 2026-09-20. All twelve legacy common sites now resolve to three original, biome-neutral buildings. Existing site IDs remain valid for maps and saves.
 
-Delivered in the proposal stage: all 12 common-site definitions now use the requested production in both `control_income` and `resource_outputs`. Focused content comparison confirms that ownership, cadence, capture rewards, rare sites and supporting producers are unchanged. Three original proposal sheets and their full generation prompts are retained in `art/overworld/source/generated/mines/unified_proposals_20260919/`. Final single-art routing, six-tile footprints and animation clips remain pending selection; no runtime art or collision change is claimed.
+| Resource | Shared identity | Daily production while controlled | Moving parts |
+| --- | --- | ---: | --- |
+| Wood | Sawmill | 2 | Rotating flywheel and circular saw |
+| Ore | Ore Mine | 2 | Traveling cart, lifting bucket and winding drum |
+| Gold | Gold Mine | 1,000 | Lifting bucket and winding drum |
 
-| Resource | Daily production while controlled | Final visual identity |
-| --- | ---: | --- |
-| Wood | 2 | One sawmill asset |
-| Ore | 2 | One ore mine asset |
-| Gold | 1,000 | One gold mine asset |
+Each chimney emits rising, drifting smoke. Lanterns flicker independently, with placement-specific timing. Walls, roofs and foundations stay stationary. The existing reduced-motion setting freezes machinery and lights and removes smoke. GPU animation runs in cached scenery batches without changing simulation or saved state; every painted cell, including smoke, is clipped to explored fog.
 
-All three final mines occupy a three-column, two-row ground footprint. The south-facing entrance must stay readable and reachable. Final footprint integration must cover both authored maps and generated runtime footprints; changing only `content/map_objects.json` would not satisfy this requirement because generated footprints override authored rendering profiles.
+## Ground footprint and compatibility
 
-Use original hand-painted oblique overworld art with neutral timber, stone and metal, a small irregular contact edge and transparent surroundings. Avoid grass mats, snow, sand plates, swamp reeds, required rivers and terrain-colored rock masses. Mines should remain readable on every ground material.
+All three mines occupy three columns by two rows. The south-middle cell is the entrance; the other five cells block movement. `CommonMineRules.gd` supplies this shared geometry to gameplay occupancy, interaction and rendering. The entrance remains at the placement's existing visit tile; authored and generated runtime footprint overrides cannot shrink the new building.
 
-Animation must show working machinery with stationary buildings and foundations: visible saw/crank motion for wood, a short cart or hoist cycle for ore, and a winch/bucket or lift cycle for gold. Use seamless authored frames, independent presentation timing and a static reduced-motion pose. Subtle lantern or dust accents may complement the machinery.
+This is an explicit game-level geometry override for owner-selected common mines. Native generator placement rules and source package masks remain immutable. Existing placements are not relocated or regenerated. This slice does not claim native RMG parity or guarantee that every historical map reserved this new shape without neighboring overlap.
 
-Prepare three coherent proposal sets: A timber workyards, B masonry works, C excavated mine fronts. The owner may mix choices by resource. Proposal paintings are selection material, not shipped sprites or finished animation clips.
+Only sites marked `common_mine_resource` use these rules. Supporting producers, loose reward references and rare mines remain separate. The native bridge translates four historical common object IDs to rare resources; rendering now prioritizes that live rare site identity over the historical object painting.
 
-Retain existing site IDs so maps and saves do not lose references. At final integration, resolve all common-site variants to the selected resource artwork. Keep supporting producers and rare-resource production separate. In generated maps, `_live_rare_site_id_for_h3m_mine` translates four historical common object IDs into rare sites; those objects must retain their live rare resource identities.
+## Art and rebuild
 
-Native generator phase behavior and recovered source masks are not changed by the proposal stage. Final six-tile occupancy needs an explicit game-level placement/adoption implementation and focused approach/pathing checks, rather than claiming that enlarged artwork changes collision.
+The approved source paintings and full image-generation prompts are in `art/overworld/source/generated/mines/stonework_20260920/`. Neutral masonry, timber and metal have transparent surroundings, with no required river, grass mat, sand plate or snow bed. The earlier A/B/C proposal originals are retained as provenance.
+
+Run `python tools/pack_unified_mines.py` with Pillow to rebuild the three building bases, machinery atlases, static previews and `art/overworld/common_mines.json`. It crops, scales and registers the painted layers. `OverworldMine.gdshader` animates those detached parts, anchored smoke and lights. Both Windows and Linux use the same resource paths and Godot canvas shader.
+
+## Focused verification
+
+`tests/unified_mines_regression.py --godot <executable> --output <temporary directory inside repo>` checks all twelve aliases, controlled daily production, ownership, five solid cells plus entrance, runtime-mask precedence, rare-site routing, immutable package/save state, fog clipping, cached drawing, moving pixels in every mechanism and lamp, chimney smoke, stationary foundations and reduced motion. It uses a short isolated render scene and disposable settings profile; it does not launch a full playtest or run the full repository suite. Generated captures and logs are disposable after visual review.
