@@ -24,7 +24,7 @@ Rules:
 
 ### Unified common mines
 
-`art-unified-common-mines-20260919` — complete. Approved B supplies three shared animated buildings with 3×2 footprints and daily yields of 2 wood, 2 ore and 1,000 gold. Owner-feedback revision makes smoke and independent lantern glow readable at map scale; 191 focused checks and textured terrain render review pass. Legacy identities, fog, reduced motion and stationary foundations are preserved. Full suite skipped. See `docs/unified-common-mines.md`.
+`art-unified-common-mines-20260919` — complete. Three approved B buildings use 3×2 gameplay footprints and daily yields of 2 wood, 2 ore and 1,000 gold. Artwork is 25% smaller around its fixed ground anchor, bringing visible height near two rows; machinery, readable smoke and independent lamps remain aligned. Focused render regression: 181 checks pass; no full suite. See `docs/unified-common-mines.md`.
 
 ### Expanded creature idle loops
 
