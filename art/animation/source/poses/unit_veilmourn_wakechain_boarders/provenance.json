@@ -72,5 +72,18 @@
       ],
       "removed_bytes": 2350025
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_veilmourn_wakechain_boarders.png",
+    "runtime_sha256": "16b12d63bda0579e43e9f47e4b28dcedcef2d69b46b6483d800f245959d0c7eb"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "035ef1e95175410f037e90be0357051e5c05b1ef895d1a4e0678feaa6feb35a3",
+    "preserved_frames": 15,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

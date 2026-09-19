@@ -1,0 +1,320 @@
+{
+  "unit_id": "unit_embercourt_amberweir_lockpike_wardens",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 22,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/poses.png",
+      "rects": [
+        [
+          73,
+          0,
+          273,
+          392
+        ],
+        [
+          107,
+          392,
+          273,
+          405
+        ]
+      ],
+      "anchor": [
+        170,
+        394
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/poses.png",
+      "rects": [
+        [
+          403,
+          7,
+          619,
+          405
+        ]
+      ],
+      "anchor": [
+        524,
+        394
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "move_pike_side_lift",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/walk-pike-side-lift-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          890,
+          1767
+        ]
+      ],
+      "anchor": [
+        465,
+        1688
+      ],
+      "scale": 0.125
+    },
+    {
+      "name": "move_shield_side_lift",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/walk-shield-side-lift-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          890,
+          1767
+        ]
+      ],
+      "anchor": [
+        465,
+        1688
+      ],
+      "scale": 0.125
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/poses.png",
+      "rects": [
+        [
+          267,
+          451,
+          697,
+          748
+        ]
+      ],
+      "anchor": [
+        505,
+        730
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "attack_contact",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/poses.png",
+      "rects": [
+        [
+          710,
+          457,
+          972,
+          738
+        ],
+        [
+          972,
+          502,
+          1188,
+          554
+        ]
+      ],
+      "anchor": [
+        831,
+        728
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "defend",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/poses.png",
+      "rects": [
+        [
+          1265,
+          405,
+          1418,
+          517
+        ],
+        [
+          1198,
+          511,
+          1367,
+          655
+        ],
+        [
+          1117,
+          554,
+          1370,
+          755
+        ]
+      ],
+      "anchor": [
+        1248,
+        735
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/poses.png",
+      "rects": [
+        [
+          28,
+          727,
+          104,
+          775
+        ],
+        [
+          28,
+          775,
+          309,
+          1049
+        ]
+      ],
+      "anchor": [
+        183,
+        1033
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/poses.png",
+      "rects": [
+        [
+          392,
+          750,
+          641,
+          1050
+        ]
+      ],
+      "anchor": [
+        523,
+        1030
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "death_collapse",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/poses.png",
+      "rects": [
+        [
+          677,
+          855,
+          1001,
+          1041
+        ],
+        [
+          1001,
+          1032,
+          1077,
+          1059
+        ],
+        [
+          677,
+          1041,
+          1001,
+          1059
+        ]
+      ],
+      "anchor": [
+        874,
+        1040
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/continuity-alpha/dead-closed-eyes-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          2038,
+          771
+        ]
+      ],
+      "anchor": [
+        1100,
+        710
+      ],
+      "scale": 0.11
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        0,
+        2,
+        1,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        4,
+        5,
+        4,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        6
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        7,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        8,
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        10
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

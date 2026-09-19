@@ -215,5 +215,18 @@
       ],
       "removed_bytes": 29531039
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_veilmourn_saltbell_casters.png",
+    "runtime_sha256": "40cd7b31995f656ddffeab6e11bcea375be5c577a32b69538ad789b83182c0b1"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "aee9230163597069d391ac86adc9ce5394a53e05d71b619fd9592963f6add549",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

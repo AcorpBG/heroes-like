@@ -180,5 +180,18 @@
       ],
       "removed_bytes": 20376783
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_brasshollow_gaugefire_arbalists.png",
+    "runtime_sha256": "41a34d59f04fc59ce197da2c9f57a7851aa831ebdb1035bb5e293d80eb2e1130"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "db001c8b63b1240c98e75789eb20233d5bcb01ba0477b48e9b33fd73b0714e33",
+    "preserved_frames": 19,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

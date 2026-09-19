@@ -1,0 +1,430 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          320,
+          346
+        ]
+      ],
+      "anchor": [
+        163,
+        331
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          337,
+          0,
+          635,
+          346
+        ]
+      ],
+      "anchor": [
+        473,
+        331
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-gait-and-guard.png",
+      "rects": [
+        [
+          0,
+          0,
+          477,
+          505
+        ]
+      ],
+      "anchor": [
+        247,
+        493
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-gait-and-guard.png",
+      "rects": [
+        [
+          480,
+          0,
+          867,
+          505
+        ]
+      ],
+      "anchor": [
+        645,
+        490
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "walk_planted_bridge",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-opposite-contact.png",
+      "rects": [
+        [
+          0,
+          0,
+          1171,
+          1343
+        ]
+      ],
+      "anchor": [
+        574,
+        1296
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-near-passing.png",
+      "rects": [
+        [
+          0,
+          0,
+          1171,
+          1343
+        ]
+      ],
+      "anchor": [
+        605,
+        1310
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          335,
+          346,
+          633,
+          671
+        ]
+      ],
+      "anchor": [
+        480,
+        661
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "melee_shove",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          638,
+          346,
+          1006,
+          671
+        ]
+      ],
+      "anchor": [
+        789,
+        661
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "guard_a",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-gait-and-guard.png",
+      "rects": [
+        [
+          300,
+          505,
+          750,
+          1024
+        ]
+      ],
+      "anchor": [
+        482,
+        997
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "guard_b",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/guided-gait-and-guard.png",
+      "rects": [
+        [
+          920,
+          505,
+          1360,
+          1024
+        ]
+      ],
+      "anchor": [
+        1085,
+        997
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          0,
+          675,
+          320,
+          979
+        ]
+      ],
+      "anchor": [
+        164,
+        964
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "ranged_aim",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          325,
+          672,
+          635,
+          979
+        ]
+      ],
+      "anchor": [
+        484,
+        963
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "ranged_discharged",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload-empty-rail.png",
+      "rects": [
+        [
+          0,
+          0,
+          705,
+          820
+        ]
+      ],
+      "anchor": [
+        342,
+        791
+      ],
+      "scale": 0.27
+    },
+    {
+      "name": "reload_cocking_empty",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload-empty-rail.png",
+      "rects": [
+        [
+          715,
+          0,
+          1337,
+          820
+        ]
+      ],
+      "anchor": [
+        988,
+        791
+      ],
+      "scale": 0.27
+    },
+    {
+      "name": "reload_insert_single_bolt",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/discharge-and-visible-reload-empty-rail.png",
+      "rects": [
+        [
+          1340,
+          0,
+          1918,
+          820
+        ]
+      ],
+      "anchor": [
+        1606,
+        792
+      ],
+      "scale": 0.27
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          0,
+          986,
+          319,
+          1254
+        ]
+      ],
+      "anchor": [
+        166,
+        1223
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          321,
+          987,
+          629,
+          1254
+        ]
+      ],
+      "anchor": [
+        474,
+        1238
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "death_settle",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          637,
+          1040,
+          940,
+          1254
+        ]
+      ],
+      "anchor": [
+        783,
+        1220
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "dead_cold",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugefire_arbalists/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          944,
+          1040,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        1093,
+        1220
+      ],
+      "scale": 0.66
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 5,
+      "indices": [
+        11,
+        12,
+        13,
+        14,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 5,
+      "indices": [
+        10,
+        15,
+        16,
+        17,
+        18
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        18
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  }
+}

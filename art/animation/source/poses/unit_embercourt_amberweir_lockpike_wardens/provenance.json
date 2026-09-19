@@ -111,5 +111,18 @@
     "runtime_sha256": "32449f9089fd7cdb83fe5a0113aca4300e8761878e481b9f2b26b5c69b132285",
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/lockpike-continuity-20260915/",
     "status": "candidate_registered_not_final_accepted"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_embercourt_amberweir_lockpike_wardens.png",
+    "runtime_sha256": "6edd086ef54ad86a154442555d5ab9e4c139a139c98eaac153cb63699f36e1b4"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "32449f9089fd7cdb83fe5a0113aca4300e8761878e481b9f2b26b5c69b132285",
+    "preserved_frames": 11,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

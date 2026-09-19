@@ -79,5 +79,18 @@
       "preserved": "Original/new/rejected masters, exact prompts/reference hashes, all unique before/final evidence, cutout recipes/proofs, source/runtime atlases, caches and unrelated files.",
       "removed_bytes": 138331
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_thornwake_pollenhook_whistlers.png",
+    "runtime_sha256": "acf27be4cfe6e2726c47242b247f154c552ec5ffcdbe687c201658fed4d4e115"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "8552995781a553a3d2a2395181e8b60bab19b05050a64fca752496d76660f16b",
+    "preserved_frames": 18,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

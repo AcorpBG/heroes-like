@@ -1,0 +1,385 @@
+{
+  "unit_id": "unit_veilmourn_wakechain_boarders",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          380,
+          374
+        ]
+      ],
+      "anchor": [
+        188,
+        361
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png",
+      "rects": [
+        [
+          380,
+          0,
+          760,
+          378
+        ]
+      ],
+      "anchor": [
+        588,
+        361
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "contact_original",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png",
+      "rects": [
+        [
+          760,
+          0,
+          1138,
+          375
+        ]
+      ],
+      "anchor": [
+        977,
+        361
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "passing_original",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png",
+      "rects": [
+        [
+          0,
+          378,
+          389,
+          684
+        ]
+      ],
+      "anchor": [
+        212,
+        672
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "contact_gathered",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-alpha/travel-recovery-and-head-right-fall-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          525,
+          549
+        ]
+      ],
+      "anchor": [
+        338,
+        515
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "passing_near_lift",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-alpha/travel-recovery-and-head-right-fall-green.png",
+      "rects": [
+        [
+          525,
+          0,
+          1016,
+          551
+        ]
+      ],
+      "anchor": [
+        818,
+        520
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png",
+      "rects": [
+        [
+          389,
+          375,
+          760,
+          689
+        ]
+      ],
+      "anchor": [
+        577,
+        675
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "attack_chain_lash",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png",
+      "rects": [
+        [
+          760,
+          377,
+          1128,
+          689
+        ],
+        [
+          1128,
+          377,
+          1290,
+          477
+        ],
+        [
+          1128,
+          477,
+          1250,
+          500
+        ]
+      ],
+      "anchor": [
+        945,
+        663
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "attack_recover",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-alpha/travel-recovery-and-head-right-fall-green.png",
+      "rects": [
+        [
+          1017,
+          0,
+          1536,
+          557
+        ]
+      ],
+      "anchor": [
+        1337,
+        531
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "defend_original",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png",
+      "rects": [
+        [
+          1290,
+          404,
+          1536,
+          477
+        ],
+        [
+          1250,
+          477,
+          1536,
+          500
+        ],
+        [
+          1128,
+          500,
+          1536,
+          692
+        ]
+      ],
+      "anchor": [
+        1355,
+        662
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "defend_gathered",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-alpha/travel-recovery-and-head-right-fall-green.png",
+      "rects": [
+        [
+          0,
+          560,
+          521,
+          1024
+        ]
+      ],
+      "anchor": [
+        280,
+        939
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png",
+      "rects": [
+        [
+          0,
+          693,
+          394,
+          1024
+        ]
+      ],
+      "anchor": [
+        203,
+        961
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/poses.png",
+      "rects": [
+        [
+          394,
+          694,
+          764,
+          1024
+        ]
+      ],
+      "anchor": [
+        579,
+        973
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "death_head_right_lower",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-alpha/travel-recovery-and-head-right-fall-green.png",
+      "rects": [
+        [
+          522,
+          605,
+          1000,
+          1024
+        ],
+        [
+          1000,
+          851,
+          1045,
+          934
+        ]
+      ],
+      "anchor": [
+        804,
+        931
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_veilmourn_wakechain_boarders/continuity-alpha/travel-recovery-and-head-right-fall-green.png",
+      "rects": [
+        [
+          1000,
+          695,
+          1536,
+          851
+        ],
+        [
+          1045,
+          851,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1282,
+        950
+      ],
+      "scale": 0.44
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        9,
+        10
+      ],
+      "loop": true,
+      "frame_msec": 580,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        11,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        14
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

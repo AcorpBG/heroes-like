@@ -1,6 +1,6 @@
 {
   "unit_id": "unit_embercourt_lockglass_writcasters",
-  "status": "candidate_pending_playback_acceptance",
+  "status": "accepted_idle_articulation_20260919",
   "frame_size": [
     512,
     256
@@ -293,6 +293,262 @@
         1220
       ],
       "scale": 0.65
+    },
+    {
+      "name": "idle_hands_0",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        194,
+        480
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_1",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          384,
+          0,
+          775,
+          512
+        ]
+      ],
+      "anchor": [
+        566,
+        481
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_2",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          775,
+          0,
+          1152,
+          348
+        ],
+        [
+          775,
+          348,
+          1151,
+          350
+        ],
+        [
+          775,
+          350,
+          1150,
+          351
+        ],
+        [
+          775,
+          351,
+          1149,
+          352
+        ],
+        [
+          775,
+          352,
+          1148,
+          353
+        ],
+        [
+          775,
+          353,
+          1147,
+          358
+        ],
+        [
+          775,
+          358,
+          1148,
+          365
+        ],
+        [
+          775,
+          365,
+          1149,
+          368
+        ],
+        [
+          775,
+          368,
+          1150,
+          371
+        ],
+        [
+          775,
+          371,
+          1151,
+          374
+        ],
+        [
+          775,
+          374,
+          1152,
+          512
+        ]
+      ],
+      "anchor": [
+        931,
+        482
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          348
+        ],
+        [
+          1151,
+          348,
+          1536,
+          350
+        ],
+        [
+          1150,
+          350,
+          1536,
+          351
+        ],
+        [
+          1149,
+          351,
+          1536,
+          352
+        ],
+        [
+          1148,
+          352,
+          1536,
+          353
+        ],
+        [
+          1147,
+          353,
+          1536,
+          358
+        ],
+        [
+          1148,
+          358,
+          1536,
+          365
+        ],
+        [
+          1149,
+          365,
+          1536,
+          368
+        ],
+        [
+          1150,
+          368,
+          1536,
+          371
+        ],
+        [
+          1151,
+          371,
+          1536,
+          374
+        ],
+        [
+          1152,
+          374,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1299,
+        482
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          416,
+          1024
+        ]
+      ],
+      "anchor": [
+        203,
+        981
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          416,
+          512,
+          780,
+          1024
+        ]
+      ],
+      "anchor": [
+        570,
+        982
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_6",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          780,
+          512,
+          1148,
+          1024
+        ]
+      ],
+      "anchor": [
+        941,
+        982
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_7",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1148,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1301,
+        982
+      ],
+      "scale": 0.44
     }
   ],
   "pose_clips": {

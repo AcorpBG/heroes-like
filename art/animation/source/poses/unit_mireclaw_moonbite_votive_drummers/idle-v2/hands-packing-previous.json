@@ -1,0 +1,387 @@
+{
+  "unit_id": "unit_mireclaw_moonbite_votive_drummers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          32,
+          4,
+          247,
+          334
+        ]
+      ],
+      "anchor": [
+        155,
+        329
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          337,
+          4,
+          541,
+          335
+        ]
+      ],
+      "anchor": [
+        448,
+        329
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "walk_near_contact",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          619,
+          4,
+          879,
+          335
+        ]
+      ],
+      "anchor": [
+        753,
+        329
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "walk_far_contact",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+      "rects": [
+        [
+          929,
+          4,
+          1202,
+          335
+        ]
+      ],
+      "anchor": [
+        1082,
+        326
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          11,
+          337,
+          277,
+          660
+        ]
+      ],
+      "anchor": [
+        149,
+        650
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          334,
+          333,
+          605,
+          652
+        ]
+      ],
+      "anchor": [
+        467,
+        643
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          620,
+          341,
+          953,
+          650
+        ]
+      ],
+      "anchor": [
+        759,
+        643
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          965,
+          382,
+          1226,
+          650
+        ]
+      ],
+      "anchor": [
+        1103,
+        641
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          11,
+          663,
+          299,
+          975
+        ]
+      ],
+      "anchor": [
+        148,
+        962
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "cast_windup",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          361,
+          659,
+          599,
+          979
+        ]
+      ],
+      "anchor": [
+        475,
+        969
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "cast_contact",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+      "rects": [
+        [
+          640,
+          662,
+          890,
+          979
+        ]
+      ],
+      "anchor": [
+        763,
+        969
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+      "rects": [
+        [
+          953,
+          650,
+          1208,
+          978
+        ]
+      ],
+      "anchor": [
+        1092,
+        970
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "kneel",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          14,
+          996,
+          271,
+          1261
+        ]
+      ],
+      "anchor": [
+        151,
+        1230
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "side_fall",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          304,
+          1023,
+          605,
+          1272
+        ]
+      ],
+      "anchor": [
+        456,
+        1239
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "prone_settle",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-facing-right-green.png",
+      "rects": [
+        [
+          610,
+          1091,
+          910,
+          1189
+        ],
+        [
+          610,
+          1189,
+          934,
+          1271
+        ]
+      ],
+      "anchor": [
+        771,
+        1250
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_mireclaw_moonbite_votive_drummers/continuity-alpha/poses-state-corrections-green.png",
+      "rects": [
+        [
+          910,
+          1092,
+          1226,
+          1189
+        ],
+        [
+          934,
+          1189,
+          1226,
+          1271
+        ]
+      ],
+      "anchor": [
+        1072,
+        1250
+      ],
+      "scale": 0.64
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        11,
+        3,
+        4
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        5,
+        6,
+        5,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        7
+      ],
+      "loop": true,
+      "frame_msec": 500,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        8,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "cast": {
+      "frames": 4,
+      "indices": [
+        9,
+        10,
+        9,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        15
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "cast"
+  }
+}

@@ -124,5 +124,18 @@
     "frames": 14,
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/parallax-continuity-20260915/",
     "validation": "Actual source/packed composites and offline art desk visually inspected as production review, not in-game motion acceptance. No automated tests/imports/exports; consolidated all-roster/repository/Linux/Windows pass deferred."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_sunvault_splitprism_parallax_fencers.png",
+    "runtime_sha256": "d5c0d2444d78f9df0a5c091beb250d9b31b553813958c85c9abaab4b2f7a109b"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "6cbebcc5e96777324f503a50ef0c91842f83d3f4ad50df6748584e5b5ad8b91c",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

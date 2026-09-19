@@ -1,7 +1,7 @@
 # Expanded creature idle loops
 
 Full-roster production is **in progress**, covering both battle and overworld.
-104 of 160 units have reviewed eight-pose idles; 56 still retain two-pose loops.
+119 of 160 units have reviewed eight-pose idles; 41 still retain two-pose loops.
 The earlier six-creature delivery did not complete the requested roster.
 
 ## Motion direction
@@ -12,7 +12,7 @@ stay quiet. Extra frames of head movement alone do not meet this requirement.
 Preserve limb ownership, continuous chains, rigid equipment and identity.
 No attack, firing or walking motion belongs in the idle loop.
 
-99 armed units now use this direction: River Guard, Ember Archer,
+114 armed units now use this direction: River Guard, Ember Archer,
 Citadel Pikeward, Blackbranch Cutthroat, Mire Slinger, Bog Brute, Shard Guard,
 Prism Harrier, Mirror Skirmisher, Roadwardens; Embercourt Fordhook Cadets,
 Lantern Sappers, Bargebow Crews, Ash-Oath Bailiffs, Beacon Lectors and Charter
@@ -39,6 +39,10 @@ The next 18 reviewed loops cover Peatflare Jarriers through Seedshield Wardens,
 including Canopy Rammers, Pressure Lancers and the three additional casters.
 Milestone Bucklers uses a corrected source preserving one spearhead; Cartbow
 Tenders uses stepped boundaries retaining the complete bow without fragments.
+
+The additional 15 armed faction variants through Tideglass Oracles also use
+reviewed hand articulation, including drum-beater movement, shield adjustments
+and a bowl lift that preserves the oracle's staff and bowl ownership.
 
 The other five expanded creatures retain their previously reviewed loops:
 Fenhound Runners, Sunscale Lanternmoths, Fenmirror Gallowshells,
@@ -73,8 +77,8 @@ uses the new art on existing maps and saved battles; no map regeneration.
 
 ## Focused review
 
-All 792 new arm-motion drawings were inspected at small and larger sizes.
-18 focused Windows playback cohorts covered all 99 changed units on the real
+All 912 new arm-motion drawings were inspected at small and larger sizes.
+21 focused Windows playback cohorts covered all 114 changed units on the real
 1280x720 battle board in both facings and the overworld shader at 74px extent.
 They passed 344-444 checks each: eight rendered frames, independent
 timing, reduced motion, fog, cached drawing and unchanged saved simulation.

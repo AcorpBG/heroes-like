@@ -1,0 +1,429 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          25,
+          0,
+          282,
+          332
+        ]
+      ],
+      "anchor": [
+        154,
+        319
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          319,
+          0,
+          610,
+          331
+        ]
+      ],
+      "anchor": [
+        471,
+        319
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "flight_up",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          620,
+          0,
+          939,
+          328
+        ]
+      ],
+      "anchor": [
+        795,
+        319
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "flight_down",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/flight-downstroke-matched.png",
+      "rects": [
+        [
+          75,
+          195,
+          1240,
+          1141
+        ]
+      ],
+      "anchor": [
+        780,
+        1080
+      ],
+      "scale": 0.225
+    },
+    {
+      "name": "flight_passing",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          0,
+          332,
+          311,
+          628
+        ]
+      ],
+      "anchor": [
+        159,
+        620
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          312,
+          332,
+          614,
+          627
+        ]
+      ],
+      "anchor": [
+        464,
+        614
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          615,
+          332,
+          951,
+          628
+        ]
+      ],
+      "anchor": [
+        780,
+        614
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          963,
+          329,
+          1254,
+          632
+        ]
+      ],
+      "anchor": [
+        1108,
+        612
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          10,
+          635,
+          313,
+          942
+        ]
+      ],
+      "anchor": [
+        168,
+        930
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_aim",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          320,
+          632,
+          610,
+          880
+        ],
+        [
+          340,
+          880,
+          610,
+          944
+        ]
+      ],
+      "anchor": [
+        470,
+        927
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_release",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/firing-no-projectile.png",
+      "rects": [
+        [
+          0,
+          0,
+          1200,
+          1311
+        ]
+      ],
+      "anchor": [
+        670,
+        1276
+      ],
+      "scale": 0.158
+    },
+    {
+      "name": "reload_pouch",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/reload-pouch-draft.png",
+      "rects": [
+        [
+          0,
+          0,
+          1176,
+          1338
+        ]
+      ],
+      "anchor": [
+        641,
+        1239
+      ],
+      "scale": 0.168
+    },
+    {
+      "name": "reload_seating",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/reload-seating.png",
+      "rects": [
+        [
+          0,
+          0,
+          1176,
+          1337
+        ]
+      ],
+      "anchor": [
+        641,
+        1239
+      ],
+      "scale": 0.168
+    },
+    {
+      "name": "kneel",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          0,
+          955,
+          309,
+          1244
+        ]
+      ],
+      "anchor": [
+        161,
+        1222
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "side_fall",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          310,
+          971,
+          629,
+          1138
+        ],
+        [
+          310,
+          1138,
+          607,
+          1249
+        ]
+      ],
+      "anchor": [
+        474,
+        1222
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "dead_0",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          634,
+          1039,
+          948,
+          1146
+        ],
+        [
+          607,
+          1146,
+          948,
+          1240
+        ]
+      ],
+      "anchor": [
+        783,
+        1222
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "dead_settled",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/poses.png",
+      "rects": [
+        [
+          943,
+          1060,
+          1254,
+          1249
+        ]
+      ],
+      "anchor": [
+        1101,
+        1222
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "guard_breath",
+      "source": "art/animation/source/poses/unit_thornwake_bramblekite_needlers/continuity-alpha/guard-breath.png",
+      "rects": [
+        [
+          0,
+          0,
+          1229,
+          1280
+        ]
+      ],
+      "anchor": [
+        611,
+        1174
+      ],
+      "scale": 0.173
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        4,
+        3,
+        4
+      ],
+      "loop": true,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        5,
+        6,
+        5,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 5,
+      "indices": [
+        9,
+        10,
+        11,
+        12,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        17
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        8,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        13,
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  }
+}

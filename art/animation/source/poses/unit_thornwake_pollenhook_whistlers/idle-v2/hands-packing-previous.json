@@ -1,0 +1,412 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          312,
+          327
+        ]
+      ],
+      "anchor": [
+        149,
+        324
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "idle_breath",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          314,
+          0,
+          624,
+          328
+        ]
+      ],
+      "anchor": [
+        461,
+        324
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "near_contact",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/near-contact-unfolded.png",
+      "rects": [
+        [
+          0,
+          0,
+          1158,
+          1358
+        ]
+      ],
+      "anchor": [
+        557,
+        1252
+      ],
+      "scale": 0.168
+    },
+    {
+      "name": "far_passing",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1158,
+          1358
+        ]
+      ],
+      "anchor": [
+        544,
+        1305
+      ],
+      "scale": 0.168
+    },
+    {
+      "name": "far_contact",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-2.png",
+      "rects": [
+        [
+          0,
+          0,
+          1158,
+          1358
+        ]
+      ],
+      "anchor": [
+        544,
+        1276
+      ],
+      "scale": 0.168
+    },
+    {
+      "name": "near_passing",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/walk-3.png",
+      "rects": [
+        [
+          0,
+          0,
+          1158,
+          1358
+        ]
+      ],
+      "anchor": [
+        551,
+        1270
+      ],
+      "scale": 0.168
+    },
+    {
+      "name": "horn_shove_windup",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          314,
+          330,
+          622,
+          643
+        ]
+      ],
+      "anchor": [
+        467,
+        632
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "horn_shove_contact",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          625,
+          330,
+          976,
+          643
+        ]
+      ],
+      "anchor": [
+        781,
+        633
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          980,
+          332,
+          1254,
+          643
+        ]
+      ],
+      "anchor": [
+        1103,
+        632
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "guard_braced",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/continuity-alpha/guard-braced.png",
+      "rects": [
+        [
+          0,
+          0,
+          1203,
+          1308
+        ]
+      ],
+      "anchor": [
+        587,
+        1236
+      ],
+      "scale": 0.14
+    },
+    {
+      "name": "horn_aim",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          314,
+          646,
+          622,
+          969
+        ]
+      ],
+      "anchor": [
+        463,
+        959
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "pollen_blow",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          625,
+          646,
+          986,
+          969
+        ]
+      ],
+      "anchor": [
+        777,
+        959
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "horn_lower",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          992,
+          645,
+          1254,
+          969
+        ]
+      ],
+      "anchor": [
+        1104,
+        959
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          0,
+          646,
+          314,
+          969
+        ]
+      ],
+      "anchor": [
+        152,
+        953
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          0,
+          977,
+          313,
+          1226
+        ]
+      ],
+      "anchor": [
+        151,
+        1208
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          315,
+          977,
+          626,
+          1226
+        ]
+      ],
+      "anchor": [
+        466,
+        1208
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "death_side",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          632,
+          978,
+          935,
+          1226
+        ]
+      ],
+      "anchor": [
+        778,
+        1208
+      ],
+      "scale": 0.66
+    },
+    {
+      "name": "corpse",
+      "source": "art/animation/source/poses/unit_thornwake_pollenhook_whistlers/poses.png",
+      "rects": [
+        [
+          944,
+          978,
+          1254,
+          1226
+        ]
+      ],
+      "anchor": [
+        1089,
+        1208
+      ],
+      "scale": 0.66
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        13,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 130,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 5,
+      "indices": [
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        17
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  }
+}

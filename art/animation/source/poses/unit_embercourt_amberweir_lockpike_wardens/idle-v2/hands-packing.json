@@ -1,0 +1,148 @@
+{
+  "unit_id": "unit_embercourt_amberweir_lockpike_wardens",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 22,
+  "status": "accepted_idle_articulation_20260919",
+  "frames": [
+    {
+      "name": "idle_hands_0",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          504
+        ]
+      ],
+      "anchor": [
+        221,
+        489
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_1",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          384,
+          0,
+          768,
+          504
+        ]
+      ],
+      "anchor": [
+        586,
+        489
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_2",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          768,
+          0,
+          1152,
+          504
+        ]
+      ],
+      "anchor": [
+        958,
+        489
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          504
+        ]
+      ],
+      "anchor": [
+        1330,
+        489
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          504,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        232,
+        993
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          384,
+          504,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        593,
+        993
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_6",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          768,
+          504,
+          1152,
+          1024
+        ]
+      ],
+      "anchor": [
+        953,
+        993
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_7",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          504,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1315,
+        992
+      ],
+      "scale": 0.44
+    }
+  ]
+}

@@ -91,5 +91,18 @@
       ],
       "removed_bytes": 9107203
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_veilmourn_gloamkeel_bulwarks.png",
+    "runtime_sha256": "31b1b6daa612132fb6fc3c28adccbf11e558f7c5038e2e3b1abc7d0e3b20440b"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "204a60f78417d0dbabe302410e0100997eff42b6fed90a33e39bb4887891c084",
+    "preserved_frames": 15,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

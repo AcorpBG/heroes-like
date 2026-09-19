@@ -113,5 +113,18 @@
       "preserved": "Original/new/rejected masters, exact prompts/reference hashes, all unique before/final evidence, cutout recipes/proofs, source/runtime atlases, caches and unrelated files.",
       "removed_bytes": 4261676
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_thornwake_woundroot_hearthseed_slingers.png",
+    "runtime_sha256": "6bc9d18bc9e26c1537a8c603f5109ca45a391c913b078d52640bed5ca08fd312"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "b67c73d272c310b04ce1ff619b5297a33004ae54feab7ca84bd43ef0284aae58",
+    "preserved_frames": 18,
+    "status": "accepted_idle_articulation_20260919"
   }
 }
