@@ -137,7 +137,7 @@ def main(script=SCRIPT, node_type='Node'):
         work = Path(temporary)
         (work/'scripts/persistence').mkdir(parents=True)
         (work/'scenes/overworld').mkdir(parents=True)
-        for name in ['OverworldGroundSurface.gd','overworld_ground_surface.gdshader']:
+        for name in ['OverworldGroundSurface.gd','overworld_ground_surface.gdshader','OverworldSceneryBatch.gd','OverworldScenery.gdshader']:
             shutil.copyfile(ROOT/'scenes/overworld'/name,work/'scenes/overworld'/name)
         shutil.copyfile(ROOT/'scripts/persistence/NativeSceneryRules.gd', work/'scripts/persistence/NativeSceneryRules.gd')
         shutil.copyfile(ROOT/'scripts/persistence/NativeSceneryFormation.gd', work/'scripts/persistence/NativeSceneryFormation.gd')

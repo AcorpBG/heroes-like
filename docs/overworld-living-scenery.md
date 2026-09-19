@@ -2,6 +2,44 @@
 
 Owner-directed Phase 6 slice `animation-overworld-living-scenery-20260912`, derived from `project.md` and `PLAN.md`.
 
+## Current formation integration (2026-09-19)
+
+Slice `art-scenery-motion-20260919` reconnects the expanded scenery library.
+The original fourteen mappings remain; ordered production-family rules now
+cover current component/cluster art, plains groves, large vegetation and
+mountain formations (2,098 registered assets in total). Unmatched art remains
+static. Different profiles provide leafy canopy movement, softer conifer and
+dry-branch movement, reed movement and slight fungal/undergrowth movement.
+Roots remain fixed. Rock silhouettes remain fixed too: ordinary stone receives
+faint passing shade, while existing warm lava fissures brighten slowly.
+
+Multi-tile formations use the same full-image UV coordinates, anchor phase and
+shared shader material across every visible cell. Canopy sampling has a motion
+margin, clipped back to the explored cell. Commands remain in the existing
+painter order; tile fog, level filtering, overlap geometry, movement masks and
+source placements are unchanged. GPU time drives motion without rebuilding
+the map each frame. Reduced motion and high contrast disable the materials.
+No asset pixels, gameplay state, RNG or save schema change. Restart and reload
+applies the effect to existing maps; regeneration is unnecessary.
+
+The Windows hardware render check in
+`tests/overworld_formation_motion_regression.py` passes 594 checks. It exercises
+the live formation draw methods, stationary vegetation bases, changed frames,
+fog coverage, shared materials, no idle rebuilds, disabled-motion stability and
+unknown-art fallback. Six representative paintings compare a continuous draw
+with nine tile slices, with at most 0.012 per-channel difference; rock coverage
+remains fixed. The current palette/profile validator and Windows Godot import
+also pass. No full suite, gameplay, Linux or package run was performed for this
+owner-directed correction. Temporary frames/logs/profiles are removed after
+review; the focused test remains rebuildable.
+
+The installed `D:\Games\HoMM 3 Complete\h3maped.exe` was opened for the owner's
+optional visual reference. Computer-use capture failed twice with
+`SetIsBorderRequired: No such interface supported (0x80004002)`; no random map
+was generated or visually inspected in that editor during this slice. Earlier
+owner-provided reference screenshots informed the rigid-landform/soft-foliage
+direction. No source art was copied and no native RMG rules were changed.
+
 ## Requirements and scope
 
 Owner follow-up 2026-09-12: previous clips looked static. Reopened for clearly perceptible normal-zoom motion, not merely unequal frame bytes. Increase canopy/smoke travel and fire/water contrast while preserving rigid grounding and buildings; expand sampling margins to cover displacement. Compare actual normal-speed gameplay and gallery captures, keep accessibility controls, and rerun source/package and repository checks. No new art or simulation changes.

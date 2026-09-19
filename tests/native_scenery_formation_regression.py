@@ -37,6 +37,7 @@ func _object_texture_for_asset(id: String):
     return textures[id]
 func _draw_mapped_sprite_grounding_anchor(_a,_b,_c,_d,_e): pass
 func _draw_living_scenery(_id,texture,rect,tint,_tile): draw_texture_rect(texture,rect,false,tint)
+func _draw_living_scenery_region(_id,texture,payload,tint,_tile,_phase_tile,_cell_rect=Rect2()): draw_texture_rect_region(texture,payload.rect,payload.source,tint)
 func _canvas_draw_texture_rect_region(texture,rect,source,tint): draw_texture_rect_region(texture,rect,source,tint)
 func _ready(): call_deferred("run")
 func _draw():

@@ -22302,6 +22302,15 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "art-scenery-motion-20260919",
+      "title": "Living multi-tile scenery and restrained rock effects",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "notes": "Restored current foliage/formation motion and restrained stone shade/lava effects; shared per-formation materials keep tile slices continuous. 594 focused render checks, current palette coverage validator and Windows import pass. No native/simulation changes or full suite. H3 editor opened but optional capture failed with SetIsBorderRequired 0x80004002; no reference generation claimed. See docs/overworld-living-scenery.md."
+    },
+    {
       "id": "art-deadlands-grass-fringes-20260919",
       "title": "Connected dirt and rough scenery; fuller plains forest edges",
       "status": "completed",

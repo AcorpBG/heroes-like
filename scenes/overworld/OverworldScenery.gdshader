@@ -7,6 +7,8 @@ uniform float strength = 0.0;
 uniform float upper = 0.16;
 uniform float anchor = 0.62;
 uniform float phase = 0.0;
+uniform float speed = 1.0;
+uniform float ripple = 0.0;
 uniform vec4 source_region = vec4(0.0, 0.0, 1.0, 1.0);
 uniform vec4 activity_region = vec4(0.0, 0.0, 1.0, 1.0);
 uniform vec2 padding_uv = vec2(0.0);
@@ -28,7 +30,7 @@ void fragment() {
 	if (motion_enabled) {
 		if (mode == 1 || mode == 2) {
 			float canopy = 1.0 - smoothstep(upper, anchor, original.y);
-			float breeze = sin(t * 1.45) * 0.72 + sin(t * 2.31 + original.y * 4.0) * 0.28;
+			float breeze = sin(t * 1.45 * speed + original.x * ripple) * 0.72 + sin(t * 2.31 * speed + original.y * 4.0 + original.x * ripple * 0.6) * 0.28;
 			uv.x -= strength * canopy * breeze / source_region.z;
 		}
 		vec2 area_uv = (original - activity_region.xy) / activity_region.zw;
@@ -42,6 +44,13 @@ void fragment() {
 			float water = smoothstep(0.08, 0.25, min(base.b, base.g) - base.r) * area;
 			uv.y += water * strength * sin(t * 3.8 - original.y * 50.0) / source_region.w;
 			brightness += water * 0.38 * sin(t * 3.8 - original.y * 50.0);
+		} else if (mode == 4) {
+			// Passing shade changes stone lighting slightly, never its silhouette.
+			brightness -= strength * (0.5 + 0.5 * sin(t * 0.28 + original.x * 4.0 + original.y * 2.0));
+		} else if (mode == 5) {
+			// Existing warm lava fissures breathe; unpainted rock stays rigid.
+			float hot = smoothstep(0.12, 0.38, base.r - max(base.g, base.b));
+			brightness += strength * 6.0 * hot * (0.55 + 0.45 * sin(t * 1.8 + original.x * 7.0));
 		}
 	}
 	vec4 pixel = texture(TEXTURE, texture_region.xy + clamp(uv, half_pixel, vec2(1.0) - half_pixel) * texture_region.zw);

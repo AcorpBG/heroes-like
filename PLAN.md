@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Living multi-tile scenery
+
+`art-scenery-motion-20260919` — completed. Current foliage and multi-tile formations animate with shared slice timing; stone has faint shade and lava fissure effects. Focused pixel/fog/grounding/coverage checks and Windows import pass. Simulation unchanged; no full suite. Optional H3 editor reference capture failed; see `docs/overworld-living-scenery.md` for the exact limitation.
+
 ### Dirt/deadland formations and plains forest edges
 
 `art-deadlands-grass-fringes-20260919` — completed. Dirt and rough now use connected rock and vegetation patches with five new originals; plains scrub becomes groves and woodland edges have fuller crowns. Saved-map crops reviewed; focused overlap/fog/mask/content checks and Windows import pass. Native masks and paths unchanged. See `docs/biome-source-component-expansion.md`.

@@ -1,17 +1,145 @@
 {
-  "version": 1,
+  "version": 2,
   "art_manifest": "res://art/overworld/manifest.json",
   "coordinate_space": "normalized_original_asset_before_painted_bounds_crop",
-  "policy": "inspected_original_rasters_only_unlisted_assets_static",
+  "policy": "original_raster_profiles_and_production_family_rules_unmatched_assets_static",
   "profiles": {
-    "canopy": {"mode": 1, "strength": 0.032, "upper": 0.16, "anchor": 0.62},
-    "snow_canopy": {"mode": 1, "strength": 0.024, "upper": 0.14, "anchor": 0.53},
-    "kiln": {"mode": 2, "strength": 0.016, "upper": 0.23, "anchor": 0.32, "region": [0.30, 0.32, 0.41, 0.40]},
-    "charcoal": {"mode": 2, "strength": 0.012, "upper": 0.24, "anchor": 0.32, "region": [0.42, 0.51, 0.10, 0.09]},
-    "claimed_kiln": {"mode": 2, "strength": 0.010, "upper": 0.01, "anchor": 0.08, "region": [0.40, 0.60, 0.22, 0.24]},
-    "claimed_charcoal": {"mode": 2, "strength": 0.010, "upper": 0.02, "anchor": 0.09, "region": [0.42, 0.57, 0.20, 0.26]},
-    "mill_stream": {"mode": 3, "strength": 0.012, "region": [0.16, 0.42, 0.34, 0.28]},
-    "mill_cascade": {"mode": 3, "strength": 0.012, "region": [0.80, 0.46, 0.15, 0.23]}
+    "canopy": {
+      "mode": 1,
+      "strength": 0.032,
+      "upper": 0.16,
+      "anchor": 0.62
+    },
+    "snow_canopy": {
+      "mode": 1,
+      "strength": 0.024,
+      "upper": 0.14,
+      "anchor": 0.53
+    },
+    "kiln": {
+      "mode": 2,
+      "strength": 0.016,
+      "upper": 0.23,
+      "anchor": 0.32,
+      "region": [
+        0.3,
+        0.32,
+        0.41,
+        0.4
+      ]
+    },
+    "charcoal": {
+      "mode": 2,
+      "strength": 0.012,
+      "upper": 0.24,
+      "anchor": 0.32,
+      "region": [
+        0.42,
+        0.51,
+        0.1,
+        0.09
+      ]
+    },
+    "claimed_kiln": {
+      "mode": 2,
+      "strength": 0.01,
+      "upper": 0.01,
+      "anchor": 0.08,
+      "region": [
+        0.4,
+        0.6,
+        0.22,
+        0.24
+      ]
+    },
+    "claimed_charcoal": {
+      "mode": 2,
+      "strength": 0.01,
+      "upper": 0.02,
+      "anchor": 0.09,
+      "region": [
+        0.42,
+        0.57,
+        0.2,
+        0.26
+      ]
+    },
+    "mill_stream": {
+      "mode": 3,
+      "strength": 0.012,
+      "region": [
+        0.16,
+        0.42,
+        0.34,
+        0.28
+      ]
+    },
+    "mill_cascade": {
+      "mode": 3,
+      "strength": 0.012,
+      "region": [
+        0.8,
+        0.46,
+        0.15,
+        0.23
+      ]
+    },
+    "woodland": {
+      "mode": 1,
+      "strength": 0.022,
+      "upper": 0.08,
+      "anchor": 0.78,
+      "speed": 0.8,
+      "ripple": 9.0
+    },
+    "conifer": {
+      "mode": 1,
+      "strength": 0.016,
+      "upper": 0.1,
+      "anchor": 0.72,
+      "speed": 0.75,
+      "ripple": 7.0
+    },
+    "deadwood": {
+      "mode": 1,
+      "strength": 0.006,
+      "upper": 0.08,
+      "anchor": 0.62,
+      "speed": 0.65,
+      "ripple": 6.0
+    },
+    "reeds": {
+      "mode": 1,
+      "strength": 0.025,
+      "upper": 0.1,
+      "anchor": 0.78,
+      "speed": 1.15,
+      "ripple": 10.0
+    },
+    "undergrowth": {
+      "mode": 1,
+      "strength": 0.017,
+      "upper": 0.08,
+      "anchor": 0.76,
+      "speed": 0.9,
+      "ripple": 8.0
+    },
+    "fungal": {
+      "mode": 1,
+      "strength": 0.007,
+      "upper": 0.12,
+      "anchor": 0.7,
+      "speed": 0.55,
+      "ripple": 5.0
+    },
+    "stone_shade": {
+      "mode": 4,
+      "strength": 0.035
+    },
+    "lava_fissures": {
+      "mode": 5,
+      "strength": 0.035
+    }
   },
   "assets": {
     "cohesive_temperate_00": "canopy",
@@ -28,5 +156,89 @@
     "mapobj_charcoal_burners": "charcoal",
     "resource_site_neutral_cinder_kiln_claimed": "claimed_kiln",
     "resource_site_neutral_charcoal_burners_claimed": "claimed_charcoal"
-  }
+  },
+  "asset_rules": [
+    {
+      "prefix": "plains_grove_v2_",
+      "profile": "woodland"
+    },
+    {
+      "prefix": "native_vegetation_woods_",
+      "profile": "woodland"
+    },
+    {
+      "prefix": "native_vegetation_conifers_",
+      "profile": "conifer"
+    },
+    {
+      "prefix": "native_vegetation_wetland_",
+      "profile": "reeds"
+    },
+    {
+      "prefix": "native_vegetation_deadwood_",
+      "profile": "deadwood"
+    },
+    {
+      "prefix": "native_vegetation_fungi_",
+      "profile": "fungal"
+    },
+    {
+      "prefix": "native_mountain_ash_lava_",
+      "profile": "lava_fissures"
+    },
+    {
+      "prefix": "native_mountain_",
+      "profile": "stone_shade"
+    },
+    {
+      "prefix": "biome_component_v2_",
+      "profile": "lava_fissures",
+      "contains": "_ash_lava_wastes_rock_"
+    },
+    {
+      "prefix": "biome_component_v2_",
+      "profile": "stone_shade",
+      "contains": "_rock_"
+    },
+    {
+      "prefix": "biome_component_v2_",
+      "profile": "woodland",
+      "contains": "_woods_"
+    },
+    {
+      "prefix": "biome_component_v2_",
+      "profile": "deadwood",
+      "contains": "_deadwood_"
+    },
+    {
+      "prefix": "biome_component_v2_",
+      "profile": "undergrowth",
+      "contains": "_undergrowth_"
+    },
+    {
+      "prefix": "biome_cluster_v2_",
+      "profile": "lava_fissures",
+      "contains": "_ash_lava_wastes_rock_"
+    },
+    {
+      "prefix": "biome_cluster_v2_",
+      "profile": "stone_shade",
+      "contains": "_rock_"
+    },
+    {
+      "prefix": "biome_cluster_v2_",
+      "profile": "woodland",
+      "contains": "_woods_"
+    },
+    {
+      "prefix": "biome_cluster_v2_",
+      "profile": "deadwood",
+      "contains": "_deadwood_"
+    },
+    {
+      "prefix": "biome_cluster_v2_",
+      "profile": "undergrowth",
+      "contains": "_undergrowth_"
+    }
+  ]
 }

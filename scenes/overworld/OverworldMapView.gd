@@ -1671,13 +1671,31 @@ func _scenery_motion_enabled() -> bool:
 	return not SettingsService.reduced_motion_enabled() and not SettingsService.high_contrast_ui_enabled()
 
 func _draw_living_scenery(asset_id: String, texture: Texture2D, rect: Rect2, tint: Color, tile: Vector2i) -> void:
-	var profile_id := String(_scenery_manifest.get("assets", {}).get(asset_id, ""))
-	if _draw_canvas_item != _state_layer or not _scenery_batches.recording or profile_id.is_empty():
+	var profile: Dictionary = SceneryBatch.profile_for_asset(_scenery_manifest, asset_id)
+	if _draw_canvas_item != _state_layer or not _scenery_batches.recording or profile.is_empty():
 		_canvas_draw_texture_rect(texture, rect, false, tint)
 		return
-	var profile: Dictionary = _scenery_manifest.get("profiles", {}).get(profile_id, {})
 	var region: Dictionary = _object_texture_visible_regions.get(asset_id, {})
 	_scenery_batches.paint(texture, rect, tint, profile, region.get("normalized_source_rect", Rect2(0, 0, 1, 1)), asset_id, tile, _level, _scenery_motion_enabled())
+
+func _draw_living_scenery_region(asset_id: String, texture: Texture2D, payload: Dictionary, tint: Color, tile: Vector2i, phase_tile: Vector2i, cell_rect: Rect2 = Rect2()) -> void:
+	var profile: Dictionary = SceneryBatch.profile_for_asset(_scenery_manifest, asset_id)
+	if _draw_canvas_item != _state_layer or not _scenery_batches.recording or profile.is_empty():
+		_canvas_draw_texture_rect_region(texture, payload.rect, payload.source, tint)
+		return
+	var region: Dictionary = _object_texture_visible_regions.get(asset_id, {})
+	var original_region: Rect2 = region.get("normalized_source_rect", Rect2(0, 0, 1, 1))
+	var padding := Vector2.ZERO
+	if int(profile.get("mode", 0)) in [1, 2] and cell_rect.has_area() and payload.has("painted_rect"):
+		# Give outer canopy tips room too, then clip the expanded painting back
+		# to the explored tile. All slices retain the same full-art UV mapping.
+		var painted: Rect2 = payload.painted_rect
+		var travel := float(profile.strength) * maxf(painted.size.x / original_region.size.x, painted.size.y / original_region.size.y)
+		var margin := ceilf(travel) + 2.0
+		padding = Vector2.ONE * margin / painted.size
+		payload = preload("res://scripts/persistence/NativeSceneryFormation.gd").clip(painted.grow(margin), cell_rect, texture.get_size())
+		if payload.is_empty(): return
+	_scenery_batches.paint_region(texture, payload.rect, payload.source, tint, profile, original_region, asset_id, tile, phase_tile, _level, _scenery_motion_enabled(), padding)
 
 func _canvas_draw_rect(rect: Rect2, color: Color, filled: bool = true, width: float = -1.0) -> void:
 	if _record_scenery_command(&"draw_rect", [rect, _actor_color(color), filled, width]):
@@ -4492,7 +4510,7 @@ func _draw_scaled_scenery_body(object: Dictionary, rect: Rect2, remembered: bool
 		tint *= _native_scenery_modulate(object, tile, asset_id)
 		if not own.is_empty():
 			var part := preload("res://scripts/persistence/NativeSceneryFormation.gd").clip(painted, rect, raster.get_size())
-			if not part.is_empty(): _canvas_draw_texture_rect_region(raster, part.rect, part.source, tint)
+			if not part.is_empty(): _draw_living_scenery_region(asset_id, raster, part, tint, tile, tile, rect)
 		else:
 			_draw_living_scenery(asset_id, raster, painted, tint, tile)
 	_draw_native_scenery_formation(object, rect, remembered, tile)
@@ -4517,7 +4535,7 @@ func _draw_native_formation_layer(object: Dictionary, formation: Dictionary, cel
 	if payload.is_empty(): return
 	var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
 	tint *= _native_scenery_modulate(object, formation.anchor, asset_id)
-	_canvas_draw_texture_rect_region(painted_texture, payload.rect, payload.source, tint)
+	_draw_living_scenery_region(asset_id, painted_texture, payload, tint, tile, formation.anchor, cell_rect)
 
 func _draw_native_rock_contacts(object: Dictionary, cell_rect: Rect2, remembered: bool, tile: Vector2i) -> void:
 	for contact in object.get("generated_body_rock_contacts", []):
