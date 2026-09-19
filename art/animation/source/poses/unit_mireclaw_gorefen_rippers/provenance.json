@@ -161,5 +161,18 @@
     "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/gorefen-continuity-20260915/art-desk-registered.html",
     "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/gorefen-continuity-20260915/art-desk-registered.png",
     "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/gorefen-continuity-20260915/packed-final/poses-candidate-atlas-green.png"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_mireclaw_gorefen_rippers.png",
+    "runtime_sha256": "76e5cf54776b5cfcfed5f99ada14d8e856d511cb4290d61689f9a8416faf0b60"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "6a542e7de5cb2382c00bccf2643045fcc3a4bb8b45635b20b4403dbec704bf93",
+    "preserved_frames": 11,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

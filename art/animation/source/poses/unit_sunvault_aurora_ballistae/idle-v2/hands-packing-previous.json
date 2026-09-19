@@ -1,0 +1,417 @@
+{
+  "unit_id": "unit_sunvault_aurora_ballistae",
+  "status": "runtime_candidate_pending_consolidated_validation",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/ready-defense.png",
+      "rects": [
+        [
+          0,
+          0,
+          624,
+          643
+        ]
+      ],
+      "anchor": [
+        342,
+        630
+      ],
+      "scale": 0.39
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/ready-defense.png",
+      "rects": [
+        [
+          624,
+          0,
+          1254,
+          643
+        ]
+      ],
+      "anchor": [
+        944,
+        630
+      ],
+      "scale": 0.39
+    },
+    {
+      "name": "creep_near_front_lift",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/creep-four.png",
+      "rects": [
+        [
+          0,
+          0,
+          618,
+          618
+        ]
+      ],
+      "anchor": [
+        312,
+        570
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "creep_near_rear_lift",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/creep-near-rear-four-feet.png",
+      "rects": [
+        [
+          637,
+          0,
+          1254,
+          615
+        ]
+      ],
+      "anchor": [
+        948,
+        570
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "creep_far_front_lift",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/creep-four.png",
+      "rects": [
+        [
+          0,
+          636,
+          618,
+          1254
+        ]
+      ],
+      "anchor": [
+        312,
+        1195
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "creep_far_rear_lift",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/creep-four.png",
+      "rects": [
+        [
+          636,
+          636,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        948,
+        1195
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "creep_all_planted",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/walk-contact-reference.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        640,
+        1148
+      ],
+      "scale": 0.21
+    },
+    {
+      "name": "ranged_windup",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/ranged-shoulder-pair.png",
+      "rects": [
+        [
+          0,
+          0,
+          930,
+          550
+        ],
+        [
+          0,
+          550,
+          885,
+          887
+        ]
+      ],
+      "anchor": [
+        480,
+        839
+      ],
+      "scale": 0.29
+    },
+    {
+      "name": "ranged_recoil",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/ranged-shoulder-pair.png",
+      "rects": [
+        [
+          930,
+          0,
+          1774,
+          550
+        ],
+        [
+          885,
+          550,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1330,
+        839
+      ],
+      "scale": 0.29
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/actions-four.png",
+      "rects": [
+        [
+          0,
+          625,
+          602,
+          1254
+        ]
+      ],
+      "anchor": [
+        320,
+        1186
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "melee_shield_bash",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/actions-four.png",
+      "rects": [
+        [
+          602,
+          625,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        955,
+        1186
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "defend_0",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/ready-defense.png",
+      "rects": [
+        [
+          0,
+          643,
+          634,
+          1254
+        ]
+      ],
+      "anchor": [
+        342,
+        1210
+      ],
+      "scale": 0.39
+    },
+    {
+      "name": "defend_1",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/ready-defense.png",
+      "rects": [
+        [
+          634,
+          643,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        944,
+        1210
+      ],
+      "scale": 0.39
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/death-hit.png",
+      "rects": [
+        [
+          0,
+          0,
+          626,
+          680
+        ]
+      ],
+      "anchor": [
+        340,
+        612
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "death_buckle",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/death-hit.png",
+      "rects": [
+        [
+          626,
+          0,
+          1254,
+          680
+        ]
+      ],
+      "anchor": [
+        945,
+        624
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/death-hit.png",
+      "rects": [
+        [
+          0,
+          680,
+          640,
+          1030
+        ],
+        [
+          0,
+          1030,
+          660,
+          1254
+        ]
+      ],
+      "anchor": [
+        350,
+        1141
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_sunvault_aurora_ballistae/continuity-alpha/death-hit.png",
+      "rects": [
+        [
+          640,
+          680,
+          1254,
+          1030
+        ],
+        [
+          660,
+          1030,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        960,
+        1145
+      ],
+      "scale": 0.4
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 8,
+      "indices": [
+        2,
+        6,
+        3,
+        6,
+        4,
+        6,
+        5,
+        6
+      ],
+      "loop": true,
+      "frame_msec": 115,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        9,
+        10,
+        9,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        7,
+        8,
+        7,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        11,
+        12
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        13,
+        11
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  }
+}

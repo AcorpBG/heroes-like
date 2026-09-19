@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_embercourt_sluicefire_lindworms",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-ec44fe62-6516-48b2-8dbf-73836e660576.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_embercourt_sluicefire_lindworms.png",
+  "reference_revision": "c315f18b0",
+  "prompt": "Use case: identity-preserve. Paint EIGHT original sequential poses for a restrained but clearly visible IDLE loop of exactly this fantasy strategy creature or mechanism. The reference strip shows ONE unit in two poses, NOT a group. Preserve its exact identity, silhouette, limb count, equipment ownership, colors, proportions and source-facing camera direction. The primary motion must come from the articulated limbs, wings, tail or mechanism specified below, NOT just bobbing the head. Keep the head and central body almost stationary. A smooth calm in-place cycle, no attack, walking, firing, extra limbs, new props or dramatic deformation.\nLEGLESS coiled serpent. Keep exactly no legs. Main movement is the free tail curling and uncoiling with a soft ripple along the lower coil; upper head barely moves. Restrained breathing at chest, closed resting mouth.\nCanvas 1536x1024 RGBA TRUE transparent background. Four columns and two rows, exactly eight sequential COMPLETE poses in reading order. Each stays fully inside its 384x512 cell with at least 24px transparent margin on all sides. Same anatomical scale and fixed root/ground baseline in all eight cells. Wide creatures fit naturally at smaller height; NEVER crop tails, wings or weapons or squeeze proportions. Rest, small adjustment, further adjustment, crest, halfway back, easing down, almost rest, rest. Detailed hand-painted original fantasy strategy sprite, crisp readable anatomy, no labels/grid/floor/background/shadow. Genuine new paintings, no rigid translated copies.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "229b46ff9f7954cae6e4eaab2fa3c492b4072bd6f5ec2bb505e2e50f07a5d2c5",
+  "reference_sha256": "4ecd51a455435972eaa71444ec51e9ccd285d188158ae72dbcad93a448d3d9cc",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; articulated limbs, wings, tails or mechanisms move according to anatomy; humanoid hand and forearm movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

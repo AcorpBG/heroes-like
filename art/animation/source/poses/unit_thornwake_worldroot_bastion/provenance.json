@@ -321,5 +321,18 @@
         }
       ]
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_thornwake_worldroot_bastion.png",
+    "runtime_sha256": "a6e156254df12902a6a95446779c89cb5539646f4e689cc7e99142e90e34d41d"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "b035a3aee198b75e7e32b574f2068086ff79d8d833979a98bf5974fdf51e5952",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

@@ -143,5 +143,18 @@
       ],
       "removed_bytes": 15882541
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_veilmourn_dreamwake_foganchor_colossi.png",
+    "runtime_sha256": "7a939571743c75e0bb652a71c40819d62b2fa682c9f58b0f7e179176cce4d638"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "893c6507a2c0dbfb52d6b9632b56233e12e91b25c89a32ca16b65199a5c8f387",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

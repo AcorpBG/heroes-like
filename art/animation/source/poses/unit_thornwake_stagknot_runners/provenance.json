@@ -222,5 +222,18 @@
     "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/stagknot-continuity-20260915/art-desk-registered.html",
     "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/stagknot-continuity-20260915/art-desk-registered.png",
     "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/stagknot-continuity-20260915/packed-guard-final/poses-candidate-atlas-green.png"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_thornwake_stagknot_runners.png",
+    "runtime_sha256": "03d9c908975e005f96edf821d489f7884b07e37c56317b79d3b170a5e38c31cb"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "21edfdfacd91b6fbabff97d2a9982acd60ed0407c0c0e7b0198e6fd55317dae4",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

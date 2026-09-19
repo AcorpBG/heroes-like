@@ -1,0 +1,269 @@
+{
+  "unit_id": "unit_neutral_quenchbell_ironbacks",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "status": "accepted_idle_articulation_20260919",
+  "frames": [
+    {
+      "name": "idle_hands_0",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          498
+        ]
+      ],
+      "anchor": [
+        174,
+        438
+      ],
+      "scale": 0.70588
+    },
+    {
+      "name": "idle_hands_1",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          384,
+          0,
+          768,
+          346
+        ],
+        [
+          384,
+          346,
+          767,
+          347
+        ],
+        [
+          384,
+          347,
+          766,
+          349
+        ],
+        [
+          384,
+          349,
+          765,
+          350
+        ],
+        [
+          384,
+          350,
+          764,
+          353
+        ],
+        [
+          384,
+          353,
+          763,
+          355
+        ],
+        [
+          384,
+          355,
+          762,
+          370
+        ],
+        [
+          384,
+          370,
+          763,
+          371
+        ],
+        [
+          384,
+          371,
+          762,
+          373
+        ],
+        [
+          384,
+          373,
+          769,
+          375
+        ],
+        [
+          384,
+          375,
+          768,
+          498
+        ]
+      ],
+      "anchor": [
+        561,
+        437
+      ],
+      "scale": 0.70588
+    },
+    {
+      "name": "idle_hands_2",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          768,
+          0,
+          1152,
+          346
+        ],
+        [
+          767,
+          346,
+          1152,
+          347
+        ],
+        [
+          766,
+          347,
+          1152,
+          349
+        ],
+        [
+          765,
+          349,
+          1152,
+          350
+        ],
+        [
+          764,
+          350,
+          1152,
+          353
+        ],
+        [
+          763,
+          353,
+          1152,
+          355
+        ],
+        [
+          762,
+          355,
+          1152,
+          370
+        ],
+        [
+          763,
+          370,
+          1152,
+          371
+        ],
+        [
+          762,
+          371,
+          1152,
+          373
+        ],
+        [
+          769,
+          373,
+          1152,
+          375
+        ],
+        [
+          768,
+          375,
+          1152,
+          498
+        ]
+      ],
+      "anchor": [
+        955,
+        439
+      ],
+      "scale": 0.70588
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          498
+        ]
+      ],
+      "anchor": [
+        1322,
+        439
+      ],
+      "scale": 0.70588
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          498,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        187,
+        914
+      ],
+      "scale": 0.70588
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          384,
+          498,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        564,
+        914
+      ],
+      "scale": 0.70588
+    },
+    {
+      "name": "idle_hands_6",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          768,
+          498,
+          1152,
+          1024
+        ]
+      ],
+      "anchor": [
+        953,
+        914
+      ],
+      "scale": 0.70588
+    },
+    {
+      "name": "idle_hands_7",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          498,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1327,
+        914
+      ],
+      "scale": 0.70588
+    }
+  ],
+  "scale_basis": "One uniform scale across the loop, matched to previous idle height with room for the highest pose; no per-frame resizing."
+}

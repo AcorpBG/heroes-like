@@ -32,9 +32,16 @@
     "Twelve original articulated poses packed and enabled as a candidate. Source battle/packed-alpha checks pass 132/7; actual 1280x720 attack and light/dark captures inspected. Continuous gait/action/brace/death acceptance remains outstanding."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_rootvault_barkhulks.png",
-    "runtime_sha256": "06a376e6909d0e4c6d0bb7e9d612bdb9fa4e515c3114884f926c3e166e3da36a",
-    "method": "Uniform 0.64 downsampling and individual original-raster pose rectangles; no painted/warped replacement poses."
+    "runtime_sha256": "a85623b73ec66484aa4d9d132ab23b21df811e5c7a4796aa129024feefd9456d"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "06a376e6909d0e4c6d0bb7e9d612bdb9fa4e515c3114884f926c3e166e3da36a",
+    "preserved_frames": 12,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

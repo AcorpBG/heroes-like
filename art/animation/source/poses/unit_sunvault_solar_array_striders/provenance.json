@@ -138,5 +138,18 @@
     "frames": 14,
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/solar-continuity-20260915/",
     "validation": "Source and packed alpha-composite/art-desk production inspection only; not connected in-game or motion acceptance. No tests/imports/exports; consolidated roster/repository/Linux/Windows pass remains deferred until production is finished."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_sunvault_solar_array_striders.png",
+    "runtime_sha256": "50bb603b040f1ad0cb655ad7e1bcd7c2f92caf14aff517c79fcb5049b1b5345e"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "92e55ff2206cec80b877eb0e68cdc07948aa34c8ee214d076c7073c842cf2a76",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

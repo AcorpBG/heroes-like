@@ -24,7 +24,7 @@ Rules:
 
 ### Expanded creature idle loops
 
-`animation-expanded-idle-loops-20260919` — in progress across the full 160-unit roster. 119 creatures have reviewed eight-pose loops; expand the remaining 41 with original painted poses shared by battle and overworld. Armed idles must show hand, elbow, wrist and equipment movement at normal game size, with quiet heads. Preserve action clips, independent phase, anchors, reduced motion and provenance. Complete only after all 160 are integrated and reviewed; focused validation, no full suite. See `docs/creature-idle-expansion.md`.
+`animation-expanded-idle-loops-20260919` — completed across all 160 creatures. Eight original painted idle poses now play in battle and overworld, with visible hand/equipment articulation for armed units and anatomy-specific wings, paws, tails or mechanisms for other creatures. Existing action pixels, independent phase, anchors and reduced motion are preserved. All 155 changed loops reviewed; 29 focused Windows playback runs and two registration checks pass. No full suite. See `docs/creature-idle-expansion.md`.
 
 ### Overworld creature idle poses
 

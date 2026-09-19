@@ -1,0 +1,22 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_sunvault_daybreak_colossus",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-80789629-0318-4a1b-81da-a8e3cb8a4dbf.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_sunvault_daybreak_colossus.png",
+  "reference_revision": "c315f18b0",
+  "additional_reference": "hands-rejected-anatomy-original.png",
+  "prompt": "The new idle sheet added an extra foot and the cannon snaps back too early. Paint a corrected complete 8-pose idle. Use original runtime reference as authority for exact leg/foot count and proportions; do not add any extra feet. Keep the same camera. Only the mounted cannon swivels smoothly upward around its original mount, then down; no invented hand emerging behind it. Frame1 original rest,2 3degrees lift,3 6degrees,4 9degrees peak,5 7degrees,6 4degrees,7 1degree,8 rest. Gold chassis and original feet remain exactly stable. Crystal panels are fixed. 4x2 layout in1536x1024transparent RGBA with full poses and30px cell padding.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "150f2a87d1d4809b2b2936c959f7c387e2d4eb19db53cf49e5351e8d54936336",
+  "reference_sha256": "aa116aa2da6fcbe3af7a52f6703252f8f2b1cdd2c549e5535bbea7b774a3174d",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; articulated limbs, wings, tails or mechanisms move according to anatomy; humanoid hand and forearm movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

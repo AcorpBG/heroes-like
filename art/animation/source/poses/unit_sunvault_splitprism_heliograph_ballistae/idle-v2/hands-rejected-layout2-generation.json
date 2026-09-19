@@ -1,0 +1,14 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-64440e94-f3c8-46c4-af48-b11f99a0dcc3.png",
+  "reference": "hands-rejected-layout-original.png",
+  "prompt": "Create the FINAL production idle sprite sheet for the exact gold/blue crystalline ballista and single blue-cloaked operator shown. Eight hand-animated poses; operator visibly raises/lowers forearm and works a control lever, torso/feet of ballista stay quiet, cape follows. Keep identity/design and original four-legged wheeled machine aiming LEFT. CRITICAL COMPOSITION: a 1536x1024 transparent RGBA canvas; 4 columns by 2 rows, each cell384x512. Each WHOLE ballista plus operator must be ONLY 280 pixels wide, centered horizontally in its cell, leaving about52pixels transparent LEFT and RIGHT of every pose. Deliberately show LARGE empty space between all eight sprites. Never touch an edge, no tip clipping or overlap! Same uniform scale, fixed machine feet baseline in each row. Frame1rest,2forearmrises,3leveradjustment,4highesthand,5handreturns,6settles,7returns,8nearrest. Clear arm movement independent of head, no firing or wheel rolling. No new equipment or figures. All8unique painted poses.",
+  "review_status": "superseded_clipped_rear_tip",
+  "originals_preserved": true,
+  "superseded_by": "hands-generation.json"
+}

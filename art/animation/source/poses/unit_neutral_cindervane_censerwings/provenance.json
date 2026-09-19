@@ -32,9 +32,16 @@
     "Sixteen original articulated poses packed and enabled as a candidate. Source battle/packed-alpha checks pass 169/7; actual 1280x720 firing and light/dark captures inspected. Continuous wingbeat/action/guard/death acceptance remains outstanding."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_cindervane_censerwings.png",
-    "runtime_sha256": "1d12722a5df5f849ee02ed9ebb1f6eeecb2436c5b0fcd71ad8e1c4469c6a4b28",
-    "method": "Uniform 0.70 downsampling and segmented original-raster wing/beak/tail rectangles; no painting or warping."
+    "runtime_sha256": "da21bd8d1dff5961b9e903c55fa1a77bda60858220d259f20b250788625baeb0"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "1d12722a5df5f849ee02ed9ebb1f6eeecb2436c5b0fcd71ad8e1c4469c6a4b28",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

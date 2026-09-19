@@ -1,0 +1,150 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "status": "accepted_idle_articulation_20260919",
+  "frames": [
+    {
+      "name": "idle_hands_0",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          421,
+          514
+        ]
+      ],
+      "anchor": [
+        194,
+        450
+      ],
+      "scale": 0.56959
+    },
+    {
+      "name": "idle_hands_1",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          421,
+          0,
+          799,
+          514
+        ]
+      ],
+      "anchor": [
+        578,
+        450
+      ],
+      "scale": 0.56959
+    },
+    {
+      "name": "idle_hands_2",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          799,
+          0,
+          1152,
+          514
+        ]
+      ],
+      "anchor": [
+        962,
+        449
+      ],
+      "scale": 0.56959
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          514
+        ]
+      ],
+      "anchor": [
+        1346,
+        449
+      ],
+      "scale": 0.56959
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          514,
+          400,
+          1024
+        ]
+      ],
+      "anchor": [
+        194,
+        963
+      ],
+      "scale": 0.56959
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          400,
+          514,
+          779,
+          1024
+        ]
+      ],
+      "anchor": [
+        578,
+        963
+      ],
+      "scale": 0.56959
+    },
+    {
+      "name": "idle_hands_6",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          779,
+          514,
+          1158,
+          1024
+        ]
+      ],
+      "anchor": [
+        962,
+        963
+      ],
+      "scale": 0.56959
+    },
+    {
+      "name": "idle_hands_7",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1158,
+          514,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1346,
+        963
+      ],
+      "scale": 0.56959
+    }
+  ],
+  "scale_basis": "One uniform scale across the loop, matched to previous idle height with room for the highest pose; no per-frame resizing.",
+  "anchor_notes": "Shared anatomical horizontal anchor; moving foreclaws or arms do not recenter the body."
+}

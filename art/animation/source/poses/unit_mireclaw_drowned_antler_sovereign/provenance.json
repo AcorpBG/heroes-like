@@ -99,5 +99,18 @@
     "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/antler-continuity-20260915/art-desk-registered.html",
     "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/antler-continuity-20260915/art-desk-registered.png",
     "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/antler-continuity-20260915/packed-final/poses-candidate-atlas-green.png"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_mireclaw_drowned_antler_sovereign.png",
+    "runtime_sha256": "4cae51488dc7608bb11d38901d8e4fca98abfa68346a5c4f7cafd92eb00271ce"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "387f17793d2e84314edf5c99746c22b9fcffd20f3e10d7529a8802d0b3e1e1b7",
+    "preserved_frames": 11,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

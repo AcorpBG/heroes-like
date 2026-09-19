@@ -49,9 +49,16 @@
     "Godot full-sheet contrast render visually inspected: both alpha attempts are genuine cutouts; colored source preview was misleading. First cutout selected, alternative retained. Eight packer tests include exact pixel preservation of this real max-254 source. Crops refined to exclude neighboring claws and spines. Continuous motion acceptance remains pending."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_gorefen_ripper.png",
-    "runtime_sha256": "ad92e043b5a9a276a715bbaf25dd6a4cd630a3ab8eacb2f2f52dab4c63a79e10",
-    "method": "Uniform 0.72 downsampling with anatomical ground anchors and segmented source crops. Original generated alpha preserved."
+    "runtime_sha256": "75c57af319225e4adcc207580a5a3587780008fab837b72dc2179d7c7413202c"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "ad92e043b5a9a276a715bbaf25dd6a4cd630a3ab8eacb2f2f52dab4c63a79e10",
+    "preserved_frames": 12,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

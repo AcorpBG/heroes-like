@@ -1,0 +1,332 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png",
+      "rects": [
+        [
+          0,
+          81,
+          395,
+          356
+        ]
+      ],
+      "anchor": [
+        209,
+        343
+      ],
+      "scale": 0.8
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png",
+      "rects": [
+        [
+          402,
+          69,
+          778,
+          356
+        ]
+      ],
+      "anchor": [
+        597,
+        343
+      ],
+      "scale": 0.8
+    },
+    {
+      "name": "walk_near_diagonal",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/walk-near-diagonal-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1501,
+          1047
+        ]
+      ],
+      "anchor": [
+        772,
+        947
+      ],
+      "scale": 0.214
+    },
+    {
+      "name": "walk_far_diagonal",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/walk-far-diagonal-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1501,
+          1047
+        ]
+      ],
+      "anchor": [
+        776,
+        1018
+      ],
+      "scale": 0.214
+    },
+    {
+      "name": "ram_windup",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png",
+      "rects": [
+        [
+          398,
+          419,
+          778,
+          576
+        ],
+        [
+          398,
+          576,
+          767,
+          588
+        ],
+        [
+          398,
+          588,
+          758,
+          600
+        ],
+        [
+          398,
+          600,
+          746,
+          660
+        ]
+      ],
+      "anchor": [
+        591,
+        645
+      ],
+      "scale": 0.8
+    },
+    {
+      "name": "ram_contact",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png",
+      "rects": [
+        [
+          782,
+          426,
+          1180,
+          576
+        ],
+        [
+          767,
+          576,
+          1172,
+          588
+        ],
+        [
+          758,
+          588,
+          1165,
+          600
+        ],
+        [
+          749,
+          600,
+          1157,
+          647
+        ]
+      ],
+      "anchor": [
+        950,
+        634
+      ],
+      "scale": 0.8
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png",
+      "rects": [
+        [
+          1181,
+          430,
+          1536,
+          576
+        ],
+        [
+          1172,
+          576,
+          1536,
+          588
+        ],
+        [
+          1165,
+          588,
+          1536,
+          600
+        ],
+        [
+          1157,
+          600,
+          1536,
+          662
+        ]
+      ],
+      "anchor": [
+        1356,
+        651
+      ],
+      "scale": 0.8
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png",
+      "rects": [
+        [
+          26,
+          675,
+          371,
+          980
+        ]
+      ],
+      "anchor": [
+        200,
+        957
+      ],
+      "scale": 0.8
+    },
+    {
+      "name": "kneel",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png",
+      "rects": [
+        [
+          380,
+          741,
+          778,
+          967
+        ]
+      ],
+      "anchor": [
+        577,
+        947
+      ],
+      "scale": 0.8
+    },
+    {
+      "name": "side_fall",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png",
+      "rects": [
+        [
+          779,
+          750,
+          1155,
+          974
+        ]
+      ],
+      "anchor": [
+        965,
+        950
+      ],
+      "scale": 0.8
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png",
+      "rects": [
+        [
+          1155,
+          793,
+          1536,
+          969
+        ]
+      ],
+      "anchor": [
+        1345,
+        951
+      ],
+      "scale": 0.8
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        0,
+        2,
+        0,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        4,
+        5,
+        4,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        6
+      ],
+      "loop": true,
+      "frame_msec": 500,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        7,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        8,
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        10
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

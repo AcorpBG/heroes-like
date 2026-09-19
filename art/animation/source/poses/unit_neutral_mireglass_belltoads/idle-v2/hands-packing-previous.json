@@ -1,0 +1,296 @@
+{
+  "unit_id": "unit_neutral_mireglass_belltoads",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          314,
+          320
+        ]
+      ],
+      "anchor": [
+        157,
+        305
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "idle_breath",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          314,
+          0,
+          620,
+          320
+        ]
+      ],
+      "anchor": [
+        471,
+        305
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "hop_crouch",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          620,
+          0,
+          940,
+          180
+        ],
+        [
+          620,
+          180,
+          925,
+          320
+        ]
+      ],
+      "anchor": [
+        785,
+        305
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "hop_airborne",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          940,
+          0,
+          1254,
+          180
+        ],
+        [
+          925,
+          180,
+          1254,
+          320
+        ]
+      ],
+      "anchor": [
+        1099,
+        305
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "hop_land",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          320,
+          314,
+          610
+        ]
+      ],
+      "anchor": [
+        157,
+        610
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          314,
+          320,
+          620,
+          610
+        ]
+      ],
+      "anchor": [
+        471,
+        610
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "bite",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          620,
+          320,
+          940,
+          610
+        ]
+      ],
+      "anchor": [
+        785,
+        610
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          940,
+          320,
+          1254,
+          610
+        ]
+      ],
+      "anchor": [
+        1099,
+        610
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_aim",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          610,
+          314,
+          910
+        ]
+      ],
+      "anchor": [
+        157,
+        900
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_charge",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          314,
+          610,
+          620,
+          910
+        ]
+      ],
+      "anchor": [
+        471,
+        900
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "croak",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          620,
+          610,
+          940,
+          910
+        ]
+      ],
+      "anchor": [
+        785,
+        900
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_recover",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          940,
+          610,
+          1254,
+          910
+        ]
+      ],
+      "anchor": [
+        1099,
+        900
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "recoil",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          910,
+          314,
+          1210
+        ]
+      ],
+      "anchor": [
+        157,
+        1210
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "collapse",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          314,
+          910,
+          620,
+          1210
+        ]
+      ],
+      "anchor": [
+        471,
+        1210
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "landing",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          620,
+          910,
+          940,
+          1210
+        ]
+      ],
+      "anchor": [
+        785,
+        1210
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_mireglass_belltoads/alpha/poses.png",
+      "rects": [
+        [
+          940,
+          910,
+          1254,
+          1210
+        ]
+      ],
+      "anchor": [
+        1099,
+        1210
+      ],
+      "scale": 0.7
+    }
+  ]
+}

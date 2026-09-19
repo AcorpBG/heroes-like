@@ -32,9 +32,16 @@
     "Sixteen original articulated poses with distinct ranged and melee clips. Actual Godot final packed light/dark and ranged action captures inspected clean. Final battle/alpha checks pass 169/7; frame order groups firing before recoil/death with corpse last. Continuous flight and action acceptance remains outstanding."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_noonshard_prism_kites.png",
-    "runtime_sha256": "26caf395d48e9042e76382b6b68f05408b01817581145820f923a54a4707f4f2",
-    "method": "Uniform 0.70 downsampling and segmented pose rectangles preserving original raster wings and tails; no painted or warped replacement poses."
+    "runtime_sha256": "2f085feadb874aa80f2183e718a5da99c9dadf6640632a282ff240c4c81f609b"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "26caf395d48e9042e76382b6b68f05408b01817581145820f923a54a4707f4f2",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

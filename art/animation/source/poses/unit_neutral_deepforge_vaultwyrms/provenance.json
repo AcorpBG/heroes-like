@@ -31,10 +31,10 @@
     }
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_deepforge_vaultwyrms.png",
-    "runtime_sha256": "6ba29009c9b5a3bb372c8880ebaf376b162db30847d07adf5007e1b3486adfff",
-    "method": "Semantic column order restored from generated right-facing sheet, uniform 0.65 downsampling and independent anatomical ground anchors. Segmented source regions separate adjacent tails/claws without repainting."
+    "runtime_sha256": "eaf6193aea49713e8d1f7de6df86e52558fe3b5a8e32a3cf4b1c79401da5eaa7"
   },
   "review_notes": [
     "Right-facing original poses packed and candidate registered. Neighboring tail fragments excluded; low corpse anchored separately. Final continuous-motion acceptance pending.",
@@ -42,5 +42,12 @@
     "Source is LEFT-facing despite right-facing request. Packing/runtime orientation must be resolved before registration. Actual alpha ranges 0..254; colored preview background is not proof of opaque pixels. No enabled or accepted count assigned.",
     "Built-in whole-sheet horizontal reflection produced a right-facing version with columns reversed in each row. Original left source retained; use poses-right and restore semantic frame order during later packing. Source-only, not yet runtime registered.",
     "Left-source alpha Godot light/dark capture visually inspected and seven checks passed; no opaque brown backdrop appears in actual rendering."
-  ]
+  ],
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "6ba29009c9b5a3bb372c8880ebaf376b162db30847d07adf5007e1b3486adfff",
+    "preserved_frames": 12,
+    "status": "accepted_idle_articulation_20260919"
+  }
 }

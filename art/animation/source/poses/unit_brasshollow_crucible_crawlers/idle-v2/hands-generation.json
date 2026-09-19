@@ -1,0 +1,22 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_brasshollow_crucible_crawlers",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-9207c7c3-f998-4851-8bb2-210c5918d6d7.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_brasshollow_crucible_crawlers.png",
+  "reference_revision": "c315f18b0",
+  "additional_reference": "hands-rejected-anatomy-original.png",
+  "prompt": "The candidate sheet incorrectly adds a FOURTH tool arm in poses3and4. Correct all eight poses to keep EXACTLY THREE tool nozzles/arms as in original runtime reference: one long upper arm, one middle right arm and one lower right arm. Keep walking legs count and geometry unchanged. Articulate ONLY the single uppermost arm gently 15degrees upward and back, with its nozzle permanently attached and no twin/mirrored nozzle ever appearing. Middle/lower arms stay in place. Smooth original rest->quarter lift->half lift->full lift->threequarter->half->quarter->rest. Preserve fixed furnace and planted feet.1536x1024true transparentRGBA4columns2rows with30pxpadding.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "e47050bee5d9dd6619ddc42580efd2e45ce6bc3d883263ba949037146454a19c",
+  "reference_sha256": "33b53a4f9e14b43c87aeb838fd82d6717880bbc2241583bd08d9b4bfc2634a15",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; articulated limbs, wings, tails or mechanisms move according to anatomy; humanoid hand and forearm movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

@@ -82,5 +82,18 @@
       ],
       "removed_bytes": 420779
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_brasshollow_whitegauge_datum_breach_cannons.png",
+    "runtime_sha256": "8c58b4bb79db39324d251592e7a5591d136d8ac82709aff3d2f71c70f5242d8a"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "fa8094207f0d8bc8e058be2e637c18a11e07d8999e4b74d4344a3f71f135485c",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

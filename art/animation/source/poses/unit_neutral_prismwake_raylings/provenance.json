@@ -73,9 +73,10 @@
     "approval": "Candidate integration only, not final whole-unit acceptance."
   },
   "packing": {
-    "recipe": "art/animation/source/poses/unit_neutral_prismwake_raylings/packing.json",
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_prismwake_raylings.png",
-    "runtime_sha256": "fc925d311561ec4f42eb3b2742ea6c251a395904af08114988fc190db2ff4f71"
+    "runtime_sha256": "a80269fd771f4a4a89d53a808e81ca0ebbc50ca8dbe11dbeb25409b990f80b23"
   },
   "ranged_correction": {
     "date": "2026-09-16",
@@ -89,5 +90,12 @@
     ],
     "runtime_sha256": "fc925d311561ec4f42eb3b2742ea6c251a395904af08114988fc190db2ff4f71",
     "review": "Original generated preparation/release/recovery replace melee alias. Source/composites/packed atlas inspected; final gameplay/continuous-motion acceptance pending. Existing frames untouched."
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "fc925d311561ec4f42eb3b2742ea6c251a395904af08114988fc190db2ff4f71",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

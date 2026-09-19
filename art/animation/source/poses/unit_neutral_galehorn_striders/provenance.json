@@ -33,9 +33,16 @@
     "Real RGBA 0..254 output; uniform downsampling and per-pose crops separate adjacent tails/hooves without painted or warped replacements."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_galehorn_striders.png",
-    "runtime_sha256": "b60aa665873d485499b89d78af8088ef4d3f5f5b37ec800a6b8ec2fdc84f013d",
-    "method": "Uniform 0.78 downsampling, anatomical ground anchors and individual source rectangles preserving original generated poses."
+    "runtime_sha256": "b511d55cff51d9dcfe532d0ba289ca0974eed0b42218048384d48e7decaaad31"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "b60aa665873d485499b89d78af8088ef4d3f5f5b37ec800a6b8ec2fdc84f013d",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

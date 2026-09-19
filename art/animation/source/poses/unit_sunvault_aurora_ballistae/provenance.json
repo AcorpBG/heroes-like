@@ -141,5 +141,18 @@
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/aurora-continuity-20260915/",
     "status": "candidate_registered_not_final_accepted",
     "acceptance": "Final full-roster gameplay/repository/Linux/Windows validation is deferred until generation/refinement/integration finish. No new final acceptance."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_sunvault_aurora_ballistae.png",
+    "runtime_sha256": "e368be39378843be24c42418f9f5aab63128f2638c017419613e3cd6ee4cefc4"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "9960dff59c66be326a1bd2c76dac4f77699d5d0ef5ce7cfb694764e0453a2b88",
+    "preserved_frames": 17,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

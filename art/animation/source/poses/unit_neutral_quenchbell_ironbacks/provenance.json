@@ -46,9 +46,16 @@
     "Twelve original articulated poses packed and enabled as a candidate. Source battle/packed-alpha checks pass 124/7; actual 1280x720 attack and light/dark captures inspected. Continuous gait/action/brace/death acceptance remains outstanding."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_quenchbell_ironbacks.png",
-    "runtime_sha256": "84e2585c17eaccb2b0e178145dc6283fe37644cb2f1005fc68011899978abb63",
-    "method": "Uniform 0.72 downsampling and segmented source rectangles retain horns and full limbs without painting or warping original poses."
+    "runtime_sha256": "6cb5cfa26146cb54d44511678e6a15a41bc7c589e78cae62fc5e648ce63722e6"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "84e2585c17eaccb2b0e178145dc6283fe37644cb2f1005fc68011899978abb63",
+    "preserved_frames": 12,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

@@ -1,0 +1,149 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "status": "accepted_idle_articulation_20260919",
+  "frames": [
+    {
+      "name": "idle_hands_0",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        203,
+        471
+      ],
+      "scale": 0.57143
+    },
+    {
+      "name": "idle_hands_1",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          384,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        587,
+        472
+      ],
+      "scale": 0.57143
+    },
+    {
+      "name": "idle_hands_2",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          768,
+          0,
+          1151,
+          512
+        ]
+      ],
+      "anchor": [
+        966,
+        472
+      ],
+      "scale": 0.57143
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1151,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1343,
+        471
+      ],
+      "scale": 0.57143
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          388,
+          1024
+        ]
+      ],
+      "anchor": [
+        207,
+        954
+      ],
+      "scale": 0.57143
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          388,
+          512,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        588,
+        954
+      ],
+      "scale": 0.57143
+    },
+    {
+      "name": "idle_hands_6",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          768,
+          512,
+          1148,
+          1024
+        ]
+      ],
+      "anchor": [
+        967,
+        954
+      ],
+      "scale": 0.57143
+    },
+    {
+      "name": "idle_hands_7",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1148,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1338,
+        953
+      ],
+      "scale": 0.57143
+    }
+  ],
+  "scale_basis": "One uniform scale across the loop, matched to previous idle height with room for the highest pose; no per-frame resizing."
+}

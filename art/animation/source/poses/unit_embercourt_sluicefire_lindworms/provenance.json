@@ -65,11 +65,18 @@
     "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_embercourt_sluicefire_lindworms.png",
-    "runtime_sha256": "7255bd942347348191528a30ae5cac2c128d68568d4e89307dc94b0cbb2e5d79"
+    "runtime_sha256": "c3739a3c034ee357f40bce1f83019cd91c5469f2ca007f8c22bc84bda5f1e9ba"
   },
   "review_notes": [
     "All source and alpha poses inspected; original articulated coils and distinct prone corpse.",
     "Explicit rectangular trimming excludes low-alpha extraction noise outside the drawn silhouettes; no chroma-key or local painting.",
     "Runtime cadence, grounded scale and both-side facing still require battle playback review."
-  ]
+  ],
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "7255bd942347348191528a30ae5cac2c128d68568d4e89307dc94b0cbb2e5d79",
+    "preserved_frames": 11,
+    "status": "accepted_idle_articulation_20260919"
+  }
 }

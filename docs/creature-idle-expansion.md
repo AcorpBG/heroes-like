@@ -1,96 +1,75 @@
 # Expanded creature idle loops
 
-Full-roster production is **in progress**, covering both battle and overworld.
-119 of 160 units have reviewed eight-pose idles; 41 still retain two-pose loops.
-The earlier six-creature delivery did not complete the requested roster.
+All **160 creatures** now use reviewed eight-pose idle loops in both battle
+and overworld. This delivery repaints 155 loops with 1,240 original drawings;
+the other five retain their previously reviewed eight-pose artwork.
 
 ## Motion direction
 
-Armed creatures need visible elbow bends, wrist turns, grip adjustments and
-movement of their equipment at normal game size. Heads, hips and planted feet
-stay quiet. Extra frames of head movement alone do not meet this requirement.
-Preserve limb ownership, continuous chains, rigid equipment and identity.
-No attack, firing or walking motion belongs in the idle loop.
+Armed creatures use visible elbow bends, wrist turns, grip adjustments and
+equipment movement at normal game size. Their heads and planted feet stay
+comparatively quiet. Creatures without hands use motion appropriate to their
+anatomy: wingbeats, claw curls, foreleg weight shifts, tail sweeps or articulated
+mechanisms. Siege crews work their controls without firing.
 
-114 armed units now use this direction: River Guard, Ember Archer,
-Citadel Pikeward, Blackbranch Cutthroat, Mire Slinger, Bog Brute, Shard Guard,
-Prism Harrier, Mirror Skirmisher, Roadwardens; Embercourt Fordhook Cadets,
-Lantern Sappers, Bargebow Crews, Ash-Oath Bailiffs, Beacon Lectors and Charter
-Colossus; Mireclaw Reedsnare Kin, Mudglass Slingers, Bogplate Maulers,
-Ferrychain Lashers and Sporewake Chanters. Most use 240 ms per frame;
-the colossus, mauler, furnace pavis team and Bogbell Mauls use 260 ms for heavier motion.
-
-The expanded roster also includes Sunvault Shard Wardens, Prism Adepts, Mirror
-Duelists, Resonant Choristers and Noonfacet Sentinels; Thornwake Seedcutters,
-Thornwhip Carriers, Sporeglass Menders and Dawnseed Bolters; Brasshollow Scrip
-Haulers, Furnace Pavis Teams and Gaugeplate Bailiffs; Veilmourn Bellwake Oars,
-Mourning Lanterns, Maskglass Corsairs, Undertow Harpooners, Obituary Scribes,
-Mirror-Keel Reavers and Tidehook Deckhands; Embercourt Cinderseal Bombardiers;
-Mireclaw Mireglass Reedcasters; and neutral Hearthbow Carriers, Mossglass
-Sentinels and Cliffhawk Wardens.
-
-Neutral production now also covers Windglass Slingers through Bogbell Mauls
-(the 36 neutral entries in that manifest range). These include two-person
-crossbow crews, polearms, slings, jarriers, shields and pack adjustments.
-Reedbarge hooks and Snowglass bow tips use explicit stepped boundaries to
-preserve their complete silhouettes without neighboring weapon fragments.
-
-The next 18 reviewed loops cover Peatflare Jarriers through Seedshield Wardens,
-including Canopy Rammers, Pressure Lancers and the three additional casters.
-Milestone Bucklers uses a corrected source preserving one spearhead; Cartbow
-Tenders uses stepped boundaries retaining the complete bow without fragments.
-
-The additional 15 armed faction variants through Tideglass Oracles also use
-reviewed hand articulation, including drum-beater movement, shield adjustments
-and a bowl lift that preserves the oracle's staff and bowl ownership.
-
-The other five expanded creatures retain their previously reviewed loops:
-Fenhound Runners, Sunscale Lanternmoths, Fenmirror Gallowshells,
-Rootcrown Knotstags and Gloambell Wake Mantas. Remaining creatures need motion
-appropriate to their anatomy, including articulated wings, paws or mechanisms.
+Preserve identity, limb ownership, equipment, stance and a continuous loop.
+No attack, walking cycle or transformed still substitutes for painted poses.
+Most armed loops use 240 ms per frame, heavy creatures 260 ms, and the final
+flying creatures 200 ms.
 
 ## Production and runtime
 
-The built-in image-generation tool paints original poses. Exact prompts,
-reference hashes, source hashes and selection notes live under
-`art/animation/source/poses/<unit_id>/idle-v2/`. The tool exposes no model ID.
-`hands-generation.json` identifies the selected arm-motion artwork; originals
-and superseded head-dominant attempts remain preserved. Shard Guard uses one
-separately generated correction for a reversed sword wrist in frame four.
-Bellwake Oars uses a corrected sheet that preserves the complete oar blade.
+The built-in image-generation tool painted the original poses; it exposes no
+model ID. Exact prompts, reference hashes, source hashes and review notes live
+under `art/animation/source/poses/<unit_id>/idle-v2/`.
+`hands-generation.json` identifies the selected artwork. Original and
+superseded sources remain preserved, including anatomy and clipping corrections.
 
 `hands-prepare.json` and `tools/prepare_idle_pose_alpha.py` clear only inspected
-alpha noise at 0-8, preserving RGB and stronger alpha. `hands-packing.json`
-records explicit source rectangles, one uniform scale and anatomical anchors.
-Long weapon tips use stepped crop boundaries to avoid cutting into neighbors.
-No transformed stills or independently resized poses substitute for paintings.
+alpha noise at 0-8, preserving RGB and stronger alpha. Packing recipes record
+explicit source rectangles, one uniform scale and anatomical anchors.
+Stepped boundaries retain long weapons and tails without neighboring fragments.
+Flying bodies and moving forepaws use stable anatomical origins so their motion
+does not recenter the whole sprite. Each loop retains all eight paintings.
 
-`tools/integrate_unit_idle_poses.py` appends candidate frames to the existing
-atlas, checks every prior frame's pixels survived, and registers matching
-battle and overworld clips. The retained previous recipe makes refinements
-repeatable. Integration does not grant visual acceptance. Production packers
-remain `tools/pack_unit_pose_art.py` and `tools/pack_overworld_creature_idle.py`.
+`tools/integrate_unit_idle_poses.py` appends candidate poses while checking every
+previous frame's pixels, then registers matching battle and overworld clips.
+Integration alone does not grant acceptance. Retained previous recipes make
+refinement repeatable. Production packers remain `tools/pack_unit_pose_art.py`
+and `tools/pack_overworld_creature_idle.py`.
 
 Both surfaces play the same paintings. Existing action clips, independent idle
-phase, reduced motion and ground anchors are preserved. Restarting the client
-uses the new art on existing maps and saved battles; no map regeneration.
+phase, reduced motion, fog and ground anchors are preserved. The Heliograph
+Ballista's missing source-facing metadata was corrected after inspecting its
+original action paintings; both battle sides now aim toward their opponent.
 
-## Focused review
+Restart the client to load the new artwork on existing maps and saved battles.
+Map regeneration is unnecessary.
 
-All 912 new arm-motion drawings were inspected at small and larger sizes.
-21 focused Windows playback cohorts covered all 114 changed units on the real
-1280x720 battle board in both facings and the overworld shader at 74px extent.
-They passed 344-444 checks each: eight rendered frames, independent
-timing, reduced motion, fog, cached drawing and unchanged saved simulation.
-Existing action pixels and non-idle clip metadata remain unchanged.
+## Focused validation
 
-Per-unit acceptance hashes and review scope are recorded in
-`battle-unit-animation-acceptance.json`; this does not accept unfinished units.
-No full suite, Linux export, package build or full-match playtest was run.
-Windows emitted the known root-certificate and unsupported GLES3 MSAA warnings,
-with no script or shader failures. Task-owned captures and profiles are
-disposable after review; original art, recipes and provenance are retained.
+All 1,240 new drawings were inspected at small and larger sizes. Twenty-eight
+Windows playback cohorts covered all 155 changed units on the real 1280x720
+battle board in both facings and the overworld shader at 74px extent.
+A further single-unit run verified the ballista facing correction.
 
-Rebuild selected alpha, run the main unit packing recipe, then extract the
-overworld strip. For focused playback pass one to six unit IDs to
-`tests/overworld_creature_idle_regression.py --godot <executable> --output <task directory> --units <unit IDs>`.
+The 29 focused runs passed 344-444 checks each: eight rendered frames,
+independent timing, reduced motion, fog, cached drawing and unchanged saved
+simulation. Two selected Python registration/acceptance checks also pass.
+Every delivery preserved previous action pixels and non-idle clip metadata.
+The final 41 atlases rebuilt byte-identically; all 576 prior frames in that
+delivery matched their previous pixels.
+
+Per-unit acceptance hashes and scope are recorded in
+`battle-unit-animation-acceptance.json`. No full suite, Linux export,
+package build or full-match playtest was run. Successful Windows runs had the
+known certificate-store and GLES3 MSAA warnings, with no script/shader failures.
+
+Task-owned captures, logs, contact sheets and isolated profiles are removed
+after review under the owner retention policy. Original art, recipes,
+provenance, source and rebuild tooling remain available.
+
+To reproduce a selected loop, prepare its alpha, run the main packing recipe,
+then extract the overworld strip. For focused playback, pass one to six unit IDs
+to `tests/overworld_creature_idle_regression.py --godot <executable>
+--output <task directory> --units <unit IDs>`.

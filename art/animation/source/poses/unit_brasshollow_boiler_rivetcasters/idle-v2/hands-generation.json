@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-9b5449ed-cadd-466d-aab8-44483200a5b1.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_brasshollow_boiler_rivetcasters.png",
+  "reference_revision": "c315f18b0",
+  "prompt": "Use case: identity-preserve. Paint EIGHT original sequential poses for a restrained but clearly visible IDLE loop of exactly this fantasy strategy creature or mechanism. The reference strip shows ONE unit in two poses, NOT a group. Preserve its exact identity, silhouette, limb count, equipment ownership, colors, proportions and source-facing camera direction. The primary motion must come from the articulated limbs, wings, tail or mechanism specified below, NOT just bobbing the head. Keep the head and central body almost stationary. A smooth calm in-place cycle, no attack, walking, firing, extra limbs, new props or dramatic deformation.\nLEFT-FACING cannon crew of TWO original operators and mounted cannon. Preserve left-facing camera! Operators' hands visibly adjust existing lever/wheel and rest, elbows bending, cannon chassis and wheels fixed. No shooting, no added operator, no extra limbs.\nCanvas 1536x1024 RGBA TRUE transparent background. Four columns and two rows, exactly eight sequential COMPLETE poses in reading order. Each stays fully inside its 384x512 cell with at least 24px transparent margin on all sides. Same anatomical scale and fixed root/ground baseline in all eight cells. Wide creatures fit naturally at smaller height; NEVER crop tails, wings or weapons or squeeze proportions. Rest, small adjustment, further adjustment, crest, halfway back, easing down, almost rest, rest. Detailed hand-painted original fantasy strategy sprite, crisp readable anatomy, no labels/grid/floor/background/shadow. Genuine new paintings, no rigid translated copies.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "710f698240b728e273101c3cab00e7d5d7849b3b90eae68dd120582c7781c378",
+  "reference_sha256": "d67980d165cc126300eec45df9812fd0255e927bc8377ab3e36acbcacfe8b694",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; articulated limbs, wings, tails or mechanisms move according to anatomy; humanoid hand and forearm movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

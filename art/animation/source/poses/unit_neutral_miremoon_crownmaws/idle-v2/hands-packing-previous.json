@@ -1,0 +1,246 @@
+{
+  "unit_id": "unit_neutral_miremoon_crownmaws",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_neutral_miremoon_crownmaws/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          370,
+          375
+        ]
+      ],
+      "anchor": [
+        210,
+        375
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "idle_breath",
+      "source": "art/animation/source/poses/unit_neutral_miremoon_crownmaws/alpha/poses.png",
+      "rects": [
+        [
+          370,
+          0,
+          720,
+          375
+        ]
+      ],
+      "anchor": [
+        572,
+        375
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_neutral_miremoon_crownmaws/alpha/poses.png",
+      "rects": [
+        [
+          720,
+          0,
+          1090,
+          375
+        ]
+      ],
+      "anchor": [
+        934,
+        375
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_neutral_miremoon_crownmaws/alpha/poses.png",
+      "rects": [
+        [
+          1090,
+          0,
+          1448,
+          375
+        ]
+      ],
+      "anchor": [
+        1296,
+        375
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_pass",
+      "source": "art/animation/source/poses/unit_neutral_miremoon_crownmaws/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          380,
+          380,
+          720
+        ]
+      ],
+      "anchor": [
+        210,
+        725
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_neutral_miremoon_crownmaws/alpha/poses.png",
+      "rects": [
+        [
+          380,
+          375,
+          710,
+          720
+        ]
+      ],
+      "anchor": [
+        572,
+        725
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "attack_bite",
+      "source": "art/animation/source/poses/unit_neutral_miremoon_crownmaws/alpha/poses.png",
+      "rects": [
+        [
+          710,
+          420,
+          1130,
+          725
+        ]
+      ],
+      "anchor": [
+        934,
+        725
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_neutral_miremoon_crownmaws/alpha/poses.png",
+      "rects": [
+        [
+          1130,
+          450,
+          1448,
+          725
+        ]
+      ],
+      "anchor": [
+        1296,
+        725
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "recoil",
+      "source": "art/animation/source/poses/unit_neutral_miremoon_crownmaws/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          725,
+          330,
+          900
+        ],
+        [
+          0,
+          900,
+          325,
+          1060
+        ],
+        [
+          330,
+          725,
+          355,
+          845
+        ]
+      ],
+      "anchor": [
+        210,
+        1060
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_miremoon_crownmaws/alpha/poses.png",
+      "rects": [
+        [
+          355,
+          760,
+          725,
+          1060
+        ],
+        [
+          330,
+          875,
+          355,
+          1000
+        ],
+        [
+          345,
+          850,
+          355,
+          875
+        ]
+      ],
+      "anchor": [
+        572,
+        1060
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_neutral_miremoon_crownmaws/alpha/poses.png",
+      "rects": [
+        [
+          725,
+          790,
+          1045,
+          1060
+        ],
+        [
+          700,
+          940,
+          725,
+          1060
+        ]
+      ],
+      "anchor": [
+        934,
+        1060
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_miremoon_crownmaws/alpha/poses.png",
+      "rects": [
+        [
+          1045,
+          810,
+          1448,
+          1060
+        ]
+      ],
+      "anchor": [
+        1296,
+        1060
+      ],
+      "scale": 0.65
+    }
+  ]
+}

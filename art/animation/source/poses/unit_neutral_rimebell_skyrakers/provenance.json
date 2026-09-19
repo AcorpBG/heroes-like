@@ -34,9 +34,16 @@
     "Original wing/keel/talon identity retained; full motion acceptance pending."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_rimebell_skyrakers.png",
-    "runtime_sha256": "d69db630b66e82c7e6838d7d1885ed63953aa034e8c4aee78c295b5a71f73abc",
-    "method": "Uniform 0.57 downsampling with anatomical flying/ground anchors and segmented wing/tail crops preserving original raster poses."
+    "runtime_sha256": "f80c5bcc49ab4be70ec10b56fb022961906ee6d4e3ddae95dd22372d919203dc"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "d69db630b66e82c7e6838d7d1885ed63953aa034e8c4aee78c295b5a71f73abc",
+    "preserved_frames": 12,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

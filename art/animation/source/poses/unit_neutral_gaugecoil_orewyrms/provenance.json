@@ -20,12 +20,19 @@
     }
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_gaugecoil_orewyrms.png",
-    "runtime_sha256": "abb71f83d336b6e6d6e553049b07320fe2d9df47787ac290c87d56e570ee51ab",
-    "method": "Uniform 0.62 downsampling and anatomical ground anchors. Source regions preserve extended mouth petals and tail valve while excluding neighboring sprites; no alpha repaint or standing-cutout transforms."
+    "runtime_sha256": "36e7e6b60074c009213117e5c00b4f991d55a9929f76e619787406d82e1090d2"
   },
   "review_notes": [
     "Twelve source poses visually inspected: original segmented body, gauges, tail valve and drill mouth retained. Separate mouth windup/thrust, braced defense and grounded dead body. Real RGBA alpha 0..255. Final motion review pending."
-  ]
+  ],
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "abb71f83d336b6e6d6e553049b07320fe2d9df47787ac290c87d56e570ee51ab",
+    "preserved_frames": 12,
+    "status": "accepted_idle_articulation_20260919"
+  }
 }
