@@ -122,5 +122,18 @@
       ],
       "removed_bytes": 18574407
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_veilmourn_saltwake_eulogists.png",
+    "runtime_sha256": "645da96bf45bf5ab57e3504c7d72bd3b673527046f807b2c75a6530e89d4ddfe"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "70532b3eb55bf5af1dd1cf427d01324069a17a98bde34aaa716fa8ce5317ebf9",
+    "preserved_frames": 18,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

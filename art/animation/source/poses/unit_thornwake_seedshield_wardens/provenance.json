@@ -197,5 +197,18 @@
     "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/seedwarden-continuity-20260915/art-desk-registered.html",
     "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/seedwarden-continuity-20260915/art-desk-registered.png",
     "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/seedwarden-continuity-20260915/packed-final/poses-candidate-atlas-green.png"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_thornwake_seedshield_wardens.png",
+    "runtime_sha256": "631bad97fb5c2466accfc6f65bc9af204cc87d9428fd86b61571959c8a90d9f9"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "605e4510fba5585d9b76e75449532150348eef524317a38d54ed3340be43e882",
+    "preserved_frames": 13,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

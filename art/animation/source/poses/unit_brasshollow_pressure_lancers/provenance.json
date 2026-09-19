@@ -92,5 +92,18 @@
       ],
       "removed_bytes": 8660792
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_brasshollow_pressure_lancers.png",
+    "runtime_sha256": "4e714b9a994d669a2ed10cb4b6319a09b3ec2d87bd75e683c69b5fd70031b244"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "6fd069f6e09e469bc4c58a2756dae49fbbee6db223ea0c2042592bc9f5029a9a",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

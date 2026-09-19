@@ -53,9 +53,10 @@
     "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
   },
   "packing": {
-    "recipe": "art/animation/source/poses/unit_neutral_emberpack_lobbers/packing.json",
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_emberpack_lobbers.png",
-    "runtime_sha256": "f3930e1575335983f70687c8efdc2c3f83b12c9f73f16126c50eccaa18e57336"
+    "runtime_sha256": "8fcccdef2a021f221dc96ecff101533a091156205f46beadcf8744b5304b4320"
   },
   "step_refinement": {
     "date": "2026-09-16",
@@ -76,5 +77,12 @@
     },
     "evidence": ".artifacts/battle-unit-animation-size-20260913/emberpack-step-refinement-20260916",
     "validation": "Sources, prepared composites and full atlas visually reviewed; automated gameplay/repository/platform validation deferred until roster refinement ends."
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "f3930e1575335983f70687c8efdc2c3f83b12c9f73f16126c50eccaa18e57336",
+    "preserved_frames": 17,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

@@ -1,0 +1,442 @@
+{
+  "unit_id": "unit_veilmourn_saltwake_eulogists",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          500,
+          599
+        ]
+      ],
+      "anchor": [
+        304,
+        543
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+      "rects": [
+        [
+          504,
+          0,
+          966,
+          599
+        ]
+      ],
+      "anchor": [
+        757,
+        543
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "walk_contact",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          500,
+          501
+        ]
+      ],
+      "anchor": [
+        306,
+        484
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards-green.png",
+      "rects": [
+        [
+          508,
+          0,
+          1004,
+          501
+        ]
+      ],
+      "anchor": [
+        808,
+        489
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "walk_repeated_contact_bridge",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards-green.png",
+      "rects": [
+        [
+          1010,
+          0,
+          1536,
+          504
+        ]
+      ],
+      "anchor": [
+        1330,
+        490
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards-green.png",
+      "rects": [
+        [
+          0,
+          503,
+          504,
+          1024
+        ]
+      ],
+      "anchor": [
+        293,
+        979
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          506,
+          503
+        ]
+      ],
+      "anchor": [
+        286,
+        494
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "melee_thrust",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png",
+      "rects": [
+        [
+          511,
+          0,
+          1108,
+          502
+        ]
+      ],
+      "anchor": [
+        785,
+        483
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "melee_recover",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png",
+      "rects": [
+        [
+          1109,
+          0,
+          1536,
+          502
+        ],
+        [
+          1225,
+          502,
+          1536,
+          522
+        ]
+      ],
+      "anchor": [
+        1311,
+        503
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "guard_a",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards-green.png",
+      "rects": [
+        [
+          507,
+          502,
+          1023,
+          1024
+        ]
+      ],
+      "anchor": [
+        805,
+        975
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "guard_b",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/guided-walk-and-guards-green.png",
+      "rects": [
+        [
+          1024,
+          505,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1290,
+        972
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "cast_anticipate",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png",
+      "rects": [
+        [
+          90,
+          503,
+          240,
+          515
+        ],
+        [
+          0,
+          515,
+          501,
+          1024
+        ]
+      ],
+      "anchor": [
+        249,
+        997
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "cast_release",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png",
+      "rects": [
+        [
+          512,
+          503,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        777,
+        997
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/equipped-attacks-and-casting-green.png",
+      "rects": [
+        [
+          1025,
+          523,
+          1536,
+          1024
+        ],
+        [
+          1120,
+          501,
+          1281,
+          523
+        ]
+      ],
+      "anchor": [
+        1317,
+        997
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+      "rects": [
+        [
+          972,
+          0,
+          1536,
+          611
+        ]
+      ],
+      "anchor": [
+        1260,
+        551
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+      "rects": [
+        [
+          0,
+          612,
+          507,
+          900
+        ],
+        [
+          0,
+          900,
+          535,
+          1024
+        ]
+      ],
+      "anchor": [
+        292,
+        961
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "death_settle",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+      "rects": [
+        [
+          510,
+          680,
+          1010,
+          900
+        ],
+        [
+          536,
+          900,
+          1010,
+          1024
+        ]
+      ],
+      "anchor": [
+        771,
+        950
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "dead_equipped",
+      "source": "art/animation/source/poses/unit_veilmourn_saltwake_eulogists/continuity-alpha/idle-and-equipped-cold-collapse-green.png",
+      "rects": [
+        [
+          1010,
+          680,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        958
+      ],
+      "scale": 0.4
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        9,
+        10
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "cast": {
+      "frames": 4,
+      "indices": [
+        11,
+        12,
+        11,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        13,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 5,
+      "indices": [
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        17
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "cast"
+  }
+}

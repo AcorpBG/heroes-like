@@ -1,0 +1,7 @@
+{
+  "source": "hands-original.png",
+  "source_sha256": "4a29cb16d19e3e62408fe74e3e22751b0835f962819908d277fb1931284d7ff5",
+  "output": "hands-alpha.png",
+  "alpha_noise_cutoff": 8,
+  "inspection": "Clear only near-transparent alpha noise 0..8; preserve RGB and stronger alpha."
+}

@@ -66,9 +66,10 @@
     "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
   },
   "packing": {
-    "recipe": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/packing.json",
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_tunnelmark_bolters.png",
-    "runtime_sha256": "50d52c33b78d2121fa8fd62b336a20b7da619cac322cf28f8b7d1ccbb007d1b2"
+    "runtime_sha256": "b2fb8f312cb034c0ee95a75c1c2ee58b6a1612e222cbb68b50690cf6649959ab"
   },
   "step_refinement": {
     "date": "2026-09-16",
@@ -90,5 +91,12 @@
     },
     "evidence": ".artifacts/battle-unit-animation-size-20260913/tunnelmark-step-refinement-20260916",
     "validation": "Sources, prepared composites and full atlas visually reviewed; automated gameplay/repository/platform validation deferred until roster refinement ends."
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "50d52c33b78d2121fa8fd62b336a20b7da619cac322cf28f8b7d1ccbb007d1b2",
+    "preserved_frames": 17,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

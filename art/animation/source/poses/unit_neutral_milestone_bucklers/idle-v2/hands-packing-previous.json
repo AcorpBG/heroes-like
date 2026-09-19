@@ -1,0 +1,227 @@
+{
+  "unit_id": "unit_neutral_milestone_bucklers",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          357,
+          375
+        ]
+      ],
+      "anchor": [
+        196,
+        370
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/alpha/poses.png",
+      "rects": [
+        [
+          370,
+          0,
+          699,
+          376
+        ]
+      ],
+      "anchor": [
+        541,
+        365
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_contact",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/alpha/poses.png",
+      "rects": [
+        [
+          716,
+          0,
+          1056,
+          378
+        ]
+      ],
+      "anchor": [
+        900,
+        367
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_passing",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "rects": [
+        [
+          589,
+          615,
+          1213,
+          1297
+        ]
+      ],
+      "anchor": [
+        916,
+        1253
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "short_spear_windup",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "rects": [
+        [
+          0,
+          0,
+          588,
+          615
+        ]
+      ],
+      "anchor": [
+        279,
+        591
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "short_spear_thrust",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "rects": [
+        [
+          590,
+          0,
+          1213,
+          615
+        ]
+      ],
+      "anchor": [
+        829,
+        605
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "short_spear_recovery",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "rects": [
+        [
+          0,
+          615,
+          589,
+          1297
+        ]
+      ],
+      "anchor": [
+        276,
+        1225
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "shield_guard",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/alpha/poses.png",
+      "rects": [
+        [
+          1175,
+          412,
+          1448,
+          478
+        ],
+        [
+          1090,
+          478,
+          1448,
+          710
+        ]
+      ],
+      "anchor": [
+        1250,
+        699
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          710,
+          210,
+          732
+        ],
+        [
+          0,
+          732,
+          340,
+          1050
+        ]
+      ],
+      "anchor": [
+        171,
+        1038
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/alpha/poses.png",
+      "rects": [
+        [
+          374,
+          742,
+          667,
+          1066
+        ]
+      ],
+      "anchor": [
+        517,
+        1045
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/alpha/poses.png",
+      "rects": [
+        [
+          667,
+          777,
+          1039,
+          1048
+        ]
+      ],
+      "anchor": [
+        855,
+        1034
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "dead_head_right_spear_point_right",
+      "source": "art/animation/source/poses/unit_neutral_milestone_bucklers/alpha/poses.png",
+      "rects": [
+        [
+          1039,
+          851,
+          1448,
+          1055
+        ]
+      ],
+      "anchor": [
+        1244,
+        1025
+      ],
+      "scale": 0.6
+    }
+  ],
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20
+}

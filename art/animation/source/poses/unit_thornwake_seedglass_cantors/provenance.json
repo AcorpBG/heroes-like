@@ -231,5 +231,18 @@
         }
       ]
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_thornwake_seedglass_cantors.png",
+    "runtime_sha256": "5e4c47834757f7bc16ae6ee7abe45a52ed5e5f45686ed889914a77d98c048dff"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "26b8d1b2bcc3b5432c6d765c5475aaae49432438732c6926108c609fd7d60b30",
+    "preserved_frames": 18,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

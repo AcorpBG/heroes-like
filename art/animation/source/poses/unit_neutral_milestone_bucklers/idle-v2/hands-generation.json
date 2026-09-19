@@ -1,0 +1,22 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_neutral_milestone_bucklers",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-c3d5cf54-05db-4653-836b-a7359413b3cb.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_neutral_milestone_bucklers.png",
+  "reference_revision": "33d1091df",
+  "additional_reference": "hands-rejected-extra-blade-original.png",
+  "prompt": "Edit this eight-pose sheet: correct the weapon in frames FOUR (top-right) and FIVE (bottom-left). This guard carries ONE short single-headed spear. It has exactly ONE steel spearhead on the outer tip pointing toward screen LEFT, and a plain wood butt extending from the grip toward screenRIGHT. REMOVE the extra silver spearhead on the right-hand/butt end in those two poses. Preserve the left spearhead, wood shaft, hand grips, all eight distinct elbow gestures, exact character identity, clothing, shield, body size, grounded boots, camera and cell layout. Do not add blade heads or weapons anywhere. Smooth idle lift and settle across 8 frames, quiet head. Canvas1536x1024, four columns two rows, true transparent RGBA background. Restore transparent padding on all canvas edges. First image is the sheet to correct, second image is original weapon reference.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "f4677285f5d887cdba3dbe2443ffc5015e11bdac4374987fe653b826350b040d",
+  "reference_sha256": "df245cdc821039b9cdfd53eaafaa74a9445ed8e5224b78c1d7ad2188caa557cc",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; hand, forearm and owned equipment movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

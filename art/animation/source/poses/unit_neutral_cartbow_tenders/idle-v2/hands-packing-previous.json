@@ -1,0 +1,312 @@
+{
+  "unit_id": "unit_neutral_cartbow_tenders",
+  "frames": [
+    {
+      "name": "idle_a_loaded",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          313,
+          313
+        ]
+      ],
+      "anchor": [
+        168,
+        306
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "idle_b_loaded",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          320,
+          0,
+          618,
+          314
+        ]
+      ],
+      "anchor": [
+        485,
+        306
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "push_contact",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          622,
+          0,
+          944,
+          314
+        ]
+      ],
+      "anchor": [
+        810,
+        306
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "push_passing_loaded",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-alpha/loaded-passing-and-shove-recovery.png",
+      "rects": [
+        [
+          0,
+          0,
+          911,
+          869
+        ]
+      ],
+      "anchor": [
+        635,
+        826
+      ],
+      "scale": 0.285
+    },
+    {
+      "name": "melee_shove_windup_loaded",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          329,
+          319,
+          620,
+          607
+        ]
+      ],
+      "anchor": [
+        483,
+        602
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "melee_shove_loaded",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          632,
+          315,
+          970,
+          611
+        ]
+      ],
+      "anchor": [
+        810,
+        596
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "melee_shove_recovery_loaded",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-alpha/loaded-passing-and-shove-recovery.png",
+      "rects": [
+        [
+          916,
+          0,
+          1810,
+          869
+        ]
+      ],
+      "anchor": [
+        1487,
+        826
+      ],
+      "scale": 0.285
+    },
+    {
+      "name": "crouch_guard_loaded",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          970,
+          369,
+          1254,
+          610
+        ]
+      ],
+      "anchor": [
+        1106,
+        599
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          610,
+          315,
+          909
+        ]
+      ],
+      "anchor": [
+        167,
+        898
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "reload_crank_and_bolt",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          327,
+          612,
+          621,
+          910
+        ]
+      ],
+      "anchor": [
+        483,
+        899
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "aim_loaded",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          627,
+          616,
+          940,
+          910
+        ]
+      ],
+      "anchor": [
+        810,
+        892
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "fired_empty_rail_front_string",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-alpha/fired-string-release-and-recovery.png",
+      "rects": [
+        [
+          0,
+          0,
+          900,
+          872
+        ]
+      ],
+      "anchor": [
+        619,
+        789
+      ],
+      "scale": 0.285
+    },
+    {
+      "name": "fired_empty_recovery_front_string",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/continuity-alpha/fired-string-release-and-recovery.png",
+      "rects": [
+        [
+          921,
+          0,
+          1802,
+          872
+        ]
+      ],
+      "anchor": [
+        1506,
+        789
+      ],
+      "scale": 0.285
+    },
+    {
+      "name": "death_buckle",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          927,
+          298,
+          1210
+        ]
+      ],
+      "anchor": [
+        169,
+        1181
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          298,
+          947,
+          631,
+          1220
+        ]
+      ],
+      "anchor": [
+        491,
+        1184
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          630,
+          951,
+          928,
+          1130
+        ],
+        [
+          630,
+          1130,
+          908,
+          1203
+        ]
+      ],
+      "anchor": [
+        805,
+        1188
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "dead_head_left_intact_cart",
+      "source": "art/animation/source/poses/unit_neutral_cartbow_tenders/alpha/poses.png",
+      "rects": [
+        [
+          928,
+          949,
+          1254,
+          1130
+        ],
+        [
+          908,
+          1130,
+          1254,
+          1227
+        ]
+      ],
+      "anchor": [
+        1104,
+        1196
+      ],
+      "scale": 0.7
+    }
+  ],
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20
+}

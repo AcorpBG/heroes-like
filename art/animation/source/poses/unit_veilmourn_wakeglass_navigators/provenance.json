@@ -90,5 +90,18 @@
       ],
       "removed_bytes": 6576087
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_veilmourn_wakeglass_navigators.png",
+    "runtime_sha256": "c063695e34e23a97b2e33e833370b358fc3563d7ebce41aa574d879bf8112ca5"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "678bfc4afa44da26cfc2f3dcf2cf846e1e7e88ab8aa48d8731e167937335a9bd",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

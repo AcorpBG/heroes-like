@@ -1,0 +1,336 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+      "rects": [
+        [
+          78,
+          0,
+          343,
+          372
+        ]
+      ],
+      "anchor": [
+        205,
+        369
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+      "rects": [
+        [
+          412,
+          0,
+          650,
+          372
+        ]
+      ],
+      "anchor": [
+        539,
+        369
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_near_contact",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-near-contact-corrected-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1060,
+          1484
+        ]
+      ],
+      "anchor": [
+        568,
+        1448
+      ],
+      "scale": 0.155
+    },
+    {
+      "name": "walk_far_lift",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-phase-3-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1058,
+          1486
+        ]
+      ],
+      "anchor": [
+        560,
+        1449
+      ],
+      "scale": 0.152
+    },
+    {
+      "name": "walk_far_contact",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-phase-2-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1058,
+          1486
+        ]
+      ],
+      "anchor": [
+        566,
+        1450
+      ],
+      "scale": 0.155
+    },
+    {
+      "name": "walk_near_lift",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/walk-near-lift-corrected-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1059,
+          1486
+        ]
+      ],
+      "anchor": [
+        574,
+        1447
+      ],
+      "scale": 0.152
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/windup-full-shaft-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1211,
+          1299
+        ]
+      ],
+      "anchor": [
+        759,
+        1230
+      ],
+      "scale": 0.19
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+      "rects": [
+        [
+          724,
+          414,
+          1168,
+          681
+        ],
+        [
+          724,
+          681,
+          1020,
+          717
+        ]
+      ],
+      "anchor": [
+        874,
+        706
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+      "rects": [
+        [
+          1170,
+          374,
+          1416,
+          690
+        ],
+        [
+          1165,
+          690,
+          1416,
+          719
+        ]
+      ],
+      "anchor": [
+        1280,
+        711
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+      "rects": [
+        [
+          65,
+          719,
+          348,
+          1060
+        ]
+      ],
+      "anchor": [
+        208,
+        1053
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "kneel",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+      "rects": [
+        [
+          413,
+          730,
+          670,
+          907
+        ],
+        [
+          413,
+          907,
+          708,
+          1061
+        ]
+      ],
+      "anchor": [
+        547,
+        1048
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "side_fall",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+      "rects": [
+        [
+          672,
+          777,
+          1050,
+          955
+        ],
+        [
+          710,
+          955,
+          1047,
+          1033
+        ]
+      ],
+      "anchor": [
+        874,
+        1017
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_thornwake_seedshield_wardens/continuity-alpha/original.png",
+      "rects": [
+        [
+          1051,
+          887,
+          1434,
+          1032
+        ]
+      ],
+      "anchor": [
+        1249,
+        1020
+      ],
+      "scale": 0.6
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        8
+      ],
+      "loop": true,
+      "frame_msec": 500,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

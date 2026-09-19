@@ -1,0 +1,330 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          310,
+          318
+        ]
+      ],
+      "anchor": [
+        146,
+        310
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          316,
+          0,
+          610,
+          319
+        ]
+      ],
+      "anchor": [
+        460,
+        310
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "run_contact",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          616,
+          0,
+          935,
+          318
+        ]
+      ],
+      "anchor": [
+        765,
+        307
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "run_passing",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/continuity-alpha/fist-recovery-ready-and-passing-step.png",
+      "rects": [
+        [
+          1290,
+          0,
+          1983,
+          793
+        ]
+      ],
+      "anchor": [
+        1635,
+        755
+      ],
+      "scale": 0.295
+    },
+    {
+      "name": "right_fist_windup",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          316,
+          318,
+          607,
+          625
+        ]
+      ],
+      "anchor": [
+        454,
+        619
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "right_fist_strike",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          608,
+          319,
+          936,
+          625
+        ]
+      ],
+      "anchor": [
+        762,
+        619
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "right_fist_recovery",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/continuity-alpha/fist-recovery-ready-and-passing-step.png",
+      "rects": [
+        [
+          0,
+          0,
+          660,
+          793
+        ]
+      ],
+      "anchor": [
+        357,
+        750
+      ],
+      "scale": 0.295
+    },
+    {
+      "name": "empty_fists_ready",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/continuity-alpha/fist-recovery-ready-and-passing-step.png",
+      "rects": [
+        [
+          660,
+          0,
+          1290,
+          793
+        ]
+      ],
+      "anchor": [
+        998,
+        750
+      ],
+      "scale": 0.295
+    },
+    {
+      "name": "empty_fists_crouch",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          941,
+          320,
+          1254,
+          616
+        ]
+      ],
+      "anchor": [
+        1095,
+        588
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          621,
+          291,
+          924
+        ],
+        [
+          0,
+          924,
+          108,
+          933
+        ],
+        [
+          205,
+          924,
+          291,
+          933
+        ]
+      ],
+      "anchor": [
+        159,
+        930
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "draw_jar",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          304,
+          625,
+          609,
+          937
+        ]
+      ],
+      "anchor": [
+        455,
+        932
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "throw_jar_aim",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          612,
+          625,
+          940,
+          794
+        ],
+        [
+          612,
+          794,
+          922,
+          924
+        ],
+        [
+          612,
+          924,
+          910,
+          940
+        ]
+      ],
+      "anchor": [
+        758,
+        934
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "throw_empty_release",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          938,
+          626,
+          1254,
+          940
+        ]
+      ],
+      "anchor": [
+        1077,
+        932
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "empty_hand_recovery",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          105,
+          923,
+          182,
+          941
+        ],
+        [
+          0,
+          941,
+          275,
+          1234
+        ]
+      ],
+      "anchor": [
+        151,
+        1225
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          299,
+          943,
+          548,
+          1220
+        ]
+      ],
+      "anchor": [
+        425,
+        1198
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          550,
+          994,
+          840,
+          1190
+        ]
+      ],
+      "anchor": [
+        699,
+        1180
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "dead_head_right_dark_jars",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          842,
+          1039,
+          1254,
+          1220
+        ]
+      ],
+      "anchor": [
+        1028,
+        1190
+      ],
+      "scale": 0.7
+    }
+  ],
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20
+}
