@@ -310,3 +310,40 @@ work or owner visual acceptance. No full suite, gameplay session, Linux or
 package run was performed. Restart/reload updates existing version 2 maps.
 Temporary previews/logs/profiles are removed after review; sources, prompts,
 runtime assets, rebuild tooling, caches, saves and unrelated files are retained.
+
+## Dirt and rough formations; fuller plains forest edges
+
+The owner's next screenshots showed the remaining terrain gap: dirt and rough
+still used per-cell rubble and small vegetation, while grass needed fuller
+woodland edges. Connected patches now cover dirt and rough as well. Each terrain
+has separate rock and vegetation routes, so adjacent dry trees do not become
+rocks and rocky bases do not acquire woodland textures.
+
+Five new original transparent sprites add two rusty-brown dirt escarpment/massif
+shapes, two grey rough ridge/buttress shapes and one dense dry thorn thicket.
+Broad connected rock patches replace rows of individual rubble. Full-sized
+outcrops remain at isolated one-cell edges. Dirt vegetation joins dry thickets;
+rough woodland uses the existing highland pine masses. The built-in image
+generation tool produced the five originals, with exact prompts and unmodified
+sources alongside the earlier four in `connected_patches_20260919`.
+
+Plains scrub blocker cells now join the woodland route. Forests have fuller
+upper crowns and shared side overlap, plus a narrow outer canopy fringe of
+0.22 tiles. The fringe stays short of adjacent tile centers. Patch bases still
+use only existing blocked cells, and no native placements, movement masks,
+roads or saved data change. Existing version 2 maps update after restart/reload;
+legacy rendering is unchanged. This is a visual composition change, not a
+native RMG density adjustment or parity claim.
+
+Before/after grass, dirt and rough crops from the existing saved map were
+visually reviewed, along with the mixed mountain overlap fixture. These are
+saved-map excerpts, not the owner's exact screenshot. The saved-map checks
+passed 2,730 assertions for dirt/rough and 2,749 for grass, preserving all 1,220
+blocked cells. Its 175 visual patches include 69 spanning multiple source
+records. Formation, mountain and vegetation overlap checks passed 231, 927
+and 400 assertions, including depth, deterministic reindexing and fog clipping.
+All 2,996 generated-blocker content/provenance contracts and Windows Godot
+import passed; the wiki includes the new assets. No full suite, gameplay,
+Linux or package run was performed. Owner visual acceptance remains separate.
+Task-owned review renders, logs and isolated profiles are removed after review;
+originals, prompts, runtime art, source tooling, saves and caches are retained.

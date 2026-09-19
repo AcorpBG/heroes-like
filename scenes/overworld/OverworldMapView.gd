@@ -10907,7 +10907,7 @@ func _index_native_rock_contacts() -> void:
 func _index_connected_scenery_patches() -> void:
 	var profiles := ContentService.load_json("res://art/overworld/connected_scenery.json")
 	var rules = preload("res://scripts/persistence/NativeSceneryRules.gd")
-	var by_terrain := {}
+	var routes := {}
 	for cell in _generated_decorative_bodies_by_tile.values():
 		if int(cell.get("native_scenery_art_version",0))<2: continue
 		var tile := Vector2i(cell.x,cell.y)
@@ -10916,27 +10916,35 @@ func _index_connected_scenery_patches() -> void:
 		if profile.is_empty(): continue
 		var policy: Dictionary = rules.policy(cell)
 		var family := String(policy.get("landscape_family",policy.get("variation_family","")))
-		if family not in profile.families or policy.has("variation_biome"): continue
-		cell.erase("generated_body_formation")
-		cell["generated_landscape_patch"] = true
-		if not by_terrain.has(terrain): by_terrain[terrain]=[]
-		by_terrain[terrain].append(tile)
-	for terrain in by_terrain:
-		var profile: Dictionary = profiles[terrain]
-		for patch in preload("res://scripts/persistence/NativeSceneryFormation.gd").landscape_patches(by_terrain[terrain]):
+		if policy.has("variation_biome"): continue
+		var choices: Array = [profile]
+		choices.append_array(profile.get("secondary",[]))
+		for choice in choices:
+			if family not in choice.families: continue
+			var key := terrain + "|" + String(choice.group)
+			if not routes.has(key): routes[key]={"terrain":terrain,"profile":choice,"tiles":[]}
+			routes[key].tiles.append(tile)
+			cell.erase("generated_body_formation")
+			cell["generated_landscape_patch"] = true
+			break
+	for route in routes.values():
+		var terrain: String = route.terrain
+		var profile: Dictionary = route.profile
+		for patch in preload("res://scripts/persistence/NativeSceneryFormation.gd").landscape_patches(route.tiles):
 			var seed: int = patch.order
 			patch["asset_id"] = profile.assets[seed % profile.assets.size()]
-			patch["source_placement_id"] = "visual_patch|%s|%s" % [terrain,patch.origin]
+			patch["source_placement_id"] = "visual_patch|%s|%s|%s" % [terrain,profile.group,patch.origin]
 			patch["overlapping"] = true
 			patch["connected_landscape"] = true
 			patch["overlap_group"] = profile.group
 			patch["overhang"] = profile.overhang
 			patch["side_overlap"] = profile.side_overlap
-			patch["presentation"] = {"native_scenery_art_version":2,"h3m_type_id":134 if terrain=="sand" else 135}
+			patch["canopy_margin"] = float(profile.get("canopy_margin",0.0))
+			patch["presentation"] = {"native_scenery_art_version":2,"h3m_type_id":int(profile.get("type_id",134 if profile.group=="rock" else 135))}
 			# Small margins use full-sized outcrops/groves, never repeated scree.
 			if patch.tiles.size()==1:
 				patch.asset_id=profile.edge_assets[seed % profile.edge_assets.size()]
-				patch.overhang=0.3 if terrain=="sand" else 0.65
+				patch.overhang=float(profile.get("edge_overhang",0.3 if profile.group=="rock" else 0.65))
 			for tile in patch.tiles:
 				_generated_decorative_bodies_by_tile[_tile_key(tile)]["generated_body_formation"]=patch
 
@@ -10960,7 +10968,10 @@ func _index_native_scenery_layers() -> void:
 	for formation in ordered:
 		var mass := Rect2i(formation.mass_origin, formation.mass_size)
 		var connected_landscape := bool(formation.get("connected_landscape", false))
-		var margins := [0.0, 0.0]
+		# A narrow canopy fringe softens plains outlines without reaching the
+		# center of an adjacent road/path tile. This changes art, not occupancy.
+		var canopy_margin := clampf(float(formation.get("canopy_margin",0.0)),0.0,0.24)
+		var margins := [canopy_margin, canopy_margin]
 		for side in range(2):
 			var x: int = mass.position.x - 1 if side == 0 else mass.end.x
 			var matching_rows := 0
@@ -10979,7 +10990,7 @@ func _index_native_scenery_layers() -> void:
 					if String(neighbor.get("overworld_sprite_asset_id", "")).begins_with("plains_grove_v2_"): neighbor_group = "vegetation"
 				if neighbor_group == String(formation.overlap_group): matching_rows += 1
 			if matching_rows == mass.size.y or connected_landscape:
-				margins[side] = float(formation.get("side_overlap", 0.45)) * float(matching_rows) / mass.size.y
+				margins[side] = maxf(canopy_margin,float(formation.get("side_overlap", 0.45)) * float(matching_rows) / mass.size.y)
 		var front_overlap := 0.0
 		if connected_landscape:
 			# Small shared skirts hide horizontal patch seams. Their bases remain

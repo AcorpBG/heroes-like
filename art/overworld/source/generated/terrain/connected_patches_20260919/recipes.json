@@ -37,6 +37,46 @@
       "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_vegetation_woods_plains_copse_v3.png",
       "atlas": "res://art/overworld/source/generated/terrain/connected_patches_20260919/plains_copse.png",
       "sha256": "5a218430a0415627e0faa8baee04c99755a985abe57a2ecfeb29846d1ab3f6d7"
+    },
+    {
+      "id": "native_mountain_dirt_escarpment_v3",
+      "kind": "original_mountain_mass",
+      "biome": "biome_rough_badlands",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_dirt_escarpment_v3.png",
+      "atlas": "res://art/overworld/source/generated/terrain/connected_patches_20260919/dirt_escarpment.png",
+      "sha256": "b7bc6f3aaeeca70761ffcedf721475c90bfc9f0f8f428d6b0cc5b3665af51390"
+    },
+    {
+      "id": "native_mountain_dirt_massif_v3",
+      "kind": "original_mountain_mass",
+      "biome": "biome_rough_badlands",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_dirt_massif_v3.png",
+      "atlas": "res://art/overworld/source/generated/terrain/connected_patches_20260919/dirt_massif.png",
+      "sha256": "79e241905fa4ebff9803084428052944050d395eb16bdae763e4df5fb3ca2454"
+    },
+    {
+      "id": "native_mountain_rough_ridge_v3",
+      "kind": "original_mountain_mass",
+      "biome": "biome_highland_ridge",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_rough_ridge_v3.png",
+      "atlas": "res://art/overworld/source/generated/terrain/connected_patches_20260919/rough_ridge.png",
+      "sha256": "7ca338b56d2d33d33e2f501ccdc14ce13e5589f3efc9c1593b1fb965938cf38a"
+    },
+    {
+      "id": "native_mountain_rough_buttress_v3",
+      "kind": "original_mountain_mass",
+      "biome": "biome_highland_ridge",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_rough_buttress_v3.png",
+      "atlas": "res://art/overworld/source/generated/terrain/connected_patches_20260919/rough_buttress.png",
+      "sha256": "ca67bba8d8e5fc618c716a34fe433486d197ccd01521b2f9757fd63aad6f09fe"
+    },
+    {
+      "id": "native_vegetation_deadwood_dirt_thicket_v3",
+      "kind": "original_vegetation_mass",
+      "biome": "biome_rough_badlands",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_vegetation_deadwood_dirt_thicket_v3.png",
+      "atlas": "res://art/overworld/source/generated/terrain/connected_patches_20260919/dirt_thicket.png",
+      "sha256": "22d664622def480be2172586383e30329fb60b7dfee9beb33a512321f5e425dc"
     }
   ]
 }

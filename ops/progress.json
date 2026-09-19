@@ -22302,6 +22302,15 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "art-deadlands-grass-fringes-20260919",
+      "title": "Connected dirt and rough scenery; fuller plains forest edges",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "notes": "Dirt/rough rock and vegetation now use separate connected visual patches with five new originals; plains scrub joins fuller woodland edges. Saved-map crops reviewed; 1,220 blocked cells preserved, overlap/fog checks, 2,996 content contracts and Windows import pass. Native masks/paths unchanged; no full suite. See docs/biome-source-component-expansion.md. Owner visual acceptance remains separate."
+    },
+    {
       "id": "art-connected-scenery-patches-20260919",
       "title": "Connected sandstone bluffs and fuller plains woodland",
       "status": "completed",

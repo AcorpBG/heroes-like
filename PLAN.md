@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Dirt/deadland formations and plains forest edges
+
+`art-deadlands-grass-fringes-20260919` — completed. Dirt and rough now use connected rock and vegetation patches with five new originals; plains scrub becomes groves and woodland edges have fuller crowns. Saved-map crops reviewed; focused overlap/fog/mask/content checks and Windows import pass. Native masks and paths unchanged. See `docs/biome-source-component-expansion.md`.
+
 ### Connected landscape patches
 
 `art-connected-scenery-patches-20260919` — completed. Sand and plains use connected visual patches across compatible neighboring source bodies, four original broad sandstone/full woodland sprites, and lower plains undergrowth. Dense saved-map sand/grass crops reviewed; focused mask/overlap/fog/content checks and Windows import pass. Native placements and paths unchanged. See `docs/biome-source-component-expansion.md`.

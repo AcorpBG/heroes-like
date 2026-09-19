@@ -26,11 +26,12 @@
     "families": [
       "rock",
       "woods",
-      "conifers"
+      "conifers",
+      "scrub"
     ],
     "group": "vegetation",
-    "overhang": 0.85,
-    "side_overlap": 0.55,
+    "overhang": 1.0,
+    "side_overlap": 0.75,
     "assets": [
       "native_vegetation_woods_plains_full_v3",
       "native_vegetation_woods_plains_copse_v3"
@@ -136,6 +137,118 @@
       "plains_grove_v2_grasslands_woods_24_1",
       "plains_grove_v2_grasslands_woods_24_2",
       "plains_grove_v2_grasslands_woods_24_3"
+    ],
+    "canopy_margin": 0.22,
+    "edge_overhang": 0.8
+  },
+  "dirt": {
+    "families": [
+      "rock"
+    ],
+    "group": "rock",
+    "type_id": 134,
+    "overhang": 1.25,
+    "side_overlap": 0.7,
+    "canopy_margin": 0.1,
+    "edge_overhang": 0.6,
+    "assets": [
+      "native_mountain_dirt_escarpment_v3",
+      "native_mountain_dirt_massif_v3"
+    ],
+    "edge_assets": [
+      "biome_component_v2_rough_badlands_rock_00",
+      "biome_component_v2_rough_badlands_rock_02",
+      "biome_component_v2_rough_badlands_rock_05",
+      "biome_component_v2_rough_badlands_rock_10",
+      "biome_component_v2_rough_badlands_rock_12",
+      "biome_component_v2_rough_badlands_rock_14",
+      "biome_component_v2_rough_badlands_rock_17",
+      "biome_component_v2_rough_badlands_rock_22"
+    ],
+    "secondary": [
+      {
+        "families": [
+          "woods",
+          "conifers",
+          "deadwood",
+          "scrub"
+        ],
+        "group": "vegetation",
+        "type_id": 119,
+        "overhang": 0.8,
+        "side_overlap": 0.6,
+        "canopy_margin": 0.14,
+        "edge_overhang": 0.6,
+        "assets": [
+          "native_vegetation_deadwood_dirt_thicket_v3",
+          "native_vegetation_deadwood_dry_thorns_00",
+          "native_vegetation_deadwood_dry_thorns_01",
+          "native_vegetation_deadwood_dry_thorns_02",
+          "native_vegetation_deadwood_dry_thorns_03",
+          "native_vegetation_deadwood_dry_thorns_04"
+        ],
+        "edge_assets": [
+          "native_vegetation_deadwood_dirt_thicket_v3",
+          "native_vegetation_deadwood_dry_thorns_00",
+          "native_vegetation_deadwood_dry_thorns_01",
+          "native_vegetation_deadwood_dry_thorns_02",
+          "native_vegetation_deadwood_dry_thorns_03",
+          "native_vegetation_deadwood_dry_thorns_04"
+        ]
+      }
+    ]
+  },
+  "rough": {
+    "families": [
+      "rock"
+    ],
+    "group": "rock",
+    "type_id": 134,
+    "overhang": 1.25,
+    "side_overlap": 0.7,
+    "canopy_margin": 0.1,
+    "edge_overhang": 0.6,
+    "assets": [
+      "native_mountain_rough_ridge_v3",
+      "native_mountain_rough_buttress_v3"
+    ],
+    "edge_assets": [
+      "biome_component_v2_highland_ridge_rock_00",
+      "biome_component_v2_highland_ridge_rock_02",
+      "biome_component_v2_highland_ridge_rock_05",
+      "biome_component_v2_highland_ridge_rock_10",
+      "biome_component_v2_highland_ridge_rock_12",
+      "biome_component_v2_highland_ridge_rock_14",
+      "biome_component_v2_highland_ridge_rock_17",
+      "biome_component_v2_highland_ridge_rock_22"
+    ],
+    "secondary": [
+      {
+        "families": [
+          "woods",
+          "conifers"
+        ],
+        "group": "vegetation",
+        "type_id": 137,
+        "overhang": 0.9,
+        "side_overlap": 0.5,
+        "canopy_margin": 0.1,
+        "edge_overhang": 0.65,
+        "assets": [
+          "native_vegetation_conifers_highland_pines_00",
+          "native_vegetation_conifers_highland_pines_01",
+          "native_vegetation_conifers_highland_pines_02",
+          "native_vegetation_conifers_highland_pines_03",
+          "native_vegetation_conifers_highland_pines_04"
+        ],
+        "edge_assets": [
+          "native_vegetation_conifers_highland_pines_00",
+          "native_vegetation_conifers_highland_pines_01",
+          "native_vegetation_conifers_highland_pines_02",
+          "native_vegetation_conifers_highland_pines_03",
+          "native_vegetation_conifers_highland_pines_04"
+        ]
+      }
     ]
   }
 }

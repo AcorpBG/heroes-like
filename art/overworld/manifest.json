@@ -41570,6 +41570,41 @@
       "source_model": "original_vegetation_mass",
       "source_manifest": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
       "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "native_mountain_dirt_escarpment_v3": {
+      "path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_dirt_escarpment_v3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/connected_patches_20260919/dirt_escarpment.png",
+      "source_model": "original_mountain_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "native_mountain_dirt_massif_v3": {
+      "path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_dirt_massif_v3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/connected_patches_20260919/dirt_massif.png",
+      "source_model": "original_mountain_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "native_mountain_rough_ridge_v3": {
+      "path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_rough_ridge_v3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/connected_patches_20260919/rough_ridge.png",
+      "source_model": "original_mountain_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "native_mountain_rough_buttress_v3": {
+      "path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_rough_buttress_v3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/connected_patches_20260919/rough_buttress.png",
+      "source_model": "original_mountain_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "native_vegetation_deadwood_dirt_thicket_v3": {
+      "path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_vegetation_deadwood_dirt_thicket_v3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/connected_patches_20260919/dirt_thicket.png",
+      "source_model": "original_vegetation_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
     }
   },
   "resource_site_sprites": {

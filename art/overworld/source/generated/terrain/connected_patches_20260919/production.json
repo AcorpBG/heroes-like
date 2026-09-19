@@ -1,6 +1,6 @@
 {
   "generator": "OpenAI built-in image generation",
-  "purpose": "Connected sand bluffs and dense plains woodland; presentation only",
+  "purpose": "Connected sand, dirt and rough landforms, dry thickets and dense plains woodland; presentation only",
   "sprites": [
     {
       "id": "native_mountain_sand_bluff_v3",
@@ -32,6 +32,46 @@
       "prompt": "Use case: stylized-concept. Create ONE original adventure-map forest cutout sprite. Dense asymmetrical roughly triangular woodland patch, wide low front and taller narrow rear slightly right of center, continuous overlapping canopy of 25 small oak, beech and birch trees, a few dark firs in back. All crowns joined naturally into a dense full forest, olive/leaf green with a few amber foliage crowns; strong dappled light from upper left, dark natural shadow between crowns. Uneven tapering outer edge with small saplings at the feet, trunks only visible along front. NO hole in the middle, NO ring, NO evenly spaced trees, NO repeating identical crowns. Elevated 3/4 orthographic map view, detailed painted/gritty prerendered 1990s fantasy strategy game aesthetic. TRUE alpha transparent background, no background scene, no colored backdrop, no floating platform or ground tile, no text or labels. Broad 3:2 forest mass, completely within frame with clear margin. Individual plants should all be trees, not oversized grasses or ferns. Landscape1536x1024.",
       "family": "woods",
       "terrain": "grass",
+      "kind": "original_vegetation_mass"
+    },
+    {
+      "id": "native_mountain_dirt_escarpment_v3",
+      "file": "dirt_escarpment.png",
+      "prompt": "Use case: stylized-concept. ONE original fantasy adventure map sprite: a broad continuous red-brown badlands escarpment, irregular winding low massive ridge, dark rusty umber sedimentary cliffs and angular weathered shoulders all joined into one rocky landform. Several unequal blunt tall crags behind, broad layered shelves and connected sloping foothills in front. Asymmetric elongated C silhouette with solid center and tapering jagged ends, NOT a ring, NOT thin line. Elevated three-quarter orthographic adventure-map perspective, rich fine gritty hand-painted late 1990s prerendered strategy art, light upper left. Muted burnt ochre and earth brown, deep brown cracks, no bright orange or lava, no sandstone cream, no plants. Multi-tile mountain mass, not a collection of little rocks; NO gravel rows, NO separate boulders, NO square ground pad, NO rectangular platform, NO cone pyramids. True RGBA transparent outside silhouette, generous transparent margin all sides, no backdrop, text, sky or labels. Wide 1536x1024 canvas.",
+      "family": "rock",
+      "terrain": "dirt",
+      "kind": "original_mountain_mass"
+    },
+    {
+      "id": "native_mountain_dirt_massif_v3",
+      "file": "dirt_massif.png",
+      "prompt": "Use case: stylized-concept. ONE original adventure-map multi-tile scenery sprite, a massive irregular broad badlands rocky outcrop with a FULL FILLED CENTER, no hole or ring. Muted rusty brown and burnt ochre rock, solid low sloping weathered shoulders enclosing three unequal blunt jagged crags offset toward the rear left, layered fractured rock shelves and large interlocking stone buttresses at its base. Compact roughly oval footprint but deeply scalloped natural contour and asymmetric tapering branches, original unbalanced composition, wide 3:2 proportions. Continuous joined rock, NOT separated miniature stones. Elevated 3/4 orthographic view, finely detailed gritty painterly 1990s prerendered fantasy strategy art, warm upper-left sunlight, deep brown crevices, no lava or glow, no bright orange. True RGBA transparent background including outside indentations, generous clear margin all around. No terrain platform, square base, sky, backdrop, text, labels, characters, plants or rows of gravel. Wide1536x1024 canvas.",
+      "family": "rock",
+      "terrain": "dirt",
+      "kind": "original_mountain_mass"
+    },
+    {
+      "id": "native_mountain_rough_ridge_v3",
+      "file": "rough_ridge.png",
+      "prompt": "Use case: stylized-concept. ONE original fantasy strategy adventure-map mountain cutout sprite. Broad dark grey-brown granite massif, several uneven rugged peaks merging into a full solid sloping base, broken angular buttresses, deep fissures, muted olive lichen only along the lowest feet. Long crooked diagonal ridge, one tall rear-left summit and shorter jagged right shoulder, asymmetric tapering spurs. A continuous HEAVY connected landform, not pebbles or disconnected separate mountains. Wide3:2 mass with full center. Elevated 3/4 orthographic map view, finely painted gritty 1990s prerendered strategy art, upper-left daylight. Weathered slate gray, muted taupe highlights and dark brown-gray shadow, no snow, lava, crystals or bright green. Irregular natural alpha contour, no ground slab or square base, no pedestal. True RGBA transparent background, no backdrop, no text or labels, generous empty margins. 1536x1024 landscape canvas.",
+      "family": "rock",
+      "terrain": "rough",
+      "kind": "original_mountain_mass"
+    },
+    {
+      "id": "native_mountain_rough_buttress_v3",
+      "file": "rough_buttress.png",
+      "prompt": "Use case: stylized-concept. ONE original multi-tile fantasy strategy-map ROCK FORMATION sprite. Heavy broad weathered grey granite escarpment, compact asymmetrical crescent with filled rocky center, low domed rugged summit right of center, giant fractured buttresses and slabs interlock down to its feet, two shorter jagged crags at left. NO loose pebble carpet. Continuous sloping rock mass with deep natural clefts and irregular tapering side spurs, no regular geometric base. Muted charcoal/taupe stone, faint olive lichen, no snow, no bright colored minerals, no glow. Elevated three-quarter orthographic view, upper-left daylight, finely hand-painted gritty detail in 1990s prerendered fantasy adventure-map style. Wide3:2 proportions; full silhouette entirely inside canvas with clear margin, TRUE transparent RGBA background. No sky, background scenery, text, square floor or grid. Make this a single coherent large landscape obstacle, not an arrangement of separate stones. Landscape1536x1024.",
+      "family": "rock",
+      "terrain": "rough",
+      "kind": "original_mountain_mass"
+    },
+    {
+      "id": "native_vegetation_deadwood_dirt_thicket_v3",
+      "file": "dirt_thicket.png",
+      "prompt": "Use case: stylized-concept. ONE original fantasy strategy adventure-map cutout sprite, a dense dry woodland thicket of many SMALL twisted dead acacia and thorn trees with interwoven branches and low brown scrub. Around twenty thin trunks, several broken snags, low thorn branches joining their bases, a few restrained dusty olive leaves only at tips. Broad irregular full patch, off-center taller branches at back left, tapering low brush tail at right. Connected tangled growth rather than a row of separate objects; no empty circular center or regular spacing. Trees individually small like a forest seen from afar, NO giant single tree. Muted weathered warm dark brown bark and grey branch tips, suitable over ochre badlands earth. Elevated 3/4 orthographic view, upper-left light, crisp detailed hand-painted gritty prerendered 1990s fantasy strategy aesthetic. True transparent RGBA background outside the silhouette and through branch gaps; no square ground pad, no background, sky, characters or text. Generous clear margins, wide1536x1024 canvas.",
+      "family": "deadwood",
+      "terrain": "dirt",
       "kind": "original_vegetation_mass"
     }
   ]
