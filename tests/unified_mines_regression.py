@@ -68,7 +68,7 @@ func run():
 	check(aliases.size()==12,"missing legacy aliases")
 	var rare := {"kind":"mine","object_id":"object_cinder_ore_face","site_id":"site_aetherglass_lens_house","x":5,"y":5}
 	check(Mines.resource(rare).is_empty(),"rare mine reclassified as ore")
-	check(view._resource_asset_id(rare)=="mapobj_aetherglass_lens_house","rare mine uses obsolete ore art")
+	check(view._resource_asset_id(rare)=="mapobj_rare_aetherglass_mine","rare mine uses obsolete ore art")
 	check(Mines.resource({"kind":"reward_reference","site_id":"site_ridge_quarry"}).is_empty(),"loose reward turned into mine")
 	var node := {"site_id":"site_ridge_quarry","kind":"mine","object_id":"object_ridge_quarry","placement_id":"geometry_mine","x":3,"y":3,"visit_tile":{"x":3,"y":3},"level":0,"package_block_tiles":[{"x":8,"y":8}],"runtime_footprint":{"width":1,"height":1},"object_footprint_catalog_ref":{"test":"retained"},"collected":false}
 	var original := node.duplicate(true)
@@ -181,20 +181,16 @@ func run():
 '''
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--godot', required=True)
-    parser.add_argument('--output', type=Path, required=True)
-    args = parser.parse_args()
-    out = args.output.resolve()
+def run_probe(script, godot, output, marker='UNIFIED_MINES_REPORT'):
+    out = output.resolve()
     out.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='mine-probe-', dir=out) as directory:
         work = Path(directory)
-        (work/'probe.gd').write_text(SCRIPT, encoding='utf-8')
+        (work/'probe.gd').write_text(script, encoding='utf-8')
         scene = work/'probe.tscn'
         scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="probe.gd" id="1"]\n[node name="MineProbe" type="Node"]\nscript=ExtResource("1")\n', encoding='utf-8')
         env = dict(os.environ, APPDATA=str(work/'profile'), XDG_DATA_HOME=str(work/'profile'))
-        command = [args.godot, '--path', str(ROOT), '--rendering-method', 'gl_compatibility', '--audio-driver', 'Dummy', '--position', '-16000,-16000', '--resolution', '1280x720', '--quit-after', '900', '--log-file', str(out/'engine.log'), 'res://'+scene.relative_to(ROOT).as_posix(), '--', str(out)]
+        command = [godot, '--path', str(ROOT), '--rendering-method', 'gl_compatibility', '--audio-driver', 'Dummy', '--position', '-16000,-16000', '--resolution', '1280x720', '--quit-after', '900', '--log-file', str(out/'engine.log'), 'res://'+scene.relative_to(ROOT).as_posix(), '--', str(out)]
         if os.name != 'nt': command = ['xvfb-run', '-a'] + command
         with (out/'console.log').open('w', encoding='utf-8') as log:
             result = subprocess.run(command, env=env, stdout=log, stderr=subprocess.STDOUT, timeout=120,
@@ -202,7 +198,15 @@ def main():
         text = (out/'console.log').read_text(encoding='utf-8')
         print(text)
         errors = [line for line in text.splitlines() if 'ERROR' in line and line != 'ERROR: Failed to read the root certificate store.']
-        return result.returncode or int(bool(errors) or 'UNIFIED_MINES_REPORT' not in text)
+        return result.returncode or int(bool(errors) or marker not in text)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--godot', required=True)
+    parser.add_argument('--output', type=Path, required=True)
+    args = parser.parse_args()
+    return run_probe(SCRIPT, args.godot, args.output)
 
 
 if __name__ == '__main__':

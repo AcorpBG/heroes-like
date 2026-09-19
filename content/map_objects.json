@@ -21450,7 +21450,7 @@
     },
     {
       "id": "object_aetherglass_lens_house",
-      "name": "Aetherglass Lens House",
+      "name": "Aetherglass Mine",
       "family": "staged_resource_front",
       "schema_version": 1,
       "primary_class": "persistent_economy_site",
@@ -21464,14 +21464,21 @@
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "batch002_role": "rare_resource_front",
       "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_mire_fen",
         "biome_highland_ridge",
-        "biome_grasslands"
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes",
+        "biome_coast_archipelago",
+        "biome_subterranean_underways",
+        "biome_snow_frost_marches"
       ],
       "footprint": {
-        "width": 2,
+        "width": 3,
         "height": 2,
         "anchor": "bottom_center",
-        "tier": "medium"
+        "tier": "large"
       },
       "body_tiles": [
         {
@@ -21485,12 +21492,17 @@
           "role": "body"
         },
         {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
           "x": 0,
           "y": 1,
           "role": "body"
         },
         {
-          "x": 1,
+          "x": 2,
           "y": 1,
           "role": "body"
         }
@@ -21529,7 +21541,7 @@
         "refresh_rule": "daily_income"
       },
       "animation_cues": [
-        "object_resource_front_idle_placeholder"
+        "object_common_mine_machinery_idle"
       ],
       "editor_placement": {
         "placement_mode": "resource_site_object",
@@ -21556,7 +21568,7 @@
     },
     {
       "id": "object_sunfall_aetherglass_yard",
-      "name": "Sunfall Aetherglass Yard",
+      "name": "Aetherglass Mine",
       "family": "staged_resource_front",
       "schema_version": 1,
       "primary_class": "persistent_economy_site",
@@ -21570,8 +21582,15 @@
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "batch002_role": "rare_resource_front",
       "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_rough_badlands",
         "biome_ash_lava_wastes",
-        "biome_highland_ridge"
+        "biome_coast_archipelago",
+        "biome_subterranean_underways",
+        "biome_snow_frost_marches"
       ],
       "footprint": {
         "width": 3,
@@ -21597,11 +21616,6 @@
         },
         {
           "x": 0,
-          "y": 1,
-          "role": "body"
-        },
-        {
-          "x": 1,
           "y": 1,
           "role": "body"
         },
@@ -21645,7 +21659,7 @@
         "refresh_rule": "daily_income"
       },
       "animation_cues": [
-        "object_resource_front_idle_placeholder"
+        "object_common_mine_machinery_idle"
       ],
       "editor_placement": {
         "placement_mode": "resource_site_object",
@@ -21672,7 +21686,7 @@
     },
     {
       "id": "object_embergrain_warm_granary",
-      "name": "Embergrain Warm Granary",
+      "name": "Embergrain Granary",
       "family": "staged_resource_front",
       "schema_version": 1,
       "primary_class": "persistent_economy_site",
@@ -21687,11 +21701,18 @@
       "batch002_role": "rare_resource_front",
       "biome_ids": [
         "biome_grasslands",
-        "biome_ash_lava_wastes"
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes",
+        "biome_coast_archipelago",
+        "biome_subterranean_underways",
+        "biome_snow_frost_marches"
       ],
       "footprint": {
-        "width": 2,
-        "height": 3,
+        "width": 3,
+        "height": 2,
         "anchor": "bottom_center",
         "tier": "large"
       },
@@ -21707,23 +21728,18 @@
           "role": "body"
         },
         {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
           "x": 0,
           "y": 1,
           "role": "body"
         },
         {
-          "x": 1,
+          "x": 2,
           "y": 1,
-          "role": "body"
-        },
-        {
-          "x": 0,
-          "y": 2,
-          "role": "body"
-        },
-        {
-          "x": 1,
-          "y": 2,
           "role": "body"
         }
       ],
@@ -21735,7 +21751,7 @@
         "visit_offsets": [
           {
             "x": 1,
-            "y": 2
+            "y": 1
           }
         ],
         "stop_before_interaction": true,
@@ -21761,7 +21777,7 @@
         "refresh_rule": "daily_income"
       },
       "animation_cues": [
-        "object_resource_front_idle_placeholder"
+        "object_common_mine_machinery_idle"
       ],
       "editor_placement": {
         "placement_mode": "resource_site_object",
@@ -21788,7 +21804,7 @@
     },
     {
       "id": "object_charcoal_embergrain_store",
-      "name": "Charcoal Embergrain Store",
+      "name": "Embergrain Granary",
       "family": "staged_resource_front",
       "schema_version": 1,
       "primary_class": "persistent_economy_site",
@@ -21802,14 +21818,21 @@
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "batch002_role": "rare_resource_front",
       "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_rough_badlands",
         "biome_ash_lava_wastes",
-        "biome_rough_badlands"
+        "biome_coast_archipelago",
+        "biome_subterranean_underways",
+        "biome_snow_frost_marches"
       ],
       "footprint": {
         "width": 3,
-        "height": 3,
+        "height": 2,
         "anchor": "bottom_center",
-        "tier": "region_feature"
+        "tier": "large"
       },
       "body_tiles": [
         {
@@ -21833,28 +21856,8 @@
           "role": "body"
         },
         {
-          "x": 1,
-          "y": 1,
-          "role": "body"
-        },
-        {
           "x": 2,
           "y": 1,
-          "role": "body"
-        },
-        {
-          "x": 0,
-          "y": 2,
-          "role": "body"
-        },
-        {
-          "x": 1,
-          "y": 2,
-          "role": "body"
-        },
-        {
-          "x": 2,
-          "y": 2,
           "role": "body"
         }
       ],
@@ -21866,7 +21869,7 @@
         "visit_offsets": [
           {
             "x": 1,
-            "y": 2
+            "y": 1
           }
         ],
         "stop_before_interaction": true,
@@ -21892,7 +21895,7 @@
         "refresh_rule": "daily_income"
       },
       "animation_cues": [
-        "object_resource_front_idle_placeholder"
+        "object_common_mine_machinery_idle"
       ],
       "editor_placement": {
         "placement_mode": "resource_site_object",
@@ -21919,7 +21922,7 @@
     },
     {
       "id": "object_peatwax_reed_yard",
-      "name": "Peatwax Reed Yard",
+      "name": "Peatwax Mine",
       "family": "staged_resource_front",
       "schema_version": 1,
       "primary_class": "persistent_economy_site",
@@ -21933,14 +21936,21 @@
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "batch002_role": "rare_resource_front",
       "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
         "biome_mire_fen",
-        "biome_coast_archipelago"
+        "biome_highland_ridge",
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes",
+        "biome_coast_archipelago",
+        "biome_subterranean_underways",
+        "biome_snow_frost_marches"
       ],
       "footprint": {
-        "width": 2,
+        "width": 3,
         "height": 2,
         "anchor": "bottom_center",
-        "tier": "medium"
+        "tier": "large"
       },
       "body_tiles": [
         {
@@ -21954,12 +21964,17 @@
           "role": "body"
         },
         {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
           "x": 0,
           "y": 1,
           "role": "body"
         },
         {
-          "x": 1,
+          "x": 2,
           "y": 1,
           "role": "body"
         }
@@ -21998,7 +22013,7 @@
         "refresh_rule": "daily_income"
       },
       "animation_cues": [
-        "object_resource_front_idle_placeholder"
+        "object_common_mine_machinery_idle"
       ],
       "editor_placement": {
         "placement_mode": "resource_site_object",
@@ -22039,8 +22054,15 @@
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "batch002_role": "rare_resource_front",
       "biome_ids": [
+        "biome_grasslands",
         "biome_deep_forest",
-        "biome_mire_fen"
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes",
+        "biome_coast_archipelago",
+        "biome_subterranean_underways",
+        "biome_snow_frost_marches"
       ],
       "footprint": {
         "width": 3,
@@ -22066,11 +22088,6 @@
         },
         {
           "x": 0,
-          "y": 1,
-          "role": "body"
-        },
-        {
-          "x": 1,
           "y": 1,
           "role": "body"
         },
@@ -22114,7 +22131,7 @@
         "refresh_rule": "daily_income"
       },
       "animation_cues": [
-        "object_resource_front_idle_placeholder"
+        "object_common_mine_machinery_idle"
       ],
       "editor_placement": {
         "placement_mode": "resource_site_object",
@@ -22155,124 +22172,15 @@
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "batch002_role": "rare_resource_front",
       "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes",
+        "biome_coast_archipelago",
         "biome_subterranean_underways",
-        "biome_rough_badlands"
-      ],
-      "footprint": {
-        "width": 2,
-        "height": 3,
-        "anchor": "bottom_center",
-        "tier": "large"
-      },
-      "body_tiles": [
-        {
-          "x": 0,
-          "y": 0,
-          "role": "body"
-        },
-        {
-          "x": 1,
-          "y": 0,
-          "role": "body"
-        },
-        {
-          "x": 0,
-          "y": 1,
-          "role": "body"
-        },
-        {
-          "x": 1,
-          "y": 1,
-          "role": "body"
-        },
-        {
-          "x": 0,
-          "y": 2,
-          "role": "body"
-        },
-        {
-          "x": 1,
-          "y": 2,
-          "role": "body"
-        }
-      ],
-      "approach": {
-        "mode": "adjacent",
-        "primary_sides": [
-          "south"
-        ],
-        "visit_offsets": [
-          {
-            "x": 1,
-            "y": 2
-          }
-        ],
-        "stop_before_interaction": true,
-        "requires_clear_tile": true,
-        "linked_exit_offsets": []
-      },
-      "passable": false,
-      "visitable": true,
-      "map_roles": [
-        "durable_economy",
-        "rare_resource_front",
-        "brass_scrip_context"
-      ],
-      "passability_class": "blocking_visitable",
-      "interaction": {
-        "cadence": "persistent_control",
-        "remains_after_visit": true,
-        "state_after_visit": "claimed",
-        "requires_ownership": false,
-        "requires_guard_clear": false,
-        "supports_revisit": true,
-        "cooldown_days": 0,
-        "refresh_rule": "daily_income"
-      },
-      "animation_cues": [
-        "object_resource_front_idle_placeholder"
-      ],
-      "editor_placement": {
-        "placement_mode": "resource_site_object",
-        "density_band": "contested_economy",
-        "minimum_lane_clearance": 1,
-        "allows_adjacent_visitable": false,
-        "requires_approach_clearance": true
-      },
-      "ai_hints": {
-        "strategic_value": 7,
-        "risk_tier": "heavy",
-        "placement_role": "staged_rare_front",
-        "resource_value_hint": "brass_scrip"
-      },
-      "staged_resource_front": {
-        "resource_id": "brass_scrip",
-        "activation_status": "live_stockpile",
-        "report_only": false,
-        "live_reward": true,
-        "source_site_family": "brass_scrip_mint",
-        "planned_cadence": "daily"
-      },
-      "live_resource_front": true
-    },
-    {
-      "id": "object_underway_brass_scrip_press",
-      "name": "Underway Brass Scrip Press",
-      "family": "staged_resource_front",
-      "schema_version": 1,
-      "primary_class": "persistent_economy_site",
-      "secondary_tags": [
-        "resource_front",
-        "counter_capture_target",
-        "rare_resource_front",
-        "staged_report_only"
-      ],
-      "resource_site_id": "site_underway_brass_scrip_press",
-      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
-      "batch002_role": "rare_resource_front",
-      "biome_ids": [
-        "biome_subterranean_underways",
-        "biome_ash_lava_wastes"
+        "biome_snow_frost_marches"
       ],
       "footprint": {
         "width": 3,
@@ -22298,11 +22206,6 @@
         },
         {
           "x": 0,
-          "y": 1,
-          "role": "body"
-        },
-        {
-          "x": 1,
           "y": 1,
           "role": "body"
         },
@@ -22346,7 +22249,125 @@
         "refresh_rule": "daily_income"
       },
       "animation_cues": [
-        "object_resource_front_idle_placeholder"
+        "object_common_mine_machinery_idle"
+      ],
+      "editor_placement": {
+        "placement_mode": "resource_site_object",
+        "density_band": "contested_economy",
+        "minimum_lane_clearance": 1,
+        "allows_adjacent_visitable": false,
+        "requires_approach_clearance": true
+      },
+      "ai_hints": {
+        "strategic_value": 7,
+        "risk_tier": "heavy",
+        "placement_role": "staged_rare_front",
+        "resource_value_hint": "brass_scrip"
+      },
+      "staged_resource_front": {
+        "resource_id": "brass_scrip",
+        "activation_status": "live_stockpile",
+        "report_only": false,
+        "live_reward": true,
+        "source_site_family": "brass_scrip_mint",
+        "planned_cadence": "daily"
+      },
+      "live_resource_front": true
+    },
+    {
+      "id": "object_underway_brass_scrip_press",
+      "name": "Brass Scrip Mint",
+      "family": "staged_resource_front",
+      "schema_version": 1,
+      "primary_class": "persistent_economy_site",
+      "secondary_tags": [
+        "resource_front",
+        "counter_capture_target",
+        "rare_resource_front",
+        "staged_report_only"
+      ],
+      "resource_site_id": "site_underway_brass_scrip_press",
+      "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
+      "batch002_role": "rare_resource_front",
+      "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes",
+        "biome_coast_archipelago",
+        "biome_subterranean_underways",
+        "biome_snow_frost_marches"
+      ],
+      "footprint": {
+        "width": 3,
+        "height": 2,
+        "anchor": "bottom_center",
+        "tier": "large"
+      },
+      "body_tiles": [
+        {
+          "x": 0,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 1,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "role": "body"
+        },
+        {
+          "x": 0,
+          "y": 1,
+          "role": "body"
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "role": "body"
+        }
+      ],
+      "approach": {
+        "mode": "adjacent",
+        "primary_sides": [
+          "south"
+        ],
+        "visit_offsets": [
+          {
+            "x": 1,
+            "y": 1
+          }
+        ],
+        "stop_before_interaction": true,
+        "requires_clear_tile": true,
+        "linked_exit_offsets": []
+      },
+      "passable": false,
+      "visitable": true,
+      "map_roles": [
+        "durable_economy",
+        "rare_resource_front",
+        "brass_scrip_context"
+      ],
+      "passability_class": "blocking_visitable",
+      "interaction": {
+        "cadence": "persistent_control",
+        "remains_after_visit": true,
+        "state_after_visit": "claimed",
+        "requires_ownership": false,
+        "requires_guard_clear": false,
+        "supports_revisit": true,
+        "cooldown_days": 0,
+        "refresh_rule": "daily_income"
+      },
+      "animation_cues": [
+        "object_common_mine_machinery_idle"
       ],
       "editor_placement": {
         "placement_mode": "resource_site_object",
@@ -22373,7 +22394,7 @@
     },
     {
       "id": "object_memory_salt_pan",
-      "name": "Memory-Salt Pan",
+      "name": "Memory Salt Mine",
       "family": "staged_resource_front",
       "schema_version": 1,
       "primary_class": "persistent_economy_site",
@@ -22387,14 +22408,21 @@
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "batch002_role": "rare_resource_front",
       "biome_ids": [
+        "biome_grasslands",
+        "biome_deep_forest",
+        "biome_mire_fen",
+        "biome_highland_ridge",
+        "biome_rough_badlands",
+        "biome_ash_lava_wastes",
         "biome_coast_archipelago",
-        "biome_mire_fen"
+        "biome_subterranean_underways",
+        "biome_snow_frost_marches"
       ],
       "footprint": {
         "width": 3,
-        "height": 3,
+        "height": 2,
         "anchor": "bottom_center",
-        "tier": "region_feature"
+        "tier": "large"
       },
       "body_tiles": [
         {
@@ -22418,28 +22446,8 @@
           "role": "body"
         },
         {
-          "x": 1,
-          "y": 1,
-          "role": "body"
-        },
-        {
           "x": 2,
           "y": 1,
-          "role": "body"
-        },
-        {
-          "x": 0,
-          "y": 2,
-          "role": "body"
-        },
-        {
-          "x": 1,
-          "y": 2,
-          "role": "body"
-        },
-        {
-          "x": 2,
-          "y": 2,
           "role": "body"
         }
       ],
@@ -22451,7 +22459,7 @@
         "visit_offsets": [
           {
             "x": 1,
-            "y": 2
+            "y": 1
           }
         ],
         "stop_before_interaction": true,
@@ -22477,7 +22485,7 @@
         "refresh_rule": "daily_income"
       },
       "animation_cues": [
-        "object_resource_front_idle_placeholder"
+        "object_common_mine_machinery_idle"
       ],
       "editor_placement": {
         "placement_mode": "resource_site_object",

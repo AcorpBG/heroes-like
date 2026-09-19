@@ -1,0 +1,6 @@
+{
+  "generator": "built_in_image_gen",
+  "source": "peatwax-layers.png",
+  "output": "peatwax-layers-final.png",
+  "prompt": "Edit this existing production sprite sheet with exactly one correction. On the LEFT main building, remove the small empty metal bucket attached to the far-right vertical timber post at approximately x=1095,y=665, and remove any bucket attachment/rope. Restore the stationary wooden post and dark wall behind it naturally. Keep the timber lifting beam and support intact. Preserve every other part of the main building, the right detached large flywheel and right detached filled peat bucket, their positions and sizes, the exact 1536x1024 canvas, camera, palette, sharp detail and existing transparent alpha. Do not add any smoke, new objects, text or background. Only remove that accidentally preinstalled bucket so the separate bucket can be animated at runtime."
+}

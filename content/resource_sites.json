@@ -3394,7 +3394,7 @@
     },
     {
       "id": "site_aetherglass_lens_house",
-      "name": "Aetherglass Lens House",
+      "name": "Aetherglass Mine",
       "family": "staged_resource_front",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3451,11 +3451,13 @@
         "gold": 120,
         "aetherglass": 1
       },
-      "live_resource_front": true
+      "live_resource_front": true,
+      "rare_mine_resource": "aetherglass",
+      "overworld_sprite_asset_id": "mapobj_rare_aetherglass_mine"
     },
     {
       "id": "site_sunfall_aetherglass_yard",
-      "name": "Sunfall Aetherglass Yard",
+      "name": "Aetherglass Mine",
       "family": "staged_resource_front",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3512,11 +3514,13 @@
         "gold": 120,
         "aetherglass": 1
       },
-      "live_resource_front": true
+      "live_resource_front": true,
+      "rare_mine_resource": "aetherglass",
+      "overworld_sprite_asset_id": "mapobj_rare_aetherglass_mine"
     },
     {
       "id": "site_embergrain_warm_granary",
-      "name": "Embergrain Warm Granary",
+      "name": "Embergrain Granary",
       "family": "staged_resource_front",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3573,11 +3577,13 @@
         "gold": 120,
         "embergrain": 1
       },
-      "live_resource_front": true
+      "live_resource_front": true,
+      "rare_mine_resource": "embergrain",
+      "overworld_sprite_asset_id": "mapobj_rare_embergrain_mine"
     },
     {
       "id": "site_charcoal_embergrain_store",
-      "name": "Charcoal Embergrain Store",
+      "name": "Embergrain Granary",
       "family": "staged_resource_front",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3634,11 +3640,13 @@
         "gold": 120,
         "embergrain": 1
       },
-      "live_resource_front": true
+      "live_resource_front": true,
+      "rare_mine_resource": "embergrain",
+      "overworld_sprite_asset_id": "mapobj_rare_embergrain_mine"
     },
     {
       "id": "site_peatwax_reed_yard",
-      "name": "Peatwax Reed Yard",
+      "name": "Peatwax Mine",
       "family": "staged_resource_front",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3695,7 +3703,9 @@
         "gold": 120,
         "peatwax": 1
       },
-      "live_resource_front": true
+      "live_resource_front": true,
+      "rare_mine_resource": "peatwax",
+      "overworld_sprite_asset_id": "mapobj_rare_peatwax_mine"
     },
     {
       "id": "site_verdant_graft_nursery",
@@ -3756,7 +3766,9 @@
         "gold": 120,
         "verdant_grafts": 1
       },
-      "live_resource_front": true
+      "live_resource_front": true,
+      "rare_mine_resource": "verdant_grafts",
+      "overworld_sprite_asset_id": "mapobj_rare_verdant_grafts_mine"
     },
     {
       "id": "site_brass_scrip_mint",
@@ -3817,11 +3829,13 @@
         "gold": 120,
         "brass_scrip": 1
       },
-      "live_resource_front": true
+      "live_resource_front": true,
+      "rare_mine_resource": "brass_scrip",
+      "overworld_sprite_asset_id": "mapobj_rare_brass_scrip_mine"
     },
     {
       "id": "site_underway_brass_scrip_press",
-      "name": "Underway Brass Scrip Press",
+      "name": "Brass Scrip Mint",
       "family": "staged_resource_front",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3878,11 +3892,13 @@
         "gold": 120,
         "brass_scrip": 1
       },
-      "live_resource_front": true
+      "live_resource_front": true,
+      "rare_mine_resource": "brass_scrip",
+      "overworld_sprite_asset_id": "mapobj_rare_brass_scrip_mine"
     },
     {
       "id": "site_memory_salt_pan",
-      "name": "Memory-Salt Pan",
+      "name": "Memory Salt Mine",
       "family": "staged_resource_front",
       "content_batch_id": "overworld-object-content-batch-002-mines-resource-fronts-10184",
       "persistent_control": true,
@@ -3939,7 +3955,9 @@
         "gold": 120,
         "memory_salt": 1
       },
-      "live_resource_front": true
+      "live_resource_front": true,
+      "rare_mine_resource": "memory_salt",
+      "overworld_sprite_asset_id": "mapobj_rare_memory_salt_mine"
     },
     {
       "id": "site_wind_press",

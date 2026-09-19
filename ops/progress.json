@@ -113581,6 +113581,18 @@
         "docs/overworld-control-flags.md"
       ],
       "notes": "Two flags flank town entrances; common and generated rare mines show one smaller flag, neutral grey when uncontrolled and controller-coloured after capture. Owner visibility revision enlarges town flags from 0.76 to 1.06 tile canvases and mine flags from 0.58 to 0.82, approximately 40 percent, around fixed pole bases. The 48-check render/capture regression passes again and normal-scale neutral/captured renders were reviewed. Existing controller-slot colours, same-faction recapture refresh, explored-cell clipping and accessibility marks retained. No full suite; capture rules, income, source geometry and saves unchanged."
+    },
+    {
+      "id": "art-unified-rare-mines-20260920",
+      "title": "Unified animated rare-resource mines",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/unified-rare-mines.md"
+      ],
+      "notes": "Implemented six original animated buildings across nine dedicated source aliases, one identity per rare resource, common-mine scale and 3x2 gameplay adapter. Machinery, visible smoke/lights, neutral/owner flags, source art/provenance and wiki are integrated. Income/capture and native source placement preserved. Passed 324 rare-mine, 183 common-mine and 48 ownership-flag focused checks; visually reviewed grass/sand/snow at normal and zoomed-out scale. Full suite not run per owner direction."
     }
   ],
   "project": "heroes-like",

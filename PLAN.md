@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Unified rare-resource mines
+
+`art-unified-rare-mines-20260920` — completed. Six original animated, biome-neutral rare-resource buildings, exactly one appearance per resource across all existing dedicated source variants. Match the common mines' 3x2 entrance footprint and adjusted scale, readable effects and control flags; preserve incomes and native source records. See `docs/unified-rare-mines.md`.
+
 ### Town and mine control flags
 
 `art-control-flags-20260920` — complete. Town entrance pairs and mine flags are approximately 40% larger for readability; pole bases stay fixed. Neutral grey, controller colours and capture refresh are preserved. Focused 48-check render/capture regression rerun and normal-scale renders reviewed; no full suite. See `docs/overworld-control-flags.md`.

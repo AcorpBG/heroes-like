@@ -18,7 +18,7 @@ The approved building art renders at 75% of its initial size, uniformly scaled a
 
 This is an explicit game-level geometry override for owner-selected common mines. Native generator placement rules and source package masks remain immutable. Existing placements are not relocated or regenerated. This slice does not claim native RMG parity or guarantee that every historical map reserved this new shape without neighboring overlap.
 
-Only sites marked `common_mine_resource` use these rules. Supporting producers, loose reward references and rare mines remain separate. The native bridge translates four historical common object IDs to rare resources; rendering now prioritizes that live rare site identity over the historical object painting.
+Sites marked `common_mine_resource` keep these three common identities. The shared `MineRules.gd` adapter also applies this geometry to the six explicitly marked [rare-resource mine identities](unified-rare-mines.md). Supporting producers and loose reward references remain separate. The native bridge translates four historical common object IDs to rare resources; rendering prioritizes that live rare site identity over the historical object painting.
 
 ## Art and rebuild
 

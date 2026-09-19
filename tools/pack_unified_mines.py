@@ -43,19 +43,20 @@ def trimmed(image):
     return image.crop(box), box
 
 
-def main():
+def pack_mines(specs, source, manifest_path, schema_id, asset_prefix):
     OUTPUT.mkdir(parents=True, exist_ok=True)
-    manifest = {'schema_id': 'unified_common_mines_v1', 'canvas_size': [512, 640],
+    manifest = {'schema_id': schema_id, 'canvas_size': [512, 640],
                 'ground_anchor': [256, 604], 'painted_width': 448, 'mines': {}}
-    for resource, spec in SPECS.items():
-        sheet = Image.open(SOURCE / f'{resource}-layers.png').convert('RGBA')
+    for resource, spec in specs.items():
+        sheet = Image.open(source / spec.get('file', f'{resource}-layers.png')).convert('RGBA')
         assert sheet.getchannel('A').getextrema()[0] == 0, 'Source must have real transparency'
-        building, bounds = trimmed(sheet.crop((0, 0, 1100, 1024)))
+        crop = spec.get('building_crop', [0, 0, 1100, 1024])
+        building, bounds = trimmed(sheet.crop(crop))
         scale = min(448 / building.width, 470 / building.height)
         size = (round(building.width * scale), round(building.height * scale))
         offset = (round(256 - size[0] / 2), 604 - size[1])
         def point(p):
-            return [round(offset[i] + (p[i] - bounds[i]) * scale, 3) for i in range(2)]
+            return [round(offset[i] + (p[i] - crop[i] - bounds[i]) * scale, 3) for i in range(2)]
         base = Image.new('RGBA', (512, 640))
         base.alpha_composite(building.resize(size, Image.Resampling.LANCZOS), offset)
         base.save(OUTPUT / f'{resource}-base.png')
@@ -80,14 +81,19 @@ def main():
         atlas.save(OUTPUT / f'{resource}-parts.png')
         fallback.save(OUTPUT / f'{resource}.png')
         manifest['mines'][resource] = {
-            'asset_id': f'mapobj_common_{resource}_mine',
+            'asset_id': f'{asset_prefix}_{resource}_mine',
             'base': f'res://art/overworld/runtime/objects/mines/{resource}-base.png',
             'parts_texture': f'res://art/overworld/runtime/objects/mines/{resource}-parts.png',
             'static': f'res://art/overworld/runtime/objects/mines/{resource}.png',
             'chimney': point(spec['chimney']), 'lights': [point(p) for p in spec['lights']], 'parts': parts,
         }
-    (ROOT / 'art/overworld/common_mines.json').write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
-    print('Packed three bases, seven moving layers, three static fallbacks and motion anchors.')
+    manifest_path.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+    print(f'Packed {len(specs)} mines and {sum(len(s["parts"]) for s in specs.values())} moving layers.')
+
+
+def main():
+    pack_mines(SPECS, SOURCE, ROOT / 'art/overworld/common_mines.json',
+               'unified_common_mines_v1', 'mapobj_common')
 
 
 if __name__ == '__main__':
