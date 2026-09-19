@@ -50,5 +50,18 @@
     "evidence": ".artifacts/battle-unit-animation-size-20260913/ridgeflare-continuity-20260916",
     "pose_source_facing": "right",
     "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_ridgeflare_shots.png",
+    "runtime_sha256": "f833a1923d68c40dff2cbf10acd1d64454fbd8f9aa0b7eadb956049f2093d9eb"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "614562adb9f4e7c95085151b902611172263b50775697659f546aab59ea28642",
+    "preserved_frames": 17,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

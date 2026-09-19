@@ -1,0 +1,464 @@
+{
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          305,
+          315
+        ]
+      ],
+      "anchor": [
+        145,
+        301
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          305,
+          0,
+          575,
+          318
+        ]
+      ],
+      "anchor": [
+        451,
+        304
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "contact_original",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          610,
+          0,
+          914,
+          323
+        ]
+      ],
+      "anchor": [
+        749,
+        312
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "passing_original",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          315,
+          306,
+          631
+        ]
+      ],
+      "anchor": [
+        144,
+        610
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-alpha/supported-travel-single-net-and-recovery.png",
+      "rects": [
+        [
+          0,
+          0,
+          510,
+          517
+        ]
+      ],
+      "anchor": [
+        255,
+        485
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "passing_knee_lift",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-alpha/supported-travel-single-net-and-recovery.png",
+      "rects": [
+        [
+          511,
+          0,
+          1021,
+          517
+        ]
+      ],
+      "anchor": [
+        771,
+        486
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "passing_rear_lift",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-alpha/supported-travel-single-net-and-recovery.png",
+      "rects": [
+        [
+          1022,
+          0,
+          1536,
+          517
+        ]
+      ],
+      "anchor": [
+        1297,
+        486
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "single_net_melee_windup",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-alpha/supported-travel-single-net-and-recovery.png",
+      "rects": [
+        [
+          0,
+          518,
+          510,
+          1024
+        ]
+      ],
+      "anchor": [
+        269,
+        988
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "net_melee_contact",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          611,
+          323,
+          914,
+          639
+        ]
+      ],
+      "anchor": [
+        756,
+        620
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "single_net_melee_recovery",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-alpha/supported-travel-single-net-and-recovery.png",
+      "rects": [
+        [
+          511,
+          518,
+          1021,
+          1024
+        ]
+      ],
+      "anchor": [
+        773,
+        984
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "guard_brace",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          915,
+          323,
+          1225,
+          639
+        ]
+      ],
+      "anchor": [
+        1087,
+        604
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "net_gather",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          638,
+          304,
+          943
+        ]
+      ],
+      "anchor": [
+        135,
+        921
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "net_windup",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          305,
+          638,
+          582,
+          945
+        ]
+      ],
+      "anchor": [
+        455,
+        929
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "net_release",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          610,
+          640,
+          914,
+          945
+        ]
+      ],
+      "anchor": [
+        748,
+        927
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "net_recovery_reach_belt",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-alpha/supported-travel-single-net-and-recovery.png",
+      "rects": [
+        [
+          1022,
+          518,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1297,
+        983
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "net_reload",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          915,
+          638,
+          1225,
+          945
+        ]
+      ],
+      "anchor": [
+        1096,
+        920
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          944,
+          304,
+          1262
+        ]
+      ],
+      "anchor": [
+        141,
+        1238
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          305,
+          945,
+          584,
+          1100
+        ],
+        [
+          305,
+          1100,
+          567,
+          1170
+        ],
+        [
+          305,
+          1170,
+          584,
+          1284
+        ]
+      ],
+      "anchor": [
+        452,
+        1226
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          568,
+          999,
+          866,
+          1160
+        ],
+        [
+          585,
+          1160,
+          866,
+          1284
+        ]
+      ],
+      "anchor": [
+        731,
+        1228
+      ],
+      "scale": 0.69
+    },
+    {
+      "name": "dead_cold",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          866,
+          1023,
+          1225,
+          1241
+        ]
+      ],
+      "anchor": [
+        1042,
+        1221
+      ],
+      "scale": 0.69
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 430,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 6,
+      "indices": [
+        2,
+        3,
+        4,
+        5,
+        4,
+        6
+      ],
+      "loop": true,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        7,
+        8,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 1
+    },
+    "ranged": {
+      "frames": 5,
+      "indices": [
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        16,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        17,
+        18,
+        19
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        19
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  },
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

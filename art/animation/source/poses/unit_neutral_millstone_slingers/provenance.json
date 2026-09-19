@@ -73,5 +73,18 @@
     "evidence": ".artifacts/battle-unit-animation-size-20260913/millstone-continuity-20260916",
     "pose_source_facing": "right",
     "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_millstone_slingers.png",
+    "runtime_sha256": "06167719c7d599dd426cecd918710f18174a33407fd0921da422226f6c787127"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "9492d6904405852ac262d0aec74af330e1ea1eef648b94fb4a9be8de88bc0a8a",
+    "preserved_frames": 17,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

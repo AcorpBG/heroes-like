@@ -1,0 +1,413 @@
+{
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          360,
+          338
+        ],
+        [
+          85,
+          338,
+          360,
+          357
+        ]
+      ],
+      "anchor": [
+        211,
+        347
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          360,
+          0,
+          709,
+          354
+        ]
+      ],
+      "anchor": [
+        550,
+        346
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "contact_original",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          710,
+          0,
+          1086,
+          355
+        ]
+      ],
+      "anchor": [
+        916,
+        347
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "back_step_original",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          1087,
+          0,
+          1448,
+          354
+        ]
+      ],
+      "anchor": [
+        1271,
+        347
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "passing_original",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          357,
+          360,
+          698
+        ],
+        [
+          70,
+          698,
+          360,
+          711
+        ]
+      ],
+      "anchor": [
+        183,
+        700
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/continuity-alpha/four-phase-step-and-spear-recovery.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          484
+        ]
+      ],
+      "anchor": [
+        278,
+        464
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "passing_a",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/continuity-alpha/four-phase-step-and-spear-recovery.png",
+      "rects": [
+        [
+          513,
+          0,
+          1023,
+          484
+        ]
+      ],
+      "anchor": [
+        717,
+        464
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "passing_b_attempt",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/continuity-alpha/four-phase-step-and-spear-recovery.png",
+      "rects": [
+        [
+          0,
+          485,
+          512,
+          1024
+        ]
+      ],
+      "anchor": [
+        247,
+        953
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "spear_windup",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          361,
+          354,
+          544,
+          377
+        ],
+        [
+          361,
+          377,
+          708,
+          704
+        ]
+      ],
+      "anchor": [
+        525,
+        696
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "spear_thrust",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          709,
+          365,
+          1184,
+          510
+        ],
+        [
+          709,
+          510,
+          1086,
+          704
+        ]
+      ],
+      "anchor": [
+        895,
+        696
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "spear_recovery",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/continuity-alpha/four-phase-step-and-spear-recovery.png",
+      "rects": [
+        [
+          513,
+          485,
+          1052,
+          1024
+        ]
+      ],
+      "anchor": [
+        745,
+        948
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/continuity-alpha/four-phase-step-and-spear-recovery.png",
+      "rects": [
+        [
+          1053,
+          485,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        954
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "guard_deep",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          1185,
+          355,
+          1448,
+          511
+        ],
+        [
+          1160,
+          511,
+          1448,
+          710
+        ]
+      ],
+      "anchor": [
+        1280,
+        695
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          711,
+          359,
+          1060
+        ]
+      ],
+      "anchor": [
+        201,
+        1033
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          360,
+          707,
+          706,
+          1060
+        ]
+      ],
+      "anchor": [
+        536,
+        1028
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          707,
+          772,
+          1074,
+          1086
+        ]
+      ],
+      "anchor": [
+        888,
+        1034
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "dead_cold",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          1075,
+          816,
+          1448,
+          1055
+        ]
+      ],
+      "anchor": [
+        1232,
+        1018
+      ],
+      "scale": 0.62
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 480,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 6,
+      "indices": [
+        2,
+        4,
+        5,
+        6,
+        3,
+        7
+      ],
+      "loop": true,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        8,
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 240,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        13,
+        11
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 280,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "unit_id": "unit_neutral_glowcap_bulwarks",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

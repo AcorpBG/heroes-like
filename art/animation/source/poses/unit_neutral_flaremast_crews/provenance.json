@@ -83,5 +83,18 @@
     "evidence": ".artifacts/battle-unit-animation-size-20260913/flaremast-continuity-20260916",
     "pose_source_facing": "right",
     "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_flaremast_crews.png",
+    "runtime_sha256": "9a51cab9481dfb813c56905e8eb05e316f6ea30bb5a3b69c40e70058a9fd7e0e"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "6b5183ed707cfa77eb016b1ceacea1af702c16a42b253c5d3fc5f7a7774f5899",
+    "preserved_frames": 18,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

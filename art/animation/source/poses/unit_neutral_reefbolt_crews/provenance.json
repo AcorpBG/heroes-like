@@ -130,5 +130,18 @@
     "evidence": ".artifacts/battle-unit-animation-size-20260913/reefbolt-continuity-20260916",
     "pose_source_facing": "right",
     "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_reefbolt_crews.png",
+    "runtime_sha256": "dd01d9844549ceea3db1d8961846d18111d5c73f2a4220e0d93b8afcf22bdbcc"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "eb20f14a549c314cba538c9c977f098606530d69e31cccd533263ff57c65b682",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

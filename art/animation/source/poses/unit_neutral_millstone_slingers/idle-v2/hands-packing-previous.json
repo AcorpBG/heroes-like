@@ -1,0 +1,414 @@
+{
+  "unit_id": "unit_neutral_millstone_slingers",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          0,
+          0,
+          313,
+          327
+        ]
+      ],
+      "anchor": [
+        153,
+        317
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          315,
+          0,
+          609,
+          327
+        ]
+      ],
+      "anchor": [
+        465,
+        317
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "run_contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          624,
+          0,
+          944,
+          326
+        ]
+      ],
+      "anchor": [
+        792,
+        306
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "run_gather_attempt",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          997,
+          0,
+          1235,
+          317
+        ]
+      ],
+      "anchor": [
+        1110,
+        309
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "right_punch_anticipation",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/same-hand-punch-and-recovery.png",
+      "rects": [
+        [
+          0,
+          0,
+          617,
+          618
+        ]
+      ],
+      "anchor": [
+        330,
+        596
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "right_punch_contact",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/same-hand-punch-and-recovery.png",
+      "rects": [
+        [
+          617,
+          0,
+          1234,
+          618
+        ]
+      ],
+      "anchor": [
+        912,
+        600
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "right_punch_recovery",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/same-hand-punch-and-recovery.png",
+      "rects": [
+        [
+          0,
+          622,
+          617,
+          1274
+        ]
+      ],
+      "anchor": [
+        330,
+        1213
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/same-hand-punch-and-recovery.png",
+      "rects": [
+        [
+          617,
+          622,
+          1234,
+          1274
+        ]
+      ],
+      "anchor": [
+        925,
+        1217
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "guard_crouch",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          990,
+          330,
+          1241,
+          635
+        ]
+      ],
+      "anchor": [
+        1111,
+        612
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "sling_load",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          0,
+          635,
+          303,
+          940
+        ]
+      ],
+      "anchor": [
+        149,
+        938
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "sling_windup",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          323,
+          630,
+          625,
+          703
+        ],
+        [
+          323,
+          703,
+          607,
+          949
+        ]
+      ],
+      "anchor": [
+        468,
+        940
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "sling_release_open_cord",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          630,
+          637,
+          1005,
+          800
+        ],
+        [
+          610,
+          800,
+          930,
+          947
+        ]
+      ],
+      "anchor": [
+        753,
+        943
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "sling_reload",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          1005,
+          638,
+          1254,
+          951
+        ]
+      ],
+      "anchor": [
+        1115,
+        938
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          0,
+          940,
+          290,
+          1221
+        ]
+      ],
+      "anchor": [
+        167,
+        1210
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          310,
+          992,
+          548,
+          1203
+        ]
+      ],
+      "anchor": [
+        428,
+        1189
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          550,
+          1000,
+          924,
+          1127
+        ],
+        [
+          550,
+          1127,
+          890,
+          1206
+        ]
+      ],
+      "anchor": [
+        743,
+        1190
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_millstone_slingers/continuity-alpha/original-corrected-sheet-clean-matte.png",
+      "rects": [
+        [
+          920,
+          1050,
+          1254,
+          1140
+        ],
+        [
+          893,
+          1140,
+          1254,
+          1210
+        ]
+      ],
+      "anchor": [
+        1090,
+        1199
+      ],
+      "scale": 0.64
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 1
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        13,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 280,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

@@ -1,7 +1,7 @@
 # Expanded creature idle loops
 
 Full-roster production is **in progress**, covering both battle and overworld.
-50 of 160 units have reviewed eight-pose idles; 110 still retain two-pose loops.
+86 of 160 units have reviewed eight-pose idles; 74 still retain two-pose loops.
 The earlier six-creature delivery did not complete the requested roster.
 
 ## Motion direction
@@ -12,13 +12,13 @@ stay quiet. Extra frames of head movement alone do not meet this requirement.
 Preserve limb ownership, continuous chains, rigid equipment and identity.
 No attack, firing or walking motion belongs in the idle loop.
 
-Forty-five armed units now use this direction: River Guard, Ember Archer,
+Eighty-one armed units now use this direction: River Guard, Ember Archer,
 Citadel Pikeward, Blackbranch Cutthroat, Mire Slinger, Bog Brute, Shard Guard,
 Prism Harrier, Mirror Skirmisher, Roadwardens; Embercourt Fordhook Cadets,
 Lantern Sappers, Bargebow Crews, Ash-Oath Bailiffs, Beacon Lectors and Charter
 Colossus; Mireclaw Reedsnare Kin, Mudglass Slingers, Bogplate Maulers,
 Ferrychain Lashers and Sporewake Chanters. Most use 240 ms per frame;
-the colossus, mauler and furnace pavis team use 260 ms for heavier motion.
+the colossus, mauler, furnace pavis team and Bogbell Mauls use 260 ms for heavier motion.
 
 The expanded roster also includes Sunvault Shard Wardens, Prism Adepts, Mirror
 Duelists, Resonant Choristers and Noonfacet Sentinels; Thornwake Seedcutters,
@@ -28,6 +28,12 @@ Mourning Lanterns, Maskglass Corsairs, Undertow Harpooners, Obituary Scribes,
 Mirror-Keel Reavers and Tidehook Deckhands; Embercourt Cinderseal Bombardiers;
 Mireclaw Mireglass Reedcasters; and neutral Hearthbow Carriers, Mossglass
 Sentinels and Cliffhawk Wardens.
+
+Neutral production now also covers Windglass Slingers through Bogbell Mauls
+(the 36 neutral entries in that manifest range). These include two-person
+crossbow crews, polearms, slings, jarriers, shields and pack adjustments.
+Reedbarge hooks and Snowglass bow tips use explicit stepped boundaries to
+preserve their complete silhouettes without neighboring weapon fragments.
 
 The other five expanded creatures retain their previously reviewed loops:
 Fenhound Runners, Sunscale Lanternmoths, Fenmirror Gallowshells,
@@ -62,8 +68,8 @@ uses the new art on existing maps and saved battles; no map regeneration.
 
 ## Focused review
 
-All 360 new arm-motion drawings were inspected at small and larger sizes.
-Nine focused Windows playback cohorts covered all 45 changed units on the real
+All 648 new arm-motion drawings were inspected at small and larger sizes.
+Fifteen focused Windows playback cohorts covered all 81 changed units on the real
 1280x720 battle board in both facings and the overworld shader at 74px extent.
 They passed 344-444 checks each: eight rendered frames, independent
 timing, reduced motion, fog, cached drawing and unchanged saved simulation.

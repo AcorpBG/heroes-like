@@ -1,0 +1,420 @@
+{
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          286,
+          334
+        ]
+      ],
+      "anchor": [
+        159,
+        321
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          300,
+          0,
+          610,
+          334
+        ]
+      ],
+      "anchor": [
+        470,
+        321
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "run_extension_attempt",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          625,
+          0,
+          944,
+          337
+        ]
+      ],
+      "anchor": [
+        813,
+        324
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "run_gather_attempt",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          944,
+          0,
+          1254,
+          342
+        ]
+      ],
+      "anchor": [
+        1118,
+        325
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "loaded_pipe_anticipation",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/loaded-pipe-melee-defense-and-empty-recovery.png",
+      "rects": [
+        [
+          0,
+          0,
+          417,
+          587
+        ]
+      ],
+      "anchor": [
+        200,
+        564
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "loaded_pipe_two_grip_shove",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/two-spaced-grips-loaded-pipe-shove.png",
+      "rects": [
+        [
+          0,
+          0,
+          1051,
+          1496
+        ]
+      ],
+      "anchor": [
+        510,
+        1309
+      ],
+      "scale": 0.176
+    },
+    {
+      "name": "loaded_pipe_recovery",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/loaded-pipe-melee-defense-and-empty-recovery.png",
+      "rects": [
+        [
+          919,
+          0,
+          1312,
+          180
+        ],
+        [
+          891,
+          180,
+          1312,
+          587
+        ]
+      ],
+      "anchor": [
+        1095,
+        564
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "loaded_guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/loaded-pipe-melee-defense-and-empty-recovery.png",
+      "rects": [
+        [
+          0,
+          590,
+          419,
+          1199
+        ]
+      ],
+      "anchor": [
+        210,
+        1143
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "loaded_guard_crouch",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/loaded-pipe-melee-defense-and-empty-recovery.png",
+      "rects": [
+        [
+          433,
+          590,
+          879,
+          1199
+        ]
+      ],
+      "anchor": [
+        655,
+        1130
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          628,
+          294,
+          928
+        ]
+      ],
+      "anchor": [
+        157,
+        917
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_reload",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          322,
+          635,
+          590,
+          990
+        ]
+      ],
+      "anchor": [
+        470,
+        969
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_loaded_aim",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          602,
+          635,
+          951,
+          900
+        ],
+        [
+          602,
+          900,
+          903,
+          985
+        ]
+      ],
+      "anchor": [
+        780,
+        965
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_empty_release",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          960,
+          630,
+          1254,
+          885
+        ],
+        [
+          930,
+          885,
+          1254,
+          990
+        ]
+      ],
+      "anchor": [
+        1095,
+        965
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_empty_recovery",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/loaded-pipe-melee-defense-and-empty-recovery.png",
+      "rects": [
+        [
+          884,
+          590,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        1090,
+        1150
+      ],
+      "scale": 0.36
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          303,
+          986,
+          570,
+          1139
+        ],
+        [
+          303,
+          1139,
+          551,
+          1200
+        ],
+        [
+          303,
+          1200,
+          570,
+          1237
+        ]
+      ],
+      "anchor": [
+        444,
+        1205
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_side_pipe_point_right",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/side-fall-pipe-point-right.png",
+      "rects": [
+        [
+          0,
+          0,
+          1639,
+          960
+        ]
+      ],
+      "anchor": [
+        830,
+        886
+      ],
+      "scale": 0.135
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          891,
+          1032,
+          1254,
+          1220
+        ]
+      ],
+      "anchor": [
+        1080,
+        1191
+      ],
+      "scale": 0.65
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

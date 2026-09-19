@@ -1,0 +1,415 @@
+{
+  "unit_id": "unit_neutral_reefbolt_crews",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          311,
+          322
+        ]
+      ],
+      "anchor": [
+        158,
+        312
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          0,
+          631,
+          323
+        ]
+      ],
+      "anchor": [
+        473,
+        313
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "crew_carry_passing",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/carry-passing-tripod.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1120
+        ]
+      ],
+      "anchor": [
+        607,
+        1086
+      ],
+      "scale": 0.225
+    },
+    {
+      "name": "crew_carry_opposite_attempt",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/carry-opposite-lowered-draft.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1100
+        ]
+      ],
+      "anchor": [
+        607,
+        1060
+      ],
+      "scale": 0.225
+    },
+    {
+      "name": "rig_shove_windup",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses.png",
+      "rects": [
+        [
+          314,
+          321,
+          622,
+          611
+        ]
+      ],
+      "anchor": [
+        468,
+        601
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "rig_shove_contact",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses.png",
+      "rects": [
+        [
+          622,
+          326,
+          964,
+          427
+        ],
+        [
+          622,
+          427,
+          938,
+          617
+        ]
+      ],
+      "anchor": [
+        795,
+        602
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "rig_shove_recovery",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/crew-recovery-and-directional-rest.png",
+      "rects": [
+        [
+          0,
+          0,
+          1239,
+          733
+        ]
+      ],
+      "anchor": [
+        621,
+        715
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "guard_crouch",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses.png",
+      "rects": [
+        [
+          977,
+          365,
+          1254,
+          419
+        ],
+        [
+          942,
+          419,
+          1254,
+          617
+        ]
+      ],
+      "anchor": [
+        1097,
+        604
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "bolt_load",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          618,
+          314,
+          921
+        ]
+      ],
+      "anchor": [
+        153,
+        912
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "bolt_aim",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses.png",
+      "rects": [
+        [
+          314,
+          623,
+          621,
+          921
+        ]
+      ],
+      "anchor": [
+        464,
+        913
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "bolt_release",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/poses-released-string-draft.png",
+      "rects": [
+        [
+          620,
+          623,
+          930,
+          920
+        ]
+      ],
+      "anchor": [
+        775,
+        911
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "empty_winch_reset",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/poses-empty-reset.png",
+      "rects": [
+        [
+          932,
+          623,
+          1254,
+          924
+        ]
+      ],
+      "anchor": [
+        1092,
+        914
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses-hit-death-basket.png",
+      "rects": [
+        [
+          0,
+          927,
+          316,
+          1060
+        ],
+        [
+          0,
+          1060,
+          286,
+          1220
+        ]
+      ],
+      "anchor": [
+        153,
+        1205
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses-hit-death-basket.png",
+      "rects": [
+        [
+          331,
+          942,
+          622,
+          1032
+        ],
+        [
+          289,
+          1032,
+          577,
+          1148
+        ],
+        [
+          289,
+          1148,
+          603,
+          1220
+        ]
+      ],
+      "anchor": [
+        447,
+        1205
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "death_team_fall",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/alpha/poses.png",
+      "rects": [
+        [
+          646,
+          966,
+          853,
+          1030
+        ],
+        [
+          579,
+          1030,
+          890,
+          1124
+        ],
+        [
+          607,
+          1124,
+          930,
+          1217
+        ]
+      ],
+      "anchor": [
+        743,
+        1197
+      ],
+      "scale": 0.75
+    },
+    {
+      "name": "dead_both_heads_right",
+      "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/crew-recovery-and-directional-rest-corrected.png",
+      "rects": [
+        [
+          0,
+          738,
+          1240,
+          1210
+        ]
+      ],
+      "anchor": [
+        620,
+        1168
+      ],
+      "scale": 0.3
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 210,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 185,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        1,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 230,
+      "static_frame": 1
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        12,
+        1
+      ],
+      "loop": false,
+      "frame_msec": 185,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        13,
+        14,
+        15
+      ],
+      "loop": false,
+      "frame_msec": 300,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        15
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

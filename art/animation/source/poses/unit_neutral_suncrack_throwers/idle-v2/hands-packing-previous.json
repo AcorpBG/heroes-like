@@ -1,0 +1,480 @@
+{
+  "unit_id": "unit_neutral_suncrack_throwers",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          303,
+          324
+        ]
+      ],
+      "anchor": [
+        155,
+        313
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          316,
+          0,
+          615,
+          324
+        ]
+      ],
+      "anchor": [
+        466,
+        316
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          325,
+          285,
+          629
+        ],
+        [
+          220,
+          629,
+          285,
+          642
+        ]
+      ],
+      "anchor": [
+        143,
+        633
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "walk_passing_attempt",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/continuity-alpha/punch-throw-recoveries-and-grounded-step.png",
+      "rects": [
+        [
+          626,
+          617,
+          1232,
+          1277
+        ]
+      ],
+      "anchor": [
+        931,
+        1233
+      ],
+      "scale": 0.335
+    },
+    {
+      "name": "punch_windup",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          324,
+          591,
+          616
+        ],
+        [
+          315,
+          616,
+          400,
+          635
+        ],
+        [
+          501,
+          616,
+          591,
+          635
+        ]
+      ],
+      "anchor": [
+        457,
+        628
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "punch_contact",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          600,
+          324,
+          962,
+          641
+        ]
+      ],
+      "anchor": [
+        781,
+        627
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "punch_recovery",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/continuity-alpha/punch-throw-recoveries-and-grounded-step.png",
+      "rects": [
+        [
+          0,
+          0,
+          612,
+          614
+        ]
+      ],
+      "anchor": [
+        286,
+        601
+      ],
+      "scale": 0.335
+    },
+    {
+      "name": "guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/continuity-alpha/punch-throw-recoveries-and-grounded-step.png",
+      "rects": [
+        [
+          0,
+          615,
+          615,
+          1277
+        ]
+      ],
+      "anchor": [
+        291,
+        1229
+      ],
+      "scale": 0.335
+    },
+    {
+      "name": "guard_crouch",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          963,
+          363,
+          1248,
+          629
+        ]
+      ],
+      "anchor": [
+        1109,
+        617
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "flask_prepare",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          630,
+          211,
+          665
+        ],
+        [
+          0,
+          665,
+          281,
+          946
+        ]
+      ],
+      "anchor": [
+        143,
+        944
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "flask_windup",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          637,
+          615,
+          864
+        ],
+        [
+          315,
+          864,
+          603,
+          964
+        ]
+      ],
+      "anchor": [
+        466,
+        951
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "flask_release",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          610,
+          638,
+          963,
+          938
+        ]
+      ],
+      "anchor": [
+        786,
+        924
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "flask_recovery",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/continuity-alpha/punch-throw-recoveries-and-grounded-step.png",
+      "rects": [
+        [
+          613,
+          0,
+          1232,
+          614
+        ]
+      ],
+      "anchor": [
+        916,
+        601
+      ],
+      "scale": 0.335
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          963,
+          635,
+          1248,
+          958
+        ]
+      ],
+      "anchor": [
+        1107,
+        941
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          949,
+          282,
+          1246
+        ]
+      ],
+      "anchor": [
+        139,
+        1232
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_tipping",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          296,
+          983,
+          612,
+          1100
+        ],
+        [
+          296,
+          1100,
+          593,
+          1150
+        ],
+        [
+          296,
+          1150,
+          612,
+          1205
+        ]
+      ],
+      "anchor": [
+        454,
+        1190
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          611,
+          1048,
+          910,
+          1110
+        ],
+        [
+          591,
+          1110,
+          911,
+          1154
+        ],
+        [
+          618,
+          1154,
+          917,
+          1165
+        ],
+        [
+          618,
+          1165,
+          941,
+          1221
+        ]
+      ],
+      "anchor": [
+        768,
+        1202
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          911,
+          1056,
+          1254,
+          1145
+        ],
+        [
+          936,
+          1145,
+          1254,
+          1160
+        ],
+        [
+          960,
+          1160,
+          1254,
+          1194
+        ]
+      ],
+      "anchor": [
+        1087,
+        1172
+      ],
+      "scale": 0.64
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 430,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        13,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        14,
+        15,
+        16,
+        17
+      ],
+      "loop": false,
+      "frame_msec": 255,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        17
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

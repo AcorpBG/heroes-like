@@ -1,0 +1,347 @@
+{
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          312,
+          419
+        ]
+      ],
+      "anchor": [
+        158,
+        410
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+      "rects": [
+        [
+          314,
+          0,
+          627,
+          420
+        ]
+      ],
+      "anchor": [
+        470,
+        411
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/continuity-alpha/hammer-recovery-shield-brace-and-travel.png",
+      "rects": [
+        [
+          0,
+          709,
+          568,
+          1454
+        ]
+      ],
+      "anchor": [
+        306,
+        1360
+      ],
+      "scale": 0.31
+    },
+    {
+      "name": "walk_passing_attempt",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/continuity-alpha/hammer-recovery-shield-brace-and-travel.png",
+      "rects": [
+        [
+          569,
+          709,
+          1082,
+          1454
+        ]
+      ],
+      "anchor": [
+        808,
+        1375
+      ],
+      "scale": 0.31
+    },
+    {
+      "name": "hammer_windup",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          421,
+          320,
+          841
+        ]
+      ],
+      "anchor": [
+        159,
+        820
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "hammer_contact",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+      "rects": [
+        [
+          325,
+          475,
+          650,
+          696
+        ],
+        [
+          325,
+          696,
+          660,
+          705
+        ],
+        [
+          325,
+          705,
+          678,
+          735
+        ],
+        [
+          325,
+          735,
+          667,
+          748
+        ],
+        [
+          325,
+          748,
+          650,
+          844
+        ]
+      ],
+      "anchor": [
+        496,
+        817
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "hammer_recovery",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/continuity-alpha/hammer-recovery-shield-brace-and-travel.png",
+      "rects": [
+        [
+          0,
+          0,
+          564,
+          708
+        ]
+      ],
+      "anchor": [
+        304,
+        666
+      ],
+      "scale": 0.31
+    },
+    {
+      "name": "guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/continuity-alpha/hammer-recovery-shield-brace-and-travel.png",
+      "rects": [
+        [
+          590,
+          0,
+          1082,
+          708
+        ]
+      ],
+      "anchor": [
+        826,
+        688
+      ],
+      "scale": 0.31
+    },
+    {
+      "name": "guard_crouch",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+      "rects": [
+        [
+          660,
+          509,
+          946,
+          693
+        ],
+        [
+          682,
+          693,
+          946,
+          752
+        ],
+        [
+          660,
+          752,
+          946,
+          835
+        ]
+      ],
+      "anchor": [
+        806,
+        808
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+      "rects": [
+        [
+          961,
+          460,
+          1254,
+          846
+        ]
+      ],
+      "anchor": [
+        1105,
+        818
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          858,
+          330,
+          1160
+        ]
+      ],
+      "anchor": [
+        167,
+        1125
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "death_low_fall",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+      "rects": [
+        [
+          337,
+          943,
+          750,
+          1190
+        ]
+      ],
+      "anchor": [
+        544,
+        1151
+      ],
+      "scale": 0.52
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+      "rects": [
+        [
+          750,
+          982,
+          1254,
+          1205
+        ]
+      ],
+      "anchor": [
+        1001,
+        1168
+      ],
+      "scale": 0.52
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 195,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 270,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

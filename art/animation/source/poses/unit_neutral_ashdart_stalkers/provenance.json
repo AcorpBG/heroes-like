@@ -44,5 +44,18 @@
     "evidence": ".artifacts/battle-unit-animation-size-20260913/ashdart-continuity-20260916",
     "pose_source_facing": "right",
     "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_ashdart_stalkers.png",
+    "runtime_sha256": "29c5751d61be34f75fb7af8095a212164f6601c815f35b9dc2cf38e6e1fb4e87"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "659cc7c3ea809692840e95e769f6974e924e721711946d76f8f51819a9865b3c",
+    "preserved_frames": 18,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

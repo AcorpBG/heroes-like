@@ -1,0 +1,409 @@
+{
+  "unit_id": "unit_neutral_cinderpot_hurlers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          0,
+          0,
+          310,
+          319
+        ]
+      ],
+      "anchor": [
+        168,
+        306
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          311,
+          0,
+          621,
+          319
+        ]
+      ],
+      "anchor": [
+        469,
+        306
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "walk_contact",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          622,
+          0,
+          945,
+          319
+        ]
+      ],
+      "anchor": [
+        780,
+        307
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "walk_passing",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          0,
+          320,
+          310,
+          622
+        ]
+      ],
+      "anchor": [
+        171,
+        608
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "passing_back",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/continuity-alpha/passing-recovery-and-directional-corpse.png",
+      "rects": [
+        [
+          0,
+          0,
+          687,
+          569
+        ]
+      ],
+      "anchor": [
+        365,
+        552
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "passing_forward",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/continuity-alpha/passing-recovery-and-directional-corpse.png",
+      "rects": [
+        [
+          687,
+          0,
+          1374,
+          569
+        ]
+      ],
+      "anchor": [
+        986,
+        552
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "fist_windup",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          311,
+          320,
+          621,
+          622
+        ]
+      ],
+      "anchor": [
+        471,
+        603
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "fist_strike",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          622,
+          320,
+          945,
+          622
+        ]
+      ],
+      "anchor": [
+        779,
+        605
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "fist_recovery",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/continuity-alpha/passing-recovery-and-directional-corpse.png",
+      "rects": [
+        [
+          0,
+          569,
+          600,
+          1145
+        ]
+      ],
+      "anchor": [
+        333,
+        1104
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "hood_guard",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          946,
+          320,
+          1254,
+          622
+        ]
+      ],
+      "anchor": [
+        1100,
+        605
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "pot_gather",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          0,
+          623,
+          311,
+          940
+        ]
+      ],
+      "anchor": [
+        171,
+        926
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "pot_windup",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          312,
+          623,
+          626,
+          940
+        ]
+      ],
+      "anchor": [
+        474,
+        931
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "pot_release",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          627,
+          623,
+          943,
+          940
+        ]
+      ],
+      "anchor": [
+        779,
+        922
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "pot_recovery",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          944,
+          623,
+          1254,
+          940
+        ]
+      ],
+      "anchor": [
+        1101,
+        928
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          0,
+          940,
+          311,
+          1254
+        ]
+      ],
+      "anchor": [
+        173,
+        1210
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          312,
+          970,
+          621,
+          1210
+        ]
+      ],
+      "anchor": [
+        464,
+        1193
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          622,
+          1010,
+          916,
+          1200
+        ]
+      ],
+      "anchor": [
+        764,
+        1180
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/continuity-alpha/passing-recovery-and-directional-corpse.png",
+      "rects": [
+        [
+          670,
+          770,
+          1374,
+          1145
+        ]
+      ],
+      "anchor": [
+        1006,
+        1088
+      ],
+      "scale": 0.4
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 420,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        4,
+        3,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        6,
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        14,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        15,
+        16,
+        17
+      ],
+      "loop": false,
+      "frame_msec": 280,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        17
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  }
+}

@@ -1,0 +1,498 @@
+{
+  "unit_id": "unit_neutral_ashdart_stalkers",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          311,
+          335
+        ]
+      ],
+      "anchor": [
+        153,
+        325
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png",
+      "rects": [
+        [
+          326,
+          0,
+          612,
+          336
+        ]
+      ],
+      "anchor": [
+        465,
+        324
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "run_extension_unaccepted",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png",
+      "rects": [
+        [
+          615,
+          0,
+          978,
+          334
+        ]
+      ],
+      "anchor": [
+        799,
+        319
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "run_gather_unaccepted",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png",
+      "rects": [
+        [
+          982,
+          0,
+          1254,
+          336
+        ]
+      ],
+      "anchor": [
+        1118,
+        322
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "tube_shove_windup",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-alpha/blowpipe-action-recovery-and-directional-collapse.png",
+      "rects": [
+        [
+          0,
+          0,
+          600,
+          460
+        ],
+        [
+          0,
+          460,
+          165,
+          481
+        ],
+        [
+          399,
+          460,
+          600,
+          481
+        ]
+      ],
+      "anchor": [
+        286,
+        459
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "tube_shove_contact",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png",
+      "rects": [
+        [
+          616,
+          337,
+          1007,
+          380
+        ],
+        [
+          616,
+          380,
+          1019,
+          500
+        ],
+        [
+          616,
+          500,
+          972,
+          639
+        ],
+        [
+          616,
+          639,
+          686,
+          650
+        ],
+        [
+          873,
+          639,
+          972,
+          650
+        ]
+      ],
+      "anchor": [
+        781,
+        633
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "tube_shove_recovery",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-alpha/blowpipe-action-recovery-and-directional-collapse.png",
+      "rects": [
+        [
+          600,
+          0,
+          1201,
+          458
+        ],
+        [
+          600,
+          458,
+          758,
+          483
+        ],
+        [
+          1000,
+          458,
+          1201,
+          483
+        ]
+      ],
+      "anchor": [
+        882,
+        465
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-alpha/blowpipe-action-recovery-and-directional-collapse.png",
+      "rects": [
+        [
+          769,
+          463,
+          966,
+          495
+        ],
+        [
+          600,
+          495,
+          1201,
+          970
+        ]
+      ],
+      "anchor": [
+        885,
+        951
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "guard_crouch",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png",
+      "rects": [
+        [
+          1010,
+          375,
+          1254,
+          500
+        ],
+        [
+          980,
+          500,
+          1254,
+          647
+        ]
+      ],
+      "anchor": [
+        1112,
+        628
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "dart_reload",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          640,
+          232,
+          659
+        ],
+        [
+          0,
+          659,
+          310,
+          960
+        ]
+      ],
+      "anchor": [
+        156,
+        947
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "blowpipe_aim",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png",
+      "rects": [
+        [
+          330,
+          642,
+          555,
+          660
+        ],
+        [
+          330,
+          660,
+          612,
+          987
+        ]
+      ],
+      "anchor": [
+        473,
+        963
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "blowpipe_fire",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png",
+      "rects": [
+        [
+          617,
+          654,
+          942,
+          985
+        ]
+      ],
+      "anchor": [
+        779,
+        964
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "blowpipe_recovery",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-alpha/blowpipe-action-recovery-and-directional-collapse.png",
+      "rects": [
+        [
+          160,
+          463,
+          390,
+          490
+        ],
+        [
+          0,
+          490,
+          600,
+          969
+        ]
+      ],
+      "anchor": [
+        286,
+        949
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png",
+      "rects": [
+        [
+          971,
+          647,
+          1254,
+          988
+        ]
+      ],
+      "anchor": [
+        1113,
+        960
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          964,
+          285,
+          1254
+        ]
+      ],
+      "anchor": [
+        139,
+        1221
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "death_tipping_head_left",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-alpha/blowpipe-action-recovery-and-directional-collapse.png",
+      "rects": [
+        [
+          0,
+          980,
+          558,
+          1310
+        ]
+      ],
+      "anchor": [
+        281,
+        1235
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/alpha/poses.png",
+      "rects": [
+        [
+          573,
+          1037,
+          912,
+          1150
+        ],
+        [
+          650,
+          1150,
+          907,
+          1162
+        ],
+        [
+          650,
+          1162,
+          941,
+          1211
+        ]
+      ],
+      "anchor": [
+        752,
+        1188
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_ashdart_stalkers/continuity-alpha/blowpipe-action-recovery-and-directional-collapse.png",
+      "rects": [
+        [
+          559,
+          1040,
+          1201,
+          1310
+        ]
+      ],
+      "anchor": [
+        881,
+        1263
+      ],
+      "scale": 0.4
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 420,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        13,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        14,
+        15,
+        16,
+        17
+      ],
+      "loop": false,
+      "frame_msec": 250,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        17
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

@@ -52,5 +52,18 @@
     "evidence": ".artifacts/battle-unit-animation-size-20260913/glimmercap-continuity-20260916",
     "pose_source_facing": "right",
     "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_glimmercap_needlers.png",
+    "runtime_sha256": "4e4fa08b30857113fb7d95464d01aaa9fcfc1be1f63e0c162c5b83ea3a396e47"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "c18e4af19731fcd74f90601091c4e992bea623f702e25905e0c669dd99fc07d8",
+    "preserved_frames": 17,
+    "status": "accepted_idle_articulation_20260919"
   }
 }
