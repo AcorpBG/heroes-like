@@ -169,5 +169,18 @@
       ],
       "review": "Standalone opposite contact and targeted crossed-thigh correction both repeat original lead, despite changed knee flexion. Both opaque RGB checkerboard. Neither copied, packed or registered; no animation progress claimed. Need materially different pose reference or production method, not identical retry. Existing sources unchanged, tests deferred."
     }
-  ]
+  ],
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_brasshollow_quenchspool_slingers.png",
+    "runtime_sha256": "945e485216ab8e0b3f99ab65abcaf5ac3c21d04e4144ea39e310cff9fa4175fa"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "99a800351f0a68ae348275c7e59524887d44f636ebcbcd53ac396e42e6d1f700",
+    "preserved_frames": 18,
+    "status": "accepted_idle_articulation_20260919"
+  }
 }

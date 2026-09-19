@@ -157,5 +157,18 @@
       ],
       "removed_bytes": 4170217
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_brasshollow_whitegauge_datum_lancers.png",
+    "runtime_sha256": "25a6f8f5ff3247641b072bc1ccbb834efc64ffef0278eb76adc9f3d0f5122cef"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "f6382dd8433fd39436dc6367eab360cf1b333167f1f07f597d594205b178930c",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

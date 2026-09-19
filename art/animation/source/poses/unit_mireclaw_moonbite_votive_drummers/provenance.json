@@ -119,5 +119,18 @@
     "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/votive-continuity-20260915/art-desk-registered.html",
     "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/votive-continuity-20260915/art-desk-registered.png",
     "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/votive-continuity-20260915/packed-final/poses-candidate-atlas-green.png"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_mireclaw_moonbite_votive_drummers.png",
+    "runtime_sha256": "7cc9c8127d29c8485dba68d24030af1f1937a93b263f8b844b99543bf24a1e68"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "070af05685bc9bdd0bed0a5cb53e1699ba9c029c308400d6993a2acad36b2aca",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

@@ -85,5 +85,18 @@
       ],
       "removed_bytes": 5565143
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_veilmourn_dreamwake_tideglass_oracles.png",
+    "runtime_sha256": "e38ab9d9c0b303b5361aa4eb66da7250d93396585d8467cd488d30ca35e755af"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "6057f1b240b0a5d570847493ab7c3833dcce664f5c29030df189860aa63f2d18",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

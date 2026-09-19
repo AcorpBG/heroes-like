@@ -1,0 +1,430 @@
+{
+  "unit_id": "unit_brasshollow_quenchspool_slingers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          305,
+          327
+        ],
+        [
+          0,
+          327,
+          135,
+          333
+        ],
+        [
+          170,
+          327,
+          305,
+          333
+        ]
+      ],
+      "anchor": [
+        166,
+        331
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          316,
+          0,
+          613,
+          340
+        ]
+      ],
+      "anchor": [
+        470,
+        332
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guided-carry-and-cable-arcs.png",
+      "rects": [
+        [
+          105,
+          0,
+          474,
+          494
+        ]
+      ],
+      "anchor": [
+        282,
+        484
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guided-carry-and-cable-arcs.png",
+      "rects": [
+        [
+          609,
+          0,
+          887,
+          500
+        ]
+      ],
+      "anchor": [
+        747,
+        488
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "walk_planted_bridge",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guided-opposite-gathered-contact.png",
+      "rects": [
+        [
+          0,
+          0,
+          1145,
+          1374
+        ]
+      ],
+      "anchor": [
+        605,
+        1245
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guided-carry-and-cable-arcs.png",
+      "rects": [
+        [
+          96,
+          496,
+          362,
+          1024
+        ]
+      ],
+      "anchor": [
+        237,
+        991
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          336,
+          338,
+          611,
+          657
+        ]
+      ],
+      "anchor": [
+        461,
+        651
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "melee_reel_shove",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          635,
+          338,
+          943,
+          657
+        ]
+      ],
+      "anchor": [
+        774,
+        651
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "guard_a",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guard-weight-clear.png",
+      "rects": [
+        [
+          0,
+          0,
+          884,
+          887
+        ]
+      ],
+      "anchor": [
+        529,
+        864
+      ],
+      "scale": 0.215
+    },
+    {
+      "name": "guard_b",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/guard-weight-clear.png",
+      "rects": [
+        [
+          889,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1336,
+        864
+      ],
+      "scale": 0.215
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          0,
+          661,
+          313,
+          973
+        ]
+      ],
+      "anchor": [
+        166,
+        966
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_curved_windup",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/reel-attached-cast-cycle.png",
+      "rects": [
+        [
+          0,
+          0,
+          698,
+          605
+        ]
+      ],
+      "anchor": [
+        410,
+        603
+      ],
+      "scale": 0.38
+    },
+    {
+      "name": "ranged_extended_release",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/reel-attached-cast-cycle.png",
+      "rects": [
+        [
+          0,
+          605,
+          693,
+          1145
+        ],
+        [
+          693,
+          704,
+          918,
+          830
+        ]
+      ],
+      "anchor": [
+        326,
+        1117
+      ],
+      "scale": 0.38
+    },
+    {
+      "name": "ranged_rewind",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/reel-attached-cast-cycle.png",
+      "rects": [
+        [
+          934,
+          605,
+          1374,
+          1145
+        ]
+      ],
+      "anchor": [
+        1149,
+        1116
+      ],
+      "scale": 0.38
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          0,
+          983,
+          314,
+          1245
+        ]
+      ],
+      "anchor": [
+        168,
+        1225
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_forward_collapse",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/corpse-directed-collapse.png",
+      "rects": [
+        [
+          0,
+          0,
+          1619,
+          971
+        ]
+      ],
+      "anchor": [
+        829,
+        856
+      ],
+      "scale": 0.135
+    },
+    {
+      "name": "death_settle",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          590,
+          1078,
+          904,
+          1250
+        ]
+      ],
+      "anchor": [
+        746,
+        1243
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "dead_cold",
+      "source": "art/animation/source/poses/unit_brasshollow_quenchspool_slingers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          913,
+          1080,
+          1226,
+          1254
+        ]
+      ],
+      "anchor": [
+        1068,
+        1241
+      ],
+      "scale": 0.65
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        11,
+        12,
+        13,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 5,
+      "indices": [
+        10,
+        14,
+        15,
+        16,
+        17
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        17
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  }
+}

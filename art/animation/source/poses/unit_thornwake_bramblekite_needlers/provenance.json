@@ -266,5 +266,18 @@
         ]
       }
     ]
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_thornwake_bramblekite_needlers.png",
+    "runtime_sha256": "6a85798aa6c82a8b8df51d1c25b65f5168aab08f5764a1f9fe9dc4b4e8d00854"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "05e7f9d3c99482938001d982ba354754ed7ca59b63e5c929c0e1422848650881",
+    "preserved_frames": 18,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

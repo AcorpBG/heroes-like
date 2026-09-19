@@ -70,5 +70,18 @@
       ],
       "removed_bytes": 226055
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers.png",
+    "runtime_sha256": "128dec89738402c596b3230be9fb5d827c776091a7b250fb3ef721b8a93349f1"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "fb3f5a13a140037221c44c6a40e2f0bdebfffa0b9a501ec61b4f001145833bd7",
+    "preserved_frames": 18,
+    "status": "accepted_idle_articulation_20260919"
   }
 }
