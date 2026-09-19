@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Unified common mines
+
+`art-unified-common-mines-20260919` — in progress. Consolidate wood, ore and gold mines to one animated, biome-neutral asset per resource; use a three-column/two-row footprint and daily yields of 2 wood, 2 ore and 1,000 gold. Prepare visual alternatives for owner selection before authoring final animation frames and switching runtime art. Preserve legacy site references and distinguish native rare-mine translations from common mines. See `docs/unified-common-mines.md`.
+
 ### Expanded creature idle loops
 
 `animation-expanded-idle-loops-20260919` — completed across all 160 creatures. Eight original painted idle poses now play in battle and overworld, with visible hand/equipment articulation for armed units and anatomy-specific wings, paws, tails or mechanisms for other creatures. Existing action pixels, independent phase, anchors and reduced motion are preserved. All 155 changed loops reviewed; 29 focused Windows playback runs and two registration checks pass. No full suite. See `docs/creature-idle-expansion.md`.
