@@ -41605,6 +41605,27 @@
       "source_model": "original_vegetation_mass",
       "source_manifest": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
       "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "mapobj_common_wood_mine": {
+      "path": "res://art/overworld/runtime/objects/mines/wood.png",
+      "source_generated": "res://art/overworld/source/generated/mines/stonework_20260920/wood-layers.png",
+      "source_model": "built_in_image_gen_original_layered_mine",
+      "animation_manifest": "res://art/overworld/common_mines.json",
+      "common_mine_resource": "wood"
+    },
+    "mapobj_common_ore_mine": {
+      "path": "res://art/overworld/runtime/objects/mines/ore.png",
+      "source_generated": "res://art/overworld/source/generated/mines/stonework_20260920/ore-layers.png",
+      "source_model": "built_in_image_gen_original_layered_mine",
+      "animation_manifest": "res://art/overworld/common_mines.json",
+      "common_mine_resource": "ore"
+    },
+    "mapobj_common_gold_mine": {
+      "path": "res://art/overworld/runtime/objects/mines/gold.png",
+      "source_generated": "res://art/overworld/source/generated/mines/stonework_20260920/gold-layers.png",
+      "source_model": "built_in_image_gen_original_layered_mine",
+      "animation_manifest": "res://art/overworld/common_mines.json",
+      "common_mine_resource": "gold"
     }
   },
   "resource_site_sprites": {
@@ -41988,8 +42009,8 @@
       "fit": "Distinct original Memory-Salt reliquary field sprite for the accepted loose-resource identity."
     },
     "site_reef_coin_assay": {
-      "asset_id": "resource_pickup_gold",
-      "fit": "Distinct original Reef coin-coffer field sprite for the accepted loose-resource identity."
+      "asset_id": "mapobj_common_gold_mine",
+      "fit": "Unified animated gold mine"
     },
     "site_prism_watch_relay": {
       "asset_id": "resource_site_recurring_prism_watch_relay",
@@ -42215,12 +42236,12 @@
       "fit": "Exact original stair-wrapped watch post with forked shutters and signal brazier."
     },
     "site_brightwood_sawmill": {
-      "asset_id": "mapobj_brightwood_sawmill",
-      "fit": "Exact original open brightwood mill with saw wheel, log carriage, plank stacks, and waterwheel."
+      "asset_id": "mapobj_common_wood_mine",
+      "fit": "Unified animated sawmill"
     },
     "site_ridge_quarry": {
-      "asset_id": "mapobj_ridge_quarry",
-      "fit": "Exact original stepped quarry with lifting tripod, ore rail, ladders, and exposed mineral seam."
+      "asset_id": "mapobj_common_ore_mine",
+      "fit": "Unified animated ore mine"
     },
     "site_charter_bar_gate": {
       "asset_id": "resource_site_route_control_charter_bar_gate_opened",
@@ -43259,6 +43280,42 @@
       "asset_id": "resource_site_uncrowned_bellwake_sounding_chair",
       "unclaimed_asset_id": "resource_site_uncrowned_bellwake_sounding_chair",
       "fit": "Exact original Bellwake Empty Sounding Chair remains visible before and after its witnessed claim."
+    },
+    "site_marsh_peat_yard": {
+      "asset_id": "mapobj_common_gold_mine",
+      "fit": "Unified animated gold mine"
+    },
+    "site_greenbough_wood_yard": {
+      "asset_id": "mapobj_common_wood_mine",
+      "fit": "Unified animated sawmill"
+    },
+    "site_floodplain_sluice_camp": {
+      "asset_id": "mapobj_common_gold_mine",
+      "fit": "Unified animated gold mine"
+    },
+    "site_ironstep_ore_pit": {
+      "asset_id": "mapobj_common_ore_mine",
+      "fit": "Unified animated ore mine"
+    },
+    "site_cinder_ore_face": {
+      "asset_id": "mapobj_common_ore_mine",
+      "fit": "Unified animated ore mine"
+    },
+    "site_frostwood_cutting_yard": {
+      "asset_id": "mapobj_common_wood_mine",
+      "fit": "Unified animated sawmill"
+    },
+    "site_badlands_coin_sluice": {
+      "asset_id": "mapobj_common_gold_mine",
+      "fit": "Unified animated gold mine"
+    },
+    "site_underway_ore_counterfort": {
+      "asset_id": "mapobj_common_ore_mine",
+      "fit": "Unified animated ore mine"
+    },
+    "site_grassland_plank_grove": {
+      "asset_id": "mapobj_common_wood_mine",
+      "fit": "Unified animated sawmill"
     }
   },
   "artifact_default_sprite": {

@@ -24,7 +24,7 @@ Rules:
 
 ### Unified common mines
 
-`art-unified-common-mines-20260919` — in progress. Consolidate wood, ore and gold mines to one animated, biome-neutral asset per resource; use a three-column/two-row footprint and daily yields of 2 wood, 2 ore and 1,000 gold. Prepare visual alternatives for owner selection before authoring final animation frames and switching runtime art. Preserve legacy site references and distinguish native rare-mine translations from common mines. See `docs/unified-common-mines.md`.
+`art-unified-common-mines-20260919` — complete. Approved B (stonework guilds) supplies one animated, biome-neutral building per resource: moving machinery, chimney smoke and independent lamps. Shared 3×2 gameplay/render footprints retain the south-middle entrance; daily yields are 2 wood, 2 ore and 1,000 gold. Legacy site IDs and live rare-mine identities are preserved. Focused render regression: 163 checks passed; full suite skipped as requested. Existing-placement scope and rebuild instructions: `docs/unified-common-mines.md`.
 
 ### Expanded creature idle loops
 

@@ -47,6 +47,9 @@ const RoadStyle = preload("res://scenes/overworld/OverworldRoadStyle.gd")
 const GroundSurface = preload("res://scenes/overworld/OverworldGroundSurface.gd")
 const ActorStyle = preload("res://scenes/overworld/OverworldActorStyle.gd")
 const CreatureIdle = preload("res://scenes/overworld/OverworldCreatureIdle.gd")
+const CommonMines = preload("res://scripts/core/CommonMineRules.gd")
+const MineArt = preload("res://scenes/overworld/OverworldMine.gd")
+var _mine_art := MineArt.new()
 var _actor_style := ActorStyle.new()
 var _actor_asset_ids: Dictionary = {}
 var _actor_unit_ids: Dictionary = {}
@@ -853,6 +856,7 @@ func _ready() -> void:
 	_load_terrain_grammar()
 	_load_overworld_art_manifest()
 	_creature_idle.configure(ContentService.load_json("res://art/overworld/creature_idle.json"))
+	_mine_art.configure(ContentService.load_json("res://art/overworld/common_mines.json"))
 	_scenery_manifest = JSON.parse_string(FileAccess.get_file_as_string("res://content/overworld_scenery_animation.json"))
 	_load_overworld_vfx_manifest()
 	_invalidate_frame_layer("ready")
@@ -4189,7 +4193,31 @@ func _draw_spell_cast_procedural_rings(rect: Rect2, motion_progress: float, alph
 	}
 
 func _draw_resource_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	if _draw_common_mine(node, rect, remembered, tile): return true
 	return _draw_object_sprite(_resource_asset_id(node), rect, remembered, _resource_object_profile(node), tile)
+
+func _draw_common_mine(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	var resource := CommonMines.resource(node)
+	if resource.is_empty() or _draw_canvas_item != _state_layer or not _scenery_batches.recording: return false
+	var pose := _mine_art.payload(resource, rect)
+	if pose.is_empty() or pose.texture == null: return false
+	var material := MineArt.material(pose, "%s:%s:%s:%d" % [resource, node.get("placement_id", ""), tile, _level], _scenery_motion_enabled())
+	var draw_rect: Rect2 = pose.rect
+	var board := _board_rect()
+	var cell_size := board.size / Vector2(_map_size)
+	var first := Vector2i((draw_rect.position - board.position) / cell_size).clamp(Vector2i.ZERO, _map_size - Vector2i.ONE)
+	var last := Vector2i((draw_rect.end - board.position) / cell_size).clamp(Vector2i.ZERO, _map_size - Vector2i.ONE)
+	var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
+	for y in range(first.y, last.y + 1):
+		for x in range(first.x, last.x + 1):
+			if not OverworldRulesScript.is_tile_explored(_session, x, y, _level): continue
+			var cell := Rect2(board.position + Vector2(x, y) * cell_size, cell_size)
+			var clipped := draw_rect.intersection(cell)
+			if clipped.size.x <= 0.0 or clipped.size.y <= 0.0: continue
+			var source := Rect2((clipped.position - draw_rect.position) / draw_rect.size * pose.canvas, clipped.size / draw_rect.size * pose.canvas)
+			_scenery_batches.paint_material_region(pose.texture, clipped, source, tint, material,
+				{"kind": "common_mine", "resource": resource, "tile": tile, "cell": Vector2i(x, y), "level": _level})
+	return true
 
 func _draw_artifact_sprite(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	if node.is_empty():
@@ -6125,6 +6153,8 @@ func _object_profile_footprint_anchor(profile: Dictionary) -> String:
 	return String(profile.get("footprint_anchor", "bottom_center"))
 
 func _resource_footprint_rect(node: Dictionary, anchor_rect: Rect2, anchor_tile: Vector2i) -> Rect2:
+	if not CommonMines.resource(node).is_empty():
+		return Rect2(anchor_rect.position + Vector2(CommonMines.origin(node) - anchor_tile) * anchor_rect.size, anchor_rect.size * Vector2(3, 2))
 	var profile := _resource_object_profile(node)
 	var footprint := _object_profile_footprint(profile)
 	if footprint == Vector2i(1, 1):
@@ -11913,6 +11943,10 @@ func _resource_object_profile(node: Dictionary) -> Dictionary:
 	if node.is_empty():
 		return _default_object_profile("pickup", Vector2i(1, 1))
 	var site_id := String(node.get("site_id", "")).strip_edges()
+	if not CommonMines.resource(node).is_empty():
+		var common_profile := _default_object_profile("mine", Vector2i(3, 2))
+		common_profile["presentation_kind"] = "mine"
+		return common_profile
 	var profile = _resource_site_object_profiles.get(site_id, {})
 	if profile is Dictionary and not profile.is_empty():
 		var resolved_profile: Dictionary = profile.duplicate(true)
@@ -12269,6 +12303,15 @@ func _resource_asset_id(node: Dictionary) -> String:
 		return ""
 	var site_id := String(node.get("site_id", ""))
 	var site := ContentService.get_resource_site(site_id)
+	var common_resource := CommonMines.resource(node)
+	if not common_resource.is_empty(): return "mapobj_common_%s_mine" % common_resource
+	# A native common-looking source ID can resolve to a rare mine. Its live
+	# resource identity takes precedence over that historical object's painting.
+	var source_object := ContentService.get_map_object(String(node.get("object_id", "")))
+	if not source_object.is_empty() and String(source_object.get("resource_site_id", "")) != site_id:
+		var live_object := ContentService.get_map_object_for_resource_site(site_id)
+		var live_id := String(live_object.get("id", ""))
+		if _map_object_asset_ids.has(live_id): return String(_map_object_asset_ids[live_id])
 	if String(site.get("family", "")) == "faction_landmark":
 		var landmark_asset_id := String(_resource_site_asset_ids.get(site_id, ""))
 		if landmark_asset_id != "" and _object_texture_for_asset(landmark_asset_id) is Texture2D:

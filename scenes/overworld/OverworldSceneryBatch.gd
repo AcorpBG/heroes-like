@@ -81,6 +81,17 @@ func paint(texture: Texture2D, rect: Rect2, tint: Color, profile: Dictionary, so
 	entries.append({"asset_id": asset_id, "tile": tile, "level": level, "rect": rect, "profile": profile, "batch": batch})
 	_current = null # Following fog, outlines and props stay ABOVE this sprite.
 
+func paint_material_region(texture: Texture2D, rect: Rect2, source: Rect2, tint: Color, shader_material: ShaderMaterial, details: Dictionary) -> void:
+	# A layered mine shares one clock across explored cell slices, including smoke.
+	var batch := _next()
+	batch.material = shader_material
+	batch.commands.append([&"draw_texture_rect_region", [texture, rect, source, tint, false, false]])
+	_materials[["mine", _cursor]] = shader_material
+	var entry := details.duplicate()
+	entry.merge({"batch": batch, "rect": rect})
+	entries.append(entry)
+	_current = null
+
 func paint_region(texture: Texture2D, rect: Rect2, source: Rect2, tint: Color, profile: Dictionary, original_region: Rect2, asset_id: String, tile: Vector2i, phase_tile: Vector2i, level: int, enabled: bool, padding: Vector2 = Vector2.ZERO) -> void:
 	var batch := _next()
 	# Every tile samples the complete texture with the same material and phase.

@@ -113549,14 +113549,14 @@
     {
       "id": "art-unified-common-mines-20260919",
       "title": "Unified animated wood, ore and gold mines",
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "content_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "docs/unified-common-mines.md"
       ],
-      "notes": "Daily production implemented for all 12 common-site definitions: 2 wood / 2 ore / 1000 gold, synchronized control_income and resource_outputs. Focused comparison passes; ownership, claim rewards, rare/support production preserved. Three original proposal sheets and full prompts delivered for owner selection. Single-art routing, 3x2 gameplay footprints across authored/generated maps and final animation remain pending selection. No game launch or full suite."
+      "notes": "Implemented approved option B: three original biome-neutral buildings replace twelve common-site art identities; daily production is 2 wood, 2 ore and 1000 gold. Shared game geometry reserves a 3x2 footprint with five solid cells and a south-middle entrance while preserving source package records and live rare-mine routing. GPU layers animate saw/flywheel, cart/hoists/drums, chimney smoke and independent lights; fog and reduced motion are respected. Focused imported-texture render regression passed 163 checks on 2026-09-20; full repository suite intentionally not run. See docs/unified-common-mines.md for existing-placement scope."
     }
   ],
   "project": "heroes-like",

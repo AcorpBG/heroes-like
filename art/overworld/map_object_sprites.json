@@ -416,7 +416,10 @@
     "mapobj_prismwake_refraction_shelf",
     "mapobj_knotstag_root_court",
     "mapobj_gaugecoil_pressure_burrow",
-    "mapobj_gloambell_sounding_deep"
+    "mapobj_gloambell_sounding_deep",
+    "mapobj_common_wood_mine",
+    "mapobj_common_ore_mine",
+    "mapobj_common_gold_mine"
   ],
   "object_sprite_mappings": {
     "object_roadward_lodge": {
@@ -588,9 +591,9 @@
       "source_batch": 2
     },
     "object_marsh_peat_yard": {
-      "asset_id": "mapobj_marsh_peat_yard",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Marsh Peat Yard' (mine).",
-      "assignment_source": "new_distinct_map_object_sprite",
+      "asset_id": "mapobj_common_gold_mine",
+      "fit": "Owner-selected biome-neutral stonework mine shared by resource type, 3x2 footprint.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "mine",
       "source_batch": 2
     },
@@ -749,44 +752,44 @@
       "source_batch": 3
     },
     "object_greenbough_wood_yard": {
-      "asset_id": "mapobj_greenbough_wood_yard",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Greenbough Wood Yard' (mine).",
-      "assignment_source": "new_distinct_map_object_sprite",
+      "asset_id": "mapobj_common_wood_mine",
+      "fit": "Owner-selected biome-neutral stonework mine shared by resource type, 3x2 footprint.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "mine",
       "source_batch": 3
     },
     "object_floodplain_sluice_camp": {
-      "asset_id": "mapobj_floodplain_sluice_camp",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Floodplain Sluice Camp' (mine).",
-      "assignment_source": "new_distinct_map_object_sprite",
+      "asset_id": "mapobj_common_gold_mine",
+      "fit": "Owner-selected biome-neutral stonework mine shared by resource type, 3x2 footprint.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "mine",
       "source_batch": 4
     },
     "object_ironstep_ore_pit": {
-      "asset_id": "mapobj_ironstep_ore_pit",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Ironstep Ore Pit' (mine).",
-      "assignment_source": "new_distinct_map_object_sprite",
+      "asset_id": "mapobj_common_ore_mine",
+      "fit": "Owner-selected biome-neutral stonework mine shared by resource type, 3x2 footprint.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "mine",
       "source_batch": 4
     },
     "object_reef_coin_assay": {
-      "asset_id": "mapobj_reef_coin_assay",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Reef Coin Assay' (mine).",
-      "assignment_source": "new_distinct_map_object_sprite",
+      "asset_id": "mapobj_common_gold_mine",
+      "fit": "Owner-selected biome-neutral stonework mine shared by resource type, 3x2 footprint.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "mine",
       "source_batch": 4
     },
     "object_cinder_ore_face": {
-      "asset_id": "mapobj_cinder_ore_face",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Cinder Ore Face' (mine).",
-      "assignment_source": "new_distinct_map_object_sprite",
+      "asset_id": "mapobj_common_ore_mine",
+      "fit": "Owner-selected biome-neutral stonework mine shared by resource type, 3x2 footprint.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "mine",
       "source_batch": 4
     },
     "object_frostwood_cutting_yard": {
-      "asset_id": "mapobj_frostwood_cutting_yard",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Frostwood Cutting Yard' (mine).",
-      "assignment_source": "new_distinct_map_object_sprite",
+      "asset_id": "mapobj_common_wood_mine",
+      "fit": "Owner-selected biome-neutral stonework mine shared by resource type, 3x2 footprint.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "mine",
       "source_batch": 4
     },
@@ -896,23 +899,23 @@
       "source_batch": 5
     },
     "object_badlands_coin_sluice": {
-      "asset_id": "mapobj_badlands_coin_sluice",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Badlands Coin Sluice' (mine).",
-      "assignment_source": "new_distinct_map_object_sprite",
+      "asset_id": "mapobj_common_gold_mine",
+      "fit": "Owner-selected biome-neutral stonework mine shared by resource type, 3x2 footprint.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "mine",
       "source_batch": 5
     },
     "object_underway_ore_counterfort": {
-      "asset_id": "mapobj_underway_ore_counterfort",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Underway Ore Counterfort' (mine).",
-      "assignment_source": "new_distinct_map_object_sprite",
+      "asset_id": "mapobj_common_ore_mine",
+      "fit": "Owner-selected biome-neutral stonework mine shared by resource type, 3x2 footprint.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "mine",
       "source_batch": 5
     },
     "object_grassland_plank_grove": {
-      "asset_id": "mapobj_grassland_plank_grove",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Grassland Plank Grove' (mine).",
-      "assignment_source": "new_distinct_map_object_sprite",
+      "asset_id": "mapobj_common_wood_mine",
+      "fit": "Owner-selected biome-neutral stonework mine shared by resource type, 3x2 footprint.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "mine",
       "source_batch": 5
     },
@@ -1729,16 +1732,16 @@
       "source_batch": 14
     },
     "object_brightwood_sawmill": {
-      "asset_id": "mapobj_brightwood_sawmill",
-      "fit": "Distinct original open brightwood mill assigned to the authored Brightwood Sawmill mine.",
-      "assignment_source": "foundation_identity_completion",
+      "asset_id": "mapobj_common_wood_mine",
+      "fit": "Owner-selected biome-neutral stonework mine shared by resource type, 3x2 footprint.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "mine",
       "source_batch": 14
     },
     "object_ridge_quarry": {
-      "asset_id": "mapobj_ridge_quarry",
-      "fit": "Distinct original stepped lifting quarry assigned to the authored Ridge Quarry mine.",
-      "assignment_source": "foundation_identity_completion",
+      "asset_id": "mapobj_common_ore_mine",
+      "fit": "Owner-selected biome-neutral stonework mine shared by resource type, 3x2 footprint.",
+      "assignment_source": "unified_common_mines_20260920",
       "family": "mine",
       "source_batch": 14
     },

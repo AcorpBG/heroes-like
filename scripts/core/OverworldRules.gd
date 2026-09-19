@@ -4,6 +4,7 @@ extends RefCounted
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
+const CommonMines = preload("res://scripts/core/CommonMineRules.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
@@ -3260,7 +3261,10 @@ static func _build_blocked_tile_index(session: SessionStateStoreScript.SessionDa
 			continue
 		var body_tiles: Array
 		var package_mask: Variant = node.get("package_block_tiles", null)
-		if package_mask is Array:
+		if not CommonMines.resource(node).is_empty():
+			if not resource_node_is_present(node): continue
+			body_tiles = CommonMines.block_tiles(node)
+		elif package_mask is Array:
 			# Package masks already override authored geometry, including an
 			# explicitly empty mask. Preserve presence and decode only once;
 			# resolving a content definition cannot affect this branch.
@@ -3324,6 +3328,7 @@ static func _resource_node_blocks_body_tiles(node: Dictionary, map_object: Dicti
 	# Keep them immutable while removing occupancy with the vanished pickup.
 	if not resource_node_is_present(node):
 		return false
+	if not CommonMines.resource(node).is_empty(): return true
 	if node.get("package_block_tiles", null) is Array:
 		return not _world_tiles_from_payload_array(node.get("package_block_tiles", [])).is_empty()
 	if map_object.is_empty():
@@ -3336,6 +3341,7 @@ static func _resource_node_blocks_body_tiles(node: Dictionary, map_object: Dicti
 	return _map_object_blocks_body_tiles(map_object)
 
 static func _map_object_world_body_tiles(map_object: Dictionary, placement: Dictionary) -> Array:
+	if not CommonMines.resource(placement).is_empty(): return CommonMines.block_tiles(placement)
 	if placement.get("package_block_tiles", null) is Array:
 		var package_tiles := _world_tiles_from_payload_array(placement.get("package_block_tiles", []))
 		if not package_tiles.is_empty():
@@ -3359,6 +3365,7 @@ static func _map_object_world_body_tiles(map_object: Dictionary, placement: Dict
 	return tiles
 
 static func _resource_node_world_interaction_tiles(map_object: Dictionary, placement: Dictionary) -> Array:
+	if not CommonMines.resource(placement).is_empty(): return [CommonMines.entry_tile(placement)]
 	if _resource_node_has_runtime_visit_tile(placement):
 		var visit_tile: Dictionary = placement.get("visit_tile", {})
 		return [Vector2i(int(visit_tile.get("x", 0)), int(visit_tile.get("y", 0)))]
@@ -3396,6 +3403,7 @@ static func _world_tiles_from_payload_array(payload: Variant) -> Array:
 	return tiles
 
 static func _map_object_footprint_origin(map_object: Dictionary, placement: Dictionary) -> Vector2i:
+	if not CommonMines.resource(placement).is_empty(): return CommonMines.origin(placement)
 	var footprint: Dictionary = map_object.get("footprint", {}) if map_object.get("footprint", {}) is Dictionary else {}
 	var width: int = maxi(1, int(footprint.get("width", 1)))
 	var height: int = maxi(1, int(footprint.get("height", 1)))
