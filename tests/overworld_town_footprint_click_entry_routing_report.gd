@@ -3,7 +3,7 @@ extends Node
 const REPORT_ID := "OVERWORLD_TOWN_FOOTPRINT_CLICK_ENTRY_ROUTING_REPORT"
 const TOWN_PLACEMENT_ID := "town_footprint_click_fixture"
 const TOWN_ENTRY := Vector2i(4, 2)
-const TOWN_ORIGIN := Vector2i(3, 1)
+const TOWN_ORIGIN := Vector2i(2, 0)
 const HERO_START := Vector2i(1, 2)
 
 func _ready() -> void:
@@ -26,8 +26,10 @@ func _run() -> void:
 
 	var footprint_rows := []
 	var body_cells := []
-	for y_offset in range(2):
-		for x_offset in range(3):
+	for y_offset in range(3):
+		for x_offset in range(5):
+			if y_offset == 0 and x_offset in [0, 4]:
+				continue
 			var clicked_tile := TOWN_ORIGIN + Vector2i(x_offset, y_offset)
 			var selection: Dictionary = map_view.call("town_footprint_selection", clicked_tile)
 			var expected_entry := clicked_tile == TOWN_ENTRY
@@ -45,8 +47,8 @@ func _run() -> void:
 			})
 			if not expected_entry:
 				body_cells.append(clicked_tile)
-	if footprint_rows.size() != 6 or body_cells.size() != 5:
-		return _fail("Town footprint did not retain one entry plus five body cells.", footprint_rows)
+	if footprint_rows.size() != 13 or body_cells.size() != 12:
+		return _fail("Town presentation did not retain one entry plus twelve body cells.", footprint_rows)
 
 	var reset_selection: Dictionary = shell.call("validation_select_tile", HERO_START.x, HERO_START.y)
 	if reset_selection.get("selected_tile", {}) != _tile_payload(HERO_START):
@@ -104,7 +106,7 @@ func _run() -> void:
 		"entry_route_moves_without_opening": true,
 		"arrival_primary_action": "visit_town",
 		"body_click_opens_town": true,
-		"body_cell_count": 5,
+		"body_cell_count": 12,
 		"town_authority_exact": true,
 		"movement_preserved_on_body_open": true,
 	})])

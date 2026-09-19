@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Town landmark scale
+
+`art-town-footprint-scale-20260920` — complete. All 58 town appearances use a tapered five-column/three-row presentation and aspect-preserved silhouettes up to 4.80×4.35 tiles. Click coverage and fog clipping match the larger landmarks; source entrances, masks and artwork identities remain intact. Focused render regression: 278 checks pass; no full suite. See `docs/overworld-town-scale.md`.
+
 ### Unified common mines
 
 `art-unified-common-mines-20260919` — complete. Three approved B buildings use 3×2 gameplay footprints and daily yields of 2 wood, 2 ore and 1,000 gold. Artwork is 25% smaller around its fixed ground anchor, bringing visible height near two rows; machinery, readable smoke and independent lamps remain aligned. Focused render regression: 181 checks pass; no full suite. See `docs/unified-common-mines.md`.

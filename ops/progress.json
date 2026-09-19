@@ -113557,6 +113557,18 @@
         "docs/unified-common-mines.md"
       ],
       "notes": "Three approved common mine identities retain 3x2 gameplay footprints and 2 wood/2 ore/1000 gold daily incomes. Owner screenshot scale revision renders all buildings at 75 percent of their initial dimensions around the fixed ground anchor, bringing painted height near 2.25 tile rows. All machinery, smoke and lamps share the scale. Existing-map geometry and native source records are unchanged. Focused render regression passes 181 checks, including effect visibility at normal/small map scales, ownership, fog and reduced motion; textured renders reviewed. No full suite. See docs/unified-common-mines.md."
+    },
+    {
+      "id": "art-town-footprint-scale-20260920",
+      "title": "Town overworld footprint and landmark scale",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/overworld-town-scale.md"
+      ],
+      "notes": "All 58 original faction, named-town and biome appearances now use a tapered 5x3 presentation/click mask and aspect-preserved silhouettes capped at 4.80x4.35 tiles. Body clicks resolve the source entrance, and explored-cell clipping protects larger silhouettes and pennants. Existing artwork, native placement/visit/collision masks and saves remain intact. Focused render regression passes 278 checks; all ten art gallery pages and the live map render reviewed. No full or native RMG suite. Existing maps need only reload. See docs/overworld-town-scale.md."
     }
   ],
   "project": "heroes-like",

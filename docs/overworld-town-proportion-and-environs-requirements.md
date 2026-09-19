@@ -1,5 +1,7 @@
 # Overworld Town Proportion And Environs Requirements
 
+Town scale revision (2026-09-20): [Town landmark scale](overworld-town-scale.md) supersedes the 3x4 visual envelope and 3x2 presentation/click footprint below. Source gameplay masks and entrance coordinates remain authoritative.
+
 Task: #10236  
 Slice: `ux-overworld-town-proportion-and-environs-10236`  
 Parent: `phase-6-production-alpha-layer`  

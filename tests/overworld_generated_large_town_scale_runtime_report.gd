@@ -4,8 +4,9 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const REPORT_ID := "OVERWORLD_GENERATED_LARGE_TOWN_SCALE_RUNTIME_REPORT"
 const GENERATED_LARGE_SEED := "town-explicit-save-surface-large-10184"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
-const TOWN_VISUAL_EXTENT_CAP_TILES := 3.72
-const TOWN_VISUAL_WIDTH_CAP_TILES := 2.90
+const TOWN_VISUAL_EXTENT_CAP_TILES := 4.80
+const TOWN_VISUAL_WIDTH_CAP_TILES := 4.80
+const TOWN_VISUAL_HEIGHT_CAP_TILES := 4.35
 const TOWN_EXTENT_FRACTION := 1.24
 
 func _ready() -> void:
@@ -103,12 +104,12 @@ func _viewport_row(session, shell, viewport_size: Vector2i, authority_before: Di
 			print("%s_SCALE_MISMATCH %s" % [REPORT_ID, JSON.stringify(scale_payload)])
 		scale_exact = scale_exact and current_scale_exact
 		footprint_exact = footprint_exact \
-			and int(profile.get("footprint_width_tiles", 0)) == 3 \
-			and int(profile.get("footprint_height_tiles", 0)) == 2 \
-			and int(profile.get("visual_footprint_width_tiles", 0)) == 3 \
-			and int(profile.get("visual_footprint_height_tiles", 0)) == 4 \
-			and String(profile.get("visual_anchor_model", "")) == "three_by_four_entry_center_bottom" \
-			and int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) == 5 \
+			and int(profile.get("footprint_width_tiles", 0)) == 5 \
+			and int(profile.get("footprint_height_tiles", 0)) == 3 \
+			and int(profile.get("visual_footprint_width_tiles", 0)) == 5 \
+			and int(profile.get("visual_footprint_height_tiles", 0)) == 5 \
+			and String(profile.get("visual_anchor_model", "")) == "five_by_three_ground_entry_center_bottom" \
+			and int(profile.get("blocked_footprint_cell_count", 0)) + int(profile.get("off_map_footprint_cell_count", 0)) == 12 \
 			and bool(profile.get("entry_is_visit_tile", false)) \
 			and bool(profile.get("non_entry_tiles_blocked", false)) \
 			and String(profile.get("presentation_passability", "")) == "entry_only"
@@ -171,15 +172,15 @@ func _viewport_row(session, shell, viewport_size: Vector2i, authority_before: Di
 
 func _scale_payload_exact(payload: Dictionary) -> bool:
 	return not payload.is_empty() \
-		and payload.get("visual_footprint", {}) == {"width": 3, "height": 4} \
-		and payload.get("logical_footprint", {}) == {"width": 3, "height": 2} \
-		and String(payload.get("visual_anchor_model", "")) == "three_by_four_entry_center_bottom" \
+		and payload.get("visual_footprint", {}) == {"width": 5, "height": 5} \
+		and payload.get("logical_footprint", {}) == {"width": 5, "height": 3} \
+		and String(payload.get("visual_anchor_model", "")) == "five_by_three_ground_entry_center_bottom" \
 		and float(payload.get("visible_extent_tiles", 0.0)) <= TOWN_VISUAL_EXTENT_CAP_TILES + 0.0001 \
 		and is_equal_approx(float(payload.get("visible_extent_fraction_of_footprint_depth", 0.0)), TOWN_EXTENT_FRACTION) \
 		and float(payload.get("painted_width_tiles", 0.0)) <= TOWN_VISUAL_WIDTH_CAP_TILES + 0.0001 \
-		and float(payload.get("painted_height_tiles", 0.0)) <= TOWN_VISUAL_EXTENT_CAP_TILES + 0.0001 \
+		and float(payload.get("painted_height_tiles", 0.0)) <= TOWN_VISUAL_HEIGHT_CAP_TILES + 0.0001 \
 		and is_equal_approx(float(payload.get("town_width_cap_tiles", 0.0)), TOWN_VISUAL_WIDTH_CAP_TILES) \
-		and is_equal_approx(float(payload.get("town_height_cap_tiles", 0.0)), TOWN_VISUAL_EXTENT_CAP_TILES) \
+		and is_equal_approx(float(payload.get("town_height_cap_tiles", 0.0)), TOWN_VISUAL_HEIGHT_CAP_TILES) \
 		and bool(payload.get("town_aspect_preserved", false)) \
 		and bool(payload.get("town_vertical_landmark_fit", false)) \
 		and float(payload.get("town_to_hero_extent_ratio", 0.0)) > 3.0 \
