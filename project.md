@@ -90,6 +90,7 @@ Expected ownership boundaries:
 - Map/scenario persistence: current JSON content/save plumbing in `ContentService.gd`, `SaveService.gd`, and `SessionStateStore.gd`; future C++ GDExtension map package ownership once selected by a tactical slice.
 - Overworld state, movement, sites, economy ticks, fog, towns, and strategic summaries: `OverworldRules.gd`.
 - Overworld ground presentation: `OverworldGroundSurface.gd` blends manifest-backed original raster materials in world space. Its cached terrain/exploration lookup is derived presentation data, never terrain, collision or save authority; unknown neighboring ground must not leak through biome blending.
+- Overworld scenery may compose compatible neighboring blocked bodies into shared visual patches, independent of source-record boundaries. Patch bases must use existing blocked cells; overlapping art stays in the presentation/fog layer and must not modify native placements, paths, collision, simulation RNG or saves.
 - Battle state, initiative, stack actions, spells/status, exits, and post-battle sync: `BattleRules.gd`.
 - Battle body geometry is shared by rules, AI and presentation through `BattleFootprint.gd`. Explicit content profiles supply new stacks' one/two-cell footprints and visual scale; these fields persist in battle saves, while legacy battles without them retain one-cell occupancy. Raster pose clips and dead poses remain presentation metadata, not simulation state.
 - Tactical enemy decisions: `BattleAiRules.gd`.

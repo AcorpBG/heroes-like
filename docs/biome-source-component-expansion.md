@@ -265,3 +265,48 @@ assertions respectively, including overlap and fog coverage. Windows Godot
 import passed without errors. No full suite, gameplay session, Linux or
 package test was run. Temporary review images, logs and the isolated editor
 profile are removed; the rendering/review tooling remains rebuildable.
+
+## Connected sand and plains landscape patches
+
+The owner rejected the previous sand/plain result despite the focused checks
+passing: per-cell rubble still formed visible rows, and reducing individual
+sprites left thin grassland vegetation. This correction changes composition
+across neighboring source objects instead of adjusting their scale alone.
+
+Sand rock bodies and ordinary plains rock/woodland bodies now share bounded
+visual patches across compatible neighboring records. The patch bases cover
+only existing blocked cells on the same terrain, with larger patches chosen
+first and deterministic placement-independent ordering. Original placement
+records, source ownership, paths, native collision and saves stay unchanged.
+Irregular sprite silhouettes overlap along shared sides and at their feet;
+fog still clips the resulting sorted visual layers by explored tile.
+
+Four new original sprites provide two broad buff sandstone bluff/mesa shapes
+and two dense filled broadleaf woodland shapes. These replace the sand scree
+grid and give plains blocker areas continuous crowns. Small edge patches use
+eight existing sandstone outcrops or the 100 existing small plains groves.
+The old large reed/root sprites no longer stretch across plains footprints:
+low plains plants remain individual undergrowth, capped at 0.24-0.30 tiles.
+Other terrain palettes and legacy version 1 rendering retain their routing.
+
+The built-in image generation tool produced all four originals. Exact prompts
+and source images are retained in
+`art/overworld/source/generated/terrain/connected_patches_20260919`.
+`tools/build_connected_scenery.py` performs the Godot import/crop/resize and
+registers the four 512px runtime textures and provenance; it does not paint
+new content or invent variation by recoloring. The wiki catalog includes them.
+
+Dense sand and grass crops from the existing saved map were reviewed before
+and after. The final saved-map check passed 2,268 assertions and preserved
+all 1,220 blocked cells. Fifty of its 109 visual patches join multiple source
+records; reindexing is deterministic and every patch base stays on its original
+terrain and blocked cells. The focused formation, vegetation and mountain
+checks passed 226, 385 and 1,248 assertions. Single-cell edge sprites are now
+checked separately from broad formations; source-body coverage replaces the
+old assumption that one source record must produce one visual formation.
+All 2,991 generated-blocker content/provenance contracts and Windows Godot
+import passed. This is a rendering/content correction, not native RMG parity
+work or owner visual acceptance. No full suite, gameplay session, Linux or
+package run was performed. Restart/reload updates existing version 2 maps.
+Temporary previews/logs/profiles are removed after review; sources, prompts,
+runtime assets, rebuild tooling, caches, saves and unrelated files are retained.

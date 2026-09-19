@@ -46,6 +46,23 @@ func run():
     check(original==JSON.stringify(review.map_objects),"saved source records mutated")
     check(_generated_decorative_bodies_by_tile.size()==expected.size(),"saved collision coverage changed")
     for key in expected: check(_generated_decorative_bodies_by_tile.has(key),"saved blocked cell lost")
+    var patches := {}
+    var joined_records := 0
+    for cell in _generated_decorative_bodies_by_tile.values():
+        var f: Dictionary = cell.get("generated_body_formation",{})
+        if f.get("connected_landscape",false): patches[f.source_placement_id]=f
+    for f in patches.values():
+        var sources := {}
+        for tile in f.tiles:
+            check(expected.has(_tile_key(tile)),"landscape patch base covers an open tile")
+            var cell: Dictionary = _generated_decorative_bodies_by_tile[_tile_key(tile)]
+            check(cell.get("generated_body_rock_contacts",[]).is_empty(),"patch retains repeated rubble contacts")
+            check(_terrain_at(tile)==_terrain_at(f.anchor),"landscape patch crossed terrain boundary")
+            sources[cell.generated_body_anchor_placement_id]=true
+        if sources.size()>1: joined_records+=1
+    var layers_before := _native_scenery_layers_by_tile.duplicate(true)
+    _index_native_rock_contacts()
+    check(_native_scenery_layers_by_tile==layers_before,"patches change on reindex")
     var rules=preload("res://scripts/persistence/NativeSceneryRules.gd")
     var tree:=rules.body_scale({"h3m_type_id":135},"biome_component_v2_highland_ridge_woods_00")
     for type in [116,125,129]:
@@ -77,7 +94,7 @@ func run():
         check(drawn_bodies[key].size.y<=48.0*0.42+0.01,"rendered ground plant exceeds scale limit")
     var capture:=get_viewport().get_texture().get_image()
     capture.save_png(OS.get_cmdline_user_args()[0]+"/dense-map.png")
-    print("SCENERY_SCALE "+JSON.stringify({"checks":checks,"failures":failures,"saved_body_cells":expected.size(),"small_plant_draws":low_draws,"tallest_small_plant_px":tallest_low}))
+    print("SCENERY_SCALE "+JSON.stringify({"checks":checks,"failures":failures,"saved_body_cells":expected.size(),"small_plant_draws":low_draws,"tallest_small_plant_px":tallest_low,"landscape_patches":patches.size(),"patches_joining_source_records":joined_records}))
     get_tree().quit(0 if failures.is_empty() else 1)
 '''
 script=re.sub(r'(?m)^( +)',lambda m:'\t'*(len(m[1])//4),script)

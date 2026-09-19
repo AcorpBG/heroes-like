@@ -22,9 +22,13 @@ Rules:
 
 ## Current Tactical State
 
+### Connected landscape patches
+
+`art-connected-scenery-patches-20260919` — completed. Sand and plains use connected visual patches across compatible neighboring source bodies, four original broad sandstone/full woodland sprites, and lower plains undergrowth. Dense saved-map sand/grass crops reviewed; focused mask/overlap/fog/content checks and Windows import pass. Native placements and paths unchanged. See `docs/biome-source-component-expansion.md`.
+
 ### Scenery scale hierarchy and quieter edges
 
-`art-scenery-scale-hierarchy-20260919` — completed. Ground plants, shrubs, trees and rocks use distinct scale limits; large formations no longer carry redundant random per-cell objects. Dense saved-map vegetation/rock excerpts were reviewed with native masks unchanged. See `docs/biome-source-component-expansion.md`.
+`art-scenery-scale-hierarchy-20260919` — implementation delivered; owner rejected the sand/plain visual result. Its scale limits remain, with connected landscape patches above replacing the rubble-based sand presentation and sparse plains stands. See `docs/biome-source-component-expansion.md`.
 
 ### Large woodland and wetland formations
 

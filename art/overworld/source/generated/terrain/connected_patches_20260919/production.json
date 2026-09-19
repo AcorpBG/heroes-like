@@ -1,0 +1,38 @@
+{
+  "generator": "OpenAI built-in image generation",
+  "purpose": "Connected sand bluffs and dense plains woodland; presentation only",
+  "sprites": [
+    {
+      "id": "native_mountain_sand_bluff_v3",
+      "file": "sand_bluff.png",
+      "prompt": "Use case: stylized-concept. Asset type: one original multi-tile fantasy strategy game scenery sprite, a single contiguous broad sandstone bluff on a TRUE transparent RGBA background. Elevated three-quarter adventure-map view, orthographic, fixed sunlight from upper left, finely painted gritty late-1990s pre-rendered strategy art. The landform is ONE connected irregular sprawling escarpment: broad low buff sandstone terraces, rounded weathered buttes with asymmetric flat broken tops, deep muted brown shaded clefts and sloping talus shoulders which join every major rock into a coherent landscape mass. Wide 3:2 subject proportions, uneven tapering ends, strong dark clefts give readable relief. Natural concave outer contour, NO rectangular ground slab or square border. Pale ochre/beige warm stone, NO red, NO gray slate. Fill most of canvas with connected rocky mass, minimal loose gravel only tight at the foot. No needle mountains, no isolated tiny rock piles, no repeated rows, no arrangement of separate objects, no freestanding arches, no pyramids. Transparent outside the bluff including notches. No background landscape, no sky, no text, no grid, no labels, no characters. Intended to overlap adjacent original bluff sprites to make a continuous mountain belt; not a showcase on a pedestal. Wide landscape canvas 1536x1024.",
+      "family": "rock",
+      "terrain": "sand",
+      "kind": "original_mountain_mass"
+    },
+    {
+      "id": "native_mountain_sand_mesa_v3",
+      "file": "sand_mesa.png",
+      "prompt": "Use case: stylized-concept. One original fantasy adventure map scenery sprite, broad compact sandstone massif, irregular roughly oval 3:2 silhouette with deep notches and an off-center flat-topped mesa at rear right. Joined rounded sandstone shoulders and terraced cliff faces fill the entire mass, wide heavy low base with embedded giant rounded boulders at the feet. Continuous landform, not separate rocks. Muted pale warm beige sandstone, shadowed crevices dark brown, fine gritty stone detail. Elevated three-quarter orthographic view, upper-left light, late-1990s hand-painted prerendered strategy art. True RGBA TRANSPARENT background outside the silhouette and inside edge notches, no background scene, no sky, no text, no grid. Subject centered with generous clear margin. NO cones or pointed pyramid mountains, NO red/orange rocks, NO square or rectangle base, NO gravel carpet. Strong irregular contour suitable for overlapping neighboring mountain sprites into natural belts. Wide landscape1536x1024 canvas.",
+      "family": "rock",
+      "terrain": "sand",
+      "kind": "original_mountain_mass"
+    },
+    {
+      "id": "native_vegetation_woods_plains_full_v3",
+      "file": "plains_full.png",
+      "prompt": "Use case: stylized-concept. Asset type: one original multi-tile fantasy strategy game FOREST sprite cutout with TRUE transparent alpha background. One dense irregular patch of around 30 small mature broadleaf trees, each with visible rounded olive and moss green crowns, several yellow-green crowns, a few darker slender conifers behind. Canopies touch and overlap into a continuous full woodland mass; lower edges have short trunks and roots. The patch is a crooked bean-shaped grove with a tapered tail and uneven canopy outline, NOT a ring or hollow circle, NOT a rectangular block, NOT an evenly spaced plantation. Rich finely painted gritty late-1990s prerendered adventure-map aesthetic, elevated three-quarter orthographic view, fixed upper-left light, deep brown-green shadow between tree crowns, individually readable lobed crowns, restrained natural colors. No miniature grass tufts filling the grove, no giant river plants. Trees fill the grove; no empty center. The entire grove isolated, generous fully transparent margin all sides, only tiny short contact shadow beneath roots. NO background color, NO glow, NO sky, NO scenery behind, NO ground platform, NO grid, NO text. Subject wide 3:2, landscape canvas1536x1024. Used with adjoining grove sprites to form a continuous wooded border around paths.",
+      "family": "woods",
+      "terrain": "grass",
+      "kind": "original_vegetation_mass"
+    },
+    {
+      "id": "native_vegetation_woods_plains_copse_v3",
+      "file": "plains_copse.png",
+      "prompt": "Use case: stylized-concept. Create ONE original adventure-map forest cutout sprite. Dense asymmetrical roughly triangular woodland patch, wide low front and taller narrow rear slightly right of center, continuous overlapping canopy of 25 small oak, beech and birch trees, a few dark firs in back. All crowns joined naturally into a dense full forest, olive/leaf green with a few amber foliage crowns; strong dappled light from upper left, dark natural shadow between crowns. Uneven tapering outer edge with small saplings at the feet, trunks only visible along front. NO hole in the middle, NO ring, NO evenly spaced trees, NO repeating identical crowns. Elevated 3/4 orthographic map view, detailed painted/gritty prerendered 1990s fantasy strategy game aesthetic. TRUE alpha transparent background, no background scene, no colored backdrop, no floating platform or ground tile, no text or labels. Broad 3:2 forest mass, completely within frame with clear margin. Individual plants should all be trees, not oversized grasses or ferns. Landscape1536x1024.",
+      "family": "woods",
+      "terrain": "grass",
+      "kind": "original_vegetation_mass"
+    }
+  ]
+}
