@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Overworld creature idle poses
+
+`animation-overworld-creature-idle-20260919` — completed. Original painted idle pairs now play on overworld creatures, including all 51 generated neutral profiles, with fixed anchors and independent timing. Compact strips cover all 160 units; cached GPU playback preserves fog, reduced motion and simulation. 365 focused Windows render/runtime checks and asset/import checks pass; six body types visually inspected. No full suite or Linux/package run. See `docs/overworld-actor-readability.md`.
+
 ### Living multi-tile scenery
 
 `art-scenery-motion-20260919` — completed. Current foliage and multi-tile formations animate with shared slice timing; stone has faint shade and lava fissure effects. Focused pixel/fog/grounding/coverage checks and Windows import pass. Simulation unchanged; no full suite. Optional H3 editor reference capture failed; see `docs/overworld-living-scenery.md` for the exact limitation.

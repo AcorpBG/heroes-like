@@ -8,6 +8,47 @@ This is an art/runtime presentation slice, not another RMG placement change.
 
 ## Requirements
 
+### Overworld creature idle playback (2026-09-19)
+
+Owner-selected follow-up `animation-overworld-creature-idle-20260919` now plays
+the original painted battle idle pairs on overworld creatures. These are two
+distinct anatomical poses per unit, not a sway/scale transform of a still image.
+Heroes and authored encounter buildings retain their separate presentation.
+Explicit actor identities cover all 51 generated neutral profiles (46 unit
+appearances); ordinary unit guards resolve through their existing primary unit.
+Generated guards also carry `prefer_identity_landmark`, so the creature identity
+must be resolved before that static-landmark branch.
+
+`tools/pack_overworld_creature_idle.py` copies the existing accepted idle pixels
+into 160 compact strips, retaining one shared crop and anatomical ground anchor
+per clip. Source art, battle clips and provenance are unchanged. The manifest
+`art/overworld/creature_idle.json` records exact source indices/crops/hashes.
+The strips total 20,809,811 PNG bytes / 59.64 MiB decoded RGBA across the roster,
+versus 1,324 MiB for the full battle sheets; textures load per encountered type.
+
+`OverworldCreatureIdle.gd` and its shader use placement-specific stable timing,
+the existing creature extent and alpha-edge contrast. The cached scenery painter
+preserves ordering; idle playback does not redraw the map or allocate frames.
+Reduced Motion/high contrast hold the resting pose. Existing exploration gates
+remove hidden actors; no positions, armies, simulation RNG or save fields change.
+Restarting the client adopts this presentation on existing maps and saves.
+
+Validation: Windows Godot import and 365 focused runtime/render checks pass,
+including real generated guard routing, all 51 profiles, 160 idle registrations,
+six visually inspected body types at 74px and larger scale, independent phase,
+anchors, unchanged map command generation, fog removal, saved-state equality and
+static reduced-motion pixels. All 160 extracted pairs contain distinct frames.
+The initial probe failed because its scenario fog was not normalized; the fixture
+was corrected. The sandbox emits an unrelated Windows root-certificate warning;
+there are no GDScript/shader errors in the completed run. No full suite,
+Linux/package run or whole-match playtest was performed for this focused slice.
+Temporary images/logs/profiles are removed after inspection; rebuild with:
+
+```text
+python -B tools/pack_overworld_creature_idle.py
+python -B tests/overworld_creature_idle_regression.py --godot <Godot executable> --output <task-owned directory inside repository>
+```
+
 1. Inspect actual hero and encounter art plus its live resolution/draw path,
    including all factions, generated neutral identities and moving AI heroes.
    Record the deficient silhouettes and the exact town-visitor shrink cause.
