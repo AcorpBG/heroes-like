@@ -50222,7 +50222,7 @@ def validate_overworld_compact_town_owner_pennants(errors: list[str]) -> None:
             '_draw_mine_control_flag(resource_node, rect, resource_rect, remembered)',
             '_town_explored_sprite_slices(rect, texture.get_size())',
         ),
-        "flag": ('neutral_pennant.png', 'const NEUTRAL :=', 'const SLOT_COLORS :=', '0.58 if mine else 0.76'),
+        "flag": ('neutral_pennant.png', 'const NEUTRAL :=', 'const SLOT_COLORS :=', '0.82 if mine else 1.06'),
         "shader": ('uniform vec4 owner_color', 'texture(TEXTURE, UV)', 'mix(paint.rgb, dyed, cloth)'),
         "runtime": ('capture/recapture does not invalidate flag cache', 'same-faction enemy recapture never reaches pixels', 'ownership flag leaks through unexplored cell', 'render changed saved state'),
         "town": ('paired_small_entrance_control_flags', '_entrance_pair_exact(current_pennant)', 'session.to_dict() == authority_before'),

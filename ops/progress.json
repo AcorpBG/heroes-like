@@ -113580,7 +113580,7 @@
       "sourceDocs": [
         "docs/overworld-control-flags.md"
       ],
-      "notes": "Two small flags flank town entrances, replacing the roof control marker. Common and generated rare mines show one smaller flag: neutral grey when uncontrolled, controller colour after capture. Stable generated-player slot colours and legacy ownership fallback; caches now include player controller IDs, including same-faction recapture. Original cloth art, explored-cell clipping and accessibility marks retained. Focused 48-check render/capture regression, 1280/1920 town report and flag source contract pass; renders reviewed. No full suite; capture rules, income, source geometry and saves unchanged."
+      "notes": "Two flags flank town entrances; common and generated rare mines show one smaller flag, neutral grey when uncontrolled and controller-coloured after capture. Owner visibility revision enlarges town flags from 0.76 to 1.06 tile canvases and mine flags from 0.58 to 0.82, approximately 40 percent, around fixed pole bases. The 48-check render/capture regression passes again and normal-scale neutral/captured renders were reviewed. Existing controller-slot colours, same-faction recapture refresh, explored-cell clipping and accessibility marks retained. No full suite; capture rules, income, source geometry and saves unchanged."
     }
   ],
   "project": "heroes-like",
