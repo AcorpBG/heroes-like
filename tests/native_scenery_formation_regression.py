@@ -2,7 +2,7 @@
 import re
 import native_scenery_variety_regression as harness
 
-names = ['_index_generated_decorative_body_cells', '_index_native_scenery_formations', '_index_native_rock_contacts', '_draw_native_rock_contacts', '_index_native_mountain_layers', '_draw_native_formation_layer', '_draw_native_mountains_at',
+names = ['_index_generated_decorative_body_cells', '_index_native_scenery_formations', '_index_native_rock_contacts', '_draw_native_rock_contacts', '_index_native_scenery_layers', '_draw_native_formation_layer', '_draw_native_scenery_layers_at',
          '_generated_decorative_body_asset_id', '_native_scenery_assets', '_native_scenery_modulate',
          '_generated_decorative_body_motif_key', '_generated_decorative_body_composition',
          '_stable_unit_fraction', '_tile_key', '_tiles_from_payloads',
@@ -15,7 +15,7 @@ script = 'extends Node2D\n'+constants+'\n'+harness.CONSTANT+'\n'+live+'''
 const Formation = preload("res://scripts/persistence/NativeSceneryFormation.gd")
 var _map_size := Vector2i(20,15)
 var _generated_decorative_bodies_by_tile := {}
-var _native_mountains_by_tile := {}
+var _native_scenery_layers_by_tile := {}
 var _generated_decorative_blocker_asset_ids_by_biome := {}
 var _generated_decorative_blocker_fallback_asset_ids := []
 var _object_texture_visible_regions := {}
@@ -50,7 +50,7 @@ func _draw():
     for y in range(_map_size.y):
         for x in range(_map_size.x):
             var tile := Vector2i(x,y)
-            if tile!=fogged: _draw_native_mountains_at(tile,Rect2(Vector2(tile)*48.0,Vector2(48,48)),false)
+            if tile!=fogged: _draw_native_scenery_layers_at(tile,Rect2(Vector2(tile)*48.0,Vector2(48,48)),false)
 func run():
     var originals := []
     for row in range(3):

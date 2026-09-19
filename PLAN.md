@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Large woodland and wetland formations
+
+`art-woodland-wetland-masses-20260919` — completed. Added 75 original irregular woodland, wetland, reed, deadwood and fungal masses with habitat-specific routing and shared depth-sorted overlap. Focused vegetation/mountain renders, content contracts and Windows import pass; source masks and generation unchanged. See `docs/biome-source-component-expansion.md`.
+
 ### Original mountain masses
 
 `art-mountain-masses-20260919` — completed. Fifty original irregular mountain masses replace paired boulders on broad rock footprints. Separate visual coverage supports overlapping sides and tall peaks with stable depth order, fog clipping and unchanged collision. Focused render/content/import checks passed; see `docs/biome-source-component-expansion.md`.

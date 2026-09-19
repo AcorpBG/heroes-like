@@ -43651,6 +43651,10 @@ def validate_generated_blocker_contracts(object_assets: dict, errors: list[str])
         assert len(mountains) == 50 and len({r["sha256"] for r in mountains}) == 50
         assert len({r["palette"] for r in mountains}) == 10
         rows += [(r["id"], r["runtime_path"], None, r["sha256"], (512, 512), [r["biome"]]) for r in mountains]
+        vegetation = load_json(base / "vegetation_masses_20260919/recipes.json")["entries"]
+        assert len(vegetation) == 75 and len({r["sha256"] for r in vegetation}) == 75
+        assert len({r["profile"] for r in vegetation}) == 15
+        rows += [(r["id"], r["runtime_path"], None, r["sha256"], (512, 512), [r["biome"]]) for r in vegetation]
         for asset_id, path, source, digest, size, biomes in rows:
             entry = object_assets.get(asset_id, {})
             runtime = res_path_to_disk(path)
@@ -43664,7 +43668,7 @@ def validate_generated_blocker_contracts(object_assets: dict, errors: list[str])
             assert appearance.get("runtime_path") == path and appearance.get("biome_ids") == biomes, asset_id
             assert all(asset_id in palette["generated_body_palette"][biome] for biome in biomes), asset_id
             settings = Path(str(runtime) + ".import").read_text(encoding="utf-8")
-            size_limit = 512 if asset_id.startswith("native_mountain_") else 256
+            size_limit = 512 if asset_id.startswith(("native_mountain_", "native_vegetation_")) else 256
             assert all(token in settings for token in (f"process/size_limit={size_limit}", "mipmaps/generate=true", "process/fix_alpha_border=true")), asset_id
             sizes[asset_id] = size
     except (AssertionError, KeyError, ValueError, OSError) as exc:

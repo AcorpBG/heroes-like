@@ -22302,6 +22302,15 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "art-woodland-wetland-masses-20260919",
+      "title": "Large irregular woodland and wetland formations",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "notes": "Delivered 75 original irregular multi-tile vegetation masses across 15 habitat/style groups; registered family/biome/terrain palettes and per-asset canopy heights. Mountains and vegetation share stable depth-sorted visual coverage; neighboring canopies overlap while native collision, placements, generation, saves and simulation RNG remain unchanged. Plains grove substitutions preserved; sand thickets remain distinct from dirt. Mixed vegetation render passed 340 checks; mountain control passed 1585. All 2987 generated blocker content contracts and final Windows Godot import pass; wiki rebuilt. No full suite, gameplay, Linux or package run. Task-owned temporary renders/logs/profile removed; originals/prompts/recipes/tools, caches and unrelated files preserved."
+    },
+    {
       "id": "art-mountain-masses-20260919",
       "title": "Original multi-tile mountain scenery",
       "status": "completed",
