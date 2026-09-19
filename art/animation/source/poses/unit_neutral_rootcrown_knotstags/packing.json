@@ -290,6 +290,142 @@
         954
       ],
       "scale": 0.62
+    },
+    {
+      "name": "idle_v2_0",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        210,
+        486
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_v2_1",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          384,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        594,
+        486
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_v2_2",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          768,
+          0,
+          1152,
+          512
+        ]
+      ],
+      "anchor": [
+        978,
+        486
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_v2_3",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1362,
+        486
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_v2_4",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        210,
+        972
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_v2_5",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          384,
+          512,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        594,
+        972
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_v2_6",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          768,
+          512,
+          1152,
+          1024
+        ]
+      ],
+      "anchor": [
+        978,
+        972
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_v2_7",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          1152,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1362,
+        972
+      ],
+      "scale": 0.48
     }
   ],
   "frame_size": [
@@ -298,86 +434,9 @@
   ],
   "columns": 4,
   "ground_margin": 20,
-  "pose_clips": {
-    "idle": {
-      "frames": 2,
-      "indices": [
-        0,
-        1
-      ],
-      "loop": true,
-      "frame_msec": 450,
-      "static_frame": 0
-    },
-    "move": {
-      "frames": 8,
-      "indices": [
-        2,
-        3,
-        2,
-        4,
-        2,
-        5,
-        2,
-        6
-      ],
-      "loop": true,
-      "frame_msec": 80
-    },
-    "attack": {
-      "frames": 3,
-      "indices": [
-        7,
-        8,
-        9
-      ],
-      "loop": false,
-      "frame_msec": 190,
-      "static_frame": 0
-    },
-    "defend": {
-      "frames": 2,
-      "indices": [
-        10,
-        11
-      ],
-      "loop": false,
-      "frame_msec": 210,
-      "static_frame": 1
-    },
-    "hit": {
-      "frames": 2,
-      "indices": [
-        12,
-        10
-      ],
-      "loop": false,
-      "frame_msec": 180,
-      "static_frame": 0
-    },
-    "death": {
-      "frames": 3,
-      "indices": [
-        13,
-        14,
-        15
-      ],
-      "loop": false,
-      "frame_msec": 270,
-      "static_frame": 0
-    },
-    "dead": {
-      "frames": 1,
-      "indices": [
-        15
-      ],
-      "loop": false,
-      "frame_msec": 180,
-      "static_frame": 0
-    }
-  },
   "pose_aliases": {
     "ranged": "attack",
     "cast": "idle"
-  }
+  },
+  "status": "accepted_idle_expansion_20260919"
 }

@@ -17,6 +17,14 @@
       "alpha_sha256": "ff06d5f96ddcac79ed44c72efe0fa49d8a58434d0067be5d4b47aea5eee975de",
       "alpha_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-dec23ac4-ec35-4425-a644-b7d7d232210c.png",
       "alpha_prompt": "Use case: background-extraction. Image1 edit target. Extract all twelve painted manta sprites onto genuine transparent RGBA background. Keep exact original canvas, positions, scale, ivory heads, navy spotted fins, thin tendrils and bell tips, forked tails. Remove only gray background including spaces between tendrils and fins; no glow halos or shadows, no painted checker or colored backdrop. Do not change pose or anatomy; preserve dark grounded corpse."
+    },
+    {
+      "source": "idle-v2/original.png",
+      "source_sha256": "9b43421124183b5fe77300abfda2255697fd3584cc23b0abe536a7e9716c38b9",
+      "alpha_source": "idle-v2/alpha.png",
+      "alpha_sha256": "dd69124ca6fdf17c8fd8d0ad9c09439130037528a24bda02ce405e68e217ad2d",
+      "workflow_provenance": "idle-v2/generation.json",
+      "review": "Eight original idle drawings accepted in focused Windows battle/map playback. Existing action frames byte-identical."
     }
   ],
   "unselected_attempts": [
@@ -164,5 +172,11 @@
     "frame_count": 15,
     "review_evidence": ".artifacts/battle-unit-animation-size-20260913/gloambell-continuity-20260915/",
     "status": "runtime_candidate_pending_consolidated_validation"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_gloambell_wake_mantas.png",
+    "runtime_sha256": "e0e643c9362b584e872cf6a406e1406affc15da639fe79e00c68e47e21dcdfea"
   }
 }

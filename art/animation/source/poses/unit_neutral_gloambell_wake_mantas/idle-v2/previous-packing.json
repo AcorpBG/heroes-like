@@ -1,0 +1,359 @@
+{
+  "unit_id": "unit_neutral_gloambell_wake_mantas",
+  "status": "runtime_candidate_pending_consolidated_validation",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "../alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          341,
+          425
+        ]
+      ],
+      "anchor": [
+        220,
+        426
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_1",
+      "source": "../alpha/poses.png",
+      "rects": [
+        [
+          341,
+          0,
+          644,
+          425
+        ]
+      ],
+      "anchor": [
+        547,
+        444
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "flight_up",
+      "source": "../continuity-alpha/flight-four-bells.png",
+      "rects": [
+        [
+          0,
+          0,
+          724,
+          724
+        ]
+      ],
+      "anchor": [
+        464,
+        706
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "flight_down",
+      "source": "../continuity-alpha/flight-four-bells.png",
+      "rects": [
+        [
+          724,
+          0,
+          1448,
+          724
+        ]
+      ],
+      "anchor": [
+        1134,
+        686
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "flight_level",
+      "source": "../continuity-alpha/flight-four-bells.png",
+      "rects": [
+        [
+          1448,
+          0,
+          2172,
+          724
+        ]
+      ],
+      "anchor": [
+        1930,
+        710
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "melee_windup",
+      "source": "../continuity-alpha/actions-four-bells.png",
+      "rects": [
+        [
+          0,
+          0,
+          738,
+          493
+        ]
+      ],
+      "anchor": [
+        445,
+        529
+      ],
+      "scale": 0.33
+    },
+    {
+      "name": "melee_contact",
+      "source": "../continuity-alpha/actions-four-bells.png",
+      "rects": [
+        [
+          738,
+          0,
+          1536,
+          493
+        ]
+      ],
+      "anchor": [
+        1280,
+        617
+      ],
+      "scale": 0.33
+    },
+    {
+      "name": "ranged_aim",
+      "source": "../continuity-alpha/actions-four-bells.png",
+      "rects": [
+        [
+          0,
+          493,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        450,
+        1024
+      ],
+      "scale": 0.33
+    },
+    {
+      "name": "ranged_release",
+      "source": "../continuity-alpha/actions-four-bells.png",
+      "rects": [
+        [
+          768,
+          493,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1220,
+        1092
+      ],
+      "scale": 0.33
+    },
+    {
+      "name": "defend_curl",
+      "source": "../continuity-alpha/defense-four-bells.png",
+      "rects": [
+        [
+          0,
+          0,
+          941,
+          887
+        ]
+      ],
+      "anchor": [
+        655,
+        876
+      ],
+      "scale": 0.24
+    },
+    {
+      "name": "defend_breath",
+      "source": "../continuity-alpha/defense-four-bells.png",
+      "rects": [
+        [
+          941,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1487,
+        866
+      ],
+      "scale": 0.24
+    },
+    {
+      "name": "hit_recoil",
+      "source": "../continuity-alpha/defense-hit-draft.png",
+      "rects": [
+        [
+          1450,
+          0,
+          2172,
+          724
+        ]
+      ],
+      "anchor": [
+        1930,
+        675
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "death_descent",
+      "source": "../continuity-alpha/death-four-bells-draft.png",
+      "rects": [
+        [
+          0,
+          0,
+          724,
+          724
+        ]
+      ],
+      "anchor": [
+        464,
+        650
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "death_collapse",
+      "source": "../continuity-alpha/grounded-four-bells.png",
+      "rects": [
+        [
+          0,
+          0,
+          941,
+          809
+        ]
+      ],
+      "anchor": [
+        600,
+        625
+      ],
+      "scale": 0.22
+    },
+    {
+      "name": "dead",
+      "source": "../continuity-alpha/grounded-four-bells.png",
+      "rects": [
+        [
+          941,
+          0,
+          1942,
+          809
+        ]
+      ],
+      "anchor": [
+        1585,
+        653
+      ],
+      "scale": 0.22
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        4,
+        2,
+        4,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        5,
+        6,
+        5,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        7,
+        8,
+        7,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        9,
+        10
+      ],
+      "loop": true,
+      "frame_msec": 500,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        11,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        12,
+        13,
+        14
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        14
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  },
+  "alignment_notes": "Uniform scale per painted source/group, anatomical torso/eye registration for hover; explicit lower death and ground anchors. No bounding-box normalization, pose warping or painted runtime geometry."
+}

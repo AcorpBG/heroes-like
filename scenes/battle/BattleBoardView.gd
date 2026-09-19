@@ -2383,6 +2383,8 @@ func _animation_frame_region_for_stack(stack: Dictionary) -> Rect2:
 		# Keep idle breathing, or the settled defensive pose, during a queued
 		# reaction. Freezing frame zero of the death/hit clip starts it too early.
 		var elapsed := BattleUnitPose.elapsed_msec({} if waiting else record, now)
+		if (record.is_empty() or waiting) and state_name in ["idle_hold", "ready_active"]:
+			elapsed = BattleUnitPose.idle_elapsed_msec(animation, now, String(stack.get("unit_id", "")) + "/" + battle_id)
 		var progress := 1.0 if waiting else _stack_presentation_progress(battle_id)
 		return BattleUnitPose.region(animation, state_name, progress, elapsed, reduced)
 	var row := _animation_state_row_for_unit(String(stack.get("unit_id", "")), state_name)

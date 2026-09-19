@@ -1,0 +1,54 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_neutral_fenmirror_gallowshells",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "original.png",
+  "source_output": "exec-87dfacc5-2f7f-4ae5-b60b-7369a2e3d257.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_neutral_fenmirror_gallowshells.png",
+  "reference_revision": "37ddcb938",
+  "prompt": "Use case: identity-preserve. Production eight-pose resting IDLE loop for the exact original Fenmirror Gallowshell from reference showing two old poses of ONE creature. Preserve squat armored crab/beetle body, domed metallic dark-bronze shell with gold edges and moss tufts, tall curved rear shell arch bearing hanging miniature golden bells/charms, warm orange eyes and two large asymmetrical pincer claws. Same number of articulated dark legs; claws retain handedness. Face RIGHT three-quarter, identical painterly fantasy sprite style. Exactly EIGHT complete poses in FOUR COLUMNS by TWO ROWS on1536x1024 transparent RGBA. Fixed equal384x512 cells with 25px clear margin all around; entire creature about325px wide, feet baseline local y430, center body x192,y300, SAME scale and camera throughout. Slow seamless resting cycle in reading order: relaxed, inhale small chest rise, shell subtly rises on braced joints, near claw opens a little, near claw closes as body exhales, antenna/eye stalks settle, hanging bells follow through gently, return nearly to first pose. All planted feet hold position, body motion tiny, distinct articulated claw/leg-joint/head details. No locomotion, stepping, attacking, rearranging shell, extra limbs or copied rotated sprites. Organic pose-to-pose continuity, grounded weight, all eight newly painted intermediate poses. True transparent background and gaps, no floor or shadows, no glow clouds, no labels, no gridlines, no checkerboard or matte.",
+  "review_status": "accepted_idle_expansion_20260919",
+  "originals_preserved": true,
+  "source_sha256": "a7be2fb4b3abc9bedb5b8fbb4dd41f975768380b38750d4d55a774f2ea6f2819",
+  "reference_sha256": "cce62388f5b8deef4abdd6006d56e49b5a50ed05128db6c291bef7afb18559ec",
+  "previous_idle": {
+    "frames": 2,
+    "indices": [
+      0,
+      1
+    ],
+    "loop": true,
+    "frame_msec": 650
+  },
+  "previous_atlas_sha256": "ac49a5c892db86da70b4a3f5b8929b33538c9be113557a1351d7d3d3df518d75",
+  "packed_indices": [
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "packing_recipe": "../packing.json",
+  "alpha_source": "alpha.png",
+  "alpha_sha256": "b70b226f651a8f54e386cab30ce906a315e7647129add10e5b92e2a91e858e0b",
+  "preparation_tool": "tools/prepare_idle_pose_alpha.py",
+  "preparation_recipe": "prepare.json",
+  "review_notes": [
+    "Eight newly painted poses inspected in source contact sheets and both runtime render paths.",
+    "One uniform scale per creature, anatomical anchors calibrated against existing poses; all earlier frame pixels retained unchanged.",
+    "Raw generated RGB includes invisible backdrop colors: native alpha preserved, only inspected noise at alpha <=8 cleared.",
+    "444 focused rendered checks passed, including all eight frames in battle and overworld, independent phase, fog and reduced motion."
+  ],
+  "references": [
+    {
+      "path": "art/overworld/runtime/creature_idle/unit_neutral_fenmirror_gallowshells.png",
+      "sha256": "cce62388f5b8deef4abdd6006d56e49b5a50ed05128db6c291bef7afb18559ec",
+      "revision": "37ddcb938"
+    }
+  ]
+}

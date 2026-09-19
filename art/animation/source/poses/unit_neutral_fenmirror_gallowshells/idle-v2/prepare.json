@@ -1,0 +1,7 @@
+{
+  "source": "original.png",
+  "source_sha256": "a7be2fb4b3abc9bedb5b8fbb4dd41f975768380b38750d4d55a774f2ea6f2819",
+  "output": "alpha.png",
+  "alpha_noise_cutoff": 8,
+  "inspection": "Only near-transparent speckles outside and at painted edges; original RGB and all alpha above 8 preserved."
+}

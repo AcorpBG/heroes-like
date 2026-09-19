@@ -1,6 +1,6 @@
 {
   "unit_id": "unit_neutral_gloambell_wake_mantas",
-  "status": "runtime_candidate_pending_consolidated_validation",
+  "status": "accepted_idle_expansion_20260919",
   "frame_size": [
     512,
     256
@@ -262,96 +262,156 @@
         653
       ],
       "scale": 0.22
+    },
+    {
+      "name": "idle_v2_0",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        250,
+        494
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "idle_v2_1",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          384,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        634,
+        494
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "idle_v2_2",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          768,
+          0,
+          1152,
+          512
+        ]
+      ],
+      "anchor": [
+        1018,
+        494
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "idle_v2_3",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1402,
+        494
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "idle_v2_4",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          381,
+          750
+        ],
+        [
+          0,
+          750,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        250,
+        972
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "idle_v2_5",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          381,
+          512,
+          768,
+          750
+        ],
+        [
+          384,
+          750,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        634,
+        972
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "idle_v2_6",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          768,
+          512,
+          1152,
+          1024
+        ]
+      ],
+      "anchor": [
+        1018,
+        972
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "idle_v2_7",
+      "source": "idle-v2/alpha.png",
+      "rects": [
+        [
+          1152,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1402,
+        972
+      ],
+      "scale": 0.51
     }
   ],
-  "pose_clips": {
-    "idle": {
-      "frames": 2,
-      "indices": [
-        0,
-        1
-      ],
-      "loop": true,
-      "frame_msec": 600,
-      "static_frame": 0
-    },
-    "move": {
-      "frames": 4,
-      "indices": [
-        4,
-        2,
-        4,
-        3
-      ],
-      "loop": true,
-      "frame_msec": 160,
-      "static_frame": 0
-    },
-    "attack": {
-      "frames": 4,
-      "indices": [
-        5,
-        6,
-        5,
-        0
-      ],
-      "loop": false,
-      "frame_msec": 150,
-      "static_frame": 0
-    },
-    "ranged": {
-      "frames": 4,
-      "indices": [
-        7,
-        8,
-        7,
-        0
-      ],
-      "loop": false,
-      "frame_msec": 150,
-      "static_frame": 0
-    },
-    "defend": {
-      "frames": 2,
-      "indices": [
-        9,
-        10
-      ],
-      "loop": true,
-      "frame_msec": 500,
-      "static_frame": 0
-    },
-    "hit": {
-      "frames": 2,
-      "indices": [
-        11,
-        9
-      ],
-      "loop": false,
-      "frame_msec": 150,
-      "static_frame": 0
-    },
-    "death": {
-      "frames": 3,
-      "indices": [
-        12,
-        13,
-        14
-      ],
-      "loop": false,
-      "frame_msec": 150,
-      "static_frame": 0
-    },
-    "dead": {
-      "frames": 1,
-      "indices": [
-        14
-      ],
-      "loop": false,
-      "frame_msec": 150,
-      "static_frame": 0
-    }
-  },
   "pose_aliases": {
     "cast": "ranged"
   },
