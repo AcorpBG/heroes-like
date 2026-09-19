@@ -1,0 +1,7 @@
+{
+  "source": "wrist-correction-original.png",
+  "source_sha256": "14dbf9259206beedc5c6748df27becba8ac9a46c52558e5966257abdd1635b37",
+  "output": "wrist-correction-alpha.png",
+  "alpha_noise_cutoff": 8,
+  "inspection": "Near-transparent noise only. Preserve all RGB and all alpha above 8; no chroma-key or recoloring."
+}

@@ -35,8 +35,16 @@
     "Pending trim, ground alignment, distinct melee/ranged routing and full playback review."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_ember_archer.png",
-    "runtime_sha256": "b17b0d46885819d7a92fe48d7ae6d139770f1675211399a2bc5fa69400dc327b"
+    "runtime_sha256": "cee2cfa5b5b0d33be996d1c75f3547fb55b25a74cb72ff7309541eaa8e74b5d7"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "b17b0d46885819d7a92fe48d7ae6d139770f1675211399a2bc5fa69400dc327b",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

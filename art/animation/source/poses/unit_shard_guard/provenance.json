@@ -20,13 +20,20 @@
     }
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_shard_guard.png",
-    "runtime_sha256": "2bb20e19791178920f4a26c4465038ee7e298dd992e4d707ce8e0ca06dfee985",
-    "method": "Uniform 0.72 downsampling and anatomical ground anchors; low corpse source frames aligned separately, no alpha repaint or standing-cutout transforms."
+    "runtime_sha256": "c65954117b1f23e95abfebc3c67621a35660242a0c19ecb03cba62c9ec56cf86"
   },
   "review_notes": [
     "Original sheet, packed atlas and Godot light/dark contrast capture inspected. Genuine alpha, original shield/weapon/armor identity and horizontal dead body retained.",
     "Walking phases need full motion review and clearer alternating contacts before final acceptance. This is an enabled candidate only."
-  ]
+  ],
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "2bb20e19791178920f4a26c4465038ee7e298dd992e4d707ce8e0ca06dfee985",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
+  }
 }

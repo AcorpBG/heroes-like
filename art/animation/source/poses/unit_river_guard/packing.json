@@ -1,6 +1,6 @@
 {
   "unit_id": "unit_river_guard",
-  "status": "candidate_requires_playback_review",
+  "status": "accepted_idle_articulation_20260919",
   "frame_size": [
     512,
     256
@@ -257,6 +257,142 @@
         680
       ],
       "scale": 0.32
+    },
+    {
+      "name": "idle_hands_0",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          425,
+          510
+        ]
+      ],
+      "anchor": [
+        269,
+        498
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "idle_hands_1",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          425,
+          0,
+          775,
+          510
+        ]
+      ],
+      "anchor": [
+        608,
+        498
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "idle_hands_2",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          775,
+          0,
+          1115,
+          510
+        ]
+      ],
+      "anchor": [
+        945,
+        498
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1115,
+          0,
+          1536,
+          510
+        ]
+      ],
+      "anchor": [
+        1291,
+        498
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          510,
+          425,
+          1024
+        ]
+      ],
+      "anchor": [
+        270,
+        1001
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          425,
+          510,
+          775,
+          1024
+        ]
+      ],
+      "anchor": [
+        610,
+        1001
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "idle_hands_6",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          775,
+          510,
+          1115,
+          1024
+        ]
+      ],
+      "anchor": [
+        944,
+        1001
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "idle_hands_7",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1115,
+          510,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1001
+      ],
+      "scale": 0.43
     }
   ]
 }

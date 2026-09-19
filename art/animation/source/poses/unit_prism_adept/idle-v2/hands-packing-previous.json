@@ -1,0 +1,314 @@
+{
+  "unit_id": "unit_prism_adept",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          315,
+          322
+        ]
+      ],
+      "anchor": [
+        158,
+        318
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "idle_breath",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          0,
+          628,
+          322
+        ]
+      ],
+      "anchor": [
+        472,
+        318
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          628,
+          0,
+          943,
+          322
+        ]
+      ],
+      "anchor": [
+        786,
+        318
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "walk_pass_a",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          943,
+          0,
+          1254,
+          322
+        ]
+      ],
+      "anchor": [
+        1099,
+        318
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          322,
+          315,
+          635
+        ]
+      ],
+      "anchor": [
+        158,
+        633
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "walk_pass_b",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          322,
+          628,
+          635
+        ]
+      ],
+      "anchor": [
+        472,
+        633
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "aim",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          628,
+          322,
+          943,
+          635
+        ]
+      ],
+      "anchor": [
+        786,
+        633
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "release",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          943,
+          322,
+          1254,
+          635
+        ]
+      ],
+      "anchor": [
+        1099,
+        633
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "bash_windup",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          635,
+          315,
+          933
+        ]
+      ],
+      "anchor": [
+        158,
+        929
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "bash_contact",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          635,
+          628,
+          933
+        ],
+        [
+          628,
+          659,
+          673,
+          718
+        ]
+      ],
+      "anchor": [
+        472,
+        929
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          700,
+          695,
+          943,
+          718
+        ],
+        [
+          628,
+          718,
+          943,
+          847
+        ],
+        [
+          628,
+          847,
+          923,
+          911
+        ],
+        [
+          628,
+          911,
+          943,
+          933
+        ]
+      ],
+      "anchor": [
+        786,
+        929
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "recoil",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          943,
+          635,
+          1254,
+          933
+        ],
+        [
+          923,
+          847,
+          943,
+          911
+        ]
+      ],
+      "anchor": [
+        1099,
+        929
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "reload",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          933,
+          315,
+          1254
+        ]
+      ],
+      "anchor": [
+        158,
+        1245
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "kneel",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          933,
+          628,
+          1254
+        ]
+      ],
+      "anchor": [
+        472,
+        1245
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "collapse",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          628,
+          1005,
+          943,
+          1245
+        ]
+      ],
+      "anchor": [
+        786,
+        1245
+      ],
+      "scale": 0.72
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_prism_adept/alpha/poses.png",
+      "rects": [
+        [
+          943,
+          1093,
+          1254,
+          1245
+        ]
+      ],
+      "anchor": [
+        1099,
+        1245
+      ],
+      "scale": 0.72
+    }
+  ]
+}

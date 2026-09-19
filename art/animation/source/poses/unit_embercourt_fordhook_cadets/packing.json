@@ -1,6 +1,6 @@
 {
   "unit_id": "unit_embercourt_fordhook_cadets",
-  "status": "runtime_candidate_pending_consolidated_validation",
+  "status": "accepted_idle_articulation_20260919",
   "frame_size": [
     512,
     256
@@ -270,6 +270,250 @@
         1054
       ],
       "scale": 0.57
+    },
+    {
+      "name": "idle_hands_0",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        164,
+        474
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_hands_1",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          384,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        547,
+        474
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_hands_2",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          768,
+          0,
+          1152,
+          512
+        ]
+      ],
+      "anchor": [
+        936,
+        474
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1320,
+        474
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        164,
+        980
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          384,
+          512,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        549,
+        980
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_hands_6",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          768,
+          512,
+          1152,
+          586
+        ],
+        [
+          768,
+          586,
+          1151,
+          587
+        ],
+        [
+          768,
+          587,
+          1150,
+          588
+        ],
+        [
+          768,
+          588,
+          1149,
+          589
+        ],
+        [
+          768,
+          589,
+          1148,
+          590
+        ],
+        [
+          768,
+          590,
+          1156,
+          592
+        ],
+        [
+          768,
+          592,
+          1155,
+          594
+        ],
+        [
+          768,
+          594,
+          1154,
+          597
+        ],
+        [
+          768,
+          597,
+          1153,
+          599
+        ],
+        [
+          768,
+          599,
+          1152,
+          1024
+        ]
+      ],
+      "anchor": [
+        939,
+        980
+      ],
+      "scale": 0.48
+    },
+    {
+      "name": "idle_hands_7",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          512,
+          1536,
+          586
+        ],
+        [
+          1151,
+          586,
+          1536,
+          587
+        ],
+        [
+          1150,
+          587,
+          1536,
+          588
+        ],
+        [
+          1149,
+          588,
+          1536,
+          589
+        ],
+        [
+          1148,
+          589,
+          1536,
+          590
+        ],
+        [
+          1156,
+          590,
+          1536,
+          592
+        ],
+        [
+          1155,
+          592,
+          1536,
+          594
+        ],
+        [
+          1154,
+          594,
+          1536,
+          597
+        ],
+        [
+          1153,
+          597,
+          1536,
+          599
+        ],
+        [
+          1152,
+          599,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1320,
+        980
+      ],
+      "scale": 0.48
     }
   ],
   "pose_clips": {

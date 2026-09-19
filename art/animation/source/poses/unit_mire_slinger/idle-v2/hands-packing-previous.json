@@ -1,0 +1,308 @@
+{
+  "unit_id": "unit_mire_slinger",
+  "status": "candidate_requires_playback_review",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          50,
+          0,
+          245,
+          323
+        ]
+      ],
+      "anchor": [
+        150,
+        320
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          355,
+          0,
+          542,
+          323
+        ]
+      ],
+      "anchor": [
+        450,
+        320
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "move_0",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          627,
+          0,
+          855,
+          323
+        ]
+      ],
+      "anchor": [
+        759,
+        320
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "move_1",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          960,
+          0,
+          1150,
+          323
+        ]
+      ],
+      "anchor": [
+        1060,
+        320
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "move_2",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          40,
+          323,
+          245,
+          642
+        ]
+      ],
+      "anchor": [
+        150,
+        635
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "move_3",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          429,
+          324,
+          488,
+          331
+        ],
+        [
+          325,
+          331,
+          548,
+          642
+        ]
+      ],
+      "anchor": [
+        445,
+        641
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_0",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          605,
+          325,
+          915,
+          642
+        ]
+      ],
+      "anchor": [
+        770,
+        640
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_1",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          940,
+          330,
+          1254,
+          643
+        ]
+      ],
+      "anchor": [
+        1060,
+        640
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "melee_0",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          20,
+          644,
+          290,
+          946
+        ]
+      ],
+      "anchor": [
+        165,
+        943
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "melee_1",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          325,
+          644,
+          619,
+          945
+        ]
+      ],
+      "anchor": [
+        475,
+        942
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          650,
+          675,
+          914,
+          943
+        ]
+      ],
+      "anchor": [
+        785,
+        936
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          980,
+          642,
+          1205,
+          927
+        ],
+        [
+          980,
+          927,
+          1058,
+          937
+        ],
+        [
+          1130,
+          927,
+          1205,
+          937
+        ]
+      ],
+      "anchor": [
+        1100,
+        935
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "recovery",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          1010,
+          940,
+          1208,
+          1245
+        ],
+        [
+          1060,
+          927,
+          1120,
+          940
+        ]
+      ],
+      "anchor": [
+        1105,
+        1237
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_0",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          25,
+          965,
+          274,
+          1220
+        ]
+      ],
+      "anchor": [
+        160,
+        1210
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "death_1",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          302,
+          990,
+          608,
+          1206
+        ]
+      ],
+      "anchor": [
+        445,
+        1198
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_mire_slinger/alpha/poses.png",
+      "rects": [
+        [
+          610,
+          1065,
+          997,
+          1207
+        ]
+      ],
+      "anchor": [
+        800,
+        1198
+      ],
+      "scale": 0.7
+    }
+  ]
+}

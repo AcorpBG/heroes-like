@@ -1,0 +1,228 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat",
+  "status": "candidate_requires_playback_review",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          45,
+          0,
+          280,
+          390
+        ]
+      ],
+      "anchor": [
+        168,
+        383
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          425,
+          0,
+          655,
+          390
+        ]
+      ],
+      "anchor": [
+        538,
+        383
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "move_0",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          765,
+          0,
+          1020,
+          390
+        ]
+      ],
+      "anchor": [
+        927,
+        385
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "move_1",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          1160,
+          0,
+          1360,
+          391
+        ]
+      ],
+      "anchor": [
+        1265,
+        386
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "move_2",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          1260,
+          730,
+          1340,
+          746
+        ],
+        [
+          1140,
+          746,
+          1400,
+          1086
+        ]
+      ],
+      "anchor": [
+        1270,
+        1078
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "attack_0",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          20,
+          394,
+          316,
+          749
+        ]
+      ],
+      "anchor": [
+        180,
+        741
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "attack_1",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          340,
+          410,
+          782,
+          505
+        ],
+        [
+          340,
+          505,
+          760,
+          730
+        ]
+      ],
+      "anchor": [
+        530,
+        722
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          779,
+          433,
+          1055,
+          730
+        ]
+      ],
+      "anchor": [
+        925,
+        720
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          1155,
+          391,
+          1400,
+          730
+        ]
+      ],
+      "anchor": [
+        1275,
+        725
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_0",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          20,
+          765,
+          290,
+          1065
+        ]
+      ],
+      "anchor": [
+        165,
+        1058
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_1",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          358,
+          791,
+          718,
+          1037
+        ]
+      ],
+      "anchor": [
+        535,
+        1028
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          721,
+          861,
+          1119,
+          1030
+        ]
+      ],
+      "anchor": [
+        914,
+        1018
+      ],
+      "scale": 0.6
+    }
+  ]
+}

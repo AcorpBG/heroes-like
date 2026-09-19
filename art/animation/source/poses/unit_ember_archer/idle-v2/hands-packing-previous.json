@@ -1,0 +1,250 @@
+{
+  "unit_id": "unit_ember_archer",
+  "status": "candidate_requires_playback_review",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/poses.png",
+      "rects": [
+        [
+          20,
+          0,
+          300,
+          425
+        ]
+      ],
+      "anchor": [
+        155,
+        425
+      ],
+      "scale": 0.53
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/poses.png",
+      "rects": [
+        [
+          325,
+          0,
+          615,
+          425
+        ]
+      ],
+      "anchor": [
+        470,
+        425
+      ],
+      "scale": 0.53
+    },
+    {
+      "name": "move_contact_0",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/poses.png",
+      "rects": [
+        [
+          635,
+          0,
+          938,
+          425
+        ]
+      ],
+      "anchor": [
+        795,
+        418
+      ],
+      "scale": 0.53
+    },
+    {
+      "name": "move_passing_0",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/passing.png",
+      "rects": [
+        [
+          0,
+          0,
+          650,
+          1254
+        ]
+      ],
+      "anchor": [
+        325,
+        1205
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "move_contact_1",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/poses.png",
+      "rects": [
+        [
+          975,
+          0,
+          1254,
+          425
+        ]
+      ],
+      "anchor": [
+        1105,
+        418
+      ],
+      "scale": 0.53
+    },
+    {
+      "name": "move_passing_1",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/passing.png",
+      "rects": [
+        [
+          650,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        990,
+        1205
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "ranged_draw",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          425,
+          310,
+          843
+        ]
+      ],
+      "anchor": [
+        145,
+        833
+      ],
+      "scale": 0.53
+    },
+    {
+      "name": "ranged_release",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          425,
+          620,
+          843
+        ]
+      ],
+      "anchor": [
+        460,
+        833
+      ],
+      "scale": 0.53
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/poses.png",
+      "rects": [
+        [
+          635,
+          450,
+          965,
+          840
+        ]
+      ],
+      "anchor": [
+        785,
+        827
+      ],
+      "scale": 0.53
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/poses.png",
+      "rects": [
+        [
+          985,
+          445,
+          1254,
+          838
+        ]
+      ],
+      "anchor": [
+        1110,
+        827
+      ],
+      "scale": 0.53
+    },
+    {
+      "name": "melee",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/poses.png",
+      "rects": [
+        [
+          967,
+          850,
+          1254,
+          1215
+        ]
+      ],
+      "anchor": [
+        1110,
+        1205
+      ],
+      "scale": 0.53
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          860,
+          294,
+          1190
+        ]
+      ],
+      "anchor": [
+        165,
+        1170
+      ],
+      "scale": 0.53
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/poses.png",
+      "rects": [
+        [
+          295,
+          910,
+          623,
+          1167
+        ]
+      ],
+      "anchor": [
+        450,
+        1158
+      ],
+      "scale": 0.53
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_ember_archer/alpha/poses.png",
+      "rects": [
+        [
+          623,
+          985,
+          958,
+          1168
+        ]
+      ],
+      "anchor": [
+        790,
+        1158
+      ],
+      "scale": 0.53
+    }
+  ]
+}

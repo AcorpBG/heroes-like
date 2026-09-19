@@ -20,12 +20,20 @@
     }
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_blackbranch_cutthroat.png",
-    "runtime_sha256": "b2dd6952a393e87e75970d4ce56f76426b9aa43426c0219df29db79c96db9d62"
+    "runtime_sha256": "50c7ed6ba36589007f1652699d864e159885f379cb7c3f31c4694f53df53c9af"
   },
   "review_notes": [
     "Original hood/buckler/sickle identity retained, actual articulated windup/lunge/guard/collapse inspected.",
     "Real RGBA alpha verified; uniform 0.60 packing scale. Final continuous playback and walk quality review pending."
-  ]
+  ],
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "b2dd6952a393e87e75970d4ce56f76426b9aa43426c0219df29db79c96db9d62",
+    "preserved_frames": 12,
+    "status": "accepted_idle_articulation_20260919"
+  }
 }

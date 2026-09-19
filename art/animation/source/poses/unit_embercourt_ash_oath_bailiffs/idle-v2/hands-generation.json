@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-8f5ae0da-1a63-43b9-83e8-d1bce401707d.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_embercourt_ash_oath_bailiffs.png",
+  "reference_revision": "396d90255",
+  "prompt": "Use case: identity-preserve. Paint an EIGHT-FRAME resting idle with VISIBLE HAND, WRIST AND ELBOW ARTICULATION for exactly this original character. Reference is a strip of poses of ONE character. Preserve identity, clothing, weapon size, hand ownership and right-facing three-quarter camera. Head/hips/feet almost stationary. The idle must read at 74px character height: hands travel about 50-70 source pixels; head under 5px. No head-bobbing substitute. Hands maintain plausible grips and bend naturally at elbows. No attack, walk or extra props.\nYoung dark-haired human woman silver segmented armor red scarf and white/red surcoat, vertical polearm screenLEFT and tall rectangular wood/metal redwhite shield screenRIGHT. Resting idle: polearm butt fixed, hand slides60px downshaft from chest tobelt aselbowextends, thenreturns. Shield elbow bends/lifts shield30px and cants slightly inward, then lowers. Fixed shield markings and polearm shape, noattack.\nCanvas1536x1024 RGBA true transparent background, 4 columns and 2 rows. Exactly eight sequential complete poses in reading order, same anatomical size, planted boot line near localy478, generous gaps, all owned weapons inside each cell. Smooth cycle: pose1 rest;2 begin hand adjustment;3 farther;4 crest;5 gradually reverse;6 ease back;7 near rest;8 almost pose1. Original detailed hand-painted fantasy strategy sprite. Genuine painted articulation, not translated whole-body copies. Transparent gaps and background, no floor/shadow/labels/grid/backdrop.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "2b18a47715e95909ef50781fb8757a2ff01ddf6cc998c3e407aa8f4d01dab994",
+  "reference_sha256": "b123412ebad3939adaf4e1baf0c8143d85f246a6521c178ddbe41e4673ff4173",
+  "review_notes": [
+    "Eight original poses inspected at game size and larger scale; articulated hands, forearms and owned equipment read independently of head movement.",
+    "Live Windows battle board in both facings and real overworld idle shader checked; all eight drawings play, reduced motion freezes, cached draw commands and saved simulation stay stable.",
+    "Existing action frame pixels and non-idle clip metadata preserved; no full-suite or Linux/package test."
+  ]
+}

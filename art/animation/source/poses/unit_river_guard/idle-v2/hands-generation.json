@@ -1,0 +1,23 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_river_guard",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-8c93dc19-3f3a-4f99-b30b-3930b0489e0a.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_river_guard.png",
+  "reference_revision": "396d90255",
+  "prompt": "Use case: identity-preserve. Redraw an EIGHT-FRAME IDLE GRIP-ADJUSTMENT animation of this exact River Guard. The previous attempt failed because only his HEAD moved. This time the PRIMARY animation MUST be clearly different HAND AND FOREARM POSES, with pronounced natural elbow articulation and visible shield repositioning. Keep his HEAD, gaze, hips, boots and camera almost perfectly stationary. Same brass helmet, beard, red quilted coat/scarf, cream sash, brown boots, one vertical spear screen LEFT and oval red/blue/cream shield screen RIGHT. Genuine hand-painted fantasy sprites matching reference.\nCanvas1536x1024 transparent RGBA, FOUR columns TWO rows, one complete figure per384x512cell with24px margins, boot soles localy478. All face RIGHT and have identical body/equipment size. Eight sequential poses in reading order. SPEAR remains upright with butt planted; weapon hand slides smoothly along shaft by about70 source pixels, forearm goes from flexed across chest to extended near waist and back. 1: spear hand upper chest, elbow bent strongly. 2: hand lowers to middle chest, elbow opens. 3: hand lowers to belt level, elbow visibly extended; simultaneously shield arm flexes and lifts shield 30px with upper edge tilted toward body. 4: lowest grip near waist, fully extended forearm, shield raised40px, now settle new grip. 5: begin returning weapon hand upward, forearm bends, shield rotates outward slightly. 6: hand back to midchest, elbow visibly bent, shield lowers halfway. 7: hand near initial height and shield almost lowered. 8: return close to initial rest with small residual wrist movement. Shield keeps its oval shape/markings and same limb ownership. Hands visibly travel from pose to pose; do NOT leave identical arms/shield in all eight frames. Head motion must be less than5px, hands travel50-70px and shield30-40px. No attack, walking or whole-body transformations, no weapon swapping. Fixed feet/root and scale. True transparent background and gaps, no scene, floor, shadow, checkerboard, labels or panel lines.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "supersedes": "generation.json",
+  "direction": "Elbow, forearm, wrist and shield motion must be legible at game scale; head and planted feet stay quiet.",
+  "source_sha256": "48072d63df83028727e1432692bb2d6104fc48189be25f5cce6ad1a2a8921c6a",
+  "reference_sha256": "b7b8cc1a3ebaea3b40498f35ad4102384c990b52573ad8a9f6822195bdc14b5a",
+  "review_notes": [
+    "Eight original poses inspected at game size and larger scale; articulated hands, forearms and owned equipment read independently of head movement.",
+    "Live Windows battle board in both facings and real overworld idle shader checked; all eight drawings play, reduced motion freezes, cached draw commands and saved simulation stay stable.",
+    "Existing action frame pixels and non-idle clip metadata preserved; no full-suite or Linux/package test."
+  ]
+}

@@ -190,5 +190,18 @@
     "runtime_sha256": "91a410e3fd96ec07cd68b5e6c5683f6677b0a6ca4a7f9e3be723a677d9524006",
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/bargebow-continuity-20260915/",
     "status": "candidate_registered_not_final_accepted"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_embercourt_bargebow_crews.png",
+    "runtime_sha256": "7587839bf6caea54d4a0afac29445c700f57f9d11abe405dfb77d2022a025445"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "91a410e3fd96ec07cd68b5e6c5683f6677b0a6ca4a7f9e3be723a677d9524006",
+    "preserved_frames": 17,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

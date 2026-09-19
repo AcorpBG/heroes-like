@@ -98,5 +98,18 @@
     "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/sporewake-continuity-20260915/art-desk-registered.html",
     "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/sporewake-continuity-20260915/art-desk-registered.png",
     "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/sporewake-continuity-20260915/packed-inspect-refined/poses-candidate-atlas-green.png"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_mireclaw_sporewake_chanters.png",
+    "runtime_sha256": "c502b383ef17770842d2969095f253373e6d4637e309f5668cb484696fffd4b9"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "5940b69d61cbfb8c133b0b8449dbdedb024c58933c69d3e2784e05ac1cab1b1e",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

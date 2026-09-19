@@ -1,0 +1,9 @@
+{
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "prompt": "Use case: precise-object-edit. This is an eight-pose idle sheet of ONE crystal knight. Correct ONLY the sword arm in the FOURTH pose (top row far right); preserve all other seven poses unchanged and preserve the fourth pose's face, shield, legs, body, scale and position exactly. In pose4 the short sword incorrectly flips to point screenRIGHT. It must point DOWN-LEFT, continuing the same wrist/sword orientation as pose3 immediately to its left. Keep the bent elbow/hand high near belt, but turn wrist so blade extends diagonally DOWN-LEFT at about40degrees beneath horizontal, tip near localx65 localy290. Same one rigid short cyan crystal sword with goldguard, same fingers aroundhilt, no left/right mirror of body. The smooth motion must be pose1 low hand/steep downleft blade;pose2 hand slightly up;pose3 hand higher;pose4 highest hand but still downleft blade;then lower again. Preserve 1536x1024, four columns two rows, genuine transparent RGBA background, all equipment intact, no backdrop/grid/text/shadow.",
+  "source": "wrist-correction-original.png",
+  "source_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c6e098aa-f8d0-4d33-afb4-daff7aa2b034.png",
+  "reference": "hands-original.png",
+  "selection": "Only frame 4 is eligible to replace the reversed-wrist drawing; pending review."
+}

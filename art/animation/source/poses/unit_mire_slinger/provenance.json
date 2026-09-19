@@ -29,13 +29,21 @@
     }
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_mire_slinger.png",
-    "runtime_sha256": "94e64dabdfebfe766dd195da029f4901cec8ee9acbe4536b045cd5a8f31c8c91"
+    "runtime_sha256": "46b672baece2391f2ca814b4f8c0879bdb7ff5b1f854fae8eb70c61a1d0d6bb3"
   },
   "review_notes": [
     "Sixteen actual articulated original poses, separate sling windup/release/recovery and melee punches.",
     "Draft release/recovery edited before alpha extraction. Sling mechanics and walking contacts still require final visual acceptance.",
     "Uniform 0.70 scale, real alpha verified; packing never paints source pixels."
-  ]
+  ],
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "94e64dabdfebfe766dd195da029f4901cec8ee9acbe4536b045cd5a8f31c8c91",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
+  }
 }
