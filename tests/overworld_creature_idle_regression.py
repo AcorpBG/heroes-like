@@ -12,6 +12,8 @@ const Factory = preload("res://scripts/core/ScenarioFactory.gd")
 const View = preload("res://scenes/overworld/OverworldMapView.gd")
 const Batch = preload("res://scenes/overworld/OverworldSceneryBatch.gd")
 const Neutrals = preload("res://scripts/persistence/GeneratedNeutralEncounterRules.gd")
+const BattleView = preload("res://scenes/battle/BattleBoardView.gd")
+const Pose = preload("res://scripts/ui/BattleUnitPose.gd")
 var failures := []
 var checks := 0
 var out := ""
@@ -35,6 +37,9 @@ func clock_for_frame(frame: int):
 func _ready(): call_deferred("run")
 func run():
 	out = OS.get_cmdline_user_args()[0]
+	SettingsService.set_presentation_mode("windowed")
+	SettingsService.set_presentation_resolution("1280x720")
+	DisplayServer.window_set_position(Vector2i(-16000,-16000))
 	DisplayServer.window_set_size(Vector2i(1280,720))
 	get_tree().root.size=Vector2i(1280,720)
 	get_tree().root.content_scale_size=Vector2i(1280,720)
@@ -107,6 +112,7 @@ func run():
 			check(not pose.is_empty(),"missing sampled pose: "+ids[i])
 			if pose.is_empty(): continue
 			var entry: Dictionary = pose.entry
+			check(int(entry.frames)==8,"expanded creature must expose eight painted poses: "+ids[i])
 			var scale := extent / float(entry.painted_extent)
 			check((pose.rect.position+Vector2(entry.ground_anchor[0],entry.ground_anchor[1])*scale).distance_to(ground)<.001,"anatomical anchor moved")
 			var material = view.CreatureIdle.material(pose,ids[i]+str(j),true)
@@ -121,6 +127,14 @@ func run():
 	var second := await image()
 	second.save_png(out+"/idle-b.png")
 	for box in boxes: check(first.get_region(box).get_data()!=second.get_region(box).get_data(),"sampled creature has no visible pose change")
+	var seen_pixels := []
+	for i in ids: seen_pixels.append({})
+	for frame in range(8):
+		clock_for_frame(frame)
+		var sample := await image()
+		sample.save_png(out+"/expanded-idle-%d.png"%frame)
+		for i in range(boxes.size()): seen_pixels[i][hash(sample.get_region(boxes[i]).get_data())]=true
+	for i in range(ids.size()): check(seen_pixels[i].size()==8,"map rendering lost idle drawings: "+ids[i])
 	painter.set_motion_enabled(false)
 	var reduced_a := await image()
 	clock_for_frame(0)
@@ -128,6 +142,56 @@ func run():
 	check(reduced_a.get_data()==reduced_b.get_data(),"reduced motion still animates")
 	SettingsService.set_reduced_motion_enabled(true)
 	check(not view._scenery_motion_enabled(),"live reduced-motion preference not honored")
+	gallery.hide()
+	# Real battle board, both facings, real idle clocks. No game input or simulation ticks.
+	SettingsService.set_reduced_motion_enabled(false)
+	session.battle = BattleRules.create_battle_payload(session,session.overworld.encounters[0])
+	var stacks := []
+	for i in range(ids.size()):
+		for side in ["player","enemy"]:
+			var stack: Dictionary = BattleRules._build_battle_stack(ids[i],10,side,i)
+			stack.battle_id = "expanded_idle_"+side+str(i)
+			stack.hex = {"q":1+(i%3)*4,"r":1+(i/3)*4+(2 if side=="enemy" else 0)}
+			stacks.append(stack)
+	session.battle.stacks=stacks
+	session.battle.active_stack_id=stacks[0].battle_id
+	session.battle.turn_order=stacks.map(func(s):return s.battle_id)
+	BattleRules._sync_occupied_hexes(session.battle)
+	BattleRules._sync_distance_from_hexes(session.battle)
+	var battle_before: Dictionary = session.to_dict().duplicate(true)
+	var board = BattleView.new()
+	board.size=Vector2(1280,720)
+	add_child(board)
+	board.set_battle_state(session)
+	var seen_regions := {}
+	for stack in stacks: seen_regions[stack.battle_id]={}
+	var started := Time.get_ticks_msec()
+	var captures := 0
+	var battle_images := []
+	while Time.get_ticks_msec()-started<4600:
+		await get_tree().process_frame
+		for stack in stacks:
+			var region: Rect2 = board._animation_frame_region_for_stack(stack)
+			seen_regions[stack.battle_id][str(region)]=true
+		if Time.get_ticks_msec()-started>captures*650:
+			var sample := await image()
+			# PNG compression must not block observation of the live pose clock.
+			battle_images.append(sample)
+			captures+=1
+	for i in range(battle_images.size()): battle_images[i].save_png(out+"/battle-idle-%d.png"%i)
+	for stack in stacks:
+		var animation: Dictionary=ContentService.get_unit_animation(stack.unit_id)
+		check(seen_regions[stack.battle_id].size()==8,"battle did not play all eight frames: "+stack.battle_id)
+		check(Pose.facing_flip(animation,stack.side)==(stack.side=="enemy"),"battle idle facing reversed")
+		var first_clock := Pose.idle_elapsed_msec(animation,0,stack.unit_id+"/"+stack.battle_id)
+		check(Pose.idle_elapsed_msec(animation,1000,stack.unit_id+"/"+stack.battle_id)==first_clock+1000,"idle phase drift")
+		check(first_clock!=Pose.idle_elapsed_msec(animation,0,stack.unit_id+"/neighbor"),"battle stacks synchronized")
+	SettingsService.set_reduced_motion_enabled(true)
+	await image()
+	for stack in stacks:
+		var animation: Dictionary=ContentService.get_unit_animation(stack.unit_id)
+		check(board._animation_frame_region_for_stack(stack)==Pose.region(animation,"idle_hold",0.0,0,true),"battle reduced motion did not freeze the idle")
+	check(session.to_dict()==battle_before,"battle idle changed saved state")
 	print("CREATURE_IDLE_REPORT "+JSON.stringify({"checks":checks,"failures":failures,"units":count,"generated_profiles":profiles.size()}))
 	get_tree().quit(0 if failures.is_empty() else 1)
 '''

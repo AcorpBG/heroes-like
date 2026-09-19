@@ -1,0 +1,60 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_neutral_roadwardens",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "original.png",
+  "source_output": "exec-82e45182-fb81-4430-8558-4509e1369b6b.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_neutral_roadwardens.png",
+  "reference_revision": "37ddcb938",
+  "prompt": "Use case: identity-preserve. Create a production game idle-animation spritesheet for the exact original Roadwarden in the reference. First reference is canonical identity; second is current gameplay painted pose/style. Exactly EIGHT distinct sequential hand-painted full-body animation poses in a strict FOUR COLUMN by TWO ROW grid, on a 1536x1024 transparent RGBA canvas. Each equal 384x512 cell contains ONE complete character centered at x192 local, both boot soles fixed at local y470, full weapon and cape stay inside with 20px margin. All face RIGHT in the same three-quarter camera. Preserve helmet, dark beard, mustard cape, ochre/red split coat, leather belt pouches, gloves, brown boots, and ONE long hooked polearm held diagonally from bottom left to top right by the SAME hands. Constant body/head/equipment dimensions, planted feet and camera. Draw a single smooth cyclical breathing sequence, NOT eight unrelated stances: 1 relaxed exhale, 2 gentle inhale, 3 chest expands with elbows following, 4 breath crest with tiny head turn, 5 beginning exhale and a blink, 6 shoulders settling eyes open, 7 slight cape-hem follow-through, 8 returning almost to pose1. Chest travel only ~6px at this source size; no stepping, no bouncing body, no weapon swapping. Movement visible in subtle shoulders, elbows, cloth folds and head angle; each pose newly painted with continuous anatomical articulation. Match the reference's detailed painterly fantasy sprite aesthetic. Genuine fully transparent background and gaps, no checkerboard, no matte, no floor, no ground shadow, no labels, no grid lines, no effects. All eight poses complete and well separated.",
+  "review_status": "accepted_idle_expansion_20260919",
+  "originals_preserved": true,
+  "source_sha256": "7bdf79f891ae1c434cffcfa8284814579b93f48205b28c16e81ab8ec1e44f1ab",
+  "reference_sha256": "7996a2df37a05544e69e5bcd05a89db2bec5182c78c527a028dcd0524fe30218",
+  "previous_idle": {
+    "frames": 2,
+    "indices": [
+      0,
+      1
+    ],
+    "loop": true,
+    "frame_msec": 600,
+    "static_frame": 0
+  },
+  "previous_atlas_sha256": "81cfd9af1108a0a56366409b8eb0519acc598ad13858cd9326952c9bc6270221",
+  "packed_indices": [
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "packing_recipe": "../packing.json",
+  "alpha_source": "alpha.png",
+  "alpha_sha256": "288e00162df90d81d4571af97d570a18a639f7d414e622557053111f2d86a098",
+  "preparation_tool": "tools/prepare_idle_pose_alpha.py",
+  "preparation_recipe": "prepare.json",
+  "review_notes": [
+    "Eight newly painted poses inspected in source contact sheets and both runtime render paths.",
+    "One uniform scale per creature, anatomical anchors calibrated against existing poses; all earlier frame pixels retained unchanged.",
+    "Raw generated RGB includes invisible backdrop colors: native alpha preserved, only inspected noise at alpha <=8 cleared.",
+    "444 focused rendered checks passed, including all eight frames in battle and overworld, independent phase, fog and reduced motion."
+  ],
+  "references": [
+    {
+      "path": "art/units/source/curated/unit_neutral_roadwardens.png",
+      "sha256": "625b2deb46cd667b28824cb2833338073406d411dc2adaea6e3a116d7a5c14b7",
+      "role": "canonical identity"
+    },
+    {
+      "path": "art/overworld/runtime/creature_idle/unit_neutral_roadwardens.png",
+      "sha256": "7996a2df37a05544e69e5bcd05a89db2bec5182c78c527a028dcd0524fe30218",
+      "revision": "37ddcb938"
+    }
+  ]
+}

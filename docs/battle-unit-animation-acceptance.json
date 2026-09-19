@@ -600,12 +600,23 @@
     },
     {
       "unit_id": "unit_neutral_roadwardens",
-      "atlas_sha256": "81cfd9af1108a0a56366409b8eb0519acc598ad13858cd9326952c9bc6270221",
-      "pose_metadata_sha256": "5914f3fc3aff96d8829e35fbed2d80200be24fad30833bea6f4ba17a81945d4a",
+      "atlas_sha256": "3a9303b7a22df7eb6fe007719cbade290b7fae2345b7b64e7d3eaf0ef0912b3d",
+      "pose_metadata_sha256": "fc3dbe1fcb5e421fbf8ca80ab214a804e87078fe0079f0c29dcbcbe606aeecd0",
       "action_contact": "roster-review-58-fit.png",
       "action_contact_sha256": "695d84f6151cc19cbdbf9215c33f8eb0bd2c04de6c2e29770c7d121f658b0a67",
-      "resting_contact": "resting-r2-review-54.png",
-      "resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f"
+      "review_status": "accepted_idle_expansion_20260919",
+      "previous_resting_contact": "resting-r2-review-54.png",
+      "previous_resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Eight original idle drawings inspected at map and larger scale plus live 1280x720 Windows battle board, both facings. 444 focused checks pass. Not full-roster new art or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_neutral_roadwardens/idle-v2/generation.json",
+        "previous_atlas_sha256": "81cfd9af1108a0a56366409b8eb0519acc598ad13858cd9326952c9bc6270221",
+        "action_frames": "Previous atlas frame pixels and action clip metadata unchanged.",
+        "capture_retention": "Temporary captures removed after review per owner policy; rebuild with tests/overworld_creature_idle_regression.py."
+      }
     },
     {
       "unit_id": "unit_neutral_hearthbow_carriers",
@@ -618,12 +629,23 @@
     },
     {
       "unit_id": "unit_neutral_fenhound_runners",
-      "atlas_sha256": "4290011bb099a1fdbec0ad886dacc91682ac873fdf14e824abbd429cb962f708",
-      "pose_metadata_sha256": "02c0bc4ece38a43abdb301cfbb3b2bfea9cdd3d0a45a1a1a65b4ba8a90954418",
+      "atlas_sha256": "a50a5b92701b906b7183d2186104537d7e3fb95ee00b9d0844f3db820af23fb5",
+      "pose_metadata_sha256": "5fd6d03cb07661fe6fd004853f89f7e094eefad1c44d92b347425d3d11de3363",
       "action_contact": "roster-review-60-fit.png",
       "action_contact_sha256": "ef3cfb7cecee10e6a87eceafabc1922b19a421e393464c4ceb9535c675bb3e39",
-      "resting_contact": "resting-r2-review-60.png",
-      "resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c"
+      "review_status": "accepted_idle_expansion_20260919",
+      "previous_resting_contact": "resting-r2-review-60.png",
+      "previous_resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 210,
+        "scope": "Eight original idle drawings inspected at map and larger scale plus live 1280x720 Windows battle board, both facings. 444 focused checks pass. Not full-roster new art or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_neutral_fenhound_runners/idle-v2/generation.json",
+        "previous_atlas_sha256": "4290011bb099a1fdbec0ad886dacc91682ac873fdf14e824abbd429cb962f708",
+        "action_frames": "Previous atlas frame pixels and action clip metadata unchanged.",
+        "capture_retention": "Temporary captures removed after review per owner policy; rebuild with tests/overworld_creature_idle_regression.py."
+      }
     },
     {
       "unit_id": "unit_neutral_mossglass_sentinels",
@@ -1149,12 +1171,23 @@
     },
     {
       "unit_id": "unit_neutral_sunscale_lanternmoths",
-      "atlas_sha256": "f4fd63f7ef7c78a20f30d86c1635364c3d6e423b201dee6fa945ff18f90e894b",
-      "pose_metadata_sha256": "fb5810c10af78f22a179c4759e0986858ba9534d060b97afc38cc4930a953e7f",
+      "atlas_sha256": "e64084483947afaa118a64d6b0b7d019f4f37b576429d7a41190c8dfa196cda7",
+      "pose_metadata_sha256": "5f857d0085a02955c2ed8d9a00327ea4e37d4f0b41a649c14d4ea9cdef7907ab",
       "action_contact": "roster-review-120-fit.png",
       "action_contact_sha256": "7a4cc264ddcaa5bd042af2a3812468865ab4c48090b2fb511bd61ae54a17a596",
-      "resting_contact": "resting-r2-review-120.png",
-      "resting_contact_sha256": "0116ca7bfd2f506cb94f6f627a0ddd5f1d44820d7c6f1a4dbf1ec052158fb77e"
+      "review_status": "accepted_idle_expansion_20260919",
+      "previous_resting_contact": "resting-r2-review-120.png",
+      "previous_resting_contact_sha256": "0116ca7bfd2f506cb94f6f627a0ddd5f1d44820d7c6f1a4dbf1ec052158fb77e",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 130,
+        "scope": "Eight original idle drawings inspected at map and larger scale plus live 1280x720 Windows battle board, both facings. 444 focused checks pass. Not full-roster new art or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_neutral_sunscale_lanternmoths/idle-v2/generation.json",
+        "previous_atlas_sha256": "f4fd63f7ef7c78a20f30d86c1635364c3d6e423b201dee6fa945ff18f90e894b",
+        "action_frames": "Previous atlas frame pixels and action clip metadata unchanged.",
+        "capture_retention": "Temporary captures removed after review per owner policy; rebuild with tests/overworld_creature_idle_regression.py."
+      }
     },
     {
       "unit_id": "unit_neutral_rimebell_skyrakers",
@@ -1464,12 +1497,23 @@
     },
     {
       "unit_id": "unit_neutral_fenmirror_gallowshells",
-      "atlas_sha256": "ac49a5c892db86da70b4a3f5b8929b33538c9be113557a1351d7d3d3df518d75",
-      "pose_metadata_sha256": "5f3db08b39f262d6cbbe441b5b6a055e245a002af2f319eca09d361a26fc285c",
+      "atlas_sha256": "187bdf73cf78bcab69cd00785a52bce6a84ce6ae9342c4e36805c9d18f4c6e29",
+      "pose_metadata_sha256": "aaa07e1acbe4313d6a038c15c1a3fb0a288a15b8d9eaf9b41bbfb1ef56db361e",
       "action_contact": "roster-review-154-fit.png",
       "action_contact_sha256": "37cec7c65bad962f82317cbddd4ecf2a2a5091e8939883a565eb3107e891fd3d",
-      "resting_contact": "resting-r2-review-150.png",
-      "resting_contact_sha256": "48aa47038a551d23de71d44ccd5d939a6979d78e3c89b8abfa9d1868f7eb13e6"
+      "review_status": "accepted_idle_expansion_20260919",
+      "previous_resting_contact": "resting-r2-review-150.png",
+      "previous_resting_contact_sha256": "48aa47038a551d23de71d44ccd5d939a6979d78e3c89b8abfa9d1868f7eb13e6",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 270,
+        "scope": "Eight original idle drawings inspected at map and larger scale plus live 1280x720 Windows battle board, both facings. 444 focused checks pass. Not full-roster new art or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_neutral_fenmirror_gallowshells/idle-v2/generation.json",
+        "previous_atlas_sha256": "ac49a5c892db86da70b4a3f5b8929b33538c9be113557a1351d7d3d3df518d75",
+        "action_frames": "Previous atlas frame pixels and action clip metadata unchanged.",
+        "capture_retention": "Temporary captures removed after review per owner policy; rebuild with tests/overworld_creature_idle_regression.py."
+      }
     },
     {
       "unit_id": "unit_neutral_prismwake_raylings",
@@ -1482,12 +1526,23 @@
     },
     {
       "unit_id": "unit_neutral_rootcrown_knotstags",
-      "atlas_sha256": "a3fee96a035786f243cedb3443af26d9c036e927bc3c595f2253630d10b4deab",
-      "pose_metadata_sha256": "4d1469960dcfd8e89147a8df10f72b02962f08198a39713ed005c5d5197e7be1",
+      "atlas_sha256": "3ab87e780edfaf67ba9c38e3a7d17fe76058dc295845ad0068c80a9bac621c0f",
+      "pose_metadata_sha256": "b3547561a03e3f97d1345bdfa09d4c597f28c249e25bb27d43cc0d0a1bdef53e",
       "action_contact": "roster-review-156-fit.png",
       "action_contact_sha256": "4478ff4abac274bbcb82e66d72ca6feda444f61f1f567f2316a000ca5845e544",
-      "resting_contact": "resting-r2-review-156.png",
-      "resting_contact_sha256": "9b6932ac9ec77f10f7b1407a2b285fe0a679ab3b72c613856fc59022ac269248"
+      "review_status": "accepted_idle_expansion_20260919",
+      "previous_resting_contact": "resting-r2-review-156.png",
+      "previous_resting_contact_sha256": "9b6932ac9ec77f10f7b1407a2b285fe0a679ab3b72c613856fc59022ac269248",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Eight original idle drawings inspected at map and larger scale plus live 1280x720 Windows battle board, both facings. 444 focused checks pass. Not full-roster new art or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/idle-v2/generation.json",
+        "previous_atlas_sha256": "a3fee96a035786f243cedb3443af26d9c036e927bc3c595f2253630d10b4deab",
+        "action_frames": "Previous atlas frame pixels and action clip metadata unchanged.",
+        "capture_retention": "Temporary captures removed after review per owner policy; rebuild with tests/overworld_creature_idle_regression.py."
+      }
     },
     {
       "unit_id": "unit_neutral_gaugecoil_orewyrms",
@@ -1500,12 +1555,23 @@
     },
     {
       "unit_id": "unit_neutral_gloambell_wake_mantas",
-      "atlas_sha256": "6cb515d0526db6b4e88e5588bab7dacdf594ff91070a000404ac77b485ff6f01",
-      "pose_metadata_sha256": "dfabbed550a2dfeba5ebd75ac219cd4f67c3debe4c00e5fc6a91e415dc57f8cf",
+      "atlas_sha256": "e0e643c9362b584e872cf6a406e1406affc15da639fe79e00c68e47e21dcdfea",
+      "pose_metadata_sha256": "507b2e496b2159f942c75ceb6d3d3bbfcdbcabb34e796a808065059e360f54b5",
       "action_contact": "roster-review-158-fit.png",
       "action_contact_sha256": "cfa035917281f72e0f14da75a6372fc2b5fa94671835df84b090c773285101e4",
-      "resting_contact": "resting-r2-review-156.png",
-      "resting_contact_sha256": "9b6932ac9ec77f10f7b1407a2b285fe0a679ab3b72c613856fc59022ac269248"
+      "review_status": "accepted_idle_expansion_20260919",
+      "previous_resting_contact": "resting-r2-review-156.png",
+      "previous_resting_contact_sha256": "9b6932ac9ec77f10f7b1407a2b285fe0a679ab3b72c613856fc59022ac269248",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 180,
+        "scope": "Eight original idle drawings inspected at map and larger scale plus live 1280x720 Windows battle board, both facings. 444 focused checks pass. Not full-roster new art or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_neutral_gloambell_wake_mantas/idle-v2/generation.json",
+        "previous_atlas_sha256": "6cb515d0526db6b4e88e5588bab7dacdf594ff91070a000404ac77b485ff6f01",
+        "action_frames": "Previous atlas frame pixels and action clip metadata unchanged.",
+        "capture_retention": "Temporary captures removed after review per owner policy; rebuild with tests/overworld_creature_idle_regression.py."
+      }
     }
   ],
   "final_packages": {

@@ -8,6 +8,11 @@ This is an art/runtime presentation slice, not another RMG placement change.
 
 ## Requirements
 
+The six-creature [expanded idle batch](creature-idle-expansion.md) supersedes the
+two-pose baseline below for Roadwardens, Fenhounds, Lanternmoths, Gallowshells,
+Knotstags and Wake Mantas. Each now has eight painted poses in both views; the
+other 154 units retain the baseline. The extraction tool supports either count.
+
 ### Overworld creature idle playback (2026-09-19)
 
 Owner-selected follow-up `animation-overworld-creature-idle-20260919` now plays

@@ -29,6 +29,14 @@
       "prompt": "Use case: sketch-to-render. Original game animation pose. Image 1 supplies ONLY the four-legged passing gait mechanics; image 2 supplies the exact Rootcrown Knotstag identity, proportions, materials and elevated three-quarter RIGHT-facing camera. Paint ONE complete creature in the guide's passing phase: far FRONT root-foot is planted vertically beneath shoulder, near HIND hoof planted beneath hip; near FRONT root-leg is bent with toes lifted beneath chest, far HIND hoof is lifted and passing underneath belly. Exactly four anatomically connected limbs. Do not copy the original two front feet planted pose. Preserve huge paired branching crown, three amber hanging seed lanterns (one high central and two low outer), fern mane, bark plates, branch tail, large root forefeet and small hind hooves. Body/crown upright, constant head/torso proportions, no mirrored torso, no attack leap. Same richly painted original sprite. Full figure with generous margins on plain flat white with NO ground shadow, scenery, effects, diagram colors/shapes or text. Distinct raised and supporting limbs, not a rotated/translated neutral stance.",
       "tool_mode": "built_in_image_gen",
       "review": "Distinct guided gait candidates; exact near/far phase and continuity remain for assembled review. Local extraction avoids redraw."
+    },
+    {
+      "source": "idle-v2/original.png",
+      "source_sha256": "2ecdebc1db376d1b01e75acb54ac38676b45777cf416ccc65d744bb5502b95b7",
+      "alpha_source": "idle-v2/alpha.png",
+      "alpha_sha256": "c9086d272cba5b7e0cc70ac8aa72d6f0c1b2f6e994fa53a4834fe03134365572",
+      "workflow_provenance": "idle-v2/generation.json",
+      "review": "Eight original idle drawings accepted in focused Windows battle/map playback. Existing action frames byte-identical."
     }
   ],
   "unselected_attempts": [
@@ -83,9 +91,10 @@
     "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
   },
   "packing": {
-    "recipe": "art/animation/source/poses/unit_neutral_rootcrown_knotstags/packing.json",
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_rootcrown_knotstags.png",
-    "runtime_sha256": "a3fee96a035786f243cedb3443af26d9c036e927bc3c595f2253630d10b4deab"
+    "runtime_sha256": "3ab87e780edfaf67ba9c38e3a7d17fe76058dc295845ad0068c80a9bac621c0f"
   },
   "step_refinement": {
     "date": "2026-09-16",

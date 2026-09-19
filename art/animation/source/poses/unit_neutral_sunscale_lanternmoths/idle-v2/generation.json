@@ -1,0 +1,54 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_neutral_sunscale_lanternmoths",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "original.png",
+  "source_output": "exec-70b11712-f0dd-4294-acf0-9af6fd71c803.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_neutral_sunscale_lanternmoths.png",
+  "reference_revision": "37ddcb938",
+  "prompt": "Use case: identity-preserve. Create an original painted EIGHT-FRAME hovering IDLE cycle for the exact Sunscale Lanternmoth in the reference (two reference poses of ONE creature). Exact identity: four large blue-and-gold patterned moth wings, warm golden edge bands with pale cream spots, fluffy gray-white thorax, golden glowing honeycomb abdomen, two curved antennae, six tiny hanging insect legs, facing RIGHT three-quarter. Preserve its detailed painterly fantasy-game style, wing pattern and anatomy. Canvas1536x1024 real transparent RGBA, exactly FOUR equal columns and TWO rows, eight separate full-body sprites, one per384x512cell. Each same anatomical scale: head/thorax centered locally x215,y285, wings and legs entirely inside with at least20px margins. Wings span~335px at widest, abdomen and head never resize. Ordered seamless wingbeat cycle: 1 wings relaxed middle, 2 lifting, 3 near raised, 4 highest folded angle, 5 beginning downstroke, 6 extended lowest wings, 7 lifting toward middle, 8 just before frame1. Smooth articulated hinge changes at wing roots, clear in-between silhouettes, not rotating or copying the whole bug. Body stays stable in same place, antennae and legs have small delayed follow-through. No flight travel, no attack, no magic trails, no large glow cloud. Eight views of the SAME creature at stable camera and scale. Genuine transparent background and all gaps; no floor, shadow, checkerboard, matte, text, labels, borders or cell lines.",
+  "review_status": "accepted_idle_expansion_20260919",
+  "originals_preserved": true,
+  "source_sha256": "ef593674bf69d0d87dae99ad59ea6db804c71e0ae55e41257870786a68f43737",
+  "reference_sha256": "0e1d8a0aa9f495072ead4e33e60c2505a8dfe0bae8475852c812dec0dc360f64",
+  "previous_idle": {
+    "frames": 2,
+    "indices": [
+      0,
+      1
+    ],
+    "loop": true,
+    "frame_msec": 650
+  },
+  "previous_atlas_sha256": "f4fd63f7ef7c78a20f30d86c1635364c3d6e423b201dee6fa945ff18f90e894b",
+  "packed_indices": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "packing_recipe": "../packing.json",
+  "alpha_source": "alpha.png",
+  "alpha_sha256": "942b47428b1c1843cf54e76baa8d26c65d665df3812def622dcd310f037c304c",
+  "preparation_tool": "tools/prepare_idle_pose_alpha.py",
+  "preparation_recipe": "prepare.json",
+  "review_notes": [
+    "Eight newly painted poses inspected in source contact sheets and both runtime render paths.",
+    "One uniform scale per creature, anatomical anchors calibrated against existing poses; all earlier frame pixels retained unchanged.",
+    "Raw generated RGB includes invisible backdrop colors: native alpha preserved, only inspected noise at alpha <=8 cleared.",
+    "444 focused rendered checks passed, including all eight frames in battle and overworld, independent phase, fog and reduced motion."
+  ],
+  "references": [
+    {
+      "path": "art/overworld/runtime/creature_idle/unit_neutral_sunscale_lanternmoths.png",
+      "sha256": "0e1d8a0aa9f495072ead4e33e60c2505a8dfe0bae8475852c812dec0dc360f64",
+      "revision": "37ddcb938"
+    }
+  ]
+}

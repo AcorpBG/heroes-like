@@ -1,6 +1,6 @@
 {
   "unit_id": "unit_neutral_sunscale_lanternmoths",
-  "status": "accepted_idle_expansion_20260919",
+  "status": "candidate_pending_playback_acceptance",
   "frame_size": [
     512,
     256
@@ -10,7 +10,7 @@
   "frames": [
     {
       "name": "idle",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           0,
@@ -27,7 +27,7 @@
     },
     {
       "name": "idle_breath",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           400,
@@ -44,7 +44,7 @@
     },
     {
       "name": "fly_upstroke",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           790,
@@ -61,7 +61,7 @@
     },
     {
       "name": "fly_downstroke",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           1150,
@@ -78,7 +78,7 @@
     },
     {
       "name": "fly_pass",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           0,
@@ -95,7 +95,7 @@
     },
     {
       "name": "melee_windup",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           450,
@@ -118,7 +118,7 @@
     },
     {
       "name": "melee_rake",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           790,
@@ -135,7 +135,7 @@
     },
     {
       "name": "guard",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           1200,
@@ -152,7 +152,7 @@
     },
     {
       "name": "ranged_aim",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           0,
@@ -169,7 +169,7 @@
     },
     {
       "name": "ranged_charge",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           400,
@@ -192,7 +192,7 @@
     },
     {
       "name": "ranged_release",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           790,
@@ -209,7 +209,7 @@
     },
     {
       "name": "ranged_recover",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           1160,
@@ -226,7 +226,7 @@
     },
     {
       "name": "recoil",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           0,
@@ -243,7 +243,7 @@
     },
     {
       "name": "death_drop",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           390,
@@ -260,7 +260,7 @@
     },
     {
       "name": "death_land",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           780,
@@ -277,7 +277,7 @@
     },
     {
       "name": "dead",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           1160,
@@ -291,142 +291,6 @@
         1015
       ],
       "scale": 0.69
-    },
-    {
-      "name": "idle_v2_0",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          0,
-          0,
-          394,
-          512
-        ]
-      ],
-      "anchor": [
-        216,
-        483
-      ],
-      "scale": 0.55
-    },
-    {
-      "name": "idle_v2_1",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          394,
-          0,
-          796,
-          512
-        ]
-      ],
-      "anchor": [
-        600,
-        483
-      ],
-      "scale": 0.55
-    },
-    {
-      "name": "idle_v2_2",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          796,
-          0,
-          1156,
-          512
-        ]
-      ],
-      "anchor": [
-        984,
-        483
-      ],
-      "scale": 0.55
-    },
-    {
-      "name": "idle_v2_3",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          1156,
-          0,
-          1536,
-          512
-        ]
-      ],
-      "anchor": [
-        1368,
-        483
-      ],
-      "scale": 0.55
-    },
-    {
-      "name": "idle_v2_4",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          0,
-          512,
-          394,
-          1024
-        ]
-      ],
-      "anchor": [
-        216,
-        961
-      ],
-      "scale": 0.55
-    },
-    {
-      "name": "idle_v2_5",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          394,
-          512,
-          796,
-          1024
-        ]
-      ],
-      "anchor": [
-        600,
-        961
-      ],
-      "scale": 0.55
-    },
-    {
-      "name": "idle_v2_6",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          796,
-          512,
-          1156,
-          1024
-        ]
-      ],
-      "anchor": [
-        984,
-        961
-      ],
-      "scale": 0.55
-    },
-    {
-      "name": "idle_v2_7",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          1156,
-          512,
-          1536,
-          1024
-        ]
-      ],
-      "anchor": [
-        1368,
-        961
-      ],
-      "scale": 0.55
     }
   ]
 }

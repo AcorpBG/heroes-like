@@ -1,6 +1,6 @@
 {
   "unit_id": "unit_neutral_roadwardens",
-  "status": "accepted_idle_expansion_20260919",
+  "status": "runtime_candidate_pending_consolidated_validation",
   "frame_size": [
     512,
     256
@@ -10,7 +10,7 @@
   "frames": [
     {
       "name": "idle_0",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           0,
@@ -27,7 +27,7 @@
     },
     {
       "name": "idle_1",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           306,
@@ -44,7 +44,7 @@
     },
     {
       "name": "walk_contact_a",
-      "source": "continuity-alpha/walk-contact-a-green.png",
+      "source": "../continuity-alpha/walk-contact-a-green.png",
       "rects": [
         [
           0,
@@ -61,7 +61,7 @@
     },
     {
       "name": "walk_passing_a",
-      "source": "continuity-alpha/walk-passing-a-green.png",
+      "source": "../continuity-alpha/walk-passing-a-green.png",
       "rects": [
         [
           0,
@@ -78,7 +78,7 @@
     },
     {
       "name": "walk_contact_b",
-      "source": "continuity-alpha/walk-contact-b-green.png",
+      "source": "../continuity-alpha/walk-contact-b-green.png",
       "rects": [
         [
           0,
@@ -95,7 +95,7 @@
     },
     {
       "name": "walk_passing_b",
-      "source": "continuity-alpha/walk-passing-b-green.png",
+      "source": "../continuity-alpha/walk-passing-b-green.png",
       "rects": [
         [
           0,
@@ -112,7 +112,7 @@
     },
     {
       "name": "attack_anticipation",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           348,
@@ -141,7 +141,7 @@
     },
     {
       "name": "attack_thrust",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           635,
@@ -176,7 +176,7 @@
     },
     {
       "name": "defend",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           1050,
@@ -211,7 +211,7 @@
     },
     {
       "name": "hit",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           0,
@@ -228,7 +228,7 @@
     },
     {
       "name": "death_kneel",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           332,
@@ -251,7 +251,7 @@
     },
     {
       "name": "death_fall",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           628,
@@ -274,7 +274,7 @@
     },
     {
       "name": "dead",
-      "source": "alpha/poses.png",
+      "source": "../alpha/poses.png",
       "rects": [
         [
           891,
@@ -288,144 +288,83 @@
         1248
       ],
       "scale": 0.5
-    },
-    {
-      "name": "idle_v2_0",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          0,
-          0,
-          384,
-          516
-        ]
-      ],
-      "anchor": [
-        190,
-        522
-      ],
-      "scale": 0.42
-    },
-    {
-      "name": "idle_v2_1",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          384,
-          0,
-          768,
-          516
-        ]
-      ],
-      "anchor": [
-        574,
-        522
-      ],
-      "scale": 0.42
-    },
-    {
-      "name": "idle_v2_2",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          768,
-          0,
-          1152,
-          516
-        ]
-      ],
-      "anchor": [
-        958,
-        522
-      ],
-      "scale": 0.42
-    },
-    {
-      "name": "idle_v2_3",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          1152,
-          0,
-          1536,
-          516
-        ]
-      ],
-      "anchor": [
-        1342,
-        522
-      ],
-      "scale": 0.42
-    },
-    {
-      "name": "idle_v2_4",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          0,
-          516,
-          384,
-          1024
-        ]
-      ],
-      "anchor": [
-        190,
-        1018
-      ],
-      "scale": 0.42
-    },
-    {
-      "name": "idle_v2_5",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          384,
-          516,
-          768,
-          1024
-        ]
-      ],
-      "anchor": [
-        574,
-        1018
-      ],
-      "scale": 0.42
-    },
-    {
-      "name": "idle_v2_6",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          768,
-          516,
-          1152,
-          1024
-        ]
-      ],
-      "anchor": [
-        958,
-        1018
-      ],
-      "scale": 0.42
-    },
-    {
-      "name": "idle_v2_7",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          1152,
-          516,
-          1536,
-          1024
-        ]
-      ],
-      "anchor": [
-        1342,
-        1018
-      ],
-      "scale": 0.42
     }
   ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        8
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
   "pose_aliases": {
     "ranged": "attack",
     "cast": "idle"

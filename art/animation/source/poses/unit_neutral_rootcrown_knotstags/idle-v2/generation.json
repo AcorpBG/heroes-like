@@ -1,0 +1,55 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_neutral_rootcrown_knotstags",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "original.png",
+  "source_output": "exec-150ee6d2-fb67-4208-b87b-a63153a406cc.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_neutral_rootcrown_knotstags.png",
+  "reference_revision": "37ddcb938",
+  "prompt": "Use case: identity-preserve. Paint EIGHT sequential idle animation frames of the exact original Rootcrown Knotstag in reference. Reference is two older poses of ONE original creature: bark-bodied brown woodland stag with leafy mossy mane and back, four thick split hooves, branching antler crown bearing exactly three golden lantern-like seed pods. Same proportions, ornaments and detailed painterly fantasy sprite style. Facing RIGHT three-quarter in every frame. 1536x1024 transparent RGBA canvas, exactly FOUR equal columns by TWO rows, one full stag per384x512cell, 25px transparent margins. Four hooves planted at identical local positions with front soles y466, torso root at x192,y300; antlers/lanterns remain inside cell. All same body scale/camera. Slow seamless eight-frame resting cycle: relaxed exhale, begin inhale, chest expands under leafy mane, inhale crest with tiny attentive head lift, blink and begin exhale, head lowers slightly, leaves/lanterns softly settle, return nearly to first pose. Small natural chest/head/ear articulation plus delayed leaves and suspended pods, no stepping, grazing, huge head turns or bouncing; four complete legs, stable feet, branch crown shape and lantern count consistent. Preserve identity, no new effects. Newly painted in-between poses, NOT distorted duplicates. True transparency including gaps; no floor/shadow, no checkerboard or matte, no text, labels, cell outlines or scenery.",
+  "review_status": "accepted_idle_expansion_20260919",
+  "originals_preserved": true,
+  "source_sha256": "2ecdebc1db376d1b01e75acb54ac38676b45777cf416ccc65d744bb5502b95b7",
+  "reference_sha256": "9de41125e8ee3d12d52e1c43d46e67652f0bae629043a8eaa472bb2a171757c8",
+  "previous_idle": {
+    "frames": 2,
+    "indices": [
+      0,
+      1
+    ],
+    "loop": true,
+    "frame_msec": 450,
+    "static_frame": 0
+  },
+  "previous_atlas_sha256": "a3fee96a035786f243cedb3443af26d9c036e927bc3c595f2253630d10b4deab",
+  "packed_indices": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "packing_recipe": "../packing.json",
+  "alpha_source": "alpha.png",
+  "alpha_sha256": "c9086d272cba5b7e0cc70ac8aa72d6f0c1b2f6e994fa53a4834fe03134365572",
+  "preparation_tool": "tools/prepare_idle_pose_alpha.py",
+  "preparation_recipe": "prepare.json",
+  "review_notes": [
+    "Eight newly painted poses inspected in source contact sheets and both runtime render paths.",
+    "One uniform scale per creature, anatomical anchors calibrated against existing poses; all earlier frame pixels retained unchanged.",
+    "Raw generated RGB includes invisible backdrop colors: native alpha preserved, only inspected noise at alpha <=8 cleared.",
+    "444 focused rendered checks passed, including all eight frames in battle and overworld, independent phase, fog and reduced motion."
+  ],
+  "references": [
+    {
+      "path": "art/overworld/runtime/creature_idle/unit_neutral_rootcrown_knotstags.png",
+      "sha256": "9de41125e8ee3d12d52e1c43d46e67652f0bae629043a8eaa472bb2a171757c8",
+      "revision": "37ddcb938"
+    }
+  ]
+}

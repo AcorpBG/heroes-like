@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Expanded creature idle loops
+
+`animation-expanded-idle-loops-20260919` — completed first batch. Six common neutral creatures now use eight original painted idle poses in both battle and overworld; the other 154 retain their prior artwork. Battle stacks have independent idle phase. Original action frames remain unchanged. 444 focused Windows render/runtime checks pass; no full suite. See `docs/creature-idle-expansion.md`.
+
 ### Overworld creature idle poses
 
 `animation-overworld-creature-idle-20260919` — completed. Original painted idle pairs now play on overworld creatures, including all 51 generated neutral profiles, with fixed anchors and independent timing. Compact strips cover all 160 units; cached GPU playback preserves fog, reduced motion and simulation. 365 focused Windows render/runtime checks and asset/import checks pass; six body types visually inspected. No full suite or Linux/package run. See `docs/overworld-actor-readability.md`.

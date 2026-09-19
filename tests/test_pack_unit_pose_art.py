@@ -47,7 +47,8 @@ class PosePackingTests(unittest.TestCase):
         self.assertEqual(evidence['reviewed_unit_count'], len(accepted))
         for row in manifest:
             with self.subTest(unit=row['unit_id']):
-                self.assertEqual(row['pose_review_status'], evidence['status'])
+                self.assertEqual(row['pose_review_status'],
+                                 accepted[row['unit_id']].get('review_status', evidence['status']))
                 self.assertEqual(row['pose_review_evidence'], 'docs/battle-unit-animation-acceptance.json')
                 atlas = ROOT / row['pose_sheet'].removeprefix('res://')
                 self.assertEqual(hashlib.sha256(atlas.read_bytes()).hexdigest(), accepted[row['unit_id']]['atlas_sha256'])

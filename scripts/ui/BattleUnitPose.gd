@@ -38,6 +38,13 @@ static func waiting_for_start(playback_record: Dictionary, now_msec: int) -> boo
 	# must not replace the resting pose before its audio and action clock start.
 	return not playback_record.is_empty() and now_msec < int(playback_record.get("started_at_msec", now_msec))
 
+static func idle_elapsed_msec(animation: Dictionary, now_msec: int, instance_key: String) -> int:
+	# Presentation-only phase: neighboring stacks must not breathe in unison.
+	# Stable identity avoids a jump when selection changes or the board redraws.
+	var spec := clip(animation, "idle_hold")
+	var cycle := maxi(1, int(spec.get("frames", 1)) * int(spec.get("frame_msec", 150)))
+	return maxi(0, now_msec) + posmod(hash(instance_key), cycle)
+
 static func grounded_rect(ground: Vector2, height: float, region: Rect2, animation: Dictionary = {}) -> Rect2:
 	# Preserve raster aspect for long weapons and prone bodies. Gameplay body
 	# cells are independent of this presentation-only transparent canvas.

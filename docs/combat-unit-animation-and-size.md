@@ -6,6 +6,11 @@ Requirements derive from `project.md`; execution is tracked in `PLAN.md` and
 
 ## Current implementation
 
+2026-09-19 follow-up: [six common creatures](creature-idle-expansion.md) now have
+eight-pose idle loops shared with the overworld. All stacks use independent idle
+timing. Action pixels remain unchanged. The six acceptance records carry their
+own review status and hashes; the original roster review below is historical.
+
 All 160 authored units (90 faction, 70 neutral) have original articulated raster
 idle, move, attack, defend and death clips plus a persistent dead pose. Ranged
 units have distinct firing/casting routing. All 160 have explicit size profiles;

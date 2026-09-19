@@ -1,6 +1,6 @@
 {
   "unit_id": "unit_neutral_fenmirror_gallowshells",
-  "status": "accepted_idle_expansion_20260919",
+  "status": "candidate_pending_playback_acceptance",
   "frame_size": [
     512,
     256
@@ -10,7 +10,7 @@
   "frames": [
     {
       "name": "idle",
-      "source": "alpha/poses-anatomy-v3.png",
+      "source": "../alpha/poses-anatomy-v3.png",
       "rects": [
         [
           0,
@@ -27,7 +27,7 @@
     },
     {
       "name": "idle_breath",
-      "source": "alpha/poses-anatomy-v3.png",
+      "source": "../alpha/poses-anatomy-v3.png",
       "rects": [
         [
           385,
@@ -44,7 +44,7 @@
     },
     {
       "name": "walk_contact_a",
-      "source": "alpha/poses-anatomy-v3.png",
+      "source": "../alpha/poses-anatomy-v3.png",
       "rects": [
         [
           770,
@@ -61,7 +61,7 @@
     },
     {
       "name": "walk_contact_b",
-      "source": "alpha/poses-anatomy-v3.png",
+      "source": "../alpha/poses-anatomy-v3.png",
       "rects": [
         [
           1155,
@@ -78,7 +78,7 @@
     },
     {
       "name": "walk_pass",
-      "source": "alpha/poses-anatomy-v3.png",
+      "source": "../alpha/poses-anatomy-v3.png",
       "rects": [
         [
           0,
@@ -95,7 +95,7 @@
     },
     {
       "name": "attack_windup",
-      "source": "alpha/poses-anatomy-v3.png",
+      "source": "../alpha/poses-anatomy-v3.png",
       "rects": [
         [
           385,
@@ -118,7 +118,7 @@
     },
     {
       "name": "attack_snap",
-      "source": "alpha/poses-anatomy-v3.png",
+      "source": "../alpha/poses-anatomy-v3.png",
       "rects": [
         [
           775,
@@ -141,7 +141,7 @@
     },
     {
       "name": "guard",
-      "source": "alpha/poses-anatomy-v3.png",
+      "source": "../alpha/poses-anatomy-v3.png",
       "rects": [
         [
           1215,
@@ -164,7 +164,7 @@
     },
     {
       "name": "recoil",
-      "source": "alpha/poses-anatomy-v3.png",
+      "source": "../alpha/poses-anatomy-v3.png",
       "rects": [
         [
           0,
@@ -181,7 +181,7 @@
     },
     {
       "name": "death_fold",
-      "source": "alpha/poses-anatomy-v3.png",
+      "source": "../alpha/poses-anatomy-v3.png",
       "rects": [
         [
           385,
@@ -198,7 +198,7 @@
     },
     {
       "name": "death_fall",
-      "source": "alpha/poses-anatomy-v3.png",
+      "source": "../alpha/poses-anatomy-v3.png",
       "rects": [
         [
           775,
@@ -215,7 +215,7 @@
     },
     {
       "name": "dead",
-      "source": "alpha/poses-anatomy-v3.png",
+      "source": "../alpha/poses-anatomy-v3.png",
       "rects": [
         [
           1155,
@@ -229,142 +229,6 @@
         990
       ],
       "scale": 0.7
-    },
-    {
-      "name": "idle_v2_0",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          0,
-          0,
-          384,
-          512
-        ]
-      ],
-      "anchor": [
-        210,
-        438
-      ],
-      "scale": 0.62
-    },
-    {
-      "name": "idle_v2_1",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          384,
-          0,
-          768,
-          512
-        ]
-      ],
-      "anchor": [
-        594,
-        438
-      ],
-      "scale": 0.62
-    },
-    {
-      "name": "idle_v2_2",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          768,
-          0,
-          1152,
-          512
-        ]
-      ],
-      "anchor": [
-        978,
-        438
-      ],
-      "scale": 0.62
-    },
-    {
-      "name": "idle_v2_3",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          1152,
-          0,
-          1536,
-          512
-        ]
-      ],
-      "anchor": [
-        1362,
-        438
-      ],
-      "scale": 0.62
-    },
-    {
-      "name": "idle_v2_4",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          0,
-          512,
-          384,
-          1024
-        ]
-      ],
-      "anchor": [
-        210,
-        948
-      ],
-      "scale": 0.62
-    },
-    {
-      "name": "idle_v2_5",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          384,
-          512,
-          768,
-          1024
-        ]
-      ],
-      "anchor": [
-        594,
-        948
-      ],
-      "scale": 0.62
-    },
-    {
-      "name": "idle_v2_6",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          768,
-          512,
-          1152,
-          1024
-        ]
-      ],
-      "anchor": [
-        978,
-        948
-      ],
-      "scale": 0.62
-    },
-    {
-      "name": "idle_v2_7",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          1152,
-          512,
-          1536,
-          1024
-        ]
-      ],
-      "anchor": [
-        1362,
-        948
-      ],
-      "scale": 0.62
     }
   ]
 }

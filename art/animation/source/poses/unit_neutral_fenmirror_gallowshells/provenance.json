@@ -17,6 +17,14 @@
       "alpha_sha256": "67aeeac432feddeb5ae01ca58c63226fcd1868f4f068c981215b243b38844d6e",
       "alpha_output": "exec-d3b41bd3-875a-4dcb-a3f7-010e4030b284.png",
       "alpha_prompt": "Remove ONLY the pale gray background from this corrected twelve-pose crab sheet. Output genuine transparent RGBA, preserving exact creature pixels, poses, layout, size, two pincers per body, six legs, shell arches and hanging ornaments. Transparent gaps between legs and under arches. No matte, checkerboard, shadows, floor, glow, haze, text or new anatomy."
+    },
+    {
+      "source": "idle-v2/original.png",
+      "source_sha256": "a7be2fb4b3abc9bedb5b8fbb4dd41f975768380b38750d4d55a774f2ea6f2819",
+      "alpha_source": "idle-v2/alpha.png",
+      "alpha_sha256": "b70b226f651a8f54e386cab30ce906a315e7647129add10e5b92e2a91e858e0b",
+      "workflow_provenance": "idle-v2/generation.json",
+      "review": "Eight original idle drawings accepted in focused Windows battle/map playback. Existing action frames byte-identical."
     }
   ],
   "intermediates": [
@@ -60,9 +68,9 @@
     "Corrected walking pincers and recoil anatomy preserved in twelve packed original poses. gallowshell-final-actions-20260914 and gallowshell-final-packed-alpha-20260914 pass 136/7 checks with inspected 1280x720 claw attack and light/dark captures. Enabled candidate; continuous gait/action/death acceptance remains pending."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_fenmirror_gallowshells.png",
-    "runtime_sha256": "ac49a5c892db86da70b4a3f5b8929b33538c9be113557a1351d7d3d3df518d75",
-    "method": "Uniform 0.70 downsampling and segmented original-raster pincer rectangles; no painted or warped replacement poses."
+    "runtime_sha256": "187bdf73cf78bcab69cd00785a52bce6a84ce6ae9342c4e36805c9d18f4c6e29"
   }
 }

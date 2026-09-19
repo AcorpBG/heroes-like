@@ -3,7 +3,7 @@
   "frames": [
     {
       "name": "idle_a",
-      "source": "local-alpha/poses.png",
+      "source": "../local-alpha/poses.png",
       "rects": [
         [
           39,
@@ -20,7 +20,7 @@
     },
     {
       "name": "idle_b",
-      "source": "local-alpha/poses.png",
+      "source": "../local-alpha/poses.png",
       "rects": [
         [
           418,
@@ -37,7 +37,7 @@
     },
     {
       "name": "travel_planted",
-      "source": "step-refinement-20260916/alpha/planted.png",
+      "source": "../step-refinement-20260916/alpha/planted.png",
       "rects": [
         [
           0,
@@ -54,7 +54,7 @@
     },
     {
       "name": "travel_near_hind_lift",
-      "source": "step-refinement-20260916/alpha/near-hind-lift.png",
+      "source": "../step-refinement-20260916/alpha/near-hind-lift.png",
       "rects": [
         [
           0,
@@ -71,7 +71,7 @@
     },
     {
       "name": "travel_near_fore_lift",
-      "source": "step-refinement-20260916/alpha/near-fore-lift.png",
+      "source": "../step-refinement-20260916/alpha/near-fore-lift.png",
       "rects": [
         [
           0,
@@ -88,7 +88,7 @@
     },
     {
       "name": "travel_far_hind_lift",
-      "source": "step-refinement-20260916/alpha/far-hind-lift.png",
+      "source": "../step-refinement-20260916/alpha/far-hind-lift.png",
       "rects": [
         [
           0,
@@ -105,7 +105,7 @@
     },
     {
       "name": "travel_far_fore_lift",
-      "source": "step-refinement-20260916/alpha/far-fore-lift.png",
+      "source": "../step-refinement-20260916/alpha/far-fore-lift.png",
       "rects": [
         [
           0,
@@ -122,7 +122,7 @@
     },
     {
       "name": "crown_windup",
-      "source": "local-alpha/poses.png",
+      "source": "../local-alpha/poses.png",
       "rects": [
         [
           389,
@@ -139,7 +139,7 @@
     },
     {
       "name": "crown_forward_strike",
-      "source": "local-alpha/poses.png",
+      "source": "../local-alpha/poses.png",
       "rects": [
         [
           747,
@@ -156,7 +156,7 @@
     },
     {
       "name": "crown_recovery",
-      "source": "continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png",
+      "source": "../continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png",
       "rects": [
         [
           0,
@@ -173,7 +173,7 @@
     },
     {
       "name": "crown_shallow_brace",
-      "source": "continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png",
+      "source": "../continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png",
       "rects": [
         [
           670,
@@ -196,7 +196,7 @@
     },
     {
       "name": "crown_deep_brace",
-      "source": "local-alpha/poses.png",
+      "source": "../local-alpha/poses.png",
       "rects": [
         [
           1180,
@@ -213,7 +213,7 @@
     },
     {
       "name": "hit_recoil",
-      "source": "local-alpha/poses.png",
+      "source": "../local-alpha/poses.png",
       "rects": [
         [
           12,
@@ -230,7 +230,7 @@
     },
     {
       "name": "death_knees_buckle",
-      "source": "continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png",
+      "source": "../continuity-alpha/crown-recovery-brace-and-knee-collapse-gray.png",
       "rects": [
         [
           1384,
@@ -253,7 +253,7 @@
     },
     {
       "name": "death_side_fall",
-      "source": "local-alpha/poses.png",
+      "source": "../local-alpha/poses.png",
       "rects": [
         [
           763,
@@ -276,7 +276,7 @@
     },
     {
       "name": "dead_head_right_dark_lanterns",
-      "source": "local-alpha/poses.png",
+      "source": "../local-alpha/poses.png",
       "rects": [
         [
           1114,
@@ -290,142 +290,6 @@
         954
       ],
       "scale": 0.62
-    },
-    {
-      "name": "idle_v2_0",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          0,
-          0,
-          384,
-          512
-        ]
-      ],
-      "anchor": [
-        210,
-        486
-      ],
-      "scale": 0.48
-    },
-    {
-      "name": "idle_v2_1",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          384,
-          0,
-          768,
-          512
-        ]
-      ],
-      "anchor": [
-        594,
-        486
-      ],
-      "scale": 0.48
-    },
-    {
-      "name": "idle_v2_2",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          768,
-          0,
-          1152,
-          512
-        ]
-      ],
-      "anchor": [
-        978,
-        486
-      ],
-      "scale": 0.48
-    },
-    {
-      "name": "idle_v2_3",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          1152,
-          0,
-          1536,
-          512
-        ]
-      ],
-      "anchor": [
-        1362,
-        486
-      ],
-      "scale": 0.48
-    },
-    {
-      "name": "idle_v2_4",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          0,
-          512,
-          384,
-          1024
-        ]
-      ],
-      "anchor": [
-        210,
-        972
-      ],
-      "scale": 0.48
-    },
-    {
-      "name": "idle_v2_5",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          384,
-          512,
-          768,
-          1024
-        ]
-      ],
-      "anchor": [
-        594,
-        972
-      ],
-      "scale": 0.48
-    },
-    {
-      "name": "idle_v2_6",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          768,
-          512,
-          1152,
-          1024
-        ]
-      ],
-      "anchor": [
-        978,
-        972
-      ],
-      "scale": 0.48
-    },
-    {
-      "name": "idle_v2_7",
-      "source": "idle-v2/alpha.png",
-      "rects": [
-        [
-          1152,
-          512,
-          1536,
-          1024
-        ]
-      ],
-      "anchor": [
-        1362,
-        972
-      ],
-      "scale": 0.48
     }
   ],
   "frame_size": [
@@ -434,9 +298,86 @@
   ],
   "columns": 4,
   "ground_margin": 20,
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 8,
+      "indices": [
+        2,
+        3,
+        2,
+        4,
+        2,
+        5,
+        2,
+        6
+      ],
+      "loop": true,
+      "frame_msec": 80
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        7,
+        8,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        10,
+        11
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        12,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        13,
+        14,
+        15
+      ],
+      "loop": false,
+      "frame_msec": 270,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        15
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
   "pose_aliases": {
     "ranged": "attack",
     "cast": "idle"
-  },
-  "status": "accepted_idle_expansion_20260919"
+  }
 }

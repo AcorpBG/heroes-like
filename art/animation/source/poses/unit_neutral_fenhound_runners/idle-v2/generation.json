@@ -1,0 +1,55 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_neutral_fenhound_runners",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "original.png",
+  "source_output": "exec-f875726b-6d42-423a-aa03-73fb3b815be2.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_neutral_fenhound_runners.png",
+  "reference_revision": "37ddcb938",
+  "prompt": "Use case: identity-preserve. Paint an EIGHT-frame seamless idle animation sheet for the exact original fantasy Fenhound in the reference, NOT a walking animation. Reference image contains two current poses of the SAME creature. Preserve shaggy gray-brown canine with cream throat, alert ears, turquoise magical markings and eyes, golden harness with circular pendants and reddish saddle straps, long bushy tail pointing left. Always faces RIGHT side/three-quarter as reference. 1536x1024 genuine transparent RGBA, exactly FOUR columns by TWO rows; eight roomy equal 384x512 cells in reading order. Each shows one entire canine at identical anatomical size and camera, muzzle at local x330, torso center x190, paws planted on local y440, full tail inside cell. Body occupies about300px wide. Smooth slow breathing cycle across eight poses: chest relaxed; starts inhaling; chest rises slightly; inhale crest with ears lifting; begin exhaling with small blink; shoulders relax; ears and tail fur settle; return almost to opening pose. Add gentle tail-tip swish with continuous curved changes, no huge wag. Exactly four legs and four paws fixed in place in ALL frames; head makes tiny natural attentive turns but never changes facing; no running, no stepping, no whole-body rotation or scale. Newly painted in-between poses preserve armor, markings and limb ownership. Detailed painterly fantasy sprite style matching reference, restrained movements that read at small map scale. Transparent background and gaps, no floor shadows, no checkerboard, no colored matte, no text, no frames or grid lines, no extra creatures or effects. Leave ample clear gutters.",
+  "review_status": "accepted_idle_expansion_20260919",
+  "originals_preserved": true,
+  "source_sha256": "2afd45cbddcbb5b8e1b07d5c5d6b4970fba518347837142a16953b4ab628cff3",
+  "reference_sha256": "2a164994bb26b5bbf1867c2f37774874defbde7c415bd268abd41b16b665d24d",
+  "previous_idle": {
+    "frames": 2,
+    "indices": [
+      0,
+      1
+    ],
+    "loop": true,
+    "frame_msec": 430,
+    "static_frame": 0
+  },
+  "previous_atlas_sha256": "4290011bb099a1fdbec0ad886dacc91682ac873fdf14e824abbd429cb962f708",
+  "packed_indices": [
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24
+  ],
+  "packing_recipe": "../packing.json",
+  "alpha_source": "alpha.png",
+  "alpha_sha256": "6f133b89f95fc34b086db43700cb4382f79925d17e3a0211f35fb7cb6e8aa880",
+  "preparation_tool": "tools/prepare_idle_pose_alpha.py",
+  "preparation_recipe": "prepare.json",
+  "review_notes": [
+    "Eight newly painted poses inspected in source contact sheets and both runtime render paths.",
+    "One uniform scale per creature, anatomical anchors calibrated against existing poses; all earlier frame pixels retained unchanged.",
+    "Raw generated RGB includes invisible backdrop colors: native alpha preserved, only inspected noise at alpha <=8 cleared.",
+    "444 focused rendered checks passed, including all eight frames in battle and overworld, independent phase, fog and reduced motion."
+  ],
+  "references": [
+    {
+      "path": "art/overworld/runtime/creature_idle/unit_neutral_fenhound_runners.png",
+      "sha256": "2a164994bb26b5bbf1867c2f37774874defbde7c415bd268abd41b16b665d24d",
+      "revision": "37ddcb938"
+    }
+  ]
+}

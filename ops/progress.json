@@ -22302,6 +22302,15 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "animation-expanded-idle-loops-20260919",
+      "title": "Expanded painted creature idle loops in battle and overworld",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "notes": "Completed first six-creature batch: Roadwardens, Fenhounds, Lanternmoths, Gallowshells, Knotstags and Wake Mantas each have eight original painted idle poses shared by battle/map. Other 154 retain existing artwork. Independent battle idle phase, existing action pixels and simulation preserved. 444 focused Windows render/runtime checks pass; all 48 paintings inspected with stable anchors and source provenance. Initial capture sampling and fixture indentation corrected. No full suite or Linux/package run. See docs/creature-idle-expansion.md."
+    },
+    {
       "id": "animation-overworld-creature-idle-20260919",
       "title": "Painted overworld creature idle animation",
       "status": "completed",
