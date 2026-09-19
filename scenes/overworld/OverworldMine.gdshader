@@ -68,12 +68,33 @@ vec4 machinery(vec4 back, vec2 uv, vec4 rect, vec4 source, vec4 motion, vec2 rop
 }
 
 vec4 lamp(vec4 back, vec2 uv, vec2 point, float t, float seed) {
-	float pulse = .72 + .16 * sin(t * 5.3 + seed) + .12 * sin(t * 9.7 + seed * 2.7);
+	// Readable at adventure-map scale: the flame lights the doorway as well
+	// as its tiny painted glass. Different lamps swell and gutter independently.
+	float pulse = .55 + .27 * sin(t * (3.2 + seed * .035) + seed) + .18 * sin(t * 7.9 + seed * 2.7);
 	vec2 delta = (uv - point) * vec2(512.0, 640.0);
 	float radius = length(delta);
-	float glow = exp(-radius * radius / 170.0) * .24 * pulse;
-	back = over(back, vec4(1.0, .49, .10, glow));
-	return over(back, vec4(1.0, .83, .35, exp(-radius * radius / 9.0) * .55 * pulse));
+	float glow = exp(-radius * radius / 490.0) * (1.0 - smoothstep(32.0, 48.0, radius)) * .68 * pulse;
+	back = over(back, vec4(1.0, .48, .08, glow));
+	return over(back, vec4(1.0, .88, .46, exp(-radius * radius / 24.0) * (.22 + .74 * pulse)));
+}
+
+vec4 chimney_smoke(vec4 back, vec2 uv, float t) {
+	// Overlapping billows make a continuous, legible plume. A darker fringe
+	// preserves contrast on pale ground; soft ash-grey cores show against grass.
+	for (int i = 0; i < 10; i++) {
+		float age = fract(t * .22 + float(i) / 10.0);
+		float curl = sin(age * 8.0 + t * .65 + float(i) * 1.7);
+		vec2 center = chimney + vec2(age * 32.0 + curl * age * 12.0, -age * 150.0) / vec2(512.0, 640.0);
+		vec2 d = (uv - center) * vec2(512.0, 640.0);
+		float radius = 7.0 + age * 25.0;
+		float shape = exp(-dot(d, d * vec2(1.0, .74)) / (radius * radius));
+		float wisps = .82 + .18 * sin(d.x * .19 + sin(d.y * .16 + t) * 2.0);
+		float lifetime = smoothstep(0.0, .055, age) * (1.0 - smoothstep(.60, 1.0, age));
+		back = over(back, vec4(.25, .24, .22, shape * lifetime * .30));
+		float core = pow(shape, 1.5) * lifetime * .76 * wisps;
+		back = over(back, vec4(mix(vec3(.62, .59, .54), vec3(.78, .76, .71), age), core));
+	}
+	return back;
 }
 
 void fragment() {
@@ -86,16 +107,6 @@ void fragment() {
 	if (light_count > 1) pixel = lamp(pixel, UV, light_1, t, 4.8);
 	if (light_count > 2) pixel = lamp(pixel, UV, light_2, t, 8.1);
 	if (light_count > 3) pixel = lamp(pixel, UV, light_3, t, 11.7);
-	if (motion_enabled) {
-		for (int i = 0; i < 7; i++) {
-			float age = fract(t * .19 + float(i) / 7.0);
-			vec2 center = chimney + vec2(age * .055 + sin(age * 6.0 + t * .32) * age * .017, -age * .205);
-			vec2 d = (UV - center) * vec2(512.0, 640.0);
-			float radius = 4.0 + age * 14.0;
-			float wisps = .74 + .26 * sin(d.x * .24 + sin(d.y * .17 + t) * 2.0);
-			float alpha = exp(-dot(d, d) / (radius * radius)) * smoothstep(0.0, .13, age) * (1.0 - age) * .40 * wisps;
-			pixel = over(pixel, vec4(mix(vec3(.31, .29, .26), vec3(.62, .60, .56), age), alpha));
-		}
-	}
+	if (motion_enabled) pixel = chimney_smoke(pixel, UV, t);
 	COLOR = pixel * paint_tint;
 }

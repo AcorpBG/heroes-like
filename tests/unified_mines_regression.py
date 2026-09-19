@@ -29,6 +29,13 @@ func clock_at(t: float):
 	for entry in painter.entries:
 		entry.batch.material.set_shader_parameter("clock_override", t)
 		entry.batch.material.set_shader_parameter("phase", 0.0)
+func visible_change_pixels(a: Image, b: Image, region: Rect2i, threshold: float) -> int:
+	var count := 0
+	for y in range(region.position.y,region.end.y):
+		for x in range(region.position.x,region.end.x):
+			var delta := a.get_pixel(x,y)-b.get_pixel(x,y)
+			if maxf(absf(delta.r),maxf(absf(delta.g),absf(delta.b)))>=threshold: count+=1
+	return count
 func _ready(): call_deferred("run")
 func run():
 	out = OS.get_cmdline_user_args()[0]
@@ -107,14 +114,24 @@ func run():
 	painter.begin(gallery)
 	painter.record(&"draw_rect",[Rect2(0,0,1280,720),Color(.095,.10,.085)])
 	var resources := ["wood","ore","gold"]
+	var ground_config := ContentService.load_json("res://art/overworld/ground_materials.json")
+	var ground: Texture2D = load(ground_config.atlas)
 	for i in range(3):
 		var terrain: String = ["grass","sand","snow"][i]
 		var region := Rect2(i*426+8,20,410,680)
-		painter.record(&"draw_rect",[region,[Color(.25,.31,.16),Color(.57,.45,.28),Color(.68,.72,.74)][i]])
+		var slot := int(ground_config.terrain_slots[terrain])
+		var source_origin := Vector2(slot%4,slot/4)*512
+		for gy in range(3):
+			for gx in range(2):
+				var target := Rect2(region.position+Vector2(gx,gy)*232,Vector2(232,232))
+				var clipped := target.intersection(region)
+				var source := Rect2(source_origin+(clipped.position-target.position)/232*512,clipped.size/232*512)
+				painter.record(&"draw_texture_rect_region",[ground,clipped,source])
 		painter.record(&"draw_string",[ThemeDB.fallback_font,Vector2(i*426+20,48),resources[i].to_upper()+" — "+terrain,HORIZONTAL_ALIGNMENT_LEFT,-1,18])
-		for j in range(2):
-			var width := 330.0 if j==0 else 174.0
-			var footprint := Rect2(Vector2(i*426+213-width/2,425 if j==0 else 641)-Vector2(0,width*2/3),Vector2(width,width*2/3))
+		for j in range(3):
+			var width := 330.0 if j==0 else (174.0 if j==1 else 108.0)
+			var center := 213.0 if j==0 else (133.0 if j==1 else 326.0)
+			var footprint := Rect2(Vector2(i*426+center-width/2,425 if j==0 else 675)-Vector2(0,width*2/3),Vector2(width,width*2/3))
 			var pose: Dictionary = art.payload(resources[i],footprint)
 			var material: ShaderMaterial = Art.material(pose,resources[i]+str(j),true)
 			painter.paint_material(pose.texture,pose.rect,Color.WHITE,material,{"kind":"mine_sample"})
@@ -126,19 +143,27 @@ func run():
 	clock_at(.85)
 	var second := await capture()
 	second.save_png(out+"/mines-1.png")
+	# Measure the plume against the same terrain/frame without smoke. Pixel
+	# inequality alone passed the previous effect even when it was imperceptible.
+	for entry in painter.entries: entry.batch.material.set_shader_parameter("chimney",Vector2(-10,-10))
+	var no_smoke := await capture()
+	for sample_index in range(samples.size()):
+		var pose: Dictionary = samples[sample_index]
+		painter.entries[sample_index].batch.material.set_shader_parameter("chimney",Vector2(pose.entry.chimney[0],pose.entry.chimney[1])/pose.canvas)
 	for pose in samples:
 		var rect: Rect2=pose.rect
 		var canvas: Vector2=pose.canvas
 		var scale: Vector2=rect.size/canvas
 		var chimney := Vector2(pose.entry.chimney[0],pose.entry.chimney[1])
-		var smoke := Rect2i(rect.position+(chimney-Vector2(20,95))*scale,Vector2(70,92)*scale)
+		var smoke := Rect2i(rect.position+(chimney-Vector2(25,125))*scale,Vector2(90,118)*scale)
 		check(first.get_region(smoke).get_data()!=second.get_region(smoke).get_data(),"no moving chimney smoke: "+pose.resource)
+		check(visible_change_pixels(second,no_smoke,smoke,.08)>=maxi(12,int(400*scale.x*scale.y)),"chimney smoke too faint at map scale: "+pose.resource)
 		for part in pose.entry.parts:
 			var region := Rect2i(rect.position+Vector2(part.rect[0],part.rect[1])*scale,Vector2(part.rect[2],part.rect[3])*scale)
 			check(first.get_region(region).get_data()!=second.get_region(region).get_data(),"machinery static: "+pose.resource)
 		for point in pose.entry.lights:
-			var lamp := Rect2i(rect.position+(Vector2(point[0],point[1])-Vector2(5,5))*scale,Vector2(10,10)*scale)
-			check(first.get_region(lamp).get_data()!=second.get_region(lamp).get_data(),"lamp static: "+pose.resource)
+			var lamp := Rect2i(rect.position+(Vector2(point[0],point[1])-Vector2(22,22))*scale,Vector2(44,44)*scale)
+			check(visible_change_pixels(first,second,lamp,.045)>=maxi(4,int(55*scale.x*scale.y)),"lamp flicker too faint at map scale: "+pose.resource)
 		var foundation := Rect2i(rect.position+Vector2(210,578)*scale,Vector2(70,22)*scale)
 		check(first.get_region(foundation).get_data()==second.get_region(foundation).get_data(),"stationary foundation moves: "+pose.resource)
 	painter.set_motion_enabled(false)

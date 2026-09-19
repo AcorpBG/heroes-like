@@ -24,7 +24,7 @@ Rules:
 
 ### Unified common mines
 
-`art-unified-common-mines-20260919` — complete. Approved B (stonework guilds) supplies one animated, biome-neutral building per resource: moving machinery, chimney smoke and independent lamps. Shared 3×2 gameplay/render footprints retain the south-middle entrance; daily yields are 2 wood, 2 ore and 1,000 gold. Legacy site IDs and live rare-mine identities are preserved. Focused render regression: 163 checks passed; full suite skipped as requested. Existing-placement scope and rebuild instructions: `docs/unified-common-mines.md`.
+`art-unified-common-mines-20260919` — complete. Approved B supplies three shared animated buildings with 3×2 footprints and daily yields of 2 wood, 2 ore and 1,000 gold. Owner-feedback revision makes smoke and independent lantern glow readable at map scale; 191 focused checks and textured terrain render review pass. Legacy identities, fog, reduced motion and stationary foundations are preserved. Full suite skipped. See `docs/unified-common-mines.md`.
 
 ### Expanded creature idle loops
 
