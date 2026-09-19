@@ -1,0 +1,472 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          307,
+          365
+        ]
+      ],
+      "anchor": [
+        156,
+        356
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/poses.png",
+      "rects": [
+        [
+          307,
+          0,
+          613,
+          365
+        ]
+      ],
+      "anchor": [
+        461,
+        356
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_contact",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/guided-travel-guards-and-release.png",
+      "rects": [
+        [
+          116,
+          0,
+          522,
+          517
+        ],
+        [
+          229,
+          517,
+          522,
+          535
+        ]
+      ],
+      "anchor": [
+        330,
+        522
+      ],
+      "scale": 0.415
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/guided-travel-guards-and-release.png",
+      "rects": [
+        [
+          566,
+          0,
+          998,
+          522
+        ],
+        [
+          760,
+          522,
+          998,
+          536
+        ]
+      ],
+      "anchor": [
+        797,
+        522
+      ],
+      "scale": 0.415
+    },
+    {
+      "name": "walk_planted_bridge",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/poses.png",
+      "rects": [
+        [
+          614,
+          0,
+          920,
+          365
+        ]
+      ],
+      "anchor": [
+        768,
+        356
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/guided-travel-guards-and-release.png",
+      "rects": [
+        [
+          1087,
+          0,
+          1536,
+          517
+        ],
+        [
+          1235,
+          517,
+          1536,
+          537
+        ]
+      ],
+      "anchor": [
+        1290,
+        522
+      ],
+      "scale": 0.415
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/poses.png",
+      "rects": [
+        [
+          312,
+          367,
+          615,
+          692
+        ]
+      ],
+      "anchor": [
+        471,
+        683
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "melee_release",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/poses.png",
+      "rects": [
+        [
+          615,
+          363,
+          919,
+          692
+        ]
+      ],
+      "anchor": [
+        771,
+        683
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "guard_a",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/guided-travel-guards-and-release.png",
+      "rects": [
+        [
+          86,
+          535,
+          529,
+          1024
+        ],
+        [
+          86,
+          517,
+          270,
+          535
+        ]
+      ],
+      "anchor": [
+        329,
+        987
+      ],
+      "scale": 0.415
+    },
+    {
+      "name": "guard_b",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/guided-travel-guards-and-release.png",
+      "rects": [
+        [
+          605,
+          539,
+          1026,
+          1024
+        ],
+        [
+          605,
+          524,
+          771,
+          539
+        ]
+      ],
+      "anchor": [
+        800,
+        987
+      ],
+      "scale": 0.415
+    },
+    {
+      "name": "ranged_aim",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/poses.png",
+      "rects": [
+        [
+          0,
+          693,
+          310,
+          990
+        ],
+        [
+          77,
+          990,
+          310,
+          997
+        ]
+      ],
+      "anchor": [
+        153,
+        988
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "ranged_release",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/guided-travel-guards-and-release.png",
+      "rects": [
+        [
+          1091,
+          539,
+          1536,
+          1024
+        ],
+        [
+          1091,
+          520,
+          1245,
+          539
+        ]
+      ],
+      "anchor": [
+        1282,
+        995
+      ],
+      "scale": 0.415
+    },
+    {
+      "name": "ranged_recoil",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/equipped-kneels-and-recoil.png",
+      "rects": [
+        [
+          170,
+          629,
+          618,
+          1254
+        ]
+      ],
+      "anchor": [
+        426,
+        1218
+      ],
+      "scale": 0.355
+    },
+    {
+      "name": "ranged_recovery",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/equipped-kneels-and-recoil.png",
+      "rects": [
+        [
+          771,
+          629,
+          1208,
+          1254
+        ]
+      ],
+      "anchor": [
+        1016,
+        1218
+      ],
+      "scale": 0.355
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/poses.png",
+      "rects": [
+        [
+          929,
+          694,
+          1222,
+          999
+        ]
+      ],
+      "anchor": [
+        1103,
+        988
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_equipped_kneel",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/equipped-kneels-and-recoil.png",
+      "rects": [
+        [
+          153,
+          0,
+          617,
+          628
+        ]
+      ],
+      "anchor": [
+        390,
+        607
+      ],
+      "scale": 0.355
+    },
+    {
+      "name": "death_projector_grounded",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/equipped-kneels-and-recoil.png",
+      "rects": [
+        [
+          740,
+          0,
+          1208,
+          629
+        ]
+      ],
+      "anchor": [
+        1000,
+        607
+      ],
+      "scale": 0.355
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/poses.png",
+      "rects": [
+        [
+          599,
+          1060,
+          924,
+          1287
+        ]
+      ],
+      "anchor": [
+        770,
+        1225
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "dead_three_lamps",
+      "source": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/continuity-alpha/poses.png",
+      "rects": [
+        [
+          921,
+          1091,
+          1222,
+          1287
+        ]
+      ],
+      "anchor": [
+        1077,
+        1225
+      ],
+      "scale": 0.6
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 5,
+      "indices": [
+        10,
+        11,
+        12,
+        13,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        14,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 5,
+      "indices": [
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "loop": false,
+      "frame_msec": 230,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        18
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  }
+}

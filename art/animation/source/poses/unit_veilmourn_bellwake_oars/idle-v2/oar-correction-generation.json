@@ -1,0 +1,20 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_veilmourn_bellwake_oars",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "oar-correction-original.png",
+  "reference": "hands-original.png",
+  "source_output": "exec-db45fc89-bf2c-4985-801e-cdfb4fe92e27.png",
+  "prompt": "Correct this eight-pose sprite sheet. Preserve the same original woman, costume, planted boots, right-facing camera, articulated hands and eight-frame idle. The oar tip in the last column is clipped by the canvas. Paint a corrected complete sheet with ALL equipment entirely within each cell. Hold the same full-length rigid oar more upright (about 25 degrees from vertical) so it comfortably fits. Do not shorten it. Eight sequential poses: both hands visibly regrip along the shaft and elbows flex, drawing oar toward the ribs then easing back to rest. Head and boots stay quiet. 1536x1024 true RGBA transparent background, four columns and two rows of equal size. Leave at least 25 clear pixels around every full sprite, boot baseline local y475. Transparent gaps, no backdrop or floor. Do not crop or cut off any oar blade, bell, cloth or boots. Preserve identity and painted fantasy strategy style.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "6d87b9679319b1b0646b68f51284ea1acc6fc16cd87ae5dfdf25cfc6db3d60e0",
+  "reference_sha256": "2be41ca9f129cbceb8d1577975dff507288325ec4f338dd1d5e4dd53c727f959",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; hand, forearm and owned equipment movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

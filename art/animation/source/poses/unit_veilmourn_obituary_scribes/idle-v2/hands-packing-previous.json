@@ -1,0 +1,413 @@
+{
+  "unit_id": "unit_veilmourn_obituary_scribes",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          307,
+          341
+        ]
+      ],
+      "anchor": [
+        162,
+        328
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/alpha/poses.png",
+      "rects": [
+        [
+          311,
+          0,
+          612,
+          341
+        ]
+      ],
+      "anchor": [
+        468,
+        328
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "glide_lean",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-glide-and-guards.png",
+      "rects": [
+        [
+          0,
+          0,
+          605,
+          520
+        ]
+      ],
+      "anchor": [
+        347,
+        497
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "glide_gather",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-glide-and-guards.png",
+      "rects": [
+        [
+          607,
+          0,
+          1028,
+          522
+        ]
+      ],
+      "anchor": [
+        812,
+        510
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "glide_spread",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-glide-and-guards.png",
+      "rects": [
+        [
+          1030,
+          0,
+          1536,
+          520
+        ]
+      ],
+      "anchor": [
+        1325,
+        505
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "glide_recover",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-glide-and-guards.png",
+      "rects": [
+        [
+          0,
+          522,
+          552,
+          1024
+        ]
+      ],
+      "anchor": [
+        306,
+        995
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-attack-and-cast.png",
+      "rects": [
+        [
+          0,
+          0,
+          540,
+          610
+        ],
+        [
+          0,
+          610,
+          430,
+          640
+        ]
+      ],
+      "anchor": [
+        300,
+        620
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "melee_thrust",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-attack-and-cast.png",
+      "rects": [
+        [
+          542,
+          0,
+          1192,
+          610
+        ],
+        [
+          650,
+          610,
+          1192,
+          640
+        ]
+      ],
+      "anchor": [
+        855,
+        620
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "action_recover",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-attack-and-cast.png",
+      "rects": [
+        [
+          586,
+          640,
+          1192,
+          1320
+        ]
+      ],
+      "anchor": [
+        925,
+        1285
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "guard_a",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-glide-and-guards.png",
+      "rects": [
+        [
+          561,
+          522,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        812,
+        993
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "guard_b",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-glide-and-guards.png",
+      "rects": [
+        [
+          1030,
+          522,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1315,
+        993
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "cast_release",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-quill-attack-and-cast.png",
+      "rects": [
+        [
+          0,
+          640,
+          579,
+          1320
+        ],
+        [
+          428,
+          611,
+          563,
+          640
+        ]
+      ],
+      "anchor": [
+        314,
+        1280
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/alpha/poses.png",
+      "rects": [
+        [
+          926,
+          647,
+          1235,
+          974
+        ]
+      ],
+      "anchor": [
+        1100,
+        959
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-lantern-cold-collapse.png",
+      "rects": [
+        [
+          0,
+          0,
+          710,
+          593
+        ]
+      ],
+      "anchor": [
+        385,
+        551
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "death_fall_left",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-lantern-cold-collapse.png",
+      "rects": [
+        [
+          711,
+          0,
+          1536,
+          593
+        ]
+      ],
+      "anchor": [
+        1126,
+        535
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "death_settle_left",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-lantern-cold-collapse.png",
+      "rects": [
+        [
+          0,
+          594,
+          760,
+          1024
+        ]
+      ],
+      "anchor": [
+        385,
+        957
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "dead_equipped_left",
+      "source": "art/animation/source/poses/unit_veilmourn_obituary_scribes/continuity-alpha/single-lantern-cold-collapse.png",
+      "rects": [
+        [
+          760,
+          594,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1133,
+        969
+      ],
+      "scale": 0.35
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        9,
+        10
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "cast": {
+      "frames": 4,
+      "indices": [
+        0,
+        11,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        12,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 5,
+      "indices": [
+        12,
+        13,
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "cast"
+  }
+}

@@ -1,0 +1,303 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels",
+  "status": "runtime_candidate_pending_consolidated_validation",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          359,
+          359
+        ],
+        [
+          78,
+          359,
+          325,
+          379
+        ]
+      ],
+      "anchor": [
+        187,
+        375
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/alpha/poses.png",
+      "rects": [
+        [
+          359,
+          0,
+          720,
+          343
+        ],
+        [
+          469,
+          343,
+          537,
+          380
+        ],
+        [
+          577,
+          343,
+          637,
+          380
+        ]
+      ],
+      "anchor": [
+        545,
+        375
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/walk-contact-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1227,
+          1282
+        ]
+      ],
+      "anchor": [
+        625,
+        1200
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "walk_passing_a",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/walk-passing-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1024,
+          1536
+        ]
+      ],
+      "anchor": [
+        537,
+        1400
+      ],
+      "scale": 0.173
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/walk-contact-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1227,
+          1282
+        ]
+      ],
+      "anchor": [
+        660,
+        1158
+      ],
+      "scale": 0.198
+    },
+    {
+      "name": "walk_passing_b",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/walk-passing-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1158,
+          1358
+        ]
+      ],
+      "anchor": [
+        580,
+        1270
+      ],
+      "scale": 0.175
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/alpha/poses.png",
+      "rects": [
+        [
+          375,
+          343,
+          472,
+          380
+        ],
+        [
+          375,
+          380,
+          718,
+          724
+        ]
+      ],
+      "anchor": [
+        550,
+        720
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/alpha/poses.png",
+      "rects": [
+        [
+          727,
+          440,
+          1112,
+          752
+        ]
+      ],
+      "anchor": [
+        883,
+        748
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "shield_brace",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/defense-pair.png",
+      "rects": [
+        [
+          0,
+          0,
+          755,
+          1024
+        ]
+      ],
+      "anchor": [
+        445,
+        918
+      ],
+      "scale": 0.24
+    },
+    {
+      "name": "shield_brace_breath",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/defense-pair.png",
+      "rects": [
+        [
+          755,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1170,
+        930
+      ],
+      "scale": 0.24
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          691,
+          111,
+          782
+        ],
+        [
+          0,
+          782,
+          368,
+          1086
+        ]
+      ],
+      "anchor": [
+        186,
+        1055
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/alpha/poses.png",
+      "rects": [
+        [
+          385,
+          782,
+          725,
+          1086
+        ]
+      ],
+      "anchor": [
+        547,
+        1065
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_seated",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/alpha/poses.png",
+      "rects": [
+        [
+          725,
+          825,
+          1082,
+          1086
+        ]
+      ],
+      "anchor": [
+        882,
+        1067
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_low_collapse",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/continuity-alpha/collapse-low-corrected.png",
+      "rects": [
+        [
+          0,
+          0,
+          1717,
+          916
+        ]
+      ],
+      "anchor": [
+        830,
+        832
+      ],
+      "scale": 0.2
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/alpha/poses.png",
+      "rects": [
+        [
+          1083,
+          879,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        1264,
+        1075
+      ],
+      "scale": 0.6
+    }
+  ],
+  "notes": [
+    "Reuses existing original alpha unchanged; repeated gait and shortened original guard omitted.",
+    "Four guided gait masters retain hand ownership. Two new shield-brace poses retain a full-length polearm; a lower collapsed body bridges seated and persistent dead poses.",
+    "Disjoint idle crops exclude the next row's tall weapon tips. All frames use anatomical/ground anchors and uniform downsampling, no posing transforms.",
+    "Final equipment/cloth continuity and actual battle motion acceptance remain deferred until full-roster production is finished."
+  ]
+}

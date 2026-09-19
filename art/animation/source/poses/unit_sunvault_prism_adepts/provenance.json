@@ -127,5 +127,18 @@
     "frame_count": 18,
     "review_evidence": ".artifacts/battle-unit-animation-size-20260913/prism-adept-continuity-20260915/",
     "status": "runtime_candidate_pending_consolidated_validation"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_sunvault_prism_adepts.png",
+    "runtime_sha256": "fd73d2bdf72cd1b45d37b49e16998f1ea988c2b6eca5295f03df41bc712d8d02"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "4f9db27531f5a923146c72c6eb1d1abd247f0b59f7ee7fe2fbcb66198eabbbde",
+    "preserved_frames": 18,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

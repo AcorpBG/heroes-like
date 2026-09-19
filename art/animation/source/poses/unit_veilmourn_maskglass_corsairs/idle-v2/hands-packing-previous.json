@@ -1,0 +1,380 @@
+{
+  "unit_id": "unit_veilmourn_maskglass_corsairs",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          307,
+          453
+        ],
+        [
+          0,
+          453,
+          100,
+          464
+        ]
+      ],
+      "anchor": [
+        169,
+        460
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png",
+      "rects": [
+        [
+          307,
+          0,
+          614,
+          455
+        ],
+        [
+          325,
+          455,
+          407,
+          465
+        ]
+      ],
+      "anchor": [
+        472,
+        460
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "walk_contact",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/continuity-alpha/guided-opposite-contact-and-guards.png",
+      "rects": [
+        [
+          0,
+          0,
+          650,
+          612
+        ]
+      ],
+      "anchor": [
+        363,
+        599
+      ],
+      "scale": 0.355
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/continuity-alpha/guided-opposite-contact-and-guards.png",
+      "rects": [
+        [
+          654,
+          0,
+          1312,
+          615
+        ]
+      ],
+      "anchor": [
+        1023,
+        600
+      ],
+      "scale": 0.355
+    },
+    {
+      "name": "walk_planted_bridge",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png",
+      "rects": [
+        [
+          616,
+          0,
+          917,
+          461
+        ]
+      ],
+      "anchor": [
+        768,
+        451
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          465,
+          307,
+          889
+        ],
+        [
+          106,
+          454,
+          250,
+          465
+        ]
+      ],
+      "anchor": [
+        170,
+        864
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png",
+      "rects": [
+        [
+          309,
+          456,
+          614,
+          890
+        ]
+      ],
+      "anchor": [
+        472,
+        876
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "melee_release",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png",
+      "rects": [
+        [
+          634,
+          498,
+          936,
+          891
+        ],
+        [
+          936,
+          689,
+          993,
+          721
+        ],
+        [
+          617,
+          817,
+          634,
+          891
+        ]
+      ],
+      "anchor": [
+        780,
+        875
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "guard_a",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/continuity-alpha/guided-opposite-contact-and-guards.png",
+      "rects": [
+        [
+          0,
+          615,
+          650,
+          1199
+        ]
+      ],
+      "anchor": [
+        365,
+        1180
+      ],
+      "scale": 0.355
+    },
+    {
+      "name": "guard_b",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/continuity-alpha/guided-opposite-contact-and-guards.png",
+      "rects": [
+        [
+          650,
+          615,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        1028,
+        1180
+      ],
+      "scale": 0.355
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          892,
+          321,
+          1287
+        ]
+      ],
+      "anchor": [
+        168,
+        1235
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png",
+      "rects": [
+        [
+          323,
+          906,
+          566,
+          1287
+        ]
+      ],
+      "anchor": [
+        449,
+        1232
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png",
+      "rects": [
+        [
+          574,
+          930,
+          870,
+          1176
+        ],
+        [
+          558,
+          979,
+          574,
+          1104
+        ],
+        [
+          612,
+          1176,
+          856,
+          1287
+        ]
+      ],
+      "anchor": [
+        714,
+        1220
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "dead_equipped",
+      "source": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/alpha/poses.png",
+      "rects": [
+        [
+          873,
+          1084,
+          1222,
+          1287
+        ],
+        [
+          854,
+          1132,
+          873,
+          1287
+        ]
+      ],
+      "anchor": [
+        1042,
+        1235
+      ],
+      "scale": 0.5
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

@@ -128,5 +128,18 @@
       ],
       "removed_bytes": 9143470
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+    "runtime_sha256": "79bc6bd18d34155ffebbe87b076a4e1855b519d87c2b4e5703c5e15e5d1538e5"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "6c7d96bda20fa59c1373da427fa7ae1214fae2ffb6f89467f8c4043758c21ef9",
+    "preserved_frames": 19,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

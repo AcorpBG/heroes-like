@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_embercourt_cinderseal_bombardiers",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-9f77486e-a753-43ce-8fa4-716a2586fc25.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_embercourt_cinderseal_bombardiers.png",
+  "reference_revision": "e8df6ca7e",
+  "prompt": "Use case: identity-preserve. Paint an EIGHT-FRAME resting idle with VISIBLE HAND, WRIST AND ELBOW ARTICULATION for exactly this original character. Reference is a strip of poses of ONE character. Preserve identity, clothing, weapon size, hand ownership and right-facing three-quarter camera. Head/hips/feet almost stationary. The idle must read at 74px character height: hands travel about 50-70 source pixels; head under 5px. No head-bobbing substitute. Hands maintain plausible grips and bend naturally at elbows. No attack, walk or extra props.\nHuman in red brass armor and sealed red helmet, large bronze bombard resting over screen LEFT shoulder, baton in screen RIGHT hand. Keep bombard stable on shoulder while its support hand regrips; free elbow raises baton hand from thigh to waist 60 source pixels then lowers. No firing, smoke, growing barrel or attack.\nCanvas1536x1024 RGBA true transparent background, 4 columns and 2 rows. Exactly eight sequential complete poses in reading order, same anatomical size, planted boot line near localy478, generous gaps, all owned weapons inside each cell. Smooth cycle: pose1 rest;2 begin hand adjustment;3 farther;4 crest;5 gradually reverse;6 ease back;7 near rest;8 almost pose1. Original detailed hand-painted fantasy strategy sprite. Genuine painted articulation, not translated whole-body copies. Transparent gaps and background, no floor/shadow/labels/grid/backdrop.\nCritical spacing: fit each entire pose within a 340-pixel-wide area in its 384-pixel cell, with transparent padding. Do not crop any weapon or accessory. Return seamlessly toward the first pose.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "eeaba88cf178a0fba75a2b8571e94a638a1c9fd31124c00266d7e0b992961ed7",
+  "reference_sha256": "2e96f1678a060146e24f126dbb05f92d44b5fd006e6d03a756d03407bdebb55e",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; hand, forearm and owned equipment movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

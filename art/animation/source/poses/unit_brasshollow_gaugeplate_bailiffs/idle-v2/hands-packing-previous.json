@@ -1,0 +1,373 @@
+{
+  "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          0,
+          0,
+          368,
+          359
+        ]
+      ],
+      "anchor": [
+        220,
+        351
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          370,
+          0,
+          743,
+          338
+        ],
+        [
+          540,
+          338,
+          743,
+          360
+        ]
+      ],
+      "anchor": [
+        570,
+        351
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_near_contact",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-gait-and-guard.png",
+      "rects": [
+        [
+          0,
+          0,
+          515,
+          512
+        ]
+      ],
+      "anchor": [
+        285,
+        500
+      ],
+      "scale": 0.425
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-far-leg-lift.png",
+      "rects": [
+        [
+          0,
+          0,
+          1233,
+          1276
+        ]
+      ],
+      "anchor": [
+        735,
+        1219
+      ],
+      "scale": 0.175
+    },
+    {
+      "name": "walk_far_contact",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-gait-and-guard.png",
+      "rects": [
+        [
+          1030,
+          0,
+          1536,
+          515
+        ]
+      ],
+      "anchor": [
+        1305,
+        497
+      ],
+      "scale": 0.425
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-gait-and-guard.png",
+      "rects": [
+        [
+          0,
+          514,
+          522,
+          1024
+        ]
+      ],
+      "anchor": [
+        278,
+        1008
+      ],
+      "scale": 0.425
+    },
+    {
+      "name": "hammer_windup",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          512,
+          337,
+          544,
+          343
+        ],
+        [
+          485,
+          343,
+          544,
+          348
+        ],
+        [
+          427,
+          348,
+          544,
+          370
+        ],
+        [
+          385,
+          370,
+          747,
+          699
+        ]
+      ],
+      "anchor": [
+        570,
+        685
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "hammer_strike",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          750,
+          365,
+          1152,
+          701
+        ]
+      ],
+      "anchor": [
+        932,
+        682
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "guard_a",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          1160,
+          365,
+          1536,
+          701
+        ]
+      ],
+      "anchor": [
+        1355,
+        690
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "guard_b",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-gait-and-guard.png",
+      "rects": [
+        [
+          525,
+          515,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        788,
+        993
+      ],
+      "scale": 0.425
+    },
+    {
+      "name": "guard_c",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/guided-gait-and-guard.png",
+      "rects": [
+        [
+          1027,
+          515,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1310,
+        995
+      ],
+      "scale": 0.425
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          0,
+          701,
+          376,
+          1024
+        ]
+      ],
+      "anchor": [
+        212,
+        988
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          385,
+          701,
+          749,
+          1024
+        ]
+      ],
+      "anchor": [
+        570,
+        1009
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          760,
+          704,
+          1166,
+          1024
+        ]
+      ],
+      "anchor": [
+        962,
+        1006
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "dead_cold",
+      "source": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/continuity-alpha/poses-quiet-vents.png",
+      "rects": [
+        [
+          1167,
+          805,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1348,
+        996
+      ],
+      "scale": 0.65
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        9,
+        10
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        11,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        14
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

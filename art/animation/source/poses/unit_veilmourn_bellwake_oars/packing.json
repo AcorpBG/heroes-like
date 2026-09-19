@@ -1,6 +1,6 @@
 {
   "unit_id": "unit_veilmourn_bellwake_oars",
-  "status": "candidate_pending_playback_acceptance",
+  "status": "accepted_idle_articulation_20260919",
   "frame_size": [
     512,
     256
@@ -292,6 +292,142 @@
         930
       ],
       "scale": 0.32
+    },
+    {
+      "name": "idle_hands_0",
+      "source": "idle-v2/oar-correction-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          400,
+          514
+        ]
+      ],
+      "anchor": [
+        204,
+        504
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_1",
+      "source": "idle-v2/oar-correction-alpha.png",
+      "rects": [
+        [
+          400,
+          0,
+          785,
+          514
+        ]
+      ],
+      "anchor": [
+        585,
+        504
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_2",
+      "source": "idle-v2/oar-correction-alpha.png",
+      "rects": [
+        [
+          785,
+          0,
+          1152,
+          514
+        ]
+      ],
+      "anchor": [
+        941,
+        504
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "idle-v2/oar-correction-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          514
+        ]
+      ],
+      "anchor": [
+        1322,
+        504
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "idle-v2/oar-correction-alpha.png",
+      "rects": [
+        [
+          0,
+          514,
+          417,
+          1024
+        ]
+      ],
+      "anchor": [
+        204,
+        1005
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "idle-v2/oar-correction-alpha.png",
+      "rects": [
+        [
+          417,
+          514,
+          796,
+          1024
+        ]
+      ],
+      "anchor": [
+        586,
+        1005
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_6",
+      "source": "idle-v2/oar-correction-alpha.png",
+      "rects": [
+        [
+          796,
+          514,
+          1157,
+          1024
+        ]
+      ],
+      "anchor": [
+        941,
+        1005
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_7",
+      "source": "idle-v2/oar-correction-alpha.png",
+      "rects": [
+        [
+          1157,
+          514,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1328,
+        1005
+      ],
+      "scale": 0.44
     }
   ],
   "pose_clips": {

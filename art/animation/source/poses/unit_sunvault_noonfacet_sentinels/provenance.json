@@ -123,5 +123,18 @@
     "frames": 15,
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/noonfacet-continuity-20260915/",
     "validation": "Production assembly and actual alpha-composite review only. Final connected battle timing, cross-sheet equipment/body/streamer continuity and platform acceptance remain deferred; no tests/imports/exports."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
+    "runtime_sha256": "b4b8f3a838846ff132be67f75690cb9d0be37db16fde07be8c426c5c797cdd23"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "fc98ef49290b26813263925e2d100a6ba58e8919688f2d15fb83fe46cbc63519",
+    "preserved_frames": 15,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

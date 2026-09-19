@@ -131,5 +131,18 @@
     "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/seedcutter-continuity-20260915/art-desk-registered.html",
     "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/seedcutter-continuity-20260915/art-desk-registered.png",
     "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/seedcutter-continuity-20260915/packed-initial/poses-candidate-atlas-green.png"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_thornwake_seedcutters.png",
+    "runtime_sha256": "7a12b07be3236664051d6c4e99d8260c8733dd176681dc09d9e7cfe2a64cee09"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "d1f32349eff3d80e56e5ef63820a6e0b335974cc321bc15172c944a43729656e",
+    "preserved_frames": 13,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

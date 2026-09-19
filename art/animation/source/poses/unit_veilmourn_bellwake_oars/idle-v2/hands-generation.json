@@ -1,0 +1,15 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_veilmourn_bellwake_oars",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-35ad8b2f-0a48-4e47-8e6d-2c94bea1cd2f.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_veilmourn_bellwake_oars.png",
+  "reference_revision": "e8df6ca7e",
+  "prompt": "Use case: identity-preserve. Paint an EIGHT-FRAME resting idle with VISIBLE HAND, WRIST AND ELBOW ARTICULATION for exactly this original character. Reference is a strip of poses of ONE character. Preserve identity, clothing, weapon size, hand ownership and right-facing three-quarter camera. Head/hips/feet almost stationary. The idle must read at 74px character height: hands travel about 50-70 source pixels; head under 5px. No head-bobbing substitute. Hands maintain plausible grips and bend naturally at elbows. No attack, walk or extra props.\nBrown-haired human woman in gray teal cream sailor layers, wrapped scarf and boots. Holds one long dark oar diagonally upperLEFT to lowerRIGHT with both hands. Flex elbows to draw oar shaft 50px toward ribs, wrists regrip and roll it through a small angle, then return. Rigid single oar, cloth restrained, no rowing stroke or attack.\nCanvas1536x1024 RGBA true transparent background, 4 columns and 2 rows. Exactly eight sequential complete poses in reading order, same anatomical size, planted boot line near localy478, generous gaps, all owned weapons inside each cell. Smooth cycle: pose1 rest;2 begin hand adjustment;3 farther;4 crest;5 gradually reverse;6 ease back;7 near rest;8 almost pose1. Original detailed hand-painted fantasy strategy sprite. Genuine painted articulation, not translated whole-body copies. Transparent gaps and background, no floor/shadow/labels/grid/backdrop.",
+  "review_status": "superseded_clipped_oar",
+  "originals_preserved": true,
+  "superseded_by": "oar-correction-generation.json"
+}

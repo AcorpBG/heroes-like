@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_sunvault_noonfacet_sentinels",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-cc5f30be-8281-4a32-8f3e-755ace19fdf5.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_sunvault_noonfacet_sentinels.png",
+  "reference_revision": "e8df6ca7e",
+  "prompt": "Use case: identity-preserve. Paint an EIGHT-FRAME resting idle with VISIBLE HAND, WRIST AND ELBOW ARTICULATION for exactly this original character. Reference is a strip of poses of ONE character. Preserve identity, clothing, weapon size, hand ownership and right-facing three-quarter camera. Head/hips/feet almost stationary. The idle must read at 74px character height: hands travel about 50-70 source pixels; head under 5px. No head-bobbing substitute. Hands maintain plausible grips and bend naturally at elbows. No attack, walk or extra props.\nGold and white sealed armored sentinel, tall spear upright screen LEFT and huge faceted white/gold shield screen RIGHT. Keep spear length fixed and butt planted. Spear hand slides 50 source pixels while elbow bends, shield forearm lifts/cants shield 35 pixels then returns. Head stationary.\nCanvas1536x1024 RGBA true transparent background, 4 columns and 2 rows. Exactly eight sequential complete poses in reading order, same anatomical size, planted boot line near localy478, generous gaps, all owned weapons inside each cell. Smooth cycle: pose1 rest;2 begin hand adjustment;3 farther;4 crest;5 gradually reverse;6 ease back;7 near rest;8 almost pose1. Original detailed hand-painted fantasy strategy sprite. Genuine painted articulation, not translated whole-body copies. Transparent gaps and background, no floor/shadow/labels/grid/backdrop.\nCritical spacing: fit each entire pose within a 340-pixel-wide area in its 384-pixel cell, with transparent padding. Do not crop any weapon or accessory. Return seamlessly toward the first pose.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "eb812daaed6eb3f8f8e9964a6dc9f361614ad994c8cb3bc6d4a71bd94e1615c7",
+  "reference_sha256": "997712c5de5ebd67f964b577dd9cd171f710b0224df058516a136502f0acaff2",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; hand, forearm and owned equipment movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

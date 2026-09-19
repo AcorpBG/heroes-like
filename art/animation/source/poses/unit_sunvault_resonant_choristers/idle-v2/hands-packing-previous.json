@@ -1,0 +1,342 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers",
+  "status": "runtime_candidate_pending_consolidated_validation",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          360,
+          358
+        ],
+        [
+          110,
+          358,
+          254,
+          377
+        ]
+      ],
+      "anchor": [
+        190,
+        375
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/poses.png",
+      "rects": [
+        [
+          384,
+          0,
+          748,
+          359
+        ],
+        [
+          501,
+          359,
+          640,
+          376
+        ]
+      ],
+      "anchor": [
+        574,
+        375
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-contact-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1205,
+          1305
+        ]
+      ],
+      "anchor": [
+        618,
+        1230
+      ],
+      "scale": 0.183
+    },
+    {
+      "name": "walk_passing_a",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-passing-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1205,
+          1305
+        ]
+      ],
+      "anchor": [
+        620,
+        1230
+      ],
+      "scale": 0.183
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-contact-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1206,
+          1305
+        ]
+      ],
+      "anchor": [
+        624,
+        1172
+      ],
+      "scale": 0.19
+    },
+    {
+      "name": "walk_passing_b",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/walk-passing-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1205,
+          1305
+        ]
+      ],
+      "anchor": [
+        618,
+        1230
+      ],
+      "scale": 0.183
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/attack-pair.png",
+      "rects": [
+        [
+          0,
+          0,
+          806,
+          887
+        ]
+      ],
+      "anchor": [
+        433,
+        816
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "melee_release",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/attack-pair.png",
+      "rects": [
+        [
+          808,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1240,
+        816
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "defend_0",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/poses.png",
+      "rects": [
+        [
+          1170,
+          430,
+          1536,
+          720
+        ]
+      ],
+      "anchor": [
+        1352,
+        712
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "defend_1",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/defense-breath.png",
+      "rects": [
+        [
+          0,
+          0,
+          1409,
+          1117
+        ]
+      ],
+      "anchor": [
+        704,
+        1022
+      ],
+      "scale": 0.16
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/poses.png",
+      "rects": [
+        [
+          194,
+          704,
+          334,
+          740
+        ],
+        [
+          0,
+          740,
+          376,
+          1017
+        ]
+      ],
+      "anchor": [
+        192,
+        1000
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/death-pair.png",
+      "rects": [
+        [
+          0,
+          0,
+          950,
+          768
+        ]
+      ],
+      "anchor": [
+        477,
+        697
+      ],
+      "scale": 0.215
+    },
+    {
+      "name": "death_low_fall",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/death-low-fall.png",
+      "rects": [
+        [
+          0,
+          0,
+          1493,
+          1054
+        ]
+      ],
+      "anchor": [
+        747,
+        970
+      ],
+      "scale": 0.15
+    },
+    {
+      "name": "death_prone",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/death-pair.png",
+      "rects": [
+        [
+          954,
+          0,
+          2048,
+          768
+        ]
+      ],
+      "anchor": [
+        1492,
+        710
+      ],
+      "scale": 0.21
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/continuity-alpha/poses.png",
+      "rects": [
+        [
+          1120,
+          867,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1325,
+        1004
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "ranged_gather_harmony",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/ranged-correction-20260916/alpha/ranged-source.png",
+      "rects": [
+        [
+          0,
+          0,
+          690,
+          756
+        ]
+      ],
+      "anchor": [
+        351,
+        733
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "ranged_release_harmony",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/ranged-correction-20260916/alpha/ranged-source.png",
+      "rects": [
+        [
+          690,
+          0,
+          1390,
+          756
+        ]
+      ],
+      "anchor": [
+        1045,
+        733
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "ranged_recover_harmony",
+      "source": "art/animation/source/poses/unit_sunvault_resonant_choristers/ranged-correction-20260916/alpha/ranged-source.png",
+      "rects": [
+        [
+          1390,
+          0,
+          2079,
+          756
+        ]
+      ],
+      "anchor": [
+        1750,
+        733
+      ],
+      "scale": 0.3
+    }
+  ],
+  "notes": [
+    "Preserves all three distinct performers and their staff/book/lyre in every selected state. New guided gait, covered knees, full-length attack shaft, three-person kneeling and low fall address failed original poses.",
+    "Original opaque sheet and all new masters remain unchanged. Selected gray masters use bounded neutral key protecting bright armor; exact recipes and local proofs retained.",
+    "Explicit anatomical scales and ground anchors, no transformed standing cutouts. Original idle/hit/defense/final corpse retained.",
+    "Candidate only; full connected-motion, fine equipment/cloth/glass/edge continuity and all-roster Linux/Windows acceptance deferred."
+  ]
+}

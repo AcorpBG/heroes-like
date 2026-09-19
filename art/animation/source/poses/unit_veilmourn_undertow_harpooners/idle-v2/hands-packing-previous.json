@@ -1,0 +1,514 @@
+{
+  "unit_id": "unit_veilmourn_undertow_harpooners",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          292,
+          337
+        ],
+        [
+          0,
+          337,
+          103,
+          343
+        ],
+        [
+          116,
+          337,
+          292,
+          343
+        ]
+      ],
+      "anchor": [
+        144,
+        337
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png",
+      "rects": [
+        [
+          304,
+          0,
+          585,
+          343
+        ]
+      ],
+      "anchor": [
+        436,
+        335
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_contact",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png",
+      "rects": [
+        [
+          590,
+          0,
+          916,
+          347
+        ]
+      ],
+      "anchor": [
+        748,
+        337
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png",
+      "rects": [
+        [
+          926,
+          0,
+          1222,
+          350
+        ]
+      ],
+      "anchor": [
+        1077,
+        338
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_planted_bridge",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/opposite-contact-and-guards.png",
+      "rects": [
+        [
+          0,
+          0,
+          669,
+          718
+        ]
+      ],
+      "anchor": [
+        321,
+        650
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          343,
+          307,
+          654
+        ]
+      ],
+      "anchor": [
+        137,
+        643
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "melee_pullback",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png",
+      "rects": [
+        [
+          307,
+          342,
+          588,
+          654
+        ]
+      ],
+      "anchor": [
+        440,
+        636
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "melee_forward_shove",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png",
+      "rects": [
+        [
+          593,
+          342,
+          937,
+          653
+        ],
+        [
+          937,
+          573,
+          961,
+          610
+        ]
+      ],
+      "anchor": [
+        746,
+        625
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "guard_a",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/opposite-contact-and-guards.png",
+      "rects": [
+        [
+          0,
+          720,
+          638,
+          1358
+        ],
+        [
+          638,
+          1060,
+          650,
+          1120
+        ]
+      ],
+      "anchor": [
+        307,
+        1304
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "guard_b",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/opposite-contact-and-guards.png",
+      "rects": [
+        [
+          645,
+          714,
+          1158,
+          1358
+        ]
+      ],
+      "anchor": [
+        886,
+        1309
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png",
+      "rects": [
+        [
+          945,
+          650,
+          1222,
+          875
+        ],
+        [
+          988,
+          875,
+          1222,
+          900
+        ],
+        [
+          945,
+          900,
+          1222,
+          970
+        ]
+      ],
+      "anchor": [
+        1085,
+        951
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_loaded_aim",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          649,
+          306,
+          970
+        ]
+      ],
+      "anchor": [
+        134,
+        950
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_empty_recoil",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/recoil-retrieval-and-reload.png",
+      "rects": [
+        [
+          0,
+          0,
+          607,
+          650
+        ]
+      ],
+      "anchor": [
+        273,
+        643
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "retrieval_contained",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/retrieval-contained.png",
+      "rects": [
+        [
+          615,
+          0,
+          1222,
+          644
+        ],
+        [
+          615,
+          644,
+          858,
+          650
+        ],
+        [
+          872,
+          644,
+          1222,
+          650
+        ]
+      ],
+      "anchor": [
+        883,
+        645
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "reload_bolt_lift",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/recoil-retrieval-and-reload.png",
+      "rects": [
+        [
+          0,
+          650,
+          609,
+          1287
+        ]
+      ],
+      "anchor": [
+        278,
+        1275
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "reload_insertion",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/recoil-retrieval-and-reload.png",
+      "rects": [
+        [
+          613,
+          655,
+          1222,
+          1287
+        ]
+      ],
+      "anchor": [
+        881,
+        1275
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "death_buckle",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          968,
+          300,
+          1215
+        ],
+        [
+          0,
+          1215,
+          307,
+          1287
+        ]
+      ],
+      "anchor": [
+        158,
+        1260
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/alpha/poses.png",
+      "rects": [
+        [
+          307,
+          968,
+          563,
+          1287
+        ],
+        [
+          563,
+          1216,
+          612,
+          1287
+        ]
+      ],
+      "anchor": [
+        462,
+        1257
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_fall_cold_lantern",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/poses-cold-lanterns.png",
+      "rects": [
+        [
+          575,
+          1030,
+          899,
+          1220
+        ],
+        [
+          613,
+          1220,
+          899,
+          1287
+        ]
+      ],
+      "anchor": [
+        747,
+        1254
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "dead_cold_lantern",
+      "source": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/continuity-alpha/poses-cold-lanterns.png",
+      "rects": [
+        [
+          903,
+          1061,
+          1222,
+          1287
+        ]
+      ],
+      "anchor": [
+        1061,
+        1240
+      ],
+      "scale": 0.65
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 5,
+      "indices": [
+        10,
+        16,
+        17,
+        18,
+        19
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        19
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 6,
+      "indices": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  }
+}

@@ -118,5 +118,18 @@
       ],
       "removed_bytes": 8117278
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
+    "runtime_sha256": "41111a728d57a93a95300da3d10d4aa3233e6303742a6c3caf1d7f678273248f"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "7d378286d4f0d424061b84a534878f3f431b2a8a79169e16b5437036f3e3577b",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

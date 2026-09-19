@@ -169,9 +169,10 @@
     "validation": "Actual source/packed alpha-composite production review, not in-game motion acceptance. Consolidated roster/repository/Linux/Windows validation remains deferred; no tests/imports/exports."
   },
   "packing": {
-    "recipe": "art/animation/source/poses/unit_sunvault_resonant_choristers/packing.json",
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_sunvault_resonant_choristers.png",
-    "runtime_sha256": "7a755377af8da83e52f0bdd26580d1444e6aa2430872e1c2e22df5eae55f9f09"
+    "runtime_sha256": "4821a6e445a0c64d88b70c2e13fe914267ab7f6e62fcd13732c655d4d411563c"
   },
   "ranged_correction": {
     "date": "2026-09-16",
@@ -185,5 +186,12 @@
     ],
     "runtime_sha256": "7a755377af8da83e52f0bdd26580d1444e6aa2430872e1c2e22df5eae55f9f09",
     "review": "Original generated preparation/release/recovery replace melee alias. Source/composites/packed atlas inspected; final gameplay/continuous-motion acceptance pending. Existing frames untouched."
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "7a755377af8da83e52f0bdd26580d1444e6aa2430872e1c2e22df5eae55f9f09",
+    "preserved_frames": 18,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

@@ -116,5 +116,18 @@
     "frames": 14,
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/shard-warden-continuity-20260915/",
     "validation": "Production assembly and visual art inspection only; no Godot/tests/imports/exports. Connected battle timing, equipment/cloth consistency and final acceptance remain deferred."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_sunvault_shard_wardens.png",
+    "runtime_sha256": "074a4e56a969f019411e3b2f4898cec6a76a8783acc318f0e68667b36bb6107e"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "717d91a4b79d18b12179cea9b5c71d2a6781580286b65f59ed7ffcf59bd21972",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

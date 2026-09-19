@@ -127,5 +127,18 @@
     "runtime_sha256": "52fe22b22e045bd443c8d76595027d3d2be3c99a7face4048502e8778d69f44b",
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/cinderseal-continuity-20260915/",
     "status": "candidate_registered_not_final_accepted"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_embercourt_cinderseal_bombardiers.png",
+    "runtime_sha256": "e83acda385ba75f24bad9f264542ce49a7be5a4b6b939be82e21271607708c7a"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "52fe22b22e045bd443c8d76595027d3d2be3c99a7face4048502e8778d69f44b",
+    "preserved_frames": 15,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

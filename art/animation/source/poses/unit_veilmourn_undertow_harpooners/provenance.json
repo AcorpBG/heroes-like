@@ -106,5 +106,18 @@
       ],
       "removed_bytes": 8114219
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners.png",
+    "runtime_sha256": "692f1dbd8897892322023b0f7418a4d2f2dc1426f91c972eda57325e262b2e2b"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "f7560cc0fb3aa9543745bb6aa56864309989acabadc92df65410ceb26eae371f",
+    "preserved_frames": 20,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

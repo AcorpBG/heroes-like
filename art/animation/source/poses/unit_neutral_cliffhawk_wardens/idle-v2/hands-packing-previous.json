@@ -1,0 +1,372 @@
+{
+  "unit_id": "unit_neutral_cliffhawk_wardens",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          317,
+          438
+        ]
+      ],
+      "anchor": [
+        166,
+        415
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/alpha/poses.png",
+      "rects": [
+        [
+          318,
+          0,
+          642,
+          438
+        ]
+      ],
+      "anchor": [
+        475,
+        415
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "contact_original",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/alpha/poses.png",
+      "rects": [
+        [
+          642,
+          0,
+          965,
+          438
+        ]
+      ],
+      "anchor": [
+        780,
+        415
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "passing_original",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          439,
+          305,
+          818
+        ]
+      ],
+      "anchor": [
+        168,
+        791
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/continuity-alpha/travel-two-hand-recovery-and-left-collapse.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          516
+        ]
+      ],
+      "anchor": [
+        254,
+        493
+      ],
+      "scale": 0.47
+    },
+    {
+      "name": "passing_knee_lift",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/continuity-alpha/travel-two-hand-recovery-and-left-collapse.png",
+      "rects": [
+        [
+          513,
+          0,
+          1010,
+          516
+        ]
+      ],
+      "anchor": [
+        766,
+        493
+      ],
+      "scale": 0.47
+    },
+    {
+      "name": "pike_two_hand_windup",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/continuity-alpha/travel-two-hand-recovery-and-left-collapse.png",
+      "rects": [
+        [
+          1011,
+          0,
+          1536,
+          516
+        ]
+      ],
+      "anchor": [
+        1254,
+        493
+      ],
+      "scale": 0.47
+    },
+    {
+      "name": "pike_thrust",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/alpha/poses.png",
+      "rects": [
+        [
+          616,
+          438,
+          1004,
+          568
+        ],
+        [
+          616,
+          568,
+          965,
+          650
+        ],
+        [
+          606,
+          650,
+          925,
+          708
+        ],
+        [
+          570,
+          708,
+          926,
+          817
+        ]
+      ],
+      "anchor": [
+        748,
+        784
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "pike_recovery",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/continuity-alpha/travel-two-hand-recovery-and-left-collapse.png",
+      "rects": [
+        [
+          0,
+          517,
+          502,
+          855
+        ],
+        [
+          0,
+          855,
+          430,
+          1024
+        ]
+      ],
+      "anchor": [
+        245,
+        965
+      ],
+      "scale": 0.47
+    },
+    {
+      "name": "guard_braced",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/alpha/poses.png",
+      "rects": [
+        [
+          1010,
+          438,
+          1254,
+          623
+        ],
+        [
+          967,
+          623,
+          1254,
+          818
+        ]
+      ],
+      "anchor": [
+        1104,
+        784
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          818,
+          307,
+          1200
+        ]
+      ],
+      "anchor": [
+        164,
+        1166
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "death_kneel_hawk_depart",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/alpha/poses.png",
+      "rects": [
+        [
+          305,
+          811,
+          620,
+          1068
+        ],
+        [
+          305,
+          1068,
+          581,
+          1114
+        ],
+        [
+          305,
+          1114,
+          615,
+          1195
+        ]
+      ],
+      "anchor": [
+        465,
+        1155
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/continuity-alpha/travel-two-hand-recovery-and-left-collapse.png",
+      "rects": [
+        [
+          449,
+          620,
+          1008,
+          1010
+        ]
+      ],
+      "anchor": [
+        727,
+        963
+      ],
+      "scale": 0.47
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/continuity-alpha/dead-head-left-from-fall.png",
+      "rects": [
+        [
+          0,
+          0,
+          1500,
+          1049
+        ]
+      ],
+      "anchor": [
+        740,
+        947
+      ],
+      "scale": 0.17
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 430,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 135,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        6,
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        10,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 270,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

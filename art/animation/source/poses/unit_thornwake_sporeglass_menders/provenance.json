@@ -113,5 +113,18 @@
     "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/sporemender-continuity-20260915/art-desk-registered.html",
     "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/sporemender-continuity-20260915/art-desk-registered.png",
     "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/sporemender-continuity-20260915/packed-initial/poses-candidate-atlas-green.png"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+    "runtime_sha256": "2a8a2cb4c714d0e4d01ab1a62dd454ff4597ae56b6082a186859af6b59696d62"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "ee99b0c0b33cc9a0a82aa5e71bc5b39d11e63297432d43ecf2adba07a702b8b9",
+    "preserved_frames": 17,
+    "status": "accepted_idle_articulation_20260919"
   }
 }
