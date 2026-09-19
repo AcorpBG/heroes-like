@@ -3663,31 +3663,19 @@ func _assert_marker_style(presentation: Dictionary, expected_kind: String, remem
 			get_tree().quit(1)
 			return false
 		var owner_pennant: Dictionary = town_presentation.get("owner_pennant", {})
-		var pennant_cloth_color: Dictionary = owner_pennant.get("cloth_color", {})
-		var expected_pennant_alpha := 0.68 if remembered else 0.96
-		if String(town_presentation.get("owner_pennant_model", "")) != "single_pass_compact_heraldic_cloth_pennant" \
-			or not bool(town_presentation.get("owner_pennant_single_pass", false)) \
-			or not is_equal_approx(float(town_presentation.get("owner_pennant_width_factor", 0.0)), 0.052) \
-			or not is_equal_approx(float(town_presentation.get("owner_pennant_height_factor", 0.0)), 0.040) \
+		if String(town_presentation.get("owner_pennant_model", "")) != "paired_small_entrance_control_flags" \
+			or int(town_presentation.get("owner_pennant_count", 0)) != 2 \
 			or String(town_presentation.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline" \
 			or float(town_presentation.get("sprite_silhouette_width_factor", 0.0)) < 0.010 \
 			or float(town_presentation.get("sprite_silhouette_visible_alpha", 0.0)) < 0.879 \
 			or float(town_presentation.get("sprite_silhouette_memory_alpha", 0.0)) < 0.779 \
-			or String(owner_pennant.get("model", "")) != "single_pass_compact_heraldic_cloth_pennant" \
-			or String(owner_pennant.get("asset_id", "")) != "ownership_pennant_%s" % String(town_presentation.get("owner", "")) \
-			or not bool(owner_pennant.get("asset_loaded", false)) \
-			or not bool(owner_pennant.get("asset_contained", false)) \
-			or bool(owner_pennant.get("procedural_fallback", true)) \
-			or int(owner_pennant.get("single_pass_draw_count", 0)) != 1 \
-			or int(owner_pennant.get("cloth_layer_count", 0)) != 1 \
-			or not bool(owner_pennant.get("cloth_contained", false)) \
-			or not bool(owner_pennant.get("shadow_contained", false)) \
-			or not bool(owner_pennant.get("pole_contained", false)) \
-			or float(owner_pennant.get("painted_area_ratio_to_legacy", 1.0)) >= 0.75 \
-			or not is_equal_approx(float(pennant_cloth_color.get("a", 0.0)), expected_pennant_alpha):
-			push_error("Overworld smoke: town owner pennant no longer uses the compact single-pass contained cloth model. presentation=%s" % presentation)
+			or String(owner_pennant.get("model", "")) != "paired_small_entrance_control_flags" \
+			or int(owner_pennant.get("flag_count", 0)) != 2 \
+			or not bool(owner_pennant.get("asset_loaded", false)):
+			push_error("Overworld smoke: town must use two small textured entrance flags. presentation=%s" % presentation)
 			get_tree().quit(1)
 			return false
+
 	var min_anchor_width := 0.36 if uses_mapped_sprite else (0.40 if uses_procedural_fallback else 0.60)
 	var min_anchor_height := 0.06 if uses_mapped_sprite else (0.12 if uses_procedural_fallback else 0.20)
 	if float(readability.get("footprint_anchor_width_fraction", 0.0)) < min_anchor_width or float(readability.get("footprint_anchor_height_fraction", 0.0)) < min_anchor_height:

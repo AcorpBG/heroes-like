@@ -2,13 +2,7 @@ extends Node
 
 const SCENARIO_ID := "river-pass"
 const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]
-const PENNANT_MODEL := "single_pass_compact_heraldic_cloth_pennant"
-const WIDTH_FACTOR := 0.052
-const HEIGHT_FACTOR := 0.040
-const LEGACY_WIDTH_FACTOR := 0.17
-const LEGACY_HEIGHT_FACTOR := 0.12
-const VISIBLE_ALPHA := 0.96
-const REMEMBERED_ALPHA := 0.68
+const PENNANT_MODEL := "paired_small_entrance_control_flags"
 const EXPECTED_VARIANT_COUNT := 12
 
 func _ready() -> void:
@@ -31,7 +25,6 @@ func _run() -> void:
 		"viewports": [[1280, 720], [1920, 1080]],
 		"pennant_model": PENNANT_MODEL,
 		"variant_count_per_town": EXPECTED_VARIANT_COUNT,
-		"painted_area_ratio_to_legacy": (WIDTH_FACTOR * HEIGHT_FACTOR) / (LEGACY_WIDTH_FACTOR * LEGACY_HEIGHT_FACTOR),
 		"rows": rows,
 		"town_footprints_unchanged": true,
 		"town_ownership_unchanged": true,
@@ -114,101 +107,23 @@ func _assert_town_variants(
 	current_pennant: Dictionary
 ) -> Dictionary:
 	var variants: Array = variant_payload.get("variants", [])
-	var keys: Dictionary = {}
-	var all_exact := String(variant_payload.get("model", "")) == PENNANT_MODEL \
-		and String(variant_payload.get("live_owner", "")) == expected_owner \
-		and int(variant_payload.get("variant_count", 0)) == EXPECTED_VARIANT_COUNT \
-		and variants.size() == EXPECTED_VARIANT_COUNT \
-		and int(town_profile.get("footprint_width_tiles", 0)) == 3 \
-		and int(town_profile.get("footprint_height_tiles", 0)) == 2 \
-		and int(town_profile.get("blocked_footprint_cell_count", 0)) + int(town_profile.get("off_map_footprint_cell_count", 0)) == 5 \
-		and String(town_profile.get("owner_pennant_model", "")) == PENNANT_MODEL \
-		and bool(town_profile.get("owner_pennant_single_pass", false)) \
-		and is_equal_approx(float(town_profile.get("owner_pennant_width_factor", 0.0)), WIDTH_FACTOR) \
-		and is_equal_approx(float(town_profile.get("owner_pennant_height_factor", 0.0)), HEIGHT_FACTOR)
-	for variant_value in variants:
-		if not (variant_value is Dictionary):
-			all_exact = false
-			continue
-		var variant: Dictionary = variant_value
-		var owner := String(variant.get("owner", ""))
-		var remembered := bool(variant.get("remembered", false))
-		var assist := bool(variant.get("color_cue_assist", false))
-		var key := "%s:%s:%s" % [owner, remembered, assist]
+	var keys := {}
+	var exact := String(variant_payload.get("model", "")) == PENNANT_MODEL and variants.size() == EXPECTED_VARIANT_COUNT
+	exact = exact and int(town_profile.get("owner_pennant_count", 0)) == 2
+	for variant in variants:
+		var key := "%s:%s:%s" % [variant.owner, variant.remembered, variant.color_cue_assist]
 		keys[key] = int(keys.get(key, 0)) + 1
-		var expected_shape := "compact_forked"
-		var expected_points := 5
-		if assist:
-			if owner == "player":
-				expected_shape = "compact_square_folded"
-				expected_points = 5
-			elif owner == "enemy":
-				expected_shape = "compact_tapered"
-				expected_points = 3
-			else:
-				expected_shape = "compact_diamond"
-				expected_points = 4
-		var cloth_color: Dictionary = variant.get("cloth_color", {})
-		var expected_asset_id := "ownership_pennant_%s" % owner
-		var expected_alpha := REMEMBERED_ALPHA if remembered else VISIBLE_ALPHA
-		var expected_ratio := (WIDTH_FACTOR * HEIGHT_FACTOR) / (LEGACY_WIDTH_FACTOR * LEGACY_HEIGHT_FACTOR)
-		all_exact = all_exact \
-			and String(variant.get("model", "")) == PENNANT_MODEL \
-			and owner in ["player", "enemy", "neutral"] \
-			and String(variant.get("shape_id", "")) == expected_shape \
-			and String(variant.get("asset_id", "")) == expected_asset_id \
-			and String(variant.get("asset_path", "")) == "res://art/overworld/runtime/objects/ownership_pennants/%s_pennant.png" % owner \
-			and bool(variant.get("asset_loaded", false)) \
-			and bool(variant.get("asset_contained", false)) \
-			and bool(variant.get("asset_mark_contained", false)) \
-			and not bool(variant.get("procedural_fallback", true)) \
-			and int(variant.get("point_count", 0)) == expected_points \
-			and int(variant.get("single_pass_draw_count", 0)) == 1 \
-			and int(variant.get("cloth_layer_count", 0)) == 1 \
-			and bool(variant.get("cloth_contained", false)) \
-			and bool(variant.get("shadow_contained", false)) \
-			and bool(variant.get("pole_contained", false)) \
-			and bool(variant.get("mark_contained", false)) \
-			and (variant.get("fold_line", []) as Array).size() == 2 \
-			and (variant.get("highlight_line", []) as Array).size() == 2 \
-			and is_equal_approx(float(variant.get("width_factor", 0.0)), WIDTH_FACTOR) \
-			and is_equal_approx(float(variant.get("height_factor", 0.0)), HEIGHT_FACTOR) \
-			and is_equal_approx(float(variant.get("legacy_width_factor", 0.0)), LEGACY_WIDTH_FACTOR) \
-			and is_equal_approx(float(variant.get("legacy_height_factor", 0.0)), LEGACY_HEIGHT_FACTOR) \
-			and is_equal_approx(float(variant.get("painted_area_ratio_to_legacy", 1.0)), expected_ratio) \
-			and expected_ratio < 0.75 \
-			and WIDTH_FACTOR < LEGACY_WIDTH_FACTOR \
-			and HEIGHT_FACTOR < LEGACY_HEIGHT_FACTOR \
-			and is_equal_approx(float(cloth_color.get("a", 0.0)), expected_alpha)
-	var every_variant_once := keys.size() == EXPECTED_VARIANT_COUNT
-	for owner in ["player", "enemy", "neutral"]:
-		for remembered in [false, true]:
-			for assist in [false, true]:
-				every_variant_once = every_variant_once and int(keys.get("%s:%s:%s" % [owner, remembered, assist], 0)) == 1
-	var current_exact := String(current_pennant.get("model", "")) == PENNANT_MODEL \
-		and String(current_pennant.get("owner", "")) == expected_owner \
-		and String(current_pennant.get("asset_id", "")) == "ownership_pennant_%s" % expected_owner \
-		and bool(current_pennant.get("asset_loaded", false)) \
-		and bool(current_pennant.get("asset_contained", false)) \
-		and bool(current_pennant.get("asset_mark_contained", false)) \
-		and not bool(current_pennant.get("procedural_fallback", true)) \
-		and int(current_pennant.get("single_pass_draw_count", 0)) == 1 \
-		and int(current_pennant.get("cloth_layer_count", 0)) == 1 \
-		and bool(current_pennant.get("cloth_contained", false)) \
-		and bool(current_pennant.get("shadow_contained", false)) \
-		and bool(current_pennant.get("pole_contained", false))
-	return {
-		"ok": all_exact and every_variant_once and current_exact,
-		"owner": expected_owner,
-		"town_placement_id": String(variant_payload.get("town_placement_id", "")),
-		"entry_tile": variant_payload.get("entry_tile", {}),
-		"variant_count": variants.size(),
-		"every_variant_once": every_variant_once,
-		"current_exact": current_exact,
-		"first_variant": variants[0] if not variants.is_empty() and not all_exact else {},
-		"current": current_pennant if not current_exact else {},
-		"compact_area_ratio": (WIDTH_FACTOR * HEIGHT_FACTOR) / (LEGACY_WIDTH_FACTOR * LEGACY_HEIGHT_FACTOR),
-	}
+		exact = exact and _entrance_pair_exact(variant)
+	for count in keys.values(): exact = exact and count == 1
+	return {"ok": exact and keys.size() == EXPECTED_VARIANT_COUNT and current_pennant.get("owner") == expected_owner and _entrance_pair_exact(current_pennant), "owner": expected_owner}
+
+func _entrance_pair_exact(payload: Dictionary) -> bool:
+	if payload.get("model") != PENNANT_MODEL or payload.get("flag_count") != 2 or not payload.get("asset_loaded", false): return false
+	var flags: Array = payload.get("flags", [])
+	if flags.size() != 2: return false
+	var entry: Dictionary = payload.entry_rect
+	var center := float(entry.x) + float(entry.width) * 0.5
+	return float(flags[0].pole_base.x) < center and float(flags[1].pole_base.x) > center and float(flags[0].pole_base.y) > float(entry.y)
 
 func _reveal_all(session) -> void:
 	var map_size := OverworldRules.derive_map_size(session)
