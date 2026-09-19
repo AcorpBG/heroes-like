@@ -709,7 +709,9 @@
       "native_vegetation_woods_plains_grove_01",
       "native_vegetation_woods_plains_grove_02",
       "native_vegetation_woods_plains_grove_03",
-      "native_vegetation_woods_plains_grove_04"
+      "native_vegetation_woods_plains_grove_04",
+      "native_vegetation_woods_plains_full_v3",
+      "native_vegetation_woods_plains_copse_v3"
     ],
     "biome_deep_forest": [
       "cohesive_temperate_00",
@@ -1750,7 +1752,9 @@
       "native_vegetation_woods_sand_thicket_01",
       "native_vegetation_woods_sand_thicket_02",
       "native_vegetation_woods_sand_thicket_03",
-      "native_vegetation_woods_sand_thicket_04"
+      "native_vegetation_woods_sand_thicket_04",
+      "native_mountain_sand_bluff_v3",
+      "native_mountain_sand_mesa_v3"
     ],
     "biome_highland_ridge": [
       "cohesive_wet_cold_02",
@@ -44800,6 +44804,58 @@
       "source_path": "res://art/overworld/source/generated/terrain/vegetation_masses_20260919/recipes.json",
       "availability": "Live large vegetation palette; habitat routing is defined in native_scenery.json.",
       "placement_authority": "Native obstacle masks; visual overlap only.",
+      "production_kind": "original_vegetation_mass",
+      "contains_dead_tree": false
+    },
+    "native_mountain_sand_bluff_v3": {
+      "name": "Sand Bluff",
+      "description": "Connected original landscape artwork spanning compatible neighboring blocker bodies. No interaction or reward; native movement masks remain authoritative.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_sand_bluff_v3.png",
+      "source_path": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "availability": "Live connected sand scenery patches.",
+      "placement_authority": "Existing blocked cells; visual patch grouping only.",
+      "production_kind": "original_mountain_mass",
+      "contains_dead_tree": false
+    },
+    "native_mountain_sand_mesa_v3": {
+      "name": "Sand Mesa",
+      "description": "Connected original landscape artwork spanning compatible neighboring blocker bodies. No interaction or reward; native movement masks remain authoritative.",
+      "biome_ids": [
+        "biome_coast_archipelago"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_sand_mesa_v3.png",
+      "source_path": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "availability": "Live connected sand scenery patches.",
+      "placement_authority": "Existing blocked cells; visual patch grouping only.",
+      "production_kind": "original_mountain_mass",
+      "contains_dead_tree": false
+    },
+    "native_vegetation_woods_plains_full_v3": {
+      "name": "Plains Full",
+      "description": "Connected original landscape artwork spanning compatible neighboring blocker bodies. No interaction or reward; native movement masks remain authoritative.",
+      "biome_ids": [
+        "biome_grasslands"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_vegetation_woods_plains_full_v3.png",
+      "source_path": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "availability": "Live connected grass scenery patches.",
+      "placement_authority": "Existing blocked cells; visual patch grouping only.",
+      "production_kind": "original_vegetation_mass",
+      "contains_dead_tree": false
+    },
+    "native_vegetation_woods_plains_copse_v3": {
+      "name": "Plains Copse",
+      "description": "Connected original landscape artwork spanning compatible neighboring blocker bodies. No interaction or reward; native movement masks remain authoritative.",
+      "biome_ids": [
+        "biome_grasslands"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_vegetation_woods_plains_copse_v3.png",
+      "source_path": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "availability": "Live connected grass scenery patches.",
+      "placement_authority": "Existing blocked cells; visual patch grouping only.",
       "production_kind": "original_vegetation_mass",
       "contains_dead_tree": false
     }

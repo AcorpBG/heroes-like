@@ -76,13 +76,15 @@ static func ground_modulate(object: Dictionary, biome_id: String, asset_id: Stri
 	# collision silhouettes, repainting source art or tinting interactable sites.
 	return Color(String(tones.get(family, tones.get("base", "ffffff"))))
 
-static func body_scale(object: Dictionary, asset_id: String, edge: bool = false) -> Vector2:
+static func body_scale(object: Dictionary, asset_id: String, edge: bool = false, terrain_id: String = "") -> Vector2:
 	var entry := policy(object)
 	var family := String(entry.get("landscape_family", entry.get("variation_family", "")))
 	if asset_id.begins_with("plains_grove_v2_"): family = "woods"
 	var rules := ContentService.load_json("res://art/overworld/scenery_scale.json")
 	var profile: Dictionary = rules.get("families", {}).get(family, {"width":1.0,"height":1.0})
 	var bounds := Vector2(float(profile.get("width",1.0)), float(profile.get("height",1.0)))
+	var terrain_limits: Dictionary = rules.get("terrain_height_limits",{}).get(terrain_id,{})
+	if terrain_limits.has(family): bounds.y=minf(bounds.y,float(terrain_limits[family]))
 	if asset_id.begins_with("biome_component_v2_"):
 		var cell := int(asset_id.get_slice("_", asset_id.get_slice_count("_") - 1))
 		if cell in rules.get(family + "_low_cells", []):

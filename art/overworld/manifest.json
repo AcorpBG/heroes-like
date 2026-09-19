@@ -41542,6 +41542,34 @@
       "source_model": "original_vegetation_mass",
       "source_manifest": "res://art/overworld/source/generated/terrain/vegetation_masses_20260919/recipes.json",
       "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "native_mountain_sand_bluff_v3": {
+      "path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_sand_bluff_v3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/connected_patches_20260919/sand_bluff.png",
+      "source_model": "original_mountain_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "native_mountain_sand_mesa_v3": {
+      "path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_sand_mesa_v3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/connected_patches_20260919/sand_mesa.png",
+      "source_model": "original_mountain_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "native_vegetation_woods_plains_full_v3": {
+      "path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_vegetation_woods_plains_full_v3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/connected_patches_20260919/plains_full.png",
+      "source_model": "original_vegetation_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
+    },
+    "native_vegetation_woods_plains_copse_v3": {
+      "path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_vegetation_woods_plains_copse_v3.png",
+      "source_generated": "res://art/overworld/source/generated/terrain/connected_patches_20260919/plains_copse.png",
+      "source_model": "original_vegetation_mass",
+      "source_manifest": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "asset_policy": "original_generated_no_copied_pixels"
     }
   },
   "resource_site_sprites": {

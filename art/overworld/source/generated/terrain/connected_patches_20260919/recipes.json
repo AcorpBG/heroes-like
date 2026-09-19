@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "canvas": [
+    512,
+    512
+  ],
+  "production": "res://art/overworld/source/generated/terrain/connected_patches_20260919/production.json",
+  "entries": [
+    {
+      "id": "native_mountain_sand_bluff_v3",
+      "kind": "original_mountain_mass",
+      "biome": "biome_coast_archipelago",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_sand_bluff_v3.png",
+      "atlas": "res://art/overworld/source/generated/terrain/connected_patches_20260919/sand_bluff.png",
+      "sha256": "1d884d48f063541ad9fc15be29b77895d0198e866d23b22226be47e9193be285"
+    },
+    {
+      "id": "native_mountain_sand_mesa_v3",
+      "kind": "original_mountain_mass",
+      "biome": "biome_coast_archipelago",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_sand_mesa_v3.png",
+      "atlas": "res://art/overworld/source/generated/terrain/connected_patches_20260919/sand_mesa.png",
+      "sha256": "2f789b7455a500d7538f35b3ec4920d041bda7c78343c1a5ee816311a9a5021e"
+    },
+    {
+      "id": "native_vegetation_woods_plains_full_v3",
+      "kind": "original_vegetation_mass",
+      "biome": "biome_grasslands",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_vegetation_woods_plains_full_v3.png",
+      "atlas": "res://art/overworld/source/generated/terrain/connected_patches_20260919/plains_full.png",
+      "sha256": "090b1048768dd736b573f2e3519fc03a409251242e078e59b99142d71af90146"
+    },
+    {
+      "id": "native_vegetation_woods_plains_copse_v3",
+      "kind": "original_vegetation_mass",
+      "biome": "biome_grasslands",
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_vegetation_woods_plains_copse_v3.png",
+      "atlas": "res://art/overworld/source/generated/terrain/connected_patches_20260919/plains_copse.png",
+      "sha256": "5a218430a0415627e0faa8baee04c99755a985abe57a2ecfeb29846d1ab3f6d7"
+    }
+  ]
+}

@@ -4483,7 +4483,7 @@ func _draw_scaled_scenery_body(object: Dictionary, rect: Rect2, remembered: bool
 		if not texture is Texture2D: return false
 		var region := _object_texture_visible_region(asset_id, texture)
 		var raster: Texture2D = region.get("draw_texture", texture)
-		var limits: Vector2 = rules.body_scale(object, asset_id, not own.is_empty()) * rect.size
+		var limits: Vector2 = rules.body_scale(object, asset_id, not own.is_empty(), _terrain_at(tile)) * rect.size
 		var factor := minf(limits.x / raster.get_width(), limits.y / raster.get_height())
 		var size := raster.get_size() * factor
 		# Ground plants share the tree's baseline, not its canvas-size target.
@@ -10867,6 +10867,7 @@ func _index_generated_decorative_body_cells(object: Dictionary) -> void:
 	_index_native_scenery_formations(object, body_tiles)
 
 func _index_native_rock_contacts() -> void:
+	_index_connected_scenery_patches()
 	# Presentation joins can cross source-record boundaries, but never a free
 	# tile or a terrain boundary. They add no placement or collision data.
 	var rocks := {}
@@ -10876,6 +10877,7 @@ func _index_native_rock_contacts() -> void:
 		var cell: Dictionary = _generated_decorative_bodies_by_tile[key]
 		cell.erase("generated_body_rock_contacts")
 		if int(cell.get("native_scenery_art_version", 0)) < 2: continue
+		if cell.has("generated_landscape_patch"): continue
 		if not String(cell.get("overworld_sprite_asset_id", "")).contains("_rock_"): continue
 		var tile := Vector2i(int(cell.x), int(cell.y))
 		var biome := String(GENERATED_DECORATIVE_BIOME_BY_TERRAIN.get(_terrain_at(tile), ""))
@@ -10902,6 +10904,42 @@ func _index_native_rock_contacts() -> void:
 			rocks[neighbor].cell.generated_body_rock_contacts.append(contact)
 	_index_native_scenery_layers()
 
+func _index_connected_scenery_patches() -> void:
+	var profiles := ContentService.load_json("res://art/overworld/connected_scenery.json")
+	var rules = preload("res://scripts/persistence/NativeSceneryRules.gd")
+	var by_terrain := {}
+	for cell in _generated_decorative_bodies_by_tile.values():
+		if int(cell.get("native_scenery_art_version",0))<2: continue
+		var tile := Vector2i(cell.x,cell.y)
+		var terrain := _terrain_at(tile)
+		var profile: Dictionary = profiles.get(terrain,{})
+		if profile.is_empty(): continue
+		var policy: Dictionary = rules.policy(cell)
+		var family := String(policy.get("landscape_family",policy.get("variation_family","")))
+		if family not in profile.families or policy.has("variation_biome"): continue
+		cell.erase("generated_body_formation")
+		cell["generated_landscape_patch"] = true
+		if not by_terrain.has(terrain): by_terrain[terrain]=[]
+		by_terrain[terrain].append(tile)
+	for terrain in by_terrain:
+		var profile: Dictionary = profiles[terrain]
+		for patch in preload("res://scripts/persistence/NativeSceneryFormation.gd").landscape_patches(by_terrain[terrain]):
+			var seed: int = patch.order
+			patch["asset_id"] = profile.assets[seed % profile.assets.size()]
+			patch["source_placement_id"] = "visual_patch|%s|%s" % [terrain,patch.origin]
+			patch["overlapping"] = true
+			patch["connected_landscape"] = true
+			patch["overlap_group"] = profile.group
+			patch["overhang"] = profile.overhang
+			patch["side_overlap"] = profile.side_overlap
+			patch["presentation"] = {"native_scenery_art_version":2,"h3m_type_id":134 if terrain=="sand" else 135}
+			# Small margins use full-sized outcrops/groves, never repeated scree.
+			if patch.tiles.size()==1:
+				patch.asset_id=profile.edge_assets[seed % profile.edge_assets.size()]
+				patch.overhang=0.3 if terrain=="sand" else 0.65
+			for tile in patch.tiles:
+				_generated_decorative_bodies_by_tile[_tile_key(tile)]["generated_body_formation"]=patch
+
 func _index_native_scenery_layers() -> void:
 	# Visual coverage is distinct from collision: canopies/peaks rise above their
 	# bases and overlap. Every explored tile samples the same sorted stack;
@@ -10921,16 +10959,16 @@ func _index_native_scenery_layers() -> void:
 		return String(a.source_placement_id) < String(b.source_placement_id))
 	for formation in ordered:
 		var mass := Rect2i(formation.mass_origin, formation.mass_size)
+		var connected_landscape := bool(formation.get("connected_landscape", false))
 		var margins := [0.0, 0.0]
 		for side in range(2):
 			var x: int = mass.position.x - 1 if side == 0 else mass.end.x
-			var joins_group := true
+			var matching_rows := 0
 			for y in range(mass.position.y, mass.end.y):
 				var tile := Vector2i(x,y)
 				var neighbor: Dictionary = _generated_decorative_bodies_by_tile.get(_tile_key(tile), {})
 				if neighbor.is_empty() or _terrain_at(tile) != _terrain_at(formation.anchor):
-					joins_group = false
-					break
+					continue
 				var own: Dictionary = neighbor.get("generated_body_formation", {})
 				var neighbor_group := String(own.get("overlap_group", ""))
 				if neighbor_group == "":
@@ -10939,12 +10977,21 @@ func _index_native_scenery_layers() -> void:
 					if family == "rock": neighbor_group = "rock"
 					if family in ["woods", "conifers", "wetland", "deadwood", "fungi", "scrub"]: neighbor_group = "vegetation"
 					if String(neighbor.get("overworld_sprite_asset_id", "")).begins_with("plains_grove_v2_"): neighbor_group = "vegetation"
-				if neighbor_group != String(formation.overlap_group):
-					joins_group = false
-					break
-			if joins_group: margins[side] = float(formation.get("side_overlap", 0.45))
+				if neighbor_group == String(formation.overlap_group): matching_rows += 1
+			if matching_rows == mass.size.y or connected_landscape:
+				margins[side] = float(formation.get("side_overlap", 0.45)) * float(matching_rows) / mass.size.y
+		var front_overlap := 0.0
+		if connected_landscape:
+			# Small shared skirts hide horizontal patch seams. Their bases remain
+			# on blocked cells; only artwork reaches into a compatible neighbor.
+			for x in range(mass.position.x,mass.end.x):
+				var tile := Vector2i(x,mass.end.y)
+				var neighbor: Dictionary = _generated_decorative_bodies_by_tile.get(_tile_key(tile),{})
+				var next: Dictionary = neighbor.get("generated_body_formation",{})
+				if _terrain_at(tile)==_terrain_at(formation.anchor) and next.get("overlap_group","")==formation.overlap_group:
+					front_overlap += 0.3 / mass.size.x
 		var overhang := float(formation.get("overhang", 1.4))
-		formation["paint_bounds"] = Rect2(Vector2(mass.position) - Vector2(margins[0],overhang), Vector2(mass.size) + Vector2(margins[0]+margins[1],overhang))
+		formation["paint_bounds"] = Rect2(Vector2(mass.position) - Vector2(margins[0],overhang), Vector2(mass.size) + Vector2(margins[0]+margins[1],overhang+front_overlap))
 		var bounds: Rect2 = formation.paint_bounds
 		for y in range(maxi(0, floori(bounds.position.y)), mini(_map_size.y, ceili(bounds.end.y))):
 			for x in range(maxi(0, floori(bounds.position.x)), mini(_map_size.x, ceili(bounds.end.x))):
@@ -10966,6 +11013,9 @@ func _index_native_scenery_formations(object: Dictionary, body_tiles: Array) -> 
 		if not by_terrain.has(terrain): by_terrain[terrain] = []
 		by_terrain[terrain].append(tile)
 	for tiles in by_terrain.values():
+		# On plains, low plants are understorey. Stretching a few reed/root
+		# tufts over a broad mask makes them taller than the woodland's trees.
+		if not tiles.is_empty() and _terrain_at(tiles[0])=="grass" and family in ["wetland","scrub","fungi"]: continue
 		for formation in preload("res://scripts/persistence/NativeSceneryFormation.gd").groups(tiles):
 			# Narrow margins retain their small scenery; broad native bodies gain
 			# one continuous dominant silhouette instead of a grid of miniatures.

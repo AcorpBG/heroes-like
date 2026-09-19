@@ -49,6 +49,39 @@ static func interior_rect(tiles: Array) -> Rect2i:
 				best = Rect2i(start, Vector2i(width, height))
 	return best
 
+static func landscape_patches(tiles: Array) -> Array:
+	# Bound artwork sizes across adjacent source records. Every base cell must
+	# already be blocked; rectangles are packing bounds, not painted outlines.
+	# Largest patches first avoid turning a shared landscape back into cell art.
+	var remaining := {}
+	for tile in tiles: remaining[tile] = true
+	var candidates: Array = []
+	for start in tiles:
+		for size in [Vector2i(4,3),Vector2i(3,3),Vector2i(4,2),Vector2i(3,2),Vector2i(2,2),Vector2i(3,1),Vector2i(2,1),Vector2i(1,2),Vector2i.ONE]:
+			var members: Array = []
+			for y in range(size.y):
+				for x in range(size.x):
+					var tile: Vector2i = start + Vector2i(x,y)
+					if remaining.has(tile): members.append(tile)
+			if members.size() != size.x * size.y: continue
+			candidates.append({"origin":start,"size":size,"tiles":members,"order":("patch|%s|%s" % [start,size]).sha256_buffer().decode_u32(0)})
+	candidates.sort_custom(func(a: Dictionary,b: Dictionary):
+		if a.tiles.size()!=b.tiles.size(): return a.tiles.size()>b.tiles.size()
+		if a.order!=b.order: return a.order<b.order
+		return a.origin.y<b.origin.y or (a.origin.y==b.origin.y and a.origin.x<b.origin.x))
+	var result: Array = []
+	for candidate in candidates:
+		var free := true
+		for tile in candidate.tiles:
+			if not remaining.has(tile): free=false; break
+		if not free: continue
+		for tile in candidate.tiles: remaining.erase(tile)
+		candidate["mass_origin"] = candidate.origin
+		candidate["mass_size"] = candidate.size
+		candidate["anchor"] = candidate.origin
+		result.append(candidate)
+	return result
+
 static func slice(formation: Dictionary, tile: Vector2i, cell_rect: Rect2, image_size: Vector2) -> Dictionary:
 	var origin: Vector2i = formation.get("mass_origin", formation.origin)
 	var size: Vector2i = formation.get("mass_size", formation.size)

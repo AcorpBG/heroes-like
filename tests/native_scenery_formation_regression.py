@@ -2,7 +2,7 @@
 import re
 import native_scenery_variety_regression as harness
 
-names = ['_index_generated_decorative_body_cells', '_index_native_scenery_formations', '_index_native_rock_contacts', '_draw_native_rock_contacts', '_index_native_scenery_layers', '_draw_native_formation_layer', '_draw_native_scenery_layers_at',
+names = ['_index_generated_decorative_body_cells', '_index_native_scenery_formations', '_index_native_rock_contacts', '_index_connected_scenery_patches', '_draw_native_rock_contacts', '_index_native_scenery_layers', '_draw_native_formation_layer', '_draw_native_scenery_layers_at',
          '_generated_decorative_body_asset_id', '_native_scenery_assets', '_native_scenery_modulate',
          '_generated_decorative_body_motif_key', '_generated_decorative_body_composition',
          '_stable_unit_fraction', '_tile_key', '_tiles_from_payloads',
@@ -86,8 +86,16 @@ func run():
         var part := Formation.slice(f,tile,bounds,Vector2(224,190))
         if not part.is_empty():
             check(bounds.encloses(part.rect),"formation escaped mask/fog cell")
-            check(part.painted_rect.size.x>48.0 and part.painted_rect.size.y>48.0,"formation remains miniature")
-    check(formations.size()==9,"multi-tile groups missing")
+            if f.mass_size.x>1 and f.mass_size.y>1:
+                check(part.painted_rect.size.x>48.0 and part.painted_rect.size.y>48.0,"broad formation remains miniature")
+    # Patches may span several records or divide an irregular body. Check
+    # actual large-body coverage instead of equating record and sprite counts.
+    for object in originals:
+        if object.package_block_tiles.size()<3: continue
+        var covered := false
+        for tile in _tiles_from_payloads(object.package_block_tiles):
+            if not _generated_decorative_bodies_by_tile[_tile_key(tile)].get("generated_body_formation",{}).is_empty(): covered=true
+        check(covered,"multi-tile body has no formation")
     check(not _generated_decorative_bodies_by_tile.has("13,1"),"irregular mask hole filled")
     var existing := _generated_decorative_bodies_by_tile.duplicate(true)
     var overlap: Dictionary = originals[1].duplicate(true)

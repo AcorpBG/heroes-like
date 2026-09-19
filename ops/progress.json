@@ -22302,6 +22302,15 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "art-connected-scenery-patches-20260919",
+      "title": "Connected sandstone bluffs and fuller plains woodland",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "notes": "Implemented cross-record visual patches for sand/plains with four original bluff/woodland sprites, shared-edge overlap and low plains undergrowth. Reviewed dense saved-map crops: 2268 checks preserve 1220 body cells; 50 patches join multiple records. Focused formation/vegetation/mountain checks, 2991 art contracts and Windows import pass. No native generation or collision change; no full suite or gameplay run. Owner visual acceptance remains separate."
+    },
+    {
       "id": "art-scenery-scale-hierarchy-20260919",
       "title": "Consistent scenery scale and quieter formation edges",
       "status": "completed",

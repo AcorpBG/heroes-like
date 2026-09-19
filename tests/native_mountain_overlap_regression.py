@@ -20,7 +20,8 @@ extra = '''
         if layers.size()>1: overlaps+=1
         if not _generated_decorative_bodies_by_tile.has(key): overhangs+=1
         for i in range(layers.size()):
-            check(String(layers[i].asset_id).begins_with("native_mountain_"),"boulder cluster used as mountain")
+            if layers[i].mass_size.x*layers[i].mass_size.y>1:
+                check(String(layers[i].asset_id).begins_with("native_mountain_"),"boulder cluster used as mountain")
             if i>0:
                 check(layers[i-1].mass_origin.y+layers[i-1].mass_size.y <= layers[i].mass_origin.y+layers[i].mass_size.y,"mountain depth order reversed")
     check(overlaps>0,"renderer has no overlapping mountain layers")

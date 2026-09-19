@@ -9,6 +9,7 @@
     "scrub": {"width": 0.65, "height": 0.42, "edge_width": 0.4, "edge_height": 0.25},
     "fungi": {"width": 0.6, "height": 0.4, "edge_width": 0.4, "edge_height": 0.25}
   },
+  "terrain_height_limits": {"grass": {"wetland": 0.28, "scrub": 0.3, "fungi": 0.24}},
   "rock_low_cells": [3, 7, 8, 11, 13, 16, 18, 21, 24],
   "deadwood_low_cells": [15, 16, 17, 18, 19, 21, 23],
   "low_limits": {"width": 0.8, "height": 0.4}
