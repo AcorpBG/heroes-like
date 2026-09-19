@@ -1,6 +1,9 @@
 extends RefCounted
 ## Layered approved paintings, animated on the GPU with no per-frame map rebuild.
 const MineShader = preload("res://scenes/overworld/OverworldMine.gdshader")
+# Keep the roof silhouette close to two tile rows without flattening the art.
+# The ground anchor and gameplay footprint stay fixed; every FX layer follows.
+const BUILDING_SCALE := 0.75
 var manifest: Dictionary = {}
 var _textures: Dictionary = {}
 
@@ -23,7 +26,7 @@ func payload(resource: String, footprint: Rect2) -> Dictionary:
 	if entry.is_empty(): return {}
 	var canvas := Vector2(manifest.canvas_size[0], manifest.canvas_size[1])
 	var ground := Vector2(footprint.get_center().x, footprint.end.y - footprint.size.y * .06)
-	var scale := footprint.size.x * .95 / float(manifest.painted_width)
+	var scale := footprint.size.x * .95 * BUILDING_SCALE / float(manifest.painted_width)
 	var anchor := Vector2(manifest.ground_anchor[0], manifest.ground_anchor[1])
 	return {"resource": resource, "entry": entry, "texture": texture(entry.base),
 		"parts_texture": texture(entry.parts_texture), "canvas": canvas,
