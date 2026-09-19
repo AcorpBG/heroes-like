@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_neutral_gaugecoil_orewyrms",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-b6883daa-1635-43bc-9ad9-a7015ff44771.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_neutral_gaugecoil_orewyrms.png",
+  "reference_revision": "849024a0b",
+  "prompt": "Use case: identity-preserve. Paint EIGHT original sequential poses for a restrained but clearly visible IDLE loop of exactly this fantasy strategy creature or mechanism. The reference strip shows ONE unit in two poses, NOT a group. Preserve its exact identity, silhouette, limb count, equipment ownership, colors, proportions and source-facing camera direction. The primary motion must come from the articulated limbs, wings, tail or mechanism specified below, NOT just bobbing the head. Keep the head and central body almost stationary. A smooth calm in-place cycle, no attack, walking, firing, extra limbs, new props or dramatic deformation.\nFour-legged segmented mechanical drill wyrm. Feet stay planted, drill head steady. Segmented tail curls and uncurls slightly, foreleg pistons flex with a subtle central suspension breath. Maintain permanent gauges, valve wheel and drill teeth, no attack.\nCanvas 1536x1024 RGBA TRUE transparent background. Four columns and two rows, exactly eight sequential COMPLETE poses in reading order. Each stays fully inside its 384x512 cell with at least 24px transparent margin on all sides. Same anatomical scale and fixed root/ground baseline in all eight cells. Wide creatures fit naturally at smaller height; NEVER crop tails, wings or weapons or squeeze proportions. Rest, small adjustment, further adjustment, crest, halfway back, easing down, almost rest, rest. Detailed hand-painted original fantasy strategy sprite, crisp readable anatomy, no labels/grid/floor/background/shadow. Genuine new paintings, no rigid translated copies.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "5e0c5bd5fa2316253ee4c5628c358e1436a8df3d803c3ecbbc178b175b440045",
+  "reference_sha256": "ab0ca1c10d6c5c46002d5405cb430abb9b23929414901b983dd236b6860e0e25",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; articulated limbs, wings, tails or mechanisms move according to anatomy; humanoid hand and forearm movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

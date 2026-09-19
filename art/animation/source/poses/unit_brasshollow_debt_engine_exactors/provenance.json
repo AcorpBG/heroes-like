@@ -102,5 +102,18 @@
       ],
       "removed_bytes": 10351909
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_brasshollow_debt_engine_exactors.png",
+    "runtime_sha256": "dc2b6a7d4fea89da12b7102c4c0a07cae164ac7a8be552175365b2dd67faf387"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "b3c167d024367d33985028435848d3819e3ba7136fab206dc28e2ddb65776550",
+    "preserved_frames": 13,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

@@ -1,0 +1,344 @@
+{
+  "unit_id": "unit_veilmourn_fogbound_leviathan",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "left",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses-green-background.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          360
+        ]
+      ],
+      "anchor": [
+        185,
+        337
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses-green-background.png",
+      "rects": [
+        [
+          384,
+          0,
+          766,
+          360
+        ]
+      ],
+      "anchor": [
+        569,
+        337
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "crawl_far_fore_contact",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/four-leg-crawl-and-fold-green-background.png",
+      "rects": [
+        [
+          0,
+          130,
+          514,
+          510
+        ]
+      ],
+      "anchor": [
+        251,
+        477
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "crawl_all_planted",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/four-leg-crawl-and-fold-green-background.png",
+      "rects": [
+        [
+          514,
+          130,
+          1024,
+          510
+        ]
+      ],
+      "anchor": [
+        765,
+        477
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "crawl_near_fore_lift",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/four-leg-crawl-and-fold-green-background.png",
+      "rects": [
+        [
+          1024,
+          130,
+          1536,
+          510
+        ]
+      ],
+      "anchor": [
+        1277,
+        477
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "crawl_hind_lift",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/four-leg-crawl-and-fold-green-background.png",
+      "rects": [
+        [
+          0,
+          520,
+          519,
+          955
+        ]
+      ],
+      "anchor": [
+        251,
+        905
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "bite_windup",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses-green-background.png",
+      "rects": [
+        [
+          384,
+          370,
+          767,
+          670
+        ]
+      ],
+      "anchor": [
+        569,
+        641
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "bite_closed_release",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses-green-background.png",
+      "rects": [
+        [
+          767,
+          370,
+          1169,
+          670
+        ]
+      ],
+      "anchor": [
+        957,
+        641
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "guard_tucked",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses-green-background.png",
+      "rects": [
+        [
+          1170,
+          370,
+          1536,
+          670
+        ]
+      ],
+      "anchor": [
+        1341,
+        641
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "guard_deeper",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/four-leg-crawl-and-fold-green-background.png",
+      "rects": [
+        [
+          520,
+          520,
+          994,
+          955
+        ]
+      ],
+      "anchor": [
+        765,
+        905
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "hit_rear",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses-green-background.png",
+      "rects": [
+        [
+          0,
+          677,
+          400,
+          887
+        ],
+        [
+          0,
+          887,
+          379,
+          987
+        ]
+      ],
+      "anchor": [
+        185,
+        950
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "death_buckle",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses-green-background.png",
+      "rects": [
+        [
+          401,
+          677,
+          750,
+          890
+        ],
+        [
+          380,
+          890,
+          750,
+          987
+        ]
+      ],
+      "anchor": [
+        569,
+        950
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "death_side_fold",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/four-leg-crawl-and-fold-green-background.png",
+      "rects": [
+        [
+          996,
+          620,
+          1536,
+          955
+        ]
+      ],
+      "anchor": [
+        1277,
+        901
+      ],
+      "scale": 0.51
+    },
+    {
+      "name": "dead_cold",
+      "source": "art/animation/source/poses/unit_veilmourn_fogbound_leviathan/continuity-alpha/poses-green-background.png",
+      "rects": [
+        [
+          1127,
+          730,
+          1536,
+          987
+        ]
+      ],
+      "anchor": [
+        1327,
+        950
+      ],
+      "scale": 0.68
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 470,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 6,
+      "indices": [
+        2,
+        3,
+        4,
+        3,
+        5,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        6,
+        7,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 300,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 250,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

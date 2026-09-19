@@ -1,0 +1,362 @@
+{
+  "unit_id": "unit_thornwake_woundroot_rootmaul_behemoths",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          365,
+          401
+        ]
+      ],
+      "anchor": [
+        209,
+        390
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "idle_breath_compact",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses-idle-neck-corrected.png",
+      "rects": [
+        [
+          365,
+          0,
+          719,
+          401
+        ]
+      ],
+      "anchor": [
+        571,
+        390
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "near_contact",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-near-contact-draft.png",
+      "rects": [
+        [
+          0,
+          0,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        832,
+        1005
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "far_passing",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-far-passing-draft.png",
+      "rects": [
+        [
+          0,
+          0,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        832,
+        982
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "far_contact",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-far-contact-draft.png",
+      "rects": [
+        [
+          0,
+          0,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        832,
+        990
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "near_passing",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/walk-near-passing-diagonal.png",
+      "rects": [
+        [
+          0,
+          0,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        832,
+        995
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "slam_windup_compact",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/slam-windup.png",
+      "rects": [
+        [
+          0,
+          0,
+          1197,
+          1315
+        ]
+      ],
+      "anchor": [
+        668,
+        1268
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "slam_contact",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+      "rects": [
+        [
+          706,
+          485,
+          1094,
+          687
+        ],
+        [
+          706,
+          687,
+          1109,
+          747
+        ]
+      ],
+      "anchor": [
+        935,
+        738
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+      "rects": [
+        [
+          1097,
+          404,
+          1448,
+          680
+        ],
+        [
+          1116,
+          680,
+          1448,
+          747
+        ]
+      ],
+      "anchor": [
+        1296,
+        733
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "guard_braced",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/guard-braced.png",
+      "rects": [
+        [
+          0,
+          0,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        840,
+        988
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "hit_compact",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/hit-recoil.png",
+      "rects": [
+        [
+          0,
+          0,
+          1197,
+          1315
+        ]
+      ],
+      "anchor": [
+        687,
+        1245
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "death_buckle",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+      "rects": [
+        [
+          365,
+          749,
+          704,
+          912
+        ],
+        [
+          365,
+          912,
+          691,
+          1066
+        ]
+      ],
+      "anchor": [
+        568,
+        1039
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "death_collapse",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+      "rects": [
+        [
+          704,
+          850,
+          1080,
+          930
+        ],
+        [
+          690,
+          930,
+          1080,
+          976
+        ],
+        [
+          704,
+          976,
+          1080,
+          1067
+        ]
+      ],
+      "anchor": [
+        932,
+        1040
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "corpse",
+      "source": "art/animation/source/poses/unit_thornwake_woundroot_rootmaul_behemoths/continuity-alpha/poses.png",
+      "rects": [
+        [
+          1080,
+          750,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        1298,
+        1040
+      ],
+      "scale": 0.59
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 230,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

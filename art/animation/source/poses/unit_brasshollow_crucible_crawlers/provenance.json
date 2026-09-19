@@ -84,5 +84,18 @@
       ],
       "removed_bytes": 6872744
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_brasshollow_crucible_crawlers.png",
+    "runtime_sha256": "c2afc3c86d65647afed90f8be8a6fbf07dd06262610c53753e4aa4565392ed00"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "2ad5ca2a46112241c28e67c5f3a9b7ba7afbd837190cf21e8fb0535bf44c36f6",
+    "preserved_frames": 15,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

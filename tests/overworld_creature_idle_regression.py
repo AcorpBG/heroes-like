@@ -182,7 +182,8 @@ func run():
 	for stack in stacks:
 		var animation: Dictionary=ContentService.get_unit_animation(stack.unit_id)
 		check(seen_regions[stack.battle_id].size()==8,"battle did not play all eight frames: "+stack.battle_id)
-		check(Pose.facing_flip(animation,stack.side)==(stack.side=="enemy"),"battle idle facing reversed")
+		var expected_flip: bool = (stack.side == "enemy") != (animation.get("pose_source_facing", "right") == "left")
+		check(Pose.facing_flip(animation,stack.side)==expected_flip,"battle idle facing reversed")
 		var first_clock := Pose.idle_elapsed_msec(animation,0,stack.unit_id+"/"+stack.battle_id)
 		check(Pose.idle_elapsed_msec(animation,1000,stack.unit_id+"/"+stack.battle_id)==first_clock+1000,"idle phase drift")
 		check(first_clock!=Pose.idle_elapsed_msec(animation,0,stack.unit_id+"/neighbor"),"battle stacks synchronized")

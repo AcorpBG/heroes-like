@@ -1,0 +1,30 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_sunvault_splitprism_heliograph_ballistae",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-8e2fa4d2-9385-4482-98b0-3534ab98b69f.png",
+  "reference": "reference-single.png",
+  "reference_preparation": {
+    "source": "hands-rejected-layout2-original.png",
+    "crop": [
+      0,
+      0,
+      402,
+      512
+    ],
+    "operation": "Unmodified crop of complete first pose to avoid repeating a clipped sheet layout."
+  },
+  "prompt": "Paint exactly eight idle animation poses of the exact ballista and one operator in the attached SINGLE reference. Keep the original design, gold/blue/white colors, wheels and four outriggers, LEFT-facing blue crystal barrel, orange rear tip. Operator's elbows and hands visibly work a control then ease back, little head motion, machine stays planted; no firing. FORMAT: 4 columns by2 rows sprite sheet,1536x1024RGBA transparent. VERY IMPORTANT: Each complete machine+operator silhouette no wider than280pixels and no taller than250pixels in its384x512cell. Each sprite occupies only the MIDDLE 70% of its cell width and MIDDLE half of its cell height. At least50pixels empty on both sides of each whole sprite. LARGE transparent gaps between poses. Never fill the cells or crop any tips. Eight distinct poses make a smooth idle loop, consistent scale and stationary machine baseline. No text, outlines, boxes or extra parts.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "9cba0a5d8720685b8e55c5e556f1c134d0f9c3e305f2345c5799a132948954be",
+  "reference_sha256": "2dca641c75b6e698ffa538a62dbad0d725849721512d787f558a9b6c17508cef",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; articulated limbs, wings, tails or mechanisms move according to anatomy; humanoid hand and forearm movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

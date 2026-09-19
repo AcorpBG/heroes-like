@@ -1,0 +1,149 @@
+{
+  "unit_id": "unit_sunvault_aurora_ballistae",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "status": "accepted_idle_articulation_20260919",
+  "frames": [
+    {
+      "name": "idle_hands_0",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          387,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        448
+      ],
+      "scale": 0.61842
+    },
+    {
+      "name": "idle_hands_1",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          387,
+          0,
+          769,
+          512
+        ]
+      ],
+      "anchor": [
+        577,
+        448
+      ],
+      "scale": 0.61842
+    },
+    {
+      "name": "idle_hands_2",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          769,
+          0,
+          1152,
+          512
+        ]
+      ],
+      "anchor": [
+        964,
+        448
+      ],
+      "scale": 0.61842
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1345,
+        448
+      ],
+      "scale": 0.61842
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          386,
+          1024
+        ]
+      ],
+      "anchor": [
+        192,
+        959
+      ],
+      "scale": 0.61842
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          386,
+          512,
+          769,
+          1024
+        ]
+      ],
+      "anchor": [
+        576,
+        960
+      ],
+      "scale": 0.61842
+    },
+    {
+      "name": "idle_hands_6",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          769,
+          512,
+          1152,
+          1024
+        ]
+      ],
+      "anchor": [
+        960,
+        960
+      ],
+      "scale": 0.61842
+    },
+    {
+      "name": "idle_hands_7",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1344,
+        959
+      ],
+      "scale": 0.61842
+    }
+  ],
+  "scale_basis": "One uniform scale across the loop, matched to previous idle height with room for the highest pose; no per-frame resizing."
+}

@@ -22304,11 +22304,11 @@
     {
       "id": "animation-expanded-idle-loops-20260919",
       "title": "Eight-pose creature idle loops for the complete 160-unit roster",
-      "status": "in_progress",
+      "status": "completed",
       "phase": "phase-6-production-alpha-layer",
       "classification": "content_implementation_slice",
       "source": "PLAN.md",
-      "notes": "Full 160-unit scope remains in progress. 119 units now have reviewed eight-pose loops; 41 retain two-pose idles. 114 armed units have visible hand, elbow, wrist and equipment motion, including the corrected Roadwarden. 21 focused Windows battle/overworld cohorts pass (344-444 checks each); existing action pixels preserved. No full suite. Continue original art production and review for all remaining units; do not mark the full roster complete."
+      "notes": "All 160 creatures have reviewed eight-pose idle loops shared by battle and overworld. 155 loops repainted with 1240 original drawings; five earlier reviewed loops retained. Armed units show hand, elbow, grip and equipment motion; beasts and constructs use wings, forepaws, tails and mechanisms. Stable anatomical anchors preserve that articulation. 29 focused Windows playback runs pass (344-444 checks each), including left-facing artwork; two selected registration tests pass. Previous action pixels and non-idle clips preserved; final 41 atlases rebuilt byte-identically and 576 prior frames compared. Corrected Heliograph Ballista source-facing metadata after inspecting original action paintings. No full suite, Linux/package build or full-match playtest. Original art and provenance retained; task-owned captures, reports and profiles removed after review."
     },
     {
       "id": "animation-overworld-creature-idle-20260919",

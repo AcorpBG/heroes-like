@@ -1,0 +1,216 @@
+{
+  "unit_id": "unit_neutral_rootvault_barkhulks",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          385,
+          360
+        ]
+      ],
+      "anchor": [
+        200,
+        365
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "idle_breath",
+      "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+      "rects": [
+        [
+          385,
+          0,
+          755,
+          360
+        ]
+      ],
+      "anchor": [
+        562,
+        365
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+      "rects": [
+        [
+          755,
+          0,
+          1095,
+          365
+        ]
+      ],
+      "anchor": [
+        924,
+        365
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+      "rects": [
+        [
+          1095,
+          0,
+          1448,
+          360
+        ]
+      ],
+      "anchor": [
+        1286,
+        365
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "walk_pass",
+      "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          360,
+          380,
+          715
+        ]
+      ],
+      "anchor": [
+        200,
+        730
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+      "rects": [
+        [
+          380,
+          360,
+          735,
+          725
+        ]
+      ],
+      "anchor": [
+        562,
+        730
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "attack_slam",
+      "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+      "rects": [
+        [
+          735,
+          390,
+          1110,
+          725
+        ]
+      ],
+      "anchor": [
+        924,
+        730
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+      "rects": [
+        [
+          1110,
+          365,
+          1448,
+          730
+        ]
+      ],
+      "anchor": [
+        1286,
+        730
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "recoil",
+      "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          715,
+          370,
+          1065
+        ]
+      ],
+      "anchor": [
+        200,
+        1075
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+      "rects": [
+        [
+          370,
+          760,
+          725,
+          1070
+        ]
+      ],
+      "anchor": [
+        562,
+        1075
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+      "rects": [
+        [
+          725,
+          845,
+          1090,
+          1075
+        ]
+      ],
+      "anchor": [
+        924,
+        1075
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_rootvault_barkhulks/alpha/poses.png",
+      "rects": [
+        [
+          1090,
+          865,
+          1448,
+          1075
+        ]
+      ],
+      "anchor": [
+        1286,
+        1075
+      ],
+      "scale": 0.64
+    }
+  ]
+}

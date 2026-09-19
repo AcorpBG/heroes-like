@@ -32,9 +32,16 @@
     "Twelve original heavy-step, crown-jaw bite, brace, recoil and collapsed dead poses packed. Real RGBA 0..255. Candidate only; gait contacts and continuous motion require refinement/review."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_miremoon_crownmaws.png",
-    "runtime_sha256": "a1aa74dbec5cdda95e62d2c277c89c76c92fad0fdda6db9bf1638f0615698703",
-    "method": "Uniform 0.65 downsampling and segmented tail/moss/adjacent-body rectangles preserving original raster poses without painting or warping."
+    "runtime_sha256": "836ff3cc6bcb920b77d22769a9e679b086f41a141c80f37def402d3464b1fa4c"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "a1aa74dbec5cdda95e62d2c277c89c76c92fad0fdda6db9bf1638f0615698703",
+    "preserved_frames": 12,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

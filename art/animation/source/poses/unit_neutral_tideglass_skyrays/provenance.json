@@ -35,9 +35,16 @@
     "Source-only; translucent fin/ribbon compositing, packing and live motion acceptance required before registration. No enabled or accepted count assigned."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_tideglass_skyrays.png",
-    "runtime_sha256": "29ad66951967f497f227f566bd6667faf1daccb607969b22e782dcef259ad4c9",
-    "method": "Sixteen original poses; uniform 0.62 base-sheet and 0.36 higher-resolution ranged-sheet downsampling with anatomical ground anchors and segmented glide/ram crops. No painted, rotated or warped replacement poses."
+    "runtime_sha256": "236344c778744e4fac6104e89a912853a5e915eb1e0c942a6c6a3e345752d43c"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "29ad66951967f497f227f566bd6667faf1daccb607969b22e782dcef259ad4c9",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

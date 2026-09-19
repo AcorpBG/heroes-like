@@ -1,0 +1,149 @@
+{
+  "unit_id": "unit_neutral_deepforge_vaultwyrms",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "status": "accepted_idle_articulation_20260919",
+  "frames": [
+    {
+      "name": "idle_hands_0",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          496
+        ]
+      ],
+      "anchor": [
+        191,
+        464
+      ],
+      "scale": 0.58076
+    },
+    {
+      "name": "idle_hands_1",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          384,
+          0,
+          768,
+          496
+        ]
+      ],
+      "anchor": [
+        579,
+        464
+      ],
+      "scale": 0.58076
+    },
+    {
+      "name": "idle_hands_2",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          768,
+          0,
+          1152,
+          496
+        ]
+      ],
+      "anchor": [
+        963,
+        464
+      ],
+      "scale": 0.58076
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          496
+        ]
+      ],
+      "anchor": [
+        1342,
+        464
+      ],
+      "scale": 0.58076
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          496,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        190,
+        941
+      ],
+      "scale": 0.58076
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          384,
+          496,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        579,
+        939
+      ],
+      "scale": 0.58076
+    },
+    {
+      "name": "idle_hands_6",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          768,
+          496,
+          1152,
+          1024
+        ]
+      ],
+      "anchor": [
+        956,
+        941
+      ],
+      "scale": 0.58076
+    },
+    {
+      "name": "idle_hands_7",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          496,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1341,
+        941
+      ],
+      "scale": 0.58076
+    }
+  ],
+  "scale_basis": "One uniform scale across the loop, matched to previous idle height with room for the highest pose; no per-frame resizing."
+}

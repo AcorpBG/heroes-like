@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_neutral_saltwake_bellwhales",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-123deebb-0064-45d1-b6f1-7a33f6ca31dd.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_neutral_saltwake_bellwhales.png",
+  "reference_revision": "849024a0b",
+  "prompt": "Use case: identity-preserve. Paint EIGHT original sequential poses for a restrained but clearly visible IDLE loop of exactly this fantasy strategy creature or mechanism. The reference strip shows ONE unit in two poses, NOT a group. Preserve its exact identity, silhouette, limb count, equipment ownership, colors, proportions and source-facing camera direction. The primary motion must come from the articulated limbs, wings, tail or mechanism specified below, NOT just bobbing the head. Keep the head and central body almost stationary. A smooth calm in-place cycle, no attack, walking, firing, extra limbs, new props or dramatic deformation.\nHovering blue whale with TWO pectoral fins and ONE split tail. Pectoral fins perform calm shallow downstroke/upstroke, trailing tail waves; body/head stationary. Bells swing subtly. No extra fins.\nCanvas 1536x1024 RGBA TRUE transparent background. Four columns and two rows, exactly eight sequential COMPLETE poses in reading order. Each stays fully inside its 384x512 cell with at least 24px transparent margin on all sides. Same anatomical scale and fixed root/ground baseline in all eight cells. Wide creatures fit naturally at smaller height; NEVER crop tails, wings or weapons or squeeze proportions. Rest, small adjustment, further adjustment, crest, halfway back, easing down, almost rest, rest. Detailed hand-painted original fantasy strategy sprite, crisp readable anatomy, no labels/grid/floor/background/shadow. Genuine new paintings, no rigid translated copies.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "aa9179e496e8186a527b120452d17437ebac62b5c2dfa10466548db8d151caae",
+  "reference_sha256": "c6b7d1487fd90265e6747d3eca786f3a6481d282c4ad6d7382ec60c7052e9ced",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; articulated limbs, wings, tails or mechanisms move according to anatomy; humanoid hand and forearm movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

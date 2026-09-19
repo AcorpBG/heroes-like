@@ -1,0 +1,240 @@
+{
+  "unit_id": "unit_neutral_deepforge_vaultwyrms",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_neutral_deepforge_vaultwyrms/alpha/poses-right.png",
+      "rects": [
+        [
+          1164,
+          0,
+          1536,
+          342
+        ]
+      ],
+      "anchor": [
+        1350,
+        331
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "idle_breath",
+      "source": "art/animation/source/poses/unit_neutral_deepforge_vaultwyrms/alpha/poses-right.png",
+      "rects": [
+        [
+          777,
+          0,
+          1152,
+          342
+        ]
+      ],
+      "anchor": [
+        971,
+        331
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_neutral_deepforge_vaultwyrms/alpha/poses-right.png",
+      "rects": [
+        [
+          397,
+          0,
+          777,
+          342
+        ]
+      ],
+      "anchor": [
+        587,
+        331
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_neutral_deepforge_vaultwyrms/alpha/poses-right.png",
+      "rects": [
+        [
+          0,
+          0,
+          397,
+          342
+        ]
+      ],
+      "anchor": [
+        199,
+        331
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_pass",
+      "source": "art/animation/source/poses/unit_neutral_deepforge_vaultwyrms/alpha/poses-right.png",
+      "rects": [
+        [
+          1152,
+          342,
+          1536,
+          540
+        ],
+        [
+          1164,
+          540,
+          1536,
+          660
+        ]
+      ],
+      "anchor": [
+        1350,
+        667
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "windup",
+      "source": "art/animation/source/poses/unit_neutral_deepforge_vaultwyrms/alpha/poses-right.png",
+      "rects": [
+        [
+          777,
+          342,
+          1152,
+          540
+        ],
+        [
+          777,
+          540,
+          1164,
+          660
+        ]
+      ],
+      "anchor": [
+        971,
+        667
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "bite",
+      "source": "art/animation/source/poses/unit_neutral_deepforge_vaultwyrms/alpha/poses-right.png",
+      "rects": [
+        [
+          397,
+          342,
+          777,
+          678
+        ]
+      ],
+      "anchor": [
+        587,
+        667
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_neutral_deepforge_vaultwyrms/alpha/poses-right.png",
+      "rects": [
+        [
+          0,
+          342,
+          397,
+          678
+        ]
+      ],
+      "anchor": [
+        199,
+        667
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "recoil",
+      "source": "art/animation/source/poses/unit_neutral_deepforge_vaultwyrms/alpha/poses-right.png",
+      "rects": [
+        [
+          1158,
+          678,
+          1536,
+          820
+        ],
+        [
+          1184,
+          820,
+          1536,
+          977
+        ]
+      ],
+      "anchor": [
+        1350,
+        977
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "collapse",
+      "source": "art/animation/source/poses/unit_neutral_deepforge_vaultwyrms/alpha/poses-right.png",
+      "rects": [
+        [
+          779,
+          678,
+          1158,
+          820
+        ],
+        [
+          779,
+          820,
+          1184,
+          977
+        ]
+      ],
+      "anchor": [
+        971,
+        977
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "roll",
+      "source": "art/animation/source/poses/unit_neutral_deepforge_vaultwyrms/alpha/poses-right.png",
+      "rects": [
+        [
+          399,
+          735,
+          779,
+          966
+        ]
+      ],
+      "anchor": [
+        587,
+        966
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_deepforge_vaultwyrms/alpha/poses-right.png",
+      "rects": [
+        [
+          0,
+          760,
+          399,
+          945
+        ]
+      ],
+      "anchor": [
+        199,
+        945
+      ],
+      "scale": 0.65
+    }
+  ]
+}

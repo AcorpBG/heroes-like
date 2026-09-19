@@ -82,5 +82,18 @@
       ],
       "removed_bytes": 5749297
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_veilmourn_fogbound_leviathan.png",
+    "runtime_sha256": "7a3cde55c267364076770b8694ee9301e7321f7fb8ede25da0bc0067dc3e206d"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "3aaef7f81b347e2d1df8c0ee3993e1a57dc795adae467d69fd773d592dc38088",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

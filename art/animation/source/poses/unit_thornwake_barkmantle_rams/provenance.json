@@ -100,5 +100,18 @@
     "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/barkram-continuity-20260915/art-desk-registered.html",
     "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/barkram-continuity-20260915/art-desk-registered.png",
     "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/barkram-continuity-20260915/packed-final/poses-candidate-atlas-green.png"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_thornwake_barkmantle_rams.png",
+    "runtime_sha256": "e054b07969e06d8736acfe3d3f356559b9526a2521712de0532e8d3e96d91bef"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "1cb173e61905e031d3f7e0c4006372a524394c698c6ed6d3e3276f1fe11a60df",
+    "preserved_frames": 11,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

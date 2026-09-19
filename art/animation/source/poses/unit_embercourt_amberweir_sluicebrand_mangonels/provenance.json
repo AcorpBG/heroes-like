@@ -186,5 +186,18 @@
     "runtime_sha256": "516a47246a45b80e65bad25f3d7c273137ff8a7ea390a5a19924e00386e5eacd",
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/sluicebrand-continuity-20260915/",
     "status": "candidate_registered_not_final_accepted"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_embercourt_amberweir_sluicebrand_mangonels.png",
+    "runtime_sha256": "e2c630aa3f61b867fe35f8356b18a64633dc7a19909f8f8c0b58e99dca36e2e9"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "516a47246a45b80e65bad25f3d7c273137ff8a7ea390a5a19924e00386e5eacd",
+    "preserved_frames": 17,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

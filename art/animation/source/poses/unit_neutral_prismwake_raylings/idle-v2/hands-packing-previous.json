@@ -1,0 +1,411 @@
+{
+  "unit_id": "unit_neutral_prismwake_raylings",
+  "status": "candidate_pending_art_desk_review",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          0,
+          0,
+          370,
+          362
+        ]
+      ],
+      "anchor": [
+        281,
+        409
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          370,
+          0,
+          724,
+          362
+        ]
+      ],
+      "anchor": [
+        634,
+        438
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "flight_up",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          724,
+          0,
+          1060,
+          362
+        ]
+      ],
+      "anchor": [
+        994,
+        448
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "flight_down",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          1060,
+          0,
+          1448,
+          362
+        ]
+      ],
+      "anchor": [
+        1358,
+        425
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "flight_level",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          0,
+          362,
+          290,
+          700
+        ],
+        [
+          290,
+          362,
+          362,
+          680
+        ]
+      ],
+      "anchor": [
+        280,
+        781
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          362,
+          390,
+          711,
+          575
+        ],
+        [
+          362,
+          575,
+          696,
+          708
+        ]
+      ],
+      "anchor": [
+        631,
+        790
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "attack_contact",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          704,
+          390,
+          1190,
+          575
+        ],
+        [
+          704,
+          575,
+          1140,
+          711
+        ]
+      ],
+      "anchor": [
+        1028,
+        755
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "defend_curl",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          1190,
+          395,
+          1448,
+          578
+        ],
+        [
+          1160,
+          578,
+          1448,
+          711
+        ]
+      ],
+      "anchor": [
+        1349,
+        755
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          0,
+          715,
+          360,
+          1086
+        ],
+        [
+          290,
+          680,
+          355,
+          715
+        ]
+      ],
+      "anchor": [
+        225,
+        1090
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "death_droop",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          365,
+          725,
+          680,
+          950
+        ],
+        [
+          365,
+          950,
+          665,
+          1086
+        ]
+      ],
+      "anchor": [
+        596,
+        1065
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          670,
+          750,
+          1045,
+          985
+        ],
+        [
+          670,
+          985,
+          1073,
+          1086
+        ]
+      ],
+      "anchor": [
+        967,
+        1030
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/poses-corrected.png",
+      "rects": [
+        [
+          1045,
+          840,
+          1448,
+          980
+        ],
+        [
+          1075,
+          980,
+          1448,
+          1010
+        ]
+      ],
+      "anchor": [
+        1344,
+        1000
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "defend_breath",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/local-alpha/defend-breath.png",
+      "rects": [
+        [
+          0,
+          0,
+          1154,
+          1363
+        ]
+      ],
+      "anchor": [
+        724,
+        1579
+      ],
+      "scale": 0.1265
+    },
+    {
+      "name": "ranged_lens_charge",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/alpha/ranged-tail-corrected.png",
+      "rects": [
+        [
+          0,
+          0,
+          560,
+          805
+        ]
+      ],
+      "anchor": [
+        432,
+        760
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "ranged_lens_release",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/alpha/ranged-source.png",
+      "rects": [
+        [
+          560,
+          0,
+          1265,
+          805
+        ]
+      ],
+      "anchor": [
+        1065,
+        735
+      ],
+      "scale": 0.3
+    },
+    {
+      "name": "ranged_lens_recover",
+      "source": "art/animation/source/poses/unit_neutral_prismwake_raylings/ranged-correction-20260916/alpha/ranged-source.png",
+      "rects": [
+        [
+          1265,
+          0,
+          1954,
+          805
+        ]
+      ],
+      "anchor": [
+        1754,
+        753
+      ],
+      "scale": 0.3
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        4,
+        2,
+        4,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        5,
+        6,
+        4
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        12
+      ],
+      "loop": true,
+      "frame_msec": 500,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        8,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        9,
+        10,
+        11
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        11
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

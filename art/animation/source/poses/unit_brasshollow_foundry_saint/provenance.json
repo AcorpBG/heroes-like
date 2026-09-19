@@ -186,5 +186,18 @@
       ],
       "removed_bytes": 28211089
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_brasshollow_foundry_saint.png",
+    "runtime_sha256": "0ae5eca55dfd66d0b50a81300010061a1a53f42939a11aa41bd0c05c9932c379"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "49d06754d57d2c609c364648d255a337f95d0dcf886fd49c6cd14e58b082ca39",
+    "preserved_frames": 13,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

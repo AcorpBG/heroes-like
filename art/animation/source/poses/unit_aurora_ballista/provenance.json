@@ -25,9 +25,16 @@
     "Godot contrasting-background render inspected: genuine alpha, no visible replacement backdrop. Packed sixteen-pose atlas inspected; isolated neighbor fragments excluded through source crop boundaries. Full motion acceptance pending."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_aurora_ballista.png",
-    "runtime_sha256": "e9727eb58ef21d2dc23fe95d7b17a50d5e29e7e2fc4ff2bf5fff2de86e72dadf",
-    "method": "Uniform 0.72 downsampling, ground anchors and segmented crops preserving stabilizers while excluding neighboring parts."
+    "runtime_sha256": "2313102ee6985f5966309ebb38e1fa9e469341960f620899ca6d38e8ccfe66a1"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "e9727eb58ef21d2dc23fe95d7b17a50d5e29e7e2fc4ff2bf5fff2de86e72dadf",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

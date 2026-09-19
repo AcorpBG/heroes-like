@@ -88,7 +88,7 @@
         "source": "art/animation/source/poses/unit_sunvault_splitprism_heliograph_ballistae/actions-four.png",
         "source_sha256": "e40dc15ca4aa239f46e037f735a63dc225e5b7c15dc2ccb96c08a5a404f2142f",
         "source_output": "/root/.codex/generated_images/01a05d96-1b3a-7930-839c-fd2fe5a9eccc/exec-27b4ed34-f39d-42c9-9885-09f2783c6010.png",
-        "prompt": "Original tactical battle animation sprite sheet, FOUR full units in TWO by TWO grid, generous empty gutters and outer margins, flat medium neutral gray #929292. Reference is authoritative Splitprism Heliograph Ballista: ONE ivory/gold/cobalt wheeled siege carriage, exactly TWO blue spoked wheels on one axle, central circular blue mirror, long blue crystalline launcher upper LEFT, amber crystalline launcher pointing RIGHT, THREE attached ivory/cobalt jointed stabilizers with gold star feet, ONE armored operator with blue plume/cape fixed on rear platform. Same fixed three-quarter camera and equipment/body scale in every cell.\nTop left RANGED WINDUP: all three supports spread/braced, operator draws crank back elbows bent, mirror pivots slightly toward amber launcher, amber arm slides back a little in its existing sleeve, crystal tip remains whole.\nTop right RANGED RECOIL: operator shoulders lean back and knees absorb recoil, both hands still gripping crank, amber launcher telescopes backward along SAME horizontal axis into SAME gold sleeve; blue launcher remains upper left and mirror intact. Amber crystal tip still physically present, just recoiled 10 percent. No projectile or flash—the game supplies event effects.\nBottom left MELEE WINDUP: operator leans back drawing whole turret away from screen right, elbows bend, mirror/blue launcher stay connected, all three feet braced.\nBottom right MELEE RAM: operator shoves crank forward with extended elbows and torso lean; whole upper turret pivots/leans a small amount forward RIGHT on its original gold suspension so the intact amber nose thrusts physically into close contact; lower chassis stays planted, three supports flex, wheels stay attached. No firing, beam or missile. Distinct close-combat body motion not same ranged recoil.\nPreserve all machine parts and asymmetry, same arms and three leg hinges, no extra barrel, wheels or operator, no detached supports, no cracks. Original detailed hand-painted game art faithful to reference. Complete silhouettes, no crop, ground, shadow, checkerboard, text or decorative effects.",
+        "prompt": "Original tactical battle animation sprite sheet, FOUR full units in TWO by TWO grid, generous empty gutters and outer margins, flat medium neutral gray #929292. Reference is authoritative Splitprism Heliograph Ballista: ONE ivory/gold/cobalt wheeled siege carriage, exactly TWO blue spoked wheels on one axle, central circular blue mirror, long blue crystalline launcher upper LEFT, amber crystalline launcher pointing RIGHT, THREE attached ivory/cobalt jointed stabilizers with gold star feet, ONE armored operator with blue plume/cape fixed on rear platform. Same fixed three-quarter camera and equipment/body scale in every cell.\nTop left RANGED WINDUP: all three supports spread/braced, operator draws crank back elbows bent, mirror pivots slightly toward amber launcher, amber arm slides back a little in its existing sleeve, crystal tip remains whole.\nTop right RANGED RECOIL: operator shoulders lean back and knees absorb recoil, both hands still gripping crank, amber launcher telescopes backward along SAME horizontal axis into SAME gold sleeve; blue launcher remains upper left and mirror intact. Amber crystal tip still physically present, just recoiled 10 percent. No projectile or flash\u0432\u0402\u201dthe game supplies event effects.\nBottom left MELEE WINDUP: operator leans back drawing whole turret away from screen right, elbows bend, mirror/blue launcher stay connected, all three feet braced.\nBottom right MELEE RAM: operator shoves crank forward with extended elbows and torso lean; whole upper turret pivots/leans a small amount forward RIGHT on its original gold suspension so the intact amber nose thrusts physically into close contact; lower chassis stays planted, three supports flex, wheels stay attached. No firing, beam or missile. Distinct close-combat body motion not same ranged recoil.\nPreserve all machine parts and asymmetry, same arms and three leg hinges, no extra barrel, wheels or operator, no detached supports, no cracks. Original detailed hand-painted game art faithful to reference. Complete silhouettes, no crop, ground, shadow, checkerboard, text or decorative effects.",
         "selection": "selected_ranged_pair_and_melee_windup_only"
       },
       {
@@ -121,5 +121,23 @@
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/heliograph-continuity-20260915/",
     "status": "candidate_registered_not_final_accepted",
     "acceptance": "Consolidated full-roster gameplay/repository/Linux/Windows validation remains deferred per owner instruction; no new final acceptance."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_sunvault_splitprism_heliograph_ballistae.png",
+    "runtime_sha256": "95b247592920698063eb3a35a0ebbbc584b887b47f32cf2e4504bd5e0f17d820"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "18a5bbe6daddeeebc6017328c773d655207cfb30b4fa0de5876627a91772783b",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
+  },
+  "source_facing_review": {
+    "direction": "left",
+    "reason": "Blue barrel and original move, attack, ranged and defend paintings face left; corrected missing metadata so friendly battle stacks aim toward enemies.",
+    "date": "2026-09-19"
   }
 }

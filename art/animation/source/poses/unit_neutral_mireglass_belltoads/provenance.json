@@ -25,9 +25,16 @@
     "Actual RGBA 0..255, source-only. Packing, throat/limb alignment and full motion review pending; no runtime registration or accepted count."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_mireglass_belltoads.png",
-    "runtime_sha256": "9a2dc1d386b928a026a0d3842f779e40e7203c1bf1a11fdadeb93e9817f4f0bc",
-    "method": "Uniform 0.70 source downsampling with independent ground anchors and segmented airborne-foot crops. Separate anatomical hop, bite, croak and collapsed dead poses."
+    "runtime_sha256": "bbba9b3d9225fc585b2da28f5c4dcc2bad81acbaf3426a7081f76a18f754d988"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "9a2dc1d386b928a026a0d3842f779e40e7203c1bf1a11fdadeb93e9817f4f0bc",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

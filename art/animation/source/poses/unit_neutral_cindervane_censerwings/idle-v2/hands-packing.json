@@ -1,0 +1,150 @@
+{
+  "unit_id": "unit_neutral_cindervane_censerwings",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "status": "accepted_idle_articulation_20260919",
+  "frames": [
+    {
+      "name": "idle_hands_0",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          386,
+          512
+        ]
+      ],
+      "anchor": [
+        224,
+        465
+      ],
+      "scale": 0.54596
+    },
+    {
+      "name": "idle_hands_1",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          386,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        608,
+        465
+      ],
+      "scale": 0.54596
+    },
+    {
+      "name": "idle_hands_2",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          768,
+          0,
+          1152,
+          512
+        ]
+      ],
+      "anchor": [
+        992,
+        465
+      ],
+      "scale": 0.54596
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1376,
+        465
+      ],
+      "scale": 0.54596
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          391,
+          1024
+        ]
+      ],
+      "anchor": [
+        224,
+        944
+      ],
+      "scale": 0.54596
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          391,
+          512,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        608,
+        944
+      ],
+      "scale": 0.54596
+    },
+    {
+      "name": "idle_hands_6",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          768,
+          512,
+          1152,
+          1024
+        ]
+      ],
+      "anchor": [
+        992,
+        944
+      ],
+      "scale": 0.54596
+    },
+    {
+      "name": "idle_hands_7",
+      "source": "hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1376,
+        944
+      ],
+      "scale": 0.54596
+    }
+  ],
+  "scale_basis": "One uniform scale across the loop, matched to previous idle height with room for the highest pose; no per-frame resizing.",
+  "anchor_notes": "Anatomical stable body/ground reference; moving forepaws, hands, wings and tails do not define recentering."
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_thornwake_graft_matriarchs",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-f7ba3ae2-9162-49cb-9c7c-d1f0ecfc333b.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_thornwake_graft_matriarchs.png",
+  "reference_revision": "c315f18b0",
+  "prompt": "Use case: identity-preserve. Paint EIGHT original sequential poses for a restrained but clearly visible IDLE loop of exactly this fantasy strategy creature or mechanism. The reference strip shows ONE unit in two poses, NOT a group. Preserve its exact identity, silhouette, limb count, equipment ownership, colors, proportions and source-facing camera direction. The primary motion must come from the articulated limbs, wings, tail or mechanism specified below, NOT just bobbing the head. Keep the head and central body almost stationary. A smooth calm in-place cycle, no attack, walking, firing, extra limbs, new props or dramatic deformation.\nTall tree humanoid with root skirt and branch bow. Keep roots fixed. Articulate hands and elbows to raise bow slightly across torso and then lower, branching free wrist rotates. Don't alter bow ownership or crown.\nCanvas 1536x1024 RGBA TRUE transparent background. Four columns and two rows, exactly eight sequential COMPLETE poses in reading order. Each stays fully inside its 384x512 cell with at least 24px transparent margin on all sides. Same anatomical scale and fixed root/ground baseline in all eight cells. Wide creatures fit naturally at smaller height; NEVER crop tails, wings or weapons or squeeze proportions. Rest, small adjustment, further adjustment, crest, halfway back, easing down, almost rest, rest. Detailed hand-painted original fantasy strategy sprite, crisp readable anatomy, no labels/grid/floor/background/shadow. Genuine new paintings, no rigid translated copies.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "fd1eeac5fe97d8a023332459580bf7a278bf9fda0e82f56a2fc8e4f76c8474de",
+  "reference_sha256": "140169f747d5bd23321c103aa00f0499e9377e14abb5dd04eb1af9c5dc551a16",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; articulated limbs, wings, tails or mechanisms move according to anatomy; humanoid hand and forearm movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

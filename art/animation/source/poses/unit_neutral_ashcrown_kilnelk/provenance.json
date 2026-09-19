@@ -68,9 +68,16 @@
     "Packing recipe is a draft; needs clean source alpha and full antler-boundary refinement before runtime registration."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_ashcrown_kilnelk.png",
-    "runtime_sha256": "b055309d7871547060eebe448e5af4c11f288aa5bc1d8080194f23c6bfb4513f",
-    "method": "Uniform 0.59 downsampling with segmented antler/crown/adjacent-body rectangles; no painted or warped replacement poses."
+    "runtime_sha256": "7e2a40cfdfd1ca0af62ea2c9f0e33f27c9bf044f2eeb1ba2c5906ef8964d9783"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "b055309d7871547060eebe448e5af4c11f288aa5bc1d8080194f23c6bfb4513f",
+    "preserved_frames": 12,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

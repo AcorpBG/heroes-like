@@ -323,5 +323,18 @@
       "review_status": "rejected_no_transparency",
       "review": "Standalone extraction retains full melee silhouette but output is 1254x1254 RGB, not RGBA; visible warped checkerboard is painted into background. Not copied into project, not packable, not runtime art. Do not repeat identical checker extraction. Existing pack_unit_pose_art.py deliberately only accepts true-alpha source and must not be weakened. Original same-facing source remains selected pending a sound alpha workflow."
     }
-  ]
+  ],
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_brasshollow_quenchbell_mortars.png",
+    "runtime_sha256": "edd1f895da658fa334fa6d17c2507ebaec55230577ac140d7482fdb54c5ebae3"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "0e7819721682d2003d0da3d41cd9256119fc68231ab298f7f9b00f53559c8d3c",
+    "preserved_frames": 20,
+    "status": "accepted_idle_articulation_20260919"
+  }
 }

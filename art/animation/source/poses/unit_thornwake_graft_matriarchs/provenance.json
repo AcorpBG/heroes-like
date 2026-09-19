@@ -326,5 +326,18 @@
         }
       ]
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+    "runtime_sha256": "2fe361aa61773913f2591619c3784308ceffccba44ae04f2230b7cdbad114a04"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "690e10078410766700e66c45c9eeff839a80d10da650badc4c230758dc5d9c73",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

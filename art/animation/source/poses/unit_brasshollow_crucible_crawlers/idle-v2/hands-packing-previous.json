@@ -1,0 +1,386 @@
+{
+  "unit_id": "unit_brasshollow_crucible_crawlers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          362,
+          385
+        ]
+      ],
+      "anchor": [
+        185,
+        377
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png",
+      "rects": [
+        [
+          362,
+          0,
+          724,
+          381
+        ]
+      ],
+      "anchor": [
+        546,
+        378
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "creep_near_front_lift",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-alpha/creep-melee-four-legs.png",
+      "rects": [
+        [
+          0,
+          0,
+          508,
+          520
+        ]
+      ],
+      "anchor": [
+        253,
+        484
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "creep_near_rear_lift",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-alpha/creep-melee-four-legs.png",
+      "rects": [
+        [
+          508,
+          0,
+          1030,
+          520
+        ]
+      ],
+      "anchor": [
+        762,
+        504
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "creep_far_front_lift",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-alpha/creep-melee-four-legs.png",
+      "rects": [
+        [
+          1040,
+          0,
+          1536,
+          520
+        ]
+      ],
+      "anchor": [
+        1270,
+        504
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "melee_closed_nozzle_windup",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-alpha/creep-melee-four-legs.png",
+      "rects": [
+        [
+          0,
+          520,
+          508,
+          1024
+        ]
+      ],
+      "anchor": [
+        253,
+        997
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "melee_closed_nozzle_strike",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-alpha/creep-melee-four-legs.png",
+      "rects": [
+        [
+          508,
+          520,
+          1057,
+          800
+        ],
+        [
+          508,
+          800,
+          1015,
+          1024
+        ]
+      ],
+      "anchor": [
+        762,
+        997
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "ranged_aim",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png",
+      "rects": [
+        [
+          362,
+          385,
+          724,
+          737
+        ]
+      ],
+      "anchor": [
+        545,
+        732
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "ranged_pour",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png",
+      "rects": [
+        [
+          724,
+          385,
+          1130,
+          580
+        ],
+        [
+          724,
+          580,
+          1086,
+          737
+        ]
+      ],
+      "anchor": [
+        907,
+        732
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "guard_a",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png",
+      "rects": [
+        [
+          1136,
+          385,
+          1448,
+          580
+        ],
+        [
+          1086,
+          580,
+          1448,
+          737
+        ]
+      ],
+      "anchor": [
+        1267,
+        711
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "guard_b",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/continuity-alpha/creep-melee-four-legs.png",
+      "rects": [
+        [
+          1060,
+          520,
+          1536,
+          670
+        ],
+        [
+          1040,
+          670,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1270,
+        987
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          737,
+          362,
+          1086
+        ]
+      ],
+      "anchor": [
+        185,
+        1069
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_buckle",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png",
+      "rects": [
+        [
+          362,
+          737,
+          724,
+          1086
+        ]
+      ],
+      "anchor": [
+        548,
+        1057
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_tip",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png",
+      "rects": [
+        [
+          724,
+          790,
+          1086,
+          1060
+        ]
+      ],
+      "anchor": [
+        907,
+        1050
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "dead_cold",
+      "source": "art/animation/source/poses/unit_brasshollow_crucible_crawlers/alpha/poses.png",
+      "rects": [
+        [
+          1086,
+          800,
+          1448,
+          1040
+        ]
+      ],
+      "anchor": [
+        1267,
+        1031
+      ],
+      "scale": 0.6
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 6,
+      "indices": [
+        0,
+        2,
+        1,
+        3,
+        0,
+        4
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        5,
+        6,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        7,
+        8,
+        7,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        9,
+        10
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        11,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        14
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  }
+}

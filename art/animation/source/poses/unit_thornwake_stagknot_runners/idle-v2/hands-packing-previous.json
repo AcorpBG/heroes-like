@@ -1,0 +1,330 @@
+{
+  "unit_id": "unit_thornwake_stagknot_runners",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-extracted.png",
+      "rects": [
+        [
+          0,
+          0,
+          332,
+          344
+        ]
+      ],
+      "anchor": [
+        187,
+        328
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-extracted.png",
+      "rects": [
+        [
+          339,
+          0,
+          687,
+          343
+        ]
+      ],
+      "anchor": [
+        502,
+        328
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "gallop_extended",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-extracted.png",
+      "rects": [
+        [
+          690,
+          0,
+          1165,
+          344
+        ]
+      ],
+      "anchor": [
+        936,
+        344
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "gallop_gathered",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-extracted.png",
+      "rects": [
+        [
+          1172,
+          0,
+          1536,
+          344
+        ]
+      ],
+      "anchor": [
+        1360,
+        342
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "gallop_fore_contact",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-alpha/gallop-fore-contact.png",
+      "rects": [
+        [
+          0,
+          0,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        827,
+        1146
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "gallop_hind_contact",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-alpha/gallop-hind-contact.png",
+      "rects": [
+        [
+          0,
+          0,
+          1232,
+          1277
+        ]
+      ],
+      "anchor": [
+        685,
+        1202
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "ram_windup",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-extracted.png",
+      "rects": [
+        [
+          375,
+          344,
+          719,
+          656
+        ]
+      ],
+      "anchor": [
+        550,
+        640
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "ram_contact",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-extracted.png",
+      "rects": [
+        [
+          720,
+          398,
+          1114,
+          662
+        ]
+      ],
+      "anchor": [
+        926,
+        646
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-extracted.png",
+      "rects": [
+        [
+          1117,
+          344,
+          1536,
+          660
+        ]
+      ],
+      "anchor": [
+        1312,
+        648
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-extracted.png",
+      "rects": [
+        [
+          0,
+          658,
+          342,
+          1000
+        ]
+      ],
+      "anchor": [
+        170,
+        979
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "front_buckle",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-extracted.png",
+      "rects": [
+        [
+          343,
+          700,
+          702,
+          992
+        ]
+      ],
+      "anchor": [
+        541,
+        990
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "side_fall",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-extracted.png",
+      "rects": [
+        [
+          703,
+          750,
+          1104,
+          997
+        ]
+      ],
+      "anchor": [
+        910,
+        990
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/poses-facing-right-extracted.png",
+      "rects": [
+        [
+          1104,
+          820,
+          1536,
+          1000
+        ]
+      ],
+      "anchor": [
+        1324,
+        990
+      ],
+      "scale": 0.67
+    },
+    {
+      "name": "guard_breath",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners/continuity-alpha/guard-breath.png",
+      "rects": [
+        [
+          0,
+          0,
+          1444,
+          1089
+        ]
+      ],
+      "anchor": [
+        760,
+        1059
+      ],
+      "scale": 0.193
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        5,
+        2,
+        4,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        13
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}
