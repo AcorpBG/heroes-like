@@ -51,9 +51,9 @@ def main():
     for entry in entries:
         aid = entry['id']
         path = RUNTIME/(aid+'.png')
-        biome = 'biome_coast_archipelago' if entry['terrain']=='sand' else 'biome_grasslands'
+        biome = {'sand':'biome_coast_archipelago','grass':'biome_grasslands','dirt':'biome_rough_badlands','rough':'biome_highland_ridge'}[entry['terrain']]
         manifest['object_assets'][aid] = dict(path=resource(path),source_generated=resource(SOURCE/entry['file']),source_model=entry['kind'],source_manifest=resource(SOURCE/'recipes.json'),asset_policy='original_generated_no_copied_pixels')
-        decorative['generated_body_appearances'][aid] = dict(name=entry['file'].removesuffix('.png').replace('_',' ').title(),description='Connected original landscape artwork spanning compatible neighboring blocker bodies. No interaction or reward; native movement masks remain authoritative.',biome_ids=[biome],runtime_path=resource(path),source_path=resource(SOURCE/'recipes.json'),availability='Live connected '+entry['terrain']+' scenery patches.',placement_authority='Existing blocked cells; visual patch grouping only.',production_kind=entry['kind'],contains_dead_tree=False)
+        decorative['generated_body_appearances'][aid] = dict(name=entry['file'].removesuffix('.png').replace('_',' ').title(),description='Connected original landscape artwork spanning compatible neighboring blocker bodies. No interaction or reward; native movement masks remain authoritative.',biome_ids=[biome],runtime_path=resource(path),source_path=resource(SOURCE/'recipes.json'),availability='Live connected '+entry['terrain']+' scenery patches.',placement_authority='Existing blocked cells; visual patch grouping only.',production_kind=entry['kind'],contains_dead_tree=entry['family']=='deadwood')
         if aid not in decorative['generated_body_palette'][biome]: decorative['generated_body_palette'][biome].append(aid)
         recipes.append(dict(id=aid,kind=entry['kind'],biome=biome,runtime_path=resource(path),atlas=resource(SOURCE/entry['file']),sha256=hashlib.sha256(path.read_bytes()).hexdigest()))
         settings = path.with_suffix('.png.import')
@@ -61,7 +61,7 @@ def main():
     write(SOURCE/'recipes.json',dict(version=1,canvas=[512,512],production=resource(SOURCE/'production.json'),entries=recipes))
     write(ROOT/'art/overworld/manifest.json',manifest)
     write(ROOT/'art/overworld/decorative_object_sprites.json',decorative)
-    print('Registered four original connected-landscape sprites.')
+    print(f'Registered {len(entries)} original connected-landscape sprites.')
 
 
 if __name__=='__main__': main()

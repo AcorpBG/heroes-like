@@ -43656,7 +43656,7 @@ def validate_generated_blocker_contracts(object_assets: dict, errors: list[str])
         assert len({r["profile"] for r in vegetation}) == 15
         rows += [(r["id"], r["runtime_path"], None, r["sha256"], (512, 512), [r["biome"]]) for r in vegetation]
         connected = load_json(base / "connected_patches_20260919/recipes.json")["entries"]
-        assert len(connected) == 4 and len({r["sha256"] for r in connected}) == 4
+        assert len(connected) == 9 and len({r["sha256"] for r in connected}) == 9
         rows += [(r["id"], r["runtime_path"], None, r["sha256"], (512, 512), [r["biome"]]) for r in connected]
         for asset_id, path, source, digest, size, biomes in rows:
             entry = object_assets.get(asset_id, {})

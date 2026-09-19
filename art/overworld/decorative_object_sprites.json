@@ -2071,7 +2071,9 @@
       "native_vegetation_conifers_highland_pines_01",
       "native_vegetation_conifers_highland_pines_02",
       "native_vegetation_conifers_highland_pines_03",
-      "native_vegetation_conifers_highland_pines_04"
+      "native_vegetation_conifers_highland_pines_04",
+      "native_mountain_rough_ridge_v3",
+      "native_mountain_rough_buttress_v3"
     ],
     "biome_rough_badlands": [
       "cohesive_harsh_00",
@@ -2390,7 +2392,10 @@
       "native_vegetation_deadwood_dry_thorns_01",
       "native_vegetation_deadwood_dry_thorns_02",
       "native_vegetation_deadwood_dry_thorns_03",
-      "native_vegetation_deadwood_dry_thorns_04"
+      "native_vegetation_deadwood_dry_thorns_04",
+      "native_mountain_dirt_escarpment_v3",
+      "native_mountain_dirt_massif_v3",
+      "native_vegetation_deadwood_dirt_thicket_v3"
     ],
     "biome_snow_frost_marches": [
       "cohesive_wet_cold_03",
@@ -44858,6 +44863,71 @@
       "placement_authority": "Existing blocked cells; visual patch grouping only.",
       "production_kind": "original_vegetation_mass",
       "contains_dead_tree": false
+    },
+    "native_mountain_dirt_escarpment_v3": {
+      "name": "Dirt Escarpment",
+      "description": "Connected original landscape artwork spanning compatible neighboring blocker bodies. No interaction or reward; native movement masks remain authoritative.",
+      "biome_ids": [
+        "biome_rough_badlands"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_dirt_escarpment_v3.png",
+      "source_path": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "availability": "Live connected dirt scenery patches.",
+      "placement_authority": "Existing blocked cells; visual patch grouping only.",
+      "production_kind": "original_mountain_mass",
+      "contains_dead_tree": false
+    },
+    "native_mountain_dirt_massif_v3": {
+      "name": "Dirt Massif",
+      "description": "Connected original landscape artwork spanning compatible neighboring blocker bodies. No interaction or reward; native movement masks remain authoritative.",
+      "biome_ids": [
+        "biome_rough_badlands"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_dirt_massif_v3.png",
+      "source_path": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "availability": "Live connected dirt scenery patches.",
+      "placement_authority": "Existing blocked cells; visual patch grouping only.",
+      "production_kind": "original_mountain_mass",
+      "contains_dead_tree": false
+    },
+    "native_mountain_rough_ridge_v3": {
+      "name": "Rough Ridge",
+      "description": "Connected original landscape artwork spanning compatible neighboring blocker bodies. No interaction or reward; native movement masks remain authoritative.",
+      "biome_ids": [
+        "biome_highland_ridge"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_rough_ridge_v3.png",
+      "source_path": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "availability": "Live connected rough scenery patches.",
+      "placement_authority": "Existing blocked cells; visual patch grouping only.",
+      "production_kind": "original_mountain_mass",
+      "contains_dead_tree": false
+    },
+    "native_mountain_rough_buttress_v3": {
+      "name": "Rough Buttress",
+      "description": "Connected original landscape artwork spanning compatible neighboring blocker bodies. No interaction or reward; native movement masks remain authoritative.",
+      "biome_ids": [
+        "biome_highland_ridge"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_mountain_rough_buttress_v3.png",
+      "source_path": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "availability": "Live connected rough scenery patches.",
+      "placement_authority": "Existing blocked cells; visual patch grouping only.",
+      "production_kind": "original_mountain_mass",
+      "contains_dead_tree": false
+    },
+    "native_vegetation_deadwood_dirt_thicket_v3": {
+      "name": "Dirt Thicket",
+      "description": "Connected original landscape artwork spanning compatible neighboring blocker bodies. No interaction or reward; native movement masks remain authoritative.",
+      "biome_ids": [
+        "biome_rough_badlands"
+      ],
+      "runtime_path": "res://art/overworld/runtime/objects/decorations/connected_patches_20260919/native_vegetation_deadwood_dirt_thicket_v3.png",
+      "source_path": "res://art/overworld/source/generated/terrain/connected_patches_20260919/recipes.json",
+      "availability": "Live connected dirt scenery patches.",
+      "placement_authority": "Existing blocked cells; visual patch grouping only.",
+      "production_kind": "original_vegetation_mass",
+      "contains_dead_tree": true
     }
   }
 }
