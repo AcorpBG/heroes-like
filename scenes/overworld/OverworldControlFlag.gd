@@ -25,7 +25,7 @@ func material(color: Color) -> ShaderMaterial:
 	return _materials[key]
 
 static func profile(pole_base: Vector2, tile_size: float, color: Color, mine: bool = false) -> Dictionary:
-	var size := Vector2.ONE * tile_size * (0.58 if mine else 0.76)
+	var size := Vector2.ONE * tile_size * (0.82 if mine else 1.06)
 	# The painted pole's ground contact is at (44, 110) on the 128px canvas.
 	var rect := Rect2(pole_base - size * Vector2(44.0 / 128.0, 110.0 / 128.0), size)
 	return {"rect": rect, "pole_base": pole_base, "color": color,

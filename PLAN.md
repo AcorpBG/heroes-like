@@ -24,7 +24,7 @@ Rules:
 
 ### Town and mine control flags
 
-`art-control-flags-20260920` — complete. Town entrances have two small owner-coloured flags; common and generated rare mines have one smaller flag, grey when uncontrolled. Controller IDs refresh capture colours even between same-faction players. Focused 48-check render/capture regression, two-resolution town report and flag source contract pass; no full suite. See `docs/overworld-control-flags.md`.
+`art-control-flags-20260920` — complete. Town entrance pairs and mine flags are approximately 40% larger for readability; pole bases stay fixed. Neutral grey, controller colours and capture refresh are preserved. Focused 48-check render/capture regression rerun and normal-scale renders reviewed; no full suite. See `docs/overworld-control-flags.md`.
 
 ### Town landmark scale
 
