@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Town and mine control flags
+
+`art-control-flags-20260920` — complete. Town entrances have two small owner-coloured flags; common and generated rare mines have one smaller flag, grey when uncontrolled. Controller IDs refresh capture colours even between same-faction players. Focused 48-check render/capture regression, two-resolution town report and flag source contract pass; no full suite. See `docs/overworld-control-flags.md`.
+
 ### Town landmark scale
 
 `art-town-footprint-scale-20260920` — complete. All 58 town appearances use a tapered five-column/three-row presentation and aspect-preserved silhouettes up to 4.80×4.35 tiles. Click coverage and fog clipping match the larger landmarks; source entrances, masks and artwork identities remain intact. Focused render regression: 278 checks pass; no full suite. See `docs/overworld-town-scale.md`.

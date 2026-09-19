@@ -113569,6 +113569,18 @@
         "docs/overworld-town-scale.md"
       ],
       "notes": "All 58 original faction, named-town and biome appearances now use a tapered 5x3 presentation/click mask and aspect-preserved silhouettes capped at 4.80x4.35 tiles. Body clicks resolve the source entrance, and explored-cell clipping protects larger silhouettes and pennants. Existing artwork, native placement/visit/collision masks and saves remain intact. Focused render regression passes 278 checks; all ten art gallery pages and the live map render reviewed. No full or native RMG suite. Existing maps need only reload. See docs/overworld-town-scale.md."
+    },
+    {
+      "id": "art-control-flags-20260920",
+      "title": "Town entrance and mine control flags",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/overworld-control-flags.md"
+      ],
+      "notes": "Two small flags flank town entrances, replacing the roof control marker. Common and generated rare mines show one smaller flag: neutral grey when uncontrolled, controller colour after capture. Stable generated-player slot colours and legacy ownership fallback; caches now include player controller IDs, including same-faction recapture. Original cloth art, explored-cell clipping and accessibility marks retained. Focused 48-check render/capture regression, 1280/1920 town report and flag source contract pass; renders reviewed. No full suite; capture rules, income, source geometry and saves unchanged."
     }
   ],
   "project": "heroes-like",

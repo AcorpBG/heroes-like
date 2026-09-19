@@ -50195,139 +50195,46 @@ def validate_overworld_faction_hero_sprite_runtime(errors: list[str]) -> None:
 
 
 def validate_overworld_compact_town_owner_pennants(errors: list[str]) -> None:
-    def gdscript_function_block(text: str, name: str) -> str:
-        start = text.find(f"func {name}(")
-        if start < 0:
-            return ""
-        end = text.find("\nfunc ", start + 1)
-        return text[start:] if end < 0 else text[start:end]
-
-    map_path = ROOT / "scenes" / "overworld" / "OverworldMapView.gd"
-    focused_path = ROOT / "tests" / "overworld_town_pennant_runtime_report.gd"
-    focused_scene_path = ROOT / "tests" / "overworld_town_pennant_runtime_report.tscn"
-    visual_path = ROOT / "tests" / "overworld_visual_smoke.gd"
-    paths = (map_path, focused_path, focused_scene_path, visual_path)
-    for path in paths:
-        ensure(path.is_file(), errors, f"Missing compact town-pennant owner: {path.relative_to(ROOT)}")
-    if not all(path.is_file() for path in paths):
+    """Town control uses entrance pairs; mines share the same small cloth art."""
+    files = {
+        "map": "scenes/overworld/OverworldMapView.gd",
+        "flag": "scenes/overworld/OverworldControlFlag.gd",
+        "shader": "scenes/overworld/OverworldControlFlag.gdshader",
+        "runtime": "tests/overworld_control_flags_regression.py",
+        "town": "tests/overworld_town_pennant_runtime_report.gd",
+        "visual": "tests/overworld_visual_smoke.gd",
+    }
+    texts = {}
+    for key, relative in files.items():
+        path = ROOT / relative
+        ensure(path.is_file(), errors, f"Missing control-flag implementation: {relative}")
+        if path.is_file():
+            texts[key] = path.read_text(encoding="utf-8")
+    if len(texts) != len(files):
         return
-
-    map_text = map_path.read_text(encoding="utf-8")
-    focused_text = focused_path.read_text(encoding="utf-8")
-    focused_scene = focused_scene_path.read_text(encoding="utf-8")
-    visual_text = visual_path.read_text(encoding="utf-8")
-    for token in (
-        'const TOWN_OWNER_PENNANT_MODEL := "single_pass_compact_heraldic_cloth_pennant"',
-        "const TOWN_OWNER_PENNANT_WIDTH_FACTOR := 0.052",
-        "const TOWN_OWNER_PENNANT_HEIGHT_FACTOR := 0.040",
-        "const TOWN_OWNER_PENNANT_POLE_HEIGHT_FACTOR := 0.128",
-        "const TOWN_OWNER_PENNANT_LEGACY_WIDTH_FACTOR := 0.17",
-        "const TOWN_OWNER_PENNANT_LEGACY_HEIGHT_FACTOR := 0.12",
-        "const TOWN_OWNER_PENNANT_CLOTH_ALPHA := 0.96",
-        "const TOWN_OWNER_PENNANT_MEMORY_ALPHA := 0.68",
-        "const TOWN_OWNER_PENNANT_SHADOW_ALPHA := 0.42",
-        "const TOWN_OWNER_PENNANT_FOLD_ALPHA := 0.34",
-        "const TOWN_OWNER_PENNANT_HIGHLIGHT_ALPHA := 0.42",
-        "const TOWN_OWNER_PENNANT_SHADOW_OFFSET_FACTOR := 0.010",
-        "const TOWN_OWNER_PENNANT_OUTLINE_WIDTH_FACTOR := 0.014",
-    ):
-        ensure(map_text.count(token) == 1, errors, f"Compact town pennant must own one exact presentation constant: {token}")
-
-    draw_block = gdscript_function_block(map_text, "_draw_town_owner_pennant")
-    profile_block = gdscript_function_block(map_text, "_town_owner_pennant_profile")
-    variants_block = gdscript_function_block(map_text, "validation_town_owner_pennant_variants")
-    payload_block = gdscript_function_block(map_text, "_town_owner_pennant_validation_payload")
-    ensure(all((draw_block, profile_block, variants_block, payload_block)), errors, "Could not isolate compact town-pennant production and validation ownership")
-    if draw_block:
-        ordered_tokens = (
-            "var profile := _town_owner_pennant_profile(",
-            "_canvas_draw_line(\n\t\tpole_bottom + shadow_offset",
-            "_canvas_draw_colored_polygon(shadow_points",
-            "_canvas_draw_line(pole_bottom, pole_top",
-            "_canvas_draw_colored_polygon(cloth_points",
-            "_canvas_draw_polyline(outline_points",
-            "if fold_line.size() == 2:",
-            "if highlight_line.size() == 2:",
-            "_canvas_draw_circle(pole_top",
-            'if bool(profile.get("color_cue_assist", false)):',
-            "_draw_town_owner_flag_mark(",
-        )
-        ensure(all(token in draw_block for token in ordered_tokens), errors, "Town-pennant drawing is missing its ordered single-pass cloth composition")
-        if all(token in draw_block for token in ordered_tokens):
-            ensure([draw_block.index(token) for token in ordered_tokens] == sorted(draw_block.index(token) for token in ordered_tokens), errors, "Town-pennant draw order must remain shadow, pole, one cloth, contour, stitching, finial, optional assist mark")
-        ensure(draw_block.count("_canvas_draw_colored_polygon(cloth_points") == 1, errors, "Town pennant must paint exactly one owner-colored cloth polygon")
-        for forbidden in ("_canvas_draw_rect(", "await ", "create_timer", "create_tween", "queue_redraw", "session.", "_session."):
-            ensure(forbidden not in draw_block, errors, f"Town-pennant draw must remain synchronous presentation only: {forbidden}")
-    if profile_block:
-        for token in (
-            "var width := extent * TOWN_OWNER_PENNANT_WIDTH_FACTOR",
-            "var height := extent * TOWN_OWNER_PENNANT_HEIGHT_FACTOR",
-            'var shape_id := "compact_forked"',
-            "if not color_cue_assist:",
-            'shape_id = "compact_square_folded"',
-            'shape_id = "compact_tapered"',
-            'shape_id = "compact_diamond"',
-            "var cloth_alpha := TOWN_OWNER_PENNANT_MEMORY_ALPHA if remembered else TOWN_OWNER_PENNANT_CLOTH_ALPHA",
-            '"single_pass_draw_count": 1',
-            '"cloth_layer_count": 1',
-            '"painted_area_ratio_to_legacy": (TOWN_OWNER_PENNANT_WIDTH_FACTOR * TOWN_OWNER_PENNANT_HEIGHT_FACTOR) / (TOWN_OWNER_PENNANT_LEGACY_WIDTH_FACTOR * TOWN_OWNER_PENNANT_LEGACY_HEIGHT_FACTOR)',
-        ):
-            ensure(token in profile_block, errors, f"Town-pennant profile is missing exact compact/differentiated geometry: {token}")
-        for forbidden in ("_session", "session.", "Input.", "await ", "create_timer", "queue_redraw", "_canvas_draw", ".erase(", "sort_custom"):
-            ensure(forbidden not in profile_block, errors, f"Town-pennant profile must remain detached, deterministic geometry: {forbidden}")
-    ensure(map_text.count("_draw_town_owner_pennant(") == 3, errors, "Town pennant must have one definition and exactly one draw call in sprite and procedural-town paths")
-    if variants_block:
-        for token in (
-            "for remembered in [false, true]:",
-            "for color_cue_assist in [false, true]:",
-            'for owner in ["player", "enemy", "neutral"]:',
-            "_town_owner_pennant_profile(rect, color, remembered, owner, color_cue_assist)",
-            '"live_owner": _town_owner_id(town)',
-            '"variant_count": variants.size()',
-        ):
-            ensure(token in variants_block, errors, f"Public town-pennant validation is missing exact 12-variant ownership: {token}")
-        for forbidden in ("_draw_town_owner_pennant(", "await ", "create_timer", "queue_redraw", "Input.", ".erase("):
-            ensure(forbidden not in variants_block, errors, f"Town-pennant validation must remain read-only: {forbidden}")
-    if payload_block:
-        for token in (
-            '"cloth_contained": rect.encloses(_points_bounds(cloth_points))',
-            '"shadow_contained": rect.encloses(_points_bounds(shadow_points))',
-            '"pole_contained": rect.has_point(profile.get("pole_top", Vector2.ZERO)) and rect.has_point(profile.get("pole_bottom", Vector2.ZERO))',
-            '"painted_area_ratio_to_legacy": float(profile.get("painted_area_ratio_to_legacy", 1.0))',
-        ):
-            ensure(token in payload_block, errors, f"Town-pennant validation payload is missing actual containment/area evidence: {token}")
-
-    ensure_scene_nodes(focused_scene, errors, "overworld_town_pennant_runtime_report.tscn", [("OverworldTownPennantRuntimeReport", "Node")])
-    for token in (
-        'const VIEWPORT_SIZES := [Vector2i(1280, 720), Vector2i(1920, 1080)]',
-        'const EXPECTED_VARIANT_COUNT := 12',
-        'var authority_before: Dictionary = session.to_dict()',
-        'map_view.call("validation_town_owner_pennant_variants", entry_tile)',
-        'shell.call("validation_tile_presentation", entry_tile.x, entry_tile.y)',
-        'for owner in ["player", "enemy", "neutral"]:',
-        'for remembered in [false, true]:',
-        'for assist in [false, true]:',
-        'String(variant.get("shape_id", "")) == expected_shape',
-        'int(variant.get("single_pass_draw_count", 0)) == 1',
-        'int(variant.get("cloth_layer_count", 0)) == 1',
-        'expected_ratio < 0.75',
-        'session.to_dict() == authority_before',
-        'print("OVERWORLD_TOWN_PENNANT_RUNTIME_REPORT %s"',
-    ):
-        ensure(token in focused_text, errors, f"Focused town-pennant owner is missing exact runtime proof: {token}")
-    ensure(focused_text.count("for viewport_size in VIEWPORT_SIZES:") == 1, errors, "Focused town-pennant owner must run exactly the registered two widths")
-    for forbidden in ("_draw_town_owner_pennant(", "_town_owner_pennant_profile(", "create_timer", "create_tween", "OS.delay", 'session.overworld["towns"] ='):
-        ensure(forbidden not in focused_text, errors, f"Focused town-pennant owner must observe public production geometry without bypass/mutation: {forbidden}")
-    for token in (
-        'String(town_presentation.get("owner_pennant_model", "")) != "single_pass_compact_heraldic_cloth_pennant"',
-        'int(owner_pennant.get("single_pass_draw_count", 0)) != 1',
-        'int(owner_pennant.get("cloth_layer_count", 0)) != 1',
-        'float(owner_pennant.get("painted_area_ratio_to_legacy", 1.0)) >= 0.75',
-        'var expected_pennant_alpha := 0.68 if remembered else 0.96',
-        'String(town_presentation.get("sprite_silhouette_model", "")) != "eight_direction_alpha_silhouette_outline"',
-        'float(town_presentation.get("sprite_silhouette_width_factor", 0.0)) < 0.010',
-    ):
-        ensure(token in visual_text, errors, f"Broad Overworld visual smoke is missing compact town-pennant compatibility proof: {token}")
+    required = {
+        "map": (
+            'const TOWN_OWNER_PENNANT_MODEL := "paired_small_entrance_control_flags"',
+            '_draw_town_owner_pennant(entry_rect,',
+            'PlayerRules.resource_controller_id(node)',
+            '"collected_by_player_id"',
+            '"controlling_player_id"',
+            '_draw_mine_control_flag(resource_node, rect, resource_rect, remembered)',
+            '_town_explored_sprite_slices(rect, texture.get_size())',
+        ),
+        "flag": ('neutral_pennant.png', 'const NEUTRAL :=', 'const SLOT_COLORS :=', '0.58 if mine else 0.76'),
+        "shader": ('uniform vec4 owner_color', 'texture(TEXTURE, UV)', 'mix(paint.rgb, dyed, cloth)'),
+        "runtime": ('capture/recapture does not invalidate flag cache', 'same-faction enemy recapture never reaches pixels', 'ownership flag leaks through unexplored cell', 'render changed saved state'),
+        "town": ('paired_small_entrance_control_flags', '_entrance_pair_exact(current_pennant)', 'session.to_dict() == authority_before'),
+        "visual": ('paired_small_entrance_control_flags', 'int(owner_pennant.get("flag_count", 0)) != 2'),
+    }
+    for key, tokens in required.items():
+        for token in tokens:
+            ensure(token in texts[key], errors, f"Control-flag contract missing from {files[key]}: {token}")
+    ensure(texts["map"].count('_draw_town_owner_pennant(') == 3, errors,
+           "Town flags need one definition and one call in each sprite/fallback path")
+    ensure((ROOT / "art/overworld/runtime/objects/ownership_pennants/neutral_pennant.png").is_file(),
+           errors, "Control flags require the original neutral cloth painting")
 
 
 def validate_overworld_town_selection_cartographic_perimeter(errors: list[str]) -> None:
