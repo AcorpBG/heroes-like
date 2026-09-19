@@ -52,5 +52,18 @@
     "evidence": ".artifacts/battle-unit-animation-size-20260913/dustjack-continuity-20260916",
     "pose_source_facing": "right",
     "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_dustjack_blades.png",
+    "runtime_sha256": "8ad6db39c52f23e9eb457a71569c36cf4c1b4f5aeb6c573f7862a6500e335e20"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "6669616a90a9286243856f3a34deda0839259549c7478237dea41bff21db38b5",
+    "preserved_frames": 17,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

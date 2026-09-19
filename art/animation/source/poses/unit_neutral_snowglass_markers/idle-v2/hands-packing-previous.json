@@ -1,0 +1,438 @@
+{
+  "unit_id": "unit_neutral_snowglass_markers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          305,
+          332
+        ]
+      ],
+      "anchor": [
+        145,
+        322
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          305,
+          0,
+          616,
+          332
+        ]
+      ],
+      "anchor": [
+        450,
+        322
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_contact",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          616,
+          0,
+          927,
+          332
+        ]
+      ],
+      "anchor": [
+        754,
+        322
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_passing",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          332,
+          307,
+          621
+        ],
+        [
+          0,
+          621,
+          183,
+          637
+        ]
+      ],
+      "anchor": [
+        145,
+        627
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "bow_windup",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          309,
+          332,
+          608,
+          619
+        ],
+        [
+          309,
+          619,
+          510,
+          637
+        ],
+        [
+          550,
+          619,
+          608,
+          637
+        ]
+      ],
+      "anchor": [
+        465,
+        626
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "bow_shove",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/melee-shove.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        608,
+        1230
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "bow_recovery",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/continuity-alpha/bow-recovery-nock-and-resting-corpse.png",
+      "rects": [
+        [
+          0,
+          0,
+          750,
+          490
+        ],
+        [
+          0,
+          490,
+          300,
+          501
+        ],
+        [
+          490,
+          490,
+          750,
+          501
+        ]
+      ],
+      "anchor": [
+        386,
+        497
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/continuity-alpha/bow-recovery-nock-and-resting-corpse.png",
+      "rects": [
+        [
+          750,
+          0,
+          1536,
+          520
+        ]
+      ],
+      "anchor": [
+        1174,
+        506
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "guard_brace",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          968,
+          333,
+          1254,
+          637
+        ]
+      ],
+      "anchor": [
+        1116,
+        618
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "arrow_nock",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/continuity-alpha/bow-recovery-nock-and-resting-corpse.png",
+      "rects": [
+        [
+          300,
+          500,
+          500,
+          520
+        ],
+        [
+          0,
+          520,
+          750,
+          1024
+        ]
+      ],
+      "anchor": [
+        373,
+        1000
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "arrow_draw",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          522,
+          625,
+          544,
+          640
+        ],
+        [
+          305,
+          640,
+          611,
+          965
+        ]
+      ],
+      "anchor": [
+        469,
+        955
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "arrow_release",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          613,
+          637,
+          934,
+          972
+        ]
+      ],
+      "anchor": [
+        766,
+        960
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "arrow_recovery",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          945,
+          632,
+          1254,
+          974
+        ]
+      ],
+      "anchor": [
+        1106,
+        965
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          956,
+          200,
+          968
+        ],
+        [
+          0,
+          968,
+          299,
+          1254
+        ]
+      ],
+      "anchor": [
+        143,
+        1225
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          300,
+          975,
+          561,
+          1254
+        ]
+      ],
+      "anchor": [
+        434,
+        1224
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          565,
+          1026,
+          915,
+          1254
+        ]
+      ],
+      "anchor": [
+        744,
+        1219
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/continuity-alpha/bow-recovery-nock-and-resting-corpse.png",
+      "rects": [
+        [
+          780,
+          724,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1131,
+        987
+      ],
+      "scale": 0.42
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 430,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 185,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        13,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 280,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  }
+}

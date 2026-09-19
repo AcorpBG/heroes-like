@@ -1,0 +1,306 @@
+{
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          317,
+          420
+        ]
+      ],
+      "anchor": [
+        169,
+        396
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          318,
+          0,
+          628,
+          420
+        ]
+      ],
+      "anchor": [
+        469,
+        396
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          638,
+          0,
+          920,
+          420
+        ]
+      ],
+      "anchor": [
+        776,
+        398
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_passing",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "rects": [
+        [
+          543,
+          699,
+          1086,
+          1448
+        ]
+      ],
+      "anchor": [
+        783,
+        1341
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "short_spear_windup",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "rects": [
+        [
+          0,
+          0,
+          537,
+          685
+        ]
+      ],
+      "anchor": [
+        270,
+        650
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "short_spear_thrust",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "rects": [
+        [
+          538,
+          0,
+          1086,
+          685
+        ]
+      ],
+      "anchor": [
+        790,
+        650
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "short_spear_recovery",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "rects": [
+        [
+          0,
+          687,
+          540,
+          1448
+        ]
+      ],
+      "anchor": [
+        270,
+        1341
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "lantern_shield_crouch",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          1020,
+          440,
+          1254,
+          546
+        ],
+        [
+          978,
+          546,
+          1254,
+          623
+        ],
+        [
+          913,
+          623,
+          1254,
+          803
+        ]
+      ],
+      "anchor": [
+        1110,
+        773
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          803,
+          319,
+          1185
+        ]
+      ],
+      "anchor": [
+        161,
+        1160
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          320,
+          830,
+          620,
+          1190
+        ]
+      ],
+      "anchor": [
+        471,
+        1157
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_low_fall",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          620,
+          875,
+          922,
+          1190
+        ]
+      ],
+      "anchor": [
+        780,
+        1157
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          923,
+          955,
+          1254,
+          1200
+        ]
+      ],
+      "anchor": [
+        1094,
+        1149
+      ],
+      "scale": 0.6
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 200,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        1,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        8,
+        1
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        9,
+        10,
+        11
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        11
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

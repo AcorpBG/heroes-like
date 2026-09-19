@@ -1,0 +1,371 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          332,
+          236
+        ],
+        [
+          0,
+          236,
+          309,
+          447
+        ]
+      ],
+      "anchor": [
+        157,
+        429
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+      "rects": [
+        [
+          337,
+          0,
+          590,
+          237
+        ],
+        [
+          337,
+          237,
+          607,
+          266
+        ],
+        [
+          309,
+          266,
+          607,
+          447
+        ]
+      ],
+      "anchor": [
+        453,
+        429
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "run_extension_attempt",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+      "rects": [
+        [
+          592,
+          0,
+          966,
+          258
+        ],
+        [
+          605,
+          258,
+          958,
+          447
+        ]
+      ],
+      "anchor": [
+        824,
+        418
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "run_gather_attempt",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+      "rects": [
+        [
+          966,
+          0,
+          1254,
+          447
+        ]
+      ],
+      "anchor": [
+        1110,
+        419
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "compact_hook_windup",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-actions-gray.png",
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          489
+        ]
+      ],
+      "anchor": [
+        420,
+        465
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "compact_hook_thrust",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-actions-gray.png",
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          489
+        ]
+      ],
+      "anchor": [
+        1040,
+        465
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "compact_hook_recovery",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-actions-gray.png",
+      "rects": [
+        [
+          0,
+          489,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        420,
+        961
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "compact_hook_ready",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-actions-gray.png",
+      "rects": [
+        [
+          768,
+          489,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1080,
+        953
+      ],
+      "scale": 0.46
+    },
+    {
+      "name": "guard_deep",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+      "rects": [
+        [
+          971,
+          460,
+          1254,
+          722
+        ],
+        [
+          953,
+          722,
+          1254,
+          840
+        ]
+      ],
+      "anchor": [
+        1105,
+        808
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          846,
+          340,
+          1022
+        ],
+        [
+          0,
+          1022,
+          318,
+          1075
+        ],
+        [
+          0,
+          1075,
+          270,
+          1208
+        ]
+      ],
+      "anchor": [
+        152,
+        1170
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+      "rects": [
+        [
+          340,
+          897,
+          538,
+          1060
+        ],
+        [
+          340,
+          1060,
+          520,
+          1095
+        ],
+        [
+          265,
+          1095,
+          536,
+          1118
+        ],
+        [
+          265,
+          1118,
+          637,
+          1208
+        ]
+      ],
+      "anchor": [
+        433,
+        1180
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "compact_hook_side_collapse",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-collapse-gray.png",
+      "rects": [
+        [
+          0,
+          0,
+          887,
+          887
+        ]
+      ],
+      "anchor": [
+        460,
+        665
+      ],
+      "scale": 0.23
+    },
+    {
+      "name": "dead_head_right_compact_hook",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-collapse-gray.png",
+      "rects": [
+        [
+          887,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1335,
+        685
+      ],
+      "scale": 0.23
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

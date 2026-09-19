@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-ca2954a2-dfb0-4d57-983d-126180f78b0c.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_neutral_tunnel_lanterns.png",
+  "reference_revision": "7f87a4648",
+  "prompt": "Use case: identity-preserve. Paint an EIGHT-FRAME resting idle with VISIBLE HAND, WRIST AND ELBOW ARTICULATION for exactly this original character. Reference is a strip of poses of ONE character. Preserve identity, clothing, weapon size, hand ownership and right-facing three-quarter camera. Head/hips/feet almost stationary. The idle must read at 74px character height: hands travel about 50-70 source pixels; head under 5px. No head-bobbing substitute. Hands maintain plausible grips and bend naturally at elbows. No attack, walk or extra props.\nBearded man under brown hood in dark brown gray armor, short spear screenLEFT and large oval brown shield bearing orange lantern screenRIGHT. Bend spear elbow raising hand to waist, shield arm slightly raises lantern assembly then settles. Preserve lantern attached to shield, head quiet.\nCanvas1536x1024 RGBA true transparent background, 4 columns and 2 rows. Exactly eight sequential complete poses in reading order, same anatomical size, planted boot line near localy478, generous gaps, all owned weapons inside each cell. Smooth cycle: pose1 rest;2 begin hand adjustment;3 farther;4 crest;5 gradually reverse;6 ease back;7 near rest;8 almost pose1. Original detailed hand-painted fantasy strategy sprite. Genuine painted articulation, not translated whole-body copies. Transparent gaps and background, no floor/shadow/labels/grid/backdrop.\nCritical: preserve body proportions and keep full props within the 384-pixel-wide cell, with 20px transparent padding. Frame5 should be halfway back from the crest, frame6 a little lower, frame7 almost rested, frame8 rested; do not jump straight from frame4 to rest. Stable hips, head and boots.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "cf430f17028f52f3f9998b7ecf876f0c5244707a3f62b3ead30675f1971921bf",
+  "reference_sha256": "277882b37ded9d389dfc307f589e80b1039bb06f197b5cc3a6c5fcc9a2e3959a",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; hand, forearm and owned equipment movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

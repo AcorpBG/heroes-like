@@ -83,9 +83,10 @@
     "validation": "Automated tests/imports/gameplay/repository/Linux/Windows exports deferred until all 160 production/refinement/integration finishes. Offline static visual evidence is not final playback acceptance."
   },
   "packing": {
-    "recipe": "art/animation/source/poses/unit_neutral_kitehook_runners/packing.json",
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_kitehook_runners.png",
-    "runtime_sha256": "417fe08cf958b2612da0e03a33cdd65c9c9d8bc4b032943eaac449bebca4482e"
+    "runtime_sha256": "e1656d24ce5f771405f4b9afb3fce572458c233073cc1edb034fc1201eed8ce3"
   },
   "equipment_refinement": {
     "date": "2026-09-16",
@@ -106,5 +107,12 @@
     },
     "evidence": ".artifacts/battle-unit-animation-size-20260913/kitehook-equipment-refinement-20260916",
     "review": "Compact weapon matched by head/torso scale rather than shrinking complete long-pole poses. Full original and replacement states inspected together. Near/far gait, fine edge detail and continuous motion are not accepted by this static production review."
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "417fe08cf958b2612da0e03a33cdd65c9c9d8bc4b032943eaac449bebca4482e",
+    "preserved_frames": 13,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

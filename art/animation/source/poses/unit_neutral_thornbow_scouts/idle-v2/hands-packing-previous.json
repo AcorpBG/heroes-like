@@ -1,0 +1,432 @@
+{
+  "unit_id": "unit_neutral_thornbow_scouts",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          313,
+          328
+        ]
+      ],
+      "anchor": [
+        151,
+        325
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          0,
+          615,
+          331
+        ]
+      ],
+      "anchor": [
+        466,
+        325
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/continuity-alpha/bow-recovery-and-grounded-travel.png",
+      "rects": [
+        [
+          0,
+          628,
+          610,
+          1288
+        ]
+      ],
+      "anchor": [
+        330,
+        1218
+      ],
+      "scale": 0.345
+    },
+    {
+      "name": "walk_passing_attempt",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/continuity-alpha/bow-recovery-and-grounded-travel.png",
+      "rects": [
+        [
+          610,
+          628,
+          1221,
+          1288
+        ]
+      ],
+      "anchor": [
+        920,
+        1231
+      ],
+      "scale": 0.345
+    },
+    {
+      "name": "bow_shove_windup",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          350,
+          331,
+          611,
+          614
+        ],
+        [
+          350,
+          614,
+          445,
+          626
+        ],
+        [
+          539,
+          614,
+          611,
+          626
+        ]
+      ],
+      "anchor": [
+        480,
+        617
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "bow_shove_contact",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          615,
+          329,
+          985,
+          621
+        ]
+      ],
+      "anchor": [
+        771,
+        615
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "bow_shove_recovery",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/continuity-alpha/bow-recovery-and-grounded-travel.png",
+      "rects": [
+        [
+          0,
+          0,
+          610,
+          623
+        ]
+      ],
+      "anchor": [
+        320,
+        615
+      ],
+      "scale": 0.345
+    },
+    {
+      "name": "guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/continuity-alpha/bow-recovery-and-grounded-travel.png",
+      "rects": [
+        [
+          610,
+          0,
+          1221,
+          624
+        ]
+      ],
+      "anchor": [
+        903,
+        615
+      ],
+      "scale": 0.345
+    },
+    {
+      "name": "guard_crouch",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          1000,
+          342,
+          1239,
+          619
+        ]
+      ],
+      "anchor": [
+        1102,
+        608
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "arrow_nock",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          630,
+          305,
+          941
+        ],
+        [
+          0,
+          941,
+          82,
+          948
+        ],
+        [
+          202,
+          941,
+          305,
+          948
+        ]
+      ],
+      "anchor": [
+        154,
+        940
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "bow_draw",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          470,
+          617,
+          550,
+          631
+        ],
+        [
+          335,
+          631,
+          612,
+          955
+        ]
+      ],
+      "anchor": [
+        456,
+        947
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "bow_release",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          629,
+          619,
+          922,
+          954
+        ]
+      ],
+      "anchor": [
+        768,
+        949
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "bow_reload",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          990,
+          627,
+          1254,
+          956
+        ]
+      ],
+      "anchor": [
+        1118,
+        949
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          947,
+          291,
+          1233
+        ]
+      ],
+      "anchor": [
+        140,
+        1226
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          300,
+          991,
+          598,
+          1225
+        ]
+      ],
+      "anchor": [
+        450,
+        1205
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          601,
+          1052,
+          908,
+          1168
+        ],
+        [
+          601,
+          1168,
+          924,
+          1221
+        ]
+      ],
+      "anchor": [
+        762,
+        1201
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          905,
+          1059,
+          1254,
+          1168
+        ],
+        [
+          937,
+          1168,
+          1254,
+          1225
+        ]
+      ],
+      "anchor": [
+        1080,
+        1202
+      ],
+      "scale": 0.64
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 1
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        13,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 280,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

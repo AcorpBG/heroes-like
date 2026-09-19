@@ -1,0 +1,365 @@
+{
+  "unit_id": "unit_neutral_orchard_halberds",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          278,
+          410
+        ],
+        [
+          213,
+          410,
+          278,
+          425
+        ]
+      ],
+      "anchor": [
+        153,
+        416
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          314,
+          0,
+          619,
+          425
+        ]
+      ],
+      "anchor": [
+        477,
+        415
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "walk_contact",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          626,
+          0,
+          930,
+          426
+        ]
+      ],
+      "anchor": [
+        798,
+        421
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "walk_passing_attempt",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          425,
+          313,
+          523
+        ],
+        [
+          0,
+          523,
+          268,
+          595
+        ],
+        [
+          0,
+          595,
+          301,
+          799
+        ],
+        [
+          55,
+          799,
+          301,
+          820
+        ]
+      ],
+      "anchor": [
+        153,
+        807
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "billhook_windup",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          268,
+          420,
+          622,
+          575
+        ],
+        [
+          284,
+          575,
+          622,
+          815
+        ]
+      ],
+      "anchor": [
+        469,
+        807
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "billhook_strike",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          623,
+          440,
+          975,
+          735
+        ],
+        [
+          623,
+          735,
+          994,
+          788
+        ],
+        [
+          623,
+          788,
+          980,
+          828
+        ]
+      ],
+      "anchor": [
+        788,
+        813
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "billhook_recovery",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/continuity-alpha/billhook-recovery-supported-step-and-corpse.png",
+      "rects": [
+        [
+          620,
+          0,
+          1227,
+          647
+        ]
+      ],
+      "anchor": [
+        860,
+        615
+      ],
+      "scale": 0.37
+    },
+    {
+      "name": "guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/continuity-alpha/billhook-recovery-supported-step-and-corpse.png",
+      "rects": [
+        [
+          0,
+          611,
+          240,
+          659
+        ],
+        [
+          0,
+          659,
+          543,
+          1282
+        ]
+      ],
+      "anchor": [
+        324,
+        1227
+      ],
+      "scale": 0.37
+    },
+    {
+      "name": "guard_brace",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          996,
+          425,
+          1254,
+          829
+        ]
+      ],
+      "anchor": [
+        1108,
+        803
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          804,
+          84,
+          830
+        ],
+        [
+          0,
+          830,
+          312,
+          1190
+        ]
+      ],
+      "anchor": [
+        156,
+        1167
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          838,
+          596,
+          1185
+        ]
+      ],
+      "anchor": [
+        469,
+        1161
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          609,
+          930,
+          924,
+          1210
+        ]
+      ],
+      "anchor": [
+        755,
+        1186
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/continuity-alpha/billhook-recovery-supported-step-and-corpse.png",
+      "rects": [
+        [
+          543,
+          900,
+          1227,
+          1282
+        ]
+      ],
+      "anchor": [
+        866,
+        1227
+      ],
+      "scale": 0.37
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 440,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 280,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

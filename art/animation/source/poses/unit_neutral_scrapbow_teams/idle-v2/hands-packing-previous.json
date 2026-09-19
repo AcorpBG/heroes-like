@@ -1,0 +1,391 @@
+{
+  "unit_id": "unit_neutral_scrapbow_teams",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          380,
+          260
+        ]
+      ],
+      "anchor": [
+        180,
+        253
+      ],
+      "scale": 0.85
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          380,
+          0,
+          756,
+          260
+        ]
+      ],
+      "anchor": [
+        560,
+        253
+      ],
+      "scale": 0.85
+    },
+    {
+      "name": "crew_step",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+      "rects": [
+        [
+          0,
+          0,
+          519,
+          503
+        ]
+      ],
+      "anchor": [
+        254,
+        468
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "crew_lift",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+      "rects": [
+        [
+          520,
+          0,
+          1024,
+          503
+        ]
+      ],
+      "anchor": [
+        766,
+        461
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "crew_settle",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          503
+        ]
+      ],
+      "anchor": [
+        1280,
+        462
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "stock_windup",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          380,
+          260,
+          756,
+          512
+        ]
+      ],
+      "anchor": [
+        565,
+        502
+      ],
+      "scale": 0.85
+    },
+    {
+      "name": "stock_shove",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          756,
+          260,
+          1145,
+          512
+        ]
+      ],
+      "anchor": [
+        946,
+        504
+      ],
+      "scale": 0.85
+    },
+    {
+      "name": "stock_recovery",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+      "rects": [
+        [
+          0,
+          504,
+          516,
+          1024
+        ]
+      ],
+      "anchor": [
+        249,
+        948
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "crouch_guard",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          1145,
+          260,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1331,
+        504
+      ],
+      "scale": 0.85
+    },
+    {
+      "name": "load_bolt",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          512,
+          380,
+          757
+        ]
+      ],
+      "anchor": [
+        185,
+        743
+      ],
+      "scale": 0.85
+    },
+    {
+      "name": "aim",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          380,
+          512,
+          758,
+          757
+        ]
+      ],
+      "anchor": [
+        570,
+        747
+      ],
+      "scale": 0.85
+    },
+    {
+      "name": "fire",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          758,
+          512,
+          1145,
+          757
+        ]
+      ],
+      "anchor": [
+        946,
+        748
+      ],
+      "scale": 0.85
+    },
+    {
+      "name": "fire_recovery",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+      "rects": [
+        [
+          1038,
+          504,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        952
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          757,
+          380,
+          1009
+        ]
+      ],
+      "anchor": [
+        183,
+        980
+      ],
+      "scale": 0.85
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          380,
+          795,
+          750,
+          993
+        ]
+      ],
+      "anchor": [
+        565,
+        982
+      ],
+      "scale": 0.85
+    },
+    {
+      "name": "death_lower",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+      "rects": [
+        [
+          516,
+          504,
+          1038,
+          1024
+        ]
+      ],
+      "anchor": [
+        785,
+        916
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "dead_pair",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          1145,
+          830,
+          1536,
+          1009
+        ]
+      ],
+      "anchor": [
+        1335,
+        968
+      ],
+      "scale": 0.85
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 420,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 3,
+      "indices": [
+        2,
+        3,
+        4
+      ],
+      "loop": true,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        5,
+        6,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        13,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 280,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  }
+}

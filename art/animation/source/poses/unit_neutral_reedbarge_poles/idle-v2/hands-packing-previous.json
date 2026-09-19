@@ -1,0 +1,415 @@
+{
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          350,
+          398
+        ]
+      ],
+      "anchor": [
+        178,
+        389
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+      "rects": [
+        [
+          350,
+          0,
+          709,
+          388
+        ],
+        [
+          411,
+          388,
+          640,
+          399
+        ]
+      ],
+      "anchor": [
+        516,
+        389
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "contact_original",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+      "rects": [
+        [
+          710,
+          0,
+          1085,
+          398
+        ]
+      ],
+      "anchor": [
+        898,
+        389
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "passing_original",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          399,
+          349,
+          740
+        ]
+      ],
+      "anchor": [
+        175,
+        727
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "contact_front_camera",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/supported-travel-hook-forward-and-left-corpse.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          534
+        ]
+      ],
+      "anchor": [
+        271,
+        516
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "passing_knee_lift",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/supported-travel-hook-forward-and-left-corpse.png",
+      "rects": [
+        [
+          513,
+          0,
+          1023,
+          534
+        ]
+      ],
+      "anchor": [
+        676,
+        516
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "passing_rear_lift",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/supported-travel-hook-forward-and-left-corpse.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          534
+        ]
+      ],
+      "anchor": [
+        1281,
+        516
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "hook_forward_windup",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/supported-travel-hook-forward-and-left-corpse.png",
+      "rects": [
+        [
+          0,
+          535,
+          546,
+          1024
+        ]
+      ],
+      "anchor": [
+        263,
+        948
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "pole_thrust",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+      "rects": [
+        [
+          670,
+          408,
+          1179,
+          499
+        ],
+        [
+          670,
+          499,
+          1140,
+          544
+        ],
+        [
+          670,
+          544,
+          1087,
+          740
+        ]
+      ],
+      "anchor": [
+        830,
+        714
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "hook_forward_recovery",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/supported-travel-hook-forward-and-left-corpse.png",
+      "rects": [
+        [
+          547,
+          535,
+          1023,
+          735
+        ],
+        [
+          547,
+          735,
+          930,
+          1024
+        ]
+      ],
+      "anchor": [
+        738,
+        948
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "guard_crosswise",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+      "rects": [
+        [
+          1179,
+          408,
+          1448,
+          500
+        ],
+        [
+          1168,
+          500,
+          1448,
+          510
+        ],
+        [
+          1140,
+          510,
+          1448,
+          539
+        ],
+        [
+          1088,
+          539,
+          1448,
+          740
+        ]
+      ],
+      "anchor": [
+        1252,
+        714
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          740,
+          318,
+          1016
+        ],
+        [
+          0,
+          1016,
+          301,
+          1086
+        ]
+      ],
+      "anchor": [
+        174,
+        1040
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+      "rects": [
+        [
+          350,
+          741,
+          670,
+          923
+        ],
+        [
+          350,
+          923,
+          642,
+          1009
+        ],
+        [
+          307,
+          1009,
+          642,
+          1086
+        ]
+      ],
+      "anchor": [
+        470,
+        1035
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+      "rects": [
+        [
+          670,
+          796,
+          1034,
+          970
+        ],
+        [
+          642,
+          970,
+          1034,
+          1086
+        ]
+      ],
+      "anchor": [
+        842,
+        1027
+      ],
+      "scale": 0.57
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/dead-head-left-cheek-on-arm.png",
+      "rects": [
+        [
+          0,
+          0,
+          1482,
+          1061
+        ]
+      ],
+      "anchor": [
+        761,
+        808
+      ],
+      "scale": 0.15
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 470,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 6,
+      "indices": [
+        2,
+        3,
+        4,
+        5,
+        4,
+        6
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        7,
+        8,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 230,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        11,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        12,
+        13,
+        14
+      ],
+      "loop": false,
+      "frame_msec": 290,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        14
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "unit_id": "unit_neutral_reedbarge_poles",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

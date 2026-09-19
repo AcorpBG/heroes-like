@@ -1,0 +1,457 @@
+{
+  "unit_id": "unit_neutral_echodart_casts",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          308,
+          332
+        ]
+      ],
+      "anchor": [
+        159,
+        321
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          340,
+          0,
+          603,
+          332
+        ]
+      ],
+      "anchor": [
+        480,
+        321
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "run_extension_unaccepted",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          605,
+          0,
+          948,
+          332
+        ]
+      ],
+      "anchor": [
+        788,
+        315
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "run_gather_unaccepted",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          950,
+          0,
+          1254,
+          332
+        ]
+      ],
+      "anchor": [
+        1096,
+        315
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "crossbow_shove_windup",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          312,
+          332,
+          604,
+          501
+        ],
+        [
+          312,
+          501,
+          615,
+          637
+        ],
+        [
+          312,
+          637,
+          375,
+          647
+        ],
+        [
+          500,
+          637,
+          615,
+          647
+        ]
+      ],
+      "anchor": [
+        459,
+        629
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "crossbow_shove_contact",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          616,
+          332,
+          955,
+          460
+        ],
+        [
+          616,
+          460,
+          939,
+          647
+        ]
+      ],
+      "anchor": [
+        782,
+        630
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "crossbow_shove_recovery",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/continuity-alpha/crossbow-recoveries-grounded-step-and-directional-rest.png",
+      "rects": [
+        [
+          0,
+          0,
+          767,
+          494
+        ],
+        [
+          0,
+          494,
+          268,
+          529
+        ],
+        [
+          500,
+          494,
+          767,
+          529
+        ]
+      ],
+      "anchor": [
+        386,
+        504
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "guard_crouch",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          980,
+          375,
+          1254,
+          420
+        ],
+        [
+          948,
+          420,
+          1254,
+          643
+        ]
+      ],
+      "anchor": [
+        1100,
+        630
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "crossbow_reload",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          641,
+          290,
+          979
+        ],
+        [
+          40,
+          979,
+          100,
+          988
+        ],
+        [
+          185,
+          979,
+          240,
+          988
+        ]
+      ],
+      "anchor": [
+        152,
+        974
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "crossbow_aim",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          310,
+          645,
+          598,
+          990
+        ]
+      ],
+      "anchor": [
+        456,
+        971
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "crossbow_release",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          605,
+          644,
+          924,
+          990
+        ]
+      ],
+      "anchor": [
+        760,
+        971
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "crossbow_empty_recovery",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/continuity-alpha/crossbow-recoveries-grounded-step-and-directional-rest.png",
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          550
+        ]
+      ],
+      "anchor": [
+        1113,
+        515
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          968,
+          648,
+          1254,
+          985
+        ]
+      ],
+      "anchor": [
+        1102,
+        959
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          990,
+          284,
+          1254
+        ]
+      ],
+      "anchor": [
+        142,
+        1213
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "death_tipping",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          283,
+          996,
+          571,
+          1090
+        ],
+        [
+          283,
+          1090,
+          566,
+          1250
+        ]
+      ],
+      "anchor": [
+        434,
+        1210
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/alpha/poses.png",
+      "rects": [
+        [
+          595,
+          1048,
+          893,
+          1220
+        ],
+        [
+          568,
+          1088,
+          595,
+          1158
+        ]
+      ],
+      "anchor": [
+        730,
+        1190
+      ],
+      "scale": 0.63
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_echodart_casts/continuity-alpha/crossbow-recoveries-grounded-step-and-directional-rest.png",
+      "rects": [
+        [
+          737,
+          699,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1132,
+        974
+      ],
+      "scale": 0.29
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 430,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        6,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        12,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        13,
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 245,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

@@ -1,0 +1,396 @@
+{
+  "unit_id": "unit_neutral_ridgeflare_shots",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          302,
+          317
+        ]
+      ],
+      "anchor": [
+        158,
+        322
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          320,
+          0,
+          610,
+          319
+        ]
+      ],
+      "anchor": [
+        464,
+        322
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "run_extension_attempt",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          620,
+          0,
+          930,
+          318
+        ]
+      ],
+      "anchor": [
+        803,
+        319
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "run_gather_attempt",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          950,
+          0,
+          1254,
+          320
+        ]
+      ],
+      "anchor": [
+        1108,
+        316
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "right_fist_anticipation",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          340,
+          321,
+          605,
+          620
+        ]
+      ],
+      "anchor": [
+        478,
+        625
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "right_fist_punch",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          629,
+          321,
+          933,
+          622
+        ]
+      ],
+      "anchor": [
+        790,
+        624
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "right_fist_recovery",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/continuity-alpha/loaded-melee-empty-ranged-and-guard-recoveries.png",
+      "rects": [
+        [
+          0,
+          0,
+          724,
+          724
+        ]
+      ],
+      "anchor": [
+        360,
+        705
+      ],
+      "scale": 0.31
+    },
+    {
+      "name": "loaded_guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/continuity-alpha/loaded-melee-empty-ranged-and-guard-recoveries.png",
+      "rects": [
+        [
+          1448,
+          0,
+          2172,
+          724
+        ]
+      ],
+      "anchor": [
+        1828,
+        705
+      ],
+      "scale": 0.31
+    },
+    {
+      "name": "loaded_guard_crouch",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          978,
+          325,
+          1254,
+          622
+        ]
+      ],
+      "anchor": [
+        1106,
+        625
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          620,
+          302,
+          903
+        ],
+        [
+          55,
+          903,
+          120,
+          914
+        ]
+      ],
+      "anchor": [
+        162,
+        915
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_reload",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          350,
+          625,
+          615,
+          934
+        ]
+      ],
+      "anchor": [
+        466,
+        928
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_loaded_aim",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          654,
+          624,
+          929,
+          934
+        ]
+      ],
+      "anchor": [
+        781,
+        930
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_empty_release",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          973,
+          623,
+          1233,
+          934
+        ]
+      ],
+      "anchor": [
+        1098,
+        930
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_empty_recovery",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/continuity-alpha/loaded-melee-empty-ranged-and-guard-recoveries.png",
+      "rects": [
+        [
+          724,
+          0,
+          1448,
+          724
+        ]
+      ],
+      "anchor": [
+        1095,
+        705
+      ],
+      "scale": 0.31
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          330,
+          941,
+          609,
+          1213
+        ]
+      ],
+      "anchor": [
+        469,
+        1200
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_side_head_left",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          610,
+          984,
+          919,
+          1215
+        ]
+      ],
+      "anchor": [
+        763,
+        1199
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_ridgeflare_shots/alpha/poses.png",
+      "rects": [
+        [
+          919,
+          1020,
+          1254,
+          1214
+        ]
+      ],
+      "anchor": [
+        1085,
+        1195
+      ],
+      "scale": 0.65
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}

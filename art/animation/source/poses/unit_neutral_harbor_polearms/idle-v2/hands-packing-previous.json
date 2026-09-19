@@ -1,0 +1,437 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          371,
+          230
+        ],
+        [
+          0,
+          230,
+          350,
+          265
+        ],
+        [
+          0,
+          265,
+          300,
+          376
+        ]
+      ],
+      "anchor": [
+        161,
+        355
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          371,
+          0,
+          737,
+          230
+        ],
+        [
+          350,
+          230,
+          713,
+          266
+        ],
+        [
+          398,
+          266,
+          669,
+          373
+        ]
+      ],
+      "anchor": [
+        510,
+        355
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          739,
+          0,
+          1097,
+          200
+        ],
+        [
+          710,
+          200,
+          1000,
+          270
+        ],
+        [
+          760,
+          270,
+          975,
+          375
+        ]
+      ],
+      "anchor": [
+        850,
+        349
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_passing_attempt",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          1100,
+          0,
+          1448,
+          198
+        ],
+        [
+          1060,
+          198,
+          1410,
+          238
+        ],
+        [
+          1097,
+          238,
+          1310,
+          371
+        ]
+      ],
+      "anchor": [
+        1241,
+        349
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "polearm_windup",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          340,
+          369,
+          415,
+          397
+        ],
+        [
+          415,
+          392,
+          692,
+          724
+        ],
+        [
+          376,
+          397,
+          415,
+          724
+        ]
+      ],
+      "anchor": [
+        509,
+        694
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "full_polearm_thrust",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/continuity-alpha/full-polearm-thrust-recovery-guard-and-step.png",
+      "rects": [
+        [
+          0,
+          0,
+          713,
+          247
+        ],
+        [
+          0,
+          247,
+          575,
+          585
+        ]
+      ],
+      "anchor": [
+        335,
+        543
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "polearm_recovery",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/continuity-alpha/full-polearm-thrust-recovery-guard-and-step.png",
+      "rects": [
+        [
+          714,
+          0,
+          1224,
+          246
+        ],
+        [
+          576,
+          246,
+          1224,
+          596
+        ]
+      ],
+      "anchor": [
+        914,
+        574
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/continuity-alpha/full-polearm-thrust-recovery-guard-and-step.png",
+      "rects": [
+        [
+          0,
+          596,
+          610,
+          1285
+        ]
+      ],
+      "anchor": [
+        306,
+        1204
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "guard_crouch",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          1210,
+          438,
+          1448,
+          524
+        ],
+        [
+          1086,
+          524,
+          1448,
+          715
+        ]
+      ],
+      "anchor": [
+        1251,
+        688
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          730,
+          160,
+          747
+        ],
+        [
+          0,
+          747,
+          354,
+          930
+        ],
+        [
+          0,
+          930,
+          279,
+          1000
+        ],
+        [
+          0,
+          1000,
+          298,
+          1064
+        ]
+      ],
+      "anchor": [
+        163,
+        1032
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          375,
+          760,
+          588,
+          932
+        ],
+        [
+          280,
+          932,
+          598,
+          950
+        ],
+        [
+          312,
+          950,
+          590,
+          993
+        ],
+        [
+          312,
+          993,
+          662,
+          1011
+        ],
+        [
+          540,
+          1011,
+          662,
+          1046
+        ]
+      ],
+      "anchor": [
+        478,
+        1024
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_fall_head_right",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          593,
+          839,
+          1008,
+          986
+        ],
+        [
+          675,
+          986,
+          1008,
+          1047
+        ]
+      ],
+      "anchor": [
+        818,
+        1020
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          1009,
+          879,
+          1448,
+          1049
+        ]
+      ],
+      "anchor": [
+        1230,
+        1020
+      ],
+      "scale": 0.6
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 195,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_source_facing": "right"
+}
