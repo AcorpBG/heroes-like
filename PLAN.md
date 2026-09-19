@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Scenery scale hierarchy and quieter edges
+
+`art-scenery-scale-hierarchy-20260919` — completed. Ground plants, shrubs, trees and rocks use distinct scale limits; large formations no longer carry redundant random per-cell objects. Dense saved-map vegetation/rock excerpts were reviewed with native masks unchanged. See `docs/biome-source-component-expansion.md`.
+
 ### Large woodland and wetland formations
 
 `art-woodland-wetland-masses-20260919` — completed. Added 75 original irregular woodland, wetland, reed, deadwood and fungal masses with habitat-specific routing and shared depth-sorted overlap. Focused vegetation/mountain renders, content contracts and Windows import pass; source masks and generation unchanged. See `docs/biome-source-component-expansion.md`.

@@ -4418,6 +4418,8 @@ func _draw_decorative_object_sprite(object: Dictionary, rect: Rect2, remembered:
 func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	if not bool(object.get("generated_body_visual_anchor", false)):
 		return false
+	if int(object.get("native_scenery_art_version", 0)) >= 2:
+		return _draw_scaled_scenery_body(object, rect, remembered, tile)
 	var asset_id := _decorative_object_asset_id(object)
 	var texture = _object_texture_for_asset(asset_id)
 	if not (texture is Texture2D):
@@ -4462,6 +4464,37 @@ func _draw_generated_decorative_body_sprite(object: Dictionary, rect: Rect2, rem
 			_canvas_draw_texture_rect_region(draw_texture, edge.rect, edge.source, base_modulate)
 	else:
 		_draw_living_scenery(asset_id, draw_texture, sprite_rect, base_modulate, tile)
+	_draw_native_scenery_formation(object, rect, remembered, tile)
+	return true
+
+func _draw_scaled_scenery_body(object: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	var rules = preload("res://scripts/persistence/NativeSceneryRules.gd")
+	var asset_id := _decorative_object_asset_id(object)
+	var own: Dictionary = object.get("generated_body_formation", {})
+	var inside_mass := false
+	if not own.is_empty():
+		inside_mass = Rect2i(own.mass_origin, own.mass_size).has_point(tile)
+	# Low shared foothills already describe connected rock ground. Adding a
+	# random spire/basin/arch on every cell creates an unrelated object carpet.
+	_draw_native_rock_contacts(object, rect, remembered, tile)
+	var has_foothills: bool = not object.get("generated_body_rock_contacts", []).is_empty()
+	if not inside_mass and not has_foothills:
+		var texture = _object_texture_for_asset(asset_id)
+		if not texture is Texture2D: return false
+		var region := _object_texture_visible_region(asset_id, texture)
+		var raster: Texture2D = region.get("draw_texture", texture)
+		var limits: Vector2 = rules.body_scale(object, asset_id, not own.is_empty()) * rect.size
+		var factor := minf(limits.x / raster.get_width(), limits.y / raster.get_height())
+		var size := raster.get_size() * factor
+		# Ground plants share the tree's baseline, not its canvas-size target.
+		var painted := Rect2(Vector2(rect.get_center().x-size.x*0.5, rect.end.y-size.y-rect.size.y*0.08),size)
+		var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
+		tint *= _native_scenery_modulate(object, tile, asset_id)
+		if not own.is_empty():
+			var part := preload("res://scripts/persistence/NativeSceneryFormation.gd").clip(painted, rect, raster.get_size())
+			if not part.is_empty(): _canvas_draw_texture_rect_region(raster, part.rect, part.source, tint)
+		else:
+			_draw_living_scenery(asset_id, raster, painted, tint, tile)
 	_draw_native_scenery_formation(object, rect, remembered, tile)
 	return true
 

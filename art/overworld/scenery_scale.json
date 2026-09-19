@@ -1,0 +1,15 @@
+{
+  "description": "Version 2 presentation limits in tile units. Individual ground plants stay below tree scale; large formations own their own visual bounds.",
+  "families": {
+    "rock": {"width": 1.05, "height": 0.85, "edge_width": 0.45, "edge_height": 0.3},
+    "woods": {"width": 1.05, "height": 1.2, "edge_width": 0.55, "edge_height": 0.6},
+    "conifers": {"width": 0.95, "height": 1.25, "edge_width": 0.5, "edge_height": 0.65},
+    "deadwood": {"width": 0.95, "height": 1.0, "edge_width": 0.5, "edge_height": 0.5},
+    "wetland": {"width": 0.65, "height": 0.42, "edge_width": 0.45, "edge_height": 0.28},
+    "scrub": {"width": 0.65, "height": 0.42, "edge_width": 0.4, "edge_height": 0.25},
+    "fungi": {"width": 0.6, "height": 0.4, "edge_width": 0.4, "edge_height": 0.25}
+  },
+  "rock_low_cells": [3, 7, 8, 11, 13, 16, 18, 21, 24],
+  "deadwood_low_cells": [15, 16, 17, 18, 19, 21, 23],
+  "low_limits": {"width": 0.8, "height": 0.4}
+}

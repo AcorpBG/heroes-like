@@ -22302,6 +22302,15 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "art-scenery-scale-hierarchy-20260919",
+      "title": "Consistent scenery scale and quieter formation edges",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "notes": "Asset-family size limits now cap low plants below trees and remove redundant per-cell objects under masses/shared foothills. Reviewed two saved RMG map crops; 1234 saved-map checks, 213 formation checks and 340 vegetation checks passed; Windows Godot import passed. Native records and masks unchanged. No full suite, gameplay session or Linux run. See docs/biome-source-component-expansion.md."
+    },
+    {
       "id": "art-woodland-wetland-masses-20260919",
       "title": "Large irregular woodland and wetland formations",
       "status": "completed",

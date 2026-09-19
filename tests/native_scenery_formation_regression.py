@@ -6,7 +6,7 @@ names = ['_index_generated_decorative_body_cells', '_index_native_scenery_format
          '_generated_decorative_body_asset_id', '_native_scenery_assets', '_native_scenery_modulate',
          '_generated_decorative_body_motif_key', '_generated_decorative_body_composition',
          '_stable_unit_fraction', '_tile_key', '_tiles_from_payloads',
-         '_draw_generated_decorative_body_sprite', '_draw_native_scenery_formation',
+         '_draw_generated_decorative_body_sprite', '_draw_scaled_scenery_body', '_draw_native_scenery_formation',
          '_object_painted_sprite_draw_payload', '_object_texture_visible_region',
          '_object_canvas_draw_rect', '_object_world_tile_extent']
 live = '\n'.join(re.search(rf'^func {name}\(.*?(?=^func |\Z)', harness.SOURCE, re.M|re.S).group().rstrip() for name in names)

@@ -233,3 +233,35 @@ provenance/canvas/import contracts and final Windows Godot import passed.
 The wiki includes the new assets. No full suite, gameplay, Linux or package
 run was performed. Rebuildable temporary renders/logs/editor profile are removed
 after review; original art, provenance, caches and existing user files remain.
+
+## Scenery scale hierarchy and quieter formation edges
+
+The individual-body renderer previously fitted reeds, ferns, shrubs, trees
+and rocks to the same 1.42-tile maximum dimension. It also drew one random
+component on each cell underneath the new broad formations. This created
+oversized low plants and a carpet of unrelated rock silhouettes.
+
+`art/overworld/scenery_scale.json` now sets separate painted width/height
+limits: low plants are at most 0.42 tiles high; woods and conifers allow
+1.2 and 1.25 tiles. Low rock and deadwood components have additional limits.
+Sprites preserve aspect ratio and share a ground baseline. Edge companions
+use smaller limits belonging to their own formation, so an unrelated
+mountain's visual overhang no longer shrinks neighboring trees.
+
+Broad formation interiors omit the redundant individual sprite. Connected
+rock cells use their existing shared foothill art without another random
+spire, arch or basin on top. This changes presentation only: no native
+generation, blocked cells, source placement records or saved data change.
+Restart/reload applies it to existing version 2 scenery; legacy version 1
+retains its previous renderer. No new map is required.
+
+Two areas of an existing 72x72 saved RMG map were rendered before and after
+and visually reviewed, covering dense rocks and vegetation. These are saved
+map excerpts, not a recreation of the owner's current screenshot. The
+read-only saved-map check passed 1,234 assertions, preserving all 1,220 blocked
+cells; its nine rendered low plants stayed at or below 20.16 pixels on
+48-pixel tiles. The formation and vegetation checks passed 213 and 340
+assertions respectively, including overlap and fog coverage. Windows Godot
+import passed without errors. No full suite, gameplay session, Linux or
+package test was run. Temporary review images, logs and the isolated editor
+profile are removed; the rendering/review tooling remains rebuildable.
