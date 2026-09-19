@@ -17,12 +17,24 @@ var _cursor := 0
 var _current: PaintBatch
 var recording := false
 var generation := 0
+var _materials := {}
+
+static func profile_for_asset(manifest: Dictionary, asset_id: String) -> Dictionary:
+	var profile_id := String(manifest.get("assets", {}).get(asset_id, ""))
+	if profile_id.is_empty():
+		for rule in manifest.get("asset_rules", []):
+			var token := String(rule.get("contains", ""))
+			if asset_id.begins_with(String(rule.prefix)) and (token.is_empty() or token in asset_id):
+				profile_id = String(rule.profile)
+				break
+	return manifest.get("profiles", {}).get(profile_id, {})
 
 func begin(host: Control) -> void:
 	_host = host
 	_cursor = 0
 	_current = null
 	entries.clear()
+	_materials.clear()
 	recording = true
 	generation += 1
 
@@ -49,6 +61,27 @@ func record(method: StringName, arguments: Array) -> void:
 
 func paint(texture: Texture2D, rect: Rect2, tint: Color, profile: Dictionary, source_region: Rect2, asset_id: String, tile: Vector2i, level: int, enabled: bool) -> void:
 	var batch := _next()
+	# Transparent margin lets canopy tips move without clipping the tight crop.
+	var displacement := float(profile.get("strength", 0.0)) * maxf(rect.size.x / source_region.size.x, rect.size.y / source_region.size.y)
+	var margin := ceilf(displacement) + 2.0
+	var padding := Vector2(margin, margin) / rect.size
+	batch.material = _material(texture, profile, source_region, asset_id, tile, level, enabled, padding)
+	batch.commands.append([&"draw_texture_rect", [texture, rect.grow(margin), false, tint]])
+	entries.append({"asset_id": asset_id, "tile": tile, "level": level, "rect": rect, "profile": profile, "batch": batch})
+	_current = null # Following fog, outlines and props stay ABOVE this sprite.
+
+func paint_region(texture: Texture2D, rect: Rect2, source: Rect2, tint: Color, profile: Dictionary, original_region: Rect2, asset_id: String, tile: Vector2i, phase_tile: Vector2i, level: int, enabled: bool, padding: Vector2 = Vector2.ZERO) -> void:
+	var batch := _next()
+	# Every tile samples the complete texture with the same material and phase.
+	# Geometry remains clipped to this explored cell, even while UVs move.
+	batch.material = _material(texture, profile, original_region, asset_id, phase_tile, level, enabled, padding)
+	batch.commands.append([&"draw_texture_rect_region", [texture, rect, source, tint, false, false]])
+	entries.append({"asset_id": asset_id, "tile": tile, "phase_tile": phase_tile, "level": level, "rect": rect, "profile": profile, "batch": batch})
+	_current = null
+
+func _material(texture: Texture2D, profile: Dictionary, source_region: Rect2, asset_id: String, phase_tile: Vector2i, level: int, enabled: bool, padding: Vector2) -> ShaderMaterial:
+	var key := [asset_id, phase_tile, level, source_region, padding, profile]
+	if _materials.has(key): return _materials[key]
 	var shader_material := ShaderMaterial.new()
 	shader_material.shader = SceneryShader
 	# AtlasTexture draw commands carry atlas UVs, not cell-local UVs. Keep
@@ -62,19 +95,15 @@ func paint(texture: Texture2D, rect: Rect2, tint: Color, profile: Dictionary, so
 	shader_material.set_shader_parameter("strength", float(profile.get("strength", 0.0)))
 	shader_material.set_shader_parameter("upper", float(profile.get("upper", 0.0)))
 	shader_material.set_shader_parameter("anchor", float(profile.get("anchor", 1.0)))
+	shader_material.set_shader_parameter("speed", float(profile.get("speed", 1.0)))
+	shader_material.set_shader_parameter("ripple", float(profile.get("ripple", 0.0)))
 	var area: Array = profile.get("region", [0.0, 0.0, 1.0, 1.0])
 	shader_material.set_shader_parameter("activity_region", Vector4(area[0], area[1], area[2], area[3]))
 	shader_material.set_shader_parameter("source_region", Vector4(source_region.position.x, source_region.position.y, source_region.size.x, source_region.size.y))
-	# Transparent margin lets canopy tips move without clipping the tight crop.
-	var displacement := float(profile.get("strength", 0.0)) * maxf(rect.size.x / source_region.size.x, rect.size.y / source_region.size.y)
-	var margin := ceilf(displacement) + 2.0
-	var padding := Vector2(margin, margin) / rect.size
 	shader_material.set_shader_parameter("padding_uv", padding)
-	shader_material.set_shader_parameter("phase", float(posmod(hash("%s:%d:%d:%d" % [asset_id, tile.x, tile.y, level]), 10007)) / 10007.0 * TAU)
-	batch.material = shader_material
-	batch.commands.append([&"draw_texture_rect", [texture, rect.grow(margin), false, tint]])
-	entries.append({"asset_id": asset_id, "tile": tile, "level": level, "rect": rect, "profile": profile, "batch": batch})
-	_current = null # Following fog, outlines and props stay ABOVE this sprite.
+	shader_material.set_shader_parameter("phase", float(posmod(hash("%s:%d:%d:%d" % [asset_id, phase_tile.x, phase_tile.y, level]), 10007)) / 10007.0 * TAU)
+	_materials[key] = shader_material
+	return shader_material
 
 func finish() -> void:
 	recording = false
@@ -86,5 +115,5 @@ func finish() -> void:
 	_current = null
 
 func set_motion_enabled(enabled: bool) -> void:
-	for entry in entries:
-		entry.batch.material.set_shader_parameter("motion_enabled", enabled)
+	for shader_material in _materials.values():
+		shader_material.set_shader_parameter("motion_enabled", enabled)

@@ -84993,19 +84993,48 @@ def validate_overworld_placeholder_art_resolution(errors: list[str]) -> None:
 
 
 def validate_overworld_scenery_animation(errors: list[str]) -> None:
-    """Only explicit, original-raster-backed, bounded scenery profiles ship."""
-    spec = json.loads((ROOT / "content/overworld_scenery_animation.json").read_text())
-    art = json.loads((ROOT / "art/overworld/manifest.json").read_text())["object_assets"]
+    """Original-raster profiles cover explicit props and registered scenery families."""
+    spec = json.loads((ROOT / "content/overworld_scenery_animation.json").read_text(encoding="utf-8"))
+    art = json.loads((ROOT / "art/overworld/manifest.json").read_text(encoding="utf-8"))["object_assets"]
     if spec.get("coordinate_space") != "normalized_original_asset_before_painted_bounds_crop":
         errors.append("Scenery animation must preserve original asset coordinates through cropping.")
-    for asset_id, profile_id in spec["assets"].items():
+    assets = dict(spec["assets"])
+    for rule in spec.get("asset_rules", []):
+        if not rule.get("prefix") or rule.get("profile") not in spec["profiles"]:
+            errors.append(f"Invalid scenery family rule: {rule}")
+            continue
+        matches = [aid for aid in art if aid.startswith(rule["prefix"]) and rule.get("contains", "") in aid]
+        if not matches:
+            errors.append(f"Scenery family rule matches no registered original art: {rule}")
+        for aid in matches:
+            assets.setdefault(aid, rule["profile"])
+    # Keep future production palette additions from silently becoming static.
+    scenery = load_json(ROOT / "art/overworld/native_scenery.json")
+    required = set()
+    def palette_assets(value):
+        if isinstance(value, dict):
+            for child in value.values():
+                palette_assets(child)
+        elif isinstance(value, list):
+            required.update(aid for aid in value if isinstance(aid, str))
+    for key in ("component_palettes", "terrain_component_palettes", "mountain_palettes", "terrain_mountain_palettes", "vegetation_palettes", "terrain_vegetation_palettes"):
+        palette_assets(scenery.get(key, {}))
+    for terrain in load_json(ROOT / "art/overworld/connected_scenery.json").values():
+        if not isinstance(terrain, dict):
+            continue
+        for profile in [terrain] + terrain.get("secondary", []):
+            required.update(profile.get("assets", []))
+            required.update(profile.get("edge_assets", []))
+    for aid in sorted(required - assets.keys()):
+        errors.append(f"Current scenery palette lacks a motion/surface profile: {aid}")
+    for asset_id, profile_id in assets.items():
         if asset_id not in art or profile_id not in spec["profiles"]:
             errors.append(f"Unresolved living-scenery art/profile: {asset_id}/{profile_id}")
             continue
         profile = spec["profiles"][profile_id]
-        if not 0 < profile.get("strength", 0) <= 0.04 or profile.get("mode") not in (1, 2, 3):
+        if not 0 < profile.get("strength", 0) <= 0.04 or profile.get("mode") not in (1, 2, 3, 4, 5):
             errors.append(f"Invalid scenery motion profile: {profile_id}")
-        if profile.get("mode") == 1 and profile.get("strength", 0) < 0.02:
+        if profile_id in ("canopy", "snow_canopy", "woodland") and profile.get("strength", 0) < 0.02:
             errors.append(f"Imperceptible normal-zoom canopy motion: {profile_id}")
         if not (ROOT / art[asset_id]["path"].removeprefix("res://")).is_file():
             errors.append(f"Missing original scenery raster: {asset_id}")
