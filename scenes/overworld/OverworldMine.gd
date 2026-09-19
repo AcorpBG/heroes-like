@@ -7,8 +7,10 @@ const BUILDING_SCALE := 0.75
 var manifest: Dictionary = {}
 var _textures: Dictionary = {}
 
-func configure(data: Dictionary) -> void:
-	manifest = data if data.get("schema_id", "") == "unified_common_mines_v1" else {}
+func configure(data: Dictionary, rare: Dictionary = {}) -> void:
+	manifest = data.duplicate(true) if data.get("schema_id", "") == "unified_common_mines_v1" else {}
+	if not manifest.is_empty() and rare.get("schema_id", "") == "unified_rare_mines_v1":
+		manifest.mines.merge(rare.get("mines", {}).duplicate(true))
 	_textures.clear()
 
 func texture(path: String) -> Texture2D:

@@ -41626,6 +41626,48 @@
       "source_model": "built_in_image_gen_original_layered_mine",
       "animation_manifest": "res://art/overworld/common_mines.json",
       "common_mine_resource": "gold"
+    },
+    "mapobj_rare_aetherglass_mine": {
+      "path": "res://art/overworld/runtime/objects/mines/aetherglass.png",
+      "source_generated": "res://art/overworld/source/generated/mines/rare_20260920/aetherglass-layers.png",
+      "source_model": "built_in_image_gen_original_layered_mine",
+      "animation_manifest": "res://art/overworld/rare_mines.json",
+      "rare_mine_resource": "aetherglass"
+    },
+    "mapobj_rare_embergrain_mine": {
+      "path": "res://art/overworld/runtime/objects/mines/embergrain.png",
+      "source_generated": "res://art/overworld/source/generated/mines/rare_20260920/embergrain-layers.png",
+      "source_model": "built_in_image_gen_original_layered_mine",
+      "animation_manifest": "res://art/overworld/rare_mines.json",
+      "rare_mine_resource": "embergrain"
+    },
+    "mapobj_rare_peatwax_mine": {
+      "path": "res://art/overworld/runtime/objects/mines/peatwax.png",
+      "source_generated": "res://art/overworld/source/generated/mines/rare_20260920/peatwax-layers-transparent.png",
+      "source_model": "built_in_image_gen_original_layered_mine",
+      "animation_manifest": "res://art/overworld/rare_mines.json",
+      "rare_mine_resource": "peatwax"
+    },
+    "mapobj_rare_verdant_grafts_mine": {
+      "path": "res://art/overworld/runtime/objects/mines/verdant_grafts.png",
+      "source_generated": "res://art/overworld/source/generated/mines/rare_20260920/verdant_grafts-layers.png",
+      "source_model": "built_in_image_gen_original_layered_mine",
+      "animation_manifest": "res://art/overworld/rare_mines.json",
+      "rare_mine_resource": "verdant_grafts"
+    },
+    "mapobj_rare_brass_scrip_mine": {
+      "path": "res://art/overworld/runtime/objects/mines/brass_scrip.png",
+      "source_generated": "res://art/overworld/source/generated/mines/rare_20260920/brass_scrip-layers.png",
+      "source_model": "built_in_image_gen_original_layered_mine",
+      "animation_manifest": "res://art/overworld/rare_mines.json",
+      "rare_mine_resource": "brass_scrip"
+    },
+    "mapobj_rare_memory_salt_mine": {
+      "path": "res://art/overworld/runtime/objects/mines/memory_salt.png",
+      "source_generated": "res://art/overworld/source/generated/mines/rare_20260920/memory_salt-layers.png",
+      "source_model": "built_in_image_gen_original_layered_mine",
+      "animation_manifest": "res://art/overworld/rare_mines.json",
+      "rare_mine_resource": "memory_salt"
     }
   },
   "resource_site_sprites": {

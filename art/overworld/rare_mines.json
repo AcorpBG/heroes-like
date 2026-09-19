@@ -1,0 +1,442 @@
+{
+  "schema_id": "unified_rare_mines_v1",
+  "canvas_size": [
+    512,
+    640
+  ],
+  "ground_anchor": [
+    256,
+    604
+  ],
+  "painted_width": 448,
+  "mines": {
+    "aetherglass": {
+      "asset_id": "mapobj_rare_aetherglass_mine",
+      "base": "res://art/overworld/runtime/objects/mines/aetherglass-base.png",
+      "parts_texture": "res://art/overworld/runtime/objects/mines/aetherglass-parts.png",
+      "static": "res://art/overworld/runtime/objects/mines/aetherglass.png",
+      "chimney": [
+        118.435,
+        272.261
+      ],
+      "lights": [
+        [
+          166.725,
+          503.565
+        ],
+        [
+          272.232,
+          517.768
+        ]
+      ],
+      "parts": [
+        {
+          "rect": [
+            92.058,
+            458.928,
+            56.812,
+            85.217
+          ],
+          "source": [
+            14,
+            2,
+            100,
+            124
+          ],
+          "mode": 1,
+          "speed": 1.1,
+          "travel": [
+            0.0,
+            0.0
+          ],
+          "rope": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "rect": [
+            439.42,
+            469.072,
+            48.696,
+            60.87
+          ],
+          "source": [
+            144,
+            2,
+            95,
+            124
+          ],
+          "mode": 2,
+          "speed": 0.8,
+          "travel": [
+            0.0,
+            17.043
+          ],
+          "rope": [
+            462.957,
+            446.754
+          ]
+        }
+      ]
+    },
+    "embergrain": {
+      "asset_id": "mapobj_rare_embergrain_mine",
+      "base": "res://art/overworld/runtime/objects/mines/embergrain-base.png",
+      "parts_texture": "res://art/overworld/runtime/objects/mines/embergrain-parts.png",
+      "static": "res://art/overworld/runtime/objects/mines/embergrain.png",
+      "chimney": [
+        131.645,
+        243.839
+      ],
+      "lights": [
+        [
+          258.612,
+          517.059
+        ],
+        [
+          363.882,
+          501.791
+        ]
+      ],
+      "parts": [
+        {
+          "rect": [
+            86.443,
+            385.673,
+            58.26,
+            84.377
+          ],
+          "source": [
+            14,
+            2,
+            99,
+            124
+          ],
+          "mode": 1,
+          "speed": -0.9,
+          "travel": [
+            0.0,
+            0.0
+          ],
+          "rope": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "rect": [
+            444.241,
+            415.808,
+            52.233,
+            56.251
+          ],
+          "source": [
+            134,
+            2,
+            115,
+            124
+          ],
+          "mode": 2,
+          "speed": 0.8,
+          "travel": [
+            0.0,
+            16.875
+          ],
+          "rope": [
+            472.366,
+            398.53
+          ]
+        }
+      ]
+    },
+    "peatwax": {
+      "asset_id": "mapobj_rare_peatwax_mine",
+      "base": "res://art/overworld/runtime/objects/mines/peatwax-base.png",
+      "parts_texture": "res://art/overworld/runtime/objects/mines/peatwax-parts.png",
+      "static": "res://art/overworld/runtime/objects/mines/peatwax.png",
+      "chimney": [
+        385.834,
+        253.299
+      ],
+      "lights": [
+        [
+          197.503,
+          496.662
+        ],
+        [
+          294.93,
+          509.707
+        ],
+        [
+          367.083,
+          516.229
+        ]
+      ],
+      "parts": [
+        {
+          "rect": [
+            85.809,
+            388.841,
+            65.223,
+            91.72
+          ],
+          "source": [
+            17,
+            2,
+            94,
+            124
+          ],
+          "mode": 1,
+          "speed": 1.1,
+          "travel": [
+            0.0,
+            0.0
+          ],
+          "rope": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "rect": [
+            450.242,
+            464.866,
+            40.764,
+            52.994
+          ],
+          "source": [
+            153,
+            2,
+            78,
+            124
+          ],
+          "mode": 2,
+          "speed": 0.8,
+          "travel": [
+            0.0,
+            17.121
+          ],
+          "rope": [
+            466.548,
+            412.688
+          ]
+        }
+      ]
+    },
+    "verdant_grafts": {
+      "asset_id": "mapobj_rare_verdant_grafts_mine",
+      "base": "res://art/overworld/runtime/objects/mines/verdant_grafts-base.png",
+      "parts_texture": "res://art/overworld/runtime/objects/mines/verdant_grafts-parts.png",
+      "static": "res://art/overworld/runtime/objects/mines/verdant_grafts.png",
+      "chimney": [
+        124.295,
+        257.717
+      ],
+      "lights": [
+        [
+          175.752,
+          483.964
+        ],
+        [
+          268.864,
+          513.367
+        ]
+      ],
+      "parts": [
+        {
+          "rect": [
+            420.375,
+            404.736,
+            44.923,
+            65.342
+          ],
+          "source": [
+            19,
+            2,
+            90,
+            124
+          ],
+          "mode": 1,
+          "speed": 0.85,
+          "travel": [
+            0.0,
+            0.0
+          ],
+          "rope": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "rect": [
+            363.406,
+            518.268,
+            55.132,
+            57.174
+          ],
+          "source": [
+            136,
+            2,
+            111,
+            124
+          ],
+          "mode": 2,
+          "speed": 0.8,
+          "travel": [
+            0.0,
+            12.252
+          ],
+          "rope": [
+            391.789,
+            508.467
+          ]
+        }
+      ]
+    },
+    "brass_scrip": {
+      "asset_id": "mapobj_rare_brass_scrip_mine",
+      "base": "res://art/overworld/runtime/objects/mines/brass_scrip-base.png",
+      "parts_texture": "res://art/overworld/runtime/objects/mines/brass_scrip-parts.png",
+      "static": "res://art/overworld/runtime/objects/mines/brass_scrip.png",
+      "chimney": [
+        105.534,
+        260.792
+      ],
+      "lights": [
+        [
+          161.884,
+          479.797
+        ],
+        [
+          282.177,
+          494.583
+        ],
+        [
+          77.959,
+          510.969
+        ]
+      ],
+      "parts": [
+        {
+          "rect": [
+            406.466,
+            462.612,
+            43.961,
+            63.943
+          ],
+          "source": [
+            13,
+            2,
+            101,
+            124
+          ],
+          "mode": 1,
+          "speed": -1.2,
+          "travel": [
+            0.0,
+            0.0
+          ],
+          "rope": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "rect": [
+            348.716,
+            479.596,
+            41.963,
+            65.941
+          ],
+          "source": [
+            158,
+            2,
+            68,
+            124
+          ],
+          "mode": 2,
+          "speed": 0.8,
+          "travel": [
+            0.0,
+            9.991
+          ],
+          "rope": [
+            -1,
+            -1
+          ]
+        }
+      ]
+    },
+    "memory_salt": {
+      "asset_id": "mapobj_rare_memory_salt_mine",
+      "base": "res://art/overworld/runtime/objects/mines/memory_salt-base.png",
+      "parts_texture": "res://art/overworld/runtime/objects/mines/memory_salt-parts.png",
+      "static": "res://art/overworld/runtime/objects/mines/memory_salt.png",
+      "chimney": [
+        165.607,
+        239.933
+      ],
+      "lights": [
+        [
+          166.024,
+          483.765
+        ],
+        [
+          288.358,
+          502.136
+        ]
+      ],
+      "parts": [
+        {
+          "rect": [
+            77.718,
+            431.993,
+            56.365,
+            83.504
+          ],
+          "source": [
+            13,
+            2,
+            102,
+            124
+          ],
+          "mode": 1,
+          "speed": 1.1,
+          "travel": [
+            0.0,
+            0.0
+          ],
+          "rope": [
+            -1,
+            -1
+          ]
+        },
+        {
+          "rect": [
+            436.995,
+            450.154,
+            45.927,
+            60.541
+          ],
+          "source": [
+            142,
+            2,
+            99,
+            124
+          ],
+          "mode": 2,
+          "speed": 0.8,
+          "travel": [
+            0.0,
+            17.536
+          ],
+          "rope": [
+            460.377,
+            429.905
+          ]
+        }
+      ]
+    }
+  }
+}

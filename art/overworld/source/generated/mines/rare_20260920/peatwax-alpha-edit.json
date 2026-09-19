@@ -1,0 +1,7 @@
+{
+  "generator": "built_in_image_gen",
+  "source": "peatwax-layers-final.png",
+  "output": "peatwax-layers-transparent.png",
+  "generated_file": "exec-320c9067-87ec-4c84-a82c-509169f3ea31.png",
+  "prompt": "Edit target: the attached PEATWAX mine sprite sheet. Keep the building, detached wheel, detached bucket, canvas size 1536x1024, and exact layout unchanged. Correct ONLY the alpha background: ALL space outside the building and the two detached parts must be fully transparent (alpha 0), including the top-left corner, all four corners, outer margins, and the gap between the building and parts. Remove the dark smoky gradient/vignette backdrop completely. Keep opaque architecture and machinery with clean anti-aliased edges. No new background, shadows, checkerboard, scenery, or text. This is a production transparent PNG sheet. The main hoist must still have no installed bucket or hanging rope. Preserve all current artwork, colours, and positions."
+}

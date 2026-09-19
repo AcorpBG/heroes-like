@@ -225,6 +225,12 @@ def main():
         for row in contents[name]['items']:
             if row.get(key): primary[row['id']] = {'path': row[key].removeprefix('res://')}
     for e in entries:
+        resource = e['data'].get('rare_mine_resource')
+        if resource:
+            asset = 'mapobj_rare_' + resource + '_mine'
+            sprite(e['id'], asset, 'Shared animated mine building')
+            primary[e['id']] = {'path': object_assets[asset]['path'].removeprefix('res://')}
+    for e in entries:
         d = e['data']
         e['description'] = description(e)
         e['faction'] = d.get('faction_id', d.get('player_faction_id', ''))

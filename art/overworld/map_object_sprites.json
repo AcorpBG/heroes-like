@@ -248,15 +248,12 @@
     "mapobj_reef_coin_assay",
     "mapobj_cinder_ore_face",
     "mapobj_frostwood_cutting_yard",
-    "mapobj_aetherglass_lens_house",
-    "mapobj_sunfall_aetherglass_yard",
-    "mapobj_embergrain_warm_granary",
-    "mapobj_charcoal_embergrain_store",
-    "mapobj_peatwax_reed_yard",
-    "mapobj_verdant_graft_nursery",
-    "mapobj_brass_scrip_mint",
-    "mapobj_underway_brass_scrip_press",
-    "mapobj_memory_salt_pan",
+    "mapobj_rare_aetherglass_mine",
+    "mapobj_rare_embergrain_mine",
+    "mapobj_rare_peatwax_mine",
+    "mapobj_rare_verdant_grafts_mine",
+    "mapobj_rare_brass_scrip_mine",
+    "mapobj_rare_memory_salt_mine",
     "mapobj_wind_press",
     "mapobj_saw_chain",
     "mapobj_tide_kiln",
@@ -794,67 +791,58 @@
       "source_batch": 4
     },
     "object_aetherglass_lens_house": {
-      "asset_id": "mapobj_aetherglass_lens_house",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Aetherglass Lens House' (staged_resource_front).",
-      "assignment_source": "new_distinct_map_object_sprite",
-      "family": "staged_resource_front",
-      "source_batch": 4
+      "asset_id": "mapobj_rare_aetherglass_mine",
+      "fit": "One biome-neutral animated building per rare resource; 3x2 footprint.",
+      "assignment_source": "unified_rare_mines_20260920",
+      "family": "staged_resource_front"
     },
     "object_sunfall_aetherglass_yard": {
-      "asset_id": "mapobj_sunfall_aetherglass_yard",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Sunfall Aetherglass Yard' (staged_resource_front).",
-      "assignment_source": "new_distinct_map_object_sprite",
-      "family": "staged_resource_front",
-      "source_batch": 4
+      "asset_id": "mapobj_rare_aetherglass_mine",
+      "fit": "One biome-neutral animated building per rare resource; 3x2 footprint.",
+      "assignment_source": "unified_rare_mines_20260920",
+      "family": "staged_resource_front"
     },
     "object_embergrain_warm_granary": {
-      "asset_id": "mapobj_embergrain_warm_granary",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Embergrain Warm Granary' (staged_resource_front).",
-      "assignment_source": "new_distinct_map_object_sprite",
-      "family": "staged_resource_front",
-      "source_batch": 4
+      "asset_id": "mapobj_rare_embergrain_mine",
+      "fit": "One biome-neutral animated building per rare resource; 3x2 footprint.",
+      "assignment_source": "unified_rare_mines_20260920",
+      "family": "staged_resource_front"
     },
     "object_charcoal_embergrain_store": {
-      "asset_id": "mapobj_charcoal_embergrain_store",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Charcoal Embergrain Store' (staged_resource_front).",
-      "assignment_source": "new_distinct_map_object_sprite",
-      "family": "staged_resource_front",
-      "source_batch": 4
+      "asset_id": "mapobj_rare_embergrain_mine",
+      "fit": "One biome-neutral animated building per rare resource; 3x2 footprint.",
+      "assignment_source": "unified_rare_mines_20260920",
+      "family": "staged_resource_front"
     },
     "object_peatwax_reed_yard": {
-      "asset_id": "mapobj_peatwax_reed_yard",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Peatwax Reed Yard' (staged_resource_front).",
-      "assignment_source": "new_distinct_map_object_sprite",
-      "family": "staged_resource_front",
-      "source_batch": 4
+      "asset_id": "mapobj_rare_peatwax_mine",
+      "fit": "One biome-neutral animated building per rare resource; 3x2 footprint.",
+      "assignment_source": "unified_rare_mines_20260920",
+      "family": "staged_resource_front"
     },
     "object_verdant_graft_nursery": {
-      "asset_id": "mapobj_verdant_graft_nursery",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Verdant Graft Nursery' (staged_resource_front).",
-      "assignment_source": "new_distinct_map_object_sprite",
-      "family": "staged_resource_front",
-      "source_batch": 4
+      "asset_id": "mapobj_rare_verdant_grafts_mine",
+      "fit": "One biome-neutral animated building per rare resource; 3x2 footprint.",
+      "assignment_source": "unified_rare_mines_20260920",
+      "family": "staged_resource_front"
     },
     "object_brass_scrip_mint": {
-      "asset_id": "mapobj_brass_scrip_mint",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Brass Scrip Mint' (staged_resource_front).",
-      "assignment_source": "new_distinct_map_object_sprite",
-      "family": "staged_resource_front",
-      "source_batch": 4
+      "asset_id": "mapobj_rare_brass_scrip_mine",
+      "fit": "One biome-neutral animated building per rare resource; 3x2 footprint.",
+      "assignment_source": "unified_rare_mines_20260920",
+      "family": "staged_resource_front"
     },
     "object_underway_brass_scrip_press": {
-      "asset_id": "mapobj_underway_brass_scrip_press",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Underway Brass Scrip Press' (staged_resource_front).",
-      "assignment_source": "new_distinct_map_object_sprite",
-      "family": "staged_resource_front",
-      "source_batch": 4
+      "asset_id": "mapobj_rare_brass_scrip_mine",
+      "fit": "One biome-neutral animated building per rare resource; 3x2 footprint.",
+      "assignment_source": "unified_rare_mines_20260920",
+      "family": "staged_resource_front"
     },
     "object_memory_salt_pan": {
-      "asset_id": "mapobj_memory_salt_pan",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Memory-Salt Pan' (staged_resource_front).",
-      "assignment_source": "new_distinct_map_object_sprite",
-      "family": "staged_resource_front",
-      "source_batch": 4
+      "asset_id": "mapobj_rare_memory_salt_mine",
+      "fit": "One biome-neutral animated building per rare resource; 3x2 footprint.",
+      "assignment_source": "unified_rare_mines_20260920",
+      "family": "staged_resource_front"
     },
     "object_wind_press": {
       "asset_id": "mapobj_wind_press",
