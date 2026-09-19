@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-84607c17-6cdd-4dcf-abed-e46c23dd36fa.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_veilmourn_mirrorkeel_reavers.png",
+  "reference_revision": "e8df6ca7e",
+  "prompt": "Use case: identity-preserve. Paint an EIGHT-FRAME resting idle with VISIBLE HAND, WRIST AND ELBOW ARTICULATION for exactly this original character. Reference is a strip of poses of ONE character. Preserve identity, clothing, weapon size, hand ownership and right-facing three-quarter camera. Head/hips/feet almost stationary. The idle must read at 74px character height: hands travel about 50-70 source pixels; head under 5px. No head-bobbing substitute. Hands maintain plausible grips and bend naturally at elbows. No attack, walk or extra props.\nDark steel teal armored masked wraith with a long curved saber screen LEFT and short sickle screen RIGHT, ragged blue cloak. Bend both elbows and adjust weapon grips from thigh toward belt, blades continuously angle down/out, then settle. No slash, no head bob, keep mask and weapon lengths consistent.\nCanvas1536x1024 RGBA true transparent background, 4 columns and 2 rows. Exactly eight sequential complete poses in reading order, same anatomical size, planted boot line near localy478, generous gaps, all owned weapons inside each cell. Smooth cycle: pose1 rest;2 begin hand adjustment;3 farther;4 crest;5 gradually reverse;6 ease back;7 near rest;8 almost pose1. Original detailed hand-painted fantasy strategy sprite. Genuine painted articulation, not translated whole-body copies. Transparent gaps and background, no floor/shadow/labels/grid/backdrop.\nCritical spacing: fit each entire pose within a 340-pixel-wide area in its 384-pixel cell, with transparent padding. Do not crop any weapon or accessory. Return seamlessly toward the first pose.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "19cf7b072d01b435dc39fe3e2116a02bdebbddef1a1f5a88da884e6c09d91d70",
+  "reference_sha256": "967c2975e851d963c0d76e0bd8ae8aeb4a57501df766fbba0605d721af144627",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; hand, forearm and owned equipment movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

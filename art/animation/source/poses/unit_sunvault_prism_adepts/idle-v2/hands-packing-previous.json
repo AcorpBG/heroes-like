@@ -1,0 +1,411 @@
+{
+  "unit_id": "unit_sunvault_prism_adepts",
+  "status": "runtime_candidate_pending_consolidated_validation",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          328,
+          334
+        ]
+      ],
+      "anchor": [
+        170,
+        327
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          328,
+          0,
+          655,
+          334
+        ]
+      ],
+      "anchor": [
+        494,
+        327
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-alpha/walk-contact-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1241,
+          1268
+        ]
+      ],
+      "anchor": [
+        625,
+        1178
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "walk_passing_a",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-alpha/walk-passing-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1024,
+          1536
+        ]
+      ],
+      "anchor": [
+        535,
+        1405
+      ],
+      "scale": 0.15
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-alpha/walk-contact-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1243,
+          1266
+        ]
+      ],
+      "anchor": [
+        630,
+        1150
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "walk_passing_b",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-alpha/walk-passing-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1024,
+          1536
+        ]
+      ],
+      "anchor": [
+        535,
+        1405
+      ],
+      "scale": 0.15
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          338,
+          334,
+          667,
+          650
+        ]
+      ],
+      "anchor": [
+        490,
+        647
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          667,
+          334,
+          975,
+          650
+        ]
+      ],
+      "anchor": [
+        815,
+        647
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_aim",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          995,
+          334,
+          1312,
+          650
+        ]
+      ],
+      "anchor": [
+        1142,
+        650
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_recoil",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          650,
+          324,
+          969
+        ]
+      ],
+      "anchor": [
+        170,
+        955
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "ranged_recovery",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          324,
+          650,
+          655,
+          969
+        ]
+      ],
+      "anchor": [
+        490,
+        959
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "defend_crouch",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          669,
+          680,
+          986,
+          960
+        ]
+      ],
+      "anchor": [
+        830,
+        951
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "defend_breath",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/continuity-alpha/defend-breath.png",
+      "rects": [
+        [
+          0,
+          0,
+          1334,
+          1179
+        ]
+      ],
+      "anchor": [
+        729,
+        1080
+      ],
+      "scale": 0.16
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          986,
+          650,
+          1312,
+          969
+        ]
+      ],
+      "anchor": [
+        1150,
+        955
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_buckle",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          969,
+          320,
+          1199
+        ]
+      ],
+      "anchor": [
+        170,
+        1190
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          320,
+          969,
+          628,
+          1199
+        ]
+      ],
+      "anchor": [
+        480,
+        1180
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_lie",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          628,
+          969,
+          965,
+          1199
+        ]
+      ],
+      "anchor": [
+        794,
+        1180
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_sunvault_prism_adepts/alpha/poses.png",
+      "rects": [
+        [
+          965,
+          969,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        1144,
+        1180
+      ],
+      "scale": 0.65
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        8,
+        9,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        11,
+        12
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        13,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        14,
+        15,
+        16,
+        17
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        17
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  },
+  "alignment_notes": "Original alpha source uniformly scaled .65; new masters aligned by body size and anatomical hip/ground anchors, not normalized independently to changing silhouette bounds. No pose warping, mirroring or synthesis."
+}

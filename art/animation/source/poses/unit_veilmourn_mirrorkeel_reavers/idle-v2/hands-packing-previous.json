@@ -1,0 +1,356 @@
+{
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          367,
+          373
+        ]
+      ],
+      "anchor": [
+        205,
+        360
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png",
+      "rects": [
+        [
+          375,
+          0,
+          739,
+          373
+        ]
+      ],
+      "anchor": [
+        576,
+        360
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "contact_retained",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png",
+      "rects": [
+        [
+          741,
+          0,
+          1127,
+          373
+        ]
+      ],
+      "anchor": [
+        946,
+        359
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "passing_rear_lift",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/recovery-and-braced-guard.png",
+      "rects": [
+        [
+          0,
+          0,
+          635,
+          650
+        ]
+      ],
+      "anchor": [
+        437,
+        617
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "contact_settle",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/recovery-and-braced-guard.png",
+      "rects": [
+        [
+          636,
+          0,
+          1222,
+          650
+        ]
+      ],
+      "anchor": [
+        978,
+        618
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "passing_crossed_near",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/opposite-passing-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1140,
+          1380
+        ]
+      ],
+      "anchor": [
+        721,
+        1306
+      ],
+      "scale": 0.165
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png",
+      "rects": [
+        [
+          380,
+          373,
+          741,
+          733
+        ]
+      ],
+      "anchor": [
+        580,
+        715
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "attack_sweep",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png",
+      "rects": [
+        [
+          742,
+          375,
+          1166,
+          464
+        ],
+        [
+          742,
+          464,
+          1108,
+          733
+        ]
+      ],
+      "anchor": [
+        933,
+        717
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "defend_a",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/recovery-and-braced-guard.png",
+      "rects": [
+        [
+          0,
+          652,
+          636,
+          1287
+        ]
+      ],
+      "anchor": [
+        381,
+        1213
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "defend_b",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/continuity-alpha/recovery-and-braced-guard.png",
+      "rects": [
+        [
+          637,
+          652,
+          1222,
+          1287
+        ]
+      ],
+      "anchor": [
+        972,
+        1225
+      ],
+      "scale": 0.35
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          729,
+          369,
+          970
+        ],
+        [
+          0,
+          970,
+          358,
+          1010
+        ],
+        [
+          0,
+          1010,
+          369,
+          1086
+        ]
+      ],
+      "anchor": [
+        216,
+        1049
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png",
+      "rects": [
+        [
+          376,
+          748,
+          705,
+          920
+        ],
+        [
+          370,
+          920,
+          705,
+          1086
+        ]
+      ],
+      "anchor": [
+        537,
+        1040
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_sidefall",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png",
+      "rects": [
+        [
+          710,
+          811,
+          1058,
+          1086
+        ]
+      ],
+      "anchor": [
+        875,
+        1040
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "dead_equipped",
+      "source": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/alpha/poses.png",
+      "rects": [
+        [
+          1058,
+          810,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        1235,
+        1038
+      ],
+      "scale": 0.6
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        4,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

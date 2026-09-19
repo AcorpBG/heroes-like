@@ -514,39 +514,83 @@
     },
     {
       "unit_id": "unit_sunvault_shard_wardens",
-      "atlas_sha256": "717d91a4b79d18b12179cea9b5c71d2a6781580286b65f59ed7ffcf59bd21972",
-      "pose_metadata_sha256": "e1a0de84563730ed18a8d0a1c8f5cf3a176318b083443eb13bee8add5a551a49",
+      "atlas_sha256": "074a4e56a969f019411e3b2f4898cec6a76a8783acc318f0e68667b36bb6107e",
+      "pose_metadata_sha256": "2ccc5c7e9ac9bc5ebe4a58f5e8723ce6e4ae39b8b4bf185e03d9d02adbc0f928",
       "action_contact": "roster-review-24-fit.png",
       "action_contact_sha256": "6fd72add3583f9739ac2128e174a185820b95edd6453d90ea7e4ca9ad67b1c99",
-      "resting_contact": "resting-r2-review-24.png",
-      "resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-24.png",
+      "previous_resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_sunvault_shard_wardens/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "717d91a4b79d18b12179cea9b5c71d2a6781580286b65f59ed7ffcf59bd21972",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_sunvault_prism_adepts",
-      "atlas_sha256": "4f9db27531f5a923146c72c6eb1d1abd247f0b59f7ee7fe2fbcb66198eabbbde",
-      "pose_metadata_sha256": "c540cccfe45e6e4dce167a0995f3852c34e764b20d7089d45658adb6c80a36a9",
+      "atlas_sha256": "fd73d2bdf72cd1b45d37b49e16998f1ea988c2b6eca5295f03df41bc712d8d02",
+      "pose_metadata_sha256": "7f6f3080708163c2ee32a76f2506d5226aaad9e6da960a56c8805ca86def17e7",
       "action_contact": "roster-review-26-fit.png",
       "action_contact_sha256": "63061758a19a6f61764c115900372bd106faa7f3e419a9e1c50ad4a638810333",
-      "resting_contact": "resting-r2-review-24.png",
-      "resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-24.png",
+      "previous_resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_sunvault_prism_adepts/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "4f9db27531f5a923146c72c6eb1d1abd247f0b59f7ee7fe2fbcb66198eabbbde",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_sunvault_mirror_duelists",
-      "atlas_sha256": "82b08fdd47fbb52b08acd93d4cabd78bf9dc11e9a3ebccd6b156072baac46ddd",
-      "pose_metadata_sha256": "0599c3bef677fb3eaaad582c4deee8bf0368f42d8f862cbcf62a1cd1eff0fb1c",
+      "atlas_sha256": "f0eb03d9879a4b5a0b1aaa99a97b6a7471e066d736955c116e2294a3bde36659",
+      "pose_metadata_sha256": "93c1f2aaa7b7feab893243a9a858fab4df553414bcff5e6753fa5e0cebb0e95e",
       "action_contact": "roster-review-26-fit.png",
       "action_contact_sha256": "63061758a19a6f61764c115900372bd106faa7f3e419a9e1c50ad4a638810333",
-      "resting_contact": "resting-r2-review-24.png",
-      "resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-24.png",
+      "previous_resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_sunvault_mirror_duelists/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "82b08fdd47fbb52b08acd93d4cabd78bf9dc11e9a3ebccd6b156072baac46ddd",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_sunvault_resonant_choristers",
-      "atlas_sha256": "7a755377af8da83e52f0bdd26580d1444e6aa2430872e1c2e22df5eae55f9f09",
-      "pose_metadata_sha256": "90862ddc10aff91a4cccabdf4d5edbebaeb1c272dd3a7115d8ddf061801768d7",
+      "atlas_sha256": "4821a6e445a0c64d88b70c2e13fe914267ab7f6e62fcd13732c655d4d411563c",
+      "pose_metadata_sha256": "60f3309175f9119d16a7ee494dc853918bcbe17165af744abc7573031477e3c0",
       "action_contact": "roster-review-28-fit.png",
       "action_contact_sha256": "f61b512580c3f22e8779032b46853a9ffa4a2a88fcafeeeb8258ad047655de8b",
-      "resting_contact": "resting-r2-review-24.png",
-      "resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-24.png",
+      "previous_resting_contact_sha256": "2c1ae33979937f3fb627f8ec84bf67884402c75772ed6b92aeecfc199b14ec10",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_sunvault_resonant_choristers/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "7a755377af8da83e52f0bdd26580d1444e6aa2430872e1c2e22df5eae55f9f09",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_sunvault_solar_array_striders",
@@ -577,30 +621,63 @@
     },
     {
       "unit_id": "unit_thornwake_seedcutters",
-      "atlas_sha256": "d1f32349eff3d80e56e5ef63820a6e0b335974cc321bc15172c944a43729656e",
-      "pose_metadata_sha256": "11349bea51e06d256ecf50ca763ca58ee73a0a936b2ff29cb636832f2a1f0798",
+      "atlas_sha256": "7a12b07be3236664051d6c4e99d8260c8733dd176681dc09d9e7cfe2a64cee09",
+      "pose_metadata_sha256": "82886cd0afde2efdd9f59db3e44a1578d126d958f1c40d34a6407e187e24f236",
       "action_contact": "roster-review-32-fit.png",
       "action_contact_sha256": "70fb723219efe2247ad76e596e183623bba714630ce05c2284c53895f973d0c6",
-      "resting_contact": "resting-r2-review-30.png",
-      "resting_contact_sha256": "e07218b1d8c864b0304c785558e69afa7100a90e1aed89db9589789733e6a07f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-30.png",
+      "previous_resting_contact_sha256": "e07218b1d8c864b0304c785558e69afa7100a90e1aed89db9589789733e6a07f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_thornwake_seedcutters/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "d1f32349eff3d80e56e5ef63820a6e0b335974cc321bc15172c944a43729656e",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_thornwake_thornwhip_carriers",
-      "atlas_sha256": "8ff007de90b6ada3584ce5a68e37642572320f33f891380f4dbb82826acbe928",
-      "pose_metadata_sha256": "c76dbb87ebfe2712d7d6317e0f23a6af294d4995528a44cca12651e0e4f9863e",
+      "atlas_sha256": "b3ffa4e75ac5a526403b6b02c010a6219839846e1f69f7c2e33a16d89c98a27d",
+      "pose_metadata_sha256": "8abd1148fa91fe1d92ed1a442085786563b05953eb3ccd16f92a9428ebd949f5",
       "action_contact": "roster-review-32-fit.png",
       "action_contact_sha256": "70fb723219efe2247ad76e596e183623bba714630ce05c2284c53895f973d0c6",
-      "resting_contact": "resting-r2-review-30.png",
-      "resting_contact_sha256": "e07218b1d8c864b0304c785558e69afa7100a90e1aed89db9589789733e6a07f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-30.png",
+      "previous_resting_contact_sha256": "e07218b1d8c864b0304c785558e69afa7100a90e1aed89db9589789733e6a07f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_thornwake_thornwhip_carriers/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "8ff007de90b6ada3584ce5a68e37642572320f33f891380f4dbb82826acbe928",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_thornwake_sporeglass_menders",
-      "atlas_sha256": "ee99b0c0b33cc9a0a82aa5e71bc5b39d11e63297432d43ecf2adba07a702b8b9",
-      "pose_metadata_sha256": "fd11b48a74a0154cb083a95e4c7d31774f07e0956dc7905a46a2144256ac14a4",
+      "atlas_sha256": "2a8a2cb4c714d0e4d01ab1a62dd454ff4597ae56b6082a186859af6b59696d62",
+      "pose_metadata_sha256": "02186c978f25544d75d10db3332c6d00468f27f7f4db6f1531802d0f44c6953e",
       "action_contact": "roster-review-34-fit.png",
       "action_contact_sha256": "9a87fd2d6a57cf0581249f626597e52a549a233710b125ad4274093c6726a73f",
-      "resting_contact": "resting-r2-review-30.png",
-      "resting_contact_sha256": "e07218b1d8c864b0304c785558e69afa7100a90e1aed89db9589789733e6a07f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-30.png",
+      "previous_resting_contact_sha256": "e07218b1d8c864b0304c785558e69afa7100a90e1aed89db9589789733e6a07f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_thornwake_sporeglass_menders/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "ee99b0c0b33cc9a0a82aa5e71bc5b39d11e63297432d43ecf2adba07a702b8b9",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_thornwake_barkmantle_rams",
@@ -640,12 +717,23 @@
     },
     {
       "unit_id": "unit_brasshollow_scrip_haulers",
-      "atlas_sha256": "f55317aa6d02b9a65b4c46a78ff6841275669ca9667f1d34b3377e1ee12b6207",
-      "pose_metadata_sha256": "670dcff98cd645b893f5b71a68852a6abe83dac71a05218e77853c96a00725b8",
+      "atlas_sha256": "12b4fcaf0fd6e6931a49df5187f4c9fd8a59c03cbeab8d413430a89a50a3bed8",
+      "pose_metadata_sha256": "13952b0bcbb00ec6f413da080ba9a43c9d0563f6ae45482daa611f8698fd6bc8",
       "action_contact": "roster-review-38-fit.png",
       "action_contact_sha256": "ac20267c2605e521030aab8e7ed9790fb3282b651137db196d273448e1e34ea9",
-      "resting_contact": "resting-r2-review-36.png",
-      "resting_contact_sha256": "254beb8585ae10f93fcf901ba0d2de63fd35b1d9bcbf1a2fa0746b23a361f93f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-36.png",
+      "previous_resting_contact_sha256": "254beb8585ae10f93fcf901ba0d2de63fd35b1d9bcbf1a2fa0746b23a361f93f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_brasshollow_scrip_haulers/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "f55317aa6d02b9a65b4c46a78ff6841275669ca9667f1d34b3377e1ee12b6207",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_brasshollow_rivet_hounds",
@@ -658,12 +746,23 @@
     },
     {
       "unit_id": "unit_brasshollow_furnace_pavis_teams",
-      "atlas_sha256": "592b7b09259d451f5cbee5625203e76e40bd07f7e6dc90b78e4f74545ba810cc",
-      "pose_metadata_sha256": "e788ae720a14437b8035acf90ed91d1f755f6ee9fa220a337c3188dbddc28029",
+      "atlas_sha256": "24f2180d6db165898bc1b37389853a4f7b4fc9957ec42cb92dbee23d7fdffde3",
+      "pose_metadata_sha256": "cc9a5a4977e59acd99277b62bf53af14a1e5c9e72feefb75da1991177d21a384",
       "action_contact": "roster-review-40-fit.png",
       "action_contact_sha256": "05ea5e790742dbda8326f2b074793e766decf215145eae2d99093c8a3cba760c",
-      "resting_contact": "resting-r2-review-36.png",
-      "resting_contact_sha256": "254beb8585ae10f93fcf901ba0d2de63fd35b1d9bcbf1a2fa0746b23a361f93f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-36.png",
+      "previous_resting_contact_sha256": "254beb8585ae10f93fcf901ba0d2de63fd35b1d9bcbf1a2fa0746b23a361f93f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 260,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "592b7b09259d451f5cbee5625203e76e40bd07f7e6dc90b78e4f74545ba810cc",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_brasshollow_boiler_rivetcasters",
@@ -703,57 +802,123 @@
     },
     {
       "unit_id": "unit_veilmourn_bellwake_oars",
-      "atlas_sha256": "7572d7d310d3a6a9bce1ef7b1d77b23234fbdc3630ac8e9e7873e636f82c30e7",
-      "pose_metadata_sha256": "ab94611b7cd18c2d40581ea6f9fe76495df8b4ab93e9eda39244098da41101bf",
+      "atlas_sha256": "0db6722acf2c97685f0bacf49347fa42861df68d6d887284c40905945ae2337d",
+      "pose_metadata_sha256": "fc05bbf18e7a524d31b17ae2201cd424ec864eae86db3df0d79907e92ed62637",
       "action_contact": "roster-review-46-fit.png",
       "action_contact_sha256": "17cffe0220448b0e7414ef549b255969c1b0188494b940007ae44d373e16d86a",
-      "resting_contact": "resting-r2-review-42.png",
-      "resting_contact_sha256": "0182ef523a32a2ed612a68c515c6c0a48457a90f8a3c423099d0666e47c4e9eb"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-42.png",
+      "previous_resting_contact_sha256": "0182ef523a32a2ed612a68c515c6c0a48457a90f8a3c423099d0666e47c4e9eb",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_veilmourn_bellwake_oars/idle-v2/oar-correction-generation.json",
+        "previous_atlas_sha256": "7572d7d310d3a6a9bce1ef7b1d77b23234fbdc3630ac8e9e7873e636f82c30e7",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_veilmourn_mourning_lanterns",
-      "atlas_sha256": "6c7d96bda20fa59c1373da427fa7ae1214fae2ffb6f89467f8c4043758c21ef9",
-      "pose_metadata_sha256": "072d87d697fb883b32480eb73c9c9ca5c2088622989552099d3a8afa9d6fb41f",
+      "atlas_sha256": "79bc6bd18d34155ffebbe87b076a4e1855b519d87c2b4e5703c5e15e5d1538e5",
+      "pose_metadata_sha256": "56c17bac34ddc96717cce92034e052bb5f82a5ca9a9322b07002f2375b667d9b",
       "action_contact": "roster-review-46-fit.png",
       "action_contact_sha256": "17cffe0220448b0e7414ef549b255969c1b0188494b940007ae44d373e16d86a",
-      "resting_contact": "resting-r2-review-42.png",
-      "resting_contact_sha256": "0182ef523a32a2ed612a68c515c6c0a48457a90f8a3c423099d0666e47c4e9eb"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-42.png",
+      "previous_resting_contact_sha256": "0182ef523a32a2ed612a68c515c6c0a48457a90f8a3c423099d0666e47c4e9eb",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_veilmourn_mourning_lanterns/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "6c7d96bda20fa59c1373da427fa7ae1214fae2ffb6f89467f8c4043758c21ef9",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_veilmourn_maskglass_corsairs",
-      "atlas_sha256": "d18b0c8bb1ca53aaacc7f172ea85bf6ef6295162880bfc4d2cada3408751b7ca",
-      "pose_metadata_sha256": "5c17c7840fe040116e6c398cb034187d7a6d5536d0a39ef6ba59d0df94abce2f",
+      "atlas_sha256": "e6c58a4d4f1b3c1887302b6f5ef96bc6b2e86a6915de7f2e41be82f9d793255b",
+      "pose_metadata_sha256": "f1ac4ffd3d27a2bb3259be5cbe8659320218f37176033b46506865fa8e7b47fc",
       "action_contact": "roster-review-48-fit.png",
       "action_contact_sha256": "ce29ae53bf2675c3f8ff7530021c6935c26340427648472522da15ced445016c",
-      "resting_contact": "resting-r2-review-48.png",
-      "resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-48.png",
+      "previous_resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "d18b0c8bb1ca53aaacc7f172ea85bf6ef6295162880bfc4d2cada3408751b7ca",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_veilmourn_undertow_harpooners",
-      "atlas_sha256": "f7560cc0fb3aa9543745bb6aa56864309989acabadc92df65410ceb26eae371f",
-      "pose_metadata_sha256": "8402d08d037771e33b35a177ef80228111b7bfb8e206ff30c6225080b2b907cc",
+      "atlas_sha256": "692f1dbd8897892322023b0f7418a4d2f2dc1426f91c972eda57325e262b2e2b",
+      "pose_metadata_sha256": "c3a54a4ba03586f2e6456f49e2ad21adabe7ef679594e91c2bbd4147b18f930b",
       "action_contact": "roster-review-48-fit.png",
       "action_contact_sha256": "ce29ae53bf2675c3f8ff7530021c6935c26340427648472522da15ced445016c",
-      "resting_contact": "resting-r2-review-48.png",
-      "resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-48.png",
+      "previous_resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_veilmourn_undertow_harpooners/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "f7560cc0fb3aa9543745bb6aa56864309989acabadc92df65410ceb26eae371f",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_veilmourn_obituary_scribes",
-      "atlas_sha256": "779155edcfbc165be97ebc445e32a212cea9d67c267b5c5819559b03fd05489d",
-      "pose_metadata_sha256": "193219c5753b1ea53ccdc551ab3657a76c22d2b0d107aed23965343b1d58091e",
+      "atlas_sha256": "d730e9c803fead3adfdb1e6fe2b9c4a4ec591bae0c41f879c236ba925b2550a1",
+      "pose_metadata_sha256": "2cf4e48db67ce9c134b41f0914cdcfb783bbb7a911c968003e5bf6518bee5a2b",
       "action_contact": "roster-review-50-fit.png",
       "action_contact_sha256": "ad8816eca2ad4d2b966999560aee81a8133d989b7b1d63b682214e7b2ff72951",
-      "resting_contact": "resting-r2-review-48.png",
-      "resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-48.png",
+      "previous_resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_veilmourn_obituary_scribes/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "779155edcfbc165be97ebc445e32a212cea9d67c267b5c5819559b03fd05489d",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_veilmourn_mirrorkeel_reavers",
-      "atlas_sha256": "4c0e58b8ad724181ae72f16cce6cdf3f63d8f4558adfec3c6ad07c338720f0f6",
-      "pose_metadata_sha256": "f937c555db73d9c73191bea0556c2bfa87a2fbc626c85d8d6898694f08bd2c0e",
+      "atlas_sha256": "b3587f23ecd8340f6578f986449d2238b5c1cacf57a37e5a92b1d32ced8b9e1b",
+      "pose_metadata_sha256": "85f62c127e43e93822b2c9fc1dadef8be9969c3152cfdace7161f9ac1da063b4",
       "action_contact": "roster-review-50-fit.png",
       "action_contact_sha256": "ad8816eca2ad4d2b966999560aee81a8133d989b7b1d63b682214e7b2ff72951",
-      "resting_contact": "resting-r2-review-48.png",
-      "resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-48.png",
+      "previous_resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "4c0e58b8ad724181ae72f16cce6cdf3f63d8f4558adfec3c6ad07c338720f0f6",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_veilmourn_fogbound_leviathan",
@@ -766,57 +931,123 @@
     },
     {
       "unit_id": "unit_embercourt_cinderseal_bombardiers",
-      "atlas_sha256": "52fe22b22e045bd443c8d76595027d3d2be3c99a7face4048502e8778d69f44b",
-      "pose_metadata_sha256": "08b410c94d91bd825fd230d285e126b80fa5ddeedfb3a3f9a27badc6e1373983",
+      "atlas_sha256": "e83acda385ba75f24bad9f264542ce49a7be5a4b6b939be82e21271607708c7a",
+      "pose_metadata_sha256": "dc655561500f7281523068135051e8d8609ce3e44729d031066e3a5e5df7a5c2",
       "action_contact": "roster-review-52-fit.png",
       "action_contact_sha256": "13a5cf2a985758fdb220b65be54154ac686a1f7ee2ee882378d485d0c9788fa7",
-      "resting_contact": "resting-r2-review-48.png",
-      "resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-48.png",
+      "previous_resting_contact_sha256": "9afc11935f43f898958e918605bfd1ed54c1f8520dd913482494b76e661eea2f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "52fe22b22e045bd443c8d76595027d3d2be3c99a7face4048502e8778d69f44b",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_mireclaw_mireglass_reedcasters",
-      "atlas_sha256": "22742f99367a5f1c5eb11529f5365aa054d28949167f94746e7be549003c90e6",
-      "pose_metadata_sha256": "0c61a2be477caced4ab112481b987ec1f06d59b2fad6585f3951dcfd64e3e828",
+      "atlas_sha256": "bdfc046dbe1d2cbb1014b15fa553cf95489b4b6acff52d883800bde8437fddc0",
+      "pose_metadata_sha256": "dfa2f3b7472987676d5a371a14a287c58d8b01993e8ca601e57e37ce3a58c707",
       "action_contact": "roster-review-54-fit.png",
       "action_contact_sha256": "dd867b9fd34d477abe58cfc6f3425cd88bce36a1ecbd143483c948beb643f48d",
-      "resting_contact": "resting-r2-review-54.png",
-      "resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-54.png",
+      "previous_resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "22742f99367a5f1c5eb11529f5365aa054d28949167f94746e7be549003c90e6",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_sunvault_noonfacet_sentinels",
-      "atlas_sha256": "fc98ef49290b26813263925e2d100a6ba58e8919688f2d15fb83fe46cbc63519",
-      "pose_metadata_sha256": "25fe87aa74e557d9229a59b817072fdc8d756fa0d7fe442c75e41803bcfc097d",
+      "atlas_sha256": "b4b8f3a838846ff132be67f75690cb9d0be37db16fde07be8c426c5c797cdd23",
+      "pose_metadata_sha256": "0b7d509b3021865eff2bb4e704c39f032bfb075e153c1fcb6bc2370ef3c331e3",
       "action_contact": "roster-review-54-fit.png",
       "action_contact_sha256": "dd867b9fd34d477abe58cfc6f3425cd88bce36a1ecbd143483c948beb643f48d",
-      "resting_contact": "resting-r2-review-54.png",
-      "resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-54.png",
+      "previous_resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_sunvault_noonfacet_sentinels/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "fc98ef49290b26813263925e2d100a6ba58e8919688f2d15fb83fe46cbc63519",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_thornwake_dawnseed_bolters",
-      "atlas_sha256": "15436880dacc9c17c7e41209b486e4e096a1228929b76c147cd1788988b317b6",
-      "pose_metadata_sha256": "3047f3e4546dec2b6c8dece1c7a8579762f7d518ea96bd43f027d28dee159de8",
+      "atlas_sha256": "f18bd41b14a5aa6120f970397135e8a7db7636fa81ccaa084ee2a1de4e75b2b0",
+      "pose_metadata_sha256": "a0118ba8172ef5b083a01d021f721cc9a397c8ece1fb7510d04a89872d70b616",
       "action_contact": "roster-review-56-fit.png",
       "action_contact_sha256": "d188213c76ffb9f0e8c1cbd04755d0883d665a83d4825d5f19386328ba5ed875",
-      "resting_contact": "resting-r2-review-54.png",
-      "resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-54.png",
+      "previous_resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_thornwake_dawnseed_bolters/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "15436880dacc9c17c7e41209b486e4e096a1228929b76c147cd1788988b317b6",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
-      "atlas_sha256": "24d92bfefeb3cf7b054c5120e747209f559aa83fddb5e5e5e1fa41a172b6d68b",
-      "pose_metadata_sha256": "3b831dfc991cd2b494295290c9636aff536023949955d1bc471c59cc09cd8d3d",
+      "atlas_sha256": "b37431d46a227c443f835a0be4a954c67cb9b0c50dbf85c97f70faffffb66f65",
+      "pose_metadata_sha256": "e33825f47133faefadeb6329549f0677907cf5b969d7dc2a1aa0a9a1ed10cb4c",
       "action_contact": "roster-review-56-fit.png",
       "action_contact_sha256": "d188213c76ffb9f0e8c1cbd04755d0883d665a83d4825d5f19386328ba5ed875",
-      "resting_contact": "resting-r2-review-54.png",
-      "resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-54.png",
+      "previous_resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "24d92bfefeb3cf7b054c5120e747209f559aa83fddb5e5e5e1fa41a172b6d68b",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_veilmourn_tidehook_deckhands",
-      "atlas_sha256": "7d378286d4f0d424061b84a534878f3f431b2a8a79169e16b5437036f3e3577b",
-      "pose_metadata_sha256": "3cd9ba9bd93a3c1c75fddaadead8082fa33e3eb1919a5bf3aaf687f5730c1f00",
+      "atlas_sha256": "41111a728d57a93a95300da3d10d4aa3233e6303742a6c3caf1d7f678273248f",
+      "pose_metadata_sha256": "97b7153eae5fc1f9a6d6fb0f32eb9808f77aac035a57add26cca7642330fc8bf",
       "action_contact": "roster-review-58-fit.png",
       "action_contact_sha256": "695d84f6151cc19cbdbf9215c33f8eb0bd2c04de6c2e29770c7d121f658b0a67",
-      "resting_contact": "resting-r2-review-54.png",
-      "resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-54.png",
+      "previous_resting_contact_sha256": "215e930bfa02ab09a62419af425bb6e873d20254ace4bb1165182e5ea6a88d0f",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_veilmourn_tidehook_deckhands/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "7d378286d4f0d424061b84a534878f3f431b2a8a79169e16b5437036f3e3577b",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_neutral_roadwardens",
@@ -850,12 +1081,23 @@
     },
     {
       "unit_id": "unit_neutral_hearthbow_carriers",
-      "atlas_sha256": "a305a2eebed73e09b425689166ed316fda55fa62cf2c8de267b422c34d31ac13",
-      "pose_metadata_sha256": "8112f212288a2b9ee3be971e8cf20042a254ad70bd2ca019a1d76a7b6a034487",
+      "atlas_sha256": "942a724af4085b450900364b6780ee99a797c2cb4dc695012a40e1541b35a95b",
+      "pose_metadata_sha256": "88a1a3c6e79061dcf10d7f6f815af4091ee5f519a4eeeffa8c889cb12cc26e93",
       "action_contact": "roster-review-60-fit.png",
       "action_contact_sha256": "ef3cfb7cecee10e6a87eceafabc1922b19a421e393464c4ceb9535c675bb3e39",
-      "resting_contact": "resting-r2-review-60.png",
-      "resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-60.png",
+      "previous_resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_neutral_hearthbow_carriers/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "a305a2eebed73e09b425689166ed316fda55fa62cf2c8de267b422c34d31ac13",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_neutral_fenhound_runners",
@@ -879,21 +1121,43 @@
     },
     {
       "unit_id": "unit_neutral_mossglass_sentinels",
-      "atlas_sha256": "a82c18ebd7f99d2b5142aa7dd05f3cdfe121a53d19f1fe18c4879ce6adff5e3f",
-      "pose_metadata_sha256": "b35c7410a2419f496bd4bca184a1fdcf42d8ff87cd0fded31c00460d79af1586",
+      "atlas_sha256": "bf59820580592a75e09d933e14663f9379f3dc37f571c05cb7bec75e0a654c2d",
+      "pose_metadata_sha256": "75dd3cdefcc1903e8debad129d4bf97232da88a6bde790bc7358fc032aa69127",
       "action_contact": "roster-review-62-fit.png",
       "action_contact_sha256": "051613e80e4c9d002d1917459338d31a72cf496b26ed45878add343caf03f5cc",
-      "resting_contact": "resting-r2-review-60.png",
-      "resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-60.png",
+      "previous_resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_neutral_mossglass_sentinels/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "a82c18ebd7f99d2b5142aa7dd05f3cdfe121a53d19f1fe18c4879ce6adff5e3f",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_neutral_cliffhawk_wardens",
-      "atlas_sha256": "77787b04b7ac5c300d56b290dd2e60c8c56bfddb4a18b340a469ab58bbbc4606",
-      "pose_metadata_sha256": "3b96b7f9779d0509761887e93fcffba6e58647f7a43177fec8685b847418dc72",
+      "atlas_sha256": "f30bdb8225968646fd2350b4d47c6a9e3bae986160a6829f7f0e3b633491cdad",
+      "pose_metadata_sha256": "129b5d98680325a9bb5cefddb90762f8729fb524f3aed522dce7bae8735f5ca6",
       "action_contact": "roster-review-62-fit.png",
       "action_contact_sha256": "051613e80e4c9d002d1917459338d31a72cf496b26ed45878add343caf03f5cc",
-      "resting_contact": "resting-r2-review-60.png",
-      "resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c"
+      "review_status": "accepted_idle_articulation_20260919",
+      "previous_resting_contact": "resting-r2-review-60.png",
+      "previous_resting_contact_sha256": "8b3070847be7b191b633233a7388c87d40e9b31078298765445059ba6131ce3c",
+      "idle_review": {
+        "reviewed_at": "2026-09-19",
+        "frames": 8,
+        "frame_msec": 240,
+        "scope": "Visible articulated hand/arm/equipment idle; eight poses inspected at map scale and live 1280x720 Windows battle board in both facings. Focused playback cohorts pass. No full suite or Linux/package validation.",
+        "generation": "art/animation/source/poses/unit_neutral_cliffhawk_wardens/idle-v2/hands-generation.json",
+        "previous_atlas_sha256": "77787b04b7ac5c300d56b290dd2e60c8c56bfddb4a18b340a469ab58bbbc4606",
+        "action_frames": "Previous atlas frame pixels and non-idle clip metadata unchanged.",
+        "capture_retention": "Task-owned captures removed after review per owner policy; reproduce with tests/overworld_creature_idle_regression.py --units."
+      }
     },
     {
       "unit_id": "unit_neutral_windglass_slingers",

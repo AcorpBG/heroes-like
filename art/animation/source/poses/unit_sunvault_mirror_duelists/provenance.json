@@ -119,5 +119,18 @@
     "frames": 14,
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/mirror-duelist-continuity-20260915/",
     "validation": "Production assembly and actual alpha-composite inspection only. No Godot/tests/imports/exports; connected battle timing, cloth/equipment continuity and final acceptance deferred."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_sunvault_mirror_duelists.png",
+    "runtime_sha256": "f0eb03d9879a4b5a0b1aaa99a97b6a7471e066d736955c116e2294a3bde36659"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "82b08fdd47fbb52b08acd93d4cabd78bf9dc11e9a3ebccd6b156072baac46ddd",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

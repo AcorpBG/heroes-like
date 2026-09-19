@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_veilmourn_tidehook_deckhands",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-c38118da-9951-4649-bfec-b171ab7fe312.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_veilmourn_tidehook_deckhands.png",
+  "reference_revision": "e8df6ca7e",
+  "prompt": "Use case: identity-preserve. Paint an EIGHT-FRAME resting idle with VISIBLE HAND, WRIST AND ELBOW ARTICULATION for exactly this original character. Reference is a strip of poses of ONE character. Preserve identity, clothing, weapon size, hand ownership and right-facing three-quarter camera. Head/hips/feet almost stationary. The idle must read at 74px character height: hands travel about 50-70 source pixels; head under 5px. No head-bobbing substitute. Hands maintain plausible grips and bend naturally at elbows. No attack, walk or extra props.\nBlue spectral sailor humanoid with dark hood, hooked blade in screen LEFT hand and small lantern dangling from chain screen RIGHT. Flex hook elbow raising wrist to belt, keep hook orientation continuous. Lift chain hand 50 source pixels while lantern hangs/sways slightly then return. Quiet torso and feet; subtle flame only, no limb disintegration.\nCanvas1536x1024 RGBA true transparent background, 4 columns and 2 rows. Exactly eight sequential complete poses in reading order, same anatomical size, planted boot line near localy478, generous gaps, all owned weapons inside each cell. Smooth cycle: pose1 rest;2 begin hand adjustment;3 farther;4 crest;5 gradually reverse;6 ease back;7 near rest;8 almost pose1. Original detailed hand-painted fantasy strategy sprite. Genuine painted articulation, not translated whole-body copies. Transparent gaps and background, no floor/shadow/labels/grid/backdrop.\nCritical spacing: fit each entire pose within a 340-pixel-wide area in its 384-pixel cell, with transparent padding. Do not crop any weapon or accessory. Return seamlessly toward the first pose.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "3cef0b45556648b888705c8175c342eb3804192f037cfbd49d8d767bde77ca49",
+  "reference_sha256": "088aa88946e35cc0e0e9cdd1ac22865b24bbbb709ef794c3c2d3280a10ebf5b3",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; hand, forearm and owned equipment movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

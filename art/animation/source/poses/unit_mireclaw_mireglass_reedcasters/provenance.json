@@ -202,5 +202,18 @@
       "sha256": "ecc965a1551d2258e541bb0d67da944f4decd73c76b5528eb78bb21cddbe1734",
       "purpose": "Authoring-only leg-pose input, never shipped as game art."
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_mireclaw_mireglass_reedcasters.png",
+    "runtime_sha256": "bdfc046dbe1d2cbb1014b15fa553cf95489b4b6acff52d883800bde8437fddc0"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "22742f99367a5f1c5eb11529f5365aa054d28949167f94746e7be549003c90e6",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

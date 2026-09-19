@@ -142,5 +142,18 @@
       ],
       "removed_bytes": 10722532
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars.png",
+    "runtime_sha256": "0db6722acf2c97685f0bacf49347fa42861df68d6d887284c40905945ae2337d"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/oar-correction-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "7572d7d310d3a6a9bce1ef7b1d77b23234fbdc3630ac8e9e7873e636f82c30e7",
+    "preserved_frames": 15,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

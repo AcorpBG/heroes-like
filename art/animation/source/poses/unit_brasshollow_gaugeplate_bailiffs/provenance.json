@@ -180,5 +180,18 @@
       ],
       "removed_bytes": 27898968
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_brasshollow_gaugeplate_bailiffs.png",
+    "runtime_sha256": "b37431d46a227c443f835a0be4a954c67cb9b0c50dbf85c97f70faffffb66f65"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "24d92bfefeb3cf7b054c5120e747209f559aa83fddb5e5e5e1fa41a172b6d68b",
+    "preserved_frames": 15,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

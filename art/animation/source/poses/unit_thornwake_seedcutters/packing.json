@@ -1,6 +1,6 @@
 {
   "unit_id": "unit_thornwake_seedcutters",
-  "status": "candidate_pending_playback_acceptance",
+  "status": "accepted_idle_articulation_20260919",
   "frame_size": [
     512,
     256
@@ -234,6 +234,142 @@
         1048
       ],
       "scale": 0.6
+    },
+    {
+      "name": "idle_hands_0",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          513
+        ]
+      ],
+      "anchor": [
+        209,
+        486
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_1",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          384,
+          0,
+          768,
+          513
+        ]
+      ],
+      "anchor": [
+        593,
+        486
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_2",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          768,
+          0,
+          1152,
+          513
+        ]
+      ],
+      "anchor": [
+        976,
+        486
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          513
+        ]
+      ],
+      "anchor": [
+        1360,
+        486
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          513,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        211,
+        998
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          384,
+          513,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        590,
+        998
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_6",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          768,
+          513,
+          1152,
+          1024
+        ]
+      ],
+      "anchor": [
+        978,
+        998
+      ],
+      "scale": 0.44
+    },
+    {
+      "name": "idle_hands_7",
+      "source": "idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          513,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1360,
+        998
+      ],
+      "scale": 0.44
     }
   ],
   "pose_clips": {

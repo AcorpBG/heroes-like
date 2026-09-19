@@ -1,0 +1,256 @@
+{
+  "unit_id": "unit_sunvault_shard_wardens",
+  "status": "runtime_candidate_pending_consolidated_validation",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          362,
+          378
+        ]
+      ],
+      "anchor": [
+        190,
+        373
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/alpha/poses.png",
+      "rects": [
+        [
+          362,
+          0,
+          724,
+          378
+        ]
+      ],
+      "anchor": [
+        548,
+        373
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/continuity-alpha/walk-contact-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1229,
+          1280
+        ]
+      ],
+      "anchor": [
+        600,
+        1165
+      ],
+      "scale": 0.19
+    },
+    {
+      "name": "walk_passing_a",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/continuity-alpha/walk-passing-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1229,
+          1280
+        ]
+      ],
+      "anchor": [
+        588,
+        1193
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/continuity-alpha/walk-contact-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1229,
+          1280
+        ]
+      ],
+      "anchor": [
+        587,
+        1157
+      ],
+      "scale": 0.19
+    },
+    {
+      "name": "walk_passing_b",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/continuity-alpha/walk-passing-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1229,
+          1280
+        ]
+      ],
+      "anchor": [
+        581,
+        1190
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/alpha/poses.png",
+      "rects": [
+        [
+          375,
+          378,
+          730,
+          731
+        ]
+      ],
+      "anchor": [
+        547,
+        727
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/alpha/poses.png",
+      "rects": [
+        [
+          733,
+          378,
+          1132,
+          732
+        ]
+      ],
+      "anchor": [
+        891,
+        728
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "shield_brace",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/alpha/poses.png",
+      "rects": [
+        [
+          1132,
+          388,
+          1448,
+          731
+        ]
+      ],
+      "anchor": [
+        1280,
+        722
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "shield_brace_breath",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/continuity-alpha/defend-breath.png",
+      "rects": [
+        [
+          0,
+          0,
+          1209,
+          1301
+        ]
+      ],
+      "anchor": [
+        593,
+        1165
+      ],
+      "scale": 0.175
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          735,
+          375,
+          1086
+        ]
+      ],
+      "anchor": [
+        194,
+        1063
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/alpha/poses.png",
+      "rects": [
+        [
+          375,
+          765,
+          724,
+          1086
+        ]
+      ],
+      "anchor": [
+        548,
+        1063
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "death_collapse",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/alpha/poses.png",
+      "rects": [
+        [
+          724,
+          820,
+          1083,
+          1086
+        ]
+      ],
+      "anchor": [
+        902,
+        1063
+      ],
+      "scale": 0.6
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_sunvault_shard_wardens/alpha/poses.png",
+      "rects": [
+        [
+          1083,
+          840,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        1263,
+        1043
+      ],
+      "scale": 0.6
+    }
+  ],
+  "notes": [
+    "Original transparent poses are copied with their alpha intact; no re-keying or posing transforms.",
+    "Four new guide-directed gait phases alternate support legs without mirroring equipment; the repeated-leading-leg contact draft is excluded.",
+    "Body anchors preserve head/armor scale and ground plane; new defense is uniformly scaled as a crouch, not normalized to idle bounds.",
+    "Packing is production assembly only; final motion acceptance and Linux/Windows validation remain deferred until the full roster is ready."
+  ]
+}

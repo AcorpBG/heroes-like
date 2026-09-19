@@ -1,0 +1,268 @@
+{
+  "unit_id": "unit_sunvault_mirror_duelists",
+  "status": "runtime_candidate_pending_consolidated_validation",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          361,
+          367
+        ]
+      ],
+      "anchor": [
+        210,
+        363
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/alpha/poses.png",
+      "rects": [
+        [
+          361,
+          0,
+          727,
+          367
+        ]
+      ],
+      "anchor": [
+        570,
+        363
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/walk-contact-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1230,
+          1278
+        ]
+      ],
+      "anchor": [
+        770,
+        1223
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "walk_passing_a",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/walk-passing-a.png",
+      "rects": [
+        [
+          0,
+          0,
+          1158,
+          1358
+        ]
+      ],
+      "anchor": [
+        726,
+        1245
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/walk-contact-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1230,
+          1278
+        ]
+      ],
+      "anchor": [
+        767,
+        1194
+      ],
+      "scale": 0.19
+    },
+    {
+      "name": "walk_passing_b",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/walk-passing-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1158,
+          1358
+        ]
+      ],
+      "anchor": [
+        723,
+        1268
+      ],
+      "scale": 0.175
+    },
+    {
+      "name": "melee_windup_full_blade",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/windup-full-blade.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        606,
+        1192
+      ],
+      "scale": 0.2
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/alpha/poses.png",
+      "rects": [
+        [
+          729,
+          399,
+          1126,
+          729
+        ],
+        [
+          1126,
+          471,
+          1238,
+          509
+        ]
+      ],
+      "anchor": [
+        923,
+        725
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "parry_brace",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/alpha/poses.png",
+      "rects": [
+        [
+          1238,
+          427,
+          1448,
+          505
+        ],
+        [
+          1126,
+          505,
+          1448,
+          729
+        ]
+      ],
+      "anchor": [
+        1278,
+        720
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "parry_brace_breath",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/continuity-alpha/defend-breath.png",
+      "rects": [
+        [
+          0,
+          0,
+          1295,
+          1214
+        ]
+      ],
+      "anchor": [
+        677,
+        1098
+      ],
+      "scale": 0.16
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          729,
+          355,
+          1086
+        ]
+      ],
+      "anchor": [
+        191,
+        1062
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/alpha/poses.png",
+      "rects": [
+        [
+          355,
+          773,
+          696,
+          1086
+        ]
+      ],
+      "anchor": [
+        532,
+        1035
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "death_collapse",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/alpha/poses.png",
+      "rects": [
+        [
+          696,
+          875,
+          1082,
+          1086
+        ]
+      ],
+      "anchor": [
+        885,
+        1040
+      ],
+      "scale": 0.62
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_sunvault_mirror_duelists/alpha/poses.png",
+      "rects": [
+        [
+          1082,
+          887,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        1263,
+        1054
+      ],
+      "scale": 0.62
+    }
+  ],
+  "notes": [
+    "Original transparent alpha remains unchanged; original repeated-leading-leg walking frames and shortened windup are excluded.",
+    "New guided near/far contact/passing phases preserve right sword and left buckler ownership.",
+    "Explicit disjoint source rectangles retain extended strike blade without including its neighboring parry; defense crop excludes the strike blade fragment.",
+    "Body/ground anchors and uniform downsampling only; no pose warping, recoloring or background generation in packing. Final connected-motion and platform acceptance deferred."
+  ]
+}

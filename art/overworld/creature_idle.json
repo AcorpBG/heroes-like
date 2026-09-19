@@ -851,118 +851,142 @@
     "unit_sunvault_shard_wardens": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_shard_wardens.png",
       "frame_size": [
-        215,
-        243
+        186,
+        224
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        108.0,
-        232
+        91.0,
+        213
       ],
-      "painted_extent": 227,
+      "painted_extent": 208,
       "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_shard_wardens.png",
       "source_indices": [
-        0,
-        1
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
       ],
       "source_crop": [
-        148,
-        16,
-        363,
+        165,
+        35,
+        351,
         259
       ],
-      "source_sha256": "717d91a4b79d18b12179cea9b5c71d2a6781580286b65f59ed7ffcf59bd21972",
+      "source_sha256": "074a4e56a969f019411e3b2f4898cec6a76a8783acc318f0e68667b36bb6107e",
       "source_provenance": "res://art/animation/source/poses/unit_sunvault_shard_wardens/provenance.json",
-      "sha256": "e32a6bc283d60d2567188a6fea22cc3b083212da5a4f53c0526f0449f30dc290"
+      "sha256": "018d583f6a929e584f18fea716bc2549d8e2ae431acb465a93ed954fda2c8cfc"
     },
     "unit_sunvault_prism_adepts": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_prism_adepts.png",
       "frame_size": [
-        231,
-        233
+        167,
+        235
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        118.0,
-        221
+        73.0,
+        224
       ],
-      "painted_extent": 217,
+      "painted_extent": 219,
       "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_prism_adepts.png",
       "source_indices": [
-        0,
-        1
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
       ],
       "source_crop": [
-        138,
-        27,
-        369,
-        260
+        183,
+        24,
+        350,
+        259
       ],
-      "source_sha256": "4f9db27531f5a923146c72c6eb1d1abd247f0b59f7ee7fe2fbcb66198eabbbde",
+      "source_sha256": "fd73d2bdf72cd1b45d37b49e16998f1ea988c2b6eca5295f03df41bc712d8d02",
       "source_provenance": "res://art/animation/source/poses/unit_sunvault_prism_adepts/provenance.json",
-      "sha256": "f7724829296369f3aa88218d6d6ec855b71582dbbbae6720711aacb81cbc60e9"
+      "sha256": "8ca08ec338586529d38ec794d965568e30dd363a88c2ee73045e126ff6dacbb0"
     },
     "unit_sunvault_mirror_duelists": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_mirror_duelists.png",
       "frame_size": [
-        241,
-        244
+        189,
+        231
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        136.0,
-        233
+        112.0,
+        220
       ],
-      "painted_extent": 228,
+      "painted_extent": 215,
       "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_mirror_duelists.png",
       "source_indices": [
-        0,
-        1
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
       ],
       "source_crop": [
-        120,
-        15,
-        361,
+        144,
+        28,
+        333,
         259
       ],
-      "source_sha256": "82b08fdd47fbb52b08acd93d4cabd78bf9dc11e9a3ebccd6b156072baac46ddd",
+      "source_sha256": "f0eb03d9879a4b5a0b1aaa99a97b6a7471e066d736955c116e2294a3bde36659",
       "source_provenance": "res://art/animation/source/poses/unit_sunvault_mirror_duelists/provenance.json",
-      "sha256": "ddcc0d011c6a988312334b305be3c8926f2355dade9945f89a02fa2b11f4d4dc"
+      "sha256": "b745ece343d99b4cf21e1cbd0ea4707a49faa9e4a256f5b0bfc68d6a57046348"
     },
     "unit_sunvault_resonant_choristers": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_resonant_choristers.png",
       "frame_size": [
-        191,
-        240
+        182,
+        230
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        97.0,
-        231
+        86.0,
+        218
       ],
-      "painted_extent": 224,
+      "painted_extent": 214,
       "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_resonant_choristers.png",
       "source_indices": [
-        0,
-        1
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
       ],
       "source_crop": [
-        159,
-        17,
-        350,
-        257
+        170,
+        30,
+        352,
+        260
       ],
-      "source_sha256": "7a755377af8da83e52f0bdd26580d1444e6aa2430872e1c2e22df5eae55f9f09",
+      "source_sha256": "4821a6e445a0c64d88b70c2e13fe914267ab7f6e62fcd13732c655d4d411563c",
       "source_provenance": "res://art/animation/source/poses/unit_sunvault_resonant_choristers/provenance.json",
-      "sha256": "138a4ab8af76fd3158853bec2522a2a5ef61fb1585416b314193eb75f667347a"
+      "sha256": "985127ed81358d37d5bef4f09a814ccf7faa35ae91cb9f39d3bd8fd0e55377d2"
     },
     "unit_sunvault_solar_array_striders": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_solar_array_striders.png",
@@ -1054,89 +1078,107 @@
     "unit_thornwake_seedcutters": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_seedcutters.png",
       "frame_size": [
-        176,
-        243
+        150,
+        226
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        85.0,
-        232
+        77.0,
+        215
       ],
-      "painted_extent": 227,
+      "painted_extent": 210,
       "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_seedcutters.png",
       "source_indices": [
-        0,
-        1
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
       ],
       "source_crop": [
-        171,
-        4,
-        347,
+        179,
+        21,
+        329,
         247
       ],
-      "source_sha256": "d1f32349eff3d80e56e5ef63820a6e0b335974cc321bc15172c944a43729656e",
+      "source_sha256": "7a12b07be3236664051d6c4e99d8260c8733dd176681dc09d9e7cfe2a64cee09",
       "source_provenance": "res://art/animation/source/poses/unit_thornwake_seedcutters/provenance.json",
-      "sha256": "da41051723f6be90cd0e4367db45773bfda0068bd03d86779b5c904160644830"
+      "sha256": "50c25dcbb4f01baf6db9df6f262d1f7273d59838d4c702eb347147b5f9497bcb"
     },
     "unit_thornwake_thornwhip_carriers": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_thornwhip_carriers.png",
       "frame_size": [
-        148,
-        242
+        144,
+        241
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        80.0,
-        228
+        86.0,
+        230
       ],
-      "painted_extent": 226,
+      "painted_extent": 225,
       "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_thornwhip_carriers.png",
       "source_indices": [
-        0,
-        1
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
       ],
       "source_crop": [
-        176,
-        8,
-        324,
-        250
+        170,
+        6,
+        314,
+        247
       ],
-      "source_sha256": "8ff007de90b6ada3584ce5a68e37642572320f33f891380f4dbb82826acbe928",
+      "source_sha256": "b3ffa4e75ac5a526403b6b02c010a6219839846e1f69f7c2e33a16d89c98a27d",
       "source_provenance": "res://art/animation/source/poses/unit_thornwake_thornwhip_carriers/provenance.json",
-      "sha256": "f1252022ea578de11d3ff0113684c1e824fbefc8b8f18df691b26978d29071eb"
+      "sha256": "bd7782ef54ebaa57d2417790517d2189ce4006adb473073023018b895769c38c"
     },
     "unit_thornwake_sporeglass_menders": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_sporeglass_menders.png",
       "frame_size": [
-        160,
-        242
+        170,
+        232
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        72.0,
-        227
+        74.0,
+        221
       ],
-      "painted_extent": 226,
+      "painted_extent": 216,
       "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
       "source_indices": [
-        0,
-        1
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
       ],
       "source_crop": [
-        184,
-        9,
-        344,
-        251
+        182,
+        15,
+        352,
+        247
       ],
-      "source_sha256": "ee99b0c0b33cc9a0a82aa5e71bc5b39d11e63297432d43ecf2adba07a702b8b9",
+      "source_sha256": "2a8a2cb4c714d0e4d01ab1a62dd454ff4597ae56b6082a186859af6b59696d62",
       "source_provenance": "res://art/animation/source/poses/unit_thornwake_sporeglass_menders/provenance.json",
-      "sha256": "4e589959cbb5bb24823477c1188be092f904b4b84dfdca78e01bc1c87e04af11"
+      "sha256": "d19b1c7206f04abc898cde1f6c144a49d30f09aa0652c5b6160c65f4d1d6b5ac"
     },
     "unit_thornwake_barkmantle_rams": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_barkmantle_rams.png",
@@ -1257,31 +1299,37 @@
     "unit_brasshollow_scrip_haulers": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_scrip_haulers.png",
       "frame_size": [
-        173,
-        237
+        174,
+        233
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        83.0,
-        224
+        84.0,
+        222
       ],
-      "painted_extent": 221,
+      "painted_extent": 217,
       "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_scrip_haulers.png",
       "source_indices": [
-        0,
-        1
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
       ],
       "source_crop": [
-        173,
-        12,
+        172,
+        14,
         346,
-        249
+        247
       ],
-      "source_sha256": "f55317aa6d02b9a65b4c46a78ff6841275669ca9667f1d34b3377e1ee12b6207",
+      "source_sha256": "12b4fcaf0fd6e6931a49df5187f4c9fd8a59c03cbeab8d413430a89a50a3bed8",
       "source_provenance": "res://art/animation/source/poses/unit_brasshollow_scrip_haulers/provenance.json",
-      "sha256": "a3d37734d37929b159a1318a0437d71fe655100701ef7aadd29156198b5d9372"
+      "sha256": "bcf64edd472a27b1ca2fa53ebc5c3eb2317162fbe0180c35e76f0efc3ad61025"
     },
     "unit_brasshollow_rivet_hounds": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_rivet_hounds.png",
@@ -1315,31 +1363,37 @@
     "unit_brasshollow_furnace_pavis_teams": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_furnace_pavis_teams.png",
       "frame_size": [
-        175,
-        227
+        173,
+        234
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 260,
       "static_frame": 0,
       "ground_anchor": [
-        81.0,
-        215
+        93.0,
+        223
       ],
-      "painted_extent": 211,
+      "painted_extent": 218,
       "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams.png",
       "source_indices": [
-        0,
-        1
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
       ],
       "source_crop": [
-        175,
-        21,
-        350,
-        248
+        163,
+        13,
+        336,
+        247
       ],
-      "source_sha256": "592b7b09259d451f5cbee5625203e76e40bd07f7e6dc90b78e4f74545ba810cc",
+      "source_sha256": "24f2180d6db165898bc1b37389853a4f7b4fc9957ec42cb92dbee23d7fdffde3",
       "source_provenance": "res://art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/provenance.json",
-      "sha256": "4689d32235043ebae07fe2f637c42a8bb3b04fcfa5ccda51de964df663081620"
+      "sha256": "d3f6f76b8a55965cd95acb331943928024d836e098a0a430406d42dec3be50e1"
     },
     "unit_brasshollow_boiler_rivetcasters": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_boiler_rivetcasters.png",
@@ -1460,176 +1514,212 @@
     "unit_veilmourn_bellwake_oars": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_bellwake_oars.png",
       "frame_size": [
-        201,
-        243
+        172,
+        238
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        87.0,
-        229
+        69.0,
+        228
       ],
-      "painted_extent": 227,
+      "painted_extent": 222,
       "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_bellwake_oars.png",
       "source_indices": [
-        0,
-        1
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
       ],
       "source_crop": [
-        169,
-        7,
-        370,
-        250
+        187,
+        8,
+        359,
+        246
       ],
-      "source_sha256": "7572d7d310d3a6a9bce1ef7b1d77b23234fbdc3630ac8e9e7873e636f82c30e7",
+      "source_sha256": "0db6722acf2c97685f0bacf49347fa42861df68d6d887284c40905945ae2337d",
       "source_provenance": "res://art/animation/source/poses/unit_veilmourn_bellwake_oars/provenance.json",
-      "sha256": "2d020811aba51697f7c3ae37a63e199046c9b6de62e5ac3ecf07476ffa2738f9"
+      "sha256": "90778257b4fc6456120e13a084fbcb6f2503e0b88f549cf3f0c813efc21db3b7"
     },
     "unit_veilmourn_mourning_lanterns": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_mourning_lanterns.png",
       "frame_size": [
-        167,
-        235
+        170,
+        237
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        84.0,
-        222
+        91.0,
+        226
       ],
-      "painted_extent": 219,
+      "painted_extent": 221,
       "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
       "source_indices": [
-        0,
-        1
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
       ],
       "source_crop": [
-        172,
-        14,
-        339,
-        249
+        165,
+        10,
+        335,
+        247
       ],
-      "source_sha256": "6c7d96bda20fa59c1373da427fa7ae1214fae2ffb6f89467f8c4043758c21ef9",
+      "source_sha256": "79bc6bd18d34155ffebbe87b076a4e1855b519d87c2b4e5703c5e15e5d1538e5",
       "source_provenance": "res://art/animation/source/poses/unit_veilmourn_mourning_lanterns/provenance.json",
-      "sha256": "c71d5e5d1032d2aee3acca4e584e8d364bc81e8dfe3315d01e08879c6e4737c4"
+      "sha256": "ffe0390666dd3d627d66ef025bac57e016a3a467206e4ee1a6aece3f1d75f789"
     },
     "unit_veilmourn_maskglass_corsairs": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_maskglass_corsairs.png",
       "frame_size": [
-        172,
-        233
+        165,
+        232
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        92.0,
-        223
+        85.0,
+        221
       ],
-      "painted_extent": 217,
+      "painted_extent": 216,
       "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_maskglass_corsairs.png",
       "source_indices": [
-        0,
-        1
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
       ],
       "source_crop": [
-        164,
-        13,
+        171,
+        15,
         336,
-        246
+        247
       ],
-      "source_sha256": "d18b0c8bb1ca53aaacc7f172ea85bf6ef6295162880bfc4d2cada3408751b7ca",
+      "source_sha256": "e6c58a4d4f1b3c1887302b6f5ef96bc6b2e86a6915de7f2e41be82f9d793255b",
       "source_provenance": "res://art/animation/source/poses/unit_veilmourn_maskglass_corsairs/provenance.json",
-      "sha256": "7ebca3c6eb6a7b777a3cb6270f5469f15ff2f80dafe5f2185ab5551079204066"
+      "sha256": "c87ce72d13decec76db84fb87c877f14b63985a561a1c05266d81e6c97022638"
     },
     "unit_veilmourn_undertow_harpooners": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_undertow_harpooners.png",
       "frame_size": [
-        207,
-        240
+        168,
+        228
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        102.0,
-        227
+        79.0,
+        217
       ],
-      "painted_extent": 224,
+      "painted_extent": 212,
       "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_undertow_harpooners.png",
       "source_indices": [
-        0,
-        1
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
       ],
       "source_crop": [
-        154,
-        9,
-        361,
-        249
+        177,
+        19,
+        345,
+        247
       ],
-      "source_sha256": "f7560cc0fb3aa9543745bb6aa56864309989acabadc92df65410ceb26eae371f",
+      "source_sha256": "692f1dbd8897892322023b0f7418a4d2f2dc1426f91c972eda57325e262b2e2b",
       "source_provenance": "res://art/animation/source/poses/unit_veilmourn_undertow_harpooners/provenance.json",
-      "sha256": "89ce17b2c19b58a4726fd8b5c86336b639ffc5ba5a0b7fe697df9241522f89b5"
+      "sha256": "12828d394123d2b378b36718493ad74e23b26bac79e0b69a5ad924fc36466ff5"
     },
     "unit_veilmourn_obituary_scribes": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_obituary_scribes.png",
       "frame_size": [
-        210,
-        238
+        162,
+        210
       ],
-      "frames": 2,
-      "frame_msec": 650,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        107.0,
-        221
+        80.0,
+        199
       ],
-      "painted_extent": 222,
+      "painted_extent": 194,
       "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_obituary_scribes.png",
       "source_indices": [
-        0,
-        1
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
       ],
       "source_crop": [
-        149,
-        15,
-        359,
-        253
+        176,
+        37,
+        338,
+        247
       ],
-      "source_sha256": "779155edcfbc165be97ebc445e32a212cea9d67c267b5c5819559b03fd05489d",
+      "source_sha256": "d730e9c803fead3adfdb1e6fe2b9c4a4ec591bae0c41f879c236ba925b2550a1",
       "source_provenance": "res://art/animation/source/poses/unit_veilmourn_obituary_scribes/provenance.json",
-      "sha256": "094cc606e2087e78b8280753126714242ea0d4ff162216643800caa833ec46b3"
+      "sha256": "7b6fdc23711a8713a4112b5a72fd05e549a35988c3688e315ab0f540b50e3cdb"
     },
     "unit_veilmourn_mirrorkeel_reavers": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_mirrorkeel_reavers.png",
       "frame_size": [
-        234,
-        233
+        195,
+        208
       ],
-      "frames": 2,
-      "frame_msec": 650,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        129.0,
-        217
+        99.0,
+        197
       ],
-      "painted_extent": 218,
+      "painted_extent": 192,
       "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_mirrorkeel_reavers.png",
       "source_indices": [
-        0,
-        1
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
       ],
       "source_crop": [
-        127,
-        19,
-        361,
-        252
+        157,
+        39,
+        352,
+        247
       ],
-      "source_sha256": "4c0e58b8ad724181ae72f16cce6cdf3f63d8f4558adfec3c6ad07c338720f0f6",
+      "source_sha256": "b3587f23ecd8340f6578f986449d2238b5c1cacf57a37e5a92b1d32ced8b9e1b",
       "source_provenance": "res://art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers/provenance.json",
-      "sha256": "967c2975e851d963c0d76e0bd8ae8aeb4a57501df766fbba0605d721af144627"
+      "sha256": "47bb49245caef701754f581cc6a20a4e7447a480742d5dcf581ea08ed70ec542"
     },
     "unit_veilmourn_fogbound_leviathan": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_fogbound_leviathan.png",
@@ -1663,176 +1753,212 @@
     "unit_embercourt_cinderseal_bombardiers": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_cinderseal_bombardiers.png",
       "frame_size": [
-        191,
-        211
+        184,
+        217
       ],
-      "frames": 2,
-      "frame_msec": 650,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        101.0,
-        197
+        86.0,
+        206
       ],
-      "painted_extent": 195,
+      "painted_extent": 201,
       "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_cinderseal_bombardiers.png",
       "source_indices": [
-        0,
-        1
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
       ],
       "source_crop": [
-        155,
-        39,
-        346,
-        250
+        170,
+        30,
+        354,
+        247
       ],
-      "source_sha256": "52fe22b22e045bd443c8d76595027d3d2be3c99a7face4048502e8778d69f44b",
+      "source_sha256": "e83acda385ba75f24bad9f264542ce49a7be5a4b6b939be82e21271607708c7a",
       "source_provenance": "res://art/animation/source/poses/unit_embercourt_cinderseal_bombardiers/provenance.json",
-      "sha256": "2e96f1678a060146e24f126dbb05f92d44b5fd006e6d03a756d03407bdebb55e"
+      "sha256": "960bc905c1311130a3d0ba71e60e501ea1acf7ec3993770efb75eed3e56113f1"
     },
     "unit_mireclaw_mireglass_reedcasters": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_mireglass_reedcasters.png",
       "frame_size": [
-        233,
-        230
+        187,
+        195
       ],
-      "frames": 2,
-      "frame_msec": 550,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        112.0,
-        219
+        82.0,
+        184
       ],
-      "painted_extent": 217,
+      "painted_extent": 179,
       "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_mireglass_reedcasters.png",
       "source_indices": [
-        0,
-        1
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
       ],
       "source_crop": [
-        144,
-        17,
-        377,
+        174,
+        52,
+        361,
         247
       ],
-      "source_sha256": "22742f99367a5f1c5eb11529f5365aa054d28949167f94746e7be549003c90e6",
+      "source_sha256": "bdfc046dbe1d2cbb1014b15fa553cf95489b4b6acff52d883800bde8437fddc0",
       "source_provenance": "res://art/animation/source/poses/unit_mireclaw_mireglass_reedcasters/provenance.json",
-      "sha256": "e29813fe136d7e647b98fcc87848e8b12ad880160a74645a755e8199fef55cb8"
+      "sha256": "b5a1d9a92a640aee686aaee0e477d47300972e17cc740ea4411f191e727d7d9c"
     },
     "unit_sunvault_noonfacet_sentinels": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_noonfacet_sentinels.png",
       "frame_size": [
-        203,
-        244
+        184,
+        227
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        108.0,
-        233
+        95.0,
+        216
       ],
-      "painted_extent": 228,
+      "painted_extent": 211,
       "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
       "source_indices": [
-        0,
-        1
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
       ],
       "source_crop": [
-        148,
-        15,
-        351,
+        161,
+        32,
+        345,
         259
       ],
-      "source_sha256": "fc98ef49290b26813263925e2d100a6ba58e8919688f2d15fb83fe46cbc63519",
+      "source_sha256": "b4b8f3a838846ff132be67f75690cb9d0be37db16fde07be8c426c5c797cdd23",
       "source_provenance": "res://art/animation/source/poses/unit_sunvault_noonfacet_sentinels/provenance.json",
-      "sha256": "997712c5de5ebd67f964b577dd9cd171f710b0224df058516a136502f0acaff2"
+      "sha256": "87f859b445f9b325927995a5fa3f4df7edb6e52544bd5dd720eef7d4eaf6c740"
     },
     "unit_thornwake_dawnseed_bolters": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_dawnseed_bolters.png",
       "frame_size": [
-        202,
-        227
+        182,
+        213
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        79.0,
-        215
+        72.0,
+        202
       ],
-      "painted_extent": 211,
+      "painted_extent": 197,
       "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
       "source_indices": [
-        0,
-        1
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
       ],
       "source_crop": [
-        177,
-        21,
-        379,
-        248
+        184,
+        34,
+        366,
+        247
       ],
-      "source_sha256": "15436880dacc9c17c7e41209b486e4e096a1228929b76c147cd1788988b317b6",
+      "source_sha256": "f18bd41b14a5aa6120f970397135e8a7db7636fa81ccaa084ee2a1de4e75b2b0",
       "source_provenance": "res://art/animation/source/poses/unit_thornwake_dawnseed_bolters/provenance.json",
-      "sha256": "13d62d4c08ad4beefe3dd8ef08a7ae75731050f65f1d1e679b89e2c0e5df12b9"
+      "sha256": "1a9d8689b300143bb812867fe2ba86a92f19f975343b29cd99d08ec751e078fb"
     },
     "unit_brasshollow_gaugeplate_bailiffs": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_gaugeplate_bailiffs.png",
       "frame_size": [
-        237,
-        230
+        190,
+        196
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        135.0,
-        216
+        99.0,
+        185
       ],
-      "painted_extent": 221,
+      "painted_extent": 180,
       "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_gaugeplate_bailiffs.png",
       "source_indices": [
-        0,
-        1
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
       ],
       "source_crop": [
-        121,
-        20,
-        358,
-        250
+        157,
+        51,
+        347,
+        247
       ],
-      "source_sha256": "24d92bfefeb3cf7b054c5120e747209f559aa83fddb5e5e5e1fa41a172b6d68b",
+      "source_sha256": "b37431d46a227c443f835a0be4a954c67cb9b0c50dbf85c97f70faffffb66f65",
       "source_provenance": "res://art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs/provenance.json",
-      "sha256": "1216c1bb39854d9477525a4f043296a8ea8a84db46a4ac29d134a9d1e3fdb210"
+      "sha256": "22d4b8b0ad2dbc0590ec2c050f7a3cf0e5ee78215d9c1853ffbc70e769f17ef1"
     },
     "unit_veilmourn_tidehook_deckhands": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_tidehook_deckhands.png",
       "frame_size": [
-        236,
-        230
+        187,
+        203
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        133.0,
-        217
+        96.0,
+        193
       ],
-      "painted_extent": 220,
+      "painted_extent": 187,
       "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
       "source_indices": [
-        0,
-        1
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
       ],
       "source_crop": [
-        123,
-        19,
-        359,
-        249
+        160,
+        43,
+        347,
+        246
       ],
-      "source_sha256": "7d378286d4f0d424061b84a534878f3f431b2a8a79169e16b5437036f3e3577b",
+      "source_sha256": "41111a728d57a93a95300da3d10d4aa3233e6303742a6c3caf1d7f678273248f",
       "source_provenance": "res://art/animation/source/poses/unit_veilmourn_tidehook_deckhands/provenance.json",
-      "sha256": "088aa88946e35cc0e0e9cdd1ac22865b24bbbb709ef794c3c2d3280a10ebf5b3"
+      "sha256": "c815ded7b936f1d0de0ceb8a5e2f098e2dba892ff149f36969cb7f642cc37662"
     },
     "unit_neutral_roadwardens": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_roadwardens.png",
@@ -1872,31 +1998,37 @@
     "unit_neutral_hearthbow_carriers": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_hearthbow_carriers.png",
       "frame_size": [
-        163,
-        230
+        167,
+        224
       ],
-      "frames": 2,
-      "frame_msec": 600,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        67.0,
-        217
+        66.0,
+        214
       ],
-      "painted_extent": 214,
+      "painted_extent": 208,
       "source_sheet": "res://art/animation/runtime/poses/unit_neutral_hearthbow_carriers.png",
       "source_indices": [
-        0,
-        1
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
       ],
       "source_crop": [
-        189,
-        27,
-        352,
-        257
+        190,
+        30,
+        357,
+        254
       ],
-      "source_sha256": "a305a2eebed73e09b425689166ed316fda55fa62cf2c8de267b422c34d31ac13",
+      "source_sha256": "942a724af4085b450900364b6780ee99a797c2cb4dc695012a40e1541b35a95b",
       "source_provenance": "res://art/animation/source/poses/unit_neutral_hearthbow_carriers/provenance.json",
-      "sha256": "6b507ca984a81a8aa7a5be26e7f55853b44c29fdecd9d525917a509c8dbbfd18"
+      "sha256": "3c153bf5506a5211701f403a727fec41b87a8e6835b119867d60a71f1b93b3b0"
     },
     "unit_neutral_fenhound_runners": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_fenhound_runners.png",
@@ -1936,60 +2068,72 @@
     "unit_neutral_mossglass_sentinels": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_mossglass_sentinels.png",
       "frame_size": [
-        205,
-        238
+        182,
+        220
       ],
-      "frames": 2,
-      "frame_msec": 460,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        113.0,
-        222
+        82.0,
+        210
       ],
-      "painted_extent": 222,
+      "painted_extent": 204,
       "source_sheet": "res://art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
       "source_indices": [
-        0,
-        1
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
       ],
       "source_crop": [
-        143,
-        14,
-        348,
-        252
+        174,
+        26,
+        356,
+        246
       ],
-      "source_sha256": "a82c18ebd7f99d2b5142aa7dd05f3cdfe121a53d19f1fe18c4879ce6adff5e3f",
+      "source_sha256": "bf59820580592a75e09d933e14663f9379f3dc37f571c05cb7bec75e0a654c2d",
       "source_provenance": "res://art/animation/source/poses/unit_neutral_mossglass_sentinels/provenance.json",
-      "sha256": "5fa12cc8860d37a187a81fc0d7218f170d60742c07e0ced2c91acf5ef1eab229"
+      "sha256": "22c1c99efd0a2e8044c59ae5329ee34b407b12d506e2278898e292cb9f46771a"
     },
     "unit_neutral_cliffhawk_wardens": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_cliffhawk_wardens.png",
       "frame_size": [
-        201,
-        243
+        177,
+        221
       ],
-      "frames": 2,
-      "frame_msec": 430,
+      "frames": 8,
+      "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        101.0,
-        222
+        80.0,
+        210
       ],
-      "painted_extent": 227,
+      "painted_extent": 205,
       "source_sheet": "res://art/animation/runtime/poses/unit_neutral_cliffhawk_wardens.png",
       "source_indices": [
-        0,
-        1
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
       ],
       "source_crop": [
-        155,
-        14,
-        356,
-        257
+        176,
+        26,
+        353,
+        247
       ],
-      "source_sha256": "77787b04b7ac5c300d56b290dd2e60c8c56bfddb4a18b340a469ab58bbbc4606",
+      "source_sha256": "f30bdb8225968646fd2350b4d47c6a9e3bae986160a6829f7f0e3b633491cdad",
       "source_provenance": "res://art/animation/source/poses/unit_neutral_cliffhawk_wardens/provenance.json",
-      "sha256": "738acc0dccdb39175873dbd3dfc46df6e7de0a5a29317cb908acc039ed84bebd"
+      "sha256": "8837facdb52d2d336fc1d14e841c9baf1b453b2938082fe0c85e3fbcee6040df"
     },
     "unit_neutral_windglass_slingers": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_windglass_slingers.png",

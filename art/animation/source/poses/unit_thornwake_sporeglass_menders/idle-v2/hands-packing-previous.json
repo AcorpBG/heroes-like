@@ -1,0 +1,392 @@
+{
+  "unit_id": "unit_thornwake_sporeglass_menders",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          63,
+          0,
+          282,
+          322
+        ]
+      ],
+      "anchor": [
+        163,
+        313
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          374,
+          0,
+          584,
+          321
+        ]
+      ],
+      "anchor": [
+        465,
+        312
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "walk_far_contact",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          665,
+          0,
+          902,
+          322
+        ]
+      ],
+      "anchor": [
+        774,
+        313
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/continuity-alpha/walk-opposite-passing-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1096,
+          1435
+        ]
+      ],
+      "anchor": [
+        500,
+        1390
+      ],
+      "scale": 0.158
+    },
+    {
+      "name": "walk_near_contact",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/continuity-alpha/walk-near-contact-magenta.png",
+      "rects": [
+        [
+          0,
+          0,
+          1026,
+          1533
+        ]
+      ],
+      "anchor": [
+        493,
+        1490
+      ],
+      "scale": 0.147
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          990,
+          0,
+          1236,
+          322
+        ]
+      ],
+      "anchor": [
+        1098,
+        313
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          360,
+          323,
+          625,
+          638
+        ]
+      ],
+      "anchor": [
+        484,
+        623
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          666,
+          329,
+          906,
+          639
+        ]
+      ],
+      "anchor": [
+        777,
+        627
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_aim",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          993,
+          327,
+          1222,
+          640
+        ]
+      ],
+      "anchor": [
+        1101,
+        631
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_recoil",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          43,
+          637,
+          291,
+          950
+        ]
+      ],
+      "anchor": [
+        158,
+        935
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "ranged_recovery",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          374,
+          637,
+          607,
+          951
+        ]
+      ],
+      "anchor": [
+        475,
+        937
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          661,
+          672,
+          903,
+          946
+        ]
+      ],
+      "anchor": [
+        778,
+        925
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          970,
+          643,
+          1219,
+          946
+        ]
+      ],
+      "anchor": [
+        1097,
+        928
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "kneel",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          43,
+          970,
+          294,
+          1213
+        ]
+      ],
+      "anchor": [
+        172,
+        1197
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "side_fall",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          1005,
+          613,
+          1218
+        ]
+      ],
+      "anchor": [
+        471,
+        1197
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "dead_0",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          622,
+          1055,
+          932,
+          1202
+        ]
+      ],
+      "anchor": [
+        789,
+        1180
+      ],
+      "scale": 0.7
+    },
+    {
+      "name": "dead_1",
+      "source": "art/animation/source/poses/unit_thornwake_sporeglass_menders/alpha/poses.png",
+      "rects": [
+        [
+          934,
+          1063,
+          1236,
+          1206
+        ]
+      ],
+      "anchor": [
+        1090,
+        1187
+      ],
+      "scale": 0.7
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 175,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        8,
+        9,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        11
+      ],
+      "loop": true,
+      "frame_msec": 500,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        12,
+        11
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        13,
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  }
+}

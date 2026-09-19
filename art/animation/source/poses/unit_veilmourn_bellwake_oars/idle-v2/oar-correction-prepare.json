@@ -1,0 +1,7 @@
+{
+  "source": "oar-correction-original.png",
+  "source_sha256": "6d87b9679319b1b0646b68f51284ea1acc6fc16cd87ae5dfdf25cfc6db3d60e0",
+  "output": "oar-correction-alpha.png",
+  "alpha_noise_cutoff": 8,
+  "inspection": "Clear only near-transparent alpha noise 0..8; preserve RGB and stronger alpha."
+}

@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_sunvault_prism_adepts",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-2992ddd3-da05-42e4-a2a9-9d5dd131e90e.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_sunvault_prism_adepts.png",
+  "reference_revision": "e8df6ca7e",
+  "prompt": "Use case: identity-preserve. Paint an EIGHT-FRAME resting idle with VISIBLE HAND, WRIST AND ELBOW ARTICULATION for exactly this original character. Reference is a strip of poses of ONE character. Preserve identity, clothing, weapon size, hand ownership and right-facing three-quarter camera. Head/hips/feet almost stationary. The idle must read at 74px character height: hands travel about 50-70 source pixels; head under 5px. No head-bobbing substitute. Hands maintain plausible grips and bend naturally at elbows. No attack, walk or extra props.\nYoung brown-haired woman in white blue gold academic coat, goggles above forehead, brown boots. Holds a small gold and violet crystal projector across her waist with two hands. Flex elbows raising projector toward ribs 50px, support hand regrips the underside, then lower steadily. Keep rigid projector, no shot or spell.\nCanvas1536x1024 RGBA true transparent background, 4 columns and 2 rows. Exactly eight sequential complete poses in reading order, same anatomical size, planted boot line near localy478, generous gaps, all owned weapons inside each cell. Smooth cycle: pose1 rest;2 begin hand adjustment;3 farther;4 crest;5 gradually reverse;6 ease back;7 near rest;8 almost pose1. Original detailed hand-painted fantasy strategy sprite. Genuine painted articulation, not translated whole-body copies. Transparent gaps and background, no floor/shadow/labels/grid/backdrop.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "3c5174798948d822ac31eef6abd6e967f79cb569b0e03f47c910effbf9f5705c",
+  "reference_sha256": "f7724829296369f3aa88218d6d6ec855b71582dbbbae6720711aacb81cbc60e9",
+  "review_notes": [
+    "Eight original poses visually inspected at game size and larger scale; hand, forearm and owned equipment movement is visible independently of the head.",
+    "Focused live Windows battle board in both facings and overworld shader checked; eight drawings play, reduced motion freezes, cached drawing and saved simulation remain stable.",
+    "Previous action-frame pixels preserved by integration; no full suite or Linux/package validation."
+  ]
+}

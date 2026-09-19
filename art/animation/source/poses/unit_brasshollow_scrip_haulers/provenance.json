@@ -97,5 +97,18 @@
       "removed_bytes": 3135779,
       "preserved": "Original/new/rejected masters, exact prompts/input hashes, source/runtime atlases, recipes/proofs, unique before/final evidence, caches and unrelated files."
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_brasshollow_scrip_haulers.png",
+    "runtime_sha256": "12b4fcaf0fd6e6931a49df5187f4c9fd8a59c03cbeab8d413430a89a50a3bed8"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "f55317aa6d02b9a65b4c46a78ff6841275669ca9667f1d34b3377e1ee12b6207",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

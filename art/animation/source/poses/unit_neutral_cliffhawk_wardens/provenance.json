@@ -61,5 +61,18 @@
       ],
       "removed_bytes": 1145372
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_neutral_cliffhawk_wardens.png",
+    "runtime_sha256": "f30bdb8225968646fd2350b4d47c6a9e3bae986160a6829f7f0e3b633491cdad"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "77787b04b7ac5c300d56b290dd2e60c8c56bfddb4a18b340a469ab58bbbc4606",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

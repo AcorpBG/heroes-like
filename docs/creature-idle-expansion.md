@@ -1,7 +1,7 @@
 # Expanded creature idle loops
 
 Full-roster production is **in progress**, covering both battle and overworld.
-26 of 160 units have reviewed eight-pose idles; 134 still retain two-pose loops.
+50 of 160 units have reviewed eight-pose idles; 110 still retain two-pose loops.
 The earlier six-creature delivery did not complete the requested roster.
 
 ## Motion direction
@@ -12,13 +12,22 @@ stay quiet. Extra frames of head movement alone do not meet this requirement.
 Preserve limb ownership, continuous chains, rigid equipment and identity.
 No attack, firing or walking motion belongs in the idle loop.
 
-Twenty-one armed units now use this direction: River Guard, Ember Archer,
+Forty-five armed units now use this direction: River Guard, Ember Archer,
 Citadel Pikeward, Blackbranch Cutthroat, Mire Slinger, Bog Brute, Shard Guard,
 Prism Harrier, Mirror Skirmisher, Roadwardens; Embercourt Fordhook Cadets,
 Lantern Sappers, Bargebow Crews, Ash-Oath Bailiffs, Beacon Lectors and Charter
 Colossus; Mireclaw Reedsnare Kin, Mudglass Slingers, Bogplate Maulers,
 Ferrychain Lashers and Sporewake Chanters. Most use 240 ms per frame;
-the colossus and mauler use 260 ms for heavier motion.
+the colossus, mauler and furnace pavis team use 260 ms for heavier motion.
+
+The expanded roster also includes Sunvault Shard Wardens, Prism Adepts, Mirror
+Duelists, Resonant Choristers and Noonfacet Sentinels; Thornwake Seedcutters,
+Thornwhip Carriers, Sporeglass Menders and Dawnseed Bolters; Brasshollow Scrip
+Haulers, Furnace Pavis Teams and Gaugeplate Bailiffs; Veilmourn Bellwake Oars,
+Mourning Lanterns, Maskglass Corsairs, Undertow Harpooners, Obituary Scribes,
+Mirror-Keel Reavers and Tidehook Deckhands; Embercourt Cinderseal Bombardiers;
+Mireclaw Mireglass Reedcasters; and neutral Hearthbow Carriers, Mossglass
+Sentinels and Cliffhawk Wardens.
 
 The other five expanded creatures retain their previously reviewed loops:
 Fenhound Runners, Sunscale Lanternmoths, Fenmirror Gallowshells,
@@ -33,6 +42,7 @@ reference hashes, source hashes and selection notes live under
 `hands-generation.json` identifies the selected arm-motion artwork; originals
 and superseded head-dominant attempts remain preserved. Shard Guard uses one
 separately generated correction for a reversed sword wrist in frame four.
+Bellwake Oars uses a corrected sheet that preserves the complete oar blade.
 
 `hands-prepare.json` and `tools/prepare_idle_pose_alpha.py` clear only inspected
 alpha noise at 0-8, preserving RGB and stronger alpha. `hands-packing.json`
@@ -52,10 +62,10 @@ uses the new art on existing maps and saved battles; no map regeneration.
 
 ## Focused review
 
-All 168 new arm-motion drawings were inspected at small and larger sizes.
-Four focused Windows playback cohorts covered all 21 changed units on the real
+All 360 new arm-motion drawings were inspected at small and larger sizes.
+Nine focused Windows playback cohorts covered all 45 changed units on the real
 1280x720 battle board in both facings and the overworld shader at 74px extent.
-They passed 424, 444, 404 and 444 checks: eight rendered frames, independent
+They passed 344-444 checks each: eight rendered frames, independent
 timing, reduced motion, fog, cached drawing and unchanged saved simulation.
 Existing action pixels and non-idle clip metadata remain unchanged.
 
