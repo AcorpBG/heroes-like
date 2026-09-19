@@ -318,20 +318,20 @@ const HERO_COMMAND_PENNANT_HEIGHT_FACTOR := 0.12
 const HERO_COMMAND_PENNANT_POLE_HEIGHT_FACTOR := 0.43
 const HERO_COMMAND_PENNANT_ALPHA := 0.96
 const HERO_COMMAND_PENNANT_ASSET_EXTENT_FACTOR := 0.60
-const TOWN_PRESENTATION_MODEL := "aspect_preserved_town_in_3x4_visual_envelope_3x2_logical_bottom_middle_entry"
+const TOWN_PRESENTATION_MODEL := "aspect_preserved_town_in_5x5_visual_envelope_5x3_ground_bottom_middle_entry"
 const TOWN_GROUNDING_MODEL := "painted_town_contact_edge_without_base_ellipse"
 const TOWN_ANCHOR_STYLE := "town_contact_cues_no_base_ellipse"
 const TOWN_DEPTH_CUE_MODEL := "painted_town_entry_ground_contact_without_cast_shadow"
-const TOWN_FOOTPRINT_CUE_MODEL := "no_visible_helper_cues_3x2_contract"
+const TOWN_FOOTPRINT_CUE_MODEL := "no_visible_helper_cues_tapered_5x3_contract"
 const TOWN_ENTRY_ROLE := "bottom_middle_visit_approach"
 const TOWN_NON_ENTRY_ROLE := "blocked_non_entry_footprint"
-const TOWN_PRESENTATION_FOOTPRINT := Vector2i(3, 2)
-const TOWN_ENTRY_OFFSET := Vector2i(1, 1)
-const TOWN_VISUAL_FOOTPRINT := Vector2i(3, 4)
-const TOWN_VISUAL_ANCHOR_MODEL := "three_by_four_entry_center_bottom"
+const TOWN_PRESENTATION_FOOTPRINT := Vector2i(5, 3)
+const TOWN_ENTRY_OFFSET := Vector2i(2, 2)
+const TOWN_VISUAL_FOOTPRINT := Vector2i(5, 5)
+const TOWN_VISUAL_ANCHOR_MODEL := "five_by_three_ground_entry_center_bottom"
 const TOWN_SPRITE_EXTENT_FACTOR := 1.24
-const TOWN_SPRITE_WIDTH_CAP_TILES := 2.90
-const TOWN_SPRITE_HEIGHT_CAP_TILES := 3.72
+const TOWN_SPRITE_WIDTH_CAP_TILES := 4.80
+const TOWN_SPRITE_HEIGHT_CAP_TILES := 4.35
 const TOWN_SPRITE_GROUND_CLEARANCE_TILES := 0.18
 const TOWN_ADJUNCT_RESOURCE_LAYOUT_MODEL := "compact_outward_edge_town_footprint_resource"
 const TOWN_ADJUNCT_RESOURCE_EXTENT_FACTOR := 0.64
@@ -4234,17 +4234,36 @@ func _draw_town_sprite(rect: Rect2, entry_rect: Rect2, remembered: bool, tile: V
 	var draw_payload := _town_sprite_draw_payload(asset_id, texture, rect)
 	var draw_texture: Texture2D = draw_payload.get("draw_texture", texture)
 	var sprite_rect: Rect2 = draw_payload.get("draw_rect", Rect2(rect.get_center(), Vector2.ZERO))
-	_draw_sprite_silhouette_outline(
-		draw_texture,
-		sprite_rect,
-		TOWN_SPRITE_SILHOUETTE_MEMORY if remembered else TOWN_SPRITE_SILHOUETTE_VISIBLE,
-		maxf(TOWN_SPRITE_SILHOUETTE_MIN_PX, minf(rect.size.x, rect.size.y) * TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR)
-	)
-	_canvas_draw_texture_rect(draw_texture, sprite_rect, false, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
+	var outline := TOWN_SPRITE_SILHOUETTE_MEMORY if remembered else TOWN_SPRITE_SILHOUETTE_VISIBLE
+	var edge := maxf(TOWN_SPRITE_SILHOUETTE_MIN_PX, minf(rect.size.x, rect.size.y) * TOWN_SPRITE_SILHOUETTE_WIDTH_FACTOR)
+	for direction in ActorStyle.DIRECTIONS:
+		_draw_explored_town_texture(draw_texture, Rect2(sprite_rect.position + direction * edge, sprite_rect.size), outline)
+	_draw_explored_town_texture(draw_texture, sprite_rect, OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE)
 	_draw_town_owner_pennant(rect, _town_color(tile), remembered, _town_owner_id(_town_at(tile)))
 	_draw_town_front_contact(anchor, remembered)
 	_draw_town_entry_approach(entry_rect, _town_color(tile), remembered)
 	return true
+
+func _town_explored_sprite_slices(sprite_rect: Rect2, texture_size: Vector2) -> Array:
+	var result := []
+	if _session == null or _map_size.x <= 0 or _map_size.y <= 0 or not sprite_rect.has_area(): return result
+	var board := _board_rect()
+	var cell_size := board.size / Vector2(_map_size)
+	var first := Vector2i((sprite_rect.position - board.position) / cell_size).clamp(Vector2i.ZERO, _map_size - Vector2i.ONE)
+	var last := Vector2i((sprite_rect.end - board.position) / cell_size).clamp(Vector2i.ZERO, _map_size - Vector2i.ONE)
+	for y in range(first.y, last.y + 1):
+		for x in range(first.x, last.x + 1):
+			if not OverworldRulesScript.is_tile_explored(_session, x, y, _level): continue
+			var clipped := sprite_rect.intersection(Rect2(board.position + Vector2(x, y) * cell_size, cell_size))
+			if not clipped.has_area(): continue
+			result.append({"cell": Vector2i(x, y), "rect": clipped,
+				"source": Rect2((clipped.position - sprite_rect.position) / sprite_rect.size * texture_size, clipped.size / sprite_rect.size * texture_size)})
+	return result
+
+func _draw_explored_town_texture(texture: Texture2D, rect: Rect2, tint: Color) -> void:
+	# Large tower silhouettes may overhang the ground mask, but never the fog.
+	for part in _town_explored_sprite_slices(rect, texture.get_size()):
+		_canvas_draw_texture_rect_region(texture, part.rect, part.source, tint)
 
 func _draw_sprite_silhouette_outline(texture: Texture2D, rect: Rect2, color: Color, width: float) -> void:
 	if texture == null or rect.size.x <= 0.0 or rect.size.y <= 0.0 or width <= 0.0:
@@ -4894,6 +4913,13 @@ func _draw_town_owner_pennant(rect: Rect2, color: Color, remembered: bool, owner
 		owner,
 		FrontierVisualKitScript.color_cue_assist_enabled()
 	)
+	# Keep the ownership marker inside explored scenery, including its optional
+	# procedural accessibility mark. A roof overhang cannot reveal a hidden tile.
+	var flag_rect: Rect2 = profile.get("asset_rect", Rect2())
+	if flag_rect.has_area():
+		var explored_area := 0.0
+		for part in _town_explored_sprite_slices(flag_rect, Vector2.ONE): explored_area += part.rect.get_area()
+		if explored_area < flag_rect.get_area() * .999: return
 	var asset_id := String(profile.get("asset_id", ""))
 	var asset_texture = _object_texture_for_asset(asset_id)
 	if asset_texture is Texture2D:
@@ -8289,6 +8315,8 @@ func _town_footprint_cell_payloads(entry: Vector2i) -> Array:
 	var origin := _town_footprint_origin_for_entry(entry)
 	for y_offset in range(TOWN_PRESENTATION_FOOTPRINT.y):
 		for x_offset in range(TOWN_PRESENTATION_FOOTPRINT.x):
+			# Rear corners are outside the tapered five-by-three ground mask.
+			if y_offset == 0 and x_offset in [0, TOWN_PRESENTATION_FOOTPRINT.x - 1]: continue
 			var tile := origin + Vector2i(x_offset, y_offset)
 			var is_entry := tile == entry
 			cells.append({
@@ -10777,6 +10805,8 @@ func _rebuild_static_object_indexes() -> void:
 		var origin := _town_footprint_origin_for_entry(entry)
 		for y_offset in range(TOWN_PRESENTATION_FOOTPRINT.y):
 			for x_offset in range(TOWN_PRESENTATION_FOOTPRINT.x):
+				# Rear corners are outside the tapered five-by-three ground mask.
+				if y_offset == 0 and x_offset in [0, TOWN_PRESENTATION_FOOTPRINT.x - 1]: continue
 				var tile := origin + Vector2i(x_offset, y_offset)
 				if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
 					continue
@@ -12289,6 +12319,8 @@ func _town_footprint_cells_for_entry(entry: Vector2i) -> Array:
 	var origin := _town_footprint_origin_for_entry(entry)
 	for y_offset in range(TOWN_PRESENTATION_FOOTPRINT.y):
 		for x_offset in range(TOWN_PRESENTATION_FOOTPRINT.x):
+			# Rear corners are outside the tapered five-by-three ground mask.
+			if y_offset == 0 and x_offset in [0, TOWN_PRESENTATION_FOOTPRINT.x - 1]: continue
 			cells.append(origin + Vector2i(x_offset, y_offset))
 	return cells
 

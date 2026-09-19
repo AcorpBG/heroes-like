@@ -1,5 +1,7 @@
 # Overworld Landmark Readability And Town Scale Requirements
 
+Town scale revision (2026-09-20): [Town landmark scale](overworld-town-scale.md) supersedes the town visual dimensions and presentation/click footprint below. Other object scale bands and source gameplay masks remain unchanged.
+
 Implementation evidence: `docs/overworld-landmark-readability-and-town-scale-report.md`.
 
 Task: #10229
