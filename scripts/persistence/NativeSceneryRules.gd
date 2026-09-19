@@ -55,6 +55,15 @@ static func mountain_candidates(object: Dictionary, biome_id: String, terrain_id
 static func policy(object: Dictionary) -> Dictionary:
 	return ContentService.load_json(MANIFEST).get("source_types", {}).get(str(int(object.get("h3m_type_id", -1))), {})
 
+static func vegetation_candidates(object: Dictionary, biome_id: String, terrain_id: String, family: String = "") -> Array:
+	var manifest := ContentService.load_json(MANIFEST)
+	var entry := policy(object)
+	if family == "": family = String(entry.get("landscape_family", entry.get("variation_family", "")))
+	if not entry.has("variation_biome"):
+		var terrain_pool: Array = manifest.get("terrain_vegetation_palettes", {}).get(terrain_id, {}).get(family, [])
+		if not terrain_pool.is_empty(): return terrain_pool
+	return manifest.get("vegetation_palettes", {}).get(family, {}).get(String(entry.get("variation_biome", biome_id)), [])
+
 static func ground_modulate(object: Dictionary, biome_id: String, asset_id: String) -> Color:
 	if int(object.get("native_scenery_art_version", 0)) < PRESENTATION_VERSION:
 		return Color.WHITE
@@ -62,6 +71,7 @@ static func ground_modulate(object: Dictionary, biome_id: String, asset_id: Stri
 	var entry := policy(object)
 	var family := String(entry.get("landscape_family", entry.get("variation_family", "")))
 	if asset_id.begins_with("plains_grove_v2_"): family = "woods"
+	if asset_id.begins_with("native_vegetation_"): family = asset_id.trim_prefix("native_vegetation_").get_slice("_", 0)
 	# Opaque lighting modulation ties scenery to its ground without fading
 	# collision silhouettes, repainting source art or tinting interactable sites.
 	return Color(String(tones.get(family, tones.get("base", "ffffff"))))

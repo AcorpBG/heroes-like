@@ -194,3 +194,42 @@ after correcting a reset-path indentation error; the wiki includes all new art.
 No full suite, gameplay session, Linux or package run was performed. Temporary
 renders, logs and the isolated editor profile are removed after review; art,
 provenance and rebuild tools remain.
+
+## Large woodland, wetland and fungal formations
+
+Seventy-five original 512px mass sprites extend the overlapping landscape
+renderer to vegetation. Fifteen habitat/style groups have five irregular
+compositions each: plains groves, deep woods, highland pines, snowy pines,
+coastal woods, swamp willows, mangrove roots, reed beds, coastal marsh,
+sand thickets, temperate deadwood, drowned groves, dry thornwood, burned groves
+and fungal colonies. The masses contain many smaller plants with uneven
+canopies, concave edges and tapering roots rather than square stands or giant
+individual trees. Source atlases and exact built-in generation prompts live in
+`art/overworld/source/generated/terrain/vegetation_masses_20260919`.
+`tools/build_vegetation_scenery.py` rebuilds extraction, recipes and routing.
+
+`vegetation_palettes` route broad native bodies by scenery family and biome;
+sand has a distinct dry-wash thicket override. Fixed source habitat choices
+still take precedence. Existing small art remains where no new mass is approved.
+Broad plains rock bodies already chosen as groves use the new plains woodland
+art; their existing selection frequency and blocked masks are unchanged.
+Wetland, fungal and scrub bodies can now receive large formations too.
+
+Mountains and vegetation share a single deterministic back-to-front visual
+index. Canopy overhang and side overlap come from each vegetation profile;
+reeds have less height than conifers. Bases remain anchored on fully blocked
+interiors, and lateral expansion requires compatible neighboring blocked
+vegetation on the same terrain. Fog clipping, viewport coverage, foreground
+armies/sites and native collision stay separate from canopy silhouettes.
+No native-generation rules, source records, saves or simulation RNG changed.
+Restart/reload updates version 2 maps; version 1 appearance is preserved.
+
+The mixed woodland/swamp/deadwood/fungal render passed 340 focused checks,
+including reachability of all 75 assets, habitat overrides, exact source masks,
+overlap ordering, deterministic reindexing, legacy behavior and fog pixels.
+The mountain control retained all 1,585 passing checks. The source sheets and
+mixed terrain render were visually reviewed. All 2,987 generated-blocker
+provenance/canvas/import contracts and final Windows Godot import passed.
+The wiki includes the new assets. No full suite, gameplay, Linux or package
+run was performed. Rebuildable temporary renders/logs/editor profile are removed
+after review; original art, provenance, caches and existing user files remain.

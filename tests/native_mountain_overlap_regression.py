@@ -15,8 +15,8 @@ extra = '''
     check(reached.size()==50,"not all original mountain masses reachable")
     var overlaps := 0
     var overhangs := 0
-    for key in _native_mountains_by_tile:
-        var layers: Array = _native_mountains_by_tile[key]
+    for key in _native_scenery_layers_by_tile:
+        var layers: Array = _native_scenery_layers_by_tile[key]
         if layers.size()>1: overlaps+=1
         if not _generated_decorative_bodies_by_tile.has(key): overhangs+=1
         for i in range(layers.size()):
@@ -25,9 +25,9 @@ extra = '''
                 check(layers[i-1].mass_origin.y+layers[i-1].mass_size.y <= layers[i].mass_origin.y+layers[i].mass_size.y,"mountain depth order reversed")
     check(overlaps>0,"renderer has no overlapping mountain layers")
     check(overhangs>0,"peaks remain confined to collision rectangles")
-    var snapshot := _native_mountains_by_tile.duplicate(true)
-    _index_native_mountain_layers()
-    check(snapshot==_native_mountains_by_tile,"reindex changed mountain overlap geometry")
+    var snapshot := _native_scenery_layers_by_tile.duplicate(true)
+    _index_native_scenery_layers()
+    check(snapshot==_native_scenery_layers_by_tile,"reindex changed mountain overlap geometry")
 '''
 extra = rocks.formation.re.sub(r'(?m)^( +)',lambda m:'\t'*(len(m[1])//4),extra)
 script = script.replace('\tvar expected := {}',extra+'\n\tvar expected := {}')

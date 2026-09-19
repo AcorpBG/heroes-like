@@ -1,0 +1,124 @@
+{
+  "generator": "OpenAI built-in image generation",
+  "grid": [
+    5,
+    5
+  ],
+  "sheets": [
+    {
+      "file": "woods.png",
+      "prompt": "Original fantasy strategy adventure-map LARGE VEGETATION FORMATION SPRITE ATLAS, TRUE TRANSPARENT RGBA. Exactly 5 rows by 5 columns, 25 different isolated mass sprites. Painterly late-1990s pre-rendered strategy art, refined detailed foliage, elevated three-quarter view, upper-left lighting. Each sprite a MULTI-TILE contiguous woodland/wetland formation of many SMALL individual plants, 12-20 trees where applicable, with layered varied-height crowns and roots/undergrowth merging at the base. These must look like extensive landscape patches, NOT one gigantic tree, NOT three enormous trees. Irregular asymmetric alpha outline, spurs, concave bays, crooked extensions, scalloped canopy edge. NO square footprint, NO rectangular or circular ground platform, NO frame, NO tile-shaped water patch, NO labels/text/background. Sparse low edge shrubs and roots taper naturally into transparency. Five strongly different arrangements per row: col1 winding diagonal grove with a long low spur; col2 open crescent thicket with unequal arms; col3 branching woodland with off-center taller trees; col4 broad patchy grove with staggered heights and deeply indented edges; col5 crooked elongated woodland wall with a long tapering tail. Independently change silhouette/proportions between rows, avoid identical recolors. Every sprite wholly inside its own equal-sized cell with 20px completely TRANSPARENT gutters, NO touching adjacent cells. Muted natural palette matching terrain, readable at 150 pixels. Original designs, no copied game pixels.\nExactly these habitats by row: Row1 patchy grassland oak and birch groves, warm olive green leaves and light trunks, several low clearings between canopy lobes. Row2 dense deep forest of many small broadleaf trees, darker green layered foliage, fern understory. Row3 rugged highland pine and spruce stands, blue-green needles, modest lichen ground cover. Row4 snow-frost evergreen stands, irregular pointed small trees, lightly snow-dusted boughs, snow only along roots no square floor. Row5 windswept coastal woodland, bent small broadleaf trees, sandy roots, subdued sage and olive foliage.",
+      "rows": [
+        {
+          "id": "plains_grove",
+          "family": "woods",
+          "biome": "biome_grasslands",
+          "overhang": 0.85
+        },
+        {
+          "id": "deep_woods",
+          "family": "woods",
+          "biome": "biome_deep_forest",
+          "overhang": 1
+        },
+        {
+          "id": "highland_pines",
+          "family": "conifers",
+          "biome": "biome_highland_ridge",
+          "overhang": 1.05
+        },
+        {
+          "id": "snow_pines",
+          "family": "conifers",
+          "biome": "biome_snow_frost_marches",
+          "overhang": 1.05
+        },
+        {
+          "id": "coastal_woods",
+          "family": "woods",
+          "biome": "biome_coast_archipelago",
+          "overhang": 0.8
+        }
+      ]
+    },
+    {
+      "file": "wetlands.png",
+      "prompt": "Original fantasy strategy adventure-map LARGE VEGETATION FORMATION SPRITE ATLAS, TRUE TRANSPARENT RGBA. Exactly 5 rows by 5 columns, 25 different isolated mass sprites. Painterly late-1990s pre-rendered strategy art, refined detailed foliage, elevated three-quarter view, upper-left lighting. Each sprite a MULTI-TILE contiguous woodland/wetland formation of many SMALL individual plants, 12-20 trees where applicable, with layered varied-height crowns and roots/undergrowth merging at the base. These must look like extensive landscape patches, NOT one gigantic tree, NOT three enormous trees. Irregular asymmetric alpha outline, spurs, concave bays, crooked extensions, scalloped canopy edge. NO square footprint, NO rectangular or circular ground platform, NO frame, NO tile-shaped water patch, NO labels/text/background. Sparse low edge shrubs and roots taper naturally into transparency. Five strongly different arrangements per row: col1 winding diagonal grove with a long low spur; col2 open crescent thicket with unequal arms; col3 branching woodland with off-center taller trees; col4 broad patchy grove with staggered heights and deeply indented edges; col5 crooked elongated woodland wall with a long tapering tail. Independently change silhouette/proportions between rows, avoid identical recolors. Every sprite wholly inside its own equal-sized cell with 20px completely TRANSPARENT gutters, NO touching adjacent cells. Muted natural palette matching terrain, readable at 150 pixels. Original designs, no copied game pixels.\nExactly these habitats by row: Row1 swamp willow and alder forest, many small twisted leaning trees, drooping olive foliage, exposed roots and moss, NO water platform. Row2 dense swamp mangrove root thicket, small canopy trees with intertwined stilt roots, wet dark brown and muted green, NO rocks. Row3 extensive low reed and cattail beds with tangled sedge and occasional small dead snag, long irregular edges, NO water platform. Row4 coastal marsh woodland of scattered small palms, low mangroves, sea rushes and reeds, pale subdued green, uneven thin rooted base. Row5 arid sand wash thicket of many small date palms, tamarisk and scrub acacia, muted sage foliage, beige roots, NO lush green lawn.",
+      "rows": [
+        {
+          "id": "swamp_willow",
+          "family": "woods",
+          "biome": "biome_mire_fen",
+          "overhang": 0.85
+        },
+        {
+          "id": "mangrove_roots",
+          "family": "wetland",
+          "biome": "biome_mire_fen",
+          "overhang": 0.7
+        },
+        {
+          "id": "reed_beds",
+          "family": "wetland",
+          "biome": "biome_mire_fen",
+          "overhang": 0.3
+        },
+        {
+          "id": "coastal_marsh",
+          "family": "wetland",
+          "biome": "biome_coast_archipelago",
+          "overhang": 0.65
+        },
+        {
+          "id": "sand_thicket",
+          "family": "woods",
+          "biome": "biome_coast_archipelago",
+          "overhang": 0.7
+        }
+      ]
+    },
+    {
+      "file": "dead_fungi.png",
+      "prompt": "Original fantasy strategy adventure-map LARGE VEGETATION FORMATION SPRITE ATLAS, TRUE TRANSPARENT RGBA. Exactly 5 rows by 5 columns, 25 different isolated mass sprites. Painterly late-1990s pre-rendered strategy art, refined detailed foliage, elevated three-quarter view, upper-left lighting. Each sprite a MULTI-TILE contiguous woodland/wetland formation of many SMALL individual plants, 12-20 trees where applicable, with layered varied-height crowns and roots/undergrowth merging at the base. These must look like extensive landscape patches, NOT one gigantic tree, NOT three enormous trees. Irregular asymmetric alpha outline, spurs, concave bays, crooked extensions, scalloped canopy edge. NO square footprint, NO rectangular or circular ground platform, NO frame, NO tile-shaped water patch, NO labels/text/background. Sparse low edge shrubs and roots taper naturally into transparency. Five strongly different arrangements per row: col1 winding diagonal grove with a long low spur; col2 open crescent thicket with unequal arms; col3 branching woodland with off-center taller trees; col4 broad patchy grove with staggered heights and deeply indented edges; col5 crooked elongated woodland wall with a long tapering tail. Independently change silhouette/proportions between rows, avoid identical recolors. Every sprite wholly inside its own equal-sized cell with 20px completely TRANSPARENT gutters, NO touching adjacent cells. Muted natural palette matching terrain, readable at 150 pixels. Original designs, no copied game pixels.\nExactly these habitats by row: Row1 temperate deadwood forest of many small branching dead oak trunks and snapped snags interwoven with low brambles, weathered gray-brown. Row2 drowned swamp deadwood grove, mossy dark trunks and tangled exposed roots with hanging gray moss, olive moss, tiny sedges. Row3 badlands thornwood grove, many small twisted drought-dead trees, dusty brown thorn branches, dry ochre undergrowth, NO rocks. Row4 ash waste burned forest, many small scorched crooked trunks and tangled blackened dead branches, muted dark charcoal, no fire/glow. Row5 subterranean dense mushroom forest of many small varied-height broad mushroom caps, layered gray-green and muted ochre shelf fungi on branching rotten trunks, connected mycelial roots, no glowing neon.",
+      "rows": [
+        {
+          "id": "temperate_deadwood",
+          "family": "deadwood",
+          "biome": "biome_deep_forest",
+          "overhang": 0.8
+        },
+        {
+          "id": "drowned_grove",
+          "family": "deadwood",
+          "biome": "biome_mire_fen",
+          "overhang": 0.85
+        },
+        {
+          "id": "dry_thorns",
+          "family": "deadwood",
+          "biome": "biome_rough_badlands",
+          "overhang": 0.6
+        },
+        {
+          "id": "burned_grove",
+          "family": "deadwood",
+          "biome": "biome_ash_lava_wastes",
+          "overhang": 0.75
+        },
+        {
+          "id": "fungal_colony",
+          "family": "fungi",
+          "biome": "biome_subterranean_underways",
+          "overhang": 0.65
+        }
+      ]
+    }
+  ],
+  "columns": [
+    "Winding grove",
+    "Open crescent",
+    "Branching stand",
+    "Patchy thicket",
+    "Tapering woodland"
+  ]
+}

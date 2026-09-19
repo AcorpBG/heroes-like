@@ -4492,5 +4492,670 @@
       "native_mountain_subterranean_underways_03",
       "native_mountain_subterranean_underways_04"
     ]
+  },
+  "vegetation_palettes": {
+    "woods": {
+      "biome_grasslands": [
+        "native_vegetation_woods_plains_grove_00",
+        "native_vegetation_woods_plains_grove_01",
+        "native_vegetation_woods_plains_grove_02",
+        "native_vegetation_woods_plains_grove_03",
+        "native_vegetation_woods_plains_grove_04"
+      ],
+      "biome_deep_forest": [
+        "native_vegetation_woods_deep_woods_00",
+        "native_vegetation_woods_deep_woods_01",
+        "native_vegetation_woods_deep_woods_02",
+        "native_vegetation_woods_deep_woods_03",
+        "native_vegetation_woods_deep_woods_04"
+      ],
+      "biome_mire_fen": [
+        "native_vegetation_woods_swamp_willow_00",
+        "native_vegetation_woods_swamp_willow_01",
+        "native_vegetation_woods_swamp_willow_02",
+        "native_vegetation_woods_swamp_willow_03",
+        "native_vegetation_woods_swamp_willow_04"
+      ],
+      "biome_highland_ridge": [
+        "native_vegetation_conifers_highland_pines_00",
+        "native_vegetation_conifers_highland_pines_01",
+        "native_vegetation_conifers_highland_pines_02",
+        "native_vegetation_conifers_highland_pines_03",
+        "native_vegetation_conifers_highland_pines_04"
+      ],
+      "biome_snow_frost_marches": [
+        "native_vegetation_conifers_snow_pines_00",
+        "native_vegetation_conifers_snow_pines_01",
+        "native_vegetation_conifers_snow_pines_02",
+        "native_vegetation_conifers_snow_pines_03",
+        "native_vegetation_conifers_snow_pines_04"
+      ],
+      "biome_coast_archipelago": [
+        "native_vegetation_woods_coastal_woods_00",
+        "native_vegetation_woods_coastal_woods_01",
+        "native_vegetation_woods_coastal_woods_02",
+        "native_vegetation_woods_coastal_woods_03",
+        "native_vegetation_woods_coastal_woods_04"
+      ],
+      "biome_rough_badlands": [
+        "native_vegetation_deadwood_dry_thorns_00",
+        "native_vegetation_deadwood_dry_thorns_01",
+        "native_vegetation_deadwood_dry_thorns_02",
+        "native_vegetation_deadwood_dry_thorns_03",
+        "native_vegetation_deadwood_dry_thorns_04"
+      ],
+      "biome_ash_lava_wastes": [
+        "native_vegetation_deadwood_burned_grove_00",
+        "native_vegetation_deadwood_burned_grove_01",
+        "native_vegetation_deadwood_burned_grove_02",
+        "native_vegetation_deadwood_burned_grove_03",
+        "native_vegetation_deadwood_burned_grove_04"
+      ],
+      "biome_subterranean_underways": [
+        "native_vegetation_fungi_fungal_colony_00",
+        "native_vegetation_fungi_fungal_colony_01",
+        "native_vegetation_fungi_fungal_colony_02",
+        "native_vegetation_fungi_fungal_colony_03",
+        "native_vegetation_fungi_fungal_colony_04"
+      ]
+    },
+    "conifers": {
+      "biome_grasslands": [
+        "native_vegetation_conifers_highland_pines_00",
+        "native_vegetation_conifers_highland_pines_01",
+        "native_vegetation_conifers_highland_pines_02",
+        "native_vegetation_conifers_highland_pines_03",
+        "native_vegetation_conifers_highland_pines_04"
+      ],
+      "biome_deep_forest": [
+        "native_vegetation_conifers_highland_pines_00",
+        "native_vegetation_conifers_highland_pines_01",
+        "native_vegetation_conifers_highland_pines_02",
+        "native_vegetation_conifers_highland_pines_03",
+        "native_vegetation_conifers_highland_pines_04"
+      ],
+      "biome_highland_ridge": [
+        "native_vegetation_conifers_highland_pines_00",
+        "native_vegetation_conifers_highland_pines_01",
+        "native_vegetation_conifers_highland_pines_02",
+        "native_vegetation_conifers_highland_pines_03",
+        "native_vegetation_conifers_highland_pines_04"
+      ],
+      "biome_snow_frost_marches": [
+        "native_vegetation_conifers_snow_pines_00",
+        "native_vegetation_conifers_snow_pines_01",
+        "native_vegetation_conifers_snow_pines_02",
+        "native_vegetation_conifers_snow_pines_03",
+        "native_vegetation_conifers_snow_pines_04"
+      ]
+    },
+    "deadwood": {
+      "biome_grasslands": [
+        "native_vegetation_deadwood_temperate_deadwood_00",
+        "native_vegetation_deadwood_temperate_deadwood_01",
+        "native_vegetation_deadwood_temperate_deadwood_02",
+        "native_vegetation_deadwood_temperate_deadwood_03",
+        "native_vegetation_deadwood_temperate_deadwood_04"
+      ],
+      "biome_deep_forest": [
+        "native_vegetation_deadwood_temperate_deadwood_00",
+        "native_vegetation_deadwood_temperate_deadwood_01",
+        "native_vegetation_deadwood_temperate_deadwood_02",
+        "native_vegetation_deadwood_temperate_deadwood_03",
+        "native_vegetation_deadwood_temperate_deadwood_04"
+      ],
+      "biome_mire_fen": [
+        "native_vegetation_deadwood_drowned_grove_00",
+        "native_vegetation_deadwood_drowned_grove_01",
+        "native_vegetation_deadwood_drowned_grove_02",
+        "native_vegetation_deadwood_drowned_grove_03",
+        "native_vegetation_deadwood_drowned_grove_04"
+      ],
+      "biome_highland_ridge": [
+        "native_vegetation_deadwood_temperate_deadwood_00",
+        "native_vegetation_deadwood_temperate_deadwood_01",
+        "native_vegetation_deadwood_temperate_deadwood_02",
+        "native_vegetation_deadwood_temperate_deadwood_03",
+        "native_vegetation_deadwood_temperate_deadwood_04"
+      ],
+      "biome_snow_frost_marches": [
+        "native_vegetation_deadwood_temperate_deadwood_00",
+        "native_vegetation_deadwood_temperate_deadwood_01",
+        "native_vegetation_deadwood_temperate_deadwood_02",
+        "native_vegetation_deadwood_temperate_deadwood_03",
+        "native_vegetation_deadwood_temperate_deadwood_04"
+      ],
+      "biome_coast_archipelago": [
+        "native_vegetation_deadwood_temperate_deadwood_00",
+        "native_vegetation_deadwood_temperate_deadwood_01",
+        "native_vegetation_deadwood_temperate_deadwood_02",
+        "native_vegetation_deadwood_temperate_deadwood_03",
+        "native_vegetation_deadwood_temperate_deadwood_04"
+      ],
+      "biome_rough_badlands": [
+        "native_vegetation_deadwood_dry_thorns_00",
+        "native_vegetation_deadwood_dry_thorns_01",
+        "native_vegetation_deadwood_dry_thorns_02",
+        "native_vegetation_deadwood_dry_thorns_03",
+        "native_vegetation_deadwood_dry_thorns_04"
+      ],
+      "biome_ash_lava_wastes": [
+        "native_vegetation_deadwood_burned_grove_00",
+        "native_vegetation_deadwood_burned_grove_01",
+        "native_vegetation_deadwood_burned_grove_02",
+        "native_vegetation_deadwood_burned_grove_03",
+        "native_vegetation_deadwood_burned_grove_04"
+      ],
+      "biome_subterranean_underways": [
+        "native_vegetation_deadwood_temperate_deadwood_00",
+        "native_vegetation_deadwood_temperate_deadwood_01",
+        "native_vegetation_deadwood_temperate_deadwood_02",
+        "native_vegetation_deadwood_temperate_deadwood_03",
+        "native_vegetation_deadwood_temperate_deadwood_04"
+      ]
+    },
+    "wetland": {
+      "biome_grasslands": [
+        "native_vegetation_woods_swamp_willow_00",
+        "native_vegetation_woods_swamp_willow_01",
+        "native_vegetation_woods_swamp_willow_02",
+        "native_vegetation_woods_swamp_willow_03",
+        "native_vegetation_woods_swamp_willow_04",
+        "native_vegetation_wetland_reed_beds_00",
+        "native_vegetation_wetland_reed_beds_01",
+        "native_vegetation_wetland_reed_beds_02",
+        "native_vegetation_wetland_reed_beds_03",
+        "native_vegetation_wetland_reed_beds_04"
+      ],
+      "biome_deep_forest": [
+        "native_vegetation_woods_swamp_willow_00",
+        "native_vegetation_woods_swamp_willow_01",
+        "native_vegetation_woods_swamp_willow_02",
+        "native_vegetation_woods_swamp_willow_03",
+        "native_vegetation_woods_swamp_willow_04",
+        "native_vegetation_wetland_reed_beds_00",
+        "native_vegetation_wetland_reed_beds_01",
+        "native_vegetation_wetland_reed_beds_02",
+        "native_vegetation_wetland_reed_beds_03",
+        "native_vegetation_wetland_reed_beds_04"
+      ],
+      "biome_mire_fen": [
+        "native_vegetation_woods_swamp_willow_00",
+        "native_vegetation_woods_swamp_willow_01",
+        "native_vegetation_woods_swamp_willow_02",
+        "native_vegetation_woods_swamp_willow_03",
+        "native_vegetation_woods_swamp_willow_04",
+        "native_vegetation_wetland_mangrove_roots_00",
+        "native_vegetation_wetland_mangrove_roots_01",
+        "native_vegetation_wetland_mangrove_roots_02",
+        "native_vegetation_wetland_mangrove_roots_03",
+        "native_vegetation_wetland_mangrove_roots_04",
+        "native_vegetation_wetland_reed_beds_00",
+        "native_vegetation_wetland_reed_beds_01",
+        "native_vegetation_wetland_reed_beds_02",
+        "native_vegetation_wetland_reed_beds_03",
+        "native_vegetation_wetland_reed_beds_04"
+      ],
+      "biome_coast_archipelago": [
+        "native_vegetation_wetland_coastal_marsh_00",
+        "native_vegetation_wetland_coastal_marsh_01",
+        "native_vegetation_wetland_coastal_marsh_02",
+        "native_vegetation_wetland_coastal_marsh_03",
+        "native_vegetation_wetland_coastal_marsh_04",
+        "native_vegetation_wetland_reed_beds_00",
+        "native_vegetation_wetland_reed_beds_01",
+        "native_vegetation_wetland_reed_beds_02",
+        "native_vegetation_wetland_reed_beds_03",
+        "native_vegetation_wetland_reed_beds_04"
+      ],
+      "biome_highland_ridge": [
+        "native_vegetation_wetland_reed_beds_00",
+        "native_vegetation_wetland_reed_beds_01",
+        "native_vegetation_wetland_reed_beds_02",
+        "native_vegetation_wetland_reed_beds_03",
+        "native_vegetation_wetland_reed_beds_04"
+      ]
+    },
+    "fungi": {
+      "biome_grasslands": [
+        "native_vegetation_fungi_fungal_colony_00",
+        "native_vegetation_fungi_fungal_colony_01",
+        "native_vegetation_fungi_fungal_colony_02",
+        "native_vegetation_fungi_fungal_colony_03",
+        "native_vegetation_fungi_fungal_colony_04"
+      ],
+      "biome_deep_forest": [
+        "native_vegetation_fungi_fungal_colony_00",
+        "native_vegetation_fungi_fungal_colony_01",
+        "native_vegetation_fungi_fungal_colony_02",
+        "native_vegetation_fungi_fungal_colony_03",
+        "native_vegetation_fungi_fungal_colony_04"
+      ],
+      "biome_mire_fen": [
+        "native_vegetation_fungi_fungal_colony_00",
+        "native_vegetation_fungi_fungal_colony_01",
+        "native_vegetation_fungi_fungal_colony_02",
+        "native_vegetation_fungi_fungal_colony_03",
+        "native_vegetation_fungi_fungal_colony_04"
+      ],
+      "biome_subterranean_underways": [
+        "native_vegetation_fungi_fungal_colony_00",
+        "native_vegetation_fungi_fungal_colony_01",
+        "native_vegetation_fungi_fungal_colony_02",
+        "native_vegetation_fungi_fungal_colony_03",
+        "native_vegetation_fungi_fungal_colony_04"
+      ]
+    },
+    "scrub": {
+      "biome_rough_badlands": [
+        "native_vegetation_deadwood_dry_thorns_00",
+        "native_vegetation_deadwood_dry_thorns_01",
+        "native_vegetation_deadwood_dry_thorns_02",
+        "native_vegetation_deadwood_dry_thorns_03",
+        "native_vegetation_deadwood_dry_thorns_04"
+      ]
+    }
+  },
+  "terrain_vegetation_palettes": {
+    "sand": {
+      "woods": [
+        "native_vegetation_woods_sand_thicket_00",
+        "native_vegetation_woods_sand_thicket_01",
+        "native_vegetation_woods_sand_thicket_02",
+        "native_vegetation_woods_sand_thicket_03",
+        "native_vegetation_woods_sand_thicket_04"
+      ],
+      "wetland": [
+        "native_vegetation_woods_sand_thicket_00",
+        "native_vegetation_woods_sand_thicket_01",
+        "native_vegetation_woods_sand_thicket_02",
+        "native_vegetation_woods_sand_thicket_03",
+        "native_vegetation_woods_sand_thicket_04"
+      ],
+      "scrub": [
+        "native_vegetation_woods_sand_thicket_00",
+        "native_vegetation_woods_sand_thicket_01",
+        "native_vegetation_woods_sand_thicket_02",
+        "native_vegetation_woods_sand_thicket_03",
+        "native_vegetation_woods_sand_thicket_04"
+      ]
+    }
+  },
+  "vegetation_mass_profiles": {
+    "native_vegetation_woods_plains_grove_00": {
+      "family": "woods",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_plains_grove_01": {
+      "family": "woods",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_plains_grove_02": {
+      "family": "woods",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_plains_grove_03": {
+      "family": "woods",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_plains_grove_04": {
+      "family": "woods",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_deep_woods_00": {
+      "family": "woods",
+      "overhang": 1,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_deep_woods_01": {
+      "family": "woods",
+      "overhang": 1,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_deep_woods_02": {
+      "family": "woods",
+      "overhang": 1,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_deep_woods_03": {
+      "family": "woods",
+      "overhang": 1,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_deep_woods_04": {
+      "family": "woods",
+      "overhang": 1,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_conifers_highland_pines_00": {
+      "family": "conifers",
+      "overhang": 1.05,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_conifers_highland_pines_01": {
+      "family": "conifers",
+      "overhang": 1.05,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_conifers_highland_pines_02": {
+      "family": "conifers",
+      "overhang": 1.05,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_conifers_highland_pines_03": {
+      "family": "conifers",
+      "overhang": 1.05,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_conifers_highland_pines_04": {
+      "family": "conifers",
+      "overhang": 1.05,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_conifers_snow_pines_00": {
+      "family": "conifers",
+      "overhang": 1.05,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_conifers_snow_pines_01": {
+      "family": "conifers",
+      "overhang": 1.05,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_conifers_snow_pines_02": {
+      "family": "conifers",
+      "overhang": 1.05,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_conifers_snow_pines_03": {
+      "family": "conifers",
+      "overhang": 1.05,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_conifers_snow_pines_04": {
+      "family": "conifers",
+      "overhang": 1.05,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_coastal_woods_00": {
+      "family": "woods",
+      "overhang": 0.8,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_coastal_woods_01": {
+      "family": "woods",
+      "overhang": 0.8,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_coastal_woods_02": {
+      "family": "woods",
+      "overhang": 0.8,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_coastal_woods_03": {
+      "family": "woods",
+      "overhang": 0.8,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_coastal_woods_04": {
+      "family": "woods",
+      "overhang": 0.8,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_swamp_willow_00": {
+      "family": "woods",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_swamp_willow_01": {
+      "family": "woods",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_swamp_willow_02": {
+      "family": "woods",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_swamp_willow_03": {
+      "family": "woods",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_swamp_willow_04": {
+      "family": "woods",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_mangrove_roots_00": {
+      "family": "wetland",
+      "overhang": 0.7,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_mangrove_roots_01": {
+      "family": "wetland",
+      "overhang": 0.7,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_mangrove_roots_02": {
+      "family": "wetland",
+      "overhang": 0.7,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_mangrove_roots_03": {
+      "family": "wetland",
+      "overhang": 0.7,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_mangrove_roots_04": {
+      "family": "wetland",
+      "overhang": 0.7,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_reed_beds_00": {
+      "family": "wetland",
+      "overhang": 0.3,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_reed_beds_01": {
+      "family": "wetland",
+      "overhang": 0.3,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_reed_beds_02": {
+      "family": "wetland",
+      "overhang": 0.3,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_reed_beds_03": {
+      "family": "wetland",
+      "overhang": 0.3,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_reed_beds_04": {
+      "family": "wetland",
+      "overhang": 0.3,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_coastal_marsh_00": {
+      "family": "wetland",
+      "overhang": 0.65,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_coastal_marsh_01": {
+      "family": "wetland",
+      "overhang": 0.65,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_coastal_marsh_02": {
+      "family": "wetland",
+      "overhang": 0.65,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_coastal_marsh_03": {
+      "family": "wetland",
+      "overhang": 0.65,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_wetland_coastal_marsh_04": {
+      "family": "wetland",
+      "overhang": 0.65,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_sand_thicket_00": {
+      "family": "woods",
+      "overhang": 0.7,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_sand_thicket_01": {
+      "family": "woods",
+      "overhang": 0.7,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_sand_thicket_02": {
+      "family": "woods",
+      "overhang": 0.7,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_sand_thicket_03": {
+      "family": "woods",
+      "overhang": 0.7,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_woods_sand_thicket_04": {
+      "family": "woods",
+      "overhang": 0.7,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_temperate_deadwood_00": {
+      "family": "deadwood",
+      "overhang": 0.8,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_temperate_deadwood_01": {
+      "family": "deadwood",
+      "overhang": 0.8,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_temperate_deadwood_02": {
+      "family": "deadwood",
+      "overhang": 0.8,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_temperate_deadwood_03": {
+      "family": "deadwood",
+      "overhang": 0.8,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_temperate_deadwood_04": {
+      "family": "deadwood",
+      "overhang": 0.8,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_drowned_grove_00": {
+      "family": "deadwood",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_drowned_grove_01": {
+      "family": "deadwood",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_drowned_grove_02": {
+      "family": "deadwood",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_drowned_grove_03": {
+      "family": "deadwood",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_drowned_grove_04": {
+      "family": "deadwood",
+      "overhang": 0.85,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_dry_thorns_00": {
+      "family": "deadwood",
+      "overhang": 0.6,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_dry_thorns_01": {
+      "family": "deadwood",
+      "overhang": 0.6,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_dry_thorns_02": {
+      "family": "deadwood",
+      "overhang": 0.6,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_dry_thorns_03": {
+      "family": "deadwood",
+      "overhang": 0.6,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_dry_thorns_04": {
+      "family": "deadwood",
+      "overhang": 0.6,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_burned_grove_00": {
+      "family": "deadwood",
+      "overhang": 0.75,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_burned_grove_01": {
+      "family": "deadwood",
+      "overhang": 0.75,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_burned_grove_02": {
+      "family": "deadwood",
+      "overhang": 0.75,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_burned_grove_03": {
+      "family": "deadwood",
+      "overhang": 0.75,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_deadwood_burned_grove_04": {
+      "family": "deadwood",
+      "overhang": 0.75,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_fungi_fungal_colony_00": {
+      "family": "fungi",
+      "overhang": 0.65,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_fungi_fungal_colony_01": {
+      "family": "fungi",
+      "overhang": 0.65,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_fungi_fungal_colony_02": {
+      "family": "fungi",
+      "overhang": 0.65,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_fungi_fungal_colony_03": {
+      "family": "fungi",
+      "overhang": 0.65,
+      "side_overlap": 0.4
+    },
+    "native_vegetation_fungi_fungal_colony_04": {
+      "family": "fungi",
+      "overhang": 0.65,
+      "side_overlap": 0.4
+    }
   }
 }
