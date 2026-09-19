@@ -128,5 +128,18 @@
     "runtime_sha256": "382c4d48c4af90e17283c25b6898c3683bfc12bbce1ce5b08247263d9787d8ae",
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/beaconline-continuity-20260915/",
     "status": "candidate_registered_not_final_accepted"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_embercourt_beaconline_writguard.png",
+    "runtime_sha256": "29a44d5f659e0d75c8229d4b1f4b57b01b475d2aa9c03fc9149736180b187233"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "382c4d48c4af90e17283c25b6898c3683bfc12bbce1ce5b08247263d9787d8ae",
+    "preserved_frames": 13,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

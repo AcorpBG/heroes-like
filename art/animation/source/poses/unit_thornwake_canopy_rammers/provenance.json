@@ -755,5 +755,18 @@
         }
       ]
     }
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_thornwake_canopy_rammers.png",
+    "runtime_sha256": "9816fea1ec06e7aab0cf75cc3c827c96b0642ddbb058b3222d9d04e45f662765"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "69722f2ae7207b9dca93552935a143909635b358890989072fb5b3af3c648821",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

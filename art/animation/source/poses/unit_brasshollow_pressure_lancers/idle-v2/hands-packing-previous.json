@@ -1,0 +1,388 @@
+{
+  "unit_id": "unit_brasshollow_pressure_lancers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          385,
+          360
+        ]
+      ],
+      "anchor": [
+        170,
+        354
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          390,
+          0,
+          764,
+          360
+        ]
+      ],
+      "anchor": [
+        550,
+        355
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "creep_planted",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png",
+      "rects": [
+        [
+          0,
+          0,
+          531,
+          320
+        ],
+        [
+          0,
+          320,
+          505,
+          513
+        ]
+      ],
+      "anchor": [
+        225,
+        504
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "creep_near_foot_lift",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png",
+      "rects": [
+        [
+          535,
+          0,
+          1044,
+          320
+        ],
+        [
+          515,
+          320,
+          1030,
+          513
+        ]
+      ],
+      "anchor": [
+        738,
+        504
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "creep_rear_foot_lift",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png",
+      "rects": [
+        [
+          1045,
+          0,
+          1536,
+          514
+        ]
+      ],
+      "anchor": [
+        1255,
+        505
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "creep_far_foot_lift",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png",
+      "rects": [
+        [
+          0,
+          520,
+          532,
+          860
+        ],
+        [
+          0,
+          860,
+          478,
+          1024
+        ]
+      ],
+      "anchor": [
+        225,
+        994
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "lance_retract_windup",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          389,
+          369,
+          766,
+          620
+        ],
+        [
+          389,
+          620,
+          747,
+          701
+        ]
+      ],
+      "anchor": [
+        559,
+        688
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "lance_extended_strike",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          765,
+          366,
+          1150,
+          620
+        ],
+        [
+          765,
+          620,
+          1125,
+          701
+        ],
+        [
+          1150,
+          485,
+          1201,
+          522
+        ]
+      ],
+      "anchor": [
+        926,
+        683
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "guard_a",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png",
+      "rects": [
+        [
+          534,
+          520,
+          1044,
+          860
+        ],
+        [
+          534,
+          860,
+          1000,
+          1024
+        ]
+      ],
+      "anchor": [
+        741,
+        984
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "guard_b",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/tripod-creep-and-guard.png",
+      "rects": [
+        [
+          1047,
+          520,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1256,
+        985
+      ],
+      "scale": 0.4
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          0,
+          702,
+          385,
+          925
+        ],
+        [
+          0,
+          925,
+          363,
+          1024
+        ]
+      ],
+      "anchor": [
+        190,
+        986
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "death_buckle",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          400,
+          727,
+          769,
+          860
+        ],
+        [
+          373,
+          860,
+          769,
+          1024
+        ]
+      ],
+      "anchor": [
+        565,
+        989
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          770,
+          773,
+          1137,
+          1024
+        ]
+      ],
+      "anchor": [
+        947,
+        978
+      ],
+      "scale": 0.61
+    },
+    {
+      "name": "dead_cold",
+      "source": "art/animation/source/poses/unit_brasshollow_pressure_lancers/continuity-alpha/original-poses.png",
+      "rects": [
+        [
+          1138,
+          822,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1324,
+        985
+      ],
+      "scale": 0.61
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 6,
+      "indices": [
+        2,
+        3,
+        2,
+        4,
+        2,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

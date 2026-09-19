@@ -1,0 +1,449 @@
+{
+  "unit_id": "unit_veilmourn_wakeglass_navigators",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          292,
+          341
+        ]
+      ],
+      "anchor": [
+        160,
+        331
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/alpha/poses.png",
+      "rects": [
+        [
+          304,
+          0,
+          586,
+          341
+        ]
+      ],
+      "anchor": [
+        444,
+        331
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "glide_lean",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/glide-and-grounded-collapse.png",
+      "rects": [
+        [
+          0,
+          0,
+          575,
+          456
+        ],
+        [
+          0,
+          456,
+          535,
+          520
+        ]
+      ],
+      "anchor": [
+        365,
+        501
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "glide_gather",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/glide-and-grounded-collapse.png",
+      "rects": [
+        [
+          575,
+          0,
+          1017,
+          533
+        ]
+      ],
+      "anchor": [
+        804,
+        514
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "glide_settle",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/glide-and-grounded-collapse.png",
+      "rects": [
+        [
+          1018,
+          0,
+          1536,
+          534
+        ]
+      ],
+      "anchor": [
+        1300,
+        512
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "glide_recover",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/glide-and-grounded-collapse.png",
+      "rects": [
+        [
+          0,
+          520,
+          535,
+          919
+        ],
+        [
+          0,
+          919,
+          489,
+          1024
+        ]
+      ],
+      "anchor": [
+        314,
+        984
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/full-staff-actions-and-guards.png",
+      "rects": [
+        [
+          0,
+          0,
+          510,
+          502
+        ]
+      ],
+      "anchor": [
+        272,
+        488
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "melee_thrust",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/full-staff-actions-and-guards.png",
+      "rects": [
+        [
+          511,
+          0,
+          1080,
+          522
+        ],
+        [
+          1080,
+          124,
+          1158,
+          244
+        ]
+      ],
+      "anchor": [
+        800,
+        500
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "guard_a",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/full-staff-actions-and-guards.png",
+      "rects": [
+        [
+          508,
+          523,
+          1040,
+          916
+        ],
+        [
+          499,
+          916,
+          1008,
+          1024
+        ]
+      ],
+      "anchor": [
+        809,
+        990
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "guard_b",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/full-staff-actions-and-guards.png",
+      "rects": [
+        [
+          1043,
+          523,
+          1536,
+          916
+        ],
+        [
+          1019,
+          916,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1312,
+        990
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "cast_anticipate",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/full-staff-actions-and-guards.png",
+      "rects": [
+        [
+          1080,
+          0,
+          1536,
+          124
+        ],
+        [
+          1160,
+          124,
+          1536,
+          244
+        ],
+        [
+          1080,
+          244,
+          1536,
+          523
+        ]
+      ],
+      "anchor": [
+        1300,
+        505
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "cast_visible_grip",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/cast-with-visible-staff-grip.png",
+      "rects": [
+        [
+          330,
+          502,
+          460,
+          512
+        ],
+        [
+          0,
+          512,
+          506,
+          969
+        ],
+        [
+          0,
+          969,
+          499,
+          1024
+        ]
+      ],
+      "anchor": [
+        278,
+        991
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/alpha/poses.png",
+      "rects": [
+        [
+          930,
+          638,
+          1225,
+          962
+        ]
+      ],
+      "anchor": [
+        1085,
+        945
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/glide-and-grounded-collapse.png",
+      "rects": [
+        [
+          535,
+          618,
+          1040,
+          914
+        ],
+        [
+          485,
+          914,
+          993,
+          966
+        ],
+        [
+          485,
+          966,
+          1010,
+          1024
+        ]
+      ],
+      "anchor": [
+        804,
+        979
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/continuity-alpha/glide-and-grounded-collapse.png",
+      "rects": [
+        [
+          990,
+          816,
+          1536,
+          962
+        ],
+        [
+          1011,
+          962,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1265,
+        974
+      ],
+      "scale": 0.43
+    },
+    {
+      "name": "dead_equipped",
+      "source": "art/animation/source/poses/unit_veilmourn_wakeglass_navigators/alpha/poses.png",
+      "rects": [
+        [
+          903,
+          1090,
+          1225,
+          1284
+        ]
+      ],
+      "anchor": [
+        1086,
+        1244
+      ],
+      "scale": 0.65
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "cast": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 3,
+      "indices": [
+        0,
+        12,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        12,
+        13,
+        14,
+        15
+      ],
+      "loop": false,
+      "frame_msec": 220,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        15
+      ],
+      "loop": false,
+      "frame_msec": 1000,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "cast"
+  }
+}

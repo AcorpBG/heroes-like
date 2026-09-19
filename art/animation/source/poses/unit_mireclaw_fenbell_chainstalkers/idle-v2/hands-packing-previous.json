@@ -1,0 +1,245 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+  "status": "unregistered_draft_pending_alignment_and_visual_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          350
+        ]
+      ],
+      "anchor": [
+        190,
+        345
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "idle_breath",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "rects": [
+        [
+          384,
+          0,
+          768,
+          350
+        ]
+      ],
+      "anchor": [
+        574,
+        345
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "rects": [
+        [
+          768,
+          0,
+          1152,
+          350
+        ]
+      ],
+      "anchor": [
+        958,
+        345
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          350
+        ]
+      ],
+      "anchor": [
+        1342,
+        345
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_passing_a",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "rects": [
+        [
+          0,
+          350,
+          335,
+          690
+        ]
+      ],
+      "anchor": [
+        190,
+        683
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "rects": [
+        [
+          335,
+          350,
+          768,
+          690
+        ]
+      ],
+      "anchor": [
+        574,
+        683
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "attack_contact",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "rects": [
+        [
+          768,
+          350,
+          1300,
+          470
+        ],
+        [
+          768,
+          470,
+          1152,
+          690
+        ]
+      ],
+      "anchor": [
+        958,
+        683
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "defend",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "rects": [
+        [
+          1300,
+          350,
+          1536,
+          470
+        ],
+        [
+          1152,
+          470,
+          1536,
+          690
+        ]
+      ],
+      "anchor": [
+        1342,
+        683
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "rects": [
+        [
+          0,
+          690,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        190,
+        1024
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "rects": [
+        [
+          384,
+          690,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        580,
+        1024
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "death_collapse",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "rects": [
+        [
+          768,
+          690,
+          1152,
+          1024
+        ]
+      ],
+      "anchor": [
+        960,
+        1024
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/poses-consolidated.png",
+      "rects": [
+        [
+          1152,
+          690,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1344,
+        1024
+      ],
+      "scale": 0.65
+    },
+    {
+      "name": "walk_passing_b",
+      "source": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/alpha/walk-passing-b.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        760,
+        960
+      ],
+      "scale": 0.23
+    }
+  ]
+}

@@ -1,0 +1,478 @@
+{
+  "unit_id": "unit_neutral_basalt_wardens",
+  "frames": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/alpha/poses.png",
+      "rects": [
+        [
+          23,
+          19,
+          306,
+          422
+        ]
+      ],
+      "anchor": [
+        170,
+        414
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "idle_b",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/alpha/poses.png",
+      "rects": [
+        [
+          328,
+          18,
+          621,
+          404
+        ],
+        [
+          478,
+          404,
+          621,
+          418
+        ]
+      ],
+      "anchor": [
+        480,
+        411
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "walk_contact",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/alpha/poses.png",
+      "rects": [
+        [
+          632,
+          20,
+          923,
+          427
+        ]
+      ],
+      "anchor": [
+        786,
+        420
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "walk_passing",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/continuity-alpha/mace-recovery-ready-and-passing.png",
+      "rects": [
+        [
+          1039,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1242,
+        953
+      ],
+      "scale": 0.255
+    },
+    {
+      "name": "walk_opposite_contact",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/alpha/contact-b-matte.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        629,
+        1155
+      ],
+      "scale": 0.195
+    },
+    {
+      "name": "walk_opposite_passing",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/gait-refinement-20260916/alpha/passing-b-matte.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        618,
+        1215
+      ],
+      "scale": 0.186
+    },
+    {
+      "name": "mace_windup",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/alpha/poses.png",
+      "rects": [
+        [
+          350,
+          405,
+          479,
+          430
+        ],
+        [
+          321,
+          430,
+          628,
+          776
+        ],
+        [
+          321,
+          776,
+          613,
+          819
+        ]
+      ],
+      "anchor": [
+        473,
+        810
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "mace_down_strike",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/alpha/poses.png",
+      "rects": [
+        [
+          628,
+          460,
+          941,
+          779
+        ],
+        [
+          612,
+          779,
+          941,
+          825
+        ]
+      ],
+      "anchor": [
+        777,
+        818
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "mace_recovery",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/continuity-alpha/mace-recovery-ready-and-passing.png",
+      "rects": [
+        [
+          0,
+          0,
+          558,
+          1024
+        ]
+      ],
+      "anchor": [
+        270,
+        947
+      ],
+      "scale": 0.255
+    },
+    {
+      "name": "mace_visible_ready",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/continuity-alpha/mace-recovery-ready-and-passing.png",
+      "rects": [
+        [
+          558,
+          0,
+          1039,
+          1024
+        ]
+      ],
+      "anchor": [
+        771,
+        953
+      ],
+      "scale": 0.255
+    },
+    {
+      "name": "crouched_guard_visible_mace_grip",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/continuity-alpha/visible-grip-crouched-shield-guard-full.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        785,
+        994
+      ],
+      "scale": 0.215
+    },
+    {
+      "name": "hit_mace_retained",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/alpha/poses.png",
+      "rects": [
+        [
+          5,
+          827,
+          314,
+          1190
+        ]
+      ],
+      "anchor": [
+        160,
+        1183
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/alpha/poses.png",
+      "rects": [
+        [
+          313,
+          870,
+          591,
+          1070
+        ],
+        [
+          313,
+          1070,
+          589,
+          1110
+        ],
+        [
+          313,
+          1110,
+          595,
+          1176
+        ]
+      ],
+      "anchor": [
+        451,
+        1167
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/alpha/poses.png",
+      "rects": [
+        [
+          590,
+          919,
+          895,
+          1025
+        ],
+        [
+          592,
+          1025,
+          896,
+          1040
+        ],
+        [
+          592,
+          1040,
+          895,
+          1045
+        ],
+        [
+          592,
+          1045,
+          898,
+          1050
+        ],
+        [
+          592,
+          1050,
+          900,
+          1055
+        ],
+        [
+          592,
+          1055,
+          904,
+          1060
+        ],
+        [
+          592,
+          1060,
+          910,
+          1065
+        ],
+        [
+          590,
+          1065,
+          927,
+          1110
+        ],
+        [
+          600,
+          1110,
+          927,
+          1168
+        ]
+      ],
+      "anchor": [
+        749,
+        1159
+      ],
+      "scale": 0.54
+    },
+    {
+      "name": "dead_head_left_shield_and_mace",
+      "source": "art/animation/source/poses/unit_neutral_basalt_wardens/alpha/poses.png",
+      "rects": [
+        [
+          977,
+          969,
+          1254,
+          990
+        ],
+        [
+          895,
+          990,
+          1254,
+          1025
+        ],
+        [
+          899,
+          1025,
+          1254,
+          1040
+        ],
+        [
+          896,
+          1040,
+          1254,
+          1045
+        ],
+        [
+          898,
+          1045,
+          1254,
+          1050
+        ],
+        [
+          900,
+          1050,
+          1254,
+          1055
+        ],
+        [
+          904,
+          1055,
+          1254,
+          1060
+        ],
+        [
+          910,
+          1060,
+          1254,
+          1065
+        ],
+        [
+          937,
+          1065,
+          1254,
+          1180
+        ]
+      ],
+      "anchor": [
+        1076,
+        1161
+      ],
+      "scale": 0.54
+    }
+  ],
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 160,
+      "static_frame": 1
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        6,
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        11,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        12,
+        13,
+        14
+      ],
+      "loop": false,
+      "frame_msec": 270,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        14
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "pose_source_facing": "right"
+}

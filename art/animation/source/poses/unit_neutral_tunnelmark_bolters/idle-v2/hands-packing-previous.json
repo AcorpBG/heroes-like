@@ -1,0 +1,437 @@
+{
+  "unit_id": "unit_neutral_tunnelmark_bolters",
+  "frames": [
+    {
+      "name": "idle_loaded_a",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          52,
+          5,
+          246,
+          326
+        ]
+      ],
+      "anchor": [
+        146,
+        319
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "idle_loaded_b",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          365,
+          4,
+          551,
+          327
+        ]
+      ],
+      "anchor": [
+        459,
+        320
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "travel_planted",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/planted.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        591,
+        1195
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "travel_near_foot_lift",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/near-lift-selected.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        591,
+        1195
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "travel_far_foot_lift",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/step-refinement-20260916/alpha/far-lift.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        591,
+        1195
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "right_fist_windup",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          357,
+          324,
+          583,
+          617
+        ],
+        [
+          357,
+          617,
+          427,
+          631
+        ],
+        [
+          485,
+          617,
+          583,
+          631
+        ]
+      ],
+      "anchor": [
+        474,
+        624
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "right_cross_left_cradled_bow",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/right-cross-recovery-and-loaded-passing.png",
+      "rects": [
+        [
+          0,
+          0,
+          625,
+          810
+        ],
+        [
+          0,
+          810,
+          650,
+          887
+        ]
+      ],
+      "anchor": [
+        341,
+        862
+      ],
+      "scale": 0.255
+    },
+    {
+      "name": "right_cross_recovery_left_cradled_bow",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/right-cross-recovery-and-loaded-passing.png",
+      "rects": [
+        [
+          650,
+          0,
+          1217,
+          730
+        ],
+        [
+          622,
+          730,
+          1217,
+          810
+        ],
+        [
+          650,
+          810,
+          1217,
+          887
+        ]
+      ],
+      "anchor": [
+        918,
+        862
+      ],
+      "scale": 0.255
+    },
+    {
+      "name": "deep_guard",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          956,
+          366,
+          1236,
+          622
+        ]
+      ],
+      "anchor": [
+        1092,
+        614
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "hit_retained_bow",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          46,
+          620,
+          177,
+          649
+        ],
+        [
+          46,
+          649,
+          281,
+          930
+        ]
+      ],
+      "anchor": [
+        160,
+        928
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "reload",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          412,
+          617,
+          509,
+          639
+        ],
+        [
+          365,
+          639,
+          573,
+          954
+        ]
+      ],
+      "anchor": [
+        469,
+        947
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "loaded_aim",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          720,
+          624,
+          837,
+          645
+        ],
+        [
+          641,
+          645,
+          920,
+          942
+        ]
+      ],
+      "anchor": [
+        780,
+        935
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "empty_release_front_string",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/fired-front-nocks-corrected.png",
+      "rects": [
+        [
+          0,
+          0,
+          830,
+          1024
+        ]
+      ],
+      "anchor": [
+        414,
+        940
+      ],
+      "scale": 0.24
+    },
+    {
+      "name": "empty_recovery_front_string",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/continuity-alpha/fired-front-nocks-corrected.png",
+      "rects": [
+        [
+          830,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1185,
+        969
+      ],
+      "scale": 0.24
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          319,
+          980,
+          578,
+          1224
+        ]
+      ],
+      "anchor": [
+        448,
+        1217
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          606,
+          1019,
+          926,
+          1201
+        ]
+      ],
+      "anchor": [
+        763,
+        1193
+      ],
+      "scale": 0.68
+    },
+    {
+      "name": "dead_head_right_bow_retained",
+      "source": "art/animation/source/poses/unit_neutral_tunnelmark_bolters/alpha/poses.png",
+      "rects": [
+        [
+          930,
+          1077,
+          1234,
+          1204
+        ]
+      ],
+      "anchor": [
+        1081,
+        1196
+      ],
+      "scale": 0.68
+    }
+  ],
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 450,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        2,
+        4
+      ],
+      "loop": true,
+      "frame_msec": 160
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        5,
+        6,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 270,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  }
+}

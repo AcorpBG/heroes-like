@@ -74,8 +74,16 @@
     "review": "Contact A keeps near leg forward, passing A keeps near leg planted; opposite B poses put near leg back then raised, without changing weapon hands. Body/head/gear proportions and thin hair-edge tint still require complete connected motion review; not final acceptance."
   },
   "packing": {
-    "recipe": "art/animation/source/poses/unit_neutral_basalt_wardens/packing.json",
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_basalt_wardens.png",
-    "runtime_sha256": "7814dcd75e6ca2555673b5ff141177077b22c6671d385210b91ac247720c1421"
+    "runtime_sha256": "f4878aa7beb38f6b0b5b48bc3c5da5869a51ec867e0bf9f29b19cbd9f095b8c3"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "7814dcd75e6ca2555673b5ff141177077b22c6671d385210b91ac247720c1421",
+    "preserved_frames": 15,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

@@ -104,9 +104,10 @@
     "2026-09-16: defense transitions from authored ready to guard and holds it. Current runtime packing hash is now explicitly recorded; deterministic repacking and full gameplay/platform acceptance remain required."
   ],
   "packing": {
-    "recipe": "art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers/packing.json",
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_mireclaw_fenbell_chainstalkers.png",
-    "runtime_sha256": "4da8f7f46c4e1a784e0a6d7e623a1e6448fd83d89ece939cf91e4a9c21caf453"
+    "runtime_sha256": "578568efd7b218fd0da2bcb79891ad0d6b50b7044b56aef81413aada4094810f"
   },
   "prior_review_notes": [
     "Twelve source poses with extended chain lash and equipped corpse.",
@@ -115,5 +116,12 @@
     "Walking orientation/lead and passing inconsistent; idle subtle. Mask/cloth/limb continuity and final eye closure need review.",
     "Wide lash requires explicit crop and margin; side fall propped on elbow requires smoother collapse.",
     "Transparency/compositing unresolved. Source only, not packed/enabled; 29 candidates and 0/160 final acceptances unchanged. No tests/exports."
-  ]
+  ],
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "4da8f7f46c4e1a784e0a6d7e623a1e6448fd83d89ece939cf91e4a9c21caf453",
+    "preserved_frames": 13,
+    "status": "accepted_idle_articulation_20260919"
+  }
 }

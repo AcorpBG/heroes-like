@@ -143,5 +143,18 @@
     "frames": 18,
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/zenith-continuity-20260915/",
     "validation": "Production assembly and actual alpha-composite review only; final connected battle timing, equipment continuity and platform acceptance deferred. No tests/imports/exports."
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_sunvault_zenith_lensbearers.png",
+    "runtime_sha256": "ec34f2f9e7c4494654cbcf0338cde0823be3626a97e128a9e32e2c8daa179417"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "7c702eee044ab2882aed1e8c9ee87f2ca83e97c28bc8b16b26fb92773074a871",
+    "preserved_frames": 18,
+    "status": "accepted_idle_articulation_20260919"
   }
 }
