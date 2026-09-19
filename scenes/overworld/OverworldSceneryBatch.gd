@@ -59,6 +59,17 @@ func record(method: StringName, arguments: Array) -> void:
 		_current = _next()
 	_current.commands.append([method, arguments])
 
+func paint_material(texture: Texture2D, rect: Rect2, tint: Color, shader_material: ShaderMaterial, details: Dictionary) -> void:
+	# Creature pose sheets share the same painter order as scenery and fog.
+	var batch := _next()
+	batch.material = shader_material
+	batch.commands.append([&"draw_texture_rect", [texture, rect, false, tint]])
+	_materials[["creature", _cursor]] = shader_material
+	var entry := details.duplicate()
+	entry.merge({"batch": batch, "rect": rect})
+	entries.append(entry)
+	_current = null
+
 func paint(texture: Texture2D, rect: Rect2, tint: Color, profile: Dictionary, source_region: Rect2, asset_id: String, tile: Vector2i, level: int, enabled: bool) -> void:
 	var batch := _next()
 	# Transparent margin lets canopy tips move without clipping the tight crop.

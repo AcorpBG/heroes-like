@@ -46,8 +46,11 @@ const SceneryBatch = preload("res://scenes/overworld/OverworldSceneryBatch.gd")
 const RoadStyle = preload("res://scenes/overworld/OverworldRoadStyle.gd")
 const GroundSurface = preload("res://scenes/overworld/OverworldGroundSurface.gd")
 const ActorStyle = preload("res://scenes/overworld/OverworldActorStyle.gd")
+const CreatureIdle = preload("res://scenes/overworld/OverworldCreatureIdle.gd")
 var _actor_style := ActorStyle.new()
 var _actor_asset_ids: Dictionary = {}
+var _actor_unit_ids: Dictionary = {}
+var _creature_idle := CreatureIdle.new()
 var _ground_background_layer: Control
 var _ground_surface: TextureRect
 
@@ -849,6 +852,7 @@ func _ready() -> void:
 	_ensure_render_layers()
 	_load_terrain_grammar()
 	_load_overworld_art_manifest()
+	_creature_idle.configure(ContentService.load_json("res://art/overworld/creature_idle.json"))
 	_scenery_manifest = JSON.parse_string(FileAccess.get_file_as_string("res://content/overworld_scenery_animation.json"))
 	_load_overworld_vfx_manifest()
 	_invalidate_frame_layer("ready")
@@ -4287,6 +4291,8 @@ func _town_sprite_draw_payload(asset_id: String, texture: Texture2D, footprint_r
 	return payload
 
 func _draw_encounter_sprite(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	if _draw_encounter_creature_idle(encounter, rect, remembered, tile):
+		return true
 	if bool(encounter.get("prefer_identity_landmark", false)) and _draw_preferred_encounter_landmark(encounter, rect, remembered, tile):
 		return true
 	if _draw_encounter_commander_sprite(encounter, rect, remembered, tile):
@@ -4301,6 +4307,35 @@ func _draw_encounter_sprite(encounter: Dictionary, rect: Rect2, remembered: bool
 
 func _draw_preferred_encounter_landmark(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	return _draw_encounter_identity_landmark(encounter, rect, remembered, tile)
+
+func _encounter_idle_unit_id(encounter: Dictionary) -> String:
+	if not _enemy_commander_hero_template(encounter).is_empty():
+		return ""
+	var identity := _encounter_identity_asset_id(encounter)
+	# Generated guards also set prefer_identity_landmark: its explicit identity
+	# can be a creature, not just a building. Consult the actor manifest first.
+	if _actor_unit_ids.has(identity):
+		return String(_actor_unit_ids[identity])
+	# An authored camp/landmark is not the creature guarding it.
+	if not identity.is_empty() or bool(encounter.get("prefer_identity_landmark", false)): return ""
+	return _encounter_primary_unit_id(encounter)
+
+func _draw_encounter_creature_idle(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
+	if _draw_canvas_item != _state_layer or not _scenery_batches.recording: return false
+	var unit_id := _encounter_idle_unit_id(encounter)
+	if not _creature_idle.units.has(unit_id): return false
+	var anchor := _draw_procedural_object_grounding(rect, tile, "encounter", Vector2i(1, 1), remembered)
+	var ground: Vector2 = anchor.get("center", rect.get_center())
+	var extent := minf(rect.size.x, rect.size.y) * OBJECT_FACTION_ENCOUNTER_VISIBLE_EXTENT_TILES
+	var pose := _creature_idle.payload(unit_id, ground, extent)
+	if pose.is_empty(): return false
+	var phase_key := "%s:%s:%d:%d:%d" % [unit_id, encounter.get("placement_id", encounter.get("id", "")), tile.x, tile.y, _level]
+	var shader_material := CreatureIdle.material(pose, phase_key, _scenery_motion_enabled())
+	var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
+	_scenery_batches.paint_material(pose.texture, pose.rect, _actor_color(tint), shader_material,
+		{"kind": "creature_idle", "unit_id": unit_id, "tile": tile, "level": _level, "ground": ground})
+	_draw_procedural_contact_marks(anchor, "encounter", remembered)
+	return true
 
 func _draw_encounter_commander_sprite(encounter: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i) -> bool:
 	var hero := _enemy_commander_hero_template(encounter)
@@ -11557,6 +11592,7 @@ func _load_overworld_art_manifest() -> void:
 
 func _load_actor_sprites() -> void:
 	# Explicit presentation replacement: historical source records remain intact.
+	_actor_unit_ids.clear()
 	var data := ContentService.load_json("res://art/overworld/actor_sprites.json")
 	if data.get("schema_id", "") != "overworld_actor_sprites_v1":
 		push_error("Missing or invalid overworld actor manifest.")
@@ -11579,6 +11615,8 @@ func _load_actor_sprites() -> void:
 		_object_asset_paths[asset_id] = path
 		_object_asset_regions.erase(asset_id)
 		_actor_asset_ids[asset_id] = true
+		if entry.get("kind", "") == "neutral":
+			_actor_unit_ids[asset_id] = String(entry.get("identity_id", ""))
 
 func _load_object_raster_density() -> void:
 	# Historical atlases keep their source/provenance contracts. This explicit

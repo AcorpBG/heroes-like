@@ -22302,6 +22302,15 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "animation-overworld-creature-idle-20260919",
+      "title": "Painted overworld creature idle animation",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "notes": "Original idle pairs for 160 units now render through cached GPU batches; all 51 generated profiles preserve their explicit creature identity despite prefer_identity_landmark. Fixed anatomical anchors, independent phase, reduced motion and fog are preserved. 365 focused Windows render/runtime checks, 160 distinct asset pairs and import pass; six body types inspected at map/large scale. Initial fixture lacked normalized fog and was corrected. No full suite, Linux/package run or simulation/native changes. Rebuildable captures/logs/profiles removed under owner retention policy."
+    },
+    {
       "id": "art-scenery-motion-20260919",
       "title": "Living multi-tile scenery and restrained rock effects",
       "status": "completed",
