@@ -1,0 +1,440 @@
+{
+  "unit_id": "unit_embercourt_beacon_lectors",
+  "status": "runtime_candidate_pending_consolidated_validation",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          65,
+          10,
+          250,
+          320
+        ]
+      ],
+      "anchor": [
+        179,
+        315
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          349,
+          5,
+          560,
+          310
+        ],
+        [
+          391,
+          310,
+          560,
+          320
+        ]
+      ],
+      "anchor": [
+        453,
+        315
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "walk_far_contact",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          673,
+          2,
+          850,
+          323
+        ]
+      ],
+      "anchor": [
+        774,
+        315
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/continuity-alpha/walk-passing-b-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1225,
+          1284
+        ]
+      ],
+      "anchor": [
+        615,
+        1230
+      ],
+      "scale": 0.16
+    },
+    {
+      "name": "walk_near_landing",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/continuity-alpha/walk-near-landing-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1225,
+          1284
+        ]
+      ],
+      "anchor": [
+        615,
+        1230
+      ],
+      "scale": 0.16
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/continuity-alpha/walk-passing-a-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1152,
+          1366
+        ]
+      ],
+      "anchor": [
+        598,
+        1288
+      ],
+      "scale": 0.157
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          316,
+          310,
+          399,
+          325
+        ],
+        [
+          316,
+          325,
+          575,
+          621
+        ],
+        [
+          401,
+          621,
+          575,
+          633
+        ]
+      ],
+      "anchor": [
+        459,
+        621
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "attack_contact",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          592,
+          329,
+          954,
+          630
+        ]
+      ],
+      "anchor": [
+        760,
+        621
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "defend",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          955,
+          326,
+          1244,
+          620
+        ],
+        [
+          1070,
+          620,
+          1244,
+          630
+        ]
+      ],
+      "anchor": [
+        1070,
+        621
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          74,
+          630,
+          158,
+          647
+        ],
+        [
+          74,
+          647,
+          288,
+          930
+        ],
+        [
+          150,
+          930,
+          288,
+          935
+        ]
+      ],
+      "anchor": [
+        177,
+        928
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "cast_anticipation",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          350,
+          623,
+          438,
+          640
+        ],
+        [
+          350,
+          640,
+          550,
+          931
+        ],
+        [
+          410,
+          931,
+          550,
+          943
+        ]
+      ],
+      "anchor": [
+        454,
+        934
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "cast_release",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          620,
+          623,
+          747,
+          637
+        ],
+        [
+          620,
+          637,
+          878,
+          950
+        ]
+      ],
+      "anchor": [
+        749,
+        934
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "cast_recover",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          982,
+          627,
+          1072,
+          646
+        ],
+        [
+          982,
+          646,
+          1188,
+          945
+        ]
+      ],
+      "anchor": [
+        1080,
+        934
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          337,
+          935,
+          405,
+          960
+        ],
+        [
+          337,
+          960,
+          560,
+          1235
+        ]
+      ],
+      "anchor": [
+        449,
+        1220
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          570,
+          1000,
+          894,
+          1213
+        ]
+      ],
+      "anchor": [
+        735,
+        1220
+      ],
+      "scale": 0.64
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_embercourt_beacon_lectors/alpha/poses.png",
+      "rects": [
+        [
+          896,
+          1055,
+          1249,
+          1215
+        ]
+      ],
+      "anchor": [
+        1060,
+        1220
+      ],
+      "scale": 0.64
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 600,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        8
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        13,
+        14,
+        15
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        15
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  }
+}

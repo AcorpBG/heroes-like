@@ -95,8 +95,7 @@
     "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_river_guard.png",
-    "runtime_sha256": "c881efa307190963035e8345c4aeac8711f7b772da320ae98ce8b6a489e3f4af",
-    "previous_runtime_sha256": "275f99cc70230027e4316cb22f0b8feac32cfc14d48a205eadbe71084cdcfe72"
+    "runtime_sha256": "c6c3a477dbcbc2183e40e446f0dcd5a7ea7bc78f076d1b1df1597b9cf4b51128"
   },
   "intermediates": [
     {
@@ -134,5 +133,12 @@
       "prompt": "Remove the checkerboard backdrop completely from this original guard. Genuine transparent RGBA output, including gaps around legs, weapon and shield. Preserve exact pose and pixels: foreground trouser leg extends backward down-left overlapping the forward leg. No anatomical changes, no matte, no checkerboard, no shadows, no new elements.",
       "status": "Unselected anatomy/background production draft; not runtime."
     }
-  ]
+  ],
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "c881efa307190963035e8345c4aeac8711f7b772da320ae98ce8b6a489e3f4af",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
+  }
 }

@@ -1,0 +1,21 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_mireclaw_sporewake_chanters",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "hands-original.png",
+  "source_output": "exec-f29dd490-c307-40ce-b5d5-e66e615ad4bf.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_mireclaw_sporewake_chanters.png",
+  "reference_revision": "396d90255",
+  "prompt": "Use case: identity-preserve. Paint an EIGHT-FRAME resting idle with VISIBLE HAND, WRIST AND ELBOW ARTICULATION for exactly this original character. Reference is a strip of poses of ONE character. Preserve identity, clothing, weapon size, hand ownership and right-facing three-quarter camera. Head/hips/feet almost stationary. The idle must read at 74px character height: hands travel about 50-70 source pixels; head under 5px. No head-bobbing substitute. Hands maintain plausible grips and bend naturally at elbows. No attack, walk or extra props.\nMasked hooded humanoid in brown, olive and purple ritual robes. Antler staff upright screen LEFT; metal censer hanging on a chain from screen RIGHT hand. Bend the censer elbow, raising hand from waist toward chest by 60px, then lower. Chain stays connected; bowl hangs with gravity and slight sway. Staff hand adjusts grip 40px while its elbow opens and closes, staff butt planted. Head and feet quiet; no spell or new glow.\nCanvas1536x1024 RGBA true transparent background, 4 columns and 2 rows. Exactly eight sequential complete poses in reading order, same anatomical size, planted boot line near localy478, generous gaps, all owned weapons inside each cell. Smooth cycle: pose1 rest;2 begin hand adjustment;3 farther;4 crest;5 gradually reverse;6 ease back;7 near rest;8 almost pose1. Original detailed hand-painted fantasy strategy sprite. Genuine painted articulation, not translated whole-body copies. Transparent gaps and background, no floor/shadow/labels/grid/backdrop.",
+  "review_status": "accepted_idle_articulation_20260919",
+  "originals_preserved": true,
+  "source_sha256": "470eb78a802d180f8267ef8c7030bf545af6b737a4a9c847fbc2a4a8e66d000b",
+  "reference_sha256": "8a713f3cc86d2d55818474dc8475af5d3574e2c747e11d998964f79a13859e55",
+  "review_notes": [
+    "Eight original poses inspected at game size and larger scale; articulated hands, forearms and owned equipment read independently of head movement.",
+    "Live Windows battle board in both facings and real overworld idle shader checked; all eight drawings play, reduced motion freezes, cached draw commands and saved simulation stay stable.",
+    "Existing action frame pixels and non-idle clip metadata preserved; no full-suite or Linux/package test."
+  ]
+}

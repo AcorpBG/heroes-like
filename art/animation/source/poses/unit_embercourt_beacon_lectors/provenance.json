@@ -85,5 +85,18 @@
     "runtime_sha256": "782351fbb3228b0954407e5030c490d2559c34e033ccbb5b1f9382fbfc2ee517",
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/lector-continuity-20260915/",
     "status": "candidate_registered_not_final_accepted"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_embercourt_beacon_lectors.png",
+    "runtime_sha256": "da8c4c09bb79fe170090059ba530866df6f89d1f53d6643c954f474674857845"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "782351fbb3228b0954407e5030c490d2559c34e033ccbb5b1f9382fbfc2ee517",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

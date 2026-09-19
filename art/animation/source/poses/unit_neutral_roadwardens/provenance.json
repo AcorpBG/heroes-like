@@ -111,6 +111,13 @@
     "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_neutral_roadwardens.png",
-    "runtime_sha256": "3a9303b7a22df7eb6fe007719cbade290b7fae2345b7b64e7d3eaf0ef0912b3d"
+    "runtime_sha256": "8812d55156f6e827243e36be0331585b0b29521108090202af3c8e4dc92bc708"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "3a9303b7a22df7eb6fe007719cbade290b7fae2345b7b64e7d3eaf0ef0912b3d",
+    "preserved_frames": 21,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

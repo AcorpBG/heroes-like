@@ -25,8 +25,16 @@
     "Segmented crops preserve thrust and upper polearm points while excluding neighboring boots. All poses use uniform 0.60 downsampling; final motion/scale review pending."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_citadel_pikeward.png",
-    "runtime_sha256": "32948b8d40c2922d436e1462acf876a47ceac95da0b5aa205393bdb8cd5aa2de"
+    "runtime_sha256": "3ef1ed150e9ed0f53bd7eb65f2fafdecbd3a411e93571f47edab1bcf2c90e69d"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "32948b8d40c2922d436e1462acf876a47ceac95da0b5aa205393bdb8cd5aa2de",
+    "preserved_frames": 12,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

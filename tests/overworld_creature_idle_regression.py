@@ -201,12 +201,24 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--godot', required=True)
     parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--units', nargs='+', help='One to six expanded units to inspect together')
     args = parser.parse_args()
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='idle-probe-', dir=out) as work:
         work = Path(work)
-        (work/'probe.gd').write_text(SCRIPT, encoding='utf-8')
+        script = SCRIPT
+        if args.units:
+            if not 1 <= len(args.units) <= 6:
+                parser.error('--units accepts one to six units per visual gallery')
+            roster = json.loads((ROOT/'content/unit_animation_manifest.json').read_text())['items']
+            known = {row['unit_id'] for row in roster}
+            if any(unit not in known for unit in args.units):
+                parser.error('Unknown unit in --units')
+            start = script.index('var ids := ')
+            end = script.index('\n', start)
+            script = script[:start] + 'var ids := ' + json.dumps(args.units) + script[end:]
+        (work/'probe.gd').write_text(script, encoding='utf-8')
         scene = work/'probe.tscn'
         scene.write_text('[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="probe.gd" id="1"]\n[node name="IdleProbe" type="Node"]\nscript=ExtResource("1")\n')
         env = dict(os.environ, APPDATA=str(work/'profile'), XDG_DATA_HOME=str(work/'profile'))

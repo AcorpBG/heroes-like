@@ -121,5 +121,18 @@
     "runtime_sha256": "2c0abc5d787d984f7c164a731427a80f435fe679225e8879e216d98b32dd6c87",
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/charter-continuity-20260915/",
     "status": "candidate_registered_not_final_accepted"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_embercourt_charter_colossus.png",
+    "runtime_sha256": "3718fd9f2b0be971a4421aa67ca8de5dfc89d1e6146ef7d462407cea8d743a85"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "2c0abc5d787d984f7c164a731427a80f435fe679225e8879e216d98b32dd6c87",
+    "preserved_frames": 13,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

@@ -126,5 +126,18 @@
     "runtime_sha256": "b87b8285304176d9be696302c392121b531569b5a5e1d876f646658cc576d70c",
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/fordhook-continuity-20260915/",
     "status": "candidate_registered_not_final_accepted"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_embercourt_fordhook_cadets.png",
+    "runtime_sha256": "9129697587b056b6abc32a26573b9ac1abf0f126e3308db8b329c4297bf66e8f"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "b87b8285304176d9be696302c392121b531569b5a5e1d876f646658cc576d70c",
+    "preserved_frames": 13,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

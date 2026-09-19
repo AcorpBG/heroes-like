@@ -1,0 +1,16 @@
+{
+  "schema": "painted_idle_generation_v1",
+  "unit_id": "unit_blackbranch_cutthroat",
+  "date": "2026-09-19",
+  "tool_mode": "built_in_image_gen",
+  "model": "not_exposed_by_tool",
+  "source": "original.png",
+  "source_output": "exec-9e343ce3-e6bb-4b4c-a4ba-06e47c80ff1c.png",
+  "reference": "art/overworld/runtime/creature_idle/unit_blackbranch_cutthroat.png",
+  "reference_revision": "396d90255",
+  "prompt": "Use case: identity-preserve. Production EIGHT-FRAME continuous resting IDLE animation for the exact original game unit shown in the reference pair. Reference contains two poses of ONE unit, not two separate characters. Preserve every identity detail, outfit, anatomy and owned equipment. Lean hooded human in moss-green ragged cloak, sleeveless green tunic, brown leather straps and leg wraps, exposed muscular forearms. One curved dagger pointing down in screen LEFT hand, one small round bronze buckler screen RIGHT. Cloth and hood move subtly; maintain exact anatomy and equipment. Paint eight NEW sequential in-between drawings in a FOUR-COLUMN, TWO-ROW sheet on1536x1024 genuine transparent RGBA. Each equal384x512cell contains one complete unit at the SAME anatomical scale and camera. Center the stance at local x192, planted feet on local y470; leave at least24px margin around ALL equipment/body, no crossing cell boundaries. Reading order forms a seamless slow cycle: relaxed exhale; beginning inhale; gentle chest expansion; breath crest/tiny attentive head turn; small blink and exhale; shoulders settle; cloth/hair/ornaments follow through; near the opening pose. Only small natural articulated changes in head, chest, elbows and cloth; feet remain planted, hands keep their proper equipment. No walk steps, attack, new props, weapon swaps, huge body sway or resizing. Preserve detailed hand-painted fantasy strategy sprite style and right-facing three-quarter view unless reference explicitly faces left. Genuine transparency including internal gaps; no floor, shadows, matte, checkerboard, text, panels, grid lines, effects or backdrop. Eight clearly distinct but smoothly connected original poses, not transformed copies.",
+  "review_status": "superseded_head_dominant_idle",
+  "originals_preserved": true,
+  "superseded_by": "hands-generation.json",
+  "selection_note": "Preserved original; stronger hand and elbow movement replaces this attempt."
+}

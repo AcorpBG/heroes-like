@@ -96,5 +96,18 @@
     "runtime_sha256": "760273effa29b00f3645df0deec2660d3dc37de98f565ba4881319aefa302554",
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/sapper-continuity-20260915/",
     "status": "candidate_registered_not_final_accepted"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_embercourt_lantern_sappers.png",
+    "runtime_sha256": "87a729e01c7ac44d276aeb28b121780f6b55c08387174797a1e2c5c412a33c41"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "760273effa29b00f3645df0deec2660d3dc37de98f565ba4881319aefa302554",
+    "preserved_frames": 13,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

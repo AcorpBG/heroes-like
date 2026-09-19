@@ -26,8 +26,16 @@
     "Reviewed segmented crops retain the long attack mace and exclude neighboring corpse pixels; final continuous playback acceptance remains pending."
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_bog_brute.png",
-    "runtime_sha256": "e9fb4471662e66c45191f9331d4f1c5153fe9e634fc54f37bf77cb5119fe8fbe"
+    "runtime_sha256": "6d5e9e4a6bf731322f4fffaaa21b7a978421f11204b6425db413803f9227ae3d"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "e9fb4471662e66c45191f9331d4f1c5153fe9e634fc54f37bf77cb5119fe8fbe",
+    "preserved_frames": 12,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

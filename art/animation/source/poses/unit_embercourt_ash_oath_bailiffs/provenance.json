@@ -126,5 +126,18 @@
     "runtime_sha256": "84bf3914159097c4712bce70301689978bfe292fd788a2e0618eeeb1061a7e67",
     "visual_evidence": ".artifacts/battle-unit-animation-size-20260913/bailiff-continuity-20260915/",
     "status": "candidate_registered_not_final_accepted"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_embercourt_ash_oath_bailiffs.png",
+    "runtime_sha256": "bc99c41f39226b1b579abc7890d2b7507caf981bcd3c9322e73705f6a26f7161"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "84bf3914159097c4712bce70301689978bfe292fd788a2e0618eeeb1061a7e67",
+    "preserved_frames": 14,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

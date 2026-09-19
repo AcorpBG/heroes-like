@@ -1,0 +1,246 @@
+{
+  "unit_id": "unit_bog_brute",
+  "status": "candidate_requires_playback_review",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          15,
+          0,
+          300,
+          434
+        ]
+      ],
+      "anchor": [
+        160,
+        427
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          325,
+          0,
+          620,
+          434
+        ]
+      ],
+      "anchor": [
+        480,
+        427
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "move_0",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          635,
+          0,
+          930,
+          434
+        ]
+      ],
+      "anchor": [
+        800,
+        431
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "move_1",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          975,
+          0,
+          1240,
+          434
+        ]
+      ],
+      "anchor": [
+        1120,
+        433
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "move_2",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          975,
+          835,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        1120,
+        1238
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "attack_0",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          10,
+          436,
+          305,
+          836
+        ]
+      ],
+      "anchor": [
+        158,
+        830
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "attack_1",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          305,
+          445,
+          665,
+          835
+        ],
+        [
+          665,
+          646,
+          712,
+          765
+        ]
+      ],
+      "anchor": [
+        460,
+        820
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          667,
+          470,
+          956,
+          646
+        ],
+        [
+          712,
+          646,
+          956,
+          765
+        ],
+        [
+          675,
+          765,
+          956,
+          835
+        ]
+      ],
+      "anchor": [
+        806,
+        828
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          973,
+          451,
+          1240,
+          835
+        ]
+      ],
+      "anchor": [
+        1110,
+        830
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "death_0",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          15,
+          850,
+          306,
+          1235
+        ]
+      ],
+      "anchor": [
+        166,
+        1226
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "death_1",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          306,
+          910,
+          628,
+          1050
+        ],
+        [
+          306,
+          1050,
+          617,
+          1186
+        ]
+      ],
+      "anchor": [
+        465,
+        1180
+      ],
+      "scale": 0.55
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          635,
+          996,
+          957,
+          1050
+        ],
+        [
+          620,
+          1050,
+          957,
+          1190
+        ]
+      ],
+      "anchor": [
+        790,
+        1180
+      ],
+      "scale": 0.55
+    }
+  ]
+}

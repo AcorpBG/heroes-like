@@ -39,14 +39,21 @@
     }
   ],
   "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
     "recipe": "packing.json",
     "runtime": "art/animation/runtime/poses/unit_mirror_duelist.png",
-    "runtime_sha256": "923300952fea86ece00a6ff98462cf52f89fa4e0a6061bb298ce42541171dae8",
-    "method": "Uniform 0.70 downsampling with anatomical ground anchors; segmented crops separate the extended staff from recoil and preserve the falling ponytail. Low corpse poses have independent ground anchors. No alpha repainting or standing-cutout transforms."
+    "runtime_sha256": "6f0febaf1f4cea04c4519d45d60ffc76298ca53ff2b410a77451bd53deaba420"
   },
   "review_notes": [
     "Packed atlas and actual Godot source-alpha light/dark capture visually inspected. Source compositing passes seven checks. Full continuous motion acceptance remains pending.",
     "Sixteen original articulated poses retain masked identity, ponytail, staff and reflective buckler, with distinct thrust, guard and horizontal corpse. Walking contact alternation and continuous motion remain pending review.",
     "Green-background edit followed by built-in extraction produced actual RGBA 0..255. No paid API or locally painted replacement."
-  ]
+  ],
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "923300952fea86ece00a6ff98462cf52f89fa4e0a6061bb298ce42541171dae8",
+    "preserved_frames": 16,
+    "status": "accepted_idle_articulation_20260919"
+  }
 }

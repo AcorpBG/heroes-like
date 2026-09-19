@@ -1,0 +1,324 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          366,
+          381
+        ]
+      ],
+      "anchor": [
+        180,
+        375
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/alpha/poses.png",
+      "rects": [
+        [
+          369,
+          0,
+          686,
+          373
+        ]
+      ],
+      "anchor": [
+        525,
+        370
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "move_contact_a",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/continuity-alpha/walk-phase-0-crossing-corrected-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1210,
+          1300
+        ]
+      ],
+      "anchor": [
+        600,
+        1260
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "move_passing_a",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/continuity-alpha/walk-phase-1-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1210,
+          1300
+        ]
+      ],
+      "anchor": [
+        600,
+        1260
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "move_contact_b",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/continuity-alpha/walk-phase-2-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1210,
+          1300
+        ]
+      ],
+      "anchor": [
+        600,
+        1260
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "move_passing_b",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/continuity-alpha/walk-phase-3-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1210,
+          1300
+        ]
+      ],
+      "anchor": [
+        600,
+        1260
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/alpha/poses.png",
+      "rects": [
+        [
+          384,
+          373,
+          685,
+          740
+        ]
+      ],
+      "anchor": [
+        535,
+        731
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/alpha/poses.png",
+      "rects": [
+        [
+          698,
+          434,
+          1088,
+          740
+        ]
+      ],
+      "anchor": [
+        861,
+        720
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "defend",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/alpha/poses.png",
+      "rects": [
+        [
+          1090,
+          474,
+          1437,
+          738
+        ]
+      ],
+      "anchor": [
+        1267,
+        723
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/alpha/poses.png",
+      "rects": [
+        [
+          20,
+          752,
+          352,
+          940
+        ],
+        [
+          20,
+          940,
+          334,
+          1059
+        ]
+      ],
+      "anchor": [
+        180,
+        1044
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/alpha/poses.png",
+      "rects": [
+        [
+          356,
+          805,
+          662,
+          958
+        ],
+        [
+          345,
+          958,
+          662,
+          1047
+        ]
+      ],
+      "anchor": [
+        492,
+        1024
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "death_collapse",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/alpha/poses.png",
+      "rects": [
+        [
+          682,
+          829,
+          1039,
+          1077
+        ]
+      ],
+      "anchor": [
+        841,
+        1045
+      ],
+      "scale": 0.59
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/alpha/poses.png",
+      "rects": [
+        [
+          1060,
+          866,
+          1443,
+          1032
+        ]
+      ],
+      "anchor": [
+        1245,
+        1010
+      ],
+      "scale": 0.59
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        8
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 190,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

@@ -1,0 +1,433 @@
+{
+  "unit_id": "unit_neutral_roadwardens",
+  "status": "accepted_idle_expansion_20260919",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 8,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          306,
+          477
+        ]
+      ],
+      "anchor": [
+        152,
+        468
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/alpha/poses.png",
+      "rects": [
+        [
+          306,
+          0,
+          626,
+          477
+        ]
+      ],
+      "anchor": [
+        463,
+        468
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/continuity-alpha/walk-contact-a-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1230,
+          1278
+        ]
+      ],
+      "anchor": [
+        657,
+        1195
+      ],
+      "scale": 0.18
+    },
+    {
+      "name": "walk_passing_a",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/continuity-alpha/walk-passing-a-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1145,
+          1374
+        ]
+      ],
+      "anchor": [
+        621,
+        1280
+      ],
+      "scale": 0.171
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/continuity-alpha/walk-contact-b-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1158,
+          1358
+        ]
+      ],
+      "anchor": [
+        625,
+        1260
+      ],
+      "scale": 0.174
+    },
+    {
+      "name": "walk_passing_b",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/continuity-alpha/walk-passing-b-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1239,
+          1269
+        ]
+      ],
+      "anchor": [
+        598,
+        1180
+      ],
+      "scale": 0.185
+    },
+    {
+      "name": "attack_anticipation",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/alpha/poses.png",
+      "rects": [
+        [
+          348,
+          477,
+          629,
+          595
+        ],
+        [
+          344,
+          595,
+          567,
+          643
+        ],
+        [
+          329,
+          643,
+          567,
+          890
+        ]
+      ],
+      "anchor": [
+        449,
+        878
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "attack_thrust",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/alpha/poses.png",
+      "rects": [
+        [
+          635,
+          500,
+          1040,
+          567
+        ],
+        [
+          635,
+          567,
+          1027,
+          612
+        ],
+        [
+          608,
+          612,
+          936,
+          745
+        ],
+        [
+          569,
+          745,
+          917,
+          890
+        ]
+      ],
+      "anchor": [
+        728,
+        879
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "defend",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/alpha/poses.png",
+      "rects": [
+        [
+          1050,
+          522,
+          1225,
+          570
+        ],
+        [
+          1038,
+          570,
+          1225,
+          612
+        ],
+        [
+          935,
+          612,
+          1225,
+          745
+        ],
+        [
+          917,
+          745,
+          1225,
+          890
+        ]
+      ],
+      "anchor": [
+        1080,
+        884
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          890,
+          286,
+          1284
+        ]
+      ],
+      "anchor": [
+        150,
+        1218
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/alpha/poses.png",
+      "rects": [
+        [
+          332,
+          930,
+          626,
+          1060
+        ],
+        [
+          286,
+          1060,
+          599,
+          1284
+        ]
+      ],
+      "anchor": [
+        451,
+        1218
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/alpha/poses.png",
+      "rects": [
+        [
+          628,
+          1030,
+          891,
+          1100
+        ],
+        [
+          599,
+          1100,
+          891,
+          1284
+        ]
+      ],
+      "anchor": [
+        737,
+        1248
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/alpha/poses.png",
+      "rects": [
+        [
+          891,
+          1030,
+          1225,
+          1284
+        ]
+      ],
+      "anchor": [
+        1057,
+        1248
+      ],
+      "scale": 0.5
+    },
+    {
+      "name": "idle_v2_0",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/idle-v2/alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          516
+        ]
+      ],
+      "anchor": [
+        190,
+        522
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "idle_v2_1",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/idle-v2/alpha.png",
+      "rects": [
+        [
+          384,
+          0,
+          768,
+          516
+        ]
+      ],
+      "anchor": [
+        574,
+        522
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "idle_v2_2",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/idle-v2/alpha.png",
+      "rects": [
+        [
+          768,
+          0,
+          1152,
+          516
+        ]
+      ],
+      "anchor": [
+        958,
+        522
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "idle_v2_3",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/idle-v2/alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          516
+        ]
+      ],
+      "anchor": [
+        1342,
+        522
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "idle_v2_4",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/idle-v2/alpha.png",
+      "rects": [
+        [
+          0,
+          516,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        190,
+        1018
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "idle_v2_5",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/idle-v2/alpha.png",
+      "rects": [
+        [
+          384,
+          516,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        574,
+        1018
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "idle_v2_6",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/idle-v2/alpha.png",
+      "rects": [
+        [
+          768,
+          516,
+          1152,
+          1024
+        ]
+      ],
+      "anchor": [
+        958,
+        1018
+      ],
+      "scale": 0.42
+    },
+    {
+      "name": "idle_v2_7",
+      "source": "art/animation/source/poses/unit_neutral_roadwardens/idle-v2/alpha.png",
+      "rects": [
+        [
+          1152,
+          516,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1342,
+        1018
+      ],
+      "scale": 0.42
+    }
+  ],
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}

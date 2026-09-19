@@ -149,5 +149,18 @@
     "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/bogplate-continuity-20260915/art-desk-registered-refined.html",
     "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/bogplate-continuity-20260915/art-desk-registered-refined.png",
     "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/bogplate-continuity-20260915/packed-inspect-registered/poses-candidate-atlas-green.png"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_mireclaw_bogplate_maulers.png",
+    "runtime_sha256": "ec76809aa1d8dc067a7a3586dc466fe7851e1e4077fe5afab8b432b7224ef497"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "dac5ea148afecad0f00a0f8dbc1dbc4757342c9111111a5dc60f281d1d5caf96",
+    "preserved_frames": 13,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

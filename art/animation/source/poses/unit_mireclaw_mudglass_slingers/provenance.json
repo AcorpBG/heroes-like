@@ -162,5 +162,18 @@
     "final_art_desk": ".artifacts/battle-unit-animation-size-20260913/mudglass-continuity-20260915/art-desk-registered.html",
     "final_art_desk_capture": ".artifacts/battle-unit-animation-size-20260913/mudglass-continuity-20260915/art-desk-registered.png",
     "final_atlas_composite": ".artifacts/battle-unit-animation-size-20260913/mudglass-continuity-20260915/packed-inspect/poses-candidate-atlas-green.png"
+  },
+  "packing": {
+    "tool": "tools/pack_unit_pose_art.py",
+    "recipe": "packing.json",
+    "runtime": "art/animation/runtime/poses/unit_mireclaw_mudglass_slingers.png",
+    "runtime_sha256": "6259c717159968690899b54c95a87b41881c86836581d8cba31f76b75948f464"
+  },
+  "idle_articulation": {
+    "generation": "idle-v2/hands-generation.json",
+    "recipe": "idle-v2/hands-packing.json",
+    "previous_atlas_sha256": "9b8f42efdaee4b73435935ed72cac274119807c12056178adb17541ace72689e",
+    "preserved_frames": 17,
+    "status": "accepted_idle_articulation_20260919"
   }
 }

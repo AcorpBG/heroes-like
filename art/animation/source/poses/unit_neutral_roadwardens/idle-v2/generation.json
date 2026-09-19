@@ -9,7 +9,7 @@
   "reference": "art/overworld/runtime/creature_idle/unit_neutral_roadwardens.png",
   "reference_revision": "37ddcb938",
   "prompt": "Use case: identity-preserve. Create a production game idle-animation spritesheet for the exact original Roadwarden in the reference. First reference is canonical identity; second is current gameplay painted pose/style. Exactly EIGHT distinct sequential hand-painted full-body animation poses in a strict FOUR COLUMN by TWO ROW grid, on a 1536x1024 transparent RGBA canvas. Each equal 384x512 cell contains ONE complete character centered at x192 local, both boot soles fixed at local y470, full weapon and cape stay inside with 20px margin. All face RIGHT in the same three-quarter camera. Preserve helmet, dark beard, mustard cape, ochre/red split coat, leather belt pouches, gloves, brown boots, and ONE long hooked polearm held diagonally from bottom left to top right by the SAME hands. Constant body/head/equipment dimensions, planted feet and camera. Draw a single smooth cyclical breathing sequence, NOT eight unrelated stances: 1 relaxed exhale, 2 gentle inhale, 3 chest expands with elbows following, 4 breath crest with tiny head turn, 5 beginning exhale and a blink, 6 shoulders settling eyes open, 7 slight cape-hem follow-through, 8 returning almost to pose1. Chest travel only ~6px at this source size; no stepping, no bouncing body, no weapon swapping. Movement visible in subtle shoulders, elbows, cloth folds and head angle; each pose newly painted with continuous anatomical articulation. Match the reference's detailed painterly fantasy sprite aesthetic. Genuine fully transparent background and gaps, no checkerboard, no matte, no floor, no ground shadow, no labels, no grid lines, no effects. All eight poses complete and well separated.",
-  "review_status": "accepted_idle_expansion_20260919",
+  "review_status": "superseded_head_dominant_idle",
   "originals_preserved": true,
   "source_sha256": "7bdf79f891ae1c434cffcfa8284814579b93f48205b28c16e81ab8ec1e44f1ab",
   "reference_sha256": "7996a2df37a05544e69e5bcd05a89db2bec5182c78c527a028dcd0524fe30218",
@@ -56,5 +56,7 @@
       "sha256": "7996a2df37a05544e69e5bcd05a89db2bec5182c78c527a028dcd0524fe30218",
       "revision": "37ddcb938"
     }
-  ]
+  ],
+  "superseded_by": "hands-generation.json",
+  "selection_note": "Preserved original; stronger hand and elbow movement replaces this attempt."
 }

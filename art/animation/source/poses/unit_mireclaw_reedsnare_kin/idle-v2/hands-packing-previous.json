@@ -1,0 +1,348 @@
+{
+  "unit_id": "unit_mireclaw_reedsnare_kin",
+  "status": "candidate_pending_playback_acceptance",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 20,
+  "frames": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/alpha/poses.png",
+      "rects": [
+        [
+          8,
+          0,
+          362,
+          379
+        ],
+        [
+          234,
+          379,
+          310,
+          390
+        ]
+      ],
+      "anchor": [
+        163,
+        380
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "idle_1",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/alpha/poses.png",
+      "rects": [
+        [
+          365,
+          0,
+          722,
+          395
+        ]
+      ],
+      "anchor": [
+        520,
+        386
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "move_contact_a",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/walk-phase-0-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1210,
+          1300
+        ]
+      ],
+      "anchor": [
+        600,
+        1265
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "move_passing_a",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/walk-phase-1-tail-corrected-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1210,
+          1300
+        ]
+      ],
+      "anchor": [
+        600,
+        1265
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "move_contact_b",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/walk-phase-2-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1210,
+          1300
+        ]
+      ],
+      "anchor": [
+        600,
+        1265
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "move_passing_b",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/walk-phase-3-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1210,
+          1300
+        ]
+      ],
+      "anchor": [
+        600,
+        1265
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "melee_windup",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/melee-windup-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1210,
+          1300
+        ]
+      ],
+      "anchor": [
+        590,
+        1235
+      ],
+      "scale": 0.17
+    },
+    {
+      "name": "melee_contact",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/continuity-alpha/melee-contact-length-corrected-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        650,
+        925
+      ],
+      "scale": 0.2
+    },
+    {
+      "name": "defend",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/alpha/poses.png",
+      "rects": [
+        [
+          1056,
+          420,
+          1448,
+          714
+        ]
+      ],
+      "anchor": [
+        1216,
+        697
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/alpha/poses.png",
+      "rects": [
+        [
+          14,
+          706,
+          260,
+          743
+        ],
+        [
+          14,
+          743,
+          380,
+          1064
+        ]
+      ],
+      "anchor": [
+        181,
+        1052
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/alpha/poses.png",
+      "rects": [
+        [
+          384,
+          723,
+          689,
+          929
+        ],
+        [
+          384,
+          929,
+          663,
+          1047
+        ]
+      ],
+      "anchor": [
+        530,
+        1024
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "death_collapse",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/alpha/poses.png",
+      "rects": [
+        [
+          700,
+          805,
+          966,
+          910
+        ],
+        [
+          665,
+          910,
+          966,
+          977
+        ],
+        [
+          666,
+          977,
+          1045,
+          1058
+        ]
+      ],
+      "anchor": [
+        823,
+        1024
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_mireclaw_reedsnare_kin/alpha/poses.png",
+      "rects": [
+        [
+          975,
+          862,
+          1448,
+          969
+        ],
+        [
+          1049,
+          969,
+          1448,
+          1055
+        ]
+      ],
+      "anchor": [
+        1230,
+        1028
+      ],
+      "scale": 0.56
+    }
+  ],
+  "pose_clips": {
+    "idle": {
+      "frames": 2,
+      "indices": [
+        0,
+        1
+      ],
+      "loop": true,
+      "frame_msec": 650,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 160,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 1,
+      "indices": [
+        8
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        10,
+        11,
+        12
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        12
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  }
+}
