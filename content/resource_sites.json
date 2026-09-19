@@ -2509,13 +2509,13 @@
         "gold": 120
       },
       "control_income": {
-        "wood": 1
+        "wood": 2
       },
       "resource_outputs": [
         {
           "resource_id": "wood",
           "cadence": "daily",
-          "amount": 1,
+          "amount": 2,
           "requires_owner": true,
           "starts_after_claim": true,
           "route_link_id": "",
@@ -2569,13 +2569,13 @@
         "gold": 100
       },
       "control_income": {
-        "ore": 1
+        "ore": 2
       },
       "resource_outputs": [
         {
           "resource_id": "ore",
           "cadence": "daily",
-          "amount": 1,
+          "amount": 2,
           "requires_owner": true,
           "starts_after_claim": true,
           "route_link_id": "",
@@ -2629,13 +2629,13 @@
         "gold": 140
       },
       "control_income": {
-        "gold": 35
+        "gold": 1000
       },
       "resource_outputs": [
         {
           "resource_id": "gold",
           "cadence": "daily",
-          "amount": 35,
+          "amount": 1000,
           "requires_owner": true,
           "starts_after_claim": true,
           "route_link_id": "",
@@ -3042,13 +3042,13 @@
         "gold": 90
       },
       "control_income": {
-        "wood": 1
+        "wood": 2
       },
       "resource_outputs": [
         {
           "resource_id": "wood",
           "cadence": "daily",
-          "amount": 1,
+          "amount": 2,
           "requires_owner": true,
           "starts_after_claim": true,
           "route_link_id": "",
@@ -3100,13 +3100,13 @@
         "gold": 180
       },
       "control_income": {
-        "gold": 30
+        "gold": 1000
       },
       "resource_outputs": [
         {
           "resource_id": "gold",
           "cadence": "daily",
-          "amount": 30,
+          "amount": 1000,
           "requires_owner": true,
           "starts_after_claim": true,
           "route_link_id": "",
@@ -3159,13 +3159,13 @@
         "gold": 80
       },
       "control_income": {
-        "ore": 1
+        "ore": 2
       },
       "resource_outputs": [
         {
           "resource_id": "ore",
           "cadence": "daily",
-          "amount": 1,
+          "amount": 2,
           "requires_owner": true,
           "starts_after_claim": true,
           "route_link_id": "",
@@ -3217,13 +3217,13 @@
         "gold": 220
       },
       "control_income": {
-        "gold": 35
+        "gold": 1000
       },
       "resource_outputs": [
         {
           "resource_id": "gold",
           "cadence": "daily",
-          "amount": 35,
+          "amount": 1000,
           "requires_owner": true,
           "starts_after_claim": true,
           "route_link_id": "",
@@ -3276,13 +3276,13 @@
         "gold": 90
       },
       "control_income": {
-        "ore": 1
+        "ore": 2
       },
       "resource_outputs": [
         {
           "resource_id": "ore",
           "cadence": "daily",
-          "amount": 1,
+          "amount": 2,
           "requires_owner": true,
           "starts_after_claim": true,
           "route_link_id": "",
@@ -3335,13 +3335,13 @@
         "gold": 90
       },
       "control_income": {
-        "wood": 1
+        "wood": 2
       },
       "resource_outputs": [
         {
           "resource_id": "wood",
           "cadence": "daily",
-          "amount": 1,
+          "amount": 2,
           "requires_owner": true,
           "starts_after_claim": true,
           "route_link_id": "",
@@ -4304,13 +4304,13 @@
         "gold": 210
       },
       "control_income": {
-        "gold": 35
+        "gold": 1000
       },
       "resource_outputs": [
         {
           "resource_id": "gold",
           "cadence": "daily",
-          "amount": 35,
+          "amount": 1000,
           "requires_owner": true,
           "starts_after_claim": true,
           "route_link_id": "",
@@ -4363,13 +4363,13 @@
         "gold": 90
       },
       "control_income": {
-        "ore": 1
+        "ore": 2
       },
       "resource_outputs": [
         {
           "resource_id": "ore",
           "cadence": "daily",
-          "amount": 1,
+          "amount": 2,
           "requires_owner": true,
           "starts_after_claim": true,
           "route_link_id": "",
@@ -4422,13 +4422,13 @@
         "gold": 80
       },
       "control_income": {
-        "wood": 1
+        "wood": 2
       },
       "resource_outputs": [
         {
           "resource_id": "wood",
           "cadence": "daily",
-          "amount": 1,
+          "amount": 2,
           "requires_owner": true,
           "starts_after_claim": true,
           "route_link_id": "",

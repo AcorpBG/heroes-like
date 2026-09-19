@@ -113545,6 +113545,18 @@
       "completedAt": "2026-09-18T02:52:20Z",
       "evidence": "docs/rmg-exploration-and-guarded-routes.md",
       "completionSummary": "Completed source-adoption correction: all 38 scenery families retain masks and original art, three reproduced bypasses close, random artifacts use rarity pools, banks remain guarded, new catalog-auto games explicitly use Normal strength, cleared-site/replay state persists. Source/Linux 81237 checks each, Windows 81227, existing boundary/neutral/art, repository and final exports/parity pass. Two Small opening-density thresholds still fail and broader full-match pacing is not claimed. Cleaned 4.51 GB disposable outputs; caches/RMG/unrelated files preserved."
+    },
+    {
+      "id": "art-unified-common-mines-20260919",
+      "title": "Unified animated wood, ore and gold mines",
+      "status": "in_progress",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/unified-common-mines.md"
+      ],
+      "notes": "Daily production implemented for all 12 common-site definitions: 2 wood / 2 ore / 1000 gold, synchronized control_income and resource_outputs. Focused comparison passes; ownership, claim rewards, rare/support production preserved. Three original proposal sheets and full prompts delivered for owner selection. Single-art routing, 3x2 gameplay footprints across authored/generated maps and final animation remain pending selection. No game launch or full suite."
     }
   ],
   "project": "heroes-like",
