@@ -1,5 +1,7 @@
 # Town landmark scale
 
+Current gameplay catalog (2026-09-20): six town templates, one per faction. The 32 named definitions mentioned in earlier artwork work below are historical; 26 retired IDs remain lookup aliases only. Original artwork and provenance remain preserved. See `common-town-building-template.md` for the live consolidation and proposed shared-building replacement.
+
 Slice: `art-town-footprint-scale-20260920`
 
 The owner's Heroes III reference establishes the intended proportions: a broad settlement over five columns and three ground rows, with towers rising above the rear of the footprint. The previous renderer limited every town to 2.9 tiles wide; enlarging the source image alone could not overcome that cap.

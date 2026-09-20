@@ -22,6 +22,12 @@ Rules:
 
 ## Current Tactical State
 
+### One gameplay town template per faction
+
+`content-single-faction-towns-20260920` - completed. Six active town templates and 26 ID-only legacy aliases; one building/spell library per faction, canonical faction defaults and new native-adoption identities, consistent artifact-service availability, six wiki towns. 164 focused runtime/save/construction/adoption checks and content reachability pass; no full suite.
+
+`design-common-town-buildings-20260920` - completed design proposal only. Shared Town Hall, Fortifications, Magic Guild, Marketplace, Tavern, Workshop and Storehouse lines; upgrade stage semantics documented. Costs, exact effects and replacement-building implementation remain pending. See `docs/common-town-building-template.md`.
+
 ### Hero level-up popup
 
 `feature-hero-level-up-popup-20260920` - completed. Automatic portrait/level/command/movement popup with queued specialty choices after adventure or battle XP, including inactive town defenders. Saved deferral, stale-callback protection and exclusive modal input; 50 focused runtime/save/UI checks pass and rendered popup reviewed. No full suite. See `docs/hero-level-up-popup.md`.

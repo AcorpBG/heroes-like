@@ -93,11 +93,7 @@
         }
       },
       "town_ids": [
-        "town_riverwatch",
-        "town_highwater_keep",
-        "town_cinderlock_bastion",
-        "town_rainwrit_bastion",
-        "town_amberweir_granary"
+        "town_riverwatch"
       ],
       "hero_ids": [
         "hero_lyra",
@@ -143,7 +139,7 @@
         "building_embercourt_drake_sluice",
         "building_embercourt_charter_bastion"
       ],
-      "seed_town_id": "town_highwater_keep",
+      "seed_town_id": "town_riverwatch",
       "design_pillars": {
         "theme": "River charters, lockworks, beacon-fire civic war",
         "economy_style": "Stable civic investment, readiness, and discounted prepared levies",
@@ -253,13 +249,7 @@
         }
       },
       "town_ids": [
-        "town_duskfen",
-        "town_blackfen_gate",
-        "town_murkward_ford",
-        "town_reedbarrow_ferry",
-        "town_nightglass_redoubt",
-        "town_hollowreed_sanctuary",
-        "town_moonbite_reedshrine"
+        "town_duskfen"
       ],
       "hero_ids": [
         "hero_vaska",
@@ -305,7 +295,7 @@
         "building_mireclaw_nightglass_dominion",
         "building_mireclaw_antler_pit"
       ],
-      "seed_town_id": "town_nightglass_redoubt",
+      "seed_town_id": "town_duskfen",
       "design_pillars": {
         "theme": "Predatory bog clans, ferry chains, and drum oaths",
         "economy_style": "Low safe income, high growth, raid spoils, and den replacement",
@@ -416,11 +406,7 @@
         }
       },
       "town_ids": [
-        "town_prismhearth",
-        "town_halo_spire",
-        "town_dawnmirror_observatory",
-        "town_meridian_choirhold",
-        "town_splitprism_duelcourt"
+        "town_prismhearth"
       ],
       "hero_ids": [
         "hero_solera",
@@ -567,11 +553,7 @@
         }
       },
       "town_ids": [
-        "town_thornwake_graftroot_caravan",
-        "town_thornwake_rootgate_nursery",
-        "town_briarwheel_enclave",
-        "town_crownroot_refuge",
-        "town_woundroot_hearthgrove"
+        "town_thornwake_graftroot_caravan"
       ],
       "hero_ids": [
         "hero_thornwake_ardren_briarmarshal",
@@ -718,11 +700,7 @@
         }
       },
       "town_ids": [
-        "town_brasshollow_orevein_gantry",
-        "town_brasshollow_clauseworks_depot",
-        "town_cindercoil_foundry",
-        "town_blackbell_foundry",
-        "town_whitegauge_calibration_yard"
+        "town_brasshollow_orevein_gantry"
       ],
       "hero_ids": [
         "hero_brasshollow_marka_ironclause",
@@ -868,11 +846,7 @@
         }
       },
       "town_ids": [
-        "town_veilmourn_bellwake_harbor",
-        "town_veilmourn_fogchart_mooring",
-        "town_gloamwake_anchorage",
-        "town_pale_sounding_harbor",
-        "town_dreamwake_oracle_harbor"
+        "town_veilmourn_bellwake_harbor"
       ],
       "hero_ids": [
         "hero_veilmourn_ivara_blacktide",

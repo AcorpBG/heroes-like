@@ -1983,9 +1983,6 @@
         ],
         "reward_tier": "standard",
         "one_time_reward": true,
-        "excluded_town_ids": [
-          "town_blackbell_foundry"
-        ],
         "service_cost": {
           "gold": 1400,
           "ore": 2
@@ -2585,7 +2582,7 @@
         "reward_tier": "standard",
         "one_time_reward": true,
         "allowed_town_ids": [
-          "town_blackbell_foundry"
+          "town_brasshollow_orevein_gantry"
         ],
         "service_cost": {
           "gold": 1800,
@@ -2818,7 +2815,7 @@
         "reward_tier": "standard",
         "one_time_reward": true,
         "allowed_town_ids": [
-          "town_crownroot_refuge"
+          "town_thornwake_graftroot_caravan"
         ],
         "service_cost": {
           "gold": 1800,
@@ -2964,7 +2961,7 @@
         "reward_tier": "standard",
         "one_time_reward": true,
         "allowed_town_ids": [
-          "town_pale_sounding_harbor"
+          "town_veilmourn_bellwake_harbor"
         ],
         "service_cost": {
           "gold": 1800,
@@ -3011,9 +3008,6 @@
         ],
         "reward_tier": "standard",
         "one_time_reward": true,
-        "excluded_town_ids": [
-          "town_rainwrit_bastion"
-        ],
         "service_cost": {
           "gold": 1200,
           "wood": 1
@@ -3122,7 +3116,7 @@
         "reward_tier": "standard",
         "one_time_reward": true,
         "allowed_town_ids": [
-          "town_rainwrit_bastion"
+          "town_riverwatch"
         ],
         "service_cost": {
           "gold": 1800,
@@ -3252,7 +3246,7 @@
         "reward_tier": "standard",
         "one_time_reward": true,
         "allowed_town_ids": [
-          "town_hollowreed_sanctuary"
+          "town_duskfen"
         ],
         "service_cost": {
           "gold": 1800,
@@ -3381,7 +3375,7 @@
         "reward_tier": "standard",
         "one_time_reward": true,
         "allowed_town_ids": [
-          "town_meridian_choirhold"
+          "town_prismhearth"
         ],
         "service_cost": {
           "gold": 1800,

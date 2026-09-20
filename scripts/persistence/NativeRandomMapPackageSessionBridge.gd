@@ -328,7 +328,7 @@ static func _town_states_from_document(map_document: Variant) -> Array:
 		if String(object.get("native_record_kind", object.get("kind", ""))) != "town" and String(object.get("kind", "")) != "town":
 			continue
 		var town_identity := _project_town_identity_from_h3m_record(object)
-		var town_id := String(town_identity.get("town_id", object.get("town_id", "")))
+		var town_id := ContentService.canonical_town_id(String(town_identity.get("town_id", object.get("town_id", ""))))
 		var town_faction_id := String(town_identity.get("faction_id", object.get("faction_id", "")))
 		var town_template := ContentService.get_town(town_id)
 		if ContentService.get_faction(town_faction_id).is_empty():
