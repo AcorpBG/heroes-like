@@ -1209,57 +1209,64 @@
       "environment_policy": "One shared structural town design on all terrain; ownership colours come from runtime entrance flags."
     },
     "town_faction_mireclaw": {
-      "path": "res://art/overworld/runtime/objects/towns/biome_fit/duskfen_land.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/duskfen_land.png",
-      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/duskfen_land_cutout.png",
-      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
-      "source_model": "built_in_image_gen_original_biome_town_variant",
-      "runtime_sha256": "58019faf21b29ce0ee1f3cec5882ef194124aea7816bb9412b2a166d836b54d9",
-      "accessible_description": "Duskfen timber-and-bone fortress with a paved courtyard and land-supported foundations, preserving its green lanterns, towers and front bridge.",
+      "path": "res://art/overworld/runtime/objects/towns/matched_factions/mireclaw.png",
+      "source_generated": "res://art/overworld/source/generated/towns/matched_factions_20260920/mireclaw-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/matched_factions_20260920/provenance.json",
+      "source_model": "built_in_image_gen_original_matched_faction_town",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_faction_id": "faction_mireclaw",
       "presentation_role": "shared_faction_town",
-      "selected_from_asset_id": "town_biome_duskfen_land",
-      "environment_policy": "One shared structural town design on all terrain; ownership colours come from runtime entrance flags."
+      "runtime_sha256": "1a69d0c727e05d24a0038df7c545793d5173a58b3290170adc8eb30e936c4974",
+      "accessible_description": "A broad, weathered timber-and-bone town with olive roofs, narrow green lanterns, stone footings and dense stepped courtyards. Its front palisade faces south with one centered gate.",
+      "environment_policy": "Neutral structural foundations on every biome; front-centre entrance, no baked ownership flags or terrain island."
     },
     "town_faction_sunvault": {
-      "path": "res://art/overworld/runtime/objects/towns/identity/town_prismhearth.png",
-      "source_generated": "res://art/overworld/source/generated/towns/identity/town_prismhearth_source.png",
-      "source_model": "built_in_image_gen_original_landmark",
+      "path": "res://art/overworld/runtime/objects/towns/matched_factions/sunvault.png",
+      "source_generated": "res://art/overworld/source/generated/towns/matched_factions_20260920/sunvault-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/matched_factions_20260920/provenance.json",
+      "source_model": "built_in_image_gen_original_matched_faction_town",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_faction_id": "faction_sunvault",
       "presentation_role": "shared_faction_town",
-      "selected_from_asset_id": "town_identity_prismhearth",
-      "environment_policy": "One shared structural town design on all terrain; ownership colours come from runtime entrance flags."
+      "runtime_sha256": "57f9a559bca95cb580177c92a45fd6116f496ddc71c9c27757372fe284662e83",
+      "accessible_description": "A dense limestone town with blue slate roofs, modest domes, aged brass details and a rear crystal observatory. Its straight front wall has one centered south gate; magical accents remain within the architecture.",
+      "environment_policy": "Neutral structural foundations on every biome; front-centre entrance, no baked ownership flags or terrain island."
     },
     "town_faction_thornwake": {
-      "path": "res://art/overworld/runtime/objects/towns/identity/town_thornwake_rootgate_nursery.png",
-      "source_generated": "res://art/overworld/source/generated/towns/identity/town_thornwake_rootgate_nursery_source.png",
-      "source_model": "built_in_image_gen_original_landmark",
+      "path": "res://art/overworld/runtime/objects/towns/matched_factions/thornwake.png",
+      "source_generated": "res://art/overworld/source/generated/towns/matched_factions_20260920/thornwake-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/matched_factions_20260920/provenance.json",
+      "source_model": "built_in_image_gen_original_matched_faction_town",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_faction_id": "faction_thornwake",
       "presentation_role": "shared_faction_town",
-      "selected_from_asset_id": "town_identity_thornwake_rootgate_nursery",
-      "environment_policy": "One shared structural town design on all terrain; ownership colours come from runtime entrance flags."
+      "runtime_sha256": "a8b5e1d28967700e11161859b26ea6ba67feff17c53b26599661252e7d847f96",
+      "accessible_description": "A dense town of weathered stone and rooted timber houses, muted green roofs, compact conservatories and rear tree towers. Architectural foliage stays within the settlement; a centered south gate meets a dry threshold.",
+      "environment_policy": "Neutral structural foundations on every biome; front-centre entrance, no baked ownership flags or terrain island."
     },
     "town_faction_brasshollow": {
-      "path": "res://art/overworld/runtime/objects/towns/identity/town_brasshollow_orevein_gantry.png",
-      "source_generated": "res://art/overworld/source/generated/towns/identity/town_brasshollow_orevein_gantry_source.png",
-      "source_model": "built_in_image_gen_original_landmark",
+      "path": "res://art/overworld/runtime/objects/towns/matched_factions/brasshollow.png",
+      "source_generated": "res://art/overworld/source/generated/towns/matched_factions_20260920/brasshollow-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/matched_factions_20260920/provenance.json",
+      "source_model": "built_in_image_gen_original_matched_faction_town",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_faction_id": "faction_brasshollow",
       "presentation_role": "shared_faction_town",
-      "selected_from_asset_id": "town_identity_brasshollow_orevein_gantry",
-      "environment_policy": "One shared structural town design on all terrain; ownership colours come from runtime entrance flags."
+      "runtime_sha256": "18aba5acb23308ecbc59bd51edd1eaa3dbb033699ff063c8a318c419f872a0d9",
+      "accessible_description": "A broad charcoal-stone industrial town with slate roofs, small gantries, copper fittings and warm furnace windows. Dense workshops sit on neutral foundations behind one centered south-facing gate.",
+      "environment_policy": "Neutral structural foundations on every biome; front-centre entrance, no baked ownership flags or terrain island."
     },
     "town_faction_veilmourn": {
-      "path": "res://art/overworld/runtime/objects/towns/biome_fit/bellwake_land.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/bellwake_land.png",
-      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/bellwake_land_cutout.png",
-      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
-      "source_model": "built_in_image_gen_original_biome_town_variant",
-      "runtime_sha256": "036b49b6f31312299fdd5f8b3891494d5e369b5b3d0637d2daf8d380b4c98d39",
-      "accessible_description": "veilmourn bellwake harbor land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "path": "res://art/overworld/runtime/objects/towns/matched_factions/veilmourn.png",
+      "source_generated": "res://art/overworld/source/generated/towns/matched_factions_20260920/veilmourn-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/matched_factions_20260920/provenance.json",
+      "source_model": "built_in_image_gen_original_matched_faction_town",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_faction_id": "faction_veilmourn",
       "presentation_role": "shared_faction_town",
-      "selected_from_asset_id": "town_biome_bellwake_land",
-      "environment_policy": "One shared structural town design on all terrain; ownership colours come from runtime entrance flags."
+      "runtime_sha256": "e1c71e9f43ec87dc4990228846ebe462af6f5acc1a4826bd92120c5b3aef05f2",
+      "accessible_description": "A broad grey-stone gothic town with dark blue roofs, small warehouses, restrained blue lanterns and a rear bell tower. A centered south gate replaces the old harbor piers; no surrounding water, ships or sails.",
+      "environment_policy": "Neutral structural foundations on every biome; front-centre entrance, no baked ownership flags or terrain island."
     },
     "town_identity_riverwatch": {
       "path": "res://art/overworld/runtime/objects/towns/front_facing/riverwatch-v2.png",
@@ -43835,12 +43842,13 @@
     "scope": "All named and generated overworld towns use their template faction design on every biome. Named-town gameplay, interiors and captured-town architecture are preserved.",
     "selected_designs": {
       "faction_embercourt": "town_identity_riverwatch",
-      "faction_mireclaw": "town_biome_duskfen_land",
-      "faction_sunvault": "town_identity_prismhearth",
-      "faction_thornwake": "town_identity_thornwake_rootgate_nursery",
-      "faction_brasshollow": "town_identity_brasshollow_orevein_gantry",
-      "faction_veilmourn": "town_biome_bellwake_land"
+      "faction_mireclaw": "town_faction_mireclaw",
+      "faction_sunvault": "town_faction_sunvault",
+      "faction_thornwake": "town_faction_thornwake",
+      "faction_brasshollow": "town_faction_brasshollow",
+      "faction_veilmourn": "town_faction_veilmourn"
     },
-    "retired_appearance_policy": "Unselected town object records and original PNGs remain historical reference art; they are no longer selected for live towns."
+    "retired_appearance_policy": "Unselected town object records and original PNGs remain historical reference art; they are no longer selected for live towns.",
+    "camera_and_scale": "Embercourt reference: elevated orthographic camera, horizontal front facade, broad five-column settlement, fine weathered architecture and centered south entrance."
   }
 }
