@@ -11,22 +11,24 @@ Current art policy (`art-one-town-per-faction-20260920`): one overworld design p
 | Faction | Shared design |
 | --- | --- |
 | Embercourt League | Riverwatch Hold, weathered front-facing replacement |
-| Mireclaw Covenant | Repainted timber-and-bone town based on Duskfen |
-| Sunvault Compact | Repainted limestone and blue-roof town based on Prismhearth |
-| Thornwake Concord | Repainted rooted timber town based on Rootgate Nursery |
-| Brasshollow Combine | Repainted fortified foundry town based on Orevein Gantry |
-| Veilmourn Armada | Repainted inland-compatible gothic town based on Bellwake |
+| Mireclaw Covenant | Reed dens, ferry-chain winches and drum platforms on timber pilings |
+| Sunvault Compact | Faceted crystal relays, ceramic cloisters and a large brass lens array |
+| Thornwake Concord | Mobile living orchard with root wheels, suspended seed vaults and graft caravans |
+| Brasshollow Combine | Riveted furnaces, pressure pipes, ore elevators and a bridge-crane rail terminal |
+| Veilmourn Armada | Dry-supported funeral-fleet hull buildings, mirror memorials, bells and salvage gantries |
 
 `town_identity_sprites` routes every named town to its `town_faction_*` asset. The biome manifest keeps these same six asset IDs on every terrain. A generic frontier fallback remains for missing content. Unselected PNGs and their old asset records are retained as historical art; the wiki marks those pictures as archive and uses the shared faction sprite as each town's overview image.
 
-The follow-up art pass (`art-matched-faction-towns-20260920`) repaints the five other factions against the unchanged Embercourt/Riverwatch reference. All six use an elevated orthographic view, horizontal front facade, dense small-scale buildings, fine weathered materials and one front-centre gate. Their painted width is 480 pixels before the existing 4.80-tile runtime fit; individual tower heights vary naturally. The painted bottom centre uses the same renderer ground anchor, so entrances and the two runtime ownership flags line up without moving gameplay coordinates.
+The owner rejected the earlier `art-matched-faction-towns-20260920` pass because it copied Embercourt's castle layout across factions. Its replacement, `art-distinct-faction-towns-20260920`, takes construction, silhouette and working infrastructure from `docs/factions-content-bible.md` and each faction's original art. Embercourt remains unchanged and was not supplied as an image reference for the new generation. The shared constraints are the elevated orthographic view, broad ground scale and front-centre entrance; buildings, outlines and skylines remain faction-specific. Painted width is 480 pixels before the existing 4.80-tile fit; heights vary naturally.
 
-Every town uses neutral structural foundations: no surrounding sea, moat, lava, terrain island or projecting entrance bridge. Thornwake's foliage is part of its architecture. Sunvault's light is confined to small crystal/window details. Brasshollow is a settlement rather than an open mine pit, and Veilmourn uses buildings rather than ships and harbor piers. All six current designs have no baked flags or banners.
+Every town uses neutral structural support: no surrounding sea, moat, lava, terrain island or long entrance bridge. Thornwake's foliage and wheels form its living architecture. Sunvault's crystals and mirrors form a calibration complex. Brasshollow has a contained industrial yard. Veilmourn's hull buildings stand in dry cradles, so maritime identity does not require a surrounding water tile. All six current designs have no baked flags or banners.
 
-Original generated RGBA images, exact prompts and reference roles are retained in `art/overworld/source/generated/towns/matched_factions_20260920/`. The deterministic `tools/pack_faction_towns.py` performs only alpha-bound cropping and uniform downsampling into 512-pixel transparent canvases; it updates the five canonical faction assets. The prior artwork remains archived. Runtime images live in `art/overworld/runtime/objects/towns/matched_factions/`; Embercourt retains its existing Riverwatch path.
+Original generated RGBA images, exact prompts, references and selected entrance pixels are retained in `art/overworld/source/generated/towns/distinct_factions_20260920/`. The deterministic `tools/pack_faction_towns.py` performs alpha-bound cropping and uniform downsampling into 512-pixel transparent canvases, translating the selected source threshold into `town_entrance_anchor_px` metadata. It updates the five canonical faction assets. The prior artwork remains archived. Current runtime images live in `art/overworld/runtime/objects/towns/distinct_factions/`; Embercourt retains its existing Riverwatch path.
+
+The renderer aligns an authored doorway threshold to the common entrance ground line, instead of using the lowest root, wheel or piling. Anchors are measured in full sprite pixels and transformed through the existing painted-bound crop and aspect fit. Legacy art without metadata keeps its previous bottom-centre anchor. Ownership flag bases and gameplay coordinates do not move.
 
 - The ground presentation and click mask are five columns by three rows, with the rear corners omitted: 3/5/5 cells. The south-middle cell remains the entrance.
-- Existing original town art fits inside a five-by-five visual envelope, capped at 4.80 tiles wide and 4.35 tiles tall. Painted alpha bounds preserve their aspect ratio; narrow towers and broad settlements keep their individual proportions. Painted bottoms sit 0.18 tiles above the entrance-cell bottom.
+- Existing original town art fits inside a five-by-five visual envelope, capped at 4.80 tiles wide and 4.35 tiles tall. Painted alpha bounds preserve their aspect ratio; narrow towers and broad settlements keep their individual proportions. The registered entrance sits 0.18 tiles above the entrance-cell bottom. Unregistered legacy art uses its painted bottom for that same reference line; short supporting roots, wheels and pilings may extend below a registered doorway.
 - The initial scale adjustment covered 58 appearance IDs; the current active set is six faction designs plus the generic fallback. Riverwatch was subsequently regenerated with a centered south-facing gate and no painted banners. Its current version uses an elevated viewpoint, fine weathered masonry, terracotta roofs and dense asymmetric buildings; the earlier clean symmetrical painting is superseded.
 - Clicking a body cell resolves to the existing entrance. The enlarged artwork and silhouette are clipped to explored cells. [Two small entrance flags](overworld-control-flags.md) now replace the roof ownership pennant and use the same explored-cell clipping.
 
@@ -35,6 +37,8 @@ Original generated RGBA images, exact prompts and reference roles are retained i
 Reloading the updated game applies the new presentation to existing maps and saves; regeneration is unnecessary. Native town placement, explicit visit coordinates, collision/package masks, movement and save data remain authoritative and unchanged. The larger presentation mask is not a replacement for those source gameplay masks. No native RMG rules or generated payloads change.
 
 ## Focused verification
+
+The distinct-faction revision passed 79 checks in the same helper, including projection of each authored doorway onto the shared entrance. The six-design ground render was reviewed for distinct silhouettes, camera, scale and gate placement. Alpha, hashes, all 32 identities/nine-biome routes and wiki portraits were checked. No full suite or map generation was run.
 
 The repaint reran the same 74-check helper successfully with the five new sprites and unchanged Embercourt/fallback. The six-design render on actual ground was visually reviewed for camera, width, gate position and terrain neutrality. All six 512-pixel RGBA files and runtime hashes, all 32 named-town/nine-biome routes, and wiki portraits were checked. Only this focused rendering helper ran; no full suite or native generation.
 

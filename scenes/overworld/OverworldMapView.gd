@@ -4324,12 +4324,20 @@ func _town_sprite_draw_payload(asset_id: String, texture: Texture2D, footprint_r
 		)
 	)
 	draw_rect.size *= aspect_fit_scale
+	# Wheels, roots and pilings can extend below the actual doorway. Register
+	# authored gates to the shared entrance while retaining the default for old art.
+	var entrance_anchor := Vector2(0.5, 1.0)
+	var town_art: Dictionary = _overworld_art_manifest.get("object_assets", {}).get(asset_id, {})
+	var anchor_value: Variant = town_art.get("town_entrance_anchor_px", [])
+	if anchor_value is Array and anchor_value.size() == 2:
+		var source_rect: Rect2 = payload.get("source_rect", Rect2(Vector2.ZERO, texture.get_size()))
+		var source_anchor := Vector2(float(anchor_value[0]), float(anchor_value[1]))
+		entrance_anchor = (source_anchor - source_rect.position) / source_rect.size
+		entrance_anchor = entrance_anchor.clamp(Vector2.ZERO, Vector2.ONE)
 	draw_rect.position = Vector2(
-		footprint_rect.get_center().x - draw_rect.size.x * 0.5,
-		painted_ground_line_y - draw_rect.size.y
+		footprint_rect.get_center().x - draw_rect.size.x * entrance_anchor.x,
+		painted_ground_line_y - draw_rect.size.y * entrance_anchor.y
 	)
-	var grounding_adjustment := painted_ground_line_y - draw_rect.end.y
-	draw_rect.position.y += grounding_adjustment
 	var visible_extent_px := maxf(draw_rect.size.x, draw_rect.size.y)
 	payload["draw_rect"] = draw_rect
 	payload["draw_size"] = draw_rect.size

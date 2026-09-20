@@ -103,6 +103,13 @@ func run():
 			check(drawn.size.x<=4.801*48 and drawn.size.y<=4.351*48,"town exceeds reference envelope: "+id)
 			check(is_equal_approx(drawn.size.x/drawn.size.y,float(pose.source_aspect)),"art stretched: "+id)
 			check(maxf(drawn.size.x/4.8,drawn.size.y/4.35)>47.9,"town remains miniature: "+id)
+			var authored_gate: Array = manifest.object_assets[id].get("town_entrance_anchor_px", [])
+			if authored_gate.size() == 2:
+				var source: Rect2 = pose.source_rect
+				var source_gate := Vector2(float(authored_gate[0]),float(authored_gate[1]))
+				var rendered_gate: Vector2 = drawn.position + (source_gate-source.position)/source.size*drawn.size
+				var expected_gate := Vector2(footprint.get_center().x,float(pose.painted_ground_line_y))
+				check(rendered_gate.distance_to(expected_gate)<0.01,"authored doorway misses common entrance: "+id)
 			painter.record(&"draw_texture_rect",[pose.draw_texture,drawn,false])
 			for cell in cells:
 				var offset: Vector2i=cell-entry

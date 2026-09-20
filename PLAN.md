@@ -22,9 +22,13 @@ Rules:
 
 ## Current Tactical State
 
+### Distinct faction town architecture
+
+`art-distinct-faction-towns-20260920` — completed. Five new faction-specific designs use reed/ferry compounds, crystal calibration arrays, mobile orchards, furnace terminals and funeral-fleet hull buildings. Shared camera/width retained; authored doorway anchors align irregular foundations to the same entrance. Game/wiki integrated, source art/prompts preserved. Six-design render reviewed and 79 focused checks pass; no full suite. See `docs/overworld-town-scale.md`.
+
 ### Matched faction town artwork
 
-`art-matched-faction-towns-20260920` — completed. Five factions repainted against unchanged Embercourt: shared camera, broad scale and front-centre gate, neutral structural foundations and no baked flags. Original RGBA art/prompts and deterministic packer retained; canonical game mappings and wiki updated. Six-design ground render reviewed; 74 focused checks plus alpha/hash/32-town/nine-biome/wiki checks pass. No full suite. See `docs/overworld-town-scale.md`.
+`art-matched-faction-towns-20260920` — superseded: owner rejected the repeated castle layout; the distinct-faction revision above replaces these paintings. Original implementation: Five factions repainted against unchanged Embercourt: shared camera, broad scale and front-centre gate, neutral structural foundations and no baked flags. Original RGBA art/prompts and deterministic packer retained; canonical game mappings and wiki updated. Six-design ground render reviewed; 74 focused checks plus alpha/hash/32-town/nine-biome/wiki checks pass. No full suite. See `docs/overworld-town-scale.md`.
 
 ### One overworld town design per faction
 
