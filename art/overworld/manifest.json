@@ -1196,28 +1196,70 @@
       "source_trimmed": "res://art/overworld/source/trimmed/towns/frontier_town-trimmed.png"
     },
     "town_faction_embercourt": {
-      "path": "res://art/overworld/runtime/objects/towns/factions/embercourt.png",
-      "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
+      "path": "res://art/overworld/runtime/objects/towns/front_facing/riverwatch-v2.png",
+      "source_generated": "res://art/overworld/source/generated/towns/style_matched_20260920/riverwatch-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/style_matched_20260920/provenance.json",
+      "source_model": "built_in_image_gen_original_front_facing_town",
+      "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
+      "runtime_sha256": "d72152128b47d01a61c3b87ca98076d6581cc93f62feabe061ab051393378cb8",
+      "accessible_description": "A densely built, weathered Riverwatch fortress seen from above, with a centered south-facing gate, varied terracotta roofs, fine grey masonry, staggered courtyards and a rear fire beacon. Neutral stone foundations fit every biome. No painted flags or banners; ownership uses the two runtime entrance flags.",
+      "assigned_faction_id": "faction_embercourt",
+      "presentation_role": "shared_faction_town",
+      "selected_from_asset_id": "town_identity_riverwatch",
+      "environment_policy": "One shared structural town design on all terrain; ownership colours come from runtime entrance flags."
     },
     "town_faction_mireclaw": {
-      "path": "res://art/overworld/runtime/objects/towns/factions/mireclaw.png",
-      "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/duskfen_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/duskfen_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/duskfen_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "58019faf21b29ce0ee1f3cec5882ef194124aea7816bb9412b2a166d836b54d9",
+      "accessible_description": "Duskfen timber-and-bone fortress with a paved courtyard and land-supported foundations, preserving its green lanterns, towers and front bridge.",
+      "assigned_faction_id": "faction_mireclaw",
+      "presentation_role": "shared_faction_town",
+      "selected_from_asset_id": "town_biome_duskfen_land",
+      "environment_policy": "One shared structural town design on all terrain; ownership colours come from runtime entrance flags."
     },
     "town_faction_sunvault": {
-      "path": "res://art/overworld/runtime/objects/towns/factions/sunvault.png",
-      "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_prismhearth.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_prismhearth_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_faction_id": "faction_sunvault",
+      "presentation_role": "shared_faction_town",
+      "selected_from_asset_id": "town_identity_prismhearth",
+      "environment_policy": "One shared structural town design on all terrain; ownership colours come from runtime entrance flags."
     },
     "town_faction_thornwake": {
-      "path": "res://art/overworld/runtime/objects/towns/factions/thornwake.png",
-      "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_thornwake_rootgate_nursery.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_thornwake_rootgate_nursery_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_faction_id": "faction_thornwake",
+      "presentation_role": "shared_faction_town",
+      "selected_from_asset_id": "town_identity_thornwake_rootgate_nursery",
+      "environment_policy": "One shared structural town design on all terrain; ownership colours come from runtime entrance flags."
     },
     "town_faction_brasshollow": {
-      "path": "res://art/overworld/runtime/objects/towns/factions/brasshollow.png",
-      "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
+      "path": "res://art/overworld/runtime/objects/towns/identity/town_brasshollow_orevein_gantry.png",
+      "source_generated": "res://art/overworld/source/generated/towns/identity/town_brasshollow_orevein_gantry_source.png",
+      "source_model": "built_in_image_gen_original_landmark",
+      "assigned_faction_id": "faction_brasshollow",
+      "presentation_role": "shared_faction_town",
+      "selected_from_asset_id": "town_identity_brasshollow_orevein_gantry",
+      "environment_policy": "One shared structural town design on all terrain; ownership colours come from runtime entrance flags."
     },
     "town_faction_veilmourn": {
-      "path": "res://art/overworld/runtime/objects/towns/factions/veilmourn.png",
-      "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
+      "path": "res://art/overworld/runtime/objects/towns/biome_fit/bellwake_land.png",
+      "source_trimmed": "res://art/overworld/source/trimmed/towns/biome_fit/bellwake_land.png",
+      "source_generated": "res://art/overworld/source/generated/towns/biome_fit/bellwake_land_cutout.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/biome_fit/manifest.json",
+      "source_model": "built_in_image_gen_original_biome_town_variant",
+      "runtime_sha256": "036b49b6f31312299fdd5f8b3891494d5e369b5b3d0637d2daf8d380b4c98d39",
+      "accessible_description": "veilmourn bellwake harbor land adaptation: original towers, roofs, faction details and entrance retained on structural foundations; no surrounding water or incompatible ground island.",
+      "assigned_faction_id": "faction_veilmourn",
+      "presentation_role": "shared_faction_town",
+      "selected_from_asset_id": "town_biome_bellwake_land",
+      "environment_policy": "One shared structural town design on all terrain; ownership colours come from runtime entrance flags."
     },
     "town_identity_riverwatch": {
       "path": "res://art/overworld/runtime/objects/towns/front_facing/riverwatch-v2.png",
@@ -43464,38 +43506,38 @@
     "faction_veilmourn": "town_faction_veilmourn"
   },
   "town_identity_sprites": {
-    "town_riverwatch": "town_identity_riverwatch",
-    "town_duskfen": "town_identity_duskfen",
-    "town_blackfen_gate": "town_identity_blackfen_gate",
-    "town_highwater_keep": "town_identity_highwater_keep",
-    "town_murkward_ford": "town_identity_murkward_ford",
-    "town_reedbarrow_ferry": "town_identity_reedbarrow_ferry",
-    "town_nightglass_redoubt": "town_identity_nightglass_redoubt",
-    "town_prismhearth": "town_identity_prismhearth",
-    "town_halo_spire": "town_identity_halo_spire",
-    "town_thornwake_graftroot_caravan": "town_identity_thornwake_graftroot_caravan",
-    "town_brasshollow_orevein_gantry": "town_identity_brasshollow_orevein_gantry",
-    "town_veilmourn_bellwake_harbor": "town_identity_veilmourn_bellwake_harbor",
-    "town_thornwake_rootgate_nursery": "town_identity_thornwake_rootgate_nursery",
-    "town_brasshollow_clauseworks_depot": "town_identity_brasshollow_clauseworks_depot",
-    "town_veilmourn_fogchart_mooring": "town_identity_veilmourn_fogchart_mooring",
-    "town_cinderlock_bastion": "town_identity_cinderlock_bastion",
-    "town_dawnmirror_observatory": "town_identity_dawnmirror_observatory",
-    "town_briarwheel_enclave": "town_identity_briarwheel_enclave",
-    "town_cindercoil_foundry": "town_identity_cindercoil_foundry",
-    "town_gloamwake_anchorage": "town_identity_gloamwake_anchorage",
-    "town_rainwrit_bastion": "town_identity_rainwrit_bastion",
-    "town_hollowreed_sanctuary": "town_identity_hollowreed_sanctuary",
-    "town_meridian_choirhold": "town_identity_meridian_choirhold",
-    "town_crownroot_refuge": "town_identity_crownroot_refuge",
-    "town_blackbell_foundry": "town_identity_blackbell_foundry",
-    "town_pale_sounding_harbor": "town_identity_pale_sounding_harbor",
-    "town_amberweir_granary": "town_identity_amberweir_granary",
-    "town_moonbite_reedshrine": "town_identity_moonbite_reedshrine",
-    "town_splitprism_duelcourt": "town_identity_splitprism_duelcourt",
-    "town_woundroot_hearthgrove": "town_identity_woundroot_hearthgrove",
-    "town_whitegauge_calibration_yard": "town_identity_whitegauge_calibration_yard",
-    "town_dreamwake_oracle_harbor": "town_identity_dreamwake_oracle_harbor"
+    "town_riverwatch": "town_faction_embercourt",
+    "town_duskfen": "town_faction_mireclaw",
+    "town_blackfen_gate": "town_faction_mireclaw",
+    "town_highwater_keep": "town_faction_embercourt",
+    "town_murkward_ford": "town_faction_mireclaw",
+    "town_reedbarrow_ferry": "town_faction_mireclaw",
+    "town_nightglass_redoubt": "town_faction_mireclaw",
+    "town_prismhearth": "town_faction_sunvault",
+    "town_halo_spire": "town_faction_sunvault",
+    "town_thornwake_graftroot_caravan": "town_faction_thornwake",
+    "town_brasshollow_orevein_gantry": "town_faction_brasshollow",
+    "town_veilmourn_bellwake_harbor": "town_faction_veilmourn",
+    "town_thornwake_rootgate_nursery": "town_faction_thornwake",
+    "town_brasshollow_clauseworks_depot": "town_faction_brasshollow",
+    "town_veilmourn_fogchart_mooring": "town_faction_veilmourn",
+    "town_cinderlock_bastion": "town_faction_embercourt",
+    "town_dawnmirror_observatory": "town_faction_sunvault",
+    "town_briarwheel_enclave": "town_faction_thornwake",
+    "town_cindercoil_foundry": "town_faction_brasshollow",
+    "town_gloamwake_anchorage": "town_faction_veilmourn",
+    "town_rainwrit_bastion": "town_faction_embercourt",
+    "town_hollowreed_sanctuary": "town_faction_mireclaw",
+    "town_meridian_choirhold": "town_faction_sunvault",
+    "town_crownroot_refuge": "town_faction_thornwake",
+    "town_blackbell_foundry": "town_faction_brasshollow",
+    "town_pale_sounding_harbor": "town_faction_veilmourn",
+    "town_amberweir_granary": "town_faction_embercourt",
+    "town_moonbite_reedshrine": "town_faction_mireclaw",
+    "town_splitprism_duelcourt": "town_faction_sunvault",
+    "town_woundroot_hearthgrove": "town_faction_thornwake",
+    "town_whitegauge_calibration_yard": "town_faction_brasshollow",
+    "town_dreamwake_oracle_harbor": "town_faction_veilmourn"
   },
   "hero_faction_sprites": {
     "faction_embercourt": "hero_faction_embercourt",
@@ -43787,5 +43829,18 @@
   "decorative_object_sprite_manifest": "res://art/overworld/decorative_object_sprites.json",
   "decorative_object_sprite_mapping_policy": "one_distinct_original_generated_sprite_asset_per_authored_decoration_or_blocker_object_and_exact_original_raster_coverage_for_every_generated_package_body_cell",
   "map_object_sprite_manifest": "res://art/overworld/map_object_sprites.json",
-  "map_object_sprite_mapping_policy": "distinct_generated_sprite_per_authored_non_decorative_gap_object_after_foundation_pass"
+  "map_object_sprite_mapping_policy": "distinct_generated_sprite_per_authored_non_decorative_gap_object_after_foundation_pass",
+  "town_art_policy": {
+    "model": "one_overworld_design_per_faction",
+    "scope": "All named and generated overworld towns use their template faction design on every biome. Named-town gameplay, interiors and captured-town architecture are preserved.",
+    "selected_designs": {
+      "faction_embercourt": "town_identity_riverwatch",
+      "faction_mireclaw": "town_biome_duskfen_land",
+      "faction_sunvault": "town_identity_prismhearth",
+      "faction_thornwake": "town_identity_thornwake_rootgate_nursery",
+      "faction_brasshollow": "town_identity_brasshollow_orevein_gantry",
+      "faction_veilmourn": "town_biome_bellwake_land"
+    },
+    "retired_appearance_policy": "Unselected town object records and original PNGs remain historical reference art; they are no longer selected for live towns."
+  }
 }

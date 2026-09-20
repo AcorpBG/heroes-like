@@ -181,6 +181,17 @@ def main():
 
     overworld = read('art/overworld/manifest.json')
     object_assets = overworld['object_assets']
+    unified_towns = overworld.get('town_art_policy', {}).get('model') == 'one_overworld_design_per_faction'
+    if unified_towns:
+        current_town_paths = {
+            object_assets[asset_id]['path'].removeprefix('res://')
+            for asset_id in overworld['town_faction_sprites'].values()
+        }
+        for asset in assets:
+            if asset['path'].startswith('art/overworld/runtime/objects/towns/'):
+                asset['archive'] = asset['path'] not in current_town_paths
+                if asset['archive']:
+                    asset['roles'].append('Retired overworld town design')
 
     def sprite(entity_id, sprite_id, role):
         if isinstance(sprite_id, dict): sprite_id = sprite_id.get('asset_id')
@@ -224,6 +235,12 @@ def main():
     for name, key in [('unit_art_manifest', 'battle_standee'), ('hero_art_manifest', 'portrait'), ('building_art_manifest', 'icon_path'), ('spell_icons', 'icon_path'), ('faction_crests', 'icon_path')]:
         for row in contents[name]['items']:
             if row.get(key): primary[row['id']] = {'path': row[key].removeprefix('res://')}
+    if unified_towns:
+        for town in contents['towns']['items']:
+            sprite_id = overworld['town_identity_sprites'][town['id']]
+            row = object_assets[sprite_id]
+            primary[town['id']] = {'path': row['path'].removeprefix('res://')}
+            sprite(town['id'], sprite_id, 'Shared faction overworld town')
     for e in entries:
         resource = e['data'].get('rare_mine_resource')
         if resource:
@@ -233,6 +250,8 @@ def main():
     for e in entries:
         d = e['data']
         e['description'] = description(e)
+        if unified_towns and e['category'] == 'towns':
+            e['description'] += ' Uses the shared ' + labels[d['faction_id']] + ' overworld town artwork on every terrain; its named-town rules and interior remain distinct.'
         e['faction'] = d.get('faction_id', d.get('player_faction_id', ''))
         e['tags'] = list(dict.fromkeys(str(v) for v in [d.get('role'), d.get('category'), d.get('family'), d.get('school_id'), d.get('rarity'), d.get('context'), d.get('strategic_role')] if v))
         if d.get('contains_dead_tree'):
