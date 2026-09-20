@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Common-resource pickups
+
+`balance-common-pickups-20260920` - completed. Standard one-time pickups award 1,000 gold, 10 ore or 10 wood. Preserve pickup consumption, difficulty modifiers, artwork and native placement.
+
 ### Unified rare-resource mines
 
 `art-unified-rare-mines-20260920` — completed. Six original animated, biome-neutral rare-resource buildings, exactly one appearance per resource across all existing dedicated source variants. Match the common mines' 3x2 entrance footprint and adjusted scale, readable effects and control flags; rare mines provide one rare resource daily and no gold, including on capture; preserve native source records. See `docs/unified-rare-mines.md`.
