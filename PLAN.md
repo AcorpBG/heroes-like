@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Matched faction town artwork
+
+`art-matched-faction-towns-20260920` — completed. Five factions repainted against unchanged Embercourt: shared camera, broad scale and front-centre gate, neutral structural foundations and no baked flags. Original RGBA art/prompts and deterministic packer retained; canonical game mappings and wiki updated. Six-design ground render reviewed; 74 focused checks plus alpha/hash/32-town/nine-biome/wiki checks pass. No full suite. See `docs/overworld-town-scale.md`.
+
 ### One overworld town design per faction
 
 `art-one-town-per-faction-20260920` — completed. All 32 named towns now share six faction designs, identical across biomes; named gameplay content and interiors remain. Wiki thumbnails use the active designs and retired art is archived. Map-scale rendering reviewed; existing focused helper passes 74 checks, all identity/biome/wiki routes verified. Material and viewpoint differences remain an art-direction follow-up; no full suite. See `docs/overworld-town-scale.md`.

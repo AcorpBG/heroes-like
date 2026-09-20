@@ -11,15 +11,19 @@ Current art policy (`art-one-town-per-faction-20260920`): one overworld design p
 | Faction | Shared design |
 | --- | --- |
 | Embercourt League | Riverwatch Hold, weathered front-facing replacement |
-| Mireclaw Covenant | Duskfen Bastion, dry structural foundations |
-| Sunvault Compact | Prismhearth |
-| Thornwake Concord | Rootgate Nursery |
-| Brasshollow Combine | Orevein Gantry |
-| Veilmourn Armada | Bellwake Harbor, dry structural foundations |
+| Mireclaw Covenant | Repainted timber-and-bone town based on Duskfen |
+| Sunvault Compact | Repainted limestone and blue-roof town based on Prismhearth |
+| Thornwake Concord | Repainted rooted timber town based on Rootgate Nursery |
+| Brasshollow Combine | Repainted fortified foundry town based on Orevein Gantry |
+| Veilmourn Armada | Repainted inland-compatible gothic town based on Bellwake |
 
 `town_identity_sprites` routes every named town to its `town_faction_*` asset. The biome manifest keeps these same six asset IDs on every terrain. A generic frontier fallback remains for missing content. Unselected PNGs and their old asset records are retained as historical art; the wiki marks those pictures as archive and uses the shared faction sprite as each town's overview image.
 
-This is a consolidation of existing artwork, not a repaint. The six designs were reviewed on actual ground at map scale; Sunvault remains brighter and smoother than the terrain, while Thornwake has rounder, more decorative forms. A later art pass should align material finish, camera angle and architectural detail without adding appearance variants again.
+The follow-up art pass (`art-matched-faction-towns-20260920`) repaints the five other factions against the unchanged Embercourt/Riverwatch reference. All six use an elevated orthographic view, horizontal front facade, dense small-scale buildings, fine weathered materials and one front-centre gate. Their painted width is 480 pixels before the existing 4.80-tile runtime fit; individual tower heights vary naturally. The painted bottom centre uses the same renderer ground anchor, so entrances and the two runtime ownership flags line up without moving gameplay coordinates.
+
+Every town uses neutral structural foundations: no surrounding sea, moat, lava, terrain island or projecting entrance bridge. Thornwake's foliage is part of its architecture. Sunvault's light is confined to small crystal/window details. Brasshollow is a settlement rather than an open mine pit, and Veilmourn uses buildings rather than ships and harbor piers. All six current designs have no baked flags or banners.
+
+Original generated RGBA images, exact prompts and reference roles are retained in `art/overworld/source/generated/towns/matched_factions_20260920/`. The deterministic `tools/pack_faction_towns.py` performs only alpha-bound cropping and uniform downsampling into 512-pixel transparent canvases; it updates the five canonical faction assets. The prior artwork remains archived. Runtime images live in `art/overworld/runtime/objects/towns/matched_factions/`; Embercourt retains its existing Riverwatch path.
 
 - The ground presentation and click mask are five columns by three rows, with the rear corners omitted: 3/5/5 cells. The south-middle cell remains the entrance.
 - Existing original town art fits inside a five-by-five visual envelope, capped at 4.80 tiles wide and 4.35 tiles tall. Painted alpha bounds preserve their aspect ratio; narrow towers and broad settlements keep their individual proportions. Painted bottoms sit 0.18 tiles above the entrance-cell bottom.
@@ -31,6 +35,8 @@ This is a consolidation of existing artwork, not a repaint. The six designs were
 Reloading the updated game applies the new presentation to existing maps and saves; regeneration is unnecessary. Native town placement, explicit visit coordinates, collision/package masks, movement and save data remain authoritative and unchanged. The larger presentation mask is not a replacement for those source gameplay masks. No native RMG rules or generated payloads change.
 
 ## Focused verification
+
+The repaint reran the same 74-check helper successfully with the five new sprites and unchanged Embercourt/fallback. The six-design render on actual ground was visually reviewed for camera, width, gate position and terrain neutrality. All six 512-pixel RGBA files and runtime hashes, all 32 named-town/nine-biome routes, and wiki portraits were checked. Only this focused rendering helper ran; no full suite or native generation.
 
 The consolidation reran the existing focused helper below: all 74 checks passed for the seven currently selected appearances, including scale/aspect, entrance/collision, fog and save-state preservation. All 32 named-town mappings, nine biome routes and wiki thumbnails were checked against the six selected paths. The six-design ground render was visually reviewed. No full suite or map generation was run.
 

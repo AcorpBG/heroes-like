@@ -2,7 +2,7 @@
 
 Slice: `art-control-flags-20260920`
 
-Towns show two small flags flanking their existing entrance, replacing the large ownership pennant above the roof. The entrance and footprint from [Town landmark scale](overworld-town-scale.md) remain unchanged. Riverwatch now uses regenerated front-facing artwork with all painted banners and pennants removed, so its two runtime entrance flags are its only cloth ownership signals. Other town artwork retains its existing decorative banners.
+Towns show two small flags flanking their existing entrance, replacing the large ownership pennant above the roof. The entrance and footprint from [Town landmark scale](overworld-town-scale.md) remain unchanged. All six current faction town designs use a front-centre gate with no painted banners or pennants; the two runtime entrance flags are their only cloth ownership signals. Older town paintings with decorative banners remain archived.
 
 Mines show one smaller flag beside their entrance. Uncontrolled mines use neutral grey; captured mines use the controlling player's colour until captured by someone else or released. This includes the common wood/ore/gold buildings and generated rare-resource mines. Loose reward pickups do not receive control flags.
 
