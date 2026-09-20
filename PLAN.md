@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Waystone treasure chest choice
+
+`feature-waystone-chest-choice-20260920` — completed. Existing caches use a terrain-neutral animated coin/scroll chest and offer exactly 2,000 gold or 1,000 hero experience once. Cancel leaves the chest; choice/collection survives saves. Gold glints and parchment light respect fog, cached drawing and reduced motion. Game/wiki updated; 69 focused runtime/dialog/GPU checks pass, no full suite. See `docs/waystone-chest.md`.
+
 ### Distinct faction town architecture
 
 `art-distinct-faction-towns-20260920` — completed. Five new faction-specific designs use reed/ferry compounds, crystal calibration arrays, mobile orchards, furnace terminals and funeral-fleet hull buildings. Shared camera/width retained; authored doorway anchors align irregular foundations to the same entrance. Game/wiki integrated, source art/prompts preserved. Six-design render reviewed and 79 focused checks pass; no full suite. See `docs/overworld-town-scale.md`.

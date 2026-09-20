@@ -1010,6 +1010,8 @@ static func try_move_along_route(
 	var route := String(interaction_result.get("route", ""))
 	if route != "":
 		result["route"] = route
+	if interaction_result.has("reward_choice"):
+		result["reward_choice"] = interaction_result["reward_choice"].duplicate(true)
 	if interaction_result.has("native_transit"):
 		result["native_transit"] = interaction_result.native_transit.duplicate(true)
 	if bool(interaction_result.get("native_transit_choice_required", false)):
@@ -1151,6 +1153,8 @@ static func execute_prevalidated_route(
 	var route := String(interaction_result.get("route", ""))
 	if route != "":
 		result["route"] = route
+	if interaction_result.has("reward_choice"):
+		result["reward_choice"] = interaction_result["reward_choice"].duplicate(true)
 	result["route_steps"] = _route_tile_payloads(path.slice(1, reachable_steps + 1))
 	var route_execution := preview.duplicate(true)
 	route_execution["reached_destination"] = reached_destination
@@ -1297,11 +1301,41 @@ static func collect_active_resource(session: SessionStateStoreScript.SessionData
 		return {"ok": false, "message": "No resource site here."}
 	return _collect_resource_node_result(session, node_result)
 
+static func choose_resource_reward(session: SessionStateStoreScript.SessionData, choice_id: String, expected_context: Dictionary) -> Dictionary:
+	normalize_overworld_state_for_runtime(session)
+	var node_result := _find_context_resource_node(session)
+	var node: Dictionary = node_result.get("node", {})
+	if choice_id.is_empty() or int(node_result.get("index", -1)) < 0 or _resource_reward_choice_context(session, node) != expected_context:
+		return {"ok": false, "message": "This chest is no longer being visited by that hero."}
+	return _collect_resource_node_result(session, node_result, true, 1, choice_id)
+
+static func _resource_reward_choice_context(session: SessionStateStoreScript.SessionData, node: Dictionary) -> Dictionary:
+	return {
+		"hero_id": String(session.overworld.get("active_hero_id", "")),
+		"placement_id": String(node.get("placement_id", "")),
+		"site_id": String(node.get("site_id", "")),
+		"x": int(node.get("x", 0)), "y": int(node.get("y", 0)), "level": int(node.get("level", 0)),
+	}
+
+static func _resource_site_reward_choices(site: Dictionary) -> Array:
+	var choices = site.get("reward_choices", [])
+	return choices if choices is Array else []
+
+static func _resource_site_reward_summary(site: Dictionary) -> String:
+	var choices := _resource_site_reward_choices(site)
+	if choices.is_empty():
+		return _describe_reward_delta(_resource_site_claim_rewards(site))
+	var labels := PackedStringArray()
+	for choice in choices:
+		labels.append(_describe_reward_delta(choice.get("rewards", {})))
+	return "choose " + " or ".join(labels)
+
 static func _collect_resource_node_result(
 	session: SessionStateStoreScript.SessionData,
 	node_result: Dictionary,
 	refresh_fog_after_action: bool = true,
-	native_transit_cost: int = 1
+	native_transit_cost: int = 1,
+	reward_choice_id: String = ""
 ) -> Dictionary:
 	var collect_started_usec := _rules_profile_timer()
 	_rules_profile_count("resource_collect_count")
@@ -1372,6 +1406,27 @@ static func _collect_resource_node_result(
 		if _resource_site_is_persistent(site):
 			return {"ok": false, "message": "This site is already under your control."}
 		return {"ok": false, "message": "This site has already been gathered."}
+	var choice_rewards := {}
+	var choices := _resource_site_reward_choices(site)
+	if not choices.is_empty():
+		if reward_choice_id.is_empty():
+			return {
+				"ok": true, "route": "reward_choice",
+				"message": "Open %s and %s." % [String(site.get("name", "the chest")), _resource_site_reward_summary(site)],
+				"reward_choice": {
+					"title": String(site.get("name", "Treasure Chest")),
+					"asset_id": String(site.get("overworld_sprite_asset_id", "")),
+					"context": _resource_reward_choice_context(session, node),
+					"choices": choices.duplicate(true),
+				},
+			}
+		for choice in choices:
+			if String(choice.get("id", "")) == reward_choice_id:
+				choice_rewards = choice.get("rewards", {}).duplicate(true)
+		if choice_rewards.is_empty():
+			return {"ok": false, "message": "Choose one of this chest's available rewards."}
+	elif not reward_choice_id.is_empty():
+		return {"ok": false, "message": "This site does not offer a reward choice."}
 	var admission := HeroCommandRulesScript.army_addition_plan(session.overworld.get("army", {}).get("stacks", []), _resource_site_claim_recruits(site))
 	if not bool(admission.get("ok", false)):
 		_rules_profile_add_ms("resource_claimability_ms", claimability_started_usec)
@@ -1396,6 +1451,8 @@ static func _collect_resource_node_result(
 	node["collected_by_faction_id"] = "player"
 	node.erase("collected_by_player_id")
 	node["collected_day"] = session.day
+	if not reward_choice_id.is_empty():
+		node["reward_choice_id"] = reward_choice_id
 	var route_opened := _open_resource_site_route_body(node, site)
 	node = _clear_resource_site_response(node)
 	nodes[int(node_result.get("index", -1))] = node
@@ -1407,7 +1464,8 @@ static func _collect_resource_node_result(
 	_rules_profile_add_ms("resource_blocked_index_refresh_ms", blocked_started_usec)
 
 	var reward_started_usec := _rules_profile_timer()
-	var rewards = DifficultyRulesScript.scale_reward_resources(session, _resource_site_claim_rewards(site))
+	# Explicit choices grant exactly the amount shown on their buttons.
+	var rewards = choice_rewards if not choices.is_empty() else DifficultyRulesScript.scale_reward_resources(session, _resource_site_claim_rewards(site))
 	if not visit_cost.is_empty():
 		_spend_resources(session, visit_cost)
 	_add_resources(session, rewards)
@@ -1784,11 +1842,9 @@ static func _resolve_post_move_interaction(session: SessionStateStoreScript.Sess
 		if NativeTransit.is_native(resource_result.get("node", {})):
 			return _collect_resource_node_result(session, resource_result, true, 0)
 		var result := collect_active_resource(session)
-		return {
-			"ok": true,
-			"message": String(result.get("message", "")),
-			"route": String(result.get("route", "")),
-		}
+		if result.has("reward_choice"):
+			return result
+		return {"ok": true, "message": String(result.get("message", "")), "route": String(result.get("route", ""))}
 
 	var artifact_result := _find_active_artifact_node(session)
 	if int(artifact_result.get("index", -1)) >= 0:
@@ -6426,6 +6482,7 @@ static func _normalize_resource_nodes(nodes: Array) -> Array:
 
 static func _copy_resource_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
 	for key in [
+		"reward_choice_id",
 		"route_state_id",
 		"state_id",
 		"native_transit",
@@ -6965,7 +7022,7 @@ static func describe_resource_site_surface(
 	var claim_recruit_summary := _describe_recruit_delta(_resource_site_claim_recruits(site))
 	if claim_recruit_summary != "":
 		parts.append("Field recruits %s" % claim_recruit_summary)
-	var reward_summary := _describe_reward_delta(_resource_site_claim_rewards(site))
+	var reward_summary := _resource_site_reward_summary(site)
 	if reward_summary != "" and not _resource_site_is_persistent(site):
 		parts.append("Reward %s" % reward_summary)
 	var response_state := _resource_site_response_state(session, node, site)
@@ -7260,7 +7317,7 @@ static func _resource_site_yield_line(
 	site: Dictionary
 ) -> String:
 	var parts := []
-	var claim_summary := _describe_reward_delta(_resource_site_claim_rewards(site))
+	var claim_summary := _resource_site_reward_summary(site)
 	var income_summary := _describe_resource_delta(site.get("control_income", {}))
 	var weekly_summary := _describe_recruit_delta(_resource_site_weekly_recruits(site))
 	var claim_recruits := _describe_recruit_delta(_resource_site_claim_recruits(site))
@@ -7274,7 +7331,7 @@ static func _resource_site_yield_line(
 		if claim_recruits != "":
 			parts.append("capture recruits %s" % claim_recruits)
 	else:
-		var reward_summary := _describe_reward_delta(_resource_site_claim_rewards(site))
+		var reward_summary := _resource_site_reward_summary(site)
 		if reward_summary != "":
 			parts.append("one-time %s" % reward_summary)
 	if _resource_site_is_repeatable(site):
@@ -8849,7 +8906,7 @@ static func _resource_site_context_summary(session: SessionStateStoreScript.Sess
 	var claim_summary := _describe_recruit_delta(_resource_site_claim_recruits(site))
 	if claim_summary != "":
 		parts.append("Field recruits %s" % claim_summary)
-	var reward_summary := _describe_reward_delta(_resource_site_claim_rewards(site))
+	var reward_summary := _resource_site_reward_summary(site)
 	if reward_summary != "":
 		parts.append("Reward %s" % reward_summary)
 	var vision_radius = max(0, int(site.get("vision_radius", 0)))
@@ -13492,7 +13549,7 @@ static func _resource_site_post_action_why(site: Dictionary) -> String:
 		if site.has("response_profile"):
 			reasons.append("opens route response")
 	else:
-		var reward_summary := _describe_reward_delta(_resource_site_claim_rewards(site))
+		var reward_summary := _resource_site_reward_summary(site)
 		if reward_summary != "":
 			reasons.append("adds %s now" % reward_summary)
 	if reasons.is_empty():

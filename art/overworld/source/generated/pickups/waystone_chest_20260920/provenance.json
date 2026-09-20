@@ -1,0 +1,10 @@
+{
+  "generator": "built-in image_gen",
+  "generated_date": "2026-09-20",
+  "source_file": "chest-source.png",
+  "reference_generated_image": "exec-7d06fd8c-1eb7-4466-a12c-b65715dee13f.png",
+  "prompt": "Use case: precise-object-edit. Asset type: final production overworld pickup sprite for an original classic fantasy strategy game. Edit this open wooden treasure chest to clearly contain BOTH gold coins and parchment scrolls, signifying a player choice of wealth or knowledge. Preserve its weathered oak-and-dark-iron construction, elevated three-quarter front view, upper-left lighting, richly textured painterly pre-rendered game-art style, open lid, squat compact silhouette, terrain-neutral base, and genuinely transparent background. Reorganize the contents: a modest readable pile of warm gold coins on the left half, three thick rolled ivory parchment scrolls tied with faded crimson or brown cord on the right half, one scroll extending slightly above the chest rim but below the lid top. Keep a small three-coin spill at its foot. Scrolls must remain visibly distinct at 64px sprite scale. Less specular gloss, slightly muted weathered materials consistent with the reference game sprites. One isolated chest only, whole object visible with transparent margins, no terrain patch, standing stone, vegetation, flags, magical aura, text, labels, watermark, icon border or surrounding scene. Keep actual RGBA transparency and a restrained close contact shadow.",
+  "processing": "tools/pack_waystone_chest.py crops transparent margins and downsamples uniformly to a 512px RGBA canvas; no repainting. Mode 7 animates coins and scrolls without modifying geometry or alpha.",
+  "reference_source_file": "reference-chest.png",
+  "source_sha256": "f768c3fddfcd070bc1aabe53075cbe4cb865b9a950ea3ad886d003ae3e39af2e"
+}

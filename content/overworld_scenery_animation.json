@@ -189,6 +189,44 @@
           0.66
         ]
       ]
+    },
+    "treasure_chest": {
+      "mode": 7,
+      "strength": 0.82,
+      "speed": 0.24,
+      "shine_color": [
+        1.0,
+        0.95,
+        0.69
+      ],
+      "sparkle_strength": 1.4,
+      "glints": [
+        [
+          0.375199,
+          0.524549
+        ],
+        [
+          0.448358,
+          0.479758
+        ],
+        [
+          0.59812,
+          0.78554
+        ]
+      ],
+      "region": [
+        0.250397,
+        0.424631,
+        0.314155,
+        0.189498
+      ],
+      "scroll_region": [
+        0.51291,
+        0.334189,
+        0.228946,
+        0.245486
+      ],
+      "scroll_glow_strength": 0.52
     }
   },
   "assets": {
@@ -207,7 +245,8 @@
     "resource_site_neutral_cinder_kiln_claimed": "claimed_kiln",
     "resource_site_neutral_charcoal_burners_claimed": "claimed_charcoal",
     "mapobj_road_writ_purse": "gold_pickup_shine",
-    "mapobj_quarry_chip_hod": "ore_pickup_sheen"
+    "mapobj_quarry_chip_hod": "ore_pickup_sheen",
+    "mapobj_waystone_cache": "treasure_chest"
   },
   "asset_rules": [
     {

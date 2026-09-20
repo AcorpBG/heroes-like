@@ -11,6 +11,8 @@ uniform float speed = 1.0;
 uniform float ripple = 0.0;
 uniform vec3 shine_color = vec3(1.0, 0.94, 0.72);
 uniform float sparkle_strength = 0.0;
+uniform vec4 scroll_region = vec4(0.0, 0.0, 1.0, 1.0);
+uniform float scroll_glow_strength = 0.0;
 uniform vec2 glint_0 = vec2(-10.0);
 uniform vec2 glint_1 = vec2(-10.0);
 uniform vec2 glint_2 = vec2(-10.0);
@@ -66,11 +68,22 @@ void fragment() {
 		}
 	}
 	vec4 pixel = texture(TEXTURE, texture_region.xy + clamp(uv, half_pixel, vec2(1.0) - half_pixel) * texture_region.zw);
-	if (motion_enabled && mode == 6) {
+	if (motion_enabled && (mode == 6 || mode == 7)) {
 		// A reflection travels over the metal; geometry and alpha never change.
 		float sweep = mix(-0.4, 2.0, fract(t * speed));
 		float band = exp(-pow((original.x + original.y * 0.65 - sweep) / 0.065, 2.0));
 		float metal = smoothstep(0.12, 0.65, max(pixel.r, max(pixel.g, pixel.b)));
+		if (mode == 7) {
+			// Only the contents catch light; the chest and its lid stay rigid.
+			vec2 gold_uv = (original - activity_region.xy) / activity_region.zw;
+			float gold_area = step(0.0, gold_uv.x) * step(0.0, gold_uv.y) * step(gold_uv.x, 1.0) * step(gold_uv.y, 1.0);
+			metal *= gold_area * smoothstep(0.15, 0.45, pixel.r - pixel.b);
+			vec2 scroll_uv = (original - scroll_region.xy) / scroll_region.zw;
+			float scroll_area = (1.0 - smoothstep(0.30, 0.52, abs(scroll_uv.x - 0.5))) * (1.0 - smoothstep(0.32, 0.52, abs(scroll_uv.y - 0.5)));
+			float parchment = smoothstep(0.3, 0.65, pixel.g) * smoothstep(0.2, 0.5, pixel.b);
+			float glow = (0.5 + 0.5 * sin(t * 2.1)) * scroll_area * parchment * scroll_glow_strength;
+			pixel.rgb = mix(pixel.rgb, vec3(1.0, 0.93, 0.72), glow);
+		}
 		float glints = metal_glint(original, glint_0, t * 1.7)
 			+ metal_glint(original, glint_1, t * 1.7 + 2.1)
 			+ metal_glint(original, glint_2, t * 1.7 + 4.2);

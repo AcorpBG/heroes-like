@@ -13382,16 +13382,17 @@
       "runtime_sha256": "4f26e92a49b9d3b15972833278feb772cdce67d19e20adf780c8e7bd9a1d381c"
     },
     "mapobj_waystone_cache": {
-      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_waystone_cache.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_waystone_cache-trimmed.png",
-      "source_generated": "res://art/overworld/source/generated/map_objects/foundation_identities_wave1/waystone_cache_source.png",
-      "source_model": "built_in_image_gen_original_foundation_map_object_with_transparent_extraction",
+      "path": "res://art/overworld/runtime/objects/pickups/waystone_chest.png",
+      "source_generated": "res://art/overworld/source/generated/pickups/waystone_chest_20260920/chest-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/pickups/waystone_chest_20260920/provenance.json",
+      "source_model": "built_in_image_gen_transparent",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "distinct_sprite_assignment": true,
       "assigned_map_object_id": "object_waystone_cache",
       "assigned_map_object_family": "pickup",
-      "presentation_role": "spiral_waystone_satchel_scroll_reward_cache",
-      "accessible_description": "A low split waystone carries a deep spiral route mark above a leather satchel, two scroll tubes, moss, and three amber pebbles."
+      "presentation_role": "gold_and_scroll_treasure_chest",
+      "accessible_description": "An open oak-and-iron chest holds gold coins and rolled parchment scrolls.",
+      "runtime_sha256": "bbe16357349f4942356a9066db6ca2b006924d5328e1485e4f02cfdce816f23f"
     },
     "mapobj_wood_wagon": {
       "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_wood_wagon.png",
@@ -42204,7 +42205,7 @@
     },
     "site_waystone_cache": {
       "asset_id": "mapobj_waystone_cache",
-      "fit": "Exact original spiral-waystone, satchel, scroll, and amber-pebble reward-cache identity."
+      "fit": "One-time chest offering a choice of gold or hero experience."
     },
     "site_wood_wagon": {
       "asset_id": "mapobj_wood_wagon",
