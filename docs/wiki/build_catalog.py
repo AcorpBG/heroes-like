@@ -115,7 +115,10 @@ def main():
             if interaction.get('requires_guard_clear'): text += ' Its guard must be cleared before use.'
         elif cat == 'resource_sites':
             pieces = [text] if text else []
+            if d.get('reward_choices'):
+                pieces.append('Choose one reward, once: ' + ' or '.join(quantities(option['rewards']) for option in d['reward_choices']) + '.')
             for field, phrase in [('rewards', 'Visit reward'), ('claim_rewards', 'Claim reward'), ('control_income', 'Control income'), ('claim_recruits', 'Claim recruits'), ('weekly_recruits', 'Weekly recruits')]:
+                if field == 'rewards' and d.get('reward_choices'): continue
                 if quantities(d.get(field, {})): pieces.append(phrase + ': ' + quantities(d[field]) + '.')
             text = ' '.join(pieces) or f"{words(d.get('family', 'adventure')).capitalize()} site. Its visit rules and linked map object determine how it is used."
         elif cat == 'encounters' and not text:

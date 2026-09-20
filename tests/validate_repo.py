@@ -81613,9 +81613,20 @@ def validate_eight_foundation_map_object_identities(errors: list[str]) -> None:
         runtime_path = res_path_to_disk(str(asset.get("path", "")))
         trimmed_path = res_path_to_disk(str(asset.get("source_trimmed", "")))
         ensure(mapping.get("asset_id") == asset_id and mapping.get("family") == family and mapping.get("source_batch") == 14 and mapping.get("assignment_source") == "foundation_identity_completion", errors, f"{object_id} exact sprite mapping changed")
-        ensure(asset.get("assigned_map_object_id") == object_id and asset.get("assigned_map_object_family") == family and asset.get("source_model") == "built_in_image_gen_original_foundation_map_object_with_transparent_extraction" and asset.get("asset_policy") == "original_generated_runtime_sprite_no_homm3_art_import" and len(str(asset.get("accessible_description", ""))) >= 72, errors, f"{asset_id} ownership, provenance, or accessible silhouette changed")
+        chest_replacement = object_id == "object_waystone_cache"
+        expected_model = "built_in_image_gen_transparent" if chest_replacement else "built_in_image_gen_original_foundation_map_object_with_transparent_extraction"
+        ensure(asset.get("assigned_map_object_id") == object_id and asset.get("assigned_map_object_family") == family and asset.get("source_model") == expected_model and asset.get("asset_policy") == "original_generated_runtime_sprite_no_homm3_art_import" and len(str(asset.get("accessible_description", ""))) >= 72, errors, f"{asset_id} ownership, provenance, or accessible silhouette changed")
         ensure(source_path.is_file() and png_size(source_path) == source_size and hashlib.sha256(source_path.read_bytes()).hexdigest() == source_sha and source_path.read_bytes()[25] == 6, errors, f"{object_id} transparent generated source changed")
-        ensure(runtime_path.is_file() and trimmed_path.is_file() and png_size(runtime_path) == (512,512) and runtime_path.read_bytes() == trimmed_path.read_bytes() and hashlib.sha256(runtime_path.read_bytes()).hexdigest() == runtime_sha and runtime_path.read_bytes()[25] == 6, errors, f"{asset_id} normalized transparent runtime surface changed")
+        if chest_replacement:
+            # The original foundation painting/provenance above remains archived;
+            # the owner-approved coins/scrolls chest is now the live surface.
+            chest_source = res_path_to_disk(str(asset.get("source_generated", "")))
+            ensure(runtime_path.is_file() and png_size(runtime_path) == (512,512) and runtime_path.read_bytes()[25] == 6 and hashlib.sha256(runtime_path.read_bytes()).hexdigest() == "bbe16357349f4942356a9066db6ca2b006924d5328e1485e4f02cfdce816f23f", errors, "Waystone chest transparent runtime changed")
+            ensure(chest_source.is_file() and hashlib.sha256(chest_source.read_bytes()).hexdigest() == "f768c3fddfcd070bc1aabe53075cbe4cb865b9a950ea3ad886d003ae3e39af2e", errors, "Waystone chest original source changed")
+            site = items_index(load_json(CONTENT_DIR / "resource_sites.json")).get(site_id, {})
+            ensure([row.get("rewards") for row in site.get("reward_choices", [])] == [{"gold": 2000}, {"experience": 1000}], errors, "Waystone chest must offer gold OR experience")
+        else:
+            ensure(runtime_path.is_file() and trimmed_path.is_file() and png_size(runtime_path) == (512,512) and runtime_path.read_bytes() == trimmed_path.read_bytes() and hashlib.sha256(runtime_path.read_bytes()).hexdigest() == runtime_sha and runtime_path.read_bytes()[25] == 6, errors, f"{asset_id} normalized transparent runtime surface changed")
         ensure(source_row.get("source_size") == list(source_size) and source_row.get("source_sha256") == source_sha and source_row.get("runtime_sha256") == runtime_sha and len(str(source_row.get("prompt_subject", ""))) >= 80, errors, f"{object_id} source row changed")
         runtime_payloads.append(runtime_path.read_bytes())
         site_entry = site_sprites.get(site_id, {})

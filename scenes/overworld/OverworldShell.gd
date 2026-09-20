@@ -20,6 +20,8 @@ var _hero_sheet: Control
 
 const UI_ART_OVERWORLD_RESOURCE_BAR := "res://art/ui/runtime/overworld/resource_bar.png"
 var _native_destination_dialog: ConfirmationDialog
+var _resource_reward_dialog: ConfirmationDialog
+var _resource_reward_context: Dictionary = {}
 var _native_destination_picker: OptionButton
 var _native_destination_actions: Array = []
 const UI_ART_OVERWORLD_SIDEBAR_FRAME := "res://art/ui/runtime/overworld/sidebar_frame.png"
@@ -648,6 +650,7 @@ func _input(event: InputEvent) -> void:
 		or (_manual_save_overwrite_dialog != null and _manual_save_overwrite_dialog.visible)
 		or (_end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible)
 		or (_native_destination_dialog != null and _native_destination_dialog.visible)
+		or (_resource_reward_dialog != null and _resource_reward_dialog.visible)
 	)
 	if modal_owner_open:
 		if event is InputEventJoypadMotion and int(event.axis) in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
@@ -958,6 +961,8 @@ func _overworld_gameplay_movement_blocked_reason() -> String:
 		return "end_turn_confirmation_open"
 	if _native_destination_dialog != null and _native_destination_dialog.visible:
 		return "native_destination_dialog_open"
+	if _resource_reward_dialog != null and _resource_reward_dialog.visible:
+		return "resource_reward_dialog_open"
 	if _end_turn_commit_in_progress:
 		return "end_turn_committing"
 	# F3/F4 are persistent, mouse-filter-ignoring observation layers. They must
@@ -2149,6 +2154,7 @@ func _on_context_action_pressed(action_id: String) -> void:
 	var route_response_context: Dictionary = _cached_active_context().duplicate(true) if action_id == "site_response" else {}
 	var result = OverworldRules.perform_context_action(_session, action_id)
 	_sync_native_transit_presentation(result)
+	_sync_resource_reward_presentation(result)
 	if result.is_empty():
 		_debug_phase_end("context_action_dispatch", dispatch_started_usec, {"action_id": action_id, "empty_result": true})
 		return
@@ -2426,6 +2432,7 @@ func _try_move(dx: int, dy: int, preserve_selection: bool = false) -> void:
 
 func _handle_move_result(result: Dictionary, preserve_selection: bool, debug_started: bool) -> void:
 	_sync_native_transit_presentation(result)
+	_sync_resource_reward_presentation(result)
 	var route := String(result.get("route", ""))
 	_last_route_execution = {}
 	if result.has("route_execution"):
@@ -2942,6 +2949,68 @@ func _sync_native_transit_presentation(result: Dictionary) -> void:
 	if bool(result.get("ok", false)) and result.has("native_transit"):
 		_set_view_level(LevelRules.hero_level(_session))
 		_select_hero_tile()
+
+func _sync_resource_reward_presentation(result: Dictionary) -> void:
+	if result.has("reward_choice"):
+		call_deferred("_open_resource_reward_dialog", result["reward_choice"].duplicate(true))
+
+func _open_resource_reward_dialog(prompt: Dictionary) -> void:
+	if _session == null or not is_inside_tree():
+		return
+	if is_instance_valid(_resource_reward_dialog):
+		FrontierVisualKit.hide_exclusive_dialog(_resource_reward_dialog)
+		_resource_reward_dialog.queue_free()
+	_resource_reward_context = prompt.get("context", {}).duplicate(true)
+	_resource_reward_dialog = ConfirmationDialog.new()
+	_resource_reward_dialog.name = "ResourceRewardChoice"
+	_resource_reward_dialog.title = String(prompt.get("title", "Treasure Chest"))
+	_resource_reward_dialog.cancel_button_text = "Leave it"
+	add_child(_resource_reward_dialog)
+	FrontierVisualKit.apply_confirmation_dialog(_resource_reward_dialog)
+	_resource_reward_dialog.get_ok_button().hide()
+	var content := VBoxContainer.new()
+	content.custom_minimum_size = Vector2(460, 220)
+	content.add_theme_constant_override("separation", 12)
+	var picture := TextureRect.new()
+	picture.texture = _map_view.call("_object_texture_for_asset", String(prompt.get("asset_id", "")))
+	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	picture.custom_minimum_size = Vector2(180, 170)
+	content.add_child(picture)
+	var instruction := Label.new()
+	instruction.text = "Choose one reward for the visiting hero.\nThe chest is collected only after you choose."
+	instruction.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	FrontierVisualKit.apply_label(instruction, "body", 16)
+	content.add_child(instruction)
+	_resource_reward_dialog.add_child(content)
+	var first_button: Button
+	for choice in prompt.get("choices", []):
+		var button := _resource_reward_dialog.add_button(String(choice.get("label", "Choose")), false, String(choice.get("id", "")))
+		FrontierVisualKit.apply_button(button, "primary", 190, 42, 16)
+		if first_button == null: first_button = button
+	_resource_reward_dialog.custom_action.connect(_on_resource_reward_selected)
+	_resource_reward_dialog.canceled.connect(_on_resource_reward_canceled)
+	_resource_reward_dialog.exclusive = true
+	_on_overworld_interaction_owner_opened()
+	_resource_reward_dialog.popup_centered(Vector2i(640, 340))
+	if first_button != null: first_button.grab_focus()
+
+func _on_resource_reward_canceled() -> void:
+	FrontierVisualKit.hide_exclusive_dialog(_resource_reward_dialog)
+	_resource_reward_context.clear()
+	call_deferred("_configure_overworld_keyboard_focus", true)
+
+func _on_resource_reward_selected(choice_id: StringName) -> void:
+	var context := _resource_reward_context.duplicate(true)
+	_on_resource_reward_canceled()
+	var before := _duplicate_dictionary(_session.overworld.get("resources", {}))
+	var result := OverworldRules.choose_resource_reward(_session, String(choice_id), context)
+	_record_object_resolution_presentation(result, "")
+	_last_message = String(result.get("message", ""))
+	_record_result_feedback("resource", result, "Treasure collected.")
+	if bool(_handle_session_resolution().get("handled", false)): return
+	_refresh()
+	_record_resource_delta_presentation(result, "collect_resource", before)
 
 func _open_native_destination_dialog() -> void:
 	if _session == null or not is_inside_tree():

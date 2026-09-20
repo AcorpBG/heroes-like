@@ -74,7 +74,7 @@ func paint(texture: Texture2D, rect: Rect2, tint: Color, profile: Dictionary, so
 	var batch := _next()
 	# Transparent margin lets canopy tips move without clipping the tight crop.
 	var displacement := float(profile.get("strength", 0.0)) * maxf(rect.size.x / source_region.size.x, rect.size.y / source_region.size.y)
-	if int(profile.get("mode", 0)) == 6:
+	if int(profile.get("mode", 0)) in [6, 7]:
 		displacement = 0.0 # Metallic shine changes colour, not vertex/UV position.
 	var margin := ceilf(displacement) + 2.0
 	var padding := Vector2(margin, margin) / rect.size
@@ -121,13 +121,16 @@ func _material(texture: Texture2D, profile: Dictionary, source_region: Rect2, as
 	shader_material.set_shader_parameter("anchor", float(profile.get("anchor", 1.0)))
 	shader_material.set_shader_parameter("speed", float(profile.get("speed", 1.0)))
 	shader_material.set_shader_parameter("ripple", float(profile.get("ripple", 0.0)))
-	if int(profile.get("mode", 0)) == 6:
+	if int(profile.get("mode", 0)) in [6, 7]:
 		var shine: Array = profile.get("shine_color", [1.0, 0.94, 0.72])
 		shader_material.set_shader_parameter("shine_color", Vector3(shine[0], shine[1], shine[2]))
 		shader_material.set_shader_parameter("sparkle_strength", float(profile.get("sparkle_strength", 0.0)))
 		var glints: Array = profile.get("glints", [])
 		for index in range(mini(3, glints.size())):
 			shader_material.set_shader_parameter("glint_%d" % index, Vector2(glints[index][0], glints[index][1]))
+		var scroll: Array = profile.get("scroll_region", [0.0, 0.0, 1.0, 1.0])
+		shader_material.set_shader_parameter("scroll_region", Vector4(scroll[0], scroll[1], scroll[2], scroll[3]))
+		shader_material.set_shader_parameter("scroll_glow_strength", float(profile.get("scroll_glow_strength", 0.0)))
 	var area: Array = profile.get("region", [0.0, 0.0, 1.0, 1.0])
 	shader_material.set_shader_parameter("activity_region", Vector4(area[0], area[1], area[2], area[3]))
 	shader_material.set_shader_parameter("source_region", Vector4(source_region.position.x, source_region.position.y, source_region.size.x, source_region.size.y))

@@ -3,9 +3,15 @@
     {
       "id": "site_waystone_cache",
       "name": "Waystone Cache",
+      "action_label": "Open Chest",
+      "overworld_sprite_asset_id": "mapobj_waystone_cache",
       "rewards": {
-        "gold": 400
-      }
+        "gold": 2000
+      },
+      "reward_choices": [
+        {"id": "gold", "label": "Take 2,000 gold", "rewards": {"gold": 2000}},
+        {"id": "experience", "label": "Gain 1,000 experience", "rewards": {"experience": 1000}}
+      ]
     },
     {
       "id": "site_beacon_path_scroll",
