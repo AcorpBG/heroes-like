@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Front-facing Riverwatch town
+
+`art-riverwatch-front-20260920` - completed. Riverwatch now has a centered front-facing gate with no painted banners or pennants. Its stone/red-roof/beacon identity, town footprint and two runtime ownership flags remain; base/land/ash IDs share the biome-neutral replacement across all nine biomes. Source/provenance and packing tool retained; focused 48-check flag/render regression passed and in-game render reviewed. No full suite.
+
 ### Ground pickup scenery occlusion
 
 `fix-pickup-scenery-occlusion-20260920` - completed. Portable loot and its shine now draw below overlapping scenery using the existing portable-object classification. Structures and armies retain their presentation. Focused 37-check render/collection/fog/reduced-motion regression passed, including forest-canopy occlusion at two gold animation times; no full suite or native generation changes.
