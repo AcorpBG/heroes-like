@@ -1,0 +1,863 @@
+{
+  "schema_version": 1,
+  "migration": {
+    "faction_embercourt": {
+      "building_town_hall": "building_town_hall",
+      "building_muster_yard": "building_dev_embercourt_t1_1",
+      "building_wayfarers_hall": "building_wayfarers_hall",
+      "building_market_square": "building_market_square",
+      "building_stone_store": "building_dev_fort_1",
+      "building_watch_barracks": "building_dev_embercourt_t1_1_upgrade",
+      "building_bowyer_lodge": "building_dev_embercourt_t2_1",
+      "building_beacon_range": "building_dev_embercourt_t2_1_upgrade",
+      "building_river_granary_exchange": "building_dev_storehouse_1",
+      "building_quartermasters_depot": "building_dev_fort_1",
+      "building_citadel_pikehall": "building_dev_embercourt_t3_1",
+      "building_lantern_archive": "building_dev_guild_1",
+      "building_starseer_annex": "building_dev_guild_2",
+      "building_embercourt_granary_lock_exchange": "building_dev_embercourt_t1_2",
+      "building_embercourt_tollstone_weir": "building_dev_embercourt_t2_2",
+      "building_embercourt_bargebow_slip": "building_dev_embercourt_t3_2",
+      "building_embercourt_oath_pikehall": "building_dev_embercourt_t4_1",
+      "building_embercourt_beacon_court": "building_dev_embercourt_t5_1",
+      "building_embercourt_drake_sluice": "building_dev_embercourt_t6_1",
+      "building_embercourt_charter_bastion": "building_dev_embercourt_t7_1",
+      "building_embercourt_lockhouse_tally": "building_dev_storehouse_1",
+      "building_embercourt_beacon_writs": "building_dev_fort_1",
+      "building_embercourt_lantern_court": "building_dev_guild_4",
+      "building_embercourt_relief_quay": "building_dev_guild_5",
+      "building_embercourt_charter_flame": "building_dev_embercourt_t7_1_upgrade",
+      "building_signal_citadel": "building_dev_fort_1",
+      "building_charter_bastion": "building_wayfarers_hall",
+      "building_embercourt_beaconline_charter_house": "building_dev_embercourt_t5_2",
+      "building_embercourt_rainwrit_stormseal_treasury": "building_wayfarers_hall",
+      "building_embercourt_amberweir_sluiceguard_lock": "building_dev_embercourt_t4_1",
+      "building_embercourt_amberweir_counterweight_foundry": "building_dev_embercourt_t6_1"
+    },
+    "faction_mireclaw": {
+      "building_town_hall": "building_town_hall",
+      "building_blackbranch_den": "building_dev_mireclaw_t1_1",
+      "building_wayfarers_hall": "building_wayfarers_hall",
+      "building_market_square": "building_market_square",
+      "building_mire_pens": "building_dev_mireclaw_t2_1",
+      "building_reed_warren": "building_dev_mireclaw_t1_1_upgrade",
+      "building_slingers_post": "building_dev_mireclaw_t1_1",
+      "building_rot_warren": "building_dev_fort_1",
+      "building_fenscale_pens": "building_dev_mireclaw_t2_1_upgrade",
+      "building_war_drum_circle": "building_dev_fort_1",
+      "building_gorefen_ring": "building_dev_mireclaw_t3_1",
+      "building_lantern_archive": "building_dev_guild_1",
+      "building_starseer_annex": "building_dev_guild_2",
+      "building_mireclaw_blackbranch_den": "building_dev_mireclaw_t1_2",
+      "building_mireclaw_chainboom_ferry": "building_dev_mireclaw_t4_1",
+      "building_mireclaw_war_drum_circle": "building_dev_mireclaw_t2_2",
+      "building_mireclaw_sporewake_shrine": "building_dev_mireclaw_t5_1",
+      "building_mireclaw_floodtide_forge": "building_dev_mireclaw_t3_2",
+      "building_mireclaw_nightglass_dominion": "building_dev_mireclaw_t6_1",
+      "building_mireclaw_antler_pit": "building_dev_mireclaw_t7_1",
+      "building_mireclaw_reed_toll": "building_dev_storehouse_1",
+      "building_mireclaw_silt_watch": "building_dev_fort_1",
+      "building_mireclaw_bog_oracle_nest": "building_dev_guild_4",
+      "building_mireclaw_boneboom_palisade": "building_dev_guild_5",
+      "building_mireclaw_oathmire_court": "building_dev_mireclaw_t6_1_upgrade",
+      "building_mireclaw_fenbell_hunt_lodge": "building_dev_mireclaw_t5_2",
+      "building_floodtide_forge": "building_dev_fort_1",
+      "building_smugglers_flotilla": "building_dev_storehouse_1",
+      "building_nightglass_dominion": "building_wayfarers_hall",
+      "building_mireclaw_hollowreed_moonwax_ossuary": "building_wayfarers_hall",
+      "building_mireclaw_moonbite_votive_drum_court": "building_dev_mireclaw_t4_1",
+      "building_mireclaw_moonbite_mirehorn_chain_pen": "building_dev_mireclaw_t6_1"
+    },
+    "faction_sunvault": {
+      "building_town_hall": "building_town_hall",
+      "building_shard_yard": "building_dev_sunvault_t1_1",
+      "building_wayfarers_hall": "building_wayfarers_hall",
+      "building_sunvault_lens_tithe": "building_dev_storehouse_1",
+      "building_market_square": "building_market_square",
+      "building_sunvault_relay_scribes": "building_dev_fort_1",
+      "building_prism_range": "building_dev_sunvault_t2_1",
+      "building_mirror_forge": "building_dev_sunvault_t1_1_upgrade",
+      "building_lens_gallery": "building_dev_sunvault_t2_1_upgrade",
+      "building_duel_circle": "building_dev_sunvault_t2_1",
+      "building_resonant_exchange": "building_dev_storehouse_1",
+      "building_harmonic_cloister": "building_dev_fort_1",
+      "building_aurora_spire": "building_dev_sunvault_t3_1",
+      "building_daybreak_matrix": "building_dev_guild_2",
+      "building_sunvault_shard_yard": "building_dev_sunvault_t1_2",
+      "building_sunvault_lens_gallery": "building_dev_sunvault_t2_2",
+      "building_sunvault_mirror_forge": "building_dev_sunvault_t3_2",
+      "building_sunvault_harmonic_cloister": "building_dev_sunvault_t4_1",
+      "building_sunvault_zenith_observatory": "building_dev_sunvault_t5_1",
+      "building_sunvault_aurora_spire": "building_dev_sunvault_t6_1",
+      "building_sunvault_daybreak_matrix": "building_dev_sunvault_t7_1",
+      "building_sunvault_prism_oratory": "building_dev_guild_4",
+      "building_sunvault_halo_battery_yard": "building_dev_fort_1",
+      "building_sunvault_zenith_court": "building_dev_sunvault_t7_1_upgrade",
+      "building_lantern_archive": "building_dev_guild_1",
+      "building_starseer_annex": "building_dev_guild_2",
+      "building_sunvault_zenith_relay_hall": "building_dev_sunvault_t5_2",
+      "building_sunvault_meridian_seven_facet_orrery": "building_wayfarers_hall",
+      "building_sunvault_splitprism_parallax_duel_hall": "building_dev_sunvault_t4_1",
+      "building_sunvault_splitprism_heliograph_battery": "building_dev_sunvault_t6_1"
+    },
+    "faction_thornwake": {
+      "building_town_hall": "building_town_hall",
+      "building_thornwake_seed_vault": "building_dev_thornwake_t1_1",
+      "building_wayfarers_hall": "building_wayfarers_hall",
+      "building_market_square": "building_market_square",
+      "building_thornwake_rootroad_markers": "building_dev_fort_1",
+      "building_thornwake_loam_ledger": "building_dev_storehouse_1",
+      "building_thornwake_pollen_litany": "building_dev_guild_4",
+      "building_thornwake_bramblewall_coppice": "building_dev_fort_1",
+      "building_thornwake_old_grove_accord": "building_wayfarers_hall",
+      "building_thornwake_rootweave_tithe": "building_dev_storehouse_1",
+      "building_thornwake_bramble_marshal_moot": "building_dev_fort_1",
+      "building_thornwake_spore_oath_chantry": "building_dev_guild_5",
+      "building_thornwake_thornwarden_husk_yard": "building_dev_fort_1",
+      "building_thornwake_verdant_concord_seat": "building_dev_thornwake_t7_1_upgrade",
+      "building_thornwake_root_cairn_watch": "building_dev_fort_1",
+      "building_thornwake_sap_chandler_grove": "building_dev_storehouse_1",
+      "building_thornwake_bastion_seed_conclave": "building_wayfarers_hall",
+      "building_thornwake_mycorrhizal_store": "building_dev_storehouse_1",
+      "building_thornwake_rootlaw_moot": "building_wayfarers_hall",
+      "building_thornwake_bramble_toll": "building_dev_thornwake_t2_1",
+      "building_thornwake_sporeglass_hothouse": "building_dev_thornwake_t3_1",
+      "building_thornwake_barkmantle_run": "building_dev_thornwake_t4_1",
+      "building_thornwake_pilgrim_orchard": "building_dev_thornwake_t5_1",
+      "building_thornwake_graftworks": "building_dev_thornwake_t6_1",
+      "building_thornwake_worldroot_gate": "building_dev_thornwake_t7_1",
+      "building_thornwake_canopy_breach_grove": "building_dev_thornwake_t5_1",
+      "building_thornwake_seedglass_cantory": "building_dev_thornwake_t5_2",
+      "building_thornwake_crownroot_heartseed_parliament": "building_wayfarers_hall",
+      "building_thornwake_woundroot_rootmaul_hollow": "building_dev_thornwake_t6_1",
+      "building_thornwake_woundroot_hearthseed_nursery": "building_dev_thornwake_t4_1"
+    },
+    "faction_brasshollow": {
+      "building_town_hall": "building_town_hall",
+      "building_brasshollow_ore_tithe_office": "building_dev_brasshollow_t1_1",
+      "building_wayfarers_hall": "building_wayfarers_hall",
+      "building_market_square": "building_market_square",
+      "building_brasshollow_scalehouse": "building_dev_storehouse_1",
+      "building_brasshollow_clause_court": "building_wayfarers_hall",
+      "building_brasshollow_heatwright_vestry": "building_dev_guild_4",
+      "building_brasshollow_gauge_arsenal": "building_dev_fort_1",
+      "building_brasshollow_debtworks_vault": "building_dev_storehouse_1",
+      "building_brasshollow_ledger_mint": "building_dev_storehouse_1",
+      "building_brasshollow_foreman_clausehouse": "building_dev_fort_1",
+      "building_brasshollow_caliper_sanctum": "building_dev_guild_5",
+      "building_brasshollow_redline_assembly_yard": "building_dev_fort_1",
+      "building_brasshollow_brassbound_directorate": "building_dev_brasshollow_t7_1_upgrade",
+      "building_brasshollow_quenchwright_bay": "building_dev_fort_1",
+      "building_brasshollow_rail_tax_office": "building_dev_storehouse_1",
+      "building_brasshollow_warrant_engine_house": "building_wayfarers_hall",
+      "building_brasshollow_rivet_kennels": "building_dev_brasshollow_t2_1",
+      "building_brasshollow_pavis_foundry": "building_dev_brasshollow_t3_1",
+      "building_brasshollow_boiler_cathedral": "building_dev_brasshollow_t4_1",
+      "building_brasshollow_pressure_rail": "building_dev_brasshollow_t5_1",
+      "building_brasshollow_crucible_dock": "building_dev_brasshollow_t6_1",
+      "building_brasshollow_titan_charter_hall": "building_dev_brasshollow_t7_1",
+      "building_brasshollow_redline_charter_bay": "building_dev_brasshollow_t5_1",
+      "building_brasshollow_quenchbell_mortar_bay": "building_dev_brasshollow_t5_2",
+      "building_brasshollow_blackbell_grand_assay_bell": "building_wayfarers_hall",
+      "building_brasshollow_whitegauge_datum_railhouse": "building_dev_brasshollow_t4_1",
+      "building_brasshollow_whitegauge_breach_pressure_foundry": "building_dev_brasshollow_t6_1"
+    },
+    "faction_veilmourn": {
+      "building_town_hall": "building_town_hall",
+      "building_veilmourn_bell_harbor": "building_dev_veilmourn_t1_1",
+      "building_wayfarers_hall": "building_wayfarers_hall",
+      "building_market_square": "building_market_square",
+      "building_veilmourn_fog_signal_buoys": "building_dev_fort_1",
+      "building_veilmourn_salvage_ledger": "building_dev_storehouse_1",
+      "building_veilmourn_wake_oratory": "building_dev_guild_4",
+      "building_veilmourn_black_sail_loft": "building_dev_fort_1",
+      "building_veilmourn_memory_anchor": "building_wayfarers_hall",
+      "building_veilmourn_salt_counting_house": "building_dev_storehouse_1",
+      "building_veilmourn_mourner_pilot_guild": "building_dev_fort_1",
+      "building_veilmourn_tideglass_chapel": "building_dev_guild_5",
+      "building_veilmourn_drowned_map_room": "building_dev_fort_1",
+      "building_veilmourn_memory_rite_court": "building_dev_veilmourn_t7_1_upgrade",
+      "building_veilmourn_bell_chain_watch": "building_dev_fort_1",
+      "building_veilmourn_saltwake_factor": "building_dev_storehouse_1",
+      "building_veilmourn_drowned_admiralty": "building_wayfarers_hall",
+      "building_veilmourn_ransom_exchange": "building_dev_veilmourn_t2_1",
+      "building_veilmourn_mirror_drydock": "building_dev_veilmourn_t3_1",
+      "building_veilmourn_harpoon_gantry": "building_dev_veilmourn_t4_1",
+      "building_veilmourn_obituary_vault": "building_dev_veilmourn_t5_1",
+      "building_veilmourn_mistgate_slip": "building_dev_veilmourn_t6_1",
+      "building_veilmourn_leviathan_sounding": "building_dev_veilmourn_t7_1",
+      "building_veilmourn_wakeglass_chart_house": "building_dev_veilmourn_t5_2",
+      "building_veilmourn_saltwake_eulogy_house": "building_dev_veilmourn_t5_1",
+      "building_veilmourn_pale_sounding_last_memory_beacon": "building_wayfarers_hall",
+      "building_veilmourn_dreamwake_tideglass_oratory": "building_dev_veilmourn_t4_1",
+      "building_veilmourn_dreamwake_foganchor_slip": "building_dev_veilmourn_t6_1"
+    }
+  },
+  "rosters": {
+    "faction_embercourt": [
+      {
+        "tier": 1,
+        "branch": 1,
+        "unit_id": "unit_river_guard",
+        "upgraded_unit_id": "unit_river_guard_veteran",
+        "building_id": "building_dev_embercourt_t1_1",
+        "upgrade_building_id": "building_dev_embercourt_t1_1_upgrade"
+      },
+      {
+        "tier": 1,
+        "branch": 2,
+        "unit_id": "unit_embercourt_fordhook_cadets",
+        "upgraded_unit_id": "unit_embercourt_fordhook_cadets_veteran",
+        "building_id": "building_dev_embercourt_t1_2",
+        "upgrade_building_id": "building_dev_embercourt_t1_2_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 1,
+        "unit_id": "unit_ember_archer",
+        "upgraded_unit_id": "unit_ember_archer_veteran",
+        "building_id": "building_dev_embercourt_t2_1",
+        "upgrade_building_id": "building_dev_embercourt_t2_1_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 2,
+        "unit_id": "unit_embercourt_lantern_sappers",
+        "upgraded_unit_id": "unit_embercourt_lantern_sappers_veteran",
+        "building_id": "building_dev_embercourt_t2_2",
+        "upgrade_building_id": "building_dev_embercourt_t2_2_upgrade"
+      },
+      {
+        "tier": 3,
+        "branch": 1,
+        "unit_id": "unit_citadel_pikeward",
+        "upgraded_unit_id": "unit_citadel_pikeward_veteran",
+        "building_id": "building_dev_embercourt_t3_1",
+        "upgrade_building_id": "building_dev_embercourt_t3_1_upgrade"
+      },
+      {
+        "tier": 3,
+        "branch": 2,
+        "unit_id": "unit_embercourt_bargebow_crews",
+        "upgraded_unit_id": "unit_embercourt_bargebow_crews_veteran",
+        "building_id": "building_dev_embercourt_t3_2",
+        "upgrade_building_id": "building_dev_embercourt_t3_2_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 1,
+        "unit_id": "unit_embercourt_ash_oath_bailiffs",
+        "upgraded_unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
+        "building_id": "building_dev_embercourt_t4_1",
+        "upgrade_building_id": "building_dev_embercourt_t4_1_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 2,
+        "unit_id": "unit_embercourt_lockglass_writcasters",
+        "upgraded_unit_id": "unit_embercourt_lockglass_writcasters_veteran",
+        "building_id": "building_dev_embercourt_t4_2",
+        "upgrade_building_id": "building_dev_embercourt_t4_2_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 1,
+        "unit_id": "unit_embercourt_beacon_lectors",
+        "upgraded_unit_id": "unit_embercourt_beacon_lectors_veteran",
+        "building_id": "building_dev_embercourt_t5_1",
+        "upgrade_building_id": "building_dev_embercourt_t5_1_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 2,
+        "unit_id": "unit_embercourt_beaconline_writguard",
+        "upgraded_unit_id": "unit_embercourt_beaconline_writguard_veteran",
+        "building_id": "building_dev_embercourt_t5_2",
+        "upgrade_building_id": "building_dev_embercourt_t5_2_upgrade"
+      },
+      {
+        "tier": 6,
+        "branch": 1,
+        "unit_id": "unit_embercourt_sluicefire_lindworms",
+        "upgraded_unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
+        "building_id": "building_dev_embercourt_t6_1",
+        "upgrade_building_id": "building_dev_embercourt_t6_1_upgrade"
+      },
+      {
+        "tier": 7,
+        "branch": 1,
+        "unit_id": "unit_embercourt_charter_colossus",
+        "upgraded_unit_id": "unit_embercourt_charter_colossus_veteran",
+        "building_id": "building_dev_embercourt_t7_1",
+        "upgrade_building_id": "building_dev_embercourt_t7_1_upgrade"
+      }
+    ],
+    "faction_mireclaw": [
+      {
+        "tier": 1,
+        "branch": 1,
+        "unit_id": "unit_blackbranch_cutthroat",
+        "upgraded_unit_id": "unit_blackbranch_cutthroat_veteran",
+        "building_id": "building_dev_mireclaw_t1_1",
+        "upgrade_building_id": "building_dev_mireclaw_t1_1_upgrade"
+      },
+      {
+        "tier": 1,
+        "branch": 2,
+        "unit_id": "unit_mireclaw_reedsnare_kin",
+        "upgraded_unit_id": "unit_mireclaw_reedsnare_kin_veteran",
+        "building_id": "building_dev_mireclaw_t1_2",
+        "upgrade_building_id": "building_dev_mireclaw_t1_2_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 1,
+        "unit_id": "unit_bog_brute",
+        "upgraded_unit_id": "unit_bog_brute_veteran",
+        "building_id": "building_dev_mireclaw_t2_1",
+        "upgrade_building_id": "building_dev_mireclaw_t2_1_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 2,
+        "unit_id": "unit_mireclaw_mudglass_slingers",
+        "upgraded_unit_id": "unit_mireclaw_mudglass_slingers_veteran",
+        "building_id": "building_dev_mireclaw_t2_2",
+        "upgrade_building_id": "building_dev_mireclaw_t2_2_upgrade"
+      },
+      {
+        "tier": 3,
+        "branch": 1,
+        "unit_id": "unit_gorefen_ripper",
+        "upgraded_unit_id": "unit_gorefen_ripper_veteran",
+        "building_id": "building_dev_mireclaw_t3_1",
+        "upgrade_building_id": "building_dev_mireclaw_t3_1_upgrade"
+      },
+      {
+        "tier": 3,
+        "branch": 2,
+        "unit_id": "unit_mireclaw_bogplate_maulers",
+        "upgraded_unit_id": "unit_mireclaw_bogplate_maulers_veteran",
+        "building_id": "building_dev_mireclaw_t3_2",
+        "upgrade_building_id": "building_dev_mireclaw_t3_2_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 1,
+        "unit_id": "unit_mireclaw_ferrychain_lashers",
+        "upgraded_unit_id": "unit_mireclaw_ferrychain_lashers_veteran",
+        "building_id": "building_dev_mireclaw_t4_1",
+        "upgrade_building_id": "building_dev_mireclaw_t4_1_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 2,
+        "unit_id": "unit_mireclaw_mireglass_reedcasters",
+        "upgraded_unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+        "building_id": "building_dev_mireclaw_t4_2",
+        "upgrade_building_id": "building_dev_mireclaw_t4_2_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 1,
+        "unit_id": "unit_mireclaw_sporewake_chanters",
+        "upgraded_unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+        "building_id": "building_dev_mireclaw_t5_1",
+        "upgrade_building_id": "building_dev_mireclaw_t5_1_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 2,
+        "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+        "upgraded_unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
+        "building_id": "building_dev_mireclaw_t5_2",
+        "upgrade_building_id": "building_dev_mireclaw_t5_2_upgrade"
+      },
+      {
+        "tier": 6,
+        "branch": 1,
+        "unit_id": "unit_mireclaw_gorefen_rippers",
+        "upgraded_unit_id": "unit_mireclaw_gorefen_rippers_veteran",
+        "building_id": "building_dev_mireclaw_t6_1",
+        "upgrade_building_id": "building_dev_mireclaw_t6_1_upgrade"
+      },
+      {
+        "tier": 7,
+        "branch": 1,
+        "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+        "upgraded_unit_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
+        "building_id": "building_dev_mireclaw_t7_1",
+        "upgrade_building_id": "building_dev_mireclaw_t7_1_upgrade"
+      }
+    ],
+    "faction_sunvault": [
+      {
+        "tier": 1,
+        "branch": 1,
+        "unit_id": "unit_shard_guard",
+        "upgraded_unit_id": "unit_shard_guard_veteran",
+        "building_id": "building_dev_sunvault_t1_1",
+        "upgrade_building_id": "building_dev_sunvault_t1_1_upgrade"
+      },
+      {
+        "tier": 1,
+        "branch": 2,
+        "unit_id": "unit_sunvault_shard_wardens",
+        "upgraded_unit_id": "unit_sunvault_shard_wardens_veteran",
+        "building_id": "building_dev_sunvault_t1_2",
+        "upgrade_building_id": "building_dev_sunvault_t1_2_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 1,
+        "unit_id": "unit_prism_adept",
+        "upgraded_unit_id": "unit_prism_adept_veteran",
+        "building_id": "building_dev_sunvault_t2_1",
+        "upgrade_building_id": "building_dev_sunvault_t2_1_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 2,
+        "unit_id": "unit_sunvault_prism_adepts",
+        "upgraded_unit_id": "unit_sunvault_prism_adepts_veteran",
+        "building_id": "building_dev_sunvault_t2_2",
+        "upgrade_building_id": "building_dev_sunvault_t2_2_upgrade"
+      },
+      {
+        "tier": 3,
+        "branch": 1,
+        "unit_id": "unit_aurora_ballista",
+        "upgraded_unit_id": "unit_aurora_ballista_veteran",
+        "building_id": "building_dev_sunvault_t3_1",
+        "upgrade_building_id": "building_dev_sunvault_t3_1_upgrade"
+      },
+      {
+        "tier": 3,
+        "branch": 2,
+        "unit_id": "unit_sunvault_mirror_duelists",
+        "upgraded_unit_id": "unit_sunvault_mirror_duelists_veteran",
+        "building_id": "building_dev_sunvault_t3_2",
+        "upgrade_building_id": "building_dev_sunvault_t3_2_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 1,
+        "unit_id": "unit_sunvault_resonant_choristers",
+        "upgraded_unit_id": "unit_sunvault_resonant_choristers_veteran",
+        "building_id": "building_dev_sunvault_t4_1",
+        "upgrade_building_id": "building_dev_sunvault_t4_1_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 2,
+        "unit_id": "unit_sunvault_noonfacet_sentinels",
+        "upgraded_unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
+        "building_id": "building_dev_sunvault_t4_2",
+        "upgrade_building_id": "building_dev_sunvault_t4_2_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 1,
+        "unit_id": "unit_sunvault_solar_array_striders",
+        "upgraded_unit_id": "unit_sunvault_solar_array_striders_veteran",
+        "building_id": "building_dev_sunvault_t5_1",
+        "upgrade_building_id": "building_dev_sunvault_t5_1_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 2,
+        "unit_id": "unit_sunvault_zenith_lensbearers",
+        "upgraded_unit_id": "unit_sunvault_zenith_lensbearers_veteran",
+        "building_id": "building_dev_sunvault_t5_2",
+        "upgrade_building_id": "building_dev_sunvault_t5_2_upgrade"
+      },
+      {
+        "tier": 6,
+        "branch": 1,
+        "unit_id": "unit_sunvault_aurora_ballistae",
+        "upgraded_unit_id": "unit_sunvault_aurora_ballistae_veteran",
+        "building_id": "building_dev_sunvault_t6_1",
+        "upgrade_building_id": "building_dev_sunvault_t6_1_upgrade"
+      },
+      {
+        "tier": 7,
+        "branch": 1,
+        "unit_id": "unit_sunvault_daybreak_colossus",
+        "upgraded_unit_id": "unit_sunvault_daybreak_colossus_veteran",
+        "building_id": "building_dev_sunvault_t7_1",
+        "upgrade_building_id": "building_dev_sunvault_t7_1_upgrade"
+      }
+    ],
+    "faction_thornwake": [
+      {
+        "tier": 1,
+        "branch": 1,
+        "unit_id": "unit_thornwake_seedcutters",
+        "upgraded_unit_id": "unit_thornwake_seedcutters_veteran",
+        "building_id": "building_dev_thornwake_t1_1",
+        "upgrade_building_id": "building_dev_thornwake_t1_1_upgrade"
+      },
+      {
+        "tier": 1,
+        "branch": 2,
+        "unit_id": "unit_thornwake_pollenhook_whistlers",
+        "upgraded_unit_id": "unit_thornwake_pollenhook_whistlers_veteran",
+        "building_id": "building_dev_thornwake_t1_2",
+        "upgrade_building_id": "building_dev_thornwake_t1_2_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 1,
+        "unit_id": "unit_thornwake_thornwhip_carriers",
+        "upgraded_unit_id": "unit_thornwake_thornwhip_carriers_veteran",
+        "building_id": "building_dev_thornwake_t2_1",
+        "upgrade_building_id": "building_dev_thornwake_t2_1_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 2,
+        "unit_id": "unit_thornwake_bramblekite_needlers",
+        "upgraded_unit_id": "unit_thornwake_bramblekite_needlers_veteran",
+        "building_id": "building_dev_thornwake_t2_2",
+        "upgrade_building_id": "building_dev_thornwake_t2_2_upgrade"
+      },
+      {
+        "tier": 3,
+        "branch": 1,
+        "unit_id": "unit_thornwake_sporeglass_menders",
+        "upgraded_unit_id": "unit_thornwake_sporeglass_menders_veteran",
+        "building_id": "building_dev_thornwake_t3_1",
+        "upgrade_building_id": "building_dev_thornwake_t3_1_upgrade"
+      },
+      {
+        "tier": 3,
+        "branch": 2,
+        "unit_id": "unit_thornwake_seedshield_wardens",
+        "upgraded_unit_id": "unit_thornwake_seedshield_wardens_veteran",
+        "building_id": "building_dev_thornwake_t3_2",
+        "upgrade_building_id": "building_dev_thornwake_t3_2_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 1,
+        "unit_id": "unit_thornwake_barkmantle_rams",
+        "upgraded_unit_id": "unit_thornwake_barkmantle_rams_veteran",
+        "building_id": "building_dev_thornwake_t4_1",
+        "upgrade_building_id": "building_dev_thornwake_t4_1_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 2,
+        "unit_id": "unit_thornwake_dawnseed_bolters",
+        "upgraded_unit_id": "unit_thornwake_dawnseed_bolters_veteran",
+        "building_id": "building_dev_thornwake_t4_2",
+        "upgrade_building_id": "building_dev_thornwake_t4_2_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 1,
+        "unit_id": "unit_thornwake_stagknot_runners",
+        "upgraded_unit_id": "unit_thornwake_stagknot_runners_veteran",
+        "building_id": "building_dev_thornwake_t5_1",
+        "upgrade_building_id": "building_dev_thornwake_t5_1_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 2,
+        "unit_id": "unit_thornwake_seedglass_cantors",
+        "upgraded_unit_id": "unit_thornwake_seedglass_cantors_veteran",
+        "building_id": "building_dev_thornwake_t5_2",
+        "upgrade_building_id": "building_dev_thornwake_t5_2_upgrade"
+      },
+      {
+        "tier": 6,
+        "branch": 1,
+        "unit_id": "unit_thornwake_graft_matriarchs",
+        "upgraded_unit_id": "unit_thornwake_graft_matriarchs_veteran",
+        "building_id": "building_dev_thornwake_t6_1",
+        "upgrade_building_id": "building_dev_thornwake_t6_1_upgrade"
+      },
+      {
+        "tier": 7,
+        "branch": 1,
+        "unit_id": "unit_thornwake_worldroot_bastion",
+        "upgraded_unit_id": "unit_thornwake_worldroot_bastion_veteran",
+        "building_id": "building_dev_thornwake_t7_1",
+        "upgrade_building_id": "building_dev_thornwake_t7_1_upgrade"
+      }
+    ],
+    "faction_brasshollow": [
+      {
+        "tier": 1,
+        "branch": 1,
+        "unit_id": "unit_brasshollow_scrip_haulers",
+        "upgraded_unit_id": "unit_brasshollow_scrip_haulers_veteran",
+        "building_id": "building_dev_brasshollow_t1_1",
+        "upgrade_building_id": "building_dev_brasshollow_t1_1_upgrade"
+      },
+      {
+        "tier": 1,
+        "branch": 2,
+        "unit_id": "unit_brasshollow_tallyspring_throwers",
+        "upgraded_unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+        "building_id": "building_dev_brasshollow_t1_2",
+        "upgrade_building_id": "building_dev_brasshollow_t1_2_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 1,
+        "unit_id": "unit_brasshollow_rivet_hounds",
+        "upgraded_unit_id": "unit_brasshollow_rivet_hounds_veteran",
+        "building_id": "building_dev_brasshollow_t2_1",
+        "upgrade_building_id": "building_dev_brasshollow_t2_1_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 2,
+        "unit_id": "unit_brasshollow_quenchspool_slingers",
+        "upgraded_unit_id": "unit_brasshollow_quenchspool_slingers_veteran",
+        "building_id": "building_dev_brasshollow_t2_2",
+        "upgrade_building_id": "building_dev_brasshollow_t2_2_upgrade"
+      },
+      {
+        "tier": 3,
+        "branch": 1,
+        "unit_id": "unit_brasshollow_furnace_pavis_teams",
+        "upgraded_unit_id": "unit_brasshollow_furnace_pavis_teams_veteran",
+        "building_id": "building_dev_brasshollow_t3_1",
+        "upgrade_building_id": "building_dev_brasshollow_t3_1_upgrade"
+      },
+      {
+        "tier": 3,
+        "branch": 2,
+        "unit_id": "unit_brasshollow_gaugefire_arbalists",
+        "upgraded_unit_id": "unit_brasshollow_gaugefire_arbalists_veteran",
+        "building_id": "building_dev_brasshollow_t3_2",
+        "upgrade_building_id": "building_dev_brasshollow_t3_2_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 1,
+        "unit_id": "unit_brasshollow_boiler_rivetcasters",
+        "upgraded_unit_id": "unit_brasshollow_boiler_rivetcasters_veteran",
+        "building_id": "building_dev_brasshollow_t4_1",
+        "upgrade_building_id": "building_dev_brasshollow_t4_1_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 2,
+        "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+        "upgraded_unit_id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
+        "building_id": "building_dev_brasshollow_t4_2",
+        "upgrade_building_id": "building_dev_brasshollow_t4_2_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 1,
+        "unit_id": "unit_brasshollow_debt_engine_exactors",
+        "upgraded_unit_id": "unit_brasshollow_debt_engine_exactors_veteran",
+        "building_id": "building_dev_brasshollow_t5_1",
+        "upgrade_building_id": "building_dev_brasshollow_t5_1_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 2,
+        "unit_id": "unit_brasshollow_quenchbell_mortars",
+        "upgraded_unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
+        "building_id": "building_dev_brasshollow_t5_2",
+        "upgrade_building_id": "building_dev_brasshollow_t5_2_upgrade"
+      },
+      {
+        "tier": 6,
+        "branch": 1,
+        "unit_id": "unit_brasshollow_crucible_crawlers",
+        "upgraded_unit_id": "unit_brasshollow_crucible_crawlers_veteran",
+        "building_id": "building_dev_brasshollow_t6_1",
+        "upgrade_building_id": "building_dev_brasshollow_t6_1_upgrade"
+      },
+      {
+        "tier": 7,
+        "branch": 1,
+        "unit_id": "unit_brasshollow_foundry_saint",
+        "upgraded_unit_id": "unit_brasshollow_foundry_saint_veteran",
+        "building_id": "building_dev_brasshollow_t7_1",
+        "upgrade_building_id": "building_dev_brasshollow_t7_1_upgrade"
+      }
+    ],
+    "faction_veilmourn": [
+      {
+        "tier": 1,
+        "branch": 1,
+        "unit_id": "unit_veilmourn_bellwake_oars",
+        "upgraded_unit_id": "unit_veilmourn_bellwake_oars_veteran",
+        "building_id": "building_dev_veilmourn_t1_1",
+        "upgrade_building_id": "building_dev_veilmourn_t1_1_upgrade"
+      },
+      {
+        "tier": 1,
+        "branch": 2,
+        "unit_id": "unit_veilmourn_saltbell_casters",
+        "upgraded_unit_id": "unit_veilmourn_saltbell_casters_veteran",
+        "building_id": "building_dev_veilmourn_t1_2",
+        "upgrade_building_id": "building_dev_veilmourn_t1_2_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 1,
+        "unit_id": "unit_veilmourn_mourning_lanterns",
+        "upgraded_unit_id": "unit_veilmourn_mourning_lanterns_veteran",
+        "building_id": "building_dev_veilmourn_t2_1",
+        "upgrade_building_id": "building_dev_veilmourn_t2_1_upgrade"
+      },
+      {
+        "tier": 2,
+        "branch": 2,
+        "unit_id": "unit_veilmourn_tidehook_deckhands",
+        "upgraded_unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
+        "building_id": "building_dev_veilmourn_t2_2",
+        "upgrade_building_id": "building_dev_veilmourn_t2_2_upgrade"
+      },
+      {
+        "tier": 3,
+        "branch": 1,
+        "unit_id": "unit_veilmourn_maskglass_corsairs",
+        "upgraded_unit_id": "unit_veilmourn_maskglass_corsairs_veteran",
+        "building_id": "building_dev_veilmourn_t3_1",
+        "upgrade_building_id": "building_dev_veilmourn_t3_1_upgrade"
+      },
+      {
+        "tier": 3,
+        "branch": 2,
+        "unit_id": "unit_veilmourn_wakechain_boarders",
+        "upgraded_unit_id": "unit_veilmourn_wakechain_boarders_veteran",
+        "building_id": "building_dev_veilmourn_t3_2",
+        "upgrade_building_id": "building_dev_veilmourn_t3_2_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 1,
+        "unit_id": "unit_veilmourn_undertow_harpooners",
+        "upgraded_unit_id": "unit_veilmourn_undertow_harpooners_veteran",
+        "building_id": "building_dev_veilmourn_t4_1",
+        "upgrade_building_id": "building_dev_veilmourn_t4_1_upgrade"
+      },
+      {
+        "tier": 4,
+        "branch": 2,
+        "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+        "upgraded_unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+        "building_id": "building_dev_veilmourn_t4_2",
+        "upgrade_building_id": "building_dev_veilmourn_t4_2_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 1,
+        "unit_id": "unit_veilmourn_obituary_scribes",
+        "upgraded_unit_id": "unit_veilmourn_obituary_scribes_veteran",
+        "building_id": "building_dev_veilmourn_t5_1",
+        "upgrade_building_id": "building_dev_veilmourn_t5_1_upgrade"
+      },
+      {
+        "tier": 5,
+        "branch": 2,
+        "unit_id": "unit_veilmourn_wakeglass_navigators",
+        "upgraded_unit_id": "unit_veilmourn_wakeglass_navigators_veteran",
+        "building_id": "building_dev_veilmourn_t5_2",
+        "upgrade_building_id": "building_dev_veilmourn_t5_2_upgrade"
+      },
+      {
+        "tier": 6,
+        "branch": 1,
+        "unit_id": "unit_veilmourn_mirrorkeel_reavers",
+        "upgraded_unit_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+        "building_id": "building_dev_veilmourn_t6_1",
+        "upgrade_building_id": "building_dev_veilmourn_t6_1_upgrade"
+      },
+      {
+        "tier": 7,
+        "branch": 1,
+        "unit_id": "unit_veilmourn_fogbound_leviathan",
+        "upgraded_unit_id": "unit_veilmourn_fogbound_leviathan_veteran",
+        "building_id": "building_dev_veilmourn_t7_1",
+        "upgrade_building_id": "building_dev_veilmourn_t7_1_upgrade"
+      }
+    ]
+  },
+  "unit_upgrades": {
+    "unit_river_guard": "unit_river_guard_veteran",
+    "unit_embercourt_fordhook_cadets": "unit_embercourt_fordhook_cadets_veteran",
+    "unit_ember_archer": "unit_ember_archer_veteran",
+    "unit_embercourt_lantern_sappers": "unit_embercourt_lantern_sappers_veteran",
+    "unit_citadel_pikeward": "unit_citadel_pikeward_veteran",
+    "unit_embercourt_bargebow_crews": "unit_embercourt_bargebow_crews_veteran",
+    "unit_embercourt_ash_oath_bailiffs": "unit_embercourt_ash_oath_bailiffs_veteran",
+    "unit_embercourt_lockglass_writcasters": "unit_embercourt_lockglass_writcasters_veteran",
+    "unit_embercourt_beacon_lectors": "unit_embercourt_beacon_lectors_veteran",
+    "unit_embercourt_beaconline_writguard": "unit_embercourt_beaconline_writguard_veteran",
+    "unit_embercourt_sluicefire_lindworms": "unit_embercourt_sluicefire_lindworms_veteran",
+    "unit_embercourt_charter_colossus": "unit_embercourt_charter_colossus_veteran",
+    "unit_blackbranch_cutthroat": "unit_blackbranch_cutthroat_veteran",
+    "unit_mireclaw_reedsnare_kin": "unit_mireclaw_reedsnare_kin_veteran",
+    "unit_bog_brute": "unit_bog_brute_veteran",
+    "unit_mireclaw_mudglass_slingers": "unit_mireclaw_mudglass_slingers_veteran",
+    "unit_gorefen_ripper": "unit_gorefen_ripper_veteran",
+    "unit_mireclaw_bogplate_maulers": "unit_mireclaw_bogplate_maulers_veteran",
+    "unit_mireclaw_ferrychain_lashers": "unit_mireclaw_ferrychain_lashers_veteran",
+    "unit_mireclaw_mireglass_reedcasters": "unit_mireclaw_mireglass_reedcasters_veteran",
+    "unit_mireclaw_sporewake_chanters": "unit_mireclaw_sporewake_chanters_veteran",
+    "unit_mireclaw_fenbell_chainstalkers": "unit_mireclaw_fenbell_chainstalkers_veteran",
+    "unit_mireclaw_gorefen_rippers": "unit_mireclaw_gorefen_rippers_veteran",
+    "unit_mireclaw_drowned_antler_sovereign": "unit_mireclaw_drowned_antler_sovereign_veteran",
+    "unit_shard_guard": "unit_shard_guard_veteran",
+    "unit_sunvault_shard_wardens": "unit_sunvault_shard_wardens_veteran",
+    "unit_prism_adept": "unit_prism_adept_veteran",
+    "unit_sunvault_prism_adepts": "unit_sunvault_prism_adepts_veteran",
+    "unit_aurora_ballista": "unit_aurora_ballista_veteran",
+    "unit_sunvault_mirror_duelists": "unit_sunvault_mirror_duelists_veteran",
+    "unit_sunvault_resonant_choristers": "unit_sunvault_resonant_choristers_veteran",
+    "unit_sunvault_noonfacet_sentinels": "unit_sunvault_noonfacet_sentinels_veteran",
+    "unit_sunvault_solar_array_striders": "unit_sunvault_solar_array_striders_veteran",
+    "unit_sunvault_zenith_lensbearers": "unit_sunvault_zenith_lensbearers_veteran",
+    "unit_sunvault_aurora_ballistae": "unit_sunvault_aurora_ballistae_veteran",
+    "unit_sunvault_daybreak_colossus": "unit_sunvault_daybreak_colossus_veteran",
+    "unit_thornwake_seedcutters": "unit_thornwake_seedcutters_veteran",
+    "unit_thornwake_pollenhook_whistlers": "unit_thornwake_pollenhook_whistlers_veteran",
+    "unit_thornwake_thornwhip_carriers": "unit_thornwake_thornwhip_carriers_veteran",
+    "unit_thornwake_bramblekite_needlers": "unit_thornwake_bramblekite_needlers_veteran",
+    "unit_thornwake_sporeglass_menders": "unit_thornwake_sporeglass_menders_veteran",
+    "unit_thornwake_seedshield_wardens": "unit_thornwake_seedshield_wardens_veteran",
+    "unit_thornwake_barkmantle_rams": "unit_thornwake_barkmantle_rams_veteran",
+    "unit_thornwake_dawnseed_bolters": "unit_thornwake_dawnseed_bolters_veteran",
+    "unit_thornwake_stagknot_runners": "unit_thornwake_stagknot_runners_veteran",
+    "unit_thornwake_seedglass_cantors": "unit_thornwake_seedglass_cantors_veteran",
+    "unit_thornwake_graft_matriarchs": "unit_thornwake_graft_matriarchs_veteran",
+    "unit_thornwake_worldroot_bastion": "unit_thornwake_worldroot_bastion_veteran",
+    "unit_brasshollow_scrip_haulers": "unit_brasshollow_scrip_haulers_veteran",
+    "unit_brasshollow_tallyspring_throwers": "unit_brasshollow_tallyspring_throwers_veteran",
+    "unit_brasshollow_rivet_hounds": "unit_brasshollow_rivet_hounds_veteran",
+    "unit_brasshollow_quenchspool_slingers": "unit_brasshollow_quenchspool_slingers_veteran",
+    "unit_brasshollow_furnace_pavis_teams": "unit_brasshollow_furnace_pavis_teams_veteran",
+    "unit_brasshollow_gaugefire_arbalists": "unit_brasshollow_gaugefire_arbalists_veteran",
+    "unit_brasshollow_boiler_rivetcasters": "unit_brasshollow_boiler_rivetcasters_veteran",
+    "unit_brasshollow_gaugeplate_bailiffs": "unit_brasshollow_gaugeplate_bailiffs_veteran",
+    "unit_brasshollow_debt_engine_exactors": "unit_brasshollow_debt_engine_exactors_veteran",
+    "unit_brasshollow_quenchbell_mortars": "unit_brasshollow_quenchbell_mortars_veteran",
+    "unit_brasshollow_crucible_crawlers": "unit_brasshollow_crucible_crawlers_veteran",
+    "unit_brasshollow_foundry_saint": "unit_brasshollow_foundry_saint_veteran",
+    "unit_veilmourn_bellwake_oars": "unit_veilmourn_bellwake_oars_veteran",
+    "unit_veilmourn_saltbell_casters": "unit_veilmourn_saltbell_casters_veteran",
+    "unit_veilmourn_mourning_lanterns": "unit_veilmourn_mourning_lanterns_veteran",
+    "unit_veilmourn_tidehook_deckhands": "unit_veilmourn_tidehook_deckhands_veteran",
+    "unit_veilmourn_maskglass_corsairs": "unit_veilmourn_maskglass_corsairs_veteran",
+    "unit_veilmourn_wakechain_boarders": "unit_veilmourn_wakechain_boarders_veteran",
+    "unit_veilmourn_undertow_harpooners": "unit_veilmourn_undertow_harpooners_veteran",
+    "unit_veilmourn_gloamkeel_bulwarks": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+    "unit_veilmourn_obituary_scribes": "unit_veilmourn_obituary_scribes_veteran",
+    "unit_veilmourn_wakeglass_navigators": "unit_veilmourn_wakeglass_navigators_veteran",
+    "unit_veilmourn_mirrorkeel_reavers": "unit_veilmourn_mirrorkeel_reavers_veteran",
+    "unit_veilmourn_fogbound_leviathan": "unit_veilmourn_fogbound_leviathan_veteran"
+  },
+  "storehouse_2_retains_common_income": true,
+  "capital_limit": "per_town",
+  "hero_reward_scope": "once_per_building_type_per_hero"
+}

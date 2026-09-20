@@ -536,7 +536,9 @@ func _direct_dialog_mode_surfaces(mode: String) -> Array:
 		"spells":
 			return [_spellbook_view]
 		"trade":
-			return [_market_label, _market_actions]
+			return [_market_label, _market_actions, _response_label, _response_actions]
+		"muster":
+			return [_response_label, _response_actions]
 		"log":
 			return [_army_management, _artifact_label, _artifact_actions, _tavern_label, _tavern_actions, _transfer_label, _transfer_actions, _response_label, _response_actions]
 		"building_info":
@@ -630,6 +632,13 @@ func _building_information_lines(building: Dictionary) -> Array:
 	var lines: Array = []
 	var cost: Dictionary = building.get("cost", {}) if building.get("cost", {}) is Dictionary else {}
 	lines.append("Construction cost: %s" % TownRules._describe_resources(cost, "founding structure"))
+	if int(building.get("development_version", 0)) == 1:
+		lines.append(String(building.get("description", "")))
+		if int(building.get("requires_dwelling_tier", 0)) > 0:
+			lines.append("Requires either tier-%d dwelling." % int(building.requires_dwelling_tier))
+		for requirement_id in building.get("requires", []):
+			lines.append("Requires: " + String(ContentService.get_building(String(requirement_id)).get("name", requirement_id)))
+		return lines
 	var requirement_names: Array = []
 	for requirement_id_value in Array(building.get("requires", [])):
 		var requirement := ContentService.get_building(String(requirement_id_value))
@@ -716,7 +725,10 @@ func _open_town_catalog(mode: String) -> void:
 	_apply_responsive_layout()
 	_build_actions.visible = mode == "build"
 	_recruit_actions.visible = mode == "muster"
-	_domain_actions.visible = mode in ["spells", "trade", "log", "building_info"]
+	# Keep upgrade orders above the recruitment grid, within the same popout.
+	if _domain_actions.get_index() > _recruit_actions.get_index():
+		_domain_actions.get_parent().move_child(_domain_actions, _recruit_actions.get_index())
+	_domain_actions.visible = mode in ["muster", "spells", "trade", "log", "building_info"]
 	_set_direct_dialog_surface_visibility(mode)
 	_build_plan_label.visible = mode == "build"
 	_confirm_build_button.visible = mode == "build"
@@ -730,6 +742,8 @@ func _open_town_catalog(mode: String) -> void:
 		_town_catalog_title_label.text = "Muster Hall"
 		_town_catalog_subtitle_label.text = String(HeroCommandRules.town_recruitment_destination(_session, TownRules.get_active_town(_session)).summary)
 		_rebuild_recruit_actions(catalog)
+		_response_label.text = "Upgrade stationed troops"
+		_rebuild_response_actions(_development_service_actions("town_upgrade:"))
 	elif mode == "spells":
 		var town := TownRules.get_active_town(_session)
 		var visitor := HeroCommandRules.town_defending_hero(_session, town)
@@ -745,6 +759,8 @@ func _open_town_catalog(mode: String) -> void:
 		_town_catalog_title_label.text = "Town Market"
 		_town_catalog_subtitle_label.text = "%d exchange order%s • restricted resources remain source-driven" % [actions.size(), "" if actions.size() == 1 else "s"]
 		_rebuild_market_actions(actions)
+		_response_label.text = "Artifact Exchange"
+		_rebuild_response_actions(_development_service_actions("town_buy:") + _development_service_actions("town_sell:"))
 	elif mode == "log":
 		var actions := _logistics_tab_actions()
 		_town_catalog_title_label.text = "Town Log & Logistics"
@@ -753,6 +769,7 @@ func _open_town_catalog(mode: String) -> void:
 		_rebuild_tavern_actions(TownRules.get_tavern_actions(_session))
 		_rebuild_transfer_actions(TownRules.get_transfer_actions(_session))
 		_rebuild_response_actions(TownRules.get_response_actions(_session))
+		_response_label.text = "Hero training and town services"
 		_rebuild_artifact_actions(TownRules.get_artifact_actions(_session))
 	else:
 		_populate_building_information(_selected_building_info_id)
@@ -1027,6 +1044,8 @@ func _on_response_action_pressed(action_id: String) -> void:
 	if _handle_session_resolution():
 		return
 	_refresh()
+	if action_id.begins_with("town_") and _town_catalog_is_open():
+		_open_town_catalog(_town_catalog_mode)
 	_record_town_action_presentation("response", action_id, action, result, before)
 
 func _on_study_action_pressed(action_id: String) -> void:
@@ -1395,7 +1414,7 @@ func _configure_town_keyboard_focus(force: bool = false) -> void:
 		if _town_catalog_mode == "build":
 			catalog_surfaces.append_array([_construction_peek_button, _construction_filters, _build_actions, _construction_requirements, _confirm_build_button])
 		elif _town_catalog_mode == "muster":
-			catalog_surfaces.append(_recruit_actions)
+			catalog_surfaces.append_array([_domain_actions, _recruit_actions])
 		else:
 			catalog_surfaces.append(_domain_actions)
 		var catalog_controls := FrontierVisualKit.configure_focus_cycle(catalog_surfaces)
@@ -2753,6 +2772,8 @@ func _active_hero_cache_signature(town: Dictionary) -> String:
 	parts.append("hero=%s" % _signature_token(hero.get("id", "")))
 	parts.append("level=%d" % int(hero.get("level", 0)))
 	parts.append("xp=%d" % int(hero.get("experience", 0)))
+	parts.append("training=%s" % _string_array_signature(hero.get("town_training_claims", [])))
+	parts.append("command=%s" % JSON.stringify(hero.get("command", {})))
 	var movement: Dictionary = hero.get("movement", {}) if hero.get("movement", {}) is Dictionary else {}
 	var overworld_movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
 	parts.append("move=%d/%d" % [
@@ -4221,8 +4242,12 @@ func _rebuild_response_actions(actions_override: Variant = null) -> void:
 		child.queue_free()
 
 	var actions = actions_override if actions_override is Array else TownRules.get_response_actions(_session)
+	if _town_catalog_mode == "muster":
+		actions = actions.filter(func(a): return String(a.get("id", "")).begins_with("town_upgrade:"))
+	elif _town_catalog_mode == "trade":
+		actions = actions.filter(func(a): return String(a.get("id", "")).begins_with("town_buy:") or String(a.get("id", "")).begins_with("town_sell:"))
 	if actions.is_empty():
-		_response_actions.add_child(_make_placeholder_label("No response orders ready"))
+		_response_actions.add_child(_make_placeholder_label("Build an upgraded dwelling to train its stationed troops." if _town_catalog_mode == "muster" else "Build an Artifact Exchange and bring a hero to trade." if _town_catalog_mode == "trade" else "No town services ready"))
 		return
 
 	for action in actions:
@@ -6738,3 +6763,9 @@ func _faction_accent() -> Color:
 			return Color(0.50, 0.62, 0.72, 1.0)
 		_:
 			return Color(0.88, 0.72, 0.40, 1.0)
+
+func _development_service_actions(prefix: String) -> Array:
+	var result: Array = []
+	for action in TownRules.get_response_actions(_session):
+		if String(action.get("id", "")).begins_with(prefix): result.append(action)
+	return result

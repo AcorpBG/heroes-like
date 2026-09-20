@@ -22,11 +22,16 @@ Rules:
 
 ## Current Tactical State
 
+### Shared town development
+
+`feature-common-town-development-20260921` - completed. Shared active-stage buildings, exclusive T1-T5 choices, T6/T7 faction-resource dwellings, 72 Veteran upgrades, three growth and three hero-support buildings, artifact commerce and three specials per faction. Legacy town migration preserves troops and claims; AI construction/recruitment shares the rules. 676 focused runtime/save/economy/UI checks pass; rendered town/muster/market dialogs reviewed, no full suite. See `docs/common-town-building-template.md`.
+
+
 ### One gameplay town template per faction
 
 `content-single-faction-towns-20260920` - completed. Six active town templates and 26 ID-only legacy aliases; one building/spell library per faction, canonical faction defaults and new native-adoption identities, consistent artifact-service availability, six wiki towns. 164 focused runtime/save/construction/adoption checks and content reachability pass; no full suite.
 
-`design-common-town-buildings-20260920` - completed design proposal only. Shared Town Hall, Fortifications, Magic Guild, Marketplace, Tavern, Workshop and Storehouse lines; upgrade stage semantics documented. Costs, exact effects and replacement-building implementation remain pending. See `docs/common-town-building-template.md`.
+`design-common-town-buildings-20260920` - completed historical design proposal. Superseded by the owner-approved implementation above; Workshop omitted and Storehouse retained. See `docs/common-town-building-template.md`.
 
 ### Hero level-up popup
 

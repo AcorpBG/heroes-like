@@ -4,43 +4,8 @@
       "id": "faction_embercourt",
       "name": "Embercourt League",
       "identity_summary": "River charter courts that turn lockworks, beacon law, and civic fire into braced relief lines.",
-      "economy": {
-        "base_income": {
-          "gold": 60
-        },
-        "pressure_bonus": 0,
-        "per_category_income": {
-          "civic": {
-            "gold": 15
-          },
-          "dwelling": {
-            "gold": 20
-          },
-          "economy": {
-            "gold": 70
-          },
-          "support": {
-            "gold": 40
-          },
-          "magic": {
-            "gold": 20
-          }
-        }
-      },
-      "recruitment": {
-        "readiness_bonus": 8,
-        "growth_bonus": {
-          "unit_embercourt_fordhook_cadets": 1
-        },
-        "cost_discount_percent": {
-          "unit_river_guard": 6,
-          "unit_ember_archer": 7,
-          "unit_citadel_pikeward": 4,
-          "unit_embercourt_fordhook_cadets": 4,
-          "unit_embercourt_lantern_sappers": 4,
-          "unit_embercourt_bargebow_crews": 4
-        }
-      },
+      "economy": {},
+      "recruitment": {},
       "enemy_strategy": {
         "build_category_weights": {
           "civic": 1.2,
@@ -152,51 +117,55 @@
         "playability": "prototype_playable_partial_plus_scaffold",
         "manual_play": "not_verified_for_six_faction_bundle",
         "scenario_integration": "existing_legacy_scenarios_only"
+      },
+      "town_resources": {
+        "main": "embergrain",
+        "secondary": "aetherglass"
+      },
+      "legacy_economy": {
+        "base_income": {
+          "gold": 60
+        },
+        "pressure_bonus": 0,
+        "per_category_income": {
+          "civic": {
+            "gold": 15
+          },
+          "dwelling": {
+            "gold": 20
+          },
+          "economy": {
+            "gold": 70
+          },
+          "support": {
+            "gold": 40
+          },
+          "magic": {
+            "gold": 20
+          }
+        }
+      },
+      "legacy_recruitment": {
+        "readiness_bonus": 8,
+        "growth_bonus": {
+          "unit_embercourt_fordhook_cadets": 1
+        },
+        "cost_discount_percent": {
+          "unit_river_guard": 6,
+          "unit_ember_archer": 7,
+          "unit_citadel_pikeward": 4,
+          "unit_embercourt_fordhook_cadets": 4,
+          "unit_embercourt_lantern_sappers": 4,
+          "unit_embercourt_bargebow_crews": 4
+        }
       }
     },
     {
       "id": "faction_mireclaw",
       "name": "Mireclaw Covenant",
       "identity_summary": "Predatory bog clans that use ferry chains, drum law, and wounded-prey rituals to make the map unsafe.",
-      "economy": {
-        "base_income": {
-          "gold": 35,
-          "wood": 1
-        },
-        "pressure_bonus": 2,
-        "per_category_income": {
-          "civic": {
-            "gold": 10
-          },
-          "dwelling": {
-            "gold": 36
-          },
-          "economy": {
-            "gold": 35
-          },
-          "support": {
-            "gold": 12
-          },
-          "magic": {
-            "gold": 12
-          }
-        }
-      },
-      "recruitment": {
-        "readiness_bonus": 2,
-        "growth_bonus": {
-          "unit_mireclaw_reedsnare_kin": 1
-        },
-        "cost_discount_percent": {
-          "unit_blackbranch_cutthroat": 10,
-          "unit_mire_slinger": 7,
-          "unit_bog_brute": 4,
-          "unit_gorefen_ripper": 4,
-          "unit_mireclaw_reedsnare_kin": 4,
-          "unit_mireclaw_mudglass_slingers": 4,
-          "unit_mireclaw_bogplate_maulers": 4
-        }
-      },
+      "economy": {},
+      "recruitment": {},
       "enemy_strategy": {
         "build_category_weights": {
           "civic": 0.8,
@@ -308,52 +277,57 @@
         "playability": "prototype_playable_partial_plus_scaffold",
         "manual_play": "not_verified_for_six_faction_bundle",
         "scenario_integration": "existing_legacy_scenarios_only"
+      },
+      "town_resources": {
+        "main": "peatwax",
+        "secondary": "memory_salt"
+      },
+      "legacy_economy": {
+        "base_income": {
+          "gold": 35,
+          "wood": 1
+        },
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "civic": {
+            "gold": 10
+          },
+          "dwelling": {
+            "gold": 36
+          },
+          "economy": {
+            "gold": 35
+          },
+          "support": {
+            "gold": 12
+          },
+          "magic": {
+            "gold": 12
+          }
+        }
+      },
+      "legacy_recruitment": {
+        "readiness_bonus": 2,
+        "growth_bonus": {
+          "unit_mireclaw_reedsnare_kin": 1
+        },
+        "cost_discount_percent": {
+          "unit_blackbranch_cutthroat": 10,
+          "unit_mire_slinger": 7,
+          "unit_bog_brute": 4,
+          "unit_gorefen_ripper": 4,
+          "unit_mireclaw_reedsnare_kin": 4,
+          "unit_mireclaw_mudglass_slingers": 4,
+          "unit_mireclaw_bogplate_maulers": 4
+        }
       }
     },
     {
       "id": "faction_sunvault",
       "name": "Sunvault Compact",
       "identity_summary": "Crystal-array commanders who convert expensive relay infrastructure into prepared lanes and resonance timing.",
-      "economy": {
-        "base_income": {
-          "gold": 50,
-          "ore": 1
-        },
-        "pressure_bonus": 1,
-        "per_category_income": {
-          "civic": {
-            "gold": 12
-          },
-          "dwelling": {
-            "gold": 24
-          },
-          "economy": {
-            "gold": 50,
-            "ore": 1
-          },
-          "support": {
-            "gold": 36
-          },
-          "magic": {
-            "gold": 34
-          }
-        }
-      },
-      "recruitment": {
-        "readiness_bonus": 5,
-        "growth_bonus": {
-          "unit_sunvault_shard_wardens": 1
-        },
-        "cost_discount_percent": {
-          "unit_shard_guard": 5,
-          "unit_prism_adept": 6,
-          "unit_mirror_duelist": 5,
-          "unit_aurora_ballista": 4,
-          "unit_sunvault_shard_wardens": 4,
-          "unit_sunvault_prism_adepts": 4,
-          "unit_sunvault_mirror_duelists": 4
-        }
-      },
+      "economy": {},
+      "recruitment": {},
       "enemy_strategy": {
         "build_category_weights": {
           "civic": 1.0,
@@ -465,42 +439,58 @@
         "playability": "prototype_playable_partial_plus_scaffold",
         "manual_play": "not_verified_for_six_faction_bundle",
         "scenario_integration": "existing_legacy_scenarios_only"
+      },
+      "town_resources": {
+        "main": "aetherglass",
+        "secondary": "brass_scrip"
+      },
+      "legacy_economy": {
+        "base_income": {
+          "gold": 50,
+          "ore": 1
+        },
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "civic": {
+            "gold": 12
+          },
+          "dwelling": {
+            "gold": 24
+          },
+          "economy": {
+            "gold": 50,
+            "ore": 1
+          },
+          "support": {
+            "gold": 36
+          },
+          "magic": {
+            "gold": 34
+          }
+        }
+      },
+      "legacy_recruitment": {
+        "readiness_bonus": 5,
+        "growth_bonus": {
+          "unit_sunvault_shard_wardens": 1
+        },
+        "cost_discount_percent": {
+          "unit_shard_guard": 5,
+          "unit_prism_adept": 6,
+          "unit_mirror_duelist": 5,
+          "unit_aurora_ballista": 4,
+          "unit_sunvault_shard_wardens": 4,
+          "unit_sunvault_prism_adepts": 4,
+          "unit_sunvault_mirror_duelists": 4
+        }
       }
     },
     {
       "id": "faction_thornwake",
       "name": "Thornwake Concord",
       "identity_summary": "Migratory living orchards that spread root law, recovery zones, and bramble tolls through contested roads.",
-      "economy": {
-        "base_income": {
-          "gold": 42,
-          "wood": 2
-        },
-        "pressure_bonus": 1,
-        "per_category_income": {
-          "economy": {
-            "gold": 34,
-            "wood": 1
-          },
-          "support": {
-            "gold": 18
-          },
-          "magic": {
-            "gold": 16
-          }
-        }
-      },
-      "recruitment": {
-        "readiness_bonus": 3,
-        "growth_bonus": {
-          "unit_thornwake_seedcutters": 1
-        },
-        "cost_discount_percent": {
-          "unit_thornwake_seedcutters": 8,
-          "unit_thornwake_thornwhip_carriers": 6,
-          "unit_thornwake_sporeglass_menders": 5
-        }
-      },
+      "economy": {},
+      "recruitment": {},
       "enemy_strategy": {
         "build_category_weights": {
           "civic": 0.9,
@@ -612,42 +602,48 @@
         "playability": "authored_player_skirmish_integrated_partial",
         "manual_play": "not_verified_for_six_faction_bundle",
         "scenario_integration": "mireford_player_skirmish_plus_ninefold_pressure_integrated"
+      },
+      "town_resources": {
+        "main": "verdant_grafts",
+        "secondary": "peatwax"
+      },
+      "legacy_economy": {
+        "base_income": {
+          "gold": 42,
+          "wood": 2
+        },
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "economy": {
+            "gold": 34,
+            "wood": 1
+          },
+          "support": {
+            "gold": 18
+          },
+          "magic": {
+            "gold": 16
+          }
+        }
+      },
+      "legacy_recruitment": {
+        "readiness_bonus": 3,
+        "growth_bonus": {
+          "unit_thornwake_seedcutters": 1
+        },
+        "cost_discount_percent": {
+          "unit_thornwake_seedcutters": 8,
+          "unit_thornwake_thornwhip_carriers": 6,
+          "unit_thornwake_sporeglass_menders": 5
+        }
       }
     },
     {
       "id": "faction_brasshollow",
       "name": "Brasshollow Combine",
       "identity_summary": "Furnace-contract foundries that convert ore, debt, and pressure rails into stubborn machines and siege power.",
-      "economy": {
-        "base_income": {
-          "gold": 48,
-          "ore": 2
-        },
-        "pressure_bonus": 1,
-        "per_category_income": {
-          "economy": {
-            "gold": 45,
-            "ore": 1
-          },
-          "support": {
-            "gold": 28
-          },
-          "dwelling": {
-            "gold": 16
-          }
-        }
-      },
-      "recruitment": {
-        "readiness_bonus": 4,
-        "growth_bonus": {
-          "unit_brasshollow_scrip_haulers": 1
-        },
-        "cost_discount_percent": {
-          "unit_brasshollow_scrip_haulers": 5,
-          "unit_brasshollow_rivet_hounds": 4,
-          "unit_brasshollow_furnace_pavis_teams": 4
-        }
-      },
+      "economy": {},
+      "recruitment": {},
       "enemy_strategy": {
         "build_category_weights": {
           "civic": 1.05,
@@ -759,41 +755,48 @@
         "playability": "authored_player_skirmish_integrated_partial",
         "manual_play": "not_verified_for_six_faction_bundle",
         "scenario_integration": "orevein_player_skirmish_plus_ninefold_pressure_integrated"
+      },
+      "town_resources": {
+        "main": "brass_scrip",
+        "secondary": "embergrain"
+      },
+      "legacy_economy": {
+        "base_income": {
+          "gold": 48,
+          "ore": 2
+        },
+        "pressure_bonus": 1,
+        "per_category_income": {
+          "economy": {
+            "gold": 45,
+            "ore": 1
+          },
+          "support": {
+            "gold": 28
+          },
+          "dwelling": {
+            "gold": 16
+          }
+        }
+      },
+      "legacy_recruitment": {
+        "readiness_bonus": 4,
+        "growth_bonus": {
+          "unit_brasshollow_scrip_haulers": 1
+        },
+        "cost_discount_percent": {
+          "unit_brasshollow_scrip_haulers": 5,
+          "unit_brasshollow_rivet_hounds": 4,
+          "unit_brasshollow_furnace_pavis_teams": 4
+        }
       }
     },
     {
       "id": "faction_veilmourn",
       "name": "Veilmourn Armada",
       "identity_summary": "Fog-bound funeral fleets that steal routes, salvage memory, and strike where maps claim no passage exists.",
-      "economy": {
-        "base_income": {
-          "gold": 38,
-          "wood": 1
-        },
-        "pressure_bonus": 2,
-        "per_category_income": {
-          "economy": {
-            "gold": 28
-          },
-          "magic": {
-            "gold": 26
-          },
-          "support": {
-            "gold": 18
-          }
-        }
-      },
-      "recruitment": {
-        "readiness_bonus": 2,
-        "growth_bonus": {
-          "unit_veilmourn_bellwake_oars": 1
-        },
-        "cost_discount_percent": {
-          "unit_veilmourn_bellwake_oars": 8,
-          "unit_veilmourn_mourning_lanterns": 6,
-          "unit_veilmourn_maskglass_corsairs": 5
-        }
-      },
+      "economy": {},
+      "recruitment": {},
       "enemy_strategy": {
         "build_category_weights": {
           "civic": 0.75,
@@ -905,6 +908,39 @@
         "playability": "authored_player_skirmish_integrated_partial",
         "manual_play": "not_verified_for_six_faction_bundle",
         "scenario_integration": "bellwake_player_skirmish_plus_ninefold_pressure_integrated"
+      },
+      "town_resources": {
+        "main": "memory_salt",
+        "secondary": "verdant_grafts"
+      },
+      "legacy_economy": {
+        "base_income": {
+          "gold": 38,
+          "wood": 1
+        },
+        "pressure_bonus": 2,
+        "per_category_income": {
+          "economy": {
+            "gold": 28
+          },
+          "magic": {
+            "gold": 26
+          },
+          "support": {
+            "gold": 18
+          }
+        }
+      },
+      "legacy_recruitment": {
+        "readiness_bonus": 2,
+        "growth_bonus": {
+          "unit_veilmourn_bellwake_oars": 1
+        },
+        "cost_discount_percent": {
+          "unit_veilmourn_bellwake_oars": 8,
+          "unit_veilmourn_mourning_lanterns": 6,
+          "unit_veilmourn_maskglass_corsairs": 5
+        }
       }
     }
   ]

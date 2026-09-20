@@ -2,6 +2,7 @@ class_name ScenarioFactory
 extends RefCounted
 
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
+const TownDevelopment = preload("res://scripts/core/TownDevelopmentRules.gd")
 
 const LIVE_STOCKPILE_RESOURCE_KEYS := [
 	"gold",
@@ -251,6 +252,7 @@ static func _build_town_states(placements: Variant) -> Array:
 			"occupation": _duplicate_dict(placement.get("occupation", {})),
 			"last_build_day": max(0, int(placement.get("last_build_day", 0))),
 		}
+		TownDevelopment.migrate_town(town_state)
 		town_state["available_recruits"] = _seed_recruits_for_town_state(town_state)
 		towns.append(
 			town_state
@@ -532,6 +534,8 @@ static func _seed_recruits(built_buildings: Array) -> Dictionary:
 	return recruits
 
 static func _seed_recruits_for_town_state(town: Dictionary) -> Dictionary:
+	if TownDevelopment.is_current(town):
+		return TownDevelopment.growth(town)
 	var recruits := _seed_recruits(_duplicate_array(town.get("built_buildings", [])))
 	var town_template := ContentService.get_town(String(town.get("town_id", "")))
 	recruits = _apply_growth_profile(recruits, town_template.get("recruitment", {}))

@@ -22302,6 +22302,17 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "feature-common-town-development-20260921",
+      "title": "Shared town development, exclusive dwellings and faction services",
+      "status": "completed",
+      "classification": "gameplay_system_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Implemented 186 active authored building stages across six unified trees: common lines, exclusive T1-T5 branches, rare-resource T6/T7, 72 Veteran unit upgrades and shared existing art/animations, growth and hero training, artifact commerce, three faction specials. Idempotent legacy migration, AI stage/reserve parity, actual defender bonuses, save claims and context-validated services. Focused town_development_regression.py passes 676 checks; live rendered dialogs reviewed and purchase UI callback verified. Wiki exposes 186 active buildings / 232 total unit identities; no full suite or Linux execution. Temporary probes/logs/screenshots removed after review; originals/caches/other work preserved."
+    },
+    {
       "id": "content-single-faction-towns-20260920",
       "title": "One gameplay town template per faction",
       "status": "completed",
