@@ -74,7 +74,9 @@ func run():
 		node.collected_by_player_id="rare_test_player"
 		for day in [2,8]:
 			var income: Dictionary=Rules.controlled_resource_site_income(session,"rare_test_player",day)
-			check(income[resource]==1 and income.gold==120,"income changed: "+site.id)
+			check(income[resource]==1 and income.gold==0,"rare mine must produce only its rare resource: "+site.id)
+		var claim: Dictionary=Rules._resource_site_claim_rewards(site)
+		check(claim.get(resource,0)==1 and claim.get("gold",0)==0,"rare mine capture must not award gold: "+site.id)
 		check(Rules.controlled_resource_site_income(session,"other_player",2)[resource]==0,"income wrong owner: "+site.id)
 		check(Mines.resource({"site_id":site.id,"kind":"reward_reference"}).is_empty(),"pickup became building: "+site.id)
 	check(aliases.size()==9 and identities.size()==6,"expected nine aliases / six identities")

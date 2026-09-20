@@ -36,7 +36,7 @@ The six-faction coverage strengthening now reports `unique_faction_count`, `cove
 - Enemy treasuries now preserve all nine live stockpile resources: `gold`, `wood`, `ore`, `aetherglass`, `embergrain`, `peatwax`, `verdant_grafts`, `brass_scrip`, and `memory_salt`.
 - Enemy town build selection now passes the current day into build readiness, and successful AI construction stamps `last_build_day`.
 - Town market affordability now rejects restricted rare-resource deficits instead of treating normal-market common resources as coverage for high-tier rare costs.
-- Rare-resource front sites now provide rare income plus gold pacing, and active enemy towns have matching scenario-authored rare-resource access.
+- Rare-resource front sites provide rare income, and active enemy towns have matching scenario-authored rare-resource access. Owner revision on 2026-09-20 removes gold from their daily income and capture rewards; dedicated gold sources remain separate.
 
 ## Evidence Boundaries
 

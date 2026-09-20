@@ -76649,8 +76649,8 @@ def validate_active_scenario_ai_town_development_runway(errors: list[str]) -> No
         ensure(bool(site), errors, f"{site_id} rare front site must exist")
         control_income = site.get("control_income", {}) if isinstance(site, dict) else {}
         claim_rewards = site.get("claim_rewards", {}) if isinstance(site, dict) else {}
-        ensure(isinstance(control_income, dict) and int(control_income.get("gold", 0)) > 0, errors, f"{site_id} must provide persistent gold income for AI runway pacing")
-        ensure(isinstance(claim_rewards, dict) and int(claim_rewards.get("gold", 0)) > 0, errors, f"{site_id} must provide a gold claim reward for AI runway pacing")
+        ensure(isinstance(control_income, dict) and int(control_income.get("gold", 0)) == 0, errors, f"{site_id} rare mines must not provide gold income")
+        ensure(isinstance(claim_rewards, dict) and int(claim_rewards.get("gold", 0)) == 0, errors, f"{site_id} rare mines must not award gold on capture")
         ensure(isinstance(control_income, dict) and int(control_income.get(rare_id, 0)) > 0, errors, f"{site_id} must provide persistent {rare_id} income")
         ensure(isinstance(claim_rewards, dict) and int(claim_rewards.get(rare_id, 0)) > 0, errors, f"{site_id} must provide a {rare_id} claim reward")
 
