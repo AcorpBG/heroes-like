@@ -113592,7 +113592,7 @@
       "sourceDocs": [
         "docs/unified-rare-mines.md"
       ],
-      "notes": "Implemented six original animated buildings across nine dedicated source aliases, one identity per rare resource, common-mine scale and 3x2 gameplay adapter. Machinery, visible smoke/lights, neutral/owner flags, source art/provenance and wiki are integrated. Income/capture and native source placement preserved. Passed 324 rare-mine, 183 common-mine and 48 ownership-flag focused checks; visually reviewed grass/sand/snow at normal and zoomed-out scale. Full suite not run per owner direction."
+      "notes": "Implemented six original animated buildings across nine dedicated source aliases, one identity per rare resource, common-mine scale and 3x2 gameplay adapter. Machinery, visible smoke/lights, neutral/owner flags, source art/provenance and wiki are integrated. Owner follow-up removes gold from both daily income and capture rewards across all nine aliases; one rare resource remains. Native source placement preserved. Passed 324 rare-mine, 183 common-mine and 48 ownership-flag focused checks; visually reviewed grass/sand/snow at normal and zoomed-out scale. Gold-removal revision passes 333 focused rare-mine checks and preserves every unrelated resource-site field. Full suite not run per owner direction."
     }
   ],
   "project": "heroes-like",
