@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### One overworld town design per faction
+
+`art-one-town-per-faction-20260920` — completed. All 32 named towns now share six faction designs, identical across biomes; named gameplay content and interiors remain. Wiki thumbnails use the active designs and retired art is archived. Map-scale rendering reviewed; existing focused helper passes 74 checks, all identity/biome/wiki routes verified. Material and viewpoint differences remain an art-direction follow-up; no full suite. See `docs/overworld-town-scale.md`.
+
 ### Riverwatch art-style correction
 
 `art-riverwatch-style-20260920` - completed. Riverwatch repainted against Highwater Keep with fine weathered masonry, terracotta roofs, elevated view and dense asymmetric buildings. Centered south-facing gate, no baked flags/banners, existing footprint and runtime ownership flags retained. Actual side-by-side map render with Highwater Keep and Nightglass Redoubt reviewed; six focused runtime checks plus alpha/hash/all-biome routing checks pass. No full suite.
