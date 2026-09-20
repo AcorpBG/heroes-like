@@ -113617,6 +113617,18 @@
         "PLAN.md"
       ],
       "notes": "Owner requested improved visual variants for gold, ore and wood pickups. Delivered A raw resource piles, B merchant supplies and C weathered field caches, each with gold/ore/wood and a generated small grass-strip concept preview. Original PNG sheets and all built-in image generation prompts saved; dimensions/decoding and visual composition checked. Proposal-only slice complete; runtime art selection and integration await owner choice. No game or repository tests were run; no disposable artifacts created."
+    },
+    {
+      "id": "art-raw-pickups-shine-20260920",
+      "title": "Raw resource pickups with animated shine",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Selected A transparent raw gold/ore/wood piles integrated through stable asset IDs. Gold has travelling reflections and sparkles; ore has subtler sheen; wood stays matte. Focused raw_pickup_shine_regression.py passed 31 live-render/GPU/fog/collection/reduced-motion checks at full, 42px and 24px sizes. Cached rendering and 1000/10/10 one-time rewards preserved. Original art and prompts retained; no full suite."
     }
   ],
   "project": "heroes-like",

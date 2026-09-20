@@ -687,24 +687,21 @@
     },
     "object_road_writ_purse": {
       "asset_id": "mapobj_road_writ_purse",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Road Writ Purse' (pickup).",
-      "assignment_source": "new_distinct_map_object_sprite",
-      "family": "pickup",
-      "source_batch": 3
+      "fit": "Approved raw gold pile with transparent terrain-independent silhouette.",
+      "assignment_source": "approved_raw_resource_piles_20260920",
+      "family": "pickup"
     },
     "object_split_wood_pile": {
       "asset_id": "mapobj_split_wood_pile",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Split Wood Pile' (pickup).",
-      "assignment_source": "new_distinct_map_object_sprite",
-      "family": "pickup",
-      "source_batch": 3
+      "fit": "Approved raw wood pile with transparent terrain-independent silhouette.",
+      "assignment_source": "approved_raw_resource_piles_20260920",
+      "family": "pickup"
     },
     "object_quarry_chip_hod": {
       "asset_id": "mapobj_quarry_chip_hod",
-      "fit": "Distinct generated overworld sprite assigned to authored map object 'Quarry Chip Hod' (pickup).",
-      "assignment_source": "new_distinct_map_object_sprite",
-      "family": "pickup",
-      "source_batch": 3
+      "fit": "Approved raw ore pile with transparent terrain-independent silhouette.",
+      "assignment_source": "approved_raw_resource_piles_20260920",
+      "family": "pickup"
     },
     "object_payroll_casket": {
       "asset_id": "mapobj_payroll_casket",

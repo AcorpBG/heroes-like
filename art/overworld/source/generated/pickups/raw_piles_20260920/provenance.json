@@ -1,0 +1,27 @@
+{
+  "generator": "built_in_image_gen",
+  "reference": "res://art/overworld/source/generated/pickups/proposals_20260920/pickup-set-a-raw-piles.png",
+  "purpose": "Owner-selected raw resource piles with transparent alpha. Painted highlights are static; animated gold shine and subtler ore sheen are runtime effects.",
+  "images": [
+    {
+      "resource": "gold",
+      "prompt": "Use the attached approved A — RAW RESOURCE PILES sheet as the exact visual reference. Produce ONE isolated production-ready adventure map sprite, NOT a proposal sheet. Match the selected large object's shape, materials, painterly edge detail and elevated three-quarter orthographic view with upper-left lighting. Original high-detail painted fantasy miniature look, coherent at 48-64 screen pixels. Square 1024x1024 output. TRUE transparent alpha background everywhere outside the object including all four corners, no dark backdrop, no checkerboard, no text, letters, frames, floor, grass, pedestals, smoke, glow halo or broad cast shadow. Place the entire compact heap centred with 10% transparent margin all around. Maintain painted natural specular highlights, but NO star sparkle symbols or baked gleam bands: animated shine will be added by the engine. ISOLATE ONLY THE GOLD PILE from the left of the reference: three chunky irregular warm yellow cast gold ingots piled over many overlapping gold coins and short coin stacks. Keep its low triangular mass, generous bright gold material coverage, rough hand-cast bar surfaces and rimmed coins. No chest, bag, paper, seal, cloth or other resource. Preserve approved design.",
+      "file": "gold-source.png",
+      "generated_file": "exec-8493bf7f-b040-41c2-9402-f9ef812e94a6.png"
+    },
+    {
+      "resource": "ore",
+      "prompt": "Use the attached approved A — RAW RESOURCE PILES sheet as the exact visual reference. Produce ONE isolated production-ready adventure map sprite, NOT a proposal sheet. Match the selected large object's shape, materials, painterly edge detail and elevated three-quarter orthographic view with upper-left lighting. Original high-detail painted fantasy miniature look, coherent at 48-64 screen pixels. Square 1024x1024 output. TRUE transparent alpha background everywhere outside the object including all four corners, no dark backdrop, no checkerboard, no text, letters, frames, floor, grass, pedestals, smoke, glow halo or broad cast shadow. Place the entire compact heap centred with 10% transparent margin all around. Maintain painted natural specular highlights, but NO star sparkle symbols or baked gleam bands: animated shine will be added by the engine. ISOLATE ONLY THE ORE PILE from the centre of the reference: a compact asymmetric heap of 5-7 chunky angular charcoal iron-ore rocks with cool steel-grey fracture planes and sparse rusty ochre seams, plus a few small rubble pieces touching the pile. Keep rough mineral texture; no crystals, basket, crate, tools, gold or foliage. Preserve approved design.",
+      "file": "ore-source.png",
+      "generated_file": "exec-cc45f3f1-8c3f-4076-97f4-cde65724efcc.png"
+    },
+    {
+      "resource": "wood",
+      "prompt": "Use the attached approved A — RAW RESOURCE PILES sheet as the exact visual reference. Produce ONE isolated production-ready adventure map sprite, NOT a proposal sheet. Match the selected large object's shape, materials, painterly edge detail and elevated three-quarter orthographic view with upper-left lighting. Original high-detail painted fantasy miniature look, coherent at 48-64 screen pixels. Square 1024x1024 output. TRUE transparent alpha background everywhere outside the object including all four corners, no dark backdrop, no checkerboard, no text, letters, frames, floor, grass, pedestals, smoke, glow halo or broad cast shadow. Place the entire compact heap centred with 10% transparent margin all around. Maintain painted natural specular highlights, but NO star sparkle symbols or baked gleam bands: animated shine will be added by the engine. ISOLATE ONLY THE WOOD PILE from the right of the reference: 8-10 stout short logs stacked low, rich dark rough bark, warm golden end grain facing front-right, restrained rope bindings across the bundle and some offset top logs. Broad compact silhouette with readable circular cut ends. No axe, tools, sawn planks, leaves, crate or other resource. Natural matte timber. Preserve approved design.",
+      "file": "wood-source.png",
+      "generated_file": "exec-cdd1032b-1a40-4a32-8e62-d169a8aae68a.png"
+    }
+  ],
+  "packing": "tools/pack_raw_pickups.py: mechanical alpha trim, aspect-preserving downsample to 400px extent and 512px transparent canvas; no repainting.",
+  "runtime_effects": "content/overworld_scenery_animation.json: gold_pickup_shine and ore_pickup_sheen; animated highlights preserve the original silhouette. Wood remains matte."
+}
