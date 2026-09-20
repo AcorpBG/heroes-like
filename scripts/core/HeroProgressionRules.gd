@@ -115,7 +115,31 @@ static func ensure_hero_progression(hero_state: Dictionary) -> Dictionary:
 	hero["pending_specialty_choices"] = _normalize_pending_choices(hero.get("pending_specialty_choices", []), hero)
 	hero = _reconcile_pending_choices(hero)
 	hero = _enqueue_missing_choice_groups(hero)
+	# Old saves with an outstanding choice get one reminder; established heroes
+	# without choices do not replay their entire progression history on load.
+	var presented := level
+	if not hero["pending_specialty_choices"].is_empty():
+		presented = int(hero["pending_specialty_choices"][0].get("level", level)) - 1
+	hero["level_up_presented"] = clampi(int(hero.get("level_up_presented", presented)), 1, level)
 	return hero
+
+static func level_up_summary(hero_state: Dictionary) -> Dictionary:
+	var hero := ensure_hero_progression(hero_state.duplicate(true))
+	var previous := int(hero["level_up_presented"])
+	var level := int(hero["level"])
+	if previous >= level:
+		return {}
+	var gains := {}
+	for earned_level in range(previous + 1, level + 1):
+		gains = _apply_base_command_gain(gains, earned_level)
+	return {
+		"previous_level": previous,
+		"level": level,
+		"command_gains": gains,
+		"movement_gain": level - previous,
+		"choice": current_pending_choice(hero),
+		"choices_remaining": pending_choices_remaining(hero),
+	}
 
 static func add_experience(hero_state: Dictionary, amount: int) -> Dictionary:
 	var hero := ensure_hero_progression(hero_state.duplicate(true))
