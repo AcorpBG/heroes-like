@@ -6316,24 +6316,87 @@ static func switch_active_hero(session: SessionStateStoreScript.SessionData, her
 		return {"ok": false, "message": String(result.get("message", "Unable to change command."))}
 	return _finalize_action_result(session, true, String(result.get("message", "")))
 
+static func get_level_up_prompt(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	if session == null or session.game_state != "overworld":
+		return {}
+	var hero: Dictionary = session.overworld.get("hero", {})
+	var summary := HeroProgressionRulesScript.level_up_summary(hero)
+	if summary.is_empty():
+		for candidate in session.overworld.get("player_heroes", []):
+			if String(candidate.get("id", "")) == String(hero.get("id", "")): continue
+			var candidate_summary := HeroProgressionRulesScript.level_up_summary(candidate)
+			if not candidate_summary.is_empty():
+				hero = candidate
+				summary = candidate_summary
+				break
+	if summary.is_empty():
+		return {}
+	summary["hero"] = hero.duplicate(true)
+	summary["context"] = {
+		"hero_id": String(hero.get("id", "")),
+		"level": summary["level"],
+		"previous_level": summary["previous_level"],
+		"choice": summary["choice"].duplicate(true),
+	}
+	return summary
+
+static func resolve_level_up(session: SessionStateStoreScript.SessionData, context: Dictionary, specialty_id: String = "") -> Dictionary:
+	if session == null or session.game_state != "overworld":
+		return {"ok": false, "message": "Return to the adventure map to review this level."}
+	normalize_overworld_state(session)
+	var prompt := get_level_up_prompt(session)
+	if prompt.is_empty() or prompt.get("context", {}) != context:
+		return {"ok": false, "message": "This hero's level-up choice has changed. Please review it again."}
+	var result := {"ok": true, "message": "Level-up reviewed. Unchosen specialties remain available in the hero commands."}
+	var hero_id := String(prompt["hero"].get("id", ""))
+	if specialty_id != "":
+		result = choose_specialty(session, specialty_id, hero_id)
+		if not bool(result.get("ok", false)):
+			return result
+	var hero := HeroCommandRulesScript.hero_by_id(session, hero_id)
+	if specialty_id == "" or HeroProgressionRulesScript.current_pending_choice(hero).is_empty():
+		hero["level_up_presented"] = int(prompt["level"])
+		if hero_id == String(session.overworld.get("active_hero_id", "")):
+			session.overworld["hero"]["level_up_presented"] = int(prompt["level"])
+			HeroCommandRulesScript.commit_active_hero(session)
+	return result
+
 static func get_specialty_actions(session: SessionStateStoreScript.SessionData) -> Array:
 	normalize_overworld_state_for_runtime(session)
 	return HeroProgressionRulesScript.get_choice_actions(session.overworld.get("hero", {}))
 
-static func choose_specialty(session: SessionStateStoreScript.SessionData, specialty_id: String) -> Dictionary:
+static func choose_specialty(session: SessionStateStoreScript.SessionData, specialty_id: String, hero_id: String = "") -> Dictionary:
 	normalize_overworld_state(session)
-	var hero = session.overworld.get("hero", {})
+	var active_id := String(session.overworld.get("active_hero_id", ""))
+	if hero_id == "": hero_id = active_id
+	var hero := HeroCommandRulesScript.hero_by_id(session, hero_id)
+	if hero.is_empty():
+		return {"ok": false, "message": "That hero is no longer in your company."}
 	var previous_movement_max := _movement_max_from_hero(hero, session)
 	var previous_mana_max := int(hero.get("spellbook", {}).get("mana", {}).get("max", SpellRulesScript.mana_max_from_hero(hero)))
 	var result := HeroProgressionRulesScript.choose_specialty(hero, specialty_id)
 	if not bool(result.get("ok", false)):
 		return {"ok": false, "message": String(result.get("message", "Unable to choose specialty."))}
 
-	session.overworld["hero"] = ArtifactRulesScript.ensure_hero_artifacts(
+	var updated := ArtifactRulesScript.ensure_hero_artifacts(
 		SpellRulesScript.ensure_hero_spellbook(result.get("hero", hero))
 	)
-	_sync_movement_to_hero(session, previous_movement_max)
-	_sync_spellbook_to_hero(session, previous_mana_max)
+	if hero_id == active_id:
+		session.overworld["hero"] = updated
+		_sync_movement_to_hero(session, previous_movement_max)
+		_sync_spellbook_to_hero(session, previous_mana_max)
+	else:
+		# Town defenders can level while another commander is selected. Apply
+		# their bonuses without switching the active hero, camera or route.
+		var movement: Dictionary = updated.get("movement", {})
+		var new_max := _movement_max_from_hero(updated, session)
+		movement["current"] = clampi(int(movement.get("current", previous_movement_max)) + new_max - previous_movement_max, 0, new_max)
+		movement["max"] = new_max
+		updated["movement"] = movement
+		var mana: Dictionary = updated.get("spellbook", {}).get("mana", {})
+		var mana_max := int(mana.get("max", previous_mana_max))
+		mana["current"] = clampi(int(mana.get("current", previous_mana_max)) + mana_max - previous_mana_max, 0, mana_max)
+		HeroCommandRulesScript._replace_hero_in_array(session.overworld["player_heroes"], updated)
 	return _finalize_action_result(session, true, String(result.get("message", "")))
 
 static func get_town_build_options(town: Dictionary, current_day: int = -1) -> Array:

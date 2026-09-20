@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Hero level-up popup
+
+`feature-hero-level-up-popup-20260920` - completed. Automatic portrait/level/command/movement popup with queued specialty choices after adventure or battle XP, including inactive town defenders. Saved deferral, stale-callback protection and exclusive modal input; 50 focused runtime/save/UI checks pass and rendered popup reviewed. No full suite. See `docs/hero-level-up-popup.md`.
+
 ### Waystone treasure chest choice
 
 `feature-waystone-chest-choice-20260920` — completed. Existing caches use a terrain-neutral animated coin/scroll chest and offer exactly 2,000 gold or 1,000 hero experience once. Cancel leaves the chest; choice/collection survives saves. Gold glints and parchment light respect fog, cached drawing and reduced motion. Game/wiki updated; 69 focused runtime/dialog/GPU checks pass, no full suite. See `docs/waystone-chest.md`.

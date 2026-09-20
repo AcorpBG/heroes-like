@@ -17,6 +17,9 @@ const SystemLoadResumedCuePresenterScript = preload("res://scenes/shared/SystemL
 const ArmyStackBarScript = preload("res://scenes/shared/ArmyStackBar.gd")
 const HeroSheetScript = preload("res://scenes/shared/HeroSheet.gd")
 var _hero_sheet: Control
+const HeroLevelUpDialogScript = preload("res://scenes/shared/HeroLevelUpDialog.gd")
+var _hero_level_up_dialog: ConfirmationDialog
+var _level_up_retry_pending := false
 
 const UI_ART_OVERWORLD_RESOURCE_BAR := "res://art/ui/runtime/overworld/resource_bar.png"
 var _native_destination_dialog: ConfirmationDialog
@@ -651,6 +654,7 @@ func _input(event: InputEvent) -> void:
 		or (_end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible)
 		or (_native_destination_dialog != null and _native_destination_dialog.visible)
 		or (_resource_reward_dialog != null and _resource_reward_dialog.visible)
+		or (is_instance_valid(_hero_level_up_dialog) and _hero_level_up_dialog.visible)
 	)
 	if modal_owner_open:
 		if event is InputEventJoypadMotion and int(event.axis) in [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y]:
@@ -941,6 +945,8 @@ func _controller_route_direction_from_axis(axis: Vector2) -> Vector2i:
 	return Vector2i.DOWN if axis.y > 0.0 else Vector2i.UP
 
 func _overworld_gameplay_movement_blocked_reason() -> String:
+	if is_instance_valid(_hero_level_up_dialog) and _hero_level_up_dialog.visible:
+		return "hero_level_up_open"
 	if is_instance_valid(_scout_dialog) and _scout_dialog.visible:
 		return "scout_inspection_open"
 	if is_instance_valid(_hero_sheet) and _hero_sheet.visible:
@@ -2751,6 +2757,7 @@ func _refresh_with_request(request: Dictionary) -> void:
 		"request": request.duplicate(true),
 	})
 	call_deferred("_configure_overworld_keyboard_focus", false)
+	call_deferred("_sync_hero_level_up_dialog")
 
 func _sync_overworld_ambient_audio(source: String) -> void:
 	if _session == null:
@@ -2949,6 +2956,51 @@ func _sync_native_transit_presentation(result: Dictionary) -> void:
 	if bool(result.get("ok", false)) and result.has("native_transit"):
 		_set_view_level(LevelRules.hero_level(_session))
 		_select_hero_tile()
+
+func _sync_hero_level_up_dialog() -> void:
+	if _session == null or not is_inside_tree() or _session.game_state != "overworld":
+		return
+	if is_instance_valid(_hero_level_up_dialog) and _hero_level_up_dialog.visible:
+		return
+	var prompt := OverworldRules.get_level_up_prompt(_session)
+	if prompt.is_empty():
+		return
+	# Wait for chest rewards, battle handoff/playback and other input owners.
+	# The single pending retry also covers overlays which close without a refresh.
+	if _overworld_gameplay_movement_blocked_reason() != "" or is_instance_valid(_turn_presenter) or _artifact_acquired_presentation_active or (_spell_cast_input_blocker != null and _spell_cast_input_blocker.visible):
+		if not _level_up_retry_pending:
+			_level_up_retry_pending = true
+			get_tree().create_timer(0.25).timeout.connect(_retry_hero_level_up_dialog)
+		return
+	if is_instance_valid(_hero_level_up_dialog):
+		_hero_level_up_dialog.queue_free()
+	_hero_level_up_dialog = HeroLevelUpDialogScript.new()
+	add_child(_hero_level_up_dialog)
+	_hero_level_up_dialog.specialty_selected.connect(_on_level_up_specialty_selected)
+	_hero_level_up_dialog.review_dismissed.connect(_on_level_up_dismissed)
+	_on_overworld_interaction_owner_opened()
+	_hero_level_up_dialog.open_level_up(prompt)
+
+func _retry_hero_level_up_dialog() -> void:
+	_level_up_retry_pending = false
+	_sync_hero_level_up_dialog()
+
+func _on_level_up_specialty_selected(specialty_id: String) -> void:
+	_resolve_level_up_dialog(specialty_id)
+
+func _on_level_up_dismissed() -> void:
+	_resolve_level_up_dialog("")
+
+func _resolve_level_up_dialog(specialty_id: String) -> void:
+	if not is_instance_valid(_hero_level_up_dialog) or _hero_level_up_dialog.context.is_empty():
+		return
+	var context: Dictionary = _hero_level_up_dialog.context.duplicate(true)
+	_hero_level_up_dialog.context.clear()
+	var result := OverworldRules.resolve_level_up(_session, context, specialty_id)
+	FrontierVisualKit.hide_exclusive_dialog(_hero_level_up_dialog)
+	_last_message = String(result.get("message", ""))
+	_record_result_feedback("hero", result, "Hero command updated.")
+	_refresh()
 
 func _sync_resource_reward_presentation(result: Dictionary) -> void:
 	if result.has("reward_choice"):
@@ -8982,6 +9034,8 @@ func _set_active_drawer(drawer: String) -> void:
 	_active_drawer = drawer
 
 func _configure_overworld_keyboard_focus(force: bool = false) -> void:
+	if is_instance_valid(_hero_level_up_dialog) and _hero_level_up_dialog.visible: return
+	if is_instance_valid(_resource_reward_dialog) and _resource_reward_dialog.visible: return
 	if is_instance_valid(_scout_dialog) and _scout_dialog.visible: return
 	if not is_inside_tree() or (_active_play_settings_dialog != null and _active_play_settings_dialog.is_open()) or (_end_turn_confirmation_dialog != null and _end_turn_confirmation_dialog.visible):
 		return

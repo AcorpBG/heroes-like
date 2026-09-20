@@ -22302,6 +22302,18 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "feature-hero-level-up-popup-20260920",
+      "title": "Automatic hero level-up popup",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "gameplay_ui_implementation_slice",
+      "source": "PLAN.md",
+      "notes": "Implemented automatic hero portrait, level and command/movement gain popup with ordered specialty choices; chest/modal sequencing, battle commander writeback and inactive defender support, saved deferral, legacy/mastered progression, stale/repeated callback protection. 50 focused Windows runtime/save/live-dialog checks pass; rendered popup reviewed. Cross-platform Godot UI and existing Linux xvfb runner retained; no full suite. Temporary evidence removed after review.",
+      "sourceDocs": [
+        "docs/hero-level-up-popup.md"
+      ]
+    },
+    {
       "id": "feature-waystone-chest-choice-20260920",
       "title": "Waystone chest reward choice and animated loot",
       "status": "completed",
