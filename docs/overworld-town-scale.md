@@ -8,7 +8,7 @@ The owner's Heroes III reference establishes the intended proportions: a broad s
 
 - The ground presentation and click mask are five columns by three rows, with the rear corners omitted: 3/5/5 cells. The south-middle cell remains the entrance.
 - Existing original town art fits inside a five-by-five visual envelope, capped at 4.80 tiles wide and 4.35 tiles tall. Painted alpha bounds preserve their aspect ratio; narrow towers and broad settlements keep their individual proportions. Painted bottoms sit 0.18 tiles above the entrance-cell bottom.
-- All 58 mapped appearances retain their artwork and lookup identity, including faction defaults, named towns, biome variants and fallback art. This is a renderer adjustment, not regenerated artwork.
+- The scale adjustment retained all 58 mapped appearances and their lookup identities, including faction defaults, named towns, biome variants and fallback art. Riverwatch was subsequently regenerated front-facing with a centered gate and no painted banners; its base, land and ash IDs now share the biome-neutral replacement without changing this footprint or scale.
 - Clicking a body cell resolves to the existing entrance. The enlarged artwork and silhouette are clipped to explored cells. [Two small entrance flags](overworld-control-flags.md) now replace the roof ownership pennant and use the same explored-cell clipping.
 
 ## Existing maps and authority

@@ -22302,6 +22302,15 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "art-riverwatch-front-20260920",
+      "title": "Front-facing Riverwatch without decorative flags",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "content_implementation_slice",
+      "source": "PLAN.md",
+      "notes": "Regenerated Riverwatch as original front-facing transparent artwork with centered gate, grey stone walls, red roofs and central fire beacon, without decorative flags, pennants or banners. Base/land/ash IDs share one biome-neutral runtime sprite across all nine biomes; stable footprint and gameplay remain unchanged. Actual in-game render reviewed with the two runtime ownership flags at the gate. Existing focused control-flags regression passed 48 checks; 512px alpha and all-biome routing verified. Updated wiki, original source/prompt provenance and deterministic packing tool retained. No full suite. Task-owned temporary renders/logs removed."
+    },
+    {
       "id": "fix-pickup-scenery-occlusion-20260920",
       "title": "Ground pickups under overlapping scenery",
       "status": "completed",

@@ -27,7 +27,7 @@
   },
   "appearances": {
     "town_identity_riverwatch": {
-      "environment_policy": "Original grassy apron on grass/forest; basalt on volcanic terrain; neutral structural foundations on all other biomes.",
+      "environment_policy": "Front-facing fortress on neutral structural stone foundations in every biome. Stable base/land/ash IDs share the flag-free replacement; ownership flags are drawn at runtime.",
       "biome_asset_ids": {
         "biome_grasslands": "town_identity_riverwatch",
         "biome_deep_forest": "town_identity_riverwatch",
