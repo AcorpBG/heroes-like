@@ -1,5 +1,6 @@
 class_name EnemyTurnRules
 extends RefCounted
+const TownDevelopment = preload("res://scripts/core/TownDevelopmentRules.gd")
 
 const TurnPlayback = preload("res://scripts/core/OverworldTurnPlayback.gd")
 
@@ -645,6 +646,7 @@ static func town_governor_town_report(
 		built_buildings = built_buildings.duplicate(true)
 		built_buildings.append(building_id)
 		projected_town["built_buildings"] = built_buildings
+		TownDevelopment.migrate_town(projected_town)
 		projected_town["available_recruits"] = _merge_recruits(
 			projected_town.get("available_recruits", {}),
 			_building_growth_payload(building_id)
@@ -1503,6 +1505,7 @@ static func _build_in_enemy_towns(
 			built_buildings = []
 		built_buildings.append(building_id)
 		town["built_buildings"] = built_buildings
+		TownDevelopment.migrate_town(town)
 		town["last_build_day"] = int(session.day)
 		town["available_recruits"] = _merge_recruits(
 			town.get("available_recruits", {}),
@@ -7445,6 +7448,8 @@ static func _discount_from_profile(profile: Variant, unit_id: String) -> int:
 static func _building_growth_payload(building_id: String) -> Dictionary:
 	var payload = {}
 	var building = ContentService.get_building(building_id)
+	if int(building.get("development_version", 0)) == 1:
+		return TownDevelopment.construction_growth(building)
 	var unlock_unit_id = String(building.get("unlock_unit_id", ""))
 	if unlock_unit_id != "":
 		payload[unlock_unit_id] = _scenario_factory()._unit_growth(unlock_unit_id)
@@ -7888,6 +7893,7 @@ static func _captured_artifact_summary(state: Dictionary) -> String:
 	return "%d seized relic%s fueling the campaign" % [artifact_count, "" if artifact_count == 1 else "s"]
 
 static func _normalized_built_buildings(town: Dictionary) -> Array:
+	if TownDevelopment.is_current(town): return TownDevelopment.active_buildings(town)
 	var normalized = []
 	var town_template = ContentService.get_town(String(town.get("town_id", "")))
 	for building_id_value in town_template.get("starting_building_ids", []):

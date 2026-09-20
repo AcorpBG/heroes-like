@@ -297,6 +297,10 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 			)
 
 	battle["stacks"] = stacks
+	var town_context_type := String(battle_context.get("type", ""))
+	if town_context_type in ["town_defense", "town_assault"]:
+		var defending_town: Dictionary = _find_town_by_placement(session, String(battle_context.get("town_placement_id", ""))).get("town", {})
+		OverworldRulesScript.TownDevelopment.apply_defender_bonus(stacks, defending_town, town_context_type)
 	_ensure_battle_hex_state(battle)
 	_initialize_damage_rng_state(session, battle)
 	_prepare_round(battle, 1)

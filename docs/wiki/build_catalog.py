@@ -63,6 +63,8 @@ def main():
         if category not in contents:
             continue
         for row in contents[category].get('items', []):
+            if category == 'buildings' and row.get('retired_from_town_tree'):
+                continue
             entries.append({'id': row['id'], 'name': row.get('name', row.get('display_name', words(row['id']))),
                             'category': category, 'source': 'content/' + category + '.json', 'data': row})
     for row in contents['artifacts'].get('sets', []):

@@ -1,5 +1,6 @@
 class_name TownRules
 extends RefCounted
+const TownDevelopment = preload("res://scripts/core/TownDevelopmentRules.gd")
 
 const BUILDING_CATEGORY_IDS := ["civic", "dwelling", "economy", "support", "magic"]
 
@@ -1175,6 +1176,8 @@ static func get_build_catalog(session: SessionStateStoreScript.SessionData) -> A
 		var building := ContentService.get_building(building_id)
 		if building.is_empty():
 			continue
+		if TownDevelopment.choice_blocked(town, building):
+			continue
 		var built := building_id in built_buildings
 		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, building_id, session.day)
 		var action: Dictionary = actions_by_building.get(building_id, {})
@@ -1184,6 +1187,9 @@ static func get_build_catalog(session: SessionStateStoreScript.SessionData) -> A
 		if built:
 			catalog_status = "Built"
 			status_detail = "Standing in this town."
+		elif TownDevelopment.satisfies(built_buildings, building_id):
+			catalog_status = "Upgraded"
+			status_detail = "Replaced by its higher stage."
 		elif not action.is_empty() and bool(action.get("direct_affordable", false)):
 			catalog_status = "Ready"
 			status_detail = "Ready for today's construction order."
@@ -1236,6 +1242,9 @@ static func get_muster_catalog(session: SessionStateStoreScript.SessionData) -> 
 		var unlock_building_id := _unlock_building_for_unit(town, unit_id)
 		var unlock_building := ContentService.get_building(unlock_building_id)
 		var unlocked := _unit_is_unlocked_in_town(town, unit_id)
+		# Future choices belong in Construction; retain old reserves in Muster.
+		if not unlocked and available <= 0:
+			continue
 		var catalog_status := "Locked"
 		var status_detail := "Build %s to unlock this unit." % String(unlock_building.get("name", "its dwelling"))
 		if unlocked and available <= 0:
@@ -1341,6 +1350,7 @@ static func get_response_actions(session: SessionStateStoreScript.SessionData) -
 		_read_cache_store(session, "response_actions", empty)
 		return empty
 	var actions: Array = OverworldRulesScript.get_town_response_actions(session, town)
+	actions.append_array(TownDevelopment.service_actions(session, town))
 	_read_cache_store(session, "response_actions", actions)
 	return actions
 
@@ -1475,6 +1485,13 @@ static func manage_army_slots_in_active_town(
 	return finalized
 
 static func perform_response_action(session: SessionStateStoreScript.SessionData, action_id: String) -> Dictionary:
+	if action_id.begins_with("town_"):
+		var town := get_active_town(session)
+		var previous_max: int = HeroCommandRulesScript.movement_max_for_hero(session.overworld.get("hero", {}), session)
+		var result := TownDevelopment.perform_service(session, town, action_id)
+		if not bool(result.get("ok", false)): return result
+		OverworldRulesScript._sync_movement_to_hero(session, previous_max)
+		return _finalize_town_result(session, true, String(result.get("message", "")))
 	var town := get_active_town(session)
 	if town.is_empty():
 		return {"ok": false, "message": "No town is available for strategic response orders."}
@@ -2717,6 +2734,8 @@ static func _building_line(building_id: String, state: String, build_status: Dic
 	return " | ".join(parts)
 
 static func _building_effect_summary(building: Dictionary) -> String:
+	if int(building.get("development_version", 0)) == 1:
+		return String(building.get("description", ""))
 	var parts := []
 	var category := String(building.get("category", ""))
 	if category != "":

@@ -5,6 +5,7 @@ const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd
 const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
 const Mines = preload("res://scripts/core/MineRules.gd")
+const TownDevelopment = preload("res://scripts/core/TownDevelopmentRules.gd")
 const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
@@ -2255,6 +2256,7 @@ static func build_in_active_town(session: SessionStateStoreScript.SessionData, b
 	var built_buildings = _normalize_built_buildings_for_town_state(town)
 	built_buildings.append(building_id)
 	town["built_buildings"] = built_buildings
+	TownDevelopment.migrate_town(town)
 	town["last_build_day"] = int(session.day)
 	town["available_recruits"] = _add_recruit_growth(
 		town.get("available_recruits", {}),
@@ -6104,8 +6106,13 @@ static func get_town_build_status(town: Dictionary, building_id: String, current
 		buildable_ids.append(String(buildable_id_value))
 	if building_id not in buildable_ids:
 		blockers.append("Not authored for this town.")
-	if building_id in built_buildings:
+	if TownDevelopment.satisfies(built_buildings, building_id):
 		blockers.append("Already built.")
+	if TownDevelopment.choice_blocked(town, building):
+		blockers.append("The other dwelling at this tier has already been chosen.")
+	var required_tier := int(building.get("requires_dwelling_tier", 0))
+	if required_tier > 0 and not TownDevelopment.has_dwelling_tier(town, required_tier):
+		blockers.append("Requires either tier-%d dwelling." % required_tier)
 	if current_day > 0 and int(town.get("last_build_day", 0)) == current_day:
 		blockers.append("Already built in this town today.")
 	var missing_requirements := _missing_build_requirements(building, built_buildings)
@@ -6458,6 +6465,7 @@ static func _normalize_towns(towns: Array, current_day: int = -1) -> Array:
 			"market_usage": _normalize_town_market_usage_state(town.get("market_usage", {}), current_day),
 		}
 		_copy_town_runtime_metadata(normalized_town, town)
+		TownDevelopment.migrate_town(normalized_town)
 		normalized_town["built_buildings"] = _normalize_built_buildings_for_town_state(normalized_town)
 		if not town.has("available_recruits") or not (town.get("available_recruits") is Dictionary):
 			normalized_town["available_recruits"] = _seed_recruits_for_town(normalized_town)
@@ -6466,6 +6474,9 @@ static func _normalize_towns(towns: Array, current_day: int = -1) -> Array:
 
 static func _copy_town_runtime_metadata(target: Dictionary, source: Dictionary) -> void:
 	for key in [
+		"development_version",
+		"legacy_built_buildings",
+		"artifact_shop_purchases",
 		"controlling_player_id",
 		"owner_slot",
 		"level",
@@ -9726,6 +9737,11 @@ static func _movement_max_from_hero(hero: Dictionary, session: SessionStateStore
 
 static func _calculate_town_income(town: Dictionary, session: SessionStateStoreScript.SessionData = null) -> Dictionary:
 	var income := _empty_live_resource_stockpile()
+	if TownDevelopment.is_current(town):
+		income = _add_resource_sets(income, TownDevelopment.income(town))
+		if session != null:
+			income = _apply_resource_percent_scale(income, 100 - int(_town_occupation_state(session, town).get("income_penalty_percent", 0)))
+		return income
 	var built_buildings := _normalize_built_buildings_for_town_state(town)
 	for building_id_value in built_buildings:
 		var building := ContentService.get_building(String(building_id_value))
@@ -12041,6 +12057,8 @@ static func _town_role_pressure_bonus(role: String) -> int:
 
 static func _building_growth_payload(building_id: String) -> Dictionary:
 	var building := ContentService.get_building(building_id)
+	if int(building.get("development_version", 0)) == 1:
+		return TownDevelopment.construction_growth(building)
 	var payload := {}
 	var unlock_unit_id := String(building.get("unlock_unit_id", ""))
 	if unlock_unit_id != "":
@@ -12101,6 +12119,8 @@ static func _town_faction_id(town: Dictionary) -> String:
 	return String(template.get("faction_id", ""))
 
 static func _normalize_built_buildings_for_town_state(town: Dictionary) -> Array:
+	if TownDevelopment.is_current(town):
+		return TownDevelopment.active_buildings(town)
 	var normalized := []
 	var town_template := ContentService.get_town(String(town.get("town_id", "")))
 	for building_id_value in town_template.get("starting_building_ids", []):
@@ -12212,11 +12232,11 @@ static func _missing_build_requirements(building: Dictionary, built_buildings: V
 	if not (built_buildings is Array):
 		return missing
 	var upgrade_from := String(building.get("upgrade_from", ""))
-	if upgrade_from != "" and upgrade_from not in built_buildings:
+	if upgrade_from != "" and not TownDevelopment.satisfies(built_buildings, upgrade_from):
 		missing.append(upgrade_from)
 	for requirement_value in building.get("requires", []):
 		var requirement := String(requirement_value)
-		if requirement == "" or requirement in built_buildings or requirement in missing:
+		if requirement == "" or TownDevelopment.satisfies(built_buildings, requirement) or requirement in missing:
 			continue
 		missing.append(requirement)
 	return missing

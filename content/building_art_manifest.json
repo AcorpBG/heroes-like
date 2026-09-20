@@ -1449,6 +1449,1836 @@
       "source_sha256": "2f79721e335fe59444fb6a3d1ed927f1a9145775cd72ff325af57f0d8be105b9",
       "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_dreamwake_foganchor_slip.png",
       "icon_sha256": "68fcda3f5ed41d7038e7b64fd82beb1cde6e9de9de882691dfb9b8ad785fff95"
+    },
+    {
+      "id": "building_dev_hall_2",
+      "building_id": "building_dev_hall_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_town_hall.png",
+      "source_sha256": "ad65fb78ee7658cf21424976a831deb27a9d4b188d1496afbf132df2874bf7d4",
+      "icon_path": "res://art/towns/runtime/buildings/building_town_hall.png",
+      "icon_sha256": "2a6d9193b251344669927e04f024f63ce3e6a490781fc5b7dce652314d400336",
+      "shared_art_from": "building_town_hall"
+    },
+    {
+      "id": "building_dev_hall_3",
+      "building_id": "building_dev_hall_3",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_town_hall.png",
+      "source_sha256": "ad65fb78ee7658cf21424976a831deb27a9d4b188d1496afbf132df2874bf7d4",
+      "icon_path": "res://art/towns/runtime/buildings/building_town_hall.png",
+      "icon_sha256": "2a6d9193b251344669927e04f024f63ce3e6a490781fc5b7dce652314d400336",
+      "shared_art_from": "building_town_hall"
+    },
+    {
+      "id": "building_dev_hall_4",
+      "building_id": "building_dev_hall_4",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_town_hall.png",
+      "source_sha256": "ad65fb78ee7658cf21424976a831deb27a9d4b188d1496afbf132df2874bf7d4",
+      "icon_path": "res://art/towns/runtime/buildings/building_town_hall.png",
+      "icon_sha256": "2a6d9193b251344669927e04f024f63ce3e6a490781fc5b7dce652314d400336",
+      "shared_art_from": "building_town_hall"
+    },
+    {
+      "id": "building_dev_fort_1",
+      "building_id": "building_dev_fort_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_watch_barracks.png",
+      "source_sha256": "d9b7aaff82c471ddea3daf49bfe04377e5de2f621ded03729302f44c449acae8",
+      "icon_path": "res://art/towns/runtime/buildings/building_watch_barracks.png",
+      "icon_sha256": "f2f226d7a817ffaa6de919884c5337f031859a85582a51d0901b15167feae3d0",
+      "shared_art_from": "building_watch_barracks"
+    },
+    {
+      "id": "building_dev_fort_2",
+      "building_id": "building_dev_fort_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_watch_barracks.png",
+      "source_sha256": "d9b7aaff82c471ddea3daf49bfe04377e5de2f621ded03729302f44c449acae8",
+      "icon_path": "res://art/towns/runtime/buildings/building_watch_barracks.png",
+      "icon_sha256": "f2f226d7a817ffaa6de919884c5337f031859a85582a51d0901b15167feae3d0",
+      "shared_art_from": "building_watch_barracks"
+    },
+    {
+      "id": "building_dev_fort_3",
+      "building_id": "building_dev_fort_3",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_watch_barracks.png",
+      "source_sha256": "d9b7aaff82c471ddea3daf49bfe04377e5de2f621ded03729302f44c449acae8",
+      "icon_path": "res://art/towns/runtime/buildings/building_watch_barracks.png",
+      "icon_sha256": "f2f226d7a817ffaa6de919884c5337f031859a85582a51d0901b15167feae3d0",
+      "shared_art_from": "building_watch_barracks"
+    },
+    {
+      "id": "building_dev_guild_1",
+      "building_id": "building_dev_guild_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_lantern_archive.png",
+      "source_sha256": "a5833f5b1c18f1dd8eb8cab27f60026e428d5f82ce87c9266325998ff114309e",
+      "icon_path": "res://art/towns/runtime/buildings/building_lantern_archive.png",
+      "icon_sha256": "cb03d313b02a4b8ff6531ce38b85d0ac0def07e557a983023e7198d17ac6f9c2",
+      "shared_art_from": "building_lantern_archive"
+    },
+    {
+      "id": "building_dev_guild_2",
+      "building_id": "building_dev_guild_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_lantern_archive.png",
+      "source_sha256": "a5833f5b1c18f1dd8eb8cab27f60026e428d5f82ce87c9266325998ff114309e",
+      "icon_path": "res://art/towns/runtime/buildings/building_lantern_archive.png",
+      "icon_sha256": "cb03d313b02a4b8ff6531ce38b85d0ac0def07e557a983023e7198d17ac6f9c2",
+      "shared_art_from": "building_lantern_archive"
+    },
+    {
+      "id": "building_dev_guild_3",
+      "building_id": "building_dev_guild_3",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_starseer_annex.png",
+      "source_sha256": "c04a79ea5f86d301a466c28904dd45dade7b9cf938fab0ff39502d860c51c569",
+      "icon_path": "res://art/towns/runtime/buildings/building_starseer_annex.png",
+      "icon_sha256": "60c047f12425f17a678933f80fff7bd9426e18e2bb64870625dbff3f0e24da56",
+      "shared_art_from": "building_starseer_annex"
+    },
+    {
+      "id": "building_dev_guild_4",
+      "building_id": "building_dev_guild_4",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_starseer_annex.png",
+      "source_sha256": "c04a79ea5f86d301a466c28904dd45dade7b9cf938fab0ff39502d860c51c569",
+      "icon_path": "res://art/towns/runtime/buildings/building_starseer_annex.png",
+      "icon_sha256": "60c047f12425f17a678933f80fff7bd9426e18e2bb64870625dbff3f0e24da56",
+      "shared_art_from": "building_starseer_annex"
+    },
+    {
+      "id": "building_dev_guild_5",
+      "building_id": "building_dev_guild_5",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_starseer_annex.png",
+      "source_sha256": "c04a79ea5f86d301a466c28904dd45dade7b9cf938fab0ff39502d860c51c569",
+      "icon_path": "res://art/towns/runtime/buildings/building_starseer_annex.png",
+      "icon_sha256": "60c047f12425f17a678933f80fff7bd9426e18e2bb64870625dbff3f0e24da56",
+      "shared_art_from": "building_starseer_annex"
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "building_id": "building_dev_trade_exchange",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_market_square.png",
+      "source_sha256": "ad39ee15d48d7d94ca8dd8a9c6305a439f5cbec2257e381b5d0dc7ddd3a622a0",
+      "icon_path": "res://art/towns/runtime/buildings/building_market_square.png",
+      "icon_sha256": "f0153603da197ea369ae1c43c338f90f0adc75e5f25de351eae073adf6a89c52",
+      "shared_art_from": "building_market_square"
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "building_id": "building_dev_storehouse_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_stone_store.png",
+      "source_sha256": "dbe7fbfd98797530a3f699e5d6471ab8217a5510bd857caa70395ca757166f40",
+      "icon_path": "res://art/towns/runtime/buildings/building_stone_store.png",
+      "icon_sha256": "de8119843539d01685dcfe0c61b1a4b9e1049cb964444a21cbafacd23563e60b",
+      "shared_art_from": "building_stone_store"
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "building_id": "building_dev_storehouse_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_stone_store.png",
+      "source_sha256": "dbe7fbfd98797530a3f699e5d6471ab8217a5510bd857caa70395ca757166f40",
+      "icon_path": "res://art/towns/runtime/buildings/building_stone_store.png",
+      "icon_sha256": "de8119843539d01685dcfe0c61b1a4b9e1049cb964444a21cbafacd23563e60b",
+      "shared_art_from": "building_stone_store"
+    },
+    {
+      "id": "building_dev_growth_1",
+      "building_id": "building_dev_growth_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_quartermasters_depot.png",
+      "source_sha256": "3d8f23039434ded8c0de742b4ebd81c3074c0eac3e6c59868243802df05177a5",
+      "icon_path": "res://art/towns/runtime/buildings/building_quartermasters_depot.png",
+      "icon_sha256": "224c41a29abb5f187184e47ca23a1b4b068f81e3baa475ea512d882b3c74a1e7",
+      "shared_art_from": "building_quartermasters_depot"
+    },
+    {
+      "id": "building_dev_growth_2",
+      "building_id": "building_dev_growth_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_quartermasters_depot.png",
+      "source_sha256": "3d8f23039434ded8c0de742b4ebd81c3074c0eac3e6c59868243802df05177a5",
+      "icon_path": "res://art/towns/runtime/buildings/building_quartermasters_depot.png",
+      "icon_sha256": "224c41a29abb5f187184e47ca23a1b4b068f81e3baa475ea512d882b3c74a1e7",
+      "shared_art_from": "building_quartermasters_depot"
+    },
+    {
+      "id": "building_dev_growth_3",
+      "building_id": "building_dev_growth_3",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_quartermasters_depot.png",
+      "source_sha256": "3d8f23039434ded8c0de742b4ebd81c3074c0eac3e6c59868243802df05177a5",
+      "icon_path": "res://art/towns/runtime/buildings/building_quartermasters_depot.png",
+      "icon_sha256": "224c41a29abb5f187184e47ca23a1b4b068f81e3baa475ea512d882b3c74a1e7",
+      "shared_art_from": "building_quartermasters_depot"
+    },
+    {
+      "id": "building_dev_training_attack",
+      "building_id": "building_dev_training_attack",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_watch_barracks.png",
+      "source_sha256": "d9b7aaff82c471ddea3daf49bfe04377e5de2f621ded03729302f44c449acae8",
+      "icon_path": "res://art/towns/runtime/buildings/building_watch_barracks.png",
+      "icon_sha256": "f2f226d7a817ffaa6de919884c5337f031859a85582a51d0901b15167feae3d0",
+      "shared_art_from": "building_watch_barracks"
+    },
+    {
+      "id": "building_dev_training_defense",
+      "building_id": "building_dev_training_defense",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_stone_store.png",
+      "source_sha256": "dbe7fbfd98797530a3f699e5d6471ab8217a5510bd857caa70395ca757166f40",
+      "icon_path": "res://art/towns/runtime/buildings/building_stone_store.png",
+      "icon_sha256": "de8119843539d01685dcfe0c61b1a4b9e1049cb964444a21cbafacd23563e60b",
+      "shared_art_from": "building_stone_store"
+    },
+    {
+      "id": "building_dev_training_experience",
+      "building_id": "building_dev_training_experience",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_lantern_archive.png",
+      "source_sha256": "a5833f5b1c18f1dd8eb8cab27f60026e428d5f82ce87c9266325998ff114309e",
+      "icon_path": "res://art/towns/runtime/buildings/building_lantern_archive.png",
+      "icon_sha256": "cb03d313b02a4b8ff6531ce38b85d0ac0def07e557a983023e7198d17ac6f9c2",
+      "shared_art_from": "building_lantern_archive"
+    },
+    {
+      "id": "building_dev_artifact_exchange",
+      "building_id": "building_dev_artifact_exchange",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_market_square.png",
+      "source_sha256": "ad39ee15d48d7d94ca8dd8a9c6305a439f5cbec2257e381b5d0dc7ddd3a622a0",
+      "icon_path": "res://art/towns/runtime/buildings/building_market_square.png",
+      "icon_sha256": "f0153603da197ea369ae1c43c338f90f0adc75e5f25de351eae073adf6a89c52",
+      "shared_art_from": "building_market_square"
+    },
+    {
+      "id": "building_dev_embercourt_t1_1",
+      "building_id": "building_dev_embercourt_t1_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_muster_yard.png",
+      "source_sha256": "ed381e3f788abe9e83e5f8c0d43fc56bc606331554c983af7bb64e376541ddcb",
+      "icon_path": "res://art/towns/runtime/buildings/building_muster_yard.png",
+      "icon_sha256": "ecececff16d37ae0ad1f9c9ecc5fe82ea62ae87b0cb3575b5477cfe6dfbe55fd",
+      "shared_art_from": "building_muster_yard"
+    },
+    {
+      "id": "building_dev_embercourt_t1_1_upgrade",
+      "building_id": "building_dev_embercourt_t1_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_muster_yard.png",
+      "source_sha256": "ed381e3f788abe9e83e5f8c0d43fc56bc606331554c983af7bb64e376541ddcb",
+      "icon_path": "res://art/towns/runtime/buildings/building_muster_yard.png",
+      "icon_sha256": "ecececff16d37ae0ad1f9c9ecc5fe82ea62ae87b0cb3575b5477cfe6dfbe55fd",
+      "shared_art_from": "building_muster_yard"
+    },
+    {
+      "id": "building_dev_embercourt_t1_2",
+      "building_id": "building_dev_embercourt_t1_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_granary_lock_exchange.png",
+      "source_sha256": "8eb9236188d7a10d203e1078d09fce7c62e56e0e98d2dbb06e4f5394ca920b1d",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_granary_lock_exchange.png",
+      "icon_sha256": "71edf6d0c0bbe1cfe54d1ab5fd26d9b3c0a67d4199a412d312872281360de695",
+      "shared_art_from": "building_embercourt_granary_lock_exchange"
+    },
+    {
+      "id": "building_dev_embercourt_t1_2_upgrade",
+      "building_id": "building_dev_embercourt_t1_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_granary_lock_exchange.png",
+      "source_sha256": "8eb9236188d7a10d203e1078d09fce7c62e56e0e98d2dbb06e4f5394ca920b1d",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_granary_lock_exchange.png",
+      "icon_sha256": "71edf6d0c0bbe1cfe54d1ab5fd26d9b3c0a67d4199a412d312872281360de695",
+      "shared_art_from": "building_embercourt_granary_lock_exchange"
+    },
+    {
+      "id": "building_dev_embercourt_t2_1",
+      "building_id": "building_dev_embercourt_t2_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_bowyer_lodge.png",
+      "source_sha256": "a0079879659626501003d9f268bb7b881b12f334e7d3acded61fe5dc92603d73",
+      "icon_path": "res://art/towns/runtime/buildings/building_bowyer_lodge.png",
+      "icon_sha256": "799b5db01e844096448462a0d2cb3801c49534a04081cda365594a552b3d50dd",
+      "shared_art_from": "building_bowyer_lodge"
+    },
+    {
+      "id": "building_dev_embercourt_t2_1_upgrade",
+      "building_id": "building_dev_embercourt_t2_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_bowyer_lodge.png",
+      "source_sha256": "a0079879659626501003d9f268bb7b881b12f334e7d3acded61fe5dc92603d73",
+      "icon_path": "res://art/towns/runtime/buildings/building_bowyer_lodge.png",
+      "icon_sha256": "799b5db01e844096448462a0d2cb3801c49534a04081cda365594a552b3d50dd",
+      "shared_art_from": "building_bowyer_lodge"
+    },
+    {
+      "id": "building_dev_embercourt_t2_2",
+      "building_id": "building_dev_embercourt_t2_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_tollstone_weir.png",
+      "source_sha256": "714fd1843aa483a4085795c22ad531dd4a1c4e81c5a680deb391ed792105fb70",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_tollstone_weir.png",
+      "icon_sha256": "c65dbca95a8659ff0d168a0899555e59a145e11591a19f8a6bea3f95739c177c",
+      "shared_art_from": "building_embercourt_tollstone_weir"
+    },
+    {
+      "id": "building_dev_embercourt_t2_2_upgrade",
+      "building_id": "building_dev_embercourt_t2_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_tollstone_weir.png",
+      "source_sha256": "714fd1843aa483a4085795c22ad531dd4a1c4e81c5a680deb391ed792105fb70",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_tollstone_weir.png",
+      "icon_sha256": "c65dbca95a8659ff0d168a0899555e59a145e11591a19f8a6bea3f95739c177c",
+      "shared_art_from": "building_embercourt_tollstone_weir"
+    },
+    {
+      "id": "building_dev_embercourt_t3_1",
+      "building_id": "building_dev_embercourt_t3_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_citadel_pikehall.png",
+      "source_sha256": "28d0e115a164a08068700964759e088985850802a446aee3e3ceec9429c46449",
+      "icon_path": "res://art/towns/runtime/buildings/building_citadel_pikehall.png",
+      "icon_sha256": "c79651b32eda20c15788a75a7b0ef48393668067585b3553f729cf4a3b200c78",
+      "shared_art_from": "building_citadel_pikehall"
+    },
+    {
+      "id": "building_dev_embercourt_t3_1_upgrade",
+      "building_id": "building_dev_embercourt_t3_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_citadel_pikehall.png",
+      "source_sha256": "28d0e115a164a08068700964759e088985850802a446aee3e3ceec9429c46449",
+      "icon_path": "res://art/towns/runtime/buildings/building_citadel_pikehall.png",
+      "icon_sha256": "c79651b32eda20c15788a75a7b0ef48393668067585b3553f729cf4a3b200c78",
+      "shared_art_from": "building_citadel_pikehall"
+    },
+    {
+      "id": "building_dev_embercourt_t3_2",
+      "building_id": "building_dev_embercourt_t3_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_bargebow_slip.png",
+      "source_sha256": "c1fd0bc6797232e944b460c557e3adf4b713f2d081872f7a2eb1374edcbabbb1",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_bargebow_slip.png",
+      "icon_sha256": "848aefaefc19e58006bf587d1e8f4fc547de61fd3afda9e0a31dc64f7b872d7f",
+      "shared_art_from": "building_embercourt_bargebow_slip"
+    },
+    {
+      "id": "building_dev_embercourt_t3_2_upgrade",
+      "building_id": "building_dev_embercourt_t3_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_bargebow_slip.png",
+      "source_sha256": "c1fd0bc6797232e944b460c557e3adf4b713f2d081872f7a2eb1374edcbabbb1",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_bargebow_slip.png",
+      "icon_sha256": "848aefaefc19e58006bf587d1e8f4fc547de61fd3afda9e0a31dc64f7b872d7f",
+      "shared_art_from": "building_embercourt_bargebow_slip"
+    },
+    {
+      "id": "building_dev_embercourt_t4_1",
+      "building_id": "building_dev_embercourt_t4_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_oath_pikehall.png",
+      "source_sha256": "591d062a338d00c2e5e3dc36ed62a33bd96d520f07bf464acedbc7f1575d55ef",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_oath_pikehall.png",
+      "icon_sha256": "b812efcfce3e68d6e236f59ab7a2fa965566f23540dc3b6b0fbbd26e9b3fbe7d",
+      "shared_art_from": "building_embercourt_oath_pikehall"
+    },
+    {
+      "id": "building_dev_embercourt_t4_1_upgrade",
+      "building_id": "building_dev_embercourt_t4_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_oath_pikehall.png",
+      "source_sha256": "591d062a338d00c2e5e3dc36ed62a33bd96d520f07bf464acedbc7f1575d55ef",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_oath_pikehall.png",
+      "icon_sha256": "b812efcfce3e68d6e236f59ab7a2fa965566f23540dc3b6b0fbbd26e9b3fbe7d",
+      "shared_art_from": "building_embercourt_oath_pikehall"
+    },
+    {
+      "id": "building_dev_embercourt_t4_2",
+      "building_id": "building_dev_embercourt_t4_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_beaconline_charter_house.png",
+      "source_sha256": "cdf56f6a3c84cd3ec651df590ad6a87727e102cd7d6f9a5e45640c4467b1b2d0",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_beaconline_charter_house.png",
+      "icon_sha256": "62fe2c395ae9b338d2982c70c0e1f093273cf7386e0837ef48d7fe723bdd0aa4",
+      "shared_art_from": "building_embercourt_beaconline_charter_house"
+    },
+    {
+      "id": "building_dev_embercourt_t4_2_upgrade",
+      "building_id": "building_dev_embercourt_t4_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_beaconline_charter_house.png",
+      "source_sha256": "cdf56f6a3c84cd3ec651df590ad6a87727e102cd7d6f9a5e45640c4467b1b2d0",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_beaconline_charter_house.png",
+      "icon_sha256": "62fe2c395ae9b338d2982c70c0e1f093273cf7386e0837ef48d7fe723bdd0aa4",
+      "shared_art_from": "building_embercourt_beaconline_charter_house"
+    },
+    {
+      "id": "building_dev_embercourt_t5_1",
+      "building_id": "building_dev_embercourt_t5_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_beacon_court.png",
+      "source_sha256": "1692e285ad06e5cbaab53afd814b6ece3a187a4f4a9a9e9c7fbe794cfb288ec9",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_beacon_court.png",
+      "icon_sha256": "ee3836aee08e0838d6ab7afff6ab74ae09150a5244aa854053878aacc5f801d5",
+      "shared_art_from": "building_embercourt_beacon_court"
+    },
+    {
+      "id": "building_dev_embercourt_t5_1_upgrade",
+      "building_id": "building_dev_embercourt_t5_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_beacon_court.png",
+      "source_sha256": "1692e285ad06e5cbaab53afd814b6ece3a187a4f4a9a9e9c7fbe794cfb288ec9",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_beacon_court.png",
+      "icon_sha256": "ee3836aee08e0838d6ab7afff6ab74ae09150a5244aa854053878aacc5f801d5",
+      "shared_art_from": "building_embercourt_beacon_court"
+    },
+    {
+      "id": "building_dev_embercourt_t5_2",
+      "building_id": "building_dev_embercourt_t5_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_beaconline_charter_house.png",
+      "source_sha256": "cdf56f6a3c84cd3ec651df590ad6a87727e102cd7d6f9a5e45640c4467b1b2d0",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_beaconline_charter_house.png",
+      "icon_sha256": "62fe2c395ae9b338d2982c70c0e1f093273cf7386e0837ef48d7fe723bdd0aa4",
+      "shared_art_from": "building_embercourt_beaconline_charter_house"
+    },
+    {
+      "id": "building_dev_embercourt_t5_2_upgrade",
+      "building_id": "building_dev_embercourt_t5_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_beaconline_charter_house.png",
+      "source_sha256": "cdf56f6a3c84cd3ec651df590ad6a87727e102cd7d6f9a5e45640c4467b1b2d0",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_beaconline_charter_house.png",
+      "icon_sha256": "62fe2c395ae9b338d2982c70c0e1f093273cf7386e0837ef48d7fe723bdd0aa4",
+      "shared_art_from": "building_embercourt_beaconline_charter_house"
+    },
+    {
+      "id": "building_dev_embercourt_t6_1",
+      "building_id": "building_dev_embercourt_t6_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_drake_sluice.png",
+      "source_sha256": "fdd51b486712197d34ca31d83a4eb35cf1594c0021d9801561b20a1f1251103d",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_drake_sluice.png",
+      "icon_sha256": "5917a21e23c08fb8ca57dddf804f38d1233aeb0551f25bb3424139cf809d7bc9",
+      "shared_art_from": "building_embercourt_drake_sluice"
+    },
+    {
+      "id": "building_dev_embercourt_t6_1_upgrade",
+      "building_id": "building_dev_embercourt_t6_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_drake_sluice.png",
+      "source_sha256": "fdd51b486712197d34ca31d83a4eb35cf1594c0021d9801561b20a1f1251103d",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_drake_sluice.png",
+      "icon_sha256": "5917a21e23c08fb8ca57dddf804f38d1233aeb0551f25bb3424139cf809d7bc9",
+      "shared_art_from": "building_embercourt_drake_sluice"
+    },
+    {
+      "id": "building_dev_embercourt_t7_1",
+      "building_id": "building_dev_embercourt_t7_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_charter_bastion.png",
+      "source_sha256": "d9dcb06fd8dbd27b1d181560cc732a0b57cdb5b57b577e30d2b31de2c7b4016a",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_charter_bastion.png",
+      "icon_sha256": "c60af07375f9b8ccbb8c049359b65230e97411aded4e3f1af20721d3c28ea725",
+      "shared_art_from": "building_embercourt_charter_bastion"
+    },
+    {
+      "id": "building_dev_embercourt_t7_1_upgrade",
+      "building_id": "building_dev_embercourt_t7_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_embercourt_charter_bastion.png",
+      "source_sha256": "d9dcb06fd8dbd27b1d181560cc732a0b57cdb5b57b577e30d2b31de2c7b4016a",
+      "icon_path": "res://art/towns/runtime/buildings/building_embercourt_charter_bastion.png",
+      "icon_sha256": "c60af07375f9b8ccbb8c049359b65230e97411aded4e3f1af20721d3c28ea725",
+      "shared_art_from": "building_embercourt_charter_bastion"
+    },
+    {
+      "id": "building_dev_embercourt_unique_1",
+      "building_id": "building_dev_embercourt_unique_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_watch_barracks.png",
+      "source_sha256": "d9b7aaff82c471ddea3daf49bfe04377e5de2f621ded03729302f44c449acae8",
+      "icon_path": "res://art/towns/runtime/buildings/building_watch_barracks.png",
+      "icon_sha256": "f2f226d7a817ffaa6de919884c5337f031859a85582a51d0901b15167feae3d0",
+      "shared_art_from": "building_watch_barracks"
+    },
+    {
+      "id": "building_dev_embercourt_unique_2",
+      "building_id": "building_dev_embercourt_unique_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_watch_barracks.png",
+      "source_sha256": "d9b7aaff82c471ddea3daf49bfe04377e5de2f621ded03729302f44c449acae8",
+      "icon_path": "res://art/towns/runtime/buildings/building_watch_barracks.png",
+      "icon_sha256": "f2f226d7a817ffaa6de919884c5337f031859a85582a51d0901b15167feae3d0",
+      "shared_art_from": "building_watch_barracks"
+    },
+    {
+      "id": "building_dev_embercourt_unique_3",
+      "building_id": "building_dev_embercourt_unique_3",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_watch_barracks.png",
+      "source_sha256": "d9b7aaff82c471ddea3daf49bfe04377e5de2f621ded03729302f44c449acae8",
+      "icon_path": "res://art/towns/runtime/buildings/building_watch_barracks.png",
+      "icon_sha256": "f2f226d7a817ffaa6de919884c5337f031859a85582a51d0901b15167feae3d0",
+      "shared_art_from": "building_watch_barracks"
+    },
+    {
+      "id": "building_dev_mireclaw_t1_1",
+      "building_id": "building_dev_mireclaw_t1_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_blackbranch_den.png",
+      "source_sha256": "e5523639be53352fbfdc21284cebcef5e8257c6b35bbe3b6bb00b7b0dccdc861",
+      "icon_path": "res://art/towns/runtime/buildings/building_blackbranch_den.png",
+      "icon_sha256": "b050952fc097921c03e226079cefa37b9bb48bc56f69046196376d0a93454114",
+      "shared_art_from": "building_blackbranch_den"
+    },
+    {
+      "id": "building_dev_mireclaw_t1_1_upgrade",
+      "building_id": "building_dev_mireclaw_t1_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_blackbranch_den.png",
+      "source_sha256": "e5523639be53352fbfdc21284cebcef5e8257c6b35bbe3b6bb00b7b0dccdc861",
+      "icon_path": "res://art/towns/runtime/buildings/building_blackbranch_den.png",
+      "icon_sha256": "b050952fc097921c03e226079cefa37b9bb48bc56f69046196376d0a93454114",
+      "shared_art_from": "building_blackbranch_den"
+    },
+    {
+      "id": "building_dev_mireclaw_t1_2",
+      "building_id": "building_dev_mireclaw_t1_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_blackbranch_den.png",
+      "source_sha256": "5246c49e542dfb293f6d84e2cf83d7d1704fc8860299595445e8a7b8b9173ff9",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_blackbranch_den.png",
+      "icon_sha256": "1323bec4e265afb3dc253163fda817d5b002e4afabec4665e58c9f5d3245ccfb",
+      "shared_art_from": "building_mireclaw_blackbranch_den"
+    },
+    {
+      "id": "building_dev_mireclaw_t1_2_upgrade",
+      "building_id": "building_dev_mireclaw_t1_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_blackbranch_den.png",
+      "source_sha256": "5246c49e542dfb293f6d84e2cf83d7d1704fc8860299595445e8a7b8b9173ff9",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_blackbranch_den.png",
+      "icon_sha256": "1323bec4e265afb3dc253163fda817d5b002e4afabec4665e58c9f5d3245ccfb",
+      "shared_art_from": "building_mireclaw_blackbranch_den"
+    },
+    {
+      "id": "building_dev_mireclaw_t2_1",
+      "building_id": "building_dev_mireclaw_t2_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mire_pens.png",
+      "source_sha256": "0978c970eab63b41624497a7d6e88b06142c7bf1ad3b38754492fa2f1908b589",
+      "icon_path": "res://art/towns/runtime/buildings/building_mire_pens.png",
+      "icon_sha256": "fac01ac8d622d2d3f8fce67860aeaa4a77a4e558b1258d86d21b6a3327b195db",
+      "shared_art_from": "building_mire_pens"
+    },
+    {
+      "id": "building_dev_mireclaw_t2_1_upgrade",
+      "building_id": "building_dev_mireclaw_t2_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mire_pens.png",
+      "source_sha256": "0978c970eab63b41624497a7d6e88b06142c7bf1ad3b38754492fa2f1908b589",
+      "icon_path": "res://art/towns/runtime/buildings/building_mire_pens.png",
+      "icon_sha256": "fac01ac8d622d2d3f8fce67860aeaa4a77a4e558b1258d86d21b6a3327b195db",
+      "shared_art_from": "building_mire_pens"
+    },
+    {
+      "id": "building_dev_mireclaw_t2_2",
+      "building_id": "building_dev_mireclaw_t2_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_war_drum_circle.png",
+      "source_sha256": "4d5ac9cf2ceadd4d9bff7934233cb7f88e9234b7c06294a4a3db10aabec10532",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_war_drum_circle.png",
+      "icon_sha256": "12e2843c8f214729069eaac3907ae7e3d36c3cee07f776cd3ca319fefb43e3e8",
+      "shared_art_from": "building_mireclaw_war_drum_circle"
+    },
+    {
+      "id": "building_dev_mireclaw_t2_2_upgrade",
+      "building_id": "building_dev_mireclaw_t2_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_war_drum_circle.png",
+      "source_sha256": "4d5ac9cf2ceadd4d9bff7934233cb7f88e9234b7c06294a4a3db10aabec10532",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_war_drum_circle.png",
+      "icon_sha256": "12e2843c8f214729069eaac3907ae7e3d36c3cee07f776cd3ca319fefb43e3e8",
+      "shared_art_from": "building_mireclaw_war_drum_circle"
+    },
+    {
+      "id": "building_dev_mireclaw_t3_1",
+      "building_id": "building_dev_mireclaw_t3_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_gorefen_ring.png",
+      "source_sha256": "51157d1bec4fa881f23478831f806c0f10a42e8535ee41d4d4b816f6e567a567",
+      "icon_path": "res://art/towns/runtime/buildings/building_gorefen_ring.png",
+      "icon_sha256": "191d86ec812e9cc7b94fc8321462e8e2b94178f80b4c69828118704a8f75eac2",
+      "shared_art_from": "building_gorefen_ring"
+    },
+    {
+      "id": "building_dev_mireclaw_t3_1_upgrade",
+      "building_id": "building_dev_mireclaw_t3_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_gorefen_ring.png",
+      "source_sha256": "51157d1bec4fa881f23478831f806c0f10a42e8535ee41d4d4b816f6e567a567",
+      "icon_path": "res://art/towns/runtime/buildings/building_gorefen_ring.png",
+      "icon_sha256": "191d86ec812e9cc7b94fc8321462e8e2b94178f80b4c69828118704a8f75eac2",
+      "shared_art_from": "building_gorefen_ring"
+    },
+    {
+      "id": "building_dev_mireclaw_t3_2",
+      "building_id": "building_dev_mireclaw_t3_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_floodtide_forge.png",
+      "source_sha256": "15ed15c7cdaec9b082e52c766e11de0b5fef006c5991dd61380fae90152fafec",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_floodtide_forge.png",
+      "icon_sha256": "2402f9930e928a4f780d456fdbb8c8712ba5aec078797fdafe53347f548ee385",
+      "shared_art_from": "building_mireclaw_floodtide_forge"
+    },
+    {
+      "id": "building_dev_mireclaw_t3_2_upgrade",
+      "building_id": "building_dev_mireclaw_t3_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_floodtide_forge.png",
+      "source_sha256": "15ed15c7cdaec9b082e52c766e11de0b5fef006c5991dd61380fae90152fafec",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_floodtide_forge.png",
+      "icon_sha256": "2402f9930e928a4f780d456fdbb8c8712ba5aec078797fdafe53347f548ee385",
+      "shared_art_from": "building_mireclaw_floodtide_forge"
+    },
+    {
+      "id": "building_dev_mireclaw_t4_1",
+      "building_id": "building_dev_mireclaw_t4_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_chainboom_ferry.png",
+      "source_sha256": "315e6b954d07671a027236e58d646014d60fa1111cc086f56b9c1ad8f015aca2",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_chainboom_ferry.png",
+      "icon_sha256": "1b672e5c7572d3dd5866576a94e0f92f1931e76550c831340b01eb81d306d29f",
+      "shared_art_from": "building_mireclaw_chainboom_ferry"
+    },
+    {
+      "id": "building_dev_mireclaw_t4_1_upgrade",
+      "building_id": "building_dev_mireclaw_t4_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_chainboom_ferry.png",
+      "source_sha256": "315e6b954d07671a027236e58d646014d60fa1111cc086f56b9c1ad8f015aca2",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_chainboom_ferry.png",
+      "icon_sha256": "1b672e5c7572d3dd5866576a94e0f92f1931e76550c831340b01eb81d306d29f",
+      "shared_art_from": "building_mireclaw_chainboom_ferry"
+    },
+    {
+      "id": "building_dev_mireclaw_t4_2",
+      "building_id": "building_dev_mireclaw_t4_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_fenbell_hunt_lodge.png",
+      "source_sha256": "6eb48720fa706e5a2d3d4aecbe62cd886c18cecf15b1d6e58ca2359afe0f27b2",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_fenbell_hunt_lodge.png",
+      "icon_sha256": "74df42b25b25439b55b6d5026defd4df28894ff1cd033606325acd8e6ee8d498",
+      "shared_art_from": "building_mireclaw_fenbell_hunt_lodge"
+    },
+    {
+      "id": "building_dev_mireclaw_t4_2_upgrade",
+      "building_id": "building_dev_mireclaw_t4_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_fenbell_hunt_lodge.png",
+      "source_sha256": "6eb48720fa706e5a2d3d4aecbe62cd886c18cecf15b1d6e58ca2359afe0f27b2",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_fenbell_hunt_lodge.png",
+      "icon_sha256": "74df42b25b25439b55b6d5026defd4df28894ff1cd033606325acd8e6ee8d498",
+      "shared_art_from": "building_mireclaw_fenbell_hunt_lodge"
+    },
+    {
+      "id": "building_dev_mireclaw_t5_1",
+      "building_id": "building_dev_mireclaw_t5_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_sporewake_shrine.png",
+      "source_sha256": "f700ca20e09591f43bc828eafceff8012500480d3788ef7ef2f777e986def9b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_sporewake_shrine.png",
+      "icon_sha256": "760f54c59d38dbcdf3df19d7d3c46f4db6a44881202f43efe58e9b027dc35729",
+      "shared_art_from": "building_mireclaw_sporewake_shrine"
+    },
+    {
+      "id": "building_dev_mireclaw_t5_1_upgrade",
+      "building_id": "building_dev_mireclaw_t5_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_sporewake_shrine.png",
+      "source_sha256": "f700ca20e09591f43bc828eafceff8012500480d3788ef7ef2f777e986def9b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_sporewake_shrine.png",
+      "icon_sha256": "760f54c59d38dbcdf3df19d7d3c46f4db6a44881202f43efe58e9b027dc35729",
+      "shared_art_from": "building_mireclaw_sporewake_shrine"
+    },
+    {
+      "id": "building_dev_mireclaw_t5_2",
+      "building_id": "building_dev_mireclaw_t5_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_fenbell_hunt_lodge.png",
+      "source_sha256": "6eb48720fa706e5a2d3d4aecbe62cd886c18cecf15b1d6e58ca2359afe0f27b2",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_fenbell_hunt_lodge.png",
+      "icon_sha256": "74df42b25b25439b55b6d5026defd4df28894ff1cd033606325acd8e6ee8d498",
+      "shared_art_from": "building_mireclaw_fenbell_hunt_lodge"
+    },
+    {
+      "id": "building_dev_mireclaw_t5_2_upgrade",
+      "building_id": "building_dev_mireclaw_t5_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_fenbell_hunt_lodge.png",
+      "source_sha256": "6eb48720fa706e5a2d3d4aecbe62cd886c18cecf15b1d6e58ca2359afe0f27b2",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_fenbell_hunt_lodge.png",
+      "icon_sha256": "74df42b25b25439b55b6d5026defd4df28894ff1cd033606325acd8e6ee8d498",
+      "shared_art_from": "building_mireclaw_fenbell_hunt_lodge"
+    },
+    {
+      "id": "building_dev_mireclaw_t6_1",
+      "building_id": "building_dev_mireclaw_t6_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_nightglass_dominion.png",
+      "source_sha256": "5b028d234aba0f4ab76e314ba5ff44405039db63f38f2b1a35641b7183ad7929",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_nightglass_dominion.png",
+      "icon_sha256": "f92791eaa832ffb2fc38e703e1b0533aef5967d6ea7f8c2d15a826846a7759fe",
+      "shared_art_from": "building_mireclaw_nightglass_dominion"
+    },
+    {
+      "id": "building_dev_mireclaw_t6_1_upgrade",
+      "building_id": "building_dev_mireclaw_t6_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_nightglass_dominion.png",
+      "source_sha256": "5b028d234aba0f4ab76e314ba5ff44405039db63f38f2b1a35641b7183ad7929",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_nightglass_dominion.png",
+      "icon_sha256": "f92791eaa832ffb2fc38e703e1b0533aef5967d6ea7f8c2d15a826846a7759fe",
+      "shared_art_from": "building_mireclaw_nightglass_dominion"
+    },
+    {
+      "id": "building_dev_mireclaw_t7_1",
+      "building_id": "building_dev_mireclaw_t7_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_antler_pit.png",
+      "source_sha256": "25250d146294122591e2065ae88d1102dc5c49cdf4fa9e168d6a998ca0b6d164",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_antler_pit.png",
+      "icon_sha256": "92e0290ab80cb2eef251226906506e07f10f317ec33d137de75bcd71a9e9f8f7",
+      "shared_art_from": "building_mireclaw_antler_pit"
+    },
+    {
+      "id": "building_dev_mireclaw_t7_1_upgrade",
+      "building_id": "building_dev_mireclaw_t7_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_mireclaw_antler_pit.png",
+      "source_sha256": "25250d146294122591e2065ae88d1102dc5c49cdf4fa9e168d6a998ca0b6d164",
+      "icon_path": "res://art/towns/runtime/buildings/building_mireclaw_antler_pit.png",
+      "icon_sha256": "92e0290ab80cb2eef251226906506e07f10f317ec33d137de75bcd71a9e9f8f7",
+      "shared_art_from": "building_mireclaw_antler_pit"
+    },
+    {
+      "id": "building_dev_mireclaw_unique_1",
+      "building_id": "building_dev_mireclaw_unique_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_smugglers_flotilla.png",
+      "source_sha256": "53f17639461db651bdf6b6bdcc690f286460861138ea0f618d5e0894ccbd2006",
+      "icon_path": "res://art/towns/runtime/buildings/building_smugglers_flotilla.png",
+      "icon_sha256": "0ec63c30a640a68321867241901c33f58f313f0cf7128d36772d667b86d02c1b",
+      "shared_art_from": "building_smugglers_flotilla"
+    },
+    {
+      "id": "building_dev_mireclaw_unique_2",
+      "building_id": "building_dev_mireclaw_unique_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_smugglers_flotilla.png",
+      "source_sha256": "53f17639461db651bdf6b6bdcc690f286460861138ea0f618d5e0894ccbd2006",
+      "icon_path": "res://art/towns/runtime/buildings/building_smugglers_flotilla.png",
+      "icon_sha256": "0ec63c30a640a68321867241901c33f58f313f0cf7128d36772d667b86d02c1b",
+      "shared_art_from": "building_smugglers_flotilla"
+    },
+    {
+      "id": "building_dev_mireclaw_unique_3",
+      "building_id": "building_dev_mireclaw_unique_3",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_smugglers_flotilla.png",
+      "source_sha256": "53f17639461db651bdf6b6bdcc690f286460861138ea0f618d5e0894ccbd2006",
+      "icon_path": "res://art/towns/runtime/buildings/building_smugglers_flotilla.png",
+      "icon_sha256": "0ec63c30a640a68321867241901c33f58f313f0cf7128d36772d667b86d02c1b",
+      "shared_art_from": "building_smugglers_flotilla"
+    },
+    {
+      "id": "building_dev_sunvault_t1_1",
+      "building_id": "building_dev_sunvault_t1_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_shard_yard.png",
+      "source_sha256": "af744f9dd5b58b59613c736079c9b65e737061311aa66733ce885607b084989f",
+      "icon_path": "res://art/towns/runtime/buildings/building_shard_yard.png",
+      "icon_sha256": "636652f2c50be014bd3303693129f47b7ed505f89bd20e908a1872c8f18a2937",
+      "shared_art_from": "building_shard_yard"
+    },
+    {
+      "id": "building_dev_sunvault_t1_1_upgrade",
+      "building_id": "building_dev_sunvault_t1_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_shard_yard.png",
+      "source_sha256": "af744f9dd5b58b59613c736079c9b65e737061311aa66733ce885607b084989f",
+      "icon_path": "res://art/towns/runtime/buildings/building_shard_yard.png",
+      "icon_sha256": "636652f2c50be014bd3303693129f47b7ed505f89bd20e908a1872c8f18a2937",
+      "shared_art_from": "building_shard_yard"
+    },
+    {
+      "id": "building_dev_sunvault_t1_2",
+      "building_id": "building_dev_sunvault_t1_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_shard_yard.png",
+      "source_sha256": "32385f8915b612fa2c2f869bd6ac283375a58f4f5a27242b333521ed07b869cd",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_shard_yard.png",
+      "icon_sha256": "01ac54df4b9ca5166fecf68b794363d97ecc0a88e3e57d367159b539bb0ad20b",
+      "shared_art_from": "building_sunvault_shard_yard"
+    },
+    {
+      "id": "building_dev_sunvault_t1_2_upgrade",
+      "building_id": "building_dev_sunvault_t1_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_shard_yard.png",
+      "source_sha256": "32385f8915b612fa2c2f869bd6ac283375a58f4f5a27242b333521ed07b869cd",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_shard_yard.png",
+      "icon_sha256": "01ac54df4b9ca5166fecf68b794363d97ecc0a88e3e57d367159b539bb0ad20b",
+      "shared_art_from": "building_sunvault_shard_yard"
+    },
+    {
+      "id": "building_dev_sunvault_t2_1",
+      "building_id": "building_dev_sunvault_t2_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_prism_range.png",
+      "source_sha256": "6803b7ef8a4cafcfebe298ff33bc2e6f370f979fe10638491b342839cd8890ec",
+      "icon_path": "res://art/towns/runtime/buildings/building_prism_range.png",
+      "icon_sha256": "dabdd4f53033efdc65f69c48d148df177884fd9539d4f46d3546d9ff93ce6108",
+      "shared_art_from": "building_prism_range"
+    },
+    {
+      "id": "building_dev_sunvault_t2_1_upgrade",
+      "building_id": "building_dev_sunvault_t2_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_prism_range.png",
+      "source_sha256": "6803b7ef8a4cafcfebe298ff33bc2e6f370f979fe10638491b342839cd8890ec",
+      "icon_path": "res://art/towns/runtime/buildings/building_prism_range.png",
+      "icon_sha256": "dabdd4f53033efdc65f69c48d148df177884fd9539d4f46d3546d9ff93ce6108",
+      "shared_art_from": "building_prism_range"
+    },
+    {
+      "id": "building_dev_sunvault_t2_2",
+      "building_id": "building_dev_sunvault_t2_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_lens_gallery.png",
+      "source_sha256": "f4bd1be06901af0e62f881436f5a0076a21ca9975fd8e6359397bb635b76fd13",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_lens_gallery.png",
+      "icon_sha256": "b03486d91263c4a4dbd295a2e5070264eab7d9f03964c1cfa28e421be22e1a4f",
+      "shared_art_from": "building_sunvault_lens_gallery"
+    },
+    {
+      "id": "building_dev_sunvault_t2_2_upgrade",
+      "building_id": "building_dev_sunvault_t2_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_lens_gallery.png",
+      "source_sha256": "f4bd1be06901af0e62f881436f5a0076a21ca9975fd8e6359397bb635b76fd13",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_lens_gallery.png",
+      "icon_sha256": "b03486d91263c4a4dbd295a2e5070264eab7d9f03964c1cfa28e421be22e1a4f",
+      "shared_art_from": "building_sunvault_lens_gallery"
+    },
+    {
+      "id": "building_dev_sunvault_t3_1",
+      "building_id": "building_dev_sunvault_t3_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_aurora_spire.png",
+      "source_sha256": "7fdf024f750e1649ab891045371f1c9373136bde45fa8fa8f04515d75a154fb5",
+      "icon_path": "res://art/towns/runtime/buildings/building_aurora_spire.png",
+      "icon_sha256": "06606ff9f286c82bb174a04606d953fd4a4e2cde71560eb3052438f29ed3842e",
+      "shared_art_from": "building_aurora_spire"
+    },
+    {
+      "id": "building_dev_sunvault_t3_1_upgrade",
+      "building_id": "building_dev_sunvault_t3_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_aurora_spire.png",
+      "source_sha256": "7fdf024f750e1649ab891045371f1c9373136bde45fa8fa8f04515d75a154fb5",
+      "icon_path": "res://art/towns/runtime/buildings/building_aurora_spire.png",
+      "icon_sha256": "06606ff9f286c82bb174a04606d953fd4a4e2cde71560eb3052438f29ed3842e",
+      "shared_art_from": "building_aurora_spire"
+    },
+    {
+      "id": "building_dev_sunvault_t3_2",
+      "building_id": "building_dev_sunvault_t3_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_mirror_forge.png",
+      "source_sha256": "5460fe9f3392ed756713b5c4b9c78561fd88300e6eafda07e1a6e02a51e5fb09",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_mirror_forge.png",
+      "icon_sha256": "adc82b408d401f9286866e5e06f30976b7f0354b1e2a98625f4d90f0da071e0c",
+      "shared_art_from": "building_sunvault_mirror_forge"
+    },
+    {
+      "id": "building_dev_sunvault_t3_2_upgrade",
+      "building_id": "building_dev_sunvault_t3_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_mirror_forge.png",
+      "source_sha256": "5460fe9f3392ed756713b5c4b9c78561fd88300e6eafda07e1a6e02a51e5fb09",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_mirror_forge.png",
+      "icon_sha256": "adc82b408d401f9286866e5e06f30976b7f0354b1e2a98625f4d90f0da071e0c",
+      "shared_art_from": "building_sunvault_mirror_forge"
+    },
+    {
+      "id": "building_dev_sunvault_t4_1",
+      "building_id": "building_dev_sunvault_t4_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_harmonic_cloister.png",
+      "source_sha256": "2b3db638c6631e0fbd1a06377ae96b8769c7756d75576578b0072a12b8daa5a7",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_harmonic_cloister.png",
+      "icon_sha256": "fcf507564d67cf052aaf6ee021c8556e39cf59eb66ff8acf8a8a3cb427dc3529",
+      "shared_art_from": "building_sunvault_harmonic_cloister"
+    },
+    {
+      "id": "building_dev_sunvault_t4_1_upgrade",
+      "building_id": "building_dev_sunvault_t4_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_harmonic_cloister.png",
+      "source_sha256": "2b3db638c6631e0fbd1a06377ae96b8769c7756d75576578b0072a12b8daa5a7",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_harmonic_cloister.png",
+      "icon_sha256": "fcf507564d67cf052aaf6ee021c8556e39cf59eb66ff8acf8a8a3cb427dc3529",
+      "shared_art_from": "building_sunvault_harmonic_cloister"
+    },
+    {
+      "id": "building_dev_sunvault_t4_2",
+      "building_id": "building_dev_sunvault_t4_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_zenith_relay_hall.png",
+      "source_sha256": "2b279c68d88bfbdae0aeb1f01c4195166536334d554f288ec534b8d33efc2e23",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_zenith_relay_hall.png",
+      "icon_sha256": "805b95000c0145e7636ab2ab8a3b1aec4b021b97872f1b8f4e07e04bcf0b48dc",
+      "shared_art_from": "building_sunvault_zenith_relay_hall"
+    },
+    {
+      "id": "building_dev_sunvault_t4_2_upgrade",
+      "building_id": "building_dev_sunvault_t4_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_zenith_relay_hall.png",
+      "source_sha256": "2b279c68d88bfbdae0aeb1f01c4195166536334d554f288ec534b8d33efc2e23",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_zenith_relay_hall.png",
+      "icon_sha256": "805b95000c0145e7636ab2ab8a3b1aec4b021b97872f1b8f4e07e04bcf0b48dc",
+      "shared_art_from": "building_sunvault_zenith_relay_hall"
+    },
+    {
+      "id": "building_dev_sunvault_t5_1",
+      "building_id": "building_dev_sunvault_t5_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_zenith_observatory.png",
+      "source_sha256": "1676da807c97d665c59180e20d345dc1c754bcb1c9382c268b37b4a591552684",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_zenith_observatory.png",
+      "icon_sha256": "082ab7a7ecae893f2991053324c568910621c52d9f27f0dd4d87788c71129161",
+      "shared_art_from": "building_sunvault_zenith_observatory"
+    },
+    {
+      "id": "building_dev_sunvault_t5_1_upgrade",
+      "building_id": "building_dev_sunvault_t5_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_zenith_observatory.png",
+      "source_sha256": "1676da807c97d665c59180e20d345dc1c754bcb1c9382c268b37b4a591552684",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_zenith_observatory.png",
+      "icon_sha256": "082ab7a7ecae893f2991053324c568910621c52d9f27f0dd4d87788c71129161",
+      "shared_art_from": "building_sunvault_zenith_observatory"
+    },
+    {
+      "id": "building_dev_sunvault_t5_2",
+      "building_id": "building_dev_sunvault_t5_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_zenith_relay_hall.png",
+      "source_sha256": "2b279c68d88bfbdae0aeb1f01c4195166536334d554f288ec534b8d33efc2e23",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_zenith_relay_hall.png",
+      "icon_sha256": "805b95000c0145e7636ab2ab8a3b1aec4b021b97872f1b8f4e07e04bcf0b48dc",
+      "shared_art_from": "building_sunvault_zenith_relay_hall"
+    },
+    {
+      "id": "building_dev_sunvault_t5_2_upgrade",
+      "building_id": "building_dev_sunvault_t5_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_zenith_relay_hall.png",
+      "source_sha256": "2b279c68d88bfbdae0aeb1f01c4195166536334d554f288ec534b8d33efc2e23",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_zenith_relay_hall.png",
+      "icon_sha256": "805b95000c0145e7636ab2ab8a3b1aec4b021b97872f1b8f4e07e04bcf0b48dc",
+      "shared_art_from": "building_sunvault_zenith_relay_hall"
+    },
+    {
+      "id": "building_dev_sunvault_t6_1",
+      "building_id": "building_dev_sunvault_t6_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_aurora_spire.png",
+      "source_sha256": "d01ba297dedb463427b310e21b1c2e14f3bc90c64694c1d9f30c396610e04842",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_aurora_spire.png",
+      "icon_sha256": "237c2b8975129fb5c2a3dbc83d5c7f9fee164163548be520aacecaee6f8c7827",
+      "shared_art_from": "building_sunvault_aurora_spire"
+    },
+    {
+      "id": "building_dev_sunvault_t6_1_upgrade",
+      "building_id": "building_dev_sunvault_t6_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_aurora_spire.png",
+      "source_sha256": "d01ba297dedb463427b310e21b1c2e14f3bc90c64694c1d9f30c396610e04842",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_aurora_spire.png",
+      "icon_sha256": "237c2b8975129fb5c2a3dbc83d5c7f9fee164163548be520aacecaee6f8c7827",
+      "shared_art_from": "building_sunvault_aurora_spire"
+    },
+    {
+      "id": "building_dev_sunvault_t7_1",
+      "building_id": "building_dev_sunvault_t7_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_daybreak_matrix.png",
+      "source_sha256": "bf5f62bbfbf6cc9211b0476beb5d79339c6186ccc8813a37b5cac544de1828ff",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_daybreak_matrix.png",
+      "icon_sha256": "60de0f9ec509b8b5788be819bb43dd746da852204d1bd448d38c9415241149be",
+      "shared_art_from": "building_sunvault_daybreak_matrix"
+    },
+    {
+      "id": "building_dev_sunvault_t7_1_upgrade",
+      "building_id": "building_dev_sunvault_t7_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_sunvault_daybreak_matrix.png",
+      "source_sha256": "bf5f62bbfbf6cc9211b0476beb5d79339c6186ccc8813a37b5cac544de1828ff",
+      "icon_path": "res://art/towns/runtime/buildings/building_sunvault_daybreak_matrix.png",
+      "icon_sha256": "60de0f9ec509b8b5788be819bb43dd746da852204d1bd448d38c9415241149be",
+      "shared_art_from": "building_sunvault_daybreak_matrix"
+    },
+    {
+      "id": "building_dev_sunvault_unique_1",
+      "building_id": "building_dev_sunvault_unique_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_resonant_exchange.png",
+      "source_sha256": "a94b5a0b6442cf2c236718f587aa7b9743661986be05346aa522929dd658ab28",
+      "icon_path": "res://art/towns/runtime/buildings/building_resonant_exchange.png",
+      "icon_sha256": "551a44a728ae34f2071e4f0bca82a38acbb218de8efdb9da7bdca0ed33b8dedd",
+      "shared_art_from": "building_resonant_exchange"
+    },
+    {
+      "id": "building_dev_sunvault_unique_2",
+      "building_id": "building_dev_sunvault_unique_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_resonant_exchange.png",
+      "source_sha256": "a94b5a0b6442cf2c236718f587aa7b9743661986be05346aa522929dd658ab28",
+      "icon_path": "res://art/towns/runtime/buildings/building_resonant_exchange.png",
+      "icon_sha256": "551a44a728ae34f2071e4f0bca82a38acbb218de8efdb9da7bdca0ed33b8dedd",
+      "shared_art_from": "building_resonant_exchange"
+    },
+    {
+      "id": "building_dev_sunvault_unique_3",
+      "building_id": "building_dev_sunvault_unique_3",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_resonant_exchange.png",
+      "source_sha256": "a94b5a0b6442cf2c236718f587aa7b9743661986be05346aa522929dd658ab28",
+      "icon_path": "res://art/towns/runtime/buildings/building_resonant_exchange.png",
+      "icon_sha256": "551a44a728ae34f2071e4f0bca82a38acbb218de8efdb9da7bdca0ed33b8dedd",
+      "shared_art_from": "building_resonant_exchange"
+    },
+    {
+      "id": "building_dev_thornwake_t1_1",
+      "building_id": "building_dev_thornwake_t1_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_seed_vault.png",
+      "source_sha256": "433a9124c354f4fb0552b386a781948ac64970b6f7daa64b8c9e2f100f5f57f7",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_seed_vault.png",
+      "icon_sha256": "6a23654fd8d7ddeddbc1829d135dd3abeedc7b8c71d6583fd712d7ae156bb72b",
+      "shared_art_from": "building_thornwake_seed_vault"
+    },
+    {
+      "id": "building_dev_thornwake_t1_1_upgrade",
+      "building_id": "building_dev_thornwake_t1_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_seed_vault.png",
+      "source_sha256": "433a9124c354f4fb0552b386a781948ac64970b6f7daa64b8c9e2f100f5f57f7",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_seed_vault.png",
+      "icon_sha256": "6a23654fd8d7ddeddbc1829d135dd3abeedc7b8c71d6583fd712d7ae156bb72b",
+      "shared_art_from": "building_thornwake_seed_vault"
+    },
+    {
+      "id": "building_dev_thornwake_t1_2",
+      "building_id": "building_dev_thornwake_t1_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_canopy_breach_grove.png",
+      "source_sha256": "dc8007f34d3f234f73abb55e9f9107fc8c7242b649e0c29ab932d9fa28304207",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_canopy_breach_grove.png",
+      "icon_sha256": "a2da1951481cc954a781a9daeafc307bb5f0ca668b99ae051910091e3594e4f6",
+      "shared_art_from": "building_thornwake_canopy_breach_grove"
+    },
+    {
+      "id": "building_dev_thornwake_t1_2_upgrade",
+      "building_id": "building_dev_thornwake_t1_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_canopy_breach_grove.png",
+      "source_sha256": "dc8007f34d3f234f73abb55e9f9107fc8c7242b649e0c29ab932d9fa28304207",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_canopy_breach_grove.png",
+      "icon_sha256": "a2da1951481cc954a781a9daeafc307bb5f0ca668b99ae051910091e3594e4f6",
+      "shared_art_from": "building_thornwake_canopy_breach_grove"
+    },
+    {
+      "id": "building_dev_thornwake_t2_1",
+      "building_id": "building_dev_thornwake_t2_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_bramble_toll.png",
+      "source_sha256": "a58ed4bcec7adbfd44c94f05b27e0e3db51a9b114a07689a75a4c051cdb57aa7",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_bramble_toll.png",
+      "icon_sha256": "a1c309de760151054c3851d684a6e00e045d1813663cd3d14c1c0f4a3ae7a66b",
+      "shared_art_from": "building_thornwake_bramble_toll"
+    },
+    {
+      "id": "building_dev_thornwake_t2_1_upgrade",
+      "building_id": "building_dev_thornwake_t2_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_bramble_toll.png",
+      "source_sha256": "a58ed4bcec7adbfd44c94f05b27e0e3db51a9b114a07689a75a4c051cdb57aa7",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_bramble_toll.png",
+      "icon_sha256": "a1c309de760151054c3851d684a6e00e045d1813663cd3d14c1c0f4a3ae7a66b",
+      "shared_art_from": "building_thornwake_bramble_toll"
+    },
+    {
+      "id": "building_dev_thornwake_t2_2",
+      "building_id": "building_dev_thornwake_t2_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_canopy_breach_grove.png",
+      "source_sha256": "dc8007f34d3f234f73abb55e9f9107fc8c7242b649e0c29ab932d9fa28304207",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_canopy_breach_grove.png",
+      "icon_sha256": "a2da1951481cc954a781a9daeafc307bb5f0ca668b99ae051910091e3594e4f6",
+      "shared_art_from": "building_thornwake_canopy_breach_grove"
+    },
+    {
+      "id": "building_dev_thornwake_t2_2_upgrade",
+      "building_id": "building_dev_thornwake_t2_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_canopy_breach_grove.png",
+      "source_sha256": "dc8007f34d3f234f73abb55e9f9107fc8c7242b649e0c29ab932d9fa28304207",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_canopy_breach_grove.png",
+      "icon_sha256": "a2da1951481cc954a781a9daeafc307bb5f0ca668b99ae051910091e3594e4f6",
+      "shared_art_from": "building_thornwake_canopy_breach_grove"
+    },
+    {
+      "id": "building_dev_thornwake_t3_1",
+      "building_id": "building_dev_thornwake_t3_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_sporeglass_hothouse.png",
+      "source_sha256": "a1f358f948b4f7ec6e9d0a043ae7052b89f2dbdfdbb673d6f7f3d3d006fe124c",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_sporeglass_hothouse.png",
+      "icon_sha256": "93218b93452695488d31e3d79099c7c5cdc75aa5559ffb5a9265c814f758f481",
+      "shared_art_from": "building_thornwake_sporeglass_hothouse"
+    },
+    {
+      "id": "building_dev_thornwake_t3_1_upgrade",
+      "building_id": "building_dev_thornwake_t3_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_sporeglass_hothouse.png",
+      "source_sha256": "a1f358f948b4f7ec6e9d0a043ae7052b89f2dbdfdbb673d6f7f3d3d006fe124c",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_sporeglass_hothouse.png",
+      "icon_sha256": "93218b93452695488d31e3d79099c7c5cdc75aa5559ffb5a9265c814f758f481",
+      "shared_art_from": "building_thornwake_sporeglass_hothouse"
+    },
+    {
+      "id": "building_dev_thornwake_t3_2",
+      "building_id": "building_dev_thornwake_t3_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_canopy_breach_grove.png",
+      "source_sha256": "dc8007f34d3f234f73abb55e9f9107fc8c7242b649e0c29ab932d9fa28304207",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_canopy_breach_grove.png",
+      "icon_sha256": "a2da1951481cc954a781a9daeafc307bb5f0ca668b99ae051910091e3594e4f6",
+      "shared_art_from": "building_thornwake_canopy_breach_grove"
+    },
+    {
+      "id": "building_dev_thornwake_t3_2_upgrade",
+      "building_id": "building_dev_thornwake_t3_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_canopy_breach_grove.png",
+      "source_sha256": "dc8007f34d3f234f73abb55e9f9107fc8c7242b649e0c29ab932d9fa28304207",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_canopy_breach_grove.png",
+      "icon_sha256": "a2da1951481cc954a781a9daeafc307bb5f0ca668b99ae051910091e3594e4f6",
+      "shared_art_from": "building_thornwake_canopy_breach_grove"
+    },
+    {
+      "id": "building_dev_thornwake_t4_1",
+      "building_id": "building_dev_thornwake_t4_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_barkmantle_run.png",
+      "source_sha256": "3a5ed127ea2f397fba0ce573c0266633064b0e269294e4992e9fccea1694b738",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_barkmantle_run.png",
+      "icon_sha256": "95e773e8537232cb1429287468fe336bf144e19e18ae0cfe8911f4f500cd32cb",
+      "shared_art_from": "building_thornwake_barkmantle_run"
+    },
+    {
+      "id": "building_dev_thornwake_t4_1_upgrade",
+      "building_id": "building_dev_thornwake_t4_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_barkmantle_run.png",
+      "source_sha256": "3a5ed127ea2f397fba0ce573c0266633064b0e269294e4992e9fccea1694b738",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_barkmantle_run.png",
+      "icon_sha256": "95e773e8537232cb1429287468fe336bf144e19e18ae0cfe8911f4f500cd32cb",
+      "shared_art_from": "building_thornwake_barkmantle_run"
+    },
+    {
+      "id": "building_dev_thornwake_t4_2",
+      "building_id": "building_dev_thornwake_t4_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_canopy_breach_grove.png",
+      "source_sha256": "dc8007f34d3f234f73abb55e9f9107fc8c7242b649e0c29ab932d9fa28304207",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_canopy_breach_grove.png",
+      "icon_sha256": "a2da1951481cc954a781a9daeafc307bb5f0ca668b99ae051910091e3594e4f6",
+      "shared_art_from": "building_thornwake_canopy_breach_grove"
+    },
+    {
+      "id": "building_dev_thornwake_t4_2_upgrade",
+      "building_id": "building_dev_thornwake_t4_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_canopy_breach_grove.png",
+      "source_sha256": "dc8007f34d3f234f73abb55e9f9107fc8c7242b649e0c29ab932d9fa28304207",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_canopy_breach_grove.png",
+      "icon_sha256": "a2da1951481cc954a781a9daeafc307bb5f0ca668b99ae051910091e3594e4f6",
+      "shared_art_from": "building_thornwake_canopy_breach_grove"
+    },
+    {
+      "id": "building_dev_thornwake_t5_1",
+      "building_id": "building_dev_thornwake_t5_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_pilgrim_orchard.png",
+      "source_sha256": "6baf7a9c609b6594032e8c23984463bd1d2ea1197e57ddcb5fca7cc2dc810925",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_pilgrim_orchard.png",
+      "icon_sha256": "220cf4ad19ae46e23e189b517d2d907e42a0cea91268f07229cea2e1789fb9ec",
+      "shared_art_from": "building_thornwake_pilgrim_orchard"
+    },
+    {
+      "id": "building_dev_thornwake_t5_1_upgrade",
+      "building_id": "building_dev_thornwake_t5_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_pilgrim_orchard.png",
+      "source_sha256": "6baf7a9c609b6594032e8c23984463bd1d2ea1197e57ddcb5fca7cc2dc810925",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_pilgrim_orchard.png",
+      "icon_sha256": "220cf4ad19ae46e23e189b517d2d907e42a0cea91268f07229cea2e1789fb9ec",
+      "shared_art_from": "building_thornwake_pilgrim_orchard"
+    },
+    {
+      "id": "building_dev_thornwake_t5_2",
+      "building_id": "building_dev_thornwake_t5_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_seedglass_cantory.png",
+      "source_sha256": "bfe79166b6f683e2dc3ad7fa454816a1d62f5d570811ec94d59302a2548f5ead",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_seedglass_cantory.png",
+      "icon_sha256": "4ba935e1801f23f85698fe9d499354fefc143f88828a4fec5213ce9c457cb9a9",
+      "shared_art_from": "building_thornwake_seedglass_cantory"
+    },
+    {
+      "id": "building_dev_thornwake_t5_2_upgrade",
+      "building_id": "building_dev_thornwake_t5_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_seedglass_cantory.png",
+      "source_sha256": "bfe79166b6f683e2dc3ad7fa454816a1d62f5d570811ec94d59302a2548f5ead",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_seedglass_cantory.png",
+      "icon_sha256": "4ba935e1801f23f85698fe9d499354fefc143f88828a4fec5213ce9c457cb9a9",
+      "shared_art_from": "building_thornwake_seedglass_cantory"
+    },
+    {
+      "id": "building_dev_thornwake_t6_1",
+      "building_id": "building_dev_thornwake_t6_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_graftworks.png",
+      "source_sha256": "755d1aae050454b28d23d02194af14ee5fd9f57c28b74f7c188c832ef2bc6a26",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_graftworks.png",
+      "icon_sha256": "d0d17c6e0bc8793823c5d095b7ad2a259a1cc3583d8da6f612a9ac654d9bb601",
+      "shared_art_from": "building_thornwake_graftworks"
+    },
+    {
+      "id": "building_dev_thornwake_t6_1_upgrade",
+      "building_id": "building_dev_thornwake_t6_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_graftworks.png",
+      "source_sha256": "755d1aae050454b28d23d02194af14ee5fd9f57c28b74f7c188c832ef2bc6a26",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_graftworks.png",
+      "icon_sha256": "d0d17c6e0bc8793823c5d095b7ad2a259a1cc3583d8da6f612a9ac654d9bb601",
+      "shared_art_from": "building_thornwake_graftworks"
+    },
+    {
+      "id": "building_dev_thornwake_t7_1",
+      "building_id": "building_dev_thornwake_t7_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_worldroot_gate.png",
+      "source_sha256": "7c6aee02c7dcbffb29f09608a8e664ce76c04051e677d2f6360f4eafbadd3251",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_worldroot_gate.png",
+      "icon_sha256": "2c0f7fac7f1c546d8403b602a6ef4e2dafa54a7b1ca8fea53ac00de5f588f061",
+      "shared_art_from": "building_thornwake_worldroot_gate"
+    },
+    {
+      "id": "building_dev_thornwake_t7_1_upgrade",
+      "building_id": "building_dev_thornwake_t7_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_worldroot_gate.png",
+      "source_sha256": "7c6aee02c7dcbffb29f09608a8e664ce76c04051e677d2f6360f4eafbadd3251",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_worldroot_gate.png",
+      "icon_sha256": "2c0f7fac7f1c546d8403b602a6ef4e2dafa54a7b1ca8fea53ac00de5f588f061",
+      "shared_art_from": "building_thornwake_worldroot_gate"
+    },
+    {
+      "id": "building_dev_thornwake_unique_1",
+      "building_id": "building_dev_thornwake_unique_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_rootroad_markers.png",
+      "source_sha256": "047bf64afb93398a58ebea9f64ed804fdbf1454eaafed2d661f579882e0dcd56",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_rootroad_markers.png",
+      "icon_sha256": "d4c112143ba2c7eaa0d566fc2f42c99f92ed1cc87da73cab92d82a59eb2aed79",
+      "shared_art_from": "building_thornwake_rootroad_markers"
+    },
+    {
+      "id": "building_dev_thornwake_unique_2",
+      "building_id": "building_dev_thornwake_unique_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_rootroad_markers.png",
+      "source_sha256": "047bf64afb93398a58ebea9f64ed804fdbf1454eaafed2d661f579882e0dcd56",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_rootroad_markers.png",
+      "icon_sha256": "d4c112143ba2c7eaa0d566fc2f42c99f92ed1cc87da73cab92d82a59eb2aed79",
+      "shared_art_from": "building_thornwake_rootroad_markers"
+    },
+    {
+      "id": "building_dev_thornwake_unique_3",
+      "building_id": "building_dev_thornwake_unique_3",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_thornwake_rootroad_markers.png",
+      "source_sha256": "047bf64afb93398a58ebea9f64ed804fdbf1454eaafed2d661f579882e0dcd56",
+      "icon_path": "res://art/towns/runtime/buildings/building_thornwake_rootroad_markers.png",
+      "icon_sha256": "d4c112143ba2c7eaa0d566fc2f42c99f92ed1cc87da73cab92d82a59eb2aed79",
+      "shared_art_from": "building_thornwake_rootroad_markers"
+    },
+    {
+      "id": "building_dev_brasshollow_t1_1",
+      "building_id": "building_dev_brasshollow_t1_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_ore_tithe_office.png",
+      "source_sha256": "54c7ba503de812dbb7011bb688a965044c248369d66338e86ccbcb57c09c549f",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_ore_tithe_office.png",
+      "icon_sha256": "f26b2af853bcd3875e7926b16fdc2bf2c7a501eda7ff754a97b9c94a0bdfb25a",
+      "shared_art_from": "building_brasshollow_ore_tithe_office"
+    },
+    {
+      "id": "building_dev_brasshollow_t1_1_upgrade",
+      "building_id": "building_dev_brasshollow_t1_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_ore_tithe_office.png",
+      "source_sha256": "54c7ba503de812dbb7011bb688a965044c248369d66338e86ccbcb57c09c549f",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_ore_tithe_office.png",
+      "icon_sha256": "f26b2af853bcd3875e7926b16fdc2bf2c7a501eda7ff754a97b9c94a0bdfb25a",
+      "shared_art_from": "building_brasshollow_ore_tithe_office"
+    },
+    {
+      "id": "building_dev_brasshollow_t1_2",
+      "building_id": "building_dev_brasshollow_t1_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_redline_charter_bay.png",
+      "source_sha256": "a7a617791fa01d2c21fdb6914ce8231bc29d1eec89a1d3f7480808e72e5318ab",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_redline_charter_bay.png",
+      "icon_sha256": "e34bf4cd1a9b4a322e247fd58065221a8c9ad57faae04a1ad07f7729f8439f40",
+      "shared_art_from": "building_brasshollow_redline_charter_bay"
+    },
+    {
+      "id": "building_dev_brasshollow_t1_2_upgrade",
+      "building_id": "building_dev_brasshollow_t1_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_redline_charter_bay.png",
+      "source_sha256": "a7a617791fa01d2c21fdb6914ce8231bc29d1eec89a1d3f7480808e72e5318ab",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_redline_charter_bay.png",
+      "icon_sha256": "e34bf4cd1a9b4a322e247fd58065221a8c9ad57faae04a1ad07f7729f8439f40",
+      "shared_art_from": "building_brasshollow_redline_charter_bay"
+    },
+    {
+      "id": "building_dev_brasshollow_t2_1",
+      "building_id": "building_dev_brasshollow_t2_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_rivet_kennels.png",
+      "source_sha256": "ee710531922b4b58fbbe2582f45b986547ee038234b7391f20f74a644e5420a4",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_rivet_kennels.png",
+      "icon_sha256": "62c2bd2d83f831290d97485212820e4700cfbe24b46110b27c19798d40ee4986",
+      "shared_art_from": "building_brasshollow_rivet_kennels"
+    },
+    {
+      "id": "building_dev_brasshollow_t2_1_upgrade",
+      "building_id": "building_dev_brasshollow_t2_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_rivet_kennels.png",
+      "source_sha256": "ee710531922b4b58fbbe2582f45b986547ee038234b7391f20f74a644e5420a4",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_rivet_kennels.png",
+      "icon_sha256": "62c2bd2d83f831290d97485212820e4700cfbe24b46110b27c19798d40ee4986",
+      "shared_art_from": "building_brasshollow_rivet_kennels"
+    },
+    {
+      "id": "building_dev_brasshollow_t2_2",
+      "building_id": "building_dev_brasshollow_t2_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_redline_charter_bay.png",
+      "source_sha256": "a7a617791fa01d2c21fdb6914ce8231bc29d1eec89a1d3f7480808e72e5318ab",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_redline_charter_bay.png",
+      "icon_sha256": "e34bf4cd1a9b4a322e247fd58065221a8c9ad57faae04a1ad07f7729f8439f40",
+      "shared_art_from": "building_brasshollow_redline_charter_bay"
+    },
+    {
+      "id": "building_dev_brasshollow_t2_2_upgrade",
+      "building_id": "building_dev_brasshollow_t2_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_redline_charter_bay.png",
+      "source_sha256": "a7a617791fa01d2c21fdb6914ce8231bc29d1eec89a1d3f7480808e72e5318ab",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_redline_charter_bay.png",
+      "icon_sha256": "e34bf4cd1a9b4a322e247fd58065221a8c9ad57faae04a1ad07f7729f8439f40",
+      "shared_art_from": "building_brasshollow_redline_charter_bay"
+    },
+    {
+      "id": "building_dev_brasshollow_t3_1",
+      "building_id": "building_dev_brasshollow_t3_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_pavis_foundry.png",
+      "source_sha256": "f39d042dbc50df2c145eabb9a587ea0f445b91937eb60af9e3db974a22e044e1",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_pavis_foundry.png",
+      "icon_sha256": "2902673445cab4d0d12e8d5474af124eea7cc6a536ff14c80b23fa1debfefd6b",
+      "shared_art_from": "building_brasshollow_pavis_foundry"
+    },
+    {
+      "id": "building_dev_brasshollow_t3_1_upgrade",
+      "building_id": "building_dev_brasshollow_t3_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_pavis_foundry.png",
+      "source_sha256": "f39d042dbc50df2c145eabb9a587ea0f445b91937eb60af9e3db974a22e044e1",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_pavis_foundry.png",
+      "icon_sha256": "2902673445cab4d0d12e8d5474af124eea7cc6a536ff14c80b23fa1debfefd6b",
+      "shared_art_from": "building_brasshollow_pavis_foundry"
+    },
+    {
+      "id": "building_dev_brasshollow_t3_2",
+      "building_id": "building_dev_brasshollow_t3_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_redline_charter_bay.png",
+      "source_sha256": "a7a617791fa01d2c21fdb6914ce8231bc29d1eec89a1d3f7480808e72e5318ab",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_redline_charter_bay.png",
+      "icon_sha256": "e34bf4cd1a9b4a322e247fd58065221a8c9ad57faae04a1ad07f7729f8439f40",
+      "shared_art_from": "building_brasshollow_redline_charter_bay"
+    },
+    {
+      "id": "building_dev_brasshollow_t3_2_upgrade",
+      "building_id": "building_dev_brasshollow_t3_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_redline_charter_bay.png",
+      "source_sha256": "a7a617791fa01d2c21fdb6914ce8231bc29d1eec89a1d3f7480808e72e5318ab",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_redline_charter_bay.png",
+      "icon_sha256": "e34bf4cd1a9b4a322e247fd58065221a8c9ad57faae04a1ad07f7729f8439f40",
+      "shared_art_from": "building_brasshollow_redline_charter_bay"
+    },
+    {
+      "id": "building_dev_brasshollow_t4_1",
+      "building_id": "building_dev_brasshollow_t4_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_boiler_cathedral.png",
+      "source_sha256": "01d0aeb004e76d4c3fe8491352245f377bb0e98c7861f8523256843ea5a79658",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_boiler_cathedral.png",
+      "icon_sha256": "9e908fc576805daf4ab07da2561af7ae77a4136932ba955db2e2972319b26763",
+      "shared_art_from": "building_brasshollow_boiler_cathedral"
+    },
+    {
+      "id": "building_dev_brasshollow_t4_1_upgrade",
+      "building_id": "building_dev_brasshollow_t4_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_boiler_cathedral.png",
+      "source_sha256": "01d0aeb004e76d4c3fe8491352245f377bb0e98c7861f8523256843ea5a79658",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_boiler_cathedral.png",
+      "icon_sha256": "9e908fc576805daf4ab07da2561af7ae77a4136932ba955db2e2972319b26763",
+      "shared_art_from": "building_brasshollow_boiler_cathedral"
+    },
+    {
+      "id": "building_dev_brasshollow_t4_2",
+      "building_id": "building_dev_brasshollow_t4_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_redline_charter_bay.png",
+      "source_sha256": "a7a617791fa01d2c21fdb6914ce8231bc29d1eec89a1d3f7480808e72e5318ab",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_redline_charter_bay.png",
+      "icon_sha256": "e34bf4cd1a9b4a322e247fd58065221a8c9ad57faae04a1ad07f7729f8439f40",
+      "shared_art_from": "building_brasshollow_redline_charter_bay"
+    },
+    {
+      "id": "building_dev_brasshollow_t4_2_upgrade",
+      "building_id": "building_dev_brasshollow_t4_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_redline_charter_bay.png",
+      "source_sha256": "a7a617791fa01d2c21fdb6914ce8231bc29d1eec89a1d3f7480808e72e5318ab",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_redline_charter_bay.png",
+      "icon_sha256": "e34bf4cd1a9b4a322e247fd58065221a8c9ad57faae04a1ad07f7729f8439f40",
+      "shared_art_from": "building_brasshollow_redline_charter_bay"
+    },
+    {
+      "id": "building_dev_brasshollow_t5_1",
+      "building_id": "building_dev_brasshollow_t5_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_pressure_rail.png",
+      "source_sha256": "046344914aebe83ffa870ad79eb176ad832333b4badf1f8a95fbece6ea0f6104",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_pressure_rail.png",
+      "icon_sha256": "69c4b8df25de5c2efe54cdb45e6b16d64e9b45c92a0665fab6ff4d931a4ff71a",
+      "shared_art_from": "building_brasshollow_pressure_rail"
+    },
+    {
+      "id": "building_dev_brasshollow_t5_1_upgrade",
+      "building_id": "building_dev_brasshollow_t5_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_pressure_rail.png",
+      "source_sha256": "046344914aebe83ffa870ad79eb176ad832333b4badf1f8a95fbece6ea0f6104",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_pressure_rail.png",
+      "icon_sha256": "69c4b8df25de5c2efe54cdb45e6b16d64e9b45c92a0665fab6ff4d931a4ff71a",
+      "shared_art_from": "building_brasshollow_pressure_rail"
+    },
+    {
+      "id": "building_dev_brasshollow_t5_2",
+      "building_id": "building_dev_brasshollow_t5_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_quenchbell_mortar_bay.png",
+      "source_sha256": "fe0f69ac21e4c6db7384987dfa97dd374b29283e544a69809e81dca55441e560",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_quenchbell_mortar_bay.png",
+      "icon_sha256": "d22591d5b04db49ba5488b685ac709cf9ecb3e4aa54d035eb6c901df65cd05e2",
+      "shared_art_from": "building_brasshollow_quenchbell_mortar_bay"
+    },
+    {
+      "id": "building_dev_brasshollow_t5_2_upgrade",
+      "building_id": "building_dev_brasshollow_t5_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_quenchbell_mortar_bay.png",
+      "source_sha256": "fe0f69ac21e4c6db7384987dfa97dd374b29283e544a69809e81dca55441e560",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_quenchbell_mortar_bay.png",
+      "icon_sha256": "d22591d5b04db49ba5488b685ac709cf9ecb3e4aa54d035eb6c901df65cd05e2",
+      "shared_art_from": "building_brasshollow_quenchbell_mortar_bay"
+    },
+    {
+      "id": "building_dev_brasshollow_t6_1",
+      "building_id": "building_dev_brasshollow_t6_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_crucible_dock.png",
+      "source_sha256": "f5c3a78b9176df67ee187a8a18b3055dae140f1258eabe81ef2899e402f506ca",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_crucible_dock.png",
+      "icon_sha256": "042090eebe88fd1f91bf035d507d57cebfe4510bf0bca7dad64bf7cc3c74e425",
+      "shared_art_from": "building_brasshollow_crucible_dock"
+    },
+    {
+      "id": "building_dev_brasshollow_t6_1_upgrade",
+      "building_id": "building_dev_brasshollow_t6_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_crucible_dock.png",
+      "source_sha256": "f5c3a78b9176df67ee187a8a18b3055dae140f1258eabe81ef2899e402f506ca",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_crucible_dock.png",
+      "icon_sha256": "042090eebe88fd1f91bf035d507d57cebfe4510bf0bca7dad64bf7cc3c74e425",
+      "shared_art_from": "building_brasshollow_crucible_dock"
+    },
+    {
+      "id": "building_dev_brasshollow_t7_1",
+      "building_id": "building_dev_brasshollow_t7_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_titan_charter_hall.png",
+      "source_sha256": "40c373cc4f8a2117f1222d852fe0d46b6ce5279bd77ed034110d1bcc7988c5a0",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_titan_charter_hall.png",
+      "icon_sha256": "95f69e8965d7ec4b62f3c65be126f1c364396e0dfaa971c78cdac279dd459b70",
+      "shared_art_from": "building_brasshollow_titan_charter_hall"
+    },
+    {
+      "id": "building_dev_brasshollow_t7_1_upgrade",
+      "building_id": "building_dev_brasshollow_t7_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_titan_charter_hall.png",
+      "source_sha256": "40c373cc4f8a2117f1222d852fe0d46b6ce5279bd77ed034110d1bcc7988c5a0",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_titan_charter_hall.png",
+      "icon_sha256": "95f69e8965d7ec4b62f3c65be126f1c364396e0dfaa971c78cdac279dd459b70",
+      "shared_art_from": "building_brasshollow_titan_charter_hall"
+    },
+    {
+      "id": "building_dev_brasshollow_unique_1",
+      "building_id": "building_dev_brasshollow_unique_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_scalehouse.png",
+      "source_sha256": "d94cc212169591980e800310a5c9c7be70c78e0f0fe60ea23102af1169077c76",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_scalehouse.png",
+      "icon_sha256": "fb4355e41908fef43511e71ae79609dd1407d2fc46afe7fe043d35aaf587f0e6",
+      "shared_art_from": "building_brasshollow_scalehouse"
+    },
+    {
+      "id": "building_dev_brasshollow_unique_2",
+      "building_id": "building_dev_brasshollow_unique_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_scalehouse.png",
+      "source_sha256": "d94cc212169591980e800310a5c9c7be70c78e0f0fe60ea23102af1169077c76",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_scalehouse.png",
+      "icon_sha256": "fb4355e41908fef43511e71ae79609dd1407d2fc46afe7fe043d35aaf587f0e6",
+      "shared_art_from": "building_brasshollow_scalehouse"
+    },
+    {
+      "id": "building_dev_brasshollow_unique_3",
+      "building_id": "building_dev_brasshollow_unique_3",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_brasshollow_scalehouse.png",
+      "source_sha256": "d94cc212169591980e800310a5c9c7be70c78e0f0fe60ea23102af1169077c76",
+      "icon_path": "res://art/towns/runtime/buildings/building_brasshollow_scalehouse.png",
+      "icon_sha256": "fb4355e41908fef43511e71ae79609dd1407d2fc46afe7fe043d35aaf587f0e6",
+      "shared_art_from": "building_brasshollow_scalehouse"
+    },
+    {
+      "id": "building_dev_veilmourn_t1_1",
+      "building_id": "building_dev_veilmourn_t1_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_bell_harbor.png",
+      "source_sha256": "caf7521986d4d57499fbe6a34b52cb93885a84abbe204a221b11cbcc3aeb78bc",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_bell_harbor.png",
+      "icon_sha256": "564d5fa1a227322aa21e3f28c486a64673607a266a591dfbdd33aecda81bb598",
+      "shared_art_from": "building_veilmourn_bell_harbor"
+    },
+    {
+      "id": "building_dev_veilmourn_t1_1_upgrade",
+      "building_id": "building_dev_veilmourn_t1_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_bell_harbor.png",
+      "source_sha256": "caf7521986d4d57499fbe6a34b52cb93885a84abbe204a221b11cbcc3aeb78bc",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_bell_harbor.png",
+      "icon_sha256": "564d5fa1a227322aa21e3f28c486a64673607a266a591dfbdd33aecda81bb598",
+      "shared_art_from": "building_veilmourn_bell_harbor"
+    },
+    {
+      "id": "building_dev_veilmourn_t1_2",
+      "building_id": "building_dev_veilmourn_t1_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_wakeglass_chart_house.png",
+      "source_sha256": "0bcdec86d2f9c23369b6ca162b8c9022f1e84253b5226a50ce21e882e8bc72b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_wakeglass_chart_house.png",
+      "icon_sha256": "26c288a725e5988eee1c120ca2337c5217d9e90ecaee29ad92f5468c929b4064",
+      "shared_art_from": "building_veilmourn_wakeglass_chart_house"
+    },
+    {
+      "id": "building_dev_veilmourn_t1_2_upgrade",
+      "building_id": "building_dev_veilmourn_t1_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_wakeglass_chart_house.png",
+      "source_sha256": "0bcdec86d2f9c23369b6ca162b8c9022f1e84253b5226a50ce21e882e8bc72b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_wakeglass_chart_house.png",
+      "icon_sha256": "26c288a725e5988eee1c120ca2337c5217d9e90ecaee29ad92f5468c929b4064",
+      "shared_art_from": "building_veilmourn_wakeglass_chart_house"
+    },
+    {
+      "id": "building_dev_veilmourn_t2_1",
+      "building_id": "building_dev_veilmourn_t2_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_ransom_exchange.png",
+      "source_sha256": "6c937e2f28bcca0cdb309e9ca5437178373611ecd3279753422ed560eae4361f",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_ransom_exchange.png",
+      "icon_sha256": "44d60e119654938bc1898f6e944305909f76221be6402a3ff71bf17264160ccd",
+      "shared_art_from": "building_veilmourn_ransom_exchange"
+    },
+    {
+      "id": "building_dev_veilmourn_t2_1_upgrade",
+      "building_id": "building_dev_veilmourn_t2_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_ransom_exchange.png",
+      "source_sha256": "6c937e2f28bcca0cdb309e9ca5437178373611ecd3279753422ed560eae4361f",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_ransom_exchange.png",
+      "icon_sha256": "44d60e119654938bc1898f6e944305909f76221be6402a3ff71bf17264160ccd",
+      "shared_art_from": "building_veilmourn_ransom_exchange"
+    },
+    {
+      "id": "building_dev_veilmourn_t2_2",
+      "building_id": "building_dev_veilmourn_t2_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_wakeglass_chart_house.png",
+      "source_sha256": "0bcdec86d2f9c23369b6ca162b8c9022f1e84253b5226a50ce21e882e8bc72b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_wakeglass_chart_house.png",
+      "icon_sha256": "26c288a725e5988eee1c120ca2337c5217d9e90ecaee29ad92f5468c929b4064",
+      "shared_art_from": "building_veilmourn_wakeglass_chart_house"
+    },
+    {
+      "id": "building_dev_veilmourn_t2_2_upgrade",
+      "building_id": "building_dev_veilmourn_t2_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_wakeglass_chart_house.png",
+      "source_sha256": "0bcdec86d2f9c23369b6ca162b8c9022f1e84253b5226a50ce21e882e8bc72b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_wakeglass_chart_house.png",
+      "icon_sha256": "26c288a725e5988eee1c120ca2337c5217d9e90ecaee29ad92f5468c929b4064",
+      "shared_art_from": "building_veilmourn_wakeglass_chart_house"
+    },
+    {
+      "id": "building_dev_veilmourn_t3_1",
+      "building_id": "building_dev_veilmourn_t3_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_mirror_drydock.png",
+      "source_sha256": "9d884692f48c6f699af9bc64301debd749fb08874b3b6746b0bb3f6eef0bb87c",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_mirror_drydock.png",
+      "icon_sha256": "0b097f071e090afc9d63f791bc2a3093092dfeda08b2654a7337cd75255e7248",
+      "shared_art_from": "building_veilmourn_mirror_drydock"
+    },
+    {
+      "id": "building_dev_veilmourn_t3_1_upgrade",
+      "building_id": "building_dev_veilmourn_t3_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_mirror_drydock.png",
+      "source_sha256": "9d884692f48c6f699af9bc64301debd749fb08874b3b6746b0bb3f6eef0bb87c",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_mirror_drydock.png",
+      "icon_sha256": "0b097f071e090afc9d63f791bc2a3093092dfeda08b2654a7337cd75255e7248",
+      "shared_art_from": "building_veilmourn_mirror_drydock"
+    },
+    {
+      "id": "building_dev_veilmourn_t3_2",
+      "building_id": "building_dev_veilmourn_t3_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_wakeglass_chart_house.png",
+      "source_sha256": "0bcdec86d2f9c23369b6ca162b8c9022f1e84253b5226a50ce21e882e8bc72b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_wakeglass_chart_house.png",
+      "icon_sha256": "26c288a725e5988eee1c120ca2337c5217d9e90ecaee29ad92f5468c929b4064",
+      "shared_art_from": "building_veilmourn_wakeglass_chart_house"
+    },
+    {
+      "id": "building_dev_veilmourn_t3_2_upgrade",
+      "building_id": "building_dev_veilmourn_t3_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_wakeglass_chart_house.png",
+      "source_sha256": "0bcdec86d2f9c23369b6ca162b8c9022f1e84253b5226a50ce21e882e8bc72b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_wakeglass_chart_house.png",
+      "icon_sha256": "26c288a725e5988eee1c120ca2337c5217d9e90ecaee29ad92f5468c929b4064",
+      "shared_art_from": "building_veilmourn_wakeglass_chart_house"
+    },
+    {
+      "id": "building_dev_veilmourn_t4_1",
+      "building_id": "building_dev_veilmourn_t4_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_harpoon_gantry.png",
+      "source_sha256": "1f19756e77c5cfd9c37086cd07923bda7cdb005f98035fa03d7d0fec682ee0ec",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_harpoon_gantry.png",
+      "icon_sha256": "d44283a9b89e8782b399effb96b39ece645bc841aa8ed459d34f8d2efd568b8b",
+      "shared_art_from": "building_veilmourn_harpoon_gantry"
+    },
+    {
+      "id": "building_dev_veilmourn_t4_1_upgrade",
+      "building_id": "building_dev_veilmourn_t4_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_harpoon_gantry.png",
+      "source_sha256": "1f19756e77c5cfd9c37086cd07923bda7cdb005f98035fa03d7d0fec682ee0ec",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_harpoon_gantry.png",
+      "icon_sha256": "d44283a9b89e8782b399effb96b39ece645bc841aa8ed459d34f8d2efd568b8b",
+      "shared_art_from": "building_veilmourn_harpoon_gantry"
+    },
+    {
+      "id": "building_dev_veilmourn_t4_2",
+      "building_id": "building_dev_veilmourn_t4_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_wakeglass_chart_house.png",
+      "source_sha256": "0bcdec86d2f9c23369b6ca162b8c9022f1e84253b5226a50ce21e882e8bc72b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_wakeglass_chart_house.png",
+      "icon_sha256": "26c288a725e5988eee1c120ca2337c5217d9e90ecaee29ad92f5468c929b4064",
+      "shared_art_from": "building_veilmourn_wakeglass_chart_house"
+    },
+    {
+      "id": "building_dev_veilmourn_t4_2_upgrade",
+      "building_id": "building_dev_veilmourn_t4_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_wakeglass_chart_house.png",
+      "source_sha256": "0bcdec86d2f9c23369b6ca162b8c9022f1e84253b5226a50ce21e882e8bc72b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_wakeglass_chart_house.png",
+      "icon_sha256": "26c288a725e5988eee1c120ca2337c5217d9e90ecaee29ad92f5468c929b4064",
+      "shared_art_from": "building_veilmourn_wakeglass_chart_house"
+    },
+    {
+      "id": "building_dev_veilmourn_t5_1",
+      "building_id": "building_dev_veilmourn_t5_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_obituary_vault.png",
+      "source_sha256": "1fd2b5537be9b8ef98eb6d892547f73f794fdcf91ca1a560b3b87b0de033d3ab",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_obituary_vault.png",
+      "icon_sha256": "46c73a9424a30d69d3c0189ff2be19e336c04c0fdbfc32959808e592b66b90a4",
+      "shared_art_from": "building_veilmourn_obituary_vault"
+    },
+    {
+      "id": "building_dev_veilmourn_t5_1_upgrade",
+      "building_id": "building_dev_veilmourn_t5_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_obituary_vault.png",
+      "source_sha256": "1fd2b5537be9b8ef98eb6d892547f73f794fdcf91ca1a560b3b87b0de033d3ab",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_obituary_vault.png",
+      "icon_sha256": "46c73a9424a30d69d3c0189ff2be19e336c04c0fdbfc32959808e592b66b90a4",
+      "shared_art_from": "building_veilmourn_obituary_vault"
+    },
+    {
+      "id": "building_dev_veilmourn_t5_2",
+      "building_id": "building_dev_veilmourn_t5_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_wakeglass_chart_house.png",
+      "source_sha256": "0bcdec86d2f9c23369b6ca162b8c9022f1e84253b5226a50ce21e882e8bc72b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_wakeglass_chart_house.png",
+      "icon_sha256": "26c288a725e5988eee1c120ca2337c5217d9e90ecaee29ad92f5468c929b4064",
+      "shared_art_from": "building_veilmourn_wakeglass_chart_house"
+    },
+    {
+      "id": "building_dev_veilmourn_t5_2_upgrade",
+      "building_id": "building_dev_veilmourn_t5_2_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_wakeglass_chart_house.png",
+      "source_sha256": "0bcdec86d2f9c23369b6ca162b8c9022f1e84253b5226a50ce21e882e8bc72b9",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_wakeglass_chart_house.png",
+      "icon_sha256": "26c288a725e5988eee1c120ca2337c5217d9e90ecaee29ad92f5468c929b4064",
+      "shared_art_from": "building_veilmourn_wakeglass_chart_house"
+    },
+    {
+      "id": "building_dev_veilmourn_t6_1",
+      "building_id": "building_dev_veilmourn_t6_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_mistgate_slip.png",
+      "source_sha256": "983d9dd95013a9f07d3b9fda8769c3c26131c0a8293aaf1ed2a106c3c7794b54",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_mistgate_slip.png",
+      "icon_sha256": "8a05f3b6fc85bb7823b04273737f6462692a214918560ab614fe173e87df56ef",
+      "shared_art_from": "building_veilmourn_mistgate_slip"
+    },
+    {
+      "id": "building_dev_veilmourn_t6_1_upgrade",
+      "building_id": "building_dev_veilmourn_t6_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_mistgate_slip.png",
+      "source_sha256": "983d9dd95013a9f07d3b9fda8769c3c26131c0a8293aaf1ed2a106c3c7794b54",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_mistgate_slip.png",
+      "icon_sha256": "8a05f3b6fc85bb7823b04273737f6462692a214918560ab614fe173e87df56ef",
+      "shared_art_from": "building_veilmourn_mistgate_slip"
+    },
+    {
+      "id": "building_dev_veilmourn_t7_1",
+      "building_id": "building_dev_veilmourn_t7_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_leviathan_sounding.png",
+      "source_sha256": "c0fb5111c28fc0ad0fc06eed3c23be167a41c10a4058e32a0c3df92d4ca25b9d",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_leviathan_sounding.png",
+      "icon_sha256": "f2bfdc9b434b783fe57717c7f6df3b38651cfea9aacfc715d78b2557fc329dad",
+      "shared_art_from": "building_veilmourn_leviathan_sounding"
+    },
+    {
+      "id": "building_dev_veilmourn_t7_1_upgrade",
+      "building_id": "building_dev_veilmourn_t7_1_upgrade",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_leviathan_sounding.png",
+      "source_sha256": "c0fb5111c28fc0ad0fc06eed3c23be167a41c10a4058e32a0c3df92d4ca25b9d",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_leviathan_sounding.png",
+      "icon_sha256": "f2bfdc9b434b783fe57717c7f6df3b38651cfea9aacfc715d78b2557fc329dad",
+      "shared_art_from": "building_veilmourn_leviathan_sounding"
+    },
+    {
+      "id": "building_dev_veilmourn_unique_1",
+      "building_id": "building_dev_veilmourn_unique_1",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_fog_signal_buoys.png",
+      "source_sha256": "392c428f6277aca0f7f460fcc4993fd800477c0ffddb0d49e8a11d3f1f291d7e",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_fog_signal_buoys.png",
+      "icon_sha256": "82ffe0d8608eecf154c937b04f6d607c7adfe6599006462e1c6ff2a53beae43f",
+      "shared_art_from": "building_veilmourn_fog_signal_buoys"
+    },
+    {
+      "id": "building_dev_veilmourn_unique_2",
+      "building_id": "building_dev_veilmourn_unique_2",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_fog_signal_buoys.png",
+      "source_sha256": "392c428f6277aca0f7f460fcc4993fd800477c0ffddb0d49e8a11d3f1f291d7e",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_fog_signal_buoys.png",
+      "icon_sha256": "82ffe0d8608eecf154c937b04f6d607c7adfe6599006462e1c6ff2a53beae43f",
+      "shared_art_from": "building_veilmourn_fog_signal_buoys"
+    },
+    {
+      "id": "building_dev_veilmourn_unique_3",
+      "building_id": "building_dev_veilmourn_unique_3",
+      "source_kind": "curated_original_building",
+      "source_path": "res://art/towns/source/buildings/curated/building_veilmourn_fog_signal_buoys.png",
+      "source_sha256": "392c428f6277aca0f7f460fcc4993fd800477c0ffddb0d49e8a11d3f1f291d7e",
+      "icon_path": "res://art/towns/runtime/buildings/building_veilmourn_fog_signal_buoys.png",
+      "icon_sha256": "82ffe0d8608eecf154c937b04f6d607c7adfe6599006462e1c6ff2a53beae43f",
+      "shared_art_from": "building_veilmourn_fog_signal_buoys"
     }
   ]
 }

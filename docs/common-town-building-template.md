@@ -1,52 +1,167 @@
-# Common town building template
+# Shared town development
 
-Owner direction, 2026-09-20: one town per faction; redesign the building system around a general template of common buildings and upgrades before faction-specific differences.
+Implemented owner direction, 2026-09-21. All six factions use one town template, common upgrade lines and exclusive creature choices. The former 26 town IDs remain compatibility aliases. Runtime rules live in `TownDevelopmentRules.gd`, construction/economy adapters in `OverworldRules.gd`, and player services in `TownRules.gd`.
 
-## Implemented consolidation
+## Common buildings
 
-The active town catalog contains exactly six definitions:
+| Line | Stages and benefits |
+| --- | --- |
+| Town Hall | 500 / 1,000 / 2,000 / 4,000 gold daily. One active stage; per-town Capital Hall, no player-wide capital restriction. |
+| Fortifications | Three stages: +10 / +20 / +30 town readiness and +2 / +4 / +6 defense to defending creatures in town battles. Higher stages replace earlier benefits. |
+| Magic Guild | Five stages, enabling faction spells through tiers 1–5. |
+| Marketplace | Basic exchange; Trade Exchange improves wood/ore buying and selling rates and enables bulk orders. No daily gold income. Rare resources remain mine/storehouse sourced. |
+| Tavern | Recruit additional heroes using the existing visiting-hero system. |
+| Storehouse I | Exactly 1 wood and 1 ore per day. |
+| Storehouse II | Retains 1 wood + 1 ore and adds 1 main faction resource per day. |
+| Training Commons | +4 weekly recruits for the selected tier-1 dwelling. |
+| Provisioners Lodge | +3 weekly recruits for the selected tier-2 dwelling. |
+| Veterans Quarters | +2 weekly recruits for the selected tier-3 dwelling. |
+| Sparring Grounds | Visiting hero gains +1 attack once. |
+| Wardens School | Visiting hero gains +1 defense once. |
+| Hall of Chronicles | Visiting hero gains 1,000 XP once, including normal level-up choices. |
+| Artifact Exchange | Three weekly artifact offers; buy and sell unequipped artifacts. |
 
-| Faction | Canonical town | Template ID |
+Hero training is once per hero per building type across all towns, preventing repeated capture/visit farming. A different hero can receive their own benefit. Growth buildings only improve an existing chosen dwelling; they never create an unbuilt troop line. Workshop is omitted until its equipment gameplay is defined.
+
+## Dwelling choices and upgrades
+
+- Tiers 1–5 each offer two distinct existing creatures. Building one branch removes the other branch and its upgrade from construction. Choice persists through saves and captures.
+- Tiers 6 and 7 each have a single dwelling and upgrade. Tier 6 requires the faction secondary rare resource for both construction and each recruit; tier 7 requires the main rare resource.
+- Every tier after 1 requires a dwelling of the preceding tier; either branch qualifies. Tiers 3–5 also require Council Hall; tiers 6–7 require City Hall and Palisade.
+- Each of the 72 base creature choices has a Veteran upgrade: +20% HP and damage (rounded upward), +2 attack/defense, +35% gold recruitment cost (rounded upward). Other abilities, mobility, footprint and rare-resource costs remain those of the base creature. Existing linked-creature abilities recognize the upgraded identity too.
+- Upgrading a dwelling replaces the base recruitment line. Existing reserve count converts to Veterans with no extra weekly grant. Subsequent growth produces Veterans only.
+- Existing field and garrison troops are upgraded through **Muster Hall**, for the undiscounted difference between base and Veteran costs. Each order trains all troops of that type in the selected stationed army; it does not consume town reserve or a construction day.
+- Veteran units intentionally reuse their original portraits, sprites, footprints and eight-frame idle/action animation assets. This is a gameplay upgrade, not a new artwork pass. Town building layers likewise reuse the existing faction paintings at shared plots for stages and exclusive branches.
+- One construction per town per day. Prerequisites recognize higher stages while effects count only the active stage. Buildings show full descriptions, costs, exclusivity and requirements in Construction.
+
+## Faction resource pairs
+
+The main resource follows existing faction affinity; the new secondary assignments are the initial authored balance choices.
+
+| Faction | Main / T7 / Storehouse II | Secondary / T6 |
 | --- | --- | --- |
-| Embercourt League | Riverwatch Hold | `town_riverwatch` |
-| Mireclaw Covenant | Duskfen Bastion | `town_duskfen` |
-| Sunvault Compact | Prismhearth | `town_prismhearth` |
-| Thornwake Concord | Graftroot Caravan | `town_thornwake_graftroot_caravan` |
-| Brasshollow Combine | Orevein Gantry | `town_brasshollow_orevein_gantry` |
-| Veilmourn Armada | Bellwake Harbor | `town_veilmourn_bellwake_harbor` |
+| Embercourt League | embergrain | aetherglass |
+| Mireclaw Covenant | peatwax | memory salt |
+| Sunvault Compact | aetherglass | brass scrip |
+| Thornwake Concord | verdant grafts | peatwax |
+| Brasshollow Combine | brass scrip | embergrain |
+| Veilmourn Armada | memory salt | verdant grafts |
 
-The 26 removed definitions are replaced only by ID-to-ID compatibility aliases in `content/towns.json`. They contain no economy, buildings, recruitment, backdrop, or town-variant rules. Catalogs/editors/wiki expose only the six active entries. Legacy placed IDs are deliberately retained in existing maps and saves so template-targeted scenario objectives and scripted events still identify the intended settlement. Content lookups resolve them to the same faction template. New native-package adoption uses canonical runtime identities while preserving original source records, placement IDs, masks, entrances, terrain and ownership.
+## Faction buildings
 
-Each faction temporarily retains the union of its former building lists and spell libraries. The canonical town supplies one set of starting buildings, income/recruitment modifiers, garrison and town rules. Constructed buildings, recruited stocks, ownership, service-claim flags and placement data remain saved state. Former town-specific artifact commissions now use the canonical faction town; the two lower-tier services no longer exclude a removed variant. This is content consolidation, not completion of the new building system. No building art or source/provenance is deleted.
+Each faction has three unique buildings in addition to the common lines. Their costs, prerequisites and effects are authored in `content/buildings.json`.
 
-## Proposed common template — not implemented
-
-All factions should share the same building IDs, functions, costs and prerequisite graph for the foundation below. Faction artwork may differ while retaining recognizable functions. The lines and stage counts below are proposals; costs and exact bonuses remain to be agreed before implementation.
-
-| Common building line | Proposed stages | Purpose |
+| Faction | Building | Benefit |
 | --- | --- | --- |
-| Town Hall | I–IV | Increasing daily gold income; the final stage is the capital upgrade. |
-| Fortifications | I–III | Defensive works, then stronger town defenses; explicit siege benefits at each stage. |
-| Magic Guild | I–V | Spell tiers 1 through 5 with clearly displayed spell access. |
-| Marketplace | I–III | Resource exchange with progressively better rates. |
-| Tavern | One | Hero recruitment and visiting-hero information. |
-| Workshop | I–II | A common support-equipment service, followed by improved equipment access. Exact equipment is a separate decision. |
-| Storehouse | I–II | Common wood/ore supply support. Exact output and unlock timing are balance decisions. |
+| Embercourt League | Convoy Charter | Chartered river convoys produce 500 gold daily. |
+| Embercourt League | Beacon Watch | Signal beacons add 15 town battle readiness. Defending creatures also gain +2 defense during town battles. |
+| Embercourt League | Quartermasters Seal | Organized supply reduces faction recruitment costs by 10%. |
+| Mireclaw Covenant | Votive Waxworks | Marsh votives produce 1 peatwax daily. |
+| Mireclaw Covenant | Chainboom Defenses | Flood chains add 20 town battle readiness. Defending creatures also gain +2 defense during town battles. |
+| Mireclaw Covenant | Reedkin Gathering | Reedkin gatherings add 3 weekly tier-1 recruits. |
+| Sunvault Compact | Lens Conservatory | Cultivated lenses produce 1 aetherglass daily. |
+| Sunvault Compact | Calibration Court | Visiting heroes gain +1 power, once per hero across all Calibration Courts. |
+| Sunvault Compact | Prism Muster | Calibrated musters add 2 weekly tier-2 recruits. |
+| Thornwake Concord | Renewal Nursery | The living nursery produces 1 verdant graft daily. |
+| Thornwake Concord | Rootbound Ward | Living roots add 15 town battle readiness. Defending creatures also gain +2 defense during town battles. |
+| Thornwake Concord | Pollen Assembly | Seasonal pollen assemblies add 4 weekly tier-1 recruits. |
+| Brasshollow Combine | Contract Mint | Stamped contracts produce 1 brass scrip daily. |
+| Brasshollow Combine | Assembly Discipline | Standardized assembly reduces faction recruitment costs by 10%. |
+| Brasshollow Combine | Pressure Bastion | Pressure defenses add 20 town battle readiness. Defending creatures also gain +2 defense during town battles. |
+| Veilmourn Armada | Saltwake Vault | Preserved memories produce 1 memory salt daily. |
+| Veilmourn Armada | Chart of Lost Voyages | Visiting heroes gain 750 experience, once per hero across all Charts. |
+| Veilmourn Armada | Bellwake Muster | Harbor bells add 2 weekly tier-3 recruits. |
 
-Creature dwellings and their upgrades are a later layer on this foundation. This proposal does not select or remove faction units, define creature upgrade pairs, or add faction-exclusive special buildings yet.
+## Artifact trading
 
-## Upgrade rules for the implementation slice
+Artifact Exchange requires Marketplace. A visiting active hero can buy up to three distinct stocked artifacts per town per week; claimed offers remain exhausted through saves and ownership changes until the next weekly refresh. Offers use stable town identity/week, not simulation RNG. Common/uncommon/rare items cost 1,500 / 2,500 / 4,000 gold. Epic/legendary sale valuations are 6,500 / 10,000. Selling pays half valuation and requires the artifact in inventory, not equipped; quest items are excluded. Buying places the item in inventory. Duplicate ownership, sold-out stock, insufficient funds, remote visits, unowned towns and stale action callbacks are rejected before mutation.
 
-- Each line has one current stage. Upgrading advances the same building instead of leaving separately counted bonus buildings behind.
-- The displayed effect is the total at the current stage; lower-stage effects must not stack again. For example, a hall upgraded from 500 to 1,000 daily gold produces 1,000, not 1,500. These numbers illustrate the rule, not approved balance.
-- Upgrades require the previous stage and explicitly listed common prerequisites. Show the cost and before/after effects before committing.
-- One construction order per town per day remains the default rule. Higher-tier upgrades use the same restriction.
-- Save/load, AI building choices, construction UI, scene-layer replacement, income, spell access and defenses must all use the same stage authority.
-- Old building IDs require an explicit migration table after the replacement design is approved. Do not silently discard built structures, charge construction again, or grant all upgrades during migration.
-- Decide whether the final Town Hall stage is limited to one per player before implementing it. Do not infer a faction-specific capital restriction from removed named-town templates.
+Artifact commerce is in **Town Market**; training is in **Town Log & Logistics**. Hover descriptions explain effects before use. Owned towns can upgrade their garrison even without a visiting hero; hero training/artifact commerce require a visitor.
 
-## Acceptance boundary
+## Compatibility and economy replacement
 
-Town consolidation is complete only when all six templates resolve, legacy IDs load through aliases, old save/objective identities survive, former buildings remain reachable, the editor/wiki catalog lists six towns, and representative construction and native-package adaptation checks pass. The shared-building redesign remains a proposal until its costs, effects, prerequisites and migration are implemented and separately verified. Full repository validation is outside this owner-directed content pass.
+`content/town_development.json` contains explicit per-faction legacy-building mappings, the selected rosters and upgrade pairs. Existing town placement/template IDs, source maps, source masks, owner, position, heroes and garrisons are not rewritten. Old built IDs are retained in `legacy_built_buildings` as migration history. Old economic/support buildings map to the new storehouse/fortification/guild lines; old unit-unlock buildings map to their matching choice, or the same-tier default if the old creature is not in the new town tree. Old dwelling upgrades map to the relevant Veteran lodge.
 
-Focused verification on Windows/Godot 4.6.2: 164 runtime/save/construction/adoption checks pass. Content inspection confirms six templates, direct aliases for 26 retired IDs, reachable construction prerequisites and exactly six wiki town entries. Source records and old objective targets are preserved. Full-suite and Linux execution were not run. The cross-platform Python probe is `tests/single_faction_towns_regression.py`; temporary logs/profile are deleted after review.
+Where an old town had both exclusive branches, its first saved branch wins deterministically. Already stored recruits from an unselected/retired line remain recruitable until used, but receive no new growth. Garrison and field troops are preserved. Migration is idempotent, free and applies when old maps/saves load; it does not replay construction, refill stocks or overwrite source files. New towns begin with Town Hall and choose their first dwelling. Legacy per-category faction/town income and growth multipliers are retired from this replacement economy and retained as legacy content metadata. Existing occupation and other live strategic penalties still apply.
+
+Retired building definitions remain for old script/content IDs and artwork provenance, but are not buildable or listed as active wiki buildings. Unit species outside the selected town roster remain available to their other authored encounters/sources. AI construction uses the same exclusivity, prerequisites, active-stage economy, converted reserves and Veteran recruitment rules.
+
+## Creature roster
+
+Each listed choice has an upgraded Veteran dwelling. Tier 6 uses secondary rare resource; tier 7 uses main rare resource.
+
+### Embercourt League
+
+| Tier | Choice A | Choice B |
+| --- | --- | --- |
+| 1 | River Guard | Fordhook Cadets |
+| 2 | Ember Archer | Lantern Sappers |
+| 3 | Citadel Pikeward | Bargebow Crews |
+| 4 | Ash-Oath Bailiffs | Lockglass Writcasters |
+| 5 | Beacon Lectors | Beaconline Writguard |
+| 6 | Sluicefire Lindworms | — |
+| 7 | Charter Colossus | — |
+
+### Mireclaw Covenant
+
+| Tier | Choice A | Choice B |
+| --- | --- | --- |
+| 1 | Blackbranch Cutthroat | Reedsnare Kin |
+| 2 | Bog Brute | Mudglass Slingers |
+| 3 | Gorefen Ripper | Bogplate Maulers |
+| 4 | Ferrychain Lashers | Mireglass Reedcasters |
+| 5 | Sporewake Chanters | Fenbell Chainstalkers |
+| 6 | Gorefen Rippers | — |
+| 7 | Drowned Antler Sovereign | — |
+
+### Sunvault Compact
+
+| Tier | Choice A | Choice B |
+| --- | --- | --- |
+| 1 | Shard Pavise Guard | Shard Wardens |
+| 2 | Prism Harrier | Prism Adepts |
+| 3 | Aurora Ballista | Mirror Duelists |
+| 4 | Resonant Choristers | Noonfacet Sentinels |
+| 5 | Solar Array Striders | Zenith Lensbearers |
+| 6 | Aurora Bastions | — |
+| 7 | Daybreak Colossus | — |
+
+### Thornwake Concord
+
+| Tier | Choice A | Choice B |
+| --- | --- | --- |
+| 1 | Seedcutters | Pollenhook Whistlers |
+| 2 | Thornwhip Carriers | Bramblekite Needlers |
+| 3 | Sporeglass Menders | Seedshield Wardens |
+| 4 | Barkmantle Rams | Dawnseed Bolters |
+| 5 | Stag-Knot Runners | Seedglass Cantors |
+| 6 | Graft Matriarchs | — |
+| 7 | Worldroot Bastion | — |
+
+### Brasshollow Combine
+
+| Tier | Choice A | Choice B |
+| --- | --- | --- |
+| 1 | Scrip Haulers | Tallyspring Throwers |
+| 2 | Rivet Hounds | Quenchspool Slingers |
+| 3 | Furnace Pavis Teams | Gaugefire Arbalists |
+| 4 | Boiler Rivetcasters | Gaugeplate Bailiffs |
+| 5 | Debt-Engine Exactors | Quenchbell Mortars |
+| 6 | Crucible Crawlers | — |
+| 7 | Foundry Saint | — |
+
+### Veilmourn Armada
+
+| Tier | Choice A | Choice B |
+| --- | --- | --- |
+| 1 | Bellwake Oars | Saltbell Casters |
+| 2 | Mourning Lanterns | Tidehook Deckhands |
+| 3 | Maskglass Corsairs | Wakechain Boarders |
+| 4 | Undertow Harpooners | Gloamkeel Bulwarks |
+| 5 | Obituary Scribes | Wakeglass Navigators |
+| 6 | Mirror-Keel Reavers | — |
+| 7 | Fogbound Leviathan | — |
+
+## Validation
+
+`tests/town_development_regression.py` checks all faction trees and both branch graphs, runtime construction/upgrade/resource/weekly-growth flows, training and trading transactions, persistent claims, migration, defending-side bonuses and actual town UI. Windows Godot 4.6.2 focused run passes 676 checks; town, muster, market and construction dialogs were rendered and reviewed, including an actual artifact purchase UI callback. JSON, artwork bindings, construction branch reachability, wiki counts and scoped diff checks pass. Known pre-existing certificate-store/MSAA startup messages remain. No full repository suite, native generation changes or Linux execution in this slice.

@@ -1,22 +1,13 @@
 {
   "items": [
     {
-      "id": "building_town_hall",
-      "name": "Town Hall",
-      "category": "civic",
-      "description": "The central civic hall that turns an occupied settlement into a paying stronghold.",
-      "cost": {},
-      "income": {
-        "gold": 500
-      }
-    },
-    {
       "id": "building_muster_yard",
       "name": "Muster Yard",
       "category": "dwelling",
       "description": "Levy yards that field the disciplined River Guard.",
       "cost": {},
-      "unlock_unit_id": "unit_river_guard"
+      "unlock_unit_id": "unit_river_guard",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_watch_barracks",
@@ -39,50 +30,8 @@
         "unit_river_guard": 10
       },
       "readiness_bonus": 8,
-      "faction_id": "faction_embercourt"
-    },
-    {
-      "id": "building_market_square",
-      "name": "Market Square",
-      "category": "economy",
-      "description": "Trade stalls and weigh houses that turn every convoy into hard coin.",
-      "cost": {
-        "gold": 1000
-      },
-      "requires": [
-        "building_town_hall"
-      ],
-      "income": {
-        "gold": 250
-      },
-      "market_profile": {
-        "id": "square",
-        "tier": 1,
-        "buy_rate_adjustments": {
-          "wood": -20,
-          "ore": -20
-        },
-        "sell_rate_adjustments": {
-          "wood": 10,
-          "ore": 10
-        },
-        "bulk_resources": [],
-        "buy_cap_bonus": {},
-        "sell_cap_bonus": {},
-        "specialty_summary": "Standard brokers can move one crate at a time between raw stock and hard coin."
-      }
-    },
-    {
-      "id": "building_wayfarers_hall",
-      "name": "Wayfarers Hall",
-      "category": "civic",
-      "description": "A hired-roads hall where spare captains wait for new contracts.",
-      "cost": {
-        "gold": 800
-      },
-      "requires": [
-        "building_town_hall"
-      ]
+      "faction_id": "faction_embercourt",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_bowyer_lodge",
@@ -96,7 +45,8 @@
       "requires": [
         "building_muster_yard"
       ],
-      "unlock_unit_id": "unit_ember_archer"
+      "unlock_unit_id": "unit_ember_archer",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_beacon_range",
@@ -120,7 +70,8 @@
         "unit_ember_archer": 10
       },
       "readiness_bonus": 5,
-      "faction_id": "faction_embercourt"
+      "faction_id": "faction_embercourt",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_stone_store",
@@ -140,7 +91,8 @@
       "growth_bonus": {
         "unit_river_guard": 2
       },
-      "readiness_bonus": 4
+      "readiness_bonus": 4,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_lantern_archive",
@@ -154,7 +106,8 @@
       "requires": [
         "building_town_hall"
       ],
-      "spell_tier": 1
+      "spell_tier": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_starseer_annex",
@@ -172,7 +125,8 @@
       ],
       "upgrade_from": "building_lantern_archive",
       "spell_tier": 2,
-      "readiness_bonus": 4
+      "readiness_bonus": 4,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_river_granary_exchange",
@@ -218,7 +172,8 @@
         "specialty_summary": "River barges tighten wood rates and open double-wood convoy trades for construction or levy recovery."
       },
       "readiness_bonus": 4,
-      "faction_id": "faction_embercourt"
+      "faction_id": "faction_embercourt",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_quartermasters_depot",
@@ -246,7 +201,8 @@
         "unit_ember_archer": 10
       },
       "readiness_bonus": 10,
-      "faction_id": "faction_embercourt"
+      "faction_id": "faction_embercourt",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_signal_citadel",
@@ -273,7 +229,8 @@
       },
       "readiness_bonus": 18,
       "pressure_bonus": 1,
-      "faction_id": "faction_embercourt"
+      "faction_id": "faction_embercourt",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_citadel_pikehall",
@@ -297,7 +254,8 @@
       "recruitment_discount_percent": {
         "unit_citadel_pikeward": 8
       },
-      "readiness_bonus": 12
+      "readiness_bonus": 12,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_charter_bastion",
@@ -349,7 +307,8 @@
         },
         "summary": "The Charter Bastion can pour reserve columns onto the roads while its beacon net hardens the basin line."
       },
-      "faction_id": "faction_embercourt"
+      "faction_id": "faction_embercourt",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_blackbranch_den",
@@ -363,7 +322,8 @@
       "requires": [
         "building_town_hall"
       ],
-      "unlock_unit_id": "unit_blackbranch_cutthroat"
+      "unlock_unit_id": "unit_blackbranch_cutthroat",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_reed_warren",
@@ -386,7 +346,8 @@
         "unit_blackbranch_cutthroat": 10
       },
       "pressure_bonus": 1,
-      "faction_id": "faction_mireclaw"
+      "faction_id": "faction_mireclaw",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mire_pens",
@@ -401,7 +362,8 @@
       "requires": [
         "building_blackbranch_den"
       ],
-      "unlock_unit_id": "unit_bog_brute"
+      "unlock_unit_id": "unit_bog_brute",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_fenscale_pens",
@@ -426,7 +388,8 @@
       },
       "readiness_bonus": 6,
       "pressure_bonus": 1,
-      "faction_id": "faction_mireclaw"
+      "faction_id": "faction_mireclaw",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_slingers_post",
@@ -440,7 +403,8 @@
       "requires": [
         "building_blackbranch_den"
       ],
-      "unlock_unit_id": "unit_mire_slinger"
+      "unlock_unit_id": "unit_mire_slinger",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_rot_warren",
@@ -463,7 +427,8 @@
         "unit_mire_slinger": 10
       },
       "pressure_bonus": 1,
-      "faction_id": "faction_mireclaw"
+      "faction_id": "faction_mireclaw",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_war_drum_circle",
@@ -488,7 +453,8 @@
         "unit_mire_slinger": 8
       },
       "pressure_bonus": 2,
-      "readiness_bonus": 6
+      "readiness_bonus": 6,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_smugglers_flotilla",
@@ -537,7 +503,8 @@
       },
       "pressure_bonus": 1,
       "readiness_bonus": 4,
-      "faction_id": "faction_mireclaw"
+      "faction_id": "faction_mireclaw",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_floodtide_forge",
@@ -565,7 +532,8 @@
       },
       "pressure_bonus": 1,
       "readiness_bonus": 12,
-      "faction_id": "faction_mireclaw"
+      "faction_id": "faction_mireclaw",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_gorefen_ring",
@@ -590,7 +558,8 @@
         "unit_gorefen_ripper": 8
       },
       "pressure_bonus": 2,
-      "readiness_bonus": 6
+      "readiness_bonus": 6,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_nightglass_dominion",
@@ -642,7 +611,8 @@
         },
         "summary": "Nightglass Dominion keeps the ferry chains moving and lets the covenant sustain a deeper drum-led surge."
       },
-      "faction_id": "faction_mireclaw"
+      "faction_id": "faction_mireclaw",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_shard_yard",
@@ -656,7 +626,8 @@
       "requires": [
         "building_town_hall"
       ],
-      "unlock_unit_id": "unit_shard_guard"
+      "unlock_unit_id": "unit_shard_guard",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mirror_forge",
@@ -679,7 +650,8 @@
         "unit_shard_guard": 10
       },
       "readiness_bonus": 6,
-      "faction_id": "faction_sunvault"
+      "faction_id": "faction_sunvault",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_prism_range",
@@ -694,7 +666,8 @@
       "requires": [
         "building_shard_yard"
       ],
-      "unlock_unit_id": "unit_prism_adept"
+      "unlock_unit_id": "unit_prism_adept",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_lens_gallery",
@@ -718,7 +691,8 @@
         "unit_prism_adept": 10
       },
       "readiness_bonus": 5,
-      "faction_id": "faction_sunvault"
+      "faction_id": "faction_sunvault",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_duel_circle",
@@ -741,7 +715,8 @@
       "recruitment_discount_percent": {
         "unit_mirror_duelist": 8
       },
-      "readiness_bonus": 5
+      "readiness_bonus": 5,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_resonant_exchange",
@@ -788,7 +763,8 @@
       },
       "pressure_bonus": 1,
       "readiness_bonus": 4,
-      "faction_id": "faction_sunvault"
+      "faction_id": "faction_sunvault",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_harmonic_cloister",
@@ -820,7 +796,8 @@
       },
       "pressure_bonus": 1,
       "readiness_bonus": 10,
-      "faction_id": "faction_sunvault"
+      "faction_id": "faction_sunvault",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_aurora_spire",
@@ -845,7 +822,8 @@
         "unit_aurora_ballista": 8
       },
       "pressure_bonus": 1,
-      "readiness_bonus": 10
+      "readiness_bonus": 10,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_daybreak_matrix",
@@ -898,7 +876,8 @@
         },
         "summary": "The Daybreak Matrix aligns Prismhearth's relays into a full-theater battery network for the final push."
       },
-      "faction_id": "faction_sunvault"
+      "faction_id": "faction_sunvault",
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_granary_lock_exchange",
@@ -921,7 +900,8 @@
       },
       "income": {
         "gold": 150
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_tollstone_weir",
@@ -944,7 +924,8 @@
         "unit_embercourt_lantern_sappers": 6
       },
       "readiness_bonus": 5,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_bargebow_slip",
@@ -966,7 +947,8 @@
       },
       "recruitment_discount_percent": {
         "unit_embercourt_bargebow_crews": 6
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_oath_pikehall",
@@ -992,7 +974,8 @@
         "unit_embercourt_ash_oath_bailiffs": 6,
         "unit_embercourt_lockglass_writcasters": 4
       },
-      "readiness_bonus": 2
+      "readiness_bonus": 2,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_beacon_court",
@@ -1023,7 +1006,8 @@
         "unit_embercourt_beacon_lectors": 4
       },
       "readiness_bonus": 8,
-      "spell_tier": 3
+      "spell_tier": 3,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_drake_sluice",
@@ -1055,7 +1039,8 @@
         "unit_embercourt_sluicefire_lindworms": 4,
         "unit_embercourt_cinderseal_bombardiers": 4
       },
-      "readiness_bonus": 2
+      "readiness_bonus": 2,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_charter_bastion",
@@ -1086,7 +1071,8 @@
         "unit_embercourt_charter_colossus": 4
       },
       "readiness_bonus": 10,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_blackbranch_den",
@@ -1106,7 +1092,8 @@
       },
       "recruitment_discount_percent": {
         "unit_mireclaw_reedsnare_kin": 6
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_chainboom_ferry",
@@ -1137,7 +1124,8 @@
         "wood": 1
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_war_drum_circle",
@@ -1160,7 +1148,8 @@
         "unit_mireclaw_mudglass_slingers": 6
       },
       "readiness_bonus": 5,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_sporewake_shrine",
@@ -1191,7 +1180,8 @@
         "unit_mireclaw_sporewake_chanters": 4
       },
       "readiness_bonus": 8,
-      "spell_tier": 3
+      "spell_tier": 3,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_floodtide_forge",
@@ -1215,7 +1205,8 @@
         "unit_mireclaw_bogplate_maulers": 6
       },
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_nightglass_dominion",
@@ -1246,7 +1237,8 @@
         "unit_mireclaw_gorefen_rippers": 4
       },
       "readiness_bonus": 9,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_antler_pit",
@@ -1276,7 +1268,8 @@
       "recruitment_discount_percent": {
         "unit_mireclaw_drowned_antler_sovereign": 4
       },
-      "readiness_bonus": 2
+      "readiness_bonus": 2,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_shard_yard",
@@ -1296,7 +1289,8 @@
       },
       "recruitment_discount_percent": {
         "unit_sunvault_shard_wardens": 6
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_lens_gallery",
@@ -1317,7 +1311,8 @@
       },
       "recruitment_discount_percent": {
         "unit_sunvault_prism_adepts": 6
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_mirror_forge",
@@ -1339,7 +1334,8 @@
       },
       "recruitment_discount_percent": {
         "unit_sunvault_mirror_duelists": 6
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_harmonic_cloister",
@@ -1367,7 +1363,8 @@
         "unit_sunvault_noonfacet_sentinels": 4
       },
       "readiness_bonus": 7,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_zenith_observatory",
@@ -1398,7 +1395,8 @@
         "unit_sunvault_solar_array_striders": 4
       },
       "readiness_bonus": 8,
-      "spell_tier": 3
+      "spell_tier": 3,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_aurora_spire",
@@ -1428,7 +1426,8 @@
       "recruitment_discount_percent": {
         "unit_sunvault_aurora_ballistae": 4
       },
-      "readiness_bonus": 2
+      "readiness_bonus": 2,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_daybreak_matrix",
@@ -1459,7 +1458,8 @@
         "unit_sunvault_daybreak_colossus": 4
       },
       "readiness_bonus": 10,
-      "spell_tier": 5
+      "spell_tier": 5,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_seed_vault",
@@ -1485,7 +1485,8 @@
       "income": {
         "gold": 150,
         "wood": 1
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_bramble_toll",
@@ -1509,7 +1510,8 @@
         "unit_thornwake_bramblekite_needlers": 4
       },
       "readiness_bonus": 5,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_sporeglass_hothouse",
@@ -1535,7 +1537,8 @@
         "unit_thornwake_seedshield_wardens": 4
       },
       "readiness_bonus": 6,
-      "spell_tier": 3
+      "spell_tier": 3,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_barkmantle_run",
@@ -1561,7 +1564,8 @@
         "unit_thornwake_barkmantle_rams": 6,
         "unit_thornwake_dawnseed_bolters": 4
       },
-      "readiness_bonus": 2
+      "readiness_bonus": 2,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_pilgrim_orchard",
@@ -1597,7 +1601,8 @@
         "wood": 1
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_graftworks",
@@ -1628,7 +1633,8 @@
         "unit_thornwake_graft_matriarchs": 4
       },
       "readiness_bonus": 9,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_worldroot_gate",
@@ -1659,7 +1665,8 @@
         "unit_thornwake_worldroot_bastion": 4
       },
       "readiness_bonus": 10,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_rootroad_markers",
@@ -1679,7 +1686,8 @@
         "gold": 80
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_loam_ledger",
@@ -1700,7 +1708,8 @@
       "income": {
         "gold": 240,
         "wood": 1
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_pollen_litany",
@@ -1717,7 +1726,8 @@
         "building_thornwake_sporeglass_hothouse"
       ],
       "readiness_bonus": 4,
-      "spell_tier": 4
+      "spell_tier": 4,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_bramblewall_coppice",
@@ -1736,7 +1746,8 @@
         "building_thornwake_loam_ledger"
       ],
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_old_grove_accord",
@@ -1760,7 +1771,8 @@
         "wood": 1
       },
       "readiness_bonus": 7,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_ore_tithe_office",
@@ -1786,7 +1798,8 @@
       "income": {
         "gold": 150,
         "ore": 1
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_rivet_kennels",
@@ -1808,7 +1821,8 @@
       "recruitment_discount_percent": {
         "unit_brasshollow_rivet_hounds": 6,
         "unit_brasshollow_quenchspool_slingers": 4
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_pavis_foundry",
@@ -1834,7 +1848,8 @@
         "unit_brasshollow_gaugefire_arbalists": 4
       },
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_boiler_cathedral",
@@ -1861,7 +1876,8 @@
         "unit_brasshollow_gaugeplate_bailiffs": 4
       },
       "readiness_bonus": 7,
-      "spell_tier": 3
+      "spell_tier": 3,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_pressure_rail",
@@ -1897,7 +1913,8 @@
         "ore": 1
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_crucible_dock",
@@ -1927,7 +1944,8 @@
       "recruitment_discount_percent": {
         "unit_brasshollow_crucible_crawlers": 4
       },
-      "readiness_bonus": 2
+      "readiness_bonus": 2,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_titan_charter_hall",
@@ -1958,7 +1976,8 @@
         "unit_brasshollow_foundry_saint": 4
       },
       "readiness_bonus": 10,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_scalehouse",
@@ -2002,7 +2021,8 @@
       "income": {
         "gold": 120,
         "ore": 1
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_clause_court",
@@ -2023,7 +2043,8 @@
       "income": {
         "gold": 220
       },
-      "readiness_bonus": 3
+      "readiness_bonus": 3,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_heatwright_vestry",
@@ -2041,7 +2062,8 @@
         "building_brasshollow_boiler_cathedral"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 4
+      "spell_tier": 4,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_gauge_arsenal",
@@ -2060,7 +2082,8 @@
         "building_brasshollow_clause_court"
       ],
       "readiness_bonus": 7,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_debtworks_vault",
@@ -2084,7 +2107,8 @@
         "ore": 1
       },
       "readiness_bonus": 4,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_bell_harbor",
@@ -2104,7 +2128,8 @@
       },
       "recruitment_discount_percent": {
         "unit_veilmourn_bellwake_oars": 6
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_ransom_exchange",
@@ -2133,7 +2158,8 @@
         "gold": 180,
         "wood": 1
       },
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_mirror_drydock",
@@ -2159,7 +2185,8 @@
         "unit_veilmourn_wakechain_boarders": 4
       },
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_harpoon_gantry",
@@ -2185,7 +2212,8 @@
         "unit_veilmourn_undertow_harpooners": 6,
         "unit_veilmourn_gloamkeel_bulwarks": 4
       },
-      "readiness_bonus": 2
+      "readiness_bonus": 2,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_obituary_vault",
@@ -2217,7 +2245,8 @@
         "unit_veilmourn_obituary_scribes": 4
       },
       "readiness_bonus": 8,
-      "spell_tier": 3
+      "spell_tier": 3,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_mistgate_slip",
@@ -2248,7 +2277,8 @@
         "unit_veilmourn_mirrorkeel_reavers": 4
       },
       "readiness_bonus": 9,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_leviathan_sounding",
@@ -2279,7 +2309,8 @@
         "unit_veilmourn_fogbound_leviathan": 4
       },
       "readiness_bonus": 10,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_fog_signal_buoys",
@@ -2299,7 +2330,8 @@
         "gold": 90
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_salvage_ledger",
@@ -2319,7 +2351,8 @@
       ],
       "income": {
         "gold": 260
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_wake_oratory",
@@ -2337,7 +2370,8 @@
         "building_veilmourn_obituary_vault"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 4
+      "spell_tier": 4,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_black_sail_loft",
@@ -2356,7 +2390,8 @@
         "building_veilmourn_salvage_ledger"
       ],
       "readiness_bonus": 7,
-      "pressure_bonus": 2
+      "pressure_bonus": 2,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_memory_anchor",
@@ -2379,7 +2414,8 @@
         "gold": 200
       },
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_rootweave_tithe",
@@ -2398,7 +2434,8 @@
       "income": {
         "gold": 120,
         "wood": 1
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_bramble_marshal_moot",
@@ -2417,7 +2454,8 @@
         "building_thornwake_rootweave_tithe"
       ],
       "readiness_bonus": 3,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_spore_oath_chantry",
@@ -2435,7 +2473,8 @@
         "building_thornwake_bramble_marshal_moot"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 5
+      "spell_tier": 5,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_thornwarden_husk_yard",
@@ -2454,7 +2493,8 @@
         "building_thornwake_spore_oath_chantry"
       ],
       "readiness_bonus": 7,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_verdant_concord_seat",
@@ -2478,7 +2518,8 @@
         "gold": 170
       },
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_ledger_mint",
@@ -2497,7 +2538,8 @@
       "income": {
         "gold": 140,
         "ore": 1
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_foreman_clausehouse",
@@ -2516,7 +2558,8 @@
         "building_brasshollow_ledger_mint"
       ],
       "readiness_bonus": 3,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_caliper_sanctum",
@@ -2535,7 +2578,8 @@
         "building_brasshollow_foreman_clausehouse"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 5
+      "spell_tier": 5,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_redline_assembly_yard",
@@ -2554,7 +2598,8 @@
         "building_brasshollow_caliper_sanctum"
       ],
       "readiness_bonus": 7,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_brassbound_directorate",
@@ -2608,7 +2653,8 @@
         "ore": 1
       },
       "readiness_bonus": 6,
-      "pressure_bonus": 2
+      "pressure_bonus": 2,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_salt_counting_house",
@@ -2626,7 +2672,8 @@
       ],
       "income": {
         "gold": 120
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_mourner_pilot_guild",
@@ -2645,7 +2692,8 @@
         "building_veilmourn_salt_counting_house"
       ],
       "readiness_bonus": 3,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_tideglass_chapel",
@@ -2664,7 +2712,8 @@
         "building_veilmourn_mourner_pilot_guild"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 5
+      "spell_tier": 5,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_drowned_map_room",
@@ -2683,7 +2732,8 @@
         "building_veilmourn_tideglass_chapel"
       ],
       "readiness_bonus": 7,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_memory_rite_court",
@@ -2707,7 +2757,8 @@
         "gold": 180
       },
       "readiness_bonus": 6,
-      "pressure_bonus": 2
+      "pressure_bonus": 2,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_root_cairn_watch",
@@ -2725,7 +2776,8 @@
         "building_thornwake_rootroad_markers"
       ],
       "readiness_bonus": 4,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_sap_chandler_grove",
@@ -2746,7 +2798,8 @@
       "income": {
         "gold": 160,
         "wood": 1
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_bastion_seed_conclave",
@@ -2766,7 +2819,8 @@
         "building_thornwake_spore_oath_chantry"
       ],
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_mycorrhizal_store",
@@ -2787,7 +2841,8 @@
       "income": {
         "gold": 150,
         "wood": 1
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_rootlaw_moot",
@@ -2836,7 +2891,8 @@
         "building_thornwake_mycorrhizal_store"
       ],
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_quenchwright_bay",
@@ -2854,7 +2910,8 @@
         "building_brasshollow_scalehouse"
       ],
       "readiness_bonus": 4,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_rail_tax_office",
@@ -2875,7 +2932,8 @@
       "income": {
         "gold": 180,
         "ore": 1
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_warrant_engine_house",
@@ -2895,7 +2953,8 @@
         "building_brasshollow_caliper_sanctum"
       ],
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_bell_chain_watch",
@@ -2913,7 +2972,8 @@
         "building_veilmourn_fog_signal_buoys"
       ],
       "readiness_bonus": 4,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_saltwake_factor",
@@ -2933,7 +2993,8 @@
       ],
       "income": {
         "gold": 170
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_drowned_admiralty",
@@ -2983,7 +3044,8 @@
         "building_veilmourn_tideglass_chapel"
       ],
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_lockhouse_tally",
@@ -3027,7 +3089,8 @@
       "income": {
         "gold": 120,
         "wood": 1
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_beacon_writs",
@@ -3046,7 +3109,8 @@
         "building_embercourt_lockhouse_tally"
       ],
       "readiness_bonus": 4,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_lantern_court",
@@ -3065,7 +3129,8 @@
         "building_embercourt_beacon_writs"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 4
+      "spell_tier": 4,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_relief_quay",
@@ -3088,7 +3153,8 @@
       },
       "readiness_bonus": 6,
       "pressure_bonus": 1,
-      "spell_tier": 5
+      "spell_tier": 5,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_charter_flame",
@@ -3141,7 +3207,8 @@
         "gold": 180
       },
       "readiness_bonus": 7,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_reed_toll",
@@ -3161,7 +3228,8 @@
         "gold": 100,
         "wood": 1
       },
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_silt_watch",
@@ -3180,7 +3248,8 @@
         "building_mireclaw_reed_toll"
       ],
       "readiness_bonus": 3,
-      "pressure_bonus": 2
+      "pressure_bonus": 2,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_bog_oracle_nest",
@@ -3198,7 +3267,8 @@
         "building_mireclaw_silt_watch"
       ],
       "readiness_bonus": 4,
-      "spell_tier": 4
+      "spell_tier": 4,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_boneboom_palisade",
@@ -3218,7 +3288,8 @@
       ],
       "readiness_bonus": 7,
       "pressure_bonus": 1,
-      "spell_tier": 5
+      "spell_tier": 5,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_oathmire_court",
@@ -3271,7 +3342,8 @@
         "gold": 160
       },
       "readiness_bonus": 6,
-      "pressure_bonus": 2
+      "pressure_bonus": 2,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_lens_tithe",
@@ -3290,7 +3362,8 @@
       "income": {
         "gold": 120,
         "ore": 1
-      }
+      },
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_relay_scribes",
@@ -3309,7 +3382,8 @@
         "building_sunvault_lens_tithe"
       ],
       "readiness_bonus": 3,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_prism_oratory",
@@ -3328,7 +3402,8 @@
         "building_sunvault_relay_scribes"
       ],
       "readiness_bonus": 5,
-      "spell_tier": 4
+      "spell_tier": 4,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_halo_battery_yard",
@@ -3347,7 +3422,8 @@
         "building_sunvault_prism_oratory"
       ],
       "readiness_bonus": 7,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_zenith_court",
@@ -3400,7 +3476,8 @@
         "gold": 180
       },
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_beaconline_charter_house",
@@ -3424,7 +3501,8 @@
         "unit_embercourt_beaconline_writguard": 2
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_fenbell_hunt_lodge",
@@ -3448,7 +3526,8 @@
         "unit_mireclaw_fenbell_chainstalkers": 2
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_zenith_relay_hall",
@@ -3471,7 +3550,8 @@
       "growth_bonus": {
         "unit_sunvault_zenith_lensbearers": 2
       },
-      "readiness_bonus": 3
+      "readiness_bonus": 3,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_canopy_breach_grove",
@@ -3494,7 +3574,8 @@
         "unit_thornwake_canopy_rammers": 2
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_redline_charter_bay",
@@ -3518,7 +3599,8 @@
         "unit_brasshollow_pressure_lancers": 2
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_wakeglass_chart_house",
@@ -3542,7 +3624,8 @@
         "unit_veilmourn_wakeglass_navigators": 2
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_seedglass_cantory",
@@ -3564,7 +3647,8 @@
         "unit_thornwake_seedglass_cantors": 2
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_quenchbell_mortar_bay",
@@ -3586,7 +3670,8 @@
         "unit_brasshollow_quenchbell_mortars": 2
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_saltwake_eulogy_house",
@@ -3609,7 +3694,8 @@
         "unit_veilmourn_saltwake_eulogists": 2
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_rainwrit_stormseal_treasury",
@@ -3638,7 +3724,8 @@
         "unit_embercourt_cinderseal_bombardiers": 5
       },
       "readiness_bonus": 4,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_hollowreed_moonwax_ossuary",
@@ -3666,7 +3753,8 @@
         "unit_mireclaw_mireglass_reedcasters": 5
       },
       "readiness_bonus": 3,
-      "recovery_relief": 1
+      "recovery_relief": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_meridian_seven_facet_orrery",
@@ -3694,7 +3782,8 @@
       "recruitment_discount_percent": {
         "unit_sunvault_noonfacet_sentinels": 5
       },
-      "readiness_bonus": 6
+      "readiness_bonus": 6,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_crownroot_heartseed_parliament",
@@ -3722,7 +3811,8 @@
       "recruitment_discount_percent": {
         "unit_thornwake_dawnseed_bolters": 4
       },
-      "recovery_relief": 1
+      "recovery_relief": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_blackbell_grand_assay_bell",
@@ -3751,7 +3841,8 @@
         "unit_brasshollow_gaugeplate_bailiffs": 8
       },
       "readiness_bonus": 6,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_pale_sounding_last_memory_beacon",
@@ -3780,7 +3871,8 @@
         "unit_veilmourn_tidehook_deckhands": 5
       },
       "readiness_bonus": 4,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_amberweir_sluiceguard_lock",
@@ -3805,7 +3897,8 @@
         "unit_embercourt_amberweir_lockpike_wardens": 4
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_moonbite_votive_drum_court",
@@ -3830,7 +3923,8 @@
         "unit_mireclaw_moonbite_votive_drummers": 4
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_splitprism_parallax_duel_hall",
@@ -3855,7 +3949,8 @@
         "unit_sunvault_splitprism_parallax_fencers": 4
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_woundroot_hearthseed_nursery",
@@ -3880,7 +3975,8 @@
         "unit_thornwake_woundroot_hearthseed_slingers": 4
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_whitegauge_datum_railhouse",
@@ -3905,7 +4001,8 @@
         "unit_brasshollow_whitegauge_datum_lancers": 4
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_dreamwake_tideglass_oratory",
@@ -3931,7 +4028,8 @@
         "unit_veilmourn_dreamwake_tideglass_oracles": 4
       },
       "readiness_bonus": 2,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_embercourt_amberweir_counterweight_foundry",
@@ -3957,7 +4055,8 @@
         "unit_embercourt_amberweir_sluicebrand_mangonels": 4
       },
       "readiness_bonus": 3,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_mireclaw_moonbite_mirehorn_chain_pen",
@@ -3983,7 +4082,8 @@
         "unit_mireclaw_moonbite_mirehorn_breakers": 4
       },
       "readiness_bonus": 3,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_sunvault_splitprism_heliograph_battery",
@@ -4009,7 +4109,8 @@
         "unit_sunvault_splitprism_heliograph_ballistae": 4
       },
       "readiness_bonus": 3,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_thornwake_woundroot_rootmaul_hollow",
@@ -4035,7 +4136,8 @@
         "unit_thornwake_woundroot_rootmaul_behemoths": 4
       },
       "readiness_bonus": 3,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_brasshollow_whitegauge_breach_pressure_foundry",
@@ -4061,7 +4163,8 @@
         "unit_brasshollow_whitegauge_datum_breach_cannons": 4
       },
       "readiness_bonus": 3,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
     },
     {
       "id": "building_veilmourn_dreamwake_foganchor_slip",
@@ -4087,7 +4190,4209 @@
         "unit_veilmourn_dreamwake_foganchor_colossi": 4
       },
       "readiness_bonus": 3,
-      "pressure_bonus": 1
+      "pressure_bonus": 1,
+      "retired_from_town_tree": true
+    },
+    {
+      "id": "building_town_hall",
+      "name": "Town Hall",
+      "category": "civic",
+      "cost": {},
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "line_id": "hall",
+      "stage": 1,
+      "income": {
+        "gold": 500
+      },
+      "description": "Produces 500 gold per day. Replaces the previous hall income."
+    },
+    {
+      "id": "building_dev_hall_2",
+      "name": "Council Hall",
+      "category": "civic",
+      "cost": {
+        "gold": 2500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "line_id": "hall",
+      "stage": 2,
+      "income": {
+        "gold": 1000
+      },
+      "upgrade_from": "building_town_hall",
+      "description": "Produces 1,000 gold per day. Replaces the previous hall income."
+    },
+    {
+      "id": "building_dev_hall_3",
+      "name": "City Hall",
+      "category": "civic",
+      "cost": {
+        "gold": 5000,
+        "wood": 15,
+        "ore": 15
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "line_id": "hall",
+      "stage": 3,
+      "income": {
+        "gold": 2000
+      },
+      "upgrade_from": "building_dev_hall_2",
+      "description": "Produces 2,000 gold per day. Replaces the previous hall income."
+    },
+    {
+      "id": "building_dev_hall_4",
+      "name": "Capital Hall",
+      "category": "civic",
+      "cost": {
+        "gold": 10000,
+        "wood": 20,
+        "ore": 20
+      },
+      "requires": [
+        "building_dev_hall_3"
+      ],
+      "development_version": 1,
+      "line_id": "hall",
+      "stage": 4,
+      "income": {
+        "gold": 4000
+      },
+      "upgrade_from": "building_dev_hall_3",
+      "description": "Produces 4,000 gold per day. Replaces the previous hall income."
+    },
+    {
+      "id": "building_dev_fort_1",
+      "name": "Palisade",
+      "category": "support",
+      "cost": {
+        "gold": 2000,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "line_id": "fort",
+      "stage": 1,
+      "readiness_bonus": 10,
+      "description": "Town battle readiness +10; strengthens the defending force. Replaces the previous fortification stage. Defending creatures gain +2 defense during town battles.",
+      "defender_defense_bonus": 2
+    },
+    {
+      "id": "building_dev_fort_2",
+      "name": "Citadel",
+      "category": "support",
+      "cost": {
+        "gold": 4000,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "line_id": "fort",
+      "stage": 2,
+      "readiness_bonus": 20,
+      "upgrade_from": "building_dev_fort_1",
+      "description": "Town battle readiness +20; strengthens the defending force. Replaces the previous fortification stage. Defending creatures gain +4 defense during town battles.",
+      "defender_defense_bonus": 4
+    },
+    {
+      "id": "building_dev_fort_3",
+      "name": "Great Ramparts",
+      "category": "support",
+      "cost": {
+        "gold": 6000,
+        "wood": 15,
+        "ore": 15
+      },
+      "requires": [
+        "building_dev_fort_2"
+      ],
+      "development_version": 1,
+      "line_id": "fort",
+      "stage": 3,
+      "readiness_bonus": 30,
+      "upgrade_from": "building_dev_fort_2",
+      "description": "Town battle readiness +30; strengthens the defending force. Replaces the previous fortification stage. Defending creatures gain +6 defense during town battles.",
+      "defender_defense_bonus": 6
+    },
+    {
+      "id": "building_dev_guild_1",
+      "name": "Magic Guild 1",
+      "category": "magic",
+      "cost": {
+        "gold": 1000,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "line_id": "guild",
+      "stage": 1,
+      "spell_tier": 1,
+      "description": "Teaches faction spells through tier 1 to visiting heroes."
+    },
+    {
+      "id": "building_dev_guild_2",
+      "name": "Magic Guild 2",
+      "category": "magic",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_guild_1"
+      ],
+      "development_version": 1,
+      "line_id": "guild",
+      "stage": 2,
+      "spell_tier": 2,
+      "upgrade_from": "building_dev_guild_1",
+      "description": "Teaches faction spells through tier 2 to visiting heroes."
+    },
+    {
+      "id": "building_dev_guild_3",
+      "name": "Magic Guild 3",
+      "category": "magic",
+      "cost": {
+        "gold": 3000,
+        "wood": 9,
+        "ore": 9
+      },
+      "requires": [
+        "building_dev_guild_2"
+      ],
+      "development_version": 1,
+      "line_id": "guild",
+      "stage": 3,
+      "spell_tier": 3,
+      "upgrade_from": "building_dev_guild_2",
+      "description": "Teaches faction spells through tier 3 to visiting heroes."
+    },
+    {
+      "id": "building_dev_guild_4",
+      "name": "Magic Guild 4",
+      "category": "magic",
+      "cost": {
+        "gold": 4000,
+        "wood": 12,
+        "ore": 12
+      },
+      "requires": [
+        "building_dev_guild_3"
+      ],
+      "development_version": 1,
+      "line_id": "guild",
+      "stage": 4,
+      "spell_tier": 4,
+      "upgrade_from": "building_dev_guild_3",
+      "description": "Teaches faction spells through tier 4 to visiting heroes."
+    },
+    {
+      "id": "building_dev_guild_5",
+      "name": "Magic Guild 5",
+      "category": "magic",
+      "cost": {
+        "gold": 5000,
+        "wood": 15,
+        "ore": 15
+      },
+      "requires": [
+        "building_dev_guild_4"
+      ],
+      "development_version": 1,
+      "line_id": "guild",
+      "stage": 5,
+      "spell_tier": 5,
+      "upgrade_from": "building_dev_guild_4",
+      "description": "Teaches faction spells through tier 5 to visiting heroes."
+    },
+    {
+      "id": "building_market_square",
+      "name": "Marketplace",
+      "category": "economy",
+      "cost": {
+        "gold": 1000,
+        "wood": 5
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "line_id": "market",
+      "stage": 1,
+      "market_profile": {
+        "id": "square",
+        "tier": 1,
+        "buy_rate_adjustments": {
+          "wood": -20,
+          "ore": -20
+        },
+        "sell_rate_adjustments": {
+          "wood": 10,
+          "ore": 10
+        },
+        "bulk_resources": [],
+        "buy_cap_bonus": {},
+        "sell_cap_bonus": {},
+        "specialty_summary": "Resource exchange; upgraded brokers offer better rates and bulk trades."
+      },
+      "description": "Exchange wood and ore for gold. Basic exchange rates."
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "name": "Trade Exchange",
+      "category": "economy",
+      "cost": {
+        "gold": 2500,
+        "wood": 5
+      },
+      "requires": [
+        "building_market_square"
+      ],
+      "development_version": 1,
+      "line_id": "market",
+      "stage": 2,
+      "upgrade_from": "building_market_square",
+      "market_profile": {
+        "id": "trade_exchange",
+        "tier": 2,
+        "buy_rate_adjustments": {
+          "wood": -150,
+          "ore": -150
+        },
+        "sell_rate_adjustments": {
+          "wood": 100,
+          "ore": 100
+        },
+        "bulk_resources": [
+          "wood",
+          "ore"
+        ],
+        "buy_cap_bonus": {},
+        "sell_cap_bonus": {},
+        "specialty_summary": "Resource exchange; upgraded brokers offer better rates and bulk trades."
+      },
+      "description": "Exchange wood and ore for gold. Improved rates and bulk trading."
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "name": "Tavern",
+      "category": "civic",
+      "cost": {
+        "gold": 800
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruit additional heroes and manage visiting commanders."
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "name": "Storehouse 1",
+      "category": "economy",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "line_id": "storehouse",
+      "stage": 1,
+      "income": {
+        "wood": 1,
+        "ore": 1
+      },
+      "description": "Produces 1 wood and 1 ore daily."
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "name": "Storehouse 2",
+      "category": "economy",
+      "cost": {
+        "gold": 4000,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_storehouse_1",
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "line_id": "storehouse",
+      "stage": 2,
+      "income": {
+        "wood": 1,
+        "ore": 1
+      },
+      "upgrade_from": "building_dev_storehouse_1",
+      "faction_resource_income": 1,
+      "description": "Produces 1 wood and 1 ore daily. Also produces 1 main faction resource daily (the tier-7 resource)."
+    },
+    {
+      "id": "building_dev_growth_1",
+      "name": "Training Commons",
+      "category": "support",
+      "cost": {
+        "gold": 1000,
+        "wood": 3,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "growth_tier": 1,
+      "growth_amount": 4,
+      "description": "Adds 4 recruits each week to the chosen tier-1 dwelling, including its upgraded units. Does not create recruits without that dwelling."
+    },
+    {
+      "id": "building_dev_growth_2",
+      "name": "Provisioners Lodge",
+      "category": "support",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "growth_tier": 2,
+      "growth_amount": 3,
+      "description": "Adds 3 recruits each week to the chosen tier-2 dwelling, including its upgraded units. Does not create recruits without that dwelling."
+    },
+    {
+      "id": "building_dev_growth_3",
+      "name": "Veterans Quarters",
+      "category": "support",
+      "cost": {
+        "gold": 3000,
+        "wood": 9,
+        "ore": 6
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "growth_tier": 3,
+      "growth_amount": 2,
+      "description": "Adds 2 recruits each week to the chosen tier-3 dwelling, including its upgraded units. Does not create recruits without that dwelling."
+    },
+    {
+      "id": "building_dev_training_attack",
+      "name": "Sparring Grounds",
+      "category": "support",
+      "cost": {
+        "gold": 2000,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "hero_visit_reward": {
+        "attack": 1
+      },
+      "description": "Grants a visiting hero +1 attack. Once per hero for this building type across all towns; capture and rebuilding cannot reset the benefit."
+    },
+    {
+      "id": "building_dev_training_defense",
+      "name": "Wardens School",
+      "category": "support",
+      "cost": {
+        "gold": 2000,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "hero_visit_reward": {
+        "defense": 1
+      },
+      "description": "Grants a visiting hero +1 defense. Once per hero for this building type across all towns; capture and rebuilding cannot reset the benefit."
+    },
+    {
+      "id": "building_dev_training_experience",
+      "name": "Hall of Chronicles",
+      "category": "support",
+      "cost": {
+        "gold": 2000,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "hero_visit_reward": {
+        "experience": 1000
+      },
+      "description": "Grants a visiting hero 1,000 experience. Once per hero for this building type across all towns; capture and rebuilding cannot reset the benefit."
+    },
+    {
+      "id": "building_dev_artifact_exchange",
+      "name": "Artifact Exchange",
+      "category": "economy",
+      "cost": {
+        "gold": 4000,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_market_square"
+      ],
+      "development_version": 1,
+      "artifact_exchange": true,
+      "description": "Buy stocked artifacts or sell unequipped artifacts at half price. Three offers refresh each week; purchases exhaust that offer until refresh."
+    },
+    {
+      "id": "building_dev_embercourt_t1_1",
+      "name": "River Guard Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits River Guard. Choosing this dwelling permanently excludes the other tier-1 option in this town.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t1_1",
+      "stage": 1,
+      "dwelling_tier": 1,
+      "choice_group": "embercourt_t1",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_river_guard"
+    },
+    {
+      "id": "building_dev_embercourt_t1_1_upgrade",
+      "name": "River Guard Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_dev_embercourt_t1_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran River Guard and upgrades existing River Guard for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t1_1",
+      "stage": 2,
+      "dwelling_tier": 1,
+      "choice_group": "embercourt_t1",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_river_guard_veteran",
+      "upgrade_from": "building_dev_embercourt_t1_1"
+    },
+    {
+      "id": "building_dev_embercourt_t1_2",
+      "name": "Fordhook Cadets Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Fordhook Cadets. Choosing this dwelling permanently excludes the other tier-1 option in this town.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t1_2",
+      "stage": 1,
+      "dwelling_tier": 1,
+      "choice_group": "embercourt_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_embercourt_fordhook_cadets"
+    },
+    {
+      "id": "building_dev_embercourt_t1_2_upgrade",
+      "name": "Fordhook Cadets Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_dev_embercourt_t1_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Fordhook Cadets and upgrades existing Fordhook Cadets for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t1_2",
+      "stage": 2,
+      "dwelling_tier": 1,
+      "choice_group": "embercourt_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_embercourt_fordhook_cadets_veteran",
+      "upgrade_from": "building_dev_embercourt_t1_2"
+    },
+    {
+      "id": "building_dev_embercourt_t2_1",
+      "name": "Ember Archer Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Ember Archer. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t2_1",
+      "stage": 1,
+      "dwelling_tier": 2,
+      "choice_group": "embercourt_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_ember_archer",
+      "requires_dwelling_tier": 1
+    },
+    {
+      "id": "building_dev_embercourt_t2_1_upgrade",
+      "name": "Ember Archer Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_dev_embercourt_t2_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Ember Archer and upgrades existing Ember Archer for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t2_1",
+      "stage": 2,
+      "dwelling_tier": 2,
+      "choice_group": "embercourt_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_ember_archer_veteran",
+      "upgrade_from": "building_dev_embercourt_t2_1"
+    },
+    {
+      "id": "building_dev_embercourt_t2_2",
+      "name": "Lantern Sappers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Lantern Sappers. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t2_2",
+      "stage": 1,
+      "dwelling_tier": 2,
+      "choice_group": "embercourt_t2",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_embercourt_lantern_sappers",
+      "requires_dwelling_tier": 1
+    },
+    {
+      "id": "building_dev_embercourt_t2_2_upgrade",
+      "name": "Lantern Sappers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_dev_embercourt_t2_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Lantern Sappers and upgrades existing Lantern Sappers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t2_2",
+      "stage": 2,
+      "dwelling_tier": 2,
+      "choice_group": "embercourt_t2",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_embercourt_lantern_sappers_veteran",
+      "upgrade_from": "building_dev_embercourt_t2_2"
+    },
+    {
+      "id": "building_dev_embercourt_t3_1",
+      "name": "Citadel Pikeward Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Citadel Pikeward. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t3_1",
+      "stage": 1,
+      "dwelling_tier": 3,
+      "choice_group": "embercourt_t3",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_citadel_pikeward",
+      "requires_dwelling_tier": 2
+    },
+    {
+      "id": "building_dev_embercourt_t3_1_upgrade",
+      "name": "Citadel Pikeward Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_embercourt_t3_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Citadel Pikeward and upgrades existing Citadel Pikeward for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t3_1",
+      "stage": 2,
+      "dwelling_tier": 3,
+      "choice_group": "embercourt_t3",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_citadel_pikeward_veteran",
+      "upgrade_from": "building_dev_embercourt_t3_1"
+    },
+    {
+      "id": "building_dev_embercourt_t3_2",
+      "name": "Bargebow Crews Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Bargebow Crews. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t3_2",
+      "stage": 1,
+      "dwelling_tier": 3,
+      "choice_group": "embercourt_t3",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_embercourt_bargebow_crews",
+      "requires_dwelling_tier": 2
+    },
+    {
+      "id": "building_dev_embercourt_t3_2_upgrade",
+      "name": "Bargebow Crews Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_embercourt_t3_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Bargebow Crews and upgrades existing Bargebow Crews for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t3_2",
+      "stage": 2,
+      "dwelling_tier": 3,
+      "choice_group": "embercourt_t3",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_embercourt_bargebow_crews_veteran",
+      "upgrade_from": "building_dev_embercourt_t3_2"
+    },
+    {
+      "id": "building_dev_embercourt_t4_1",
+      "name": "Ash-Oath Bailiffs Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Ash-Oath Bailiffs. Choosing this dwelling permanently excludes the other tier-4 option in this town.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t4_1",
+      "stage": 1,
+      "dwelling_tier": 4,
+      "choice_group": "embercourt_t4",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_embercourt_ash_oath_bailiffs",
+      "requires_dwelling_tier": 3
+    },
+    {
+      "id": "building_dev_embercourt_t4_1_upgrade",
+      "name": "Ash-Oath Bailiffs Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_embercourt_t4_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Ash-Oath Bailiffs and upgrades existing Ash-Oath Bailiffs for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t4_1",
+      "stage": 2,
+      "dwelling_tier": 4,
+      "choice_group": "embercourt_t4",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
+      "upgrade_from": "building_dev_embercourt_t4_1"
+    },
+    {
+      "id": "building_dev_embercourt_t4_2",
+      "name": "Lockglass Writcasters Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Lockglass Writcasters. Choosing this dwelling permanently excludes the other tier-4 option in this town.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t4_2",
+      "stage": 1,
+      "dwelling_tier": 4,
+      "choice_group": "embercourt_t4",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_embercourt_lockglass_writcasters",
+      "requires_dwelling_tier": 3
+    },
+    {
+      "id": "building_dev_embercourt_t4_2_upgrade",
+      "name": "Lockglass Writcasters Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_embercourt_t4_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Lockglass Writcasters and upgrades existing Lockglass Writcasters for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t4_2",
+      "stage": 2,
+      "dwelling_tier": 4,
+      "choice_group": "embercourt_t4",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_embercourt_lockglass_writcasters_veteran",
+      "upgrade_from": "building_dev_embercourt_t4_2"
+    },
+    {
+      "id": "building_dev_embercourt_t5_1",
+      "name": "Beacon Lectors Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Beacon Lectors. Choosing this dwelling permanently excludes the other tier-5 option in this town.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t5_1",
+      "stage": 1,
+      "dwelling_tier": 5,
+      "choice_group": "embercourt_t5",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_embercourt_beacon_lectors",
+      "requires_dwelling_tier": 4
+    },
+    {
+      "id": "building_dev_embercourt_t5_1_upgrade",
+      "name": "Beacon Lectors Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_embercourt_t5_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Beacon Lectors and upgrades existing Beacon Lectors for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t5_1",
+      "stage": 2,
+      "dwelling_tier": 5,
+      "choice_group": "embercourt_t5",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_embercourt_beacon_lectors_veteran",
+      "upgrade_from": "building_dev_embercourt_t5_1"
+    },
+    {
+      "id": "building_dev_embercourt_t5_2",
+      "name": "Beaconline Writguard Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Beaconline Writguard. Choosing this dwelling permanently excludes the other tier-5 option in this town.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t5_2",
+      "stage": 1,
+      "dwelling_tier": 5,
+      "choice_group": "embercourt_t5",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_embercourt_beaconline_writguard",
+      "requires_dwelling_tier": 4
+    },
+    {
+      "id": "building_dev_embercourt_t5_2_upgrade",
+      "name": "Beaconline Writguard Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_embercourt_t5_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Beaconline Writguard and upgrades existing Beaconline Writguard for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t5_2",
+      "stage": 2,
+      "dwelling_tier": 5,
+      "choice_group": "embercourt_t5",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_embercourt_beaconline_writguard_veteran",
+      "upgrade_from": "building_dev_embercourt_t5_2"
+    },
+    {
+      "id": "building_dev_embercourt_t6_1",
+      "name": "Sluicefire Lindworms Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 8000,
+        "wood": 12,
+        "ore": 12,
+        "aetherglass": 5
+      },
+      "requires": [
+        "building_dev_hall_3",
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Sluicefire Lindworms. Construction and recruitment require aetherglass.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t6_1",
+      "stage": 1,
+      "dwelling_tier": 6,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_embercourt_sluicefire_lindworms",
+      "requires_dwelling_tier": 5
+    },
+    {
+      "id": "building_dev_embercourt_t6_1_upgrade",
+      "name": "Sluicefire Lindworms Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 6000,
+        "wood": 9,
+        "ore": 9,
+        "aetherglass": 4
+      },
+      "requires": [
+        "building_dev_embercourt_t6_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Sluicefire Lindworms and upgrades existing Sluicefire Lindworms for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t6_1",
+      "stage": 2,
+      "dwelling_tier": 6,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
+      "upgrade_from": "building_dev_embercourt_t6_1"
+    },
+    {
+      "id": "building_dev_embercourt_t7_1",
+      "name": "Charter Colossus Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 15000,
+        "wood": 14,
+        "ore": 14,
+        "embergrain": 10
+      },
+      "requires": [
+        "building_dev_hall_3",
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Charter Colossus. Construction and recruitment require embergrain.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t7_1",
+      "stage": 1,
+      "dwelling_tier": 7,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_embercourt_charter_colossus",
+      "requires_dwelling_tier": 6
+    },
+    {
+      "id": "building_dev_embercourt_t7_1_upgrade",
+      "name": "Charter Colossus Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 11250,
+        "wood": 11,
+        "ore": 11,
+        "embergrain": 8
+      },
+      "requires": [
+        "building_dev_embercourt_t7_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Charter Colossus and upgrades existing Charter Colossus for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_embercourt",
+      "line_id": "embercourt_t7_1",
+      "stage": 2,
+      "dwelling_tier": 7,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_embercourt_charter_colossus_veteran",
+      "upgrade_from": "building_dev_embercourt_t7_1"
+    },
+    {
+      "id": "building_dev_embercourt_unique_1",
+      "name": "Convoy Charter",
+      "category": "support",
+      "cost": {
+        "gold": 3500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_embercourt",
+      "description": "Chartered river convoys produce 500 gold daily.",
+      "income": {
+        "gold": 500
+      }
+    },
+    {
+      "id": "building_dev_embercourt_unique_2",
+      "name": "Beacon Watch",
+      "category": "support",
+      "cost": {
+        "gold": 4000,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_embercourt",
+      "description": "Signal beacons add 15 town battle readiness. Defending creatures also gain +2 defense during town battles.",
+      "readiness_bonus": 15,
+      "defender_defense_bonus": 2
+    },
+    {
+      "id": "building_dev_embercourt_unique_3",
+      "name": "Quartermasters Seal",
+      "category": "support",
+      "cost": {
+        "gold": 4500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_embercourt",
+      "description": "Organized supply reduces faction recruitment costs by 10%.",
+      "recruitment_discount_percent": {
+        "unit_river_guard": 10,
+        "unit_ember_archer": 10,
+        "unit_citadel_pikeward": 10,
+        "unit_embercourt_fordhook_cadets": 10,
+        "unit_embercourt_lantern_sappers": 10,
+        "unit_embercourt_bargebow_crews": 10,
+        "unit_embercourt_ash_oath_bailiffs": 10,
+        "unit_embercourt_beacon_lectors": 10,
+        "unit_embercourt_sluicefire_lindworms": 10,
+        "unit_embercourt_charter_colossus": 10,
+        "unit_embercourt_cinderseal_bombardiers": 10,
+        "unit_embercourt_beaconline_writguard": 10,
+        "unit_embercourt_lockglass_writcasters": 10,
+        "unit_embercourt_amberweir_lockpike_wardens": 10,
+        "unit_embercourt_amberweir_sluicebrand_mangonels": 10,
+        "unit_river_guard_veteran": 10,
+        "unit_embercourt_fordhook_cadets_veteran": 10,
+        "unit_ember_archer_veteran": 10,
+        "unit_embercourt_lantern_sappers_veteran": 10,
+        "unit_citadel_pikeward_veteran": 10,
+        "unit_embercourt_bargebow_crews_veteran": 10,
+        "unit_embercourt_ash_oath_bailiffs_veteran": 10,
+        "unit_embercourt_lockglass_writcasters_veteran": 10,
+        "unit_embercourt_beacon_lectors_veteran": 10,
+        "unit_embercourt_beaconline_writguard_veteran": 10,
+        "unit_embercourt_sluicefire_lindworms_veteran": 10,
+        "unit_embercourt_charter_colossus_veteran": 10
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_t1_1",
+      "name": "Blackbranch Cutthroat Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Blackbranch Cutthroat. Choosing this dwelling permanently excludes the other tier-1 option in this town.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t1_1",
+      "stage": 1,
+      "dwelling_tier": 1,
+      "choice_group": "mireclaw_t1",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_blackbranch_cutthroat"
+    },
+    {
+      "id": "building_dev_mireclaw_t1_1_upgrade",
+      "name": "Blackbranch Cutthroat Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_dev_mireclaw_t1_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Blackbranch Cutthroat and upgrades existing Blackbranch Cutthroat for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t1_1",
+      "stage": 2,
+      "dwelling_tier": 1,
+      "choice_group": "mireclaw_t1",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_blackbranch_cutthroat_veteran",
+      "upgrade_from": "building_dev_mireclaw_t1_1"
+    },
+    {
+      "id": "building_dev_mireclaw_t1_2",
+      "name": "Reedsnare Kin Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Reedsnare Kin. Choosing this dwelling permanently excludes the other tier-1 option in this town.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t1_2",
+      "stage": 1,
+      "dwelling_tier": 1,
+      "choice_group": "mireclaw_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_mireclaw_reedsnare_kin"
+    },
+    {
+      "id": "building_dev_mireclaw_t1_2_upgrade",
+      "name": "Reedsnare Kin Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_dev_mireclaw_t1_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Reedsnare Kin and upgrades existing Reedsnare Kin for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t1_2",
+      "stage": 2,
+      "dwelling_tier": 1,
+      "choice_group": "mireclaw_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_mireclaw_reedsnare_kin_veteran",
+      "upgrade_from": "building_dev_mireclaw_t1_2"
+    },
+    {
+      "id": "building_dev_mireclaw_t2_1",
+      "name": "Bog Brute Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Bog Brute. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t2_1",
+      "stage": 1,
+      "dwelling_tier": 2,
+      "choice_group": "mireclaw_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_bog_brute",
+      "requires_dwelling_tier": 1
+    },
+    {
+      "id": "building_dev_mireclaw_t2_1_upgrade",
+      "name": "Bog Brute Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_dev_mireclaw_t2_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Bog Brute and upgrades existing Bog Brute for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t2_1",
+      "stage": 2,
+      "dwelling_tier": 2,
+      "choice_group": "mireclaw_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_bog_brute_veteran",
+      "upgrade_from": "building_dev_mireclaw_t2_1"
+    },
+    {
+      "id": "building_dev_mireclaw_t2_2",
+      "name": "Mudglass Slingers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Mudglass Slingers. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t2_2",
+      "stage": 1,
+      "dwelling_tier": 2,
+      "choice_group": "mireclaw_t2",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_mireclaw_mudglass_slingers",
+      "requires_dwelling_tier": 1
+    },
+    {
+      "id": "building_dev_mireclaw_t2_2_upgrade",
+      "name": "Mudglass Slingers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_dev_mireclaw_t2_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Mudglass Slingers and upgrades existing Mudglass Slingers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t2_2",
+      "stage": 2,
+      "dwelling_tier": 2,
+      "choice_group": "mireclaw_t2",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_mireclaw_mudglass_slingers_veteran",
+      "upgrade_from": "building_dev_mireclaw_t2_2"
+    },
+    {
+      "id": "building_dev_mireclaw_t3_1",
+      "name": "Gorefen Ripper Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Gorefen Ripper. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t3_1",
+      "stage": 1,
+      "dwelling_tier": 3,
+      "choice_group": "mireclaw_t3",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_gorefen_ripper",
+      "requires_dwelling_tier": 2
+    },
+    {
+      "id": "building_dev_mireclaw_t3_1_upgrade",
+      "name": "Gorefen Ripper Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_mireclaw_t3_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Gorefen Ripper and upgrades existing Gorefen Ripper for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t3_1",
+      "stage": 2,
+      "dwelling_tier": 3,
+      "choice_group": "mireclaw_t3",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_gorefen_ripper_veteran",
+      "upgrade_from": "building_dev_mireclaw_t3_1"
+    },
+    {
+      "id": "building_dev_mireclaw_t3_2",
+      "name": "Bogplate Maulers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Bogplate Maulers. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t3_2",
+      "stage": 1,
+      "dwelling_tier": 3,
+      "choice_group": "mireclaw_t3",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_mireclaw_bogplate_maulers",
+      "requires_dwelling_tier": 2
+    },
+    {
+      "id": "building_dev_mireclaw_t3_2_upgrade",
+      "name": "Bogplate Maulers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_mireclaw_t3_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Bogplate Maulers and upgrades existing Bogplate Maulers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t3_2",
+      "stage": 2,
+      "dwelling_tier": 3,
+      "choice_group": "mireclaw_t3",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_mireclaw_bogplate_maulers_veteran",
+      "upgrade_from": "building_dev_mireclaw_t3_2"
+    },
+    {
+      "id": "building_dev_mireclaw_t4_1",
+      "name": "Ferrychain Lashers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Ferrychain Lashers. Choosing this dwelling permanently excludes the other tier-4 option in this town.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t4_1",
+      "stage": 1,
+      "dwelling_tier": 4,
+      "choice_group": "mireclaw_t4",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_mireclaw_ferrychain_lashers",
+      "requires_dwelling_tier": 3
+    },
+    {
+      "id": "building_dev_mireclaw_t4_1_upgrade",
+      "name": "Ferrychain Lashers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_mireclaw_t4_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Ferrychain Lashers and upgrades existing Ferrychain Lashers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t4_1",
+      "stage": 2,
+      "dwelling_tier": 4,
+      "choice_group": "mireclaw_t4",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_mireclaw_ferrychain_lashers_veteran",
+      "upgrade_from": "building_dev_mireclaw_t4_1"
+    },
+    {
+      "id": "building_dev_mireclaw_t4_2",
+      "name": "Mireglass Reedcasters Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Mireglass Reedcasters. Choosing this dwelling permanently excludes the other tier-4 option in this town.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t4_2",
+      "stage": 1,
+      "dwelling_tier": 4,
+      "choice_group": "mireclaw_t4",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_mireclaw_mireglass_reedcasters",
+      "requires_dwelling_tier": 3
+    },
+    {
+      "id": "building_dev_mireclaw_t4_2_upgrade",
+      "name": "Mireglass Reedcasters Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_mireclaw_t4_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Mireglass Reedcasters and upgrades existing Mireglass Reedcasters for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t4_2",
+      "stage": 2,
+      "dwelling_tier": 4,
+      "choice_group": "mireclaw_t4",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+      "upgrade_from": "building_dev_mireclaw_t4_2"
+    },
+    {
+      "id": "building_dev_mireclaw_t5_1",
+      "name": "Sporewake Chanters Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Sporewake Chanters. Choosing this dwelling permanently excludes the other tier-5 option in this town.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t5_1",
+      "stage": 1,
+      "dwelling_tier": 5,
+      "choice_group": "mireclaw_t5",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_mireclaw_sporewake_chanters",
+      "requires_dwelling_tier": 4
+    },
+    {
+      "id": "building_dev_mireclaw_t5_1_upgrade",
+      "name": "Sporewake Chanters Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_mireclaw_t5_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Sporewake Chanters and upgrades existing Sporewake Chanters for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t5_1",
+      "stage": 2,
+      "dwelling_tier": 5,
+      "choice_group": "mireclaw_t5",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+      "upgrade_from": "building_dev_mireclaw_t5_1"
+    },
+    {
+      "id": "building_dev_mireclaw_t5_2",
+      "name": "Fenbell Chainstalkers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Fenbell Chainstalkers. Choosing this dwelling permanently excludes the other tier-5 option in this town.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t5_2",
+      "stage": 1,
+      "dwelling_tier": 5,
+      "choice_group": "mireclaw_t5",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_mireclaw_fenbell_chainstalkers",
+      "requires_dwelling_tier": 4
+    },
+    {
+      "id": "building_dev_mireclaw_t5_2_upgrade",
+      "name": "Fenbell Chainstalkers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_mireclaw_t5_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Fenbell Chainstalkers and upgrades existing Fenbell Chainstalkers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t5_2",
+      "stage": 2,
+      "dwelling_tier": 5,
+      "choice_group": "mireclaw_t5",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
+      "upgrade_from": "building_dev_mireclaw_t5_2"
+    },
+    {
+      "id": "building_dev_mireclaw_t6_1",
+      "name": "Gorefen Rippers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 8000,
+        "wood": 12,
+        "ore": 12,
+        "memory_salt": 5
+      },
+      "requires": [
+        "building_dev_hall_3",
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Gorefen Rippers. Construction and recruitment require memory_salt.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t6_1",
+      "stage": 1,
+      "dwelling_tier": 6,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_mireclaw_gorefen_rippers",
+      "requires_dwelling_tier": 5
+    },
+    {
+      "id": "building_dev_mireclaw_t6_1_upgrade",
+      "name": "Gorefen Rippers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 6000,
+        "wood": 9,
+        "ore": 9,
+        "memory_salt": 4
+      },
+      "requires": [
+        "building_dev_mireclaw_t6_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Gorefen Rippers and upgrades existing Gorefen Rippers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t6_1",
+      "stage": 2,
+      "dwelling_tier": 6,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_mireclaw_gorefen_rippers_veteran",
+      "upgrade_from": "building_dev_mireclaw_t6_1"
+    },
+    {
+      "id": "building_dev_mireclaw_t7_1",
+      "name": "Drowned Antler Sovereign Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 15000,
+        "wood": 14,
+        "ore": 14,
+        "peatwax": 10
+      },
+      "requires": [
+        "building_dev_hall_3",
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Drowned Antler Sovereign. Construction and recruitment require peatwax.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t7_1",
+      "stage": 1,
+      "dwelling_tier": 7,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_mireclaw_drowned_antler_sovereign",
+      "requires_dwelling_tier": 6
+    },
+    {
+      "id": "building_dev_mireclaw_t7_1_upgrade",
+      "name": "Drowned Antler Sovereign Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 11250,
+        "wood": 11,
+        "ore": 11,
+        "peatwax": 8
+      },
+      "requires": [
+        "building_dev_mireclaw_t7_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Drowned Antler Sovereign and upgrades existing Drowned Antler Sovereign for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_mireclaw",
+      "line_id": "mireclaw_t7_1",
+      "stage": 2,
+      "dwelling_tier": 7,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
+      "upgrade_from": "building_dev_mireclaw_t7_1"
+    },
+    {
+      "id": "building_dev_mireclaw_unique_1",
+      "name": "Votive Waxworks",
+      "category": "support",
+      "cost": {
+        "gold": 3500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_mireclaw",
+      "description": "Marsh votives produce 1 peatwax daily.",
+      "income": {
+        "peatwax": 1
+      }
+    },
+    {
+      "id": "building_dev_mireclaw_unique_2",
+      "name": "Chainboom Defenses",
+      "category": "support",
+      "cost": {
+        "gold": 4000,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_mireclaw",
+      "description": "Flood chains add 20 town battle readiness. Defending creatures also gain +2 defense during town battles.",
+      "readiness_bonus": 20,
+      "defender_defense_bonus": 2
+    },
+    {
+      "id": "building_dev_mireclaw_unique_3",
+      "name": "Reedkin Gathering",
+      "category": "support",
+      "cost": {
+        "gold": 4500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_mireclaw",
+      "description": "Reedkin gatherings add 3 weekly tier-1 recruits.",
+      "growth_tier": 1,
+      "growth_amount": 3
+    },
+    {
+      "id": "building_dev_sunvault_t1_1",
+      "name": "Shard Pavise Guard Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Shard Pavise Guard. Choosing this dwelling permanently excludes the other tier-1 option in this town.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t1_1",
+      "stage": 1,
+      "dwelling_tier": 1,
+      "choice_group": "sunvault_t1",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_shard_guard"
+    },
+    {
+      "id": "building_dev_sunvault_t1_1_upgrade",
+      "name": "Shard Pavise Guard Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_dev_sunvault_t1_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Shard Pavise Guard and upgrades existing Shard Pavise Guard for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t1_1",
+      "stage": 2,
+      "dwelling_tier": 1,
+      "choice_group": "sunvault_t1",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_shard_guard_veteran",
+      "upgrade_from": "building_dev_sunvault_t1_1"
+    },
+    {
+      "id": "building_dev_sunvault_t1_2",
+      "name": "Shard Wardens Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Shard Wardens. Choosing this dwelling permanently excludes the other tier-1 option in this town.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t1_2",
+      "stage": 1,
+      "dwelling_tier": 1,
+      "choice_group": "sunvault_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_sunvault_shard_wardens"
+    },
+    {
+      "id": "building_dev_sunvault_t1_2_upgrade",
+      "name": "Shard Wardens Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_dev_sunvault_t1_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Shard Wardens and upgrades existing Shard Wardens for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t1_2",
+      "stage": 2,
+      "dwelling_tier": 1,
+      "choice_group": "sunvault_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_sunvault_shard_wardens_veteran",
+      "upgrade_from": "building_dev_sunvault_t1_2"
+    },
+    {
+      "id": "building_dev_sunvault_t2_1",
+      "name": "Prism Harrier Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Prism Harrier. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t2_1",
+      "stage": 1,
+      "dwelling_tier": 2,
+      "choice_group": "sunvault_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_prism_adept",
+      "requires_dwelling_tier": 1
+    },
+    {
+      "id": "building_dev_sunvault_t2_1_upgrade",
+      "name": "Prism Harrier Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_dev_sunvault_t2_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Prism Harrier and upgrades existing Prism Harrier for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t2_1",
+      "stage": 2,
+      "dwelling_tier": 2,
+      "choice_group": "sunvault_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_prism_adept_veteran",
+      "upgrade_from": "building_dev_sunvault_t2_1"
+    },
+    {
+      "id": "building_dev_sunvault_t2_2",
+      "name": "Prism Adepts Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Prism Adepts. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t2_2",
+      "stage": 1,
+      "dwelling_tier": 2,
+      "choice_group": "sunvault_t2",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_sunvault_prism_adepts",
+      "requires_dwelling_tier": 1
+    },
+    {
+      "id": "building_dev_sunvault_t2_2_upgrade",
+      "name": "Prism Adepts Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_dev_sunvault_t2_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Prism Adepts and upgrades existing Prism Adepts for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t2_2",
+      "stage": 2,
+      "dwelling_tier": 2,
+      "choice_group": "sunvault_t2",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_sunvault_prism_adepts_veteran",
+      "upgrade_from": "building_dev_sunvault_t2_2"
+    },
+    {
+      "id": "building_dev_sunvault_t3_1",
+      "name": "Aurora Ballista Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Aurora Ballista. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t3_1",
+      "stage": 1,
+      "dwelling_tier": 3,
+      "choice_group": "sunvault_t3",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_aurora_ballista",
+      "requires_dwelling_tier": 2
+    },
+    {
+      "id": "building_dev_sunvault_t3_1_upgrade",
+      "name": "Aurora Ballista Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_sunvault_t3_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Aurora Ballista and upgrades existing Aurora Ballista for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t3_1",
+      "stage": 2,
+      "dwelling_tier": 3,
+      "choice_group": "sunvault_t3",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_aurora_ballista_veteran",
+      "upgrade_from": "building_dev_sunvault_t3_1"
+    },
+    {
+      "id": "building_dev_sunvault_t3_2",
+      "name": "Mirror Duelists Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Mirror Duelists. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t3_2",
+      "stage": 1,
+      "dwelling_tier": 3,
+      "choice_group": "sunvault_t3",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_sunvault_mirror_duelists",
+      "requires_dwelling_tier": 2
+    },
+    {
+      "id": "building_dev_sunvault_t3_2_upgrade",
+      "name": "Mirror Duelists Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_sunvault_t3_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Mirror Duelists and upgrades existing Mirror Duelists for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t3_2",
+      "stage": 2,
+      "dwelling_tier": 3,
+      "choice_group": "sunvault_t3",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_sunvault_mirror_duelists_veteran",
+      "upgrade_from": "building_dev_sunvault_t3_2"
+    },
+    {
+      "id": "building_dev_sunvault_t4_1",
+      "name": "Resonant Choristers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Resonant Choristers. Choosing this dwelling permanently excludes the other tier-4 option in this town.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t4_1",
+      "stage": 1,
+      "dwelling_tier": 4,
+      "choice_group": "sunvault_t4",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_sunvault_resonant_choristers",
+      "requires_dwelling_tier": 3
+    },
+    {
+      "id": "building_dev_sunvault_t4_1_upgrade",
+      "name": "Resonant Choristers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_sunvault_t4_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Resonant Choristers and upgrades existing Resonant Choristers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t4_1",
+      "stage": 2,
+      "dwelling_tier": 4,
+      "choice_group": "sunvault_t4",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_sunvault_resonant_choristers_veteran",
+      "upgrade_from": "building_dev_sunvault_t4_1"
+    },
+    {
+      "id": "building_dev_sunvault_t4_2",
+      "name": "Noonfacet Sentinels Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Noonfacet Sentinels. Choosing this dwelling permanently excludes the other tier-4 option in this town.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t4_2",
+      "stage": 1,
+      "dwelling_tier": 4,
+      "choice_group": "sunvault_t4",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_sunvault_noonfacet_sentinels",
+      "requires_dwelling_tier": 3
+    },
+    {
+      "id": "building_dev_sunvault_t4_2_upgrade",
+      "name": "Noonfacet Sentinels Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_sunvault_t4_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Noonfacet Sentinels and upgrades existing Noonfacet Sentinels for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t4_2",
+      "stage": 2,
+      "dwelling_tier": 4,
+      "choice_group": "sunvault_t4",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
+      "upgrade_from": "building_dev_sunvault_t4_2"
+    },
+    {
+      "id": "building_dev_sunvault_t5_1",
+      "name": "Solar Array Striders Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Solar Array Striders. Choosing this dwelling permanently excludes the other tier-5 option in this town.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t5_1",
+      "stage": 1,
+      "dwelling_tier": 5,
+      "choice_group": "sunvault_t5",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_sunvault_solar_array_striders",
+      "requires_dwelling_tier": 4
+    },
+    {
+      "id": "building_dev_sunvault_t5_1_upgrade",
+      "name": "Solar Array Striders Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_sunvault_t5_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Solar Array Striders and upgrades existing Solar Array Striders for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t5_1",
+      "stage": 2,
+      "dwelling_tier": 5,
+      "choice_group": "sunvault_t5",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_sunvault_solar_array_striders_veteran",
+      "upgrade_from": "building_dev_sunvault_t5_1"
+    },
+    {
+      "id": "building_dev_sunvault_t5_2",
+      "name": "Zenith Lensbearers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Zenith Lensbearers. Choosing this dwelling permanently excludes the other tier-5 option in this town.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t5_2",
+      "stage": 1,
+      "dwelling_tier": 5,
+      "choice_group": "sunvault_t5",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_sunvault_zenith_lensbearers",
+      "requires_dwelling_tier": 4
+    },
+    {
+      "id": "building_dev_sunvault_t5_2_upgrade",
+      "name": "Zenith Lensbearers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_sunvault_t5_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Zenith Lensbearers and upgrades existing Zenith Lensbearers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t5_2",
+      "stage": 2,
+      "dwelling_tier": 5,
+      "choice_group": "sunvault_t5",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_sunvault_zenith_lensbearers_veteran",
+      "upgrade_from": "building_dev_sunvault_t5_2"
+    },
+    {
+      "id": "building_dev_sunvault_t6_1",
+      "name": "Aurora Bastions Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 8000,
+        "wood": 12,
+        "ore": 12,
+        "brass_scrip": 5
+      },
+      "requires": [
+        "building_dev_hall_3",
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Aurora Bastions. Construction and recruitment require brass_scrip.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t6_1",
+      "stage": 1,
+      "dwelling_tier": 6,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_sunvault_aurora_ballistae",
+      "requires_dwelling_tier": 5
+    },
+    {
+      "id": "building_dev_sunvault_t6_1_upgrade",
+      "name": "Aurora Bastions Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 6000,
+        "wood": 9,
+        "ore": 9,
+        "brass_scrip": 4
+      },
+      "requires": [
+        "building_dev_sunvault_t6_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Aurora Bastions and upgrades existing Aurora Bastions for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t6_1",
+      "stage": 2,
+      "dwelling_tier": 6,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_sunvault_aurora_ballistae_veteran",
+      "upgrade_from": "building_dev_sunvault_t6_1"
+    },
+    {
+      "id": "building_dev_sunvault_t7_1",
+      "name": "Daybreak Colossus Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 15000,
+        "wood": 14,
+        "ore": 14,
+        "aetherglass": 10
+      },
+      "requires": [
+        "building_dev_hall_3",
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Daybreak Colossus. Construction and recruitment require aetherglass.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t7_1",
+      "stage": 1,
+      "dwelling_tier": 7,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_sunvault_daybreak_colossus",
+      "requires_dwelling_tier": 6
+    },
+    {
+      "id": "building_dev_sunvault_t7_1_upgrade",
+      "name": "Daybreak Colossus Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 11250,
+        "wood": 11,
+        "ore": 11,
+        "aetherglass": 8
+      },
+      "requires": [
+        "building_dev_sunvault_t7_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Daybreak Colossus and upgrades existing Daybreak Colossus for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_sunvault",
+      "line_id": "sunvault_t7_1",
+      "stage": 2,
+      "dwelling_tier": 7,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_sunvault_daybreak_colossus_veteran",
+      "upgrade_from": "building_dev_sunvault_t7_1"
+    },
+    {
+      "id": "building_dev_sunvault_unique_1",
+      "name": "Lens Conservatory",
+      "category": "support",
+      "cost": {
+        "gold": 3500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_sunvault",
+      "description": "Cultivated lenses produce 1 aetherglass daily.",
+      "income": {
+        "aetherglass": 1
+      }
+    },
+    {
+      "id": "building_dev_sunvault_unique_2",
+      "name": "Calibration Court",
+      "category": "support",
+      "cost": {
+        "gold": 4000,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_sunvault",
+      "description": "Visiting heroes gain +1 power, once per hero across all Calibration Courts.",
+      "hero_visit_reward": {
+        "power": 1
+      }
+    },
+    {
+      "id": "building_dev_sunvault_unique_3",
+      "name": "Prism Muster",
+      "category": "support",
+      "cost": {
+        "gold": 4500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_sunvault",
+      "description": "Calibrated musters add 2 weekly tier-2 recruits.",
+      "growth_tier": 2,
+      "growth_amount": 2
+    },
+    {
+      "id": "building_dev_thornwake_t1_1",
+      "name": "Seedcutters Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Seedcutters. Choosing this dwelling permanently excludes the other tier-1 option in this town.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t1_1",
+      "stage": 1,
+      "dwelling_tier": 1,
+      "choice_group": "thornwake_t1",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_seedcutters"
+    },
+    {
+      "id": "building_dev_thornwake_t1_1_upgrade",
+      "name": "Seedcutters Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_dev_thornwake_t1_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Seedcutters and upgrades existing Seedcutters for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t1_1",
+      "stage": 2,
+      "dwelling_tier": 1,
+      "choice_group": "thornwake_t1",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_seedcutters_veteran",
+      "upgrade_from": "building_dev_thornwake_t1_1"
+    },
+    {
+      "id": "building_dev_thornwake_t1_2",
+      "name": "Pollenhook Whistlers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Pollenhook Whistlers. Choosing this dwelling permanently excludes the other tier-1 option in this town.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t1_2",
+      "stage": 1,
+      "dwelling_tier": 1,
+      "choice_group": "thornwake_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_thornwake_pollenhook_whistlers"
+    },
+    {
+      "id": "building_dev_thornwake_t1_2_upgrade",
+      "name": "Pollenhook Whistlers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_dev_thornwake_t1_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Pollenhook Whistlers and upgrades existing Pollenhook Whistlers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t1_2",
+      "stage": 2,
+      "dwelling_tier": 1,
+      "choice_group": "thornwake_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_thornwake_pollenhook_whistlers_veteran",
+      "upgrade_from": "building_dev_thornwake_t1_2"
+    },
+    {
+      "id": "building_dev_thornwake_t2_1",
+      "name": "Thornwhip Carriers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Thornwhip Carriers. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t2_1",
+      "stage": 1,
+      "dwelling_tier": 2,
+      "choice_group": "thornwake_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_thornwhip_carriers",
+      "requires_dwelling_tier": 1
+    },
+    {
+      "id": "building_dev_thornwake_t2_1_upgrade",
+      "name": "Thornwhip Carriers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_dev_thornwake_t2_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Thornwhip Carriers and upgrades existing Thornwhip Carriers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t2_1",
+      "stage": 2,
+      "dwelling_tier": 2,
+      "choice_group": "thornwake_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_thornwhip_carriers_veteran",
+      "upgrade_from": "building_dev_thornwake_t2_1"
+    },
+    {
+      "id": "building_dev_thornwake_t2_2",
+      "name": "Bramblekite Needlers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Bramblekite Needlers. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t2_2",
+      "stage": 1,
+      "dwelling_tier": 2,
+      "choice_group": "thornwake_t2",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_thornwake_bramblekite_needlers",
+      "requires_dwelling_tier": 1
+    },
+    {
+      "id": "building_dev_thornwake_t2_2_upgrade",
+      "name": "Bramblekite Needlers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_dev_thornwake_t2_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Bramblekite Needlers and upgrades existing Bramblekite Needlers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t2_2",
+      "stage": 2,
+      "dwelling_tier": 2,
+      "choice_group": "thornwake_t2",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_thornwake_bramblekite_needlers_veteran",
+      "upgrade_from": "building_dev_thornwake_t2_2"
+    },
+    {
+      "id": "building_dev_thornwake_t3_1",
+      "name": "Sporeglass Menders Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Sporeglass Menders. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t3_1",
+      "stage": 1,
+      "dwelling_tier": 3,
+      "choice_group": "thornwake_t3",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_sporeglass_menders",
+      "requires_dwelling_tier": 2
+    },
+    {
+      "id": "building_dev_thornwake_t3_1_upgrade",
+      "name": "Sporeglass Menders Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_thornwake_t3_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Sporeglass Menders and upgrades existing Sporeglass Menders for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t3_1",
+      "stage": 2,
+      "dwelling_tier": 3,
+      "choice_group": "thornwake_t3",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_sporeglass_menders_veteran",
+      "upgrade_from": "building_dev_thornwake_t3_1"
+    },
+    {
+      "id": "building_dev_thornwake_t3_2",
+      "name": "Seedshield Wardens Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Seedshield Wardens. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t3_2",
+      "stage": 1,
+      "dwelling_tier": 3,
+      "choice_group": "thornwake_t3",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_thornwake_seedshield_wardens",
+      "requires_dwelling_tier": 2
+    },
+    {
+      "id": "building_dev_thornwake_t3_2_upgrade",
+      "name": "Seedshield Wardens Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_thornwake_t3_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Seedshield Wardens and upgrades existing Seedshield Wardens for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t3_2",
+      "stage": 2,
+      "dwelling_tier": 3,
+      "choice_group": "thornwake_t3",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_thornwake_seedshield_wardens_veteran",
+      "upgrade_from": "building_dev_thornwake_t3_2"
+    },
+    {
+      "id": "building_dev_thornwake_t4_1",
+      "name": "Barkmantle Rams Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Barkmantle Rams. Choosing this dwelling permanently excludes the other tier-4 option in this town.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t4_1",
+      "stage": 1,
+      "dwelling_tier": 4,
+      "choice_group": "thornwake_t4",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_barkmantle_rams",
+      "requires_dwelling_tier": 3
+    },
+    {
+      "id": "building_dev_thornwake_t4_1_upgrade",
+      "name": "Barkmantle Rams Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_thornwake_t4_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Barkmantle Rams and upgrades existing Barkmantle Rams for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t4_1",
+      "stage": 2,
+      "dwelling_tier": 4,
+      "choice_group": "thornwake_t4",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_barkmantle_rams_veteran",
+      "upgrade_from": "building_dev_thornwake_t4_1"
+    },
+    {
+      "id": "building_dev_thornwake_t4_2",
+      "name": "Dawnseed Bolters Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Dawnseed Bolters. Choosing this dwelling permanently excludes the other tier-4 option in this town.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t4_2",
+      "stage": 1,
+      "dwelling_tier": 4,
+      "choice_group": "thornwake_t4",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_thornwake_dawnseed_bolters",
+      "requires_dwelling_tier": 3
+    },
+    {
+      "id": "building_dev_thornwake_t4_2_upgrade",
+      "name": "Dawnseed Bolters Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_thornwake_t4_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Dawnseed Bolters and upgrades existing Dawnseed Bolters for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t4_2",
+      "stage": 2,
+      "dwelling_tier": 4,
+      "choice_group": "thornwake_t4",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_thornwake_dawnseed_bolters_veteran",
+      "upgrade_from": "building_dev_thornwake_t4_2"
+    },
+    {
+      "id": "building_dev_thornwake_t5_1",
+      "name": "Stag-Knot Runners Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Stag-Knot Runners. Choosing this dwelling permanently excludes the other tier-5 option in this town.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t5_1",
+      "stage": 1,
+      "dwelling_tier": 5,
+      "choice_group": "thornwake_t5",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_stagknot_runners",
+      "requires_dwelling_tier": 4
+    },
+    {
+      "id": "building_dev_thornwake_t5_1_upgrade",
+      "name": "Stag-Knot Runners Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_thornwake_t5_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Stag-Knot Runners and upgrades existing Stag-Knot Runners for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t5_1",
+      "stage": 2,
+      "dwelling_tier": 5,
+      "choice_group": "thornwake_t5",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_stagknot_runners_veteran",
+      "upgrade_from": "building_dev_thornwake_t5_1"
+    },
+    {
+      "id": "building_dev_thornwake_t5_2",
+      "name": "Seedglass Cantors Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Seedglass Cantors. Choosing this dwelling permanently excludes the other tier-5 option in this town.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t5_2",
+      "stage": 1,
+      "dwelling_tier": 5,
+      "choice_group": "thornwake_t5",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_thornwake_seedglass_cantors",
+      "requires_dwelling_tier": 4
+    },
+    {
+      "id": "building_dev_thornwake_t5_2_upgrade",
+      "name": "Seedglass Cantors Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_thornwake_t5_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Seedglass Cantors and upgrades existing Seedglass Cantors for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t5_2",
+      "stage": 2,
+      "dwelling_tier": 5,
+      "choice_group": "thornwake_t5",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_thornwake_seedglass_cantors_veteran",
+      "upgrade_from": "building_dev_thornwake_t5_2"
+    },
+    {
+      "id": "building_dev_thornwake_t6_1",
+      "name": "Graft Matriarchs Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 8000,
+        "wood": 12,
+        "ore": 12,
+        "peatwax": 5
+      },
+      "requires": [
+        "building_dev_hall_3",
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Graft Matriarchs. Construction and recruitment require peatwax.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t6_1",
+      "stage": 1,
+      "dwelling_tier": 6,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_graft_matriarchs",
+      "requires_dwelling_tier": 5
+    },
+    {
+      "id": "building_dev_thornwake_t6_1_upgrade",
+      "name": "Graft Matriarchs Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 6000,
+        "wood": 9,
+        "ore": 9,
+        "peatwax": 4
+      },
+      "requires": [
+        "building_dev_thornwake_t6_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Graft Matriarchs and upgrades existing Graft Matriarchs for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t6_1",
+      "stage": 2,
+      "dwelling_tier": 6,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_graft_matriarchs_veteran",
+      "upgrade_from": "building_dev_thornwake_t6_1"
+    },
+    {
+      "id": "building_dev_thornwake_t7_1",
+      "name": "Worldroot Bastion Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 15000,
+        "wood": 14,
+        "ore": 14,
+        "verdant_grafts": 10
+      },
+      "requires": [
+        "building_dev_hall_3",
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Worldroot Bastion. Construction and recruitment require verdant_grafts.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t7_1",
+      "stage": 1,
+      "dwelling_tier": 7,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_worldroot_bastion",
+      "requires_dwelling_tier": 6
+    },
+    {
+      "id": "building_dev_thornwake_t7_1_upgrade",
+      "name": "Worldroot Bastion Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 11250,
+        "wood": 11,
+        "ore": 11,
+        "verdant_grafts": 8
+      },
+      "requires": [
+        "building_dev_thornwake_t7_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Worldroot Bastion and upgrades existing Worldroot Bastion for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_thornwake",
+      "line_id": "thornwake_t7_1",
+      "stage": 2,
+      "dwelling_tier": 7,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_thornwake_worldroot_bastion_veteran",
+      "upgrade_from": "building_dev_thornwake_t7_1"
+    },
+    {
+      "id": "building_dev_thornwake_unique_1",
+      "name": "Renewal Nursery",
+      "category": "support",
+      "cost": {
+        "gold": 3500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_thornwake",
+      "description": "The living nursery produces 1 verdant graft daily.",
+      "income": {
+        "verdant_grafts": 1
+      }
+    },
+    {
+      "id": "building_dev_thornwake_unique_2",
+      "name": "Rootbound Ward",
+      "category": "support",
+      "cost": {
+        "gold": 4000,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_thornwake",
+      "description": "Living roots add 15 town battle readiness. Defending creatures also gain +2 defense during town battles.",
+      "readiness_bonus": 15,
+      "defender_defense_bonus": 2
+    },
+    {
+      "id": "building_dev_thornwake_unique_3",
+      "name": "Pollen Assembly",
+      "category": "support",
+      "cost": {
+        "gold": 4500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_thornwake",
+      "description": "Seasonal pollen assemblies add 4 weekly tier-1 recruits.",
+      "growth_tier": 1,
+      "growth_amount": 4
+    },
+    {
+      "id": "building_dev_brasshollow_t1_1",
+      "name": "Scrip Haulers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Scrip Haulers. Choosing this dwelling permanently excludes the other tier-1 option in this town.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t1_1",
+      "stage": 1,
+      "dwelling_tier": 1,
+      "choice_group": "brasshollow_t1",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_scrip_haulers"
+    },
+    {
+      "id": "building_dev_brasshollow_t1_1_upgrade",
+      "name": "Scrip Haulers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_dev_brasshollow_t1_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Scrip Haulers and upgrades existing Scrip Haulers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t1_1",
+      "stage": 2,
+      "dwelling_tier": 1,
+      "choice_group": "brasshollow_t1",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_scrip_haulers_veteran",
+      "upgrade_from": "building_dev_brasshollow_t1_1"
+    },
+    {
+      "id": "building_dev_brasshollow_t1_2",
+      "name": "Tallyspring Throwers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Tallyspring Throwers. Choosing this dwelling permanently excludes the other tier-1 option in this town.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t1_2",
+      "stage": 1,
+      "dwelling_tier": 1,
+      "choice_group": "brasshollow_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_brasshollow_tallyspring_throwers"
+    },
+    {
+      "id": "building_dev_brasshollow_t1_2_upgrade",
+      "name": "Tallyspring Throwers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_dev_brasshollow_t1_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Tallyspring Throwers and upgrades existing Tallyspring Throwers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t1_2",
+      "stage": 2,
+      "dwelling_tier": 1,
+      "choice_group": "brasshollow_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+      "upgrade_from": "building_dev_brasshollow_t1_2"
+    },
+    {
+      "id": "building_dev_brasshollow_t2_1",
+      "name": "Rivet Hounds Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Rivet Hounds. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t2_1",
+      "stage": 1,
+      "dwelling_tier": 2,
+      "choice_group": "brasshollow_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_rivet_hounds",
+      "requires_dwelling_tier": 1
+    },
+    {
+      "id": "building_dev_brasshollow_t2_1_upgrade",
+      "name": "Rivet Hounds Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_dev_brasshollow_t2_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Rivet Hounds and upgrades existing Rivet Hounds for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t2_1",
+      "stage": 2,
+      "dwelling_tier": 2,
+      "choice_group": "brasshollow_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_rivet_hounds_veteran",
+      "upgrade_from": "building_dev_brasshollow_t2_1"
+    },
+    {
+      "id": "building_dev_brasshollow_t2_2",
+      "name": "Quenchspool Slingers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Quenchspool Slingers. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t2_2",
+      "stage": 1,
+      "dwelling_tier": 2,
+      "choice_group": "brasshollow_t2",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_brasshollow_quenchspool_slingers",
+      "requires_dwelling_tier": 1
+    },
+    {
+      "id": "building_dev_brasshollow_t2_2_upgrade",
+      "name": "Quenchspool Slingers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_dev_brasshollow_t2_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Quenchspool Slingers and upgrades existing Quenchspool Slingers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t2_2",
+      "stage": 2,
+      "dwelling_tier": 2,
+      "choice_group": "brasshollow_t2",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_brasshollow_quenchspool_slingers_veteran",
+      "upgrade_from": "building_dev_brasshollow_t2_2"
+    },
+    {
+      "id": "building_dev_brasshollow_t3_1",
+      "name": "Furnace Pavis Teams Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Furnace Pavis Teams. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t3_1",
+      "stage": 1,
+      "dwelling_tier": 3,
+      "choice_group": "brasshollow_t3",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_furnace_pavis_teams",
+      "requires_dwelling_tier": 2
+    },
+    {
+      "id": "building_dev_brasshollow_t3_1_upgrade",
+      "name": "Furnace Pavis Teams Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_brasshollow_t3_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Furnace Pavis Teams and upgrades existing Furnace Pavis Teams for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t3_1",
+      "stage": 2,
+      "dwelling_tier": 3,
+      "choice_group": "brasshollow_t3",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_furnace_pavis_teams_veteran",
+      "upgrade_from": "building_dev_brasshollow_t3_1"
+    },
+    {
+      "id": "building_dev_brasshollow_t3_2",
+      "name": "Gaugefire Arbalists Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Gaugefire Arbalists. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t3_2",
+      "stage": 1,
+      "dwelling_tier": 3,
+      "choice_group": "brasshollow_t3",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_brasshollow_gaugefire_arbalists",
+      "requires_dwelling_tier": 2
+    },
+    {
+      "id": "building_dev_brasshollow_t3_2_upgrade",
+      "name": "Gaugefire Arbalists Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_brasshollow_t3_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Gaugefire Arbalists and upgrades existing Gaugefire Arbalists for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t3_2",
+      "stage": 2,
+      "dwelling_tier": 3,
+      "choice_group": "brasshollow_t3",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_brasshollow_gaugefire_arbalists_veteran",
+      "upgrade_from": "building_dev_brasshollow_t3_2"
+    },
+    {
+      "id": "building_dev_brasshollow_t4_1",
+      "name": "Boiler Rivetcasters Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Boiler Rivetcasters. Choosing this dwelling permanently excludes the other tier-4 option in this town.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t4_1",
+      "stage": 1,
+      "dwelling_tier": 4,
+      "choice_group": "brasshollow_t4",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_boiler_rivetcasters",
+      "requires_dwelling_tier": 3
+    },
+    {
+      "id": "building_dev_brasshollow_t4_1_upgrade",
+      "name": "Boiler Rivetcasters Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_brasshollow_t4_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Boiler Rivetcasters and upgrades existing Boiler Rivetcasters for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t4_1",
+      "stage": 2,
+      "dwelling_tier": 4,
+      "choice_group": "brasshollow_t4",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_boiler_rivetcasters_veteran",
+      "upgrade_from": "building_dev_brasshollow_t4_1"
+    },
+    {
+      "id": "building_dev_brasshollow_t4_2",
+      "name": "Gaugeplate Bailiffs Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Gaugeplate Bailiffs. Choosing this dwelling permanently excludes the other tier-4 option in this town.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t4_2",
+      "stage": 1,
+      "dwelling_tier": 4,
+      "choice_group": "brasshollow_t4",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+      "requires_dwelling_tier": 3
+    },
+    {
+      "id": "building_dev_brasshollow_t4_2_upgrade",
+      "name": "Gaugeplate Bailiffs Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_brasshollow_t4_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Gaugeplate Bailiffs and upgrades existing Gaugeplate Bailiffs for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t4_2",
+      "stage": 2,
+      "dwelling_tier": 4,
+      "choice_group": "brasshollow_t4",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
+      "upgrade_from": "building_dev_brasshollow_t4_2"
+    },
+    {
+      "id": "building_dev_brasshollow_t5_1",
+      "name": "Debt-Engine Exactors Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Debt-Engine Exactors. Choosing this dwelling permanently excludes the other tier-5 option in this town.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t5_1",
+      "stage": 1,
+      "dwelling_tier": 5,
+      "choice_group": "brasshollow_t5",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_debt_engine_exactors",
+      "requires_dwelling_tier": 4
+    },
+    {
+      "id": "building_dev_brasshollow_t5_1_upgrade",
+      "name": "Debt-Engine Exactors Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_brasshollow_t5_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Debt-Engine Exactors and upgrades existing Debt-Engine Exactors for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t5_1",
+      "stage": 2,
+      "dwelling_tier": 5,
+      "choice_group": "brasshollow_t5",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_debt_engine_exactors_veteran",
+      "upgrade_from": "building_dev_brasshollow_t5_1"
+    },
+    {
+      "id": "building_dev_brasshollow_t5_2",
+      "name": "Quenchbell Mortars Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Quenchbell Mortars. Choosing this dwelling permanently excludes the other tier-5 option in this town.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t5_2",
+      "stage": 1,
+      "dwelling_tier": 5,
+      "choice_group": "brasshollow_t5",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_brasshollow_quenchbell_mortars",
+      "requires_dwelling_tier": 4
+    },
+    {
+      "id": "building_dev_brasshollow_t5_2_upgrade",
+      "name": "Quenchbell Mortars Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_brasshollow_t5_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Quenchbell Mortars and upgrades existing Quenchbell Mortars for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t5_2",
+      "stage": 2,
+      "dwelling_tier": 5,
+      "choice_group": "brasshollow_t5",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
+      "upgrade_from": "building_dev_brasshollow_t5_2"
+    },
+    {
+      "id": "building_dev_brasshollow_t6_1",
+      "name": "Crucible Crawlers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 8000,
+        "wood": 12,
+        "ore": 12,
+        "embergrain": 5
+      },
+      "requires": [
+        "building_dev_hall_3",
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Crucible Crawlers. Construction and recruitment require embergrain.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t6_1",
+      "stage": 1,
+      "dwelling_tier": 6,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_crucible_crawlers",
+      "requires_dwelling_tier": 5
+    },
+    {
+      "id": "building_dev_brasshollow_t6_1_upgrade",
+      "name": "Crucible Crawlers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 6000,
+        "wood": 9,
+        "ore": 9,
+        "embergrain": 4
+      },
+      "requires": [
+        "building_dev_brasshollow_t6_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Crucible Crawlers and upgrades existing Crucible Crawlers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t6_1",
+      "stage": 2,
+      "dwelling_tier": 6,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_crucible_crawlers_veteran",
+      "upgrade_from": "building_dev_brasshollow_t6_1"
+    },
+    {
+      "id": "building_dev_brasshollow_t7_1",
+      "name": "Foundry Saint Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 15000,
+        "wood": 14,
+        "ore": 14,
+        "brass_scrip": 10
+      },
+      "requires": [
+        "building_dev_hall_3",
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Foundry Saint. Construction and recruitment require brass_scrip.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t7_1",
+      "stage": 1,
+      "dwelling_tier": 7,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_foundry_saint",
+      "requires_dwelling_tier": 6
+    },
+    {
+      "id": "building_dev_brasshollow_t7_1_upgrade",
+      "name": "Foundry Saint Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 11250,
+        "wood": 11,
+        "ore": 11,
+        "brass_scrip": 8
+      },
+      "requires": [
+        "building_dev_brasshollow_t7_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Foundry Saint and upgrades existing Foundry Saint for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_brasshollow",
+      "line_id": "brasshollow_t7_1",
+      "stage": 2,
+      "dwelling_tier": 7,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_brasshollow_foundry_saint_veteran",
+      "upgrade_from": "building_dev_brasshollow_t7_1"
+    },
+    {
+      "id": "building_dev_brasshollow_unique_1",
+      "name": "Contract Mint",
+      "category": "support",
+      "cost": {
+        "gold": 3500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_brasshollow",
+      "description": "Stamped contracts produce 1 brass scrip daily.",
+      "income": {
+        "brass_scrip": 1
+      }
+    },
+    {
+      "id": "building_dev_brasshollow_unique_2",
+      "name": "Assembly Discipline",
+      "category": "support",
+      "cost": {
+        "gold": 4000,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_brasshollow",
+      "description": "Standardized assembly reduces faction recruitment costs by 10%.",
+      "recruitment_discount_percent": {
+        "unit_brasshollow_scrip_haulers": 10,
+        "unit_brasshollow_rivet_hounds": 10,
+        "unit_brasshollow_furnace_pavis_teams": 10,
+        "unit_brasshollow_boiler_rivetcasters": 10,
+        "unit_brasshollow_debt_engine_exactors": 10,
+        "unit_brasshollow_crucible_crawlers": 10,
+        "unit_brasshollow_foundry_saint": 10,
+        "unit_brasshollow_gaugeplate_bailiffs": 10,
+        "unit_brasshollow_pressure_lancers": 10,
+        "unit_brasshollow_quenchbell_mortars": 10,
+        "unit_brasshollow_gaugefire_arbalists": 10,
+        "unit_brasshollow_quenchspool_slingers": 10,
+        "unit_brasshollow_tallyspring_throwers": 10,
+        "unit_brasshollow_whitegauge_datum_lancers": 10,
+        "unit_brasshollow_whitegauge_datum_breach_cannons": 10,
+        "unit_brasshollow_scrip_haulers_veteran": 10,
+        "unit_brasshollow_tallyspring_throwers_veteran": 10,
+        "unit_brasshollow_rivet_hounds_veteran": 10,
+        "unit_brasshollow_quenchspool_slingers_veteran": 10,
+        "unit_brasshollow_furnace_pavis_teams_veteran": 10,
+        "unit_brasshollow_gaugefire_arbalists_veteran": 10,
+        "unit_brasshollow_boiler_rivetcasters_veteran": 10,
+        "unit_brasshollow_gaugeplate_bailiffs_veteran": 10,
+        "unit_brasshollow_debt_engine_exactors_veteran": 10,
+        "unit_brasshollow_quenchbell_mortars_veteran": 10,
+        "unit_brasshollow_crucible_crawlers_veteran": 10,
+        "unit_brasshollow_foundry_saint_veteran": 10
+      }
+    },
+    {
+      "id": "building_dev_brasshollow_unique_3",
+      "name": "Pressure Bastion",
+      "category": "support",
+      "cost": {
+        "gold": 4500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_brasshollow",
+      "description": "Pressure defenses add 20 town battle readiness. Defending creatures also gain +2 defense during town battles.",
+      "readiness_bonus": 20,
+      "defender_defense_bonus": 2
+    },
+    {
+      "id": "building_dev_veilmourn_t1_1",
+      "name": "Bellwake Oars Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Bellwake Oars. Choosing this dwelling permanently excludes the other tier-1 option in this town.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t1_1",
+      "stage": 1,
+      "dwelling_tier": 1,
+      "choice_group": "veilmourn_t1",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_bellwake_oars"
+    },
+    {
+      "id": "building_dev_veilmourn_t1_1_upgrade",
+      "name": "Bellwake Oars Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_dev_veilmourn_t1_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Bellwake Oars and upgrades existing Bellwake Oars for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t1_1",
+      "stage": 2,
+      "dwelling_tier": 1,
+      "choice_group": "veilmourn_t1",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_bellwake_oars_veteran",
+      "upgrade_from": "building_dev_veilmourn_t1_1"
+    },
+    {
+      "id": "building_dev_veilmourn_t1_2",
+      "name": "Saltbell Casters Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 600,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Saltbell Casters. Choosing this dwelling permanently excludes the other tier-1 option in this town.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t1_2",
+      "stage": 1,
+      "dwelling_tier": 1,
+      "choice_group": "veilmourn_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_veilmourn_saltbell_casters"
+    },
+    {
+      "id": "building_dev_veilmourn_t1_2_upgrade",
+      "name": "Saltbell Casters Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 450,
+        "wood": 2,
+        "ore": 2
+      },
+      "requires": [
+        "building_dev_veilmourn_t1_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Saltbell Casters and upgrades existing Saltbell Casters for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t1_2",
+      "stage": 2,
+      "dwelling_tier": 1,
+      "choice_group": "veilmourn_t1",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_veilmourn_saltbell_casters_veteran",
+      "upgrade_from": "building_dev_veilmourn_t1_2"
+    },
+    {
+      "id": "building_dev_veilmourn_t2_1",
+      "name": "Mourning Lanterns Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Mourning Lanterns. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t2_1",
+      "stage": 1,
+      "dwelling_tier": 2,
+      "choice_group": "veilmourn_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_mourning_lanterns",
+      "requires_dwelling_tier": 1
+    },
+    {
+      "id": "building_dev_veilmourn_t2_1_upgrade",
+      "name": "Mourning Lanterns Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_dev_veilmourn_t2_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Mourning Lanterns and upgrades existing Mourning Lanterns for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t2_1",
+      "stage": 2,
+      "dwelling_tier": 2,
+      "choice_group": "veilmourn_t2",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_mourning_lanterns_veteran",
+      "upgrade_from": "building_dev_veilmourn_t2_1"
+    },
+    {
+      "id": "building_dev_veilmourn_t2_2",
+      "name": "Tidehook Deckhands Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1200,
+        "wood": 4,
+        "ore": 4
+      },
+      "requires": [
+        "building_town_hall"
+      ],
+      "development_version": 1,
+      "description": "Recruits Tidehook Deckhands. Choosing this dwelling permanently excludes the other tier-2 option in this town.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t2_2",
+      "stage": 1,
+      "dwelling_tier": 2,
+      "choice_group": "veilmourn_t2",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_veilmourn_tidehook_deckhands",
+      "requires_dwelling_tier": 1
+    },
+    {
+      "id": "building_dev_veilmourn_t2_2_upgrade",
+      "name": "Tidehook Deckhands Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 900,
+        "wood": 3,
+        "ore": 3
+      },
+      "requires": [
+        "building_dev_veilmourn_t2_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Tidehook Deckhands and upgrades existing Tidehook Deckhands for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t2_2",
+      "stage": 2,
+      "dwelling_tier": 2,
+      "choice_group": "veilmourn_t2",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
+      "upgrade_from": "building_dev_veilmourn_t2_2"
+    },
+    {
+      "id": "building_dev_veilmourn_t3_1",
+      "name": "Maskglass Corsairs Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Maskglass Corsairs. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t3_1",
+      "stage": 1,
+      "dwelling_tier": 3,
+      "choice_group": "veilmourn_t3",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_maskglass_corsairs",
+      "requires_dwelling_tier": 2
+    },
+    {
+      "id": "building_dev_veilmourn_t3_1_upgrade",
+      "name": "Maskglass Corsairs Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_veilmourn_t3_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Maskglass Corsairs and upgrades existing Maskglass Corsairs for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t3_1",
+      "stage": 2,
+      "dwelling_tier": 3,
+      "choice_group": "veilmourn_t3",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_maskglass_corsairs_veteran",
+      "upgrade_from": "building_dev_veilmourn_t3_1"
+    },
+    {
+      "id": "building_dev_veilmourn_t3_2",
+      "name": "Wakechain Boarders Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2000,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Wakechain Boarders. Choosing this dwelling permanently excludes the other tier-3 option in this town.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t3_2",
+      "stage": 1,
+      "dwelling_tier": 3,
+      "choice_group": "veilmourn_t3",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_veilmourn_wakechain_boarders",
+      "requires_dwelling_tier": 2
+    },
+    {
+      "id": "building_dev_veilmourn_t3_2_upgrade",
+      "name": "Wakechain Boarders Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 1500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_veilmourn_t3_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Wakechain Boarders and upgrades existing Wakechain Boarders for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t3_2",
+      "stage": 2,
+      "dwelling_tier": 3,
+      "choice_group": "veilmourn_t3",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_veilmourn_wakechain_boarders_veteran",
+      "upgrade_from": "building_dev_veilmourn_t3_2"
+    },
+    {
+      "id": "building_dev_veilmourn_t4_1",
+      "name": "Undertow Harpooners Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Undertow Harpooners. Choosing this dwelling permanently excludes the other tier-4 option in this town.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t4_1",
+      "stage": 1,
+      "dwelling_tier": 4,
+      "choice_group": "veilmourn_t4",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_undertow_harpooners",
+      "requires_dwelling_tier": 3
+    },
+    {
+      "id": "building_dev_veilmourn_t4_1_upgrade",
+      "name": "Undertow Harpooners Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_veilmourn_t4_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Undertow Harpooners and upgrades existing Undertow Harpooners for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t4_1",
+      "stage": 2,
+      "dwelling_tier": 4,
+      "choice_group": "veilmourn_t4",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_undertow_harpooners_veteran",
+      "upgrade_from": "building_dev_veilmourn_t4_1"
+    },
+    {
+      "id": "building_dev_veilmourn_t4_2",
+      "name": "Gloamkeel Bulwarks Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3000,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Gloamkeel Bulwarks. Choosing this dwelling permanently excludes the other tier-4 option in this town.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t4_2",
+      "stage": 1,
+      "dwelling_tier": 4,
+      "choice_group": "veilmourn_t4",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+      "requires_dwelling_tier": 3
+    },
+    {
+      "id": "building_dev_veilmourn_t4_2_upgrade",
+      "name": "Gloamkeel Bulwarks Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 2250,
+        "wood": 6,
+        "ore": 6
+      },
+      "requires": [
+        "building_dev_veilmourn_t4_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Gloamkeel Bulwarks and upgrades existing Gloamkeel Bulwarks for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t4_2",
+      "stage": 2,
+      "dwelling_tier": 4,
+      "choice_group": "veilmourn_t4",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+      "upgrade_from": "building_dev_veilmourn_t4_2"
+    },
+    {
+      "id": "building_dev_veilmourn_t5_1",
+      "name": "Obituary Scribes Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Obituary Scribes. Choosing this dwelling permanently excludes the other tier-5 option in this town.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t5_1",
+      "stage": 1,
+      "dwelling_tier": 5,
+      "choice_group": "veilmourn_t5",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_obituary_scribes",
+      "requires_dwelling_tier": 4
+    },
+    {
+      "id": "building_dev_veilmourn_t5_1_upgrade",
+      "name": "Obituary Scribes Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_veilmourn_t5_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Obituary Scribes and upgrades existing Obituary Scribes for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t5_1",
+      "stage": 2,
+      "dwelling_tier": 5,
+      "choice_group": "veilmourn_t5",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_obituary_scribes_veteran",
+      "upgrade_from": "building_dev_veilmourn_t5_1"
+    },
+    {
+      "id": "building_dev_veilmourn_t5_2",
+      "name": "Wakeglass Navigators Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 4500,
+        "wood": 10,
+        "ore": 10
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Wakeglass Navigators. Choosing this dwelling permanently excludes the other tier-5 option in this town.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t5_2",
+      "stage": 1,
+      "dwelling_tier": 5,
+      "choice_group": "veilmourn_t5",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_veilmourn_wakeglass_navigators",
+      "requires_dwelling_tier": 4
+    },
+    {
+      "id": "building_dev_veilmourn_t5_2_upgrade",
+      "name": "Wakeglass Navigators Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 3375,
+        "wood": 8,
+        "ore": 8
+      },
+      "requires": [
+        "building_dev_veilmourn_t5_2"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Wakeglass Navigators and upgrades existing Wakeglass Navigators for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t5_2",
+      "stage": 2,
+      "dwelling_tier": 5,
+      "choice_group": "veilmourn_t5",
+      "choice_branch": 2,
+      "unlock_unit_id": "unit_veilmourn_wakeglass_navigators_veteran",
+      "upgrade_from": "building_dev_veilmourn_t5_2"
+    },
+    {
+      "id": "building_dev_veilmourn_t6_1",
+      "name": "Mirror-Keel Reavers Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 8000,
+        "wood": 12,
+        "ore": 12,
+        "verdant_grafts": 5
+      },
+      "requires": [
+        "building_dev_hall_3",
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Mirror-Keel Reavers. Construction and recruitment require verdant_grafts.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t6_1",
+      "stage": 1,
+      "dwelling_tier": 6,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_mirrorkeel_reavers",
+      "requires_dwelling_tier": 5
+    },
+    {
+      "id": "building_dev_veilmourn_t6_1_upgrade",
+      "name": "Mirror-Keel Reavers Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 6000,
+        "wood": 9,
+        "ore": 9,
+        "verdant_grafts": 4
+      },
+      "requires": [
+        "building_dev_veilmourn_t6_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Mirror-Keel Reavers and upgrades existing Mirror-Keel Reavers for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t6_1",
+      "stage": 2,
+      "dwelling_tier": 6,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+      "upgrade_from": "building_dev_veilmourn_t6_1"
+    },
+    {
+      "id": "building_dev_veilmourn_t7_1",
+      "name": "Fogbound Leviathan Dwelling",
+      "category": "dwelling",
+      "cost": {
+        "gold": 15000,
+        "wood": 14,
+        "ore": 14,
+        "memory_salt": 10
+      },
+      "requires": [
+        "building_dev_hall_3",
+        "building_dev_fort_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Fogbound Leviathan. Construction and recruitment require memory_salt.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t7_1",
+      "stage": 1,
+      "dwelling_tier": 7,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_fogbound_leviathan",
+      "requires_dwelling_tier": 6
+    },
+    {
+      "id": "building_dev_veilmourn_t7_1_upgrade",
+      "name": "Fogbound Leviathan Lodge",
+      "category": "dwelling",
+      "cost": {
+        "gold": 11250,
+        "wood": 11,
+        "ore": 11,
+        "memory_salt": 8
+      },
+      "requires": [
+        "building_dev_veilmourn_t7_1"
+      ],
+      "development_version": 1,
+      "description": "Recruits Veteran Fogbound Leviathan and upgrades existing Fogbound Leviathan for the cost difference. Reserve recruits convert without adding extra recruits.",
+      "faction_id": "faction_veilmourn",
+      "line_id": "veilmourn_t7_1",
+      "stage": 2,
+      "dwelling_tier": 7,
+      "choice_group": "",
+      "choice_branch": 1,
+      "unlock_unit_id": "unit_veilmourn_fogbound_leviathan_veteran",
+      "upgrade_from": "building_dev_veilmourn_t7_1"
+    },
+    {
+      "id": "building_dev_veilmourn_unique_1",
+      "name": "Saltwake Vault",
+      "category": "support",
+      "cost": {
+        "gold": 3500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_veilmourn",
+      "description": "Preserved memories produce 1 memory salt daily.",
+      "income": {
+        "memory_salt": 1
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_unique_2",
+      "name": "Chart of Lost Voyages",
+      "category": "support",
+      "cost": {
+        "gold": 4000,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_veilmourn",
+      "description": "Visiting heroes gain 750 experience, once per hero across all Charts.",
+      "hero_visit_reward": {
+        "experience": 750
+      }
+    },
+    {
+      "id": "building_dev_veilmourn_unique_3",
+      "name": "Bellwake Muster",
+      "category": "support",
+      "cost": {
+        "gold": 4500,
+        "wood": 5,
+        "ore": 5
+      },
+      "requires": [
+        "building_dev_hall_2"
+      ],
+      "development_version": 1,
+      "faction_id": "faction_veilmourn",
+      "description": "Harbor bells add 2 weekly tier-3 recruits.",
+      "growth_tier": 3,
+      "growth_amount": 2
     }
   ]
 }
