@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Common pickup artwork proposals
+
+`art-common-pickup-proposals-20260920` - completed. Three original gold/ore/wood proposal sets and full prompts are saved in `art/overworld/source/generated/pickups/proposals_20260920/`: A raw piles, B merchant supplies, C weathered field caches. Visually reviewed concept previews; runtime replacement follows owner selection.
+
 ### Common-resource pickups
 
 `balance-common-pickups-20260920` - completed. Standard one-time pickups award 1,000 gold, 10 ore or 10 wood. Preserve pickup consumption, difficulty modifiers, artwork and native placement.
