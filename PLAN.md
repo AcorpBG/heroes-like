@@ -22,9 +22,13 @@ Rules:
 
 ## Current Tactical State
 
+### Riverwatch art-style correction
+
+`art-riverwatch-style-20260920` - completed. Riverwatch repainted against Highwater Keep with fine weathered masonry, terracotta roofs, elevated view and dense asymmetric buildings. Centered south-facing gate, no baked flags/banners, existing footprint and runtime ownership flags retained. Actual side-by-side map render with Highwater Keep and Nightglass Redoubt reviewed; six focused runtime checks plus alpha/hash/all-biome routing checks pass. No full suite.
+
 ### Front-facing Riverwatch town
 
-`art-riverwatch-front-20260920` - completed. Riverwatch now has a centered front-facing gate with no painted banners or pennants. Its stone/red-roof/beacon identity, town footprint and two runtime ownership flags remain; base/land/ash IDs share the biome-neutral replacement across all nine biomes. Source/provenance and packing tool retained; focused 48-check flag/render regression passed and in-game render reviewed. No full suite.
+`art-riverwatch-front-20260920` - functionality delivered; owner rejected the overly clean, symmetrical art style. Style correction above supersedes this painting. Riverwatch has a centered front-facing gate with no painted banners or pennants. Its stone/red-roof/beacon identity, town footprint and two runtime ownership flags remain; base/land/ash IDs share the biome-neutral replacement across all nine biomes. Source/provenance and packing tool retained; focused 48-check flag/render regression passed and in-game render reviewed. No full suite.
 
 ### Ground pickup scenery occlusion
 

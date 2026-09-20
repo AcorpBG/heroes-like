@@ -1220,14 +1220,14 @@
       "source_atlas": "res://art/overworld/source/faction_town_sprite_atlas.png"
     },
     "town_identity_riverwatch": {
-      "path": "res://art/overworld/runtime/objects/towns/front_facing/riverwatch.png",
-      "source_generated": "res://art/overworld/source/generated/towns/front_facing_20260920/riverwatch-source.png",
-      "source_processing_manifest": "res://art/overworld/source/generated/towns/front_facing_20260920/provenance.json",
+      "path": "res://art/overworld/runtime/objects/towns/front_facing/riverwatch-v2.png",
+      "source_generated": "res://art/overworld/source/generated/towns/style_matched_20260920/riverwatch-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/style_matched_20260920/provenance.json",
       "source_model": "built_in_image_gen_original_front_facing_town",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_town_id": "town_riverwatch",
-      "runtime_sha256": "a9d5ab5375669fabdd8fa375700542d28a8cf03cac4cc4ae90a598e6b4501d19",
-      "accessible_description": "Front-facing grey-stone Riverwatch fortress with a centered gate, red roofs, and a central fire beacon. Neutral stone foundations fit every biome. No painted flags or banners; ownership uses the two runtime entrance flags."
+      "runtime_sha256": "d72152128b47d01a61c3b87ca98076d6581cc93f62feabe061ab051393378cb8",
+      "accessible_description": "A densely built, weathered Riverwatch fortress seen from above, with a centered south-facing gate, varied terracotta roofs, fine grey masonry, staggered courtyards and a rear fire beacon. Neutral stone foundations fit every biome. No painted flags or banners; ownership uses the two runtime entrance flags."
     },
     "town_identity_duskfen": {
       "path": "res://art/overworld/runtime/objects/towns/identity/town_duskfen.png",
@@ -26814,14 +26814,14 @@
       "asset_policy": "original_generated_no_copied_pixels"
     },
     "town_biome_riverwatch_ash": {
-      "path": "res://art/overworld/runtime/objects/towns/front_facing/riverwatch.png",
-      "source_generated": "res://art/overworld/source/generated/towns/front_facing_20260920/riverwatch-source.png",
-      "source_processing_manifest": "res://art/overworld/source/generated/towns/front_facing_20260920/provenance.json",
+      "path": "res://art/overworld/runtime/objects/towns/front_facing/riverwatch-v2.png",
+      "source_generated": "res://art/overworld/source/generated/towns/style_matched_20260920/riverwatch-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/style_matched_20260920/provenance.json",
       "source_model": "built_in_image_gen_original_front_facing_town",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_town_id": "town_riverwatch",
-      "runtime_sha256": "a9d5ab5375669fabdd8fa375700542d28a8cf03cac4cc4ae90a598e6b4501d19",
-      "accessible_description": "Front-facing grey-stone Riverwatch fortress with a centered gate, red roofs, and a central fire beacon. Neutral stone foundations fit every biome. No painted flags or banners; ownership uses the two runtime entrance flags.",
+      "runtime_sha256": "d72152128b47d01a61c3b87ca98076d6581cc93f62feabe061ab051393378cb8",
+      "accessible_description": "A densely built, weathered Riverwatch fortress seen from above, with a centered south-facing gate, varied terracotta roofs, fine grey masonry, staggered courtyards and a rear fire beacon. Neutral stone foundations fit every biome. No painted flags or banners; ownership uses the two runtime entrance flags.",
       "base_asset_id": "town_identity_riverwatch"
     },
     "town_biome_duskfen_land": {
@@ -26836,14 +26836,14 @@
       "accessible_description": "Duskfen timber-and-bone fortress with a paved courtyard and land-supported foundations, preserving its green lanterns, towers and front bridge."
     },
     "town_biome_riverwatch_land": {
-      "path": "res://art/overworld/runtime/objects/towns/front_facing/riverwatch.png",
-      "source_generated": "res://art/overworld/source/generated/towns/front_facing_20260920/riverwatch-source.png",
-      "source_processing_manifest": "res://art/overworld/source/generated/towns/front_facing_20260920/provenance.json",
+      "path": "res://art/overworld/runtime/objects/towns/front_facing/riverwatch-v2.png",
+      "source_generated": "res://art/overworld/source/generated/towns/style_matched_20260920/riverwatch-source.png",
+      "source_processing_manifest": "res://art/overworld/source/generated/towns/style_matched_20260920/provenance.json",
       "source_model": "built_in_image_gen_original_front_facing_town",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "assigned_town_id": "town_riverwatch",
-      "runtime_sha256": "a9d5ab5375669fabdd8fa375700542d28a8cf03cac4cc4ae90a598e6b4501d19",
-      "accessible_description": "Front-facing grey-stone Riverwatch fortress with a centered gate, red roofs, and a central fire beacon. Neutral stone foundations fit every biome. No painted flags or banners; ownership uses the two runtime entrance flags.",
+      "runtime_sha256": "d72152128b47d01a61c3b87ca98076d6581cc93f62feabe061ab051393378cb8",
+      "accessible_description": "A densely built, weathered Riverwatch fortress seen from above, with a centered south-facing gate, varied terracotta roofs, fine grey masonry, staggered courtyards and a rear fire beacon. Neutral stone foundations fit every biome. No painted flags or banners; ownership uses the two runtime entrance flags.",
       "base_asset_id": "town_identity_riverwatch"
     },
     "town_biome_embercourt_land": {
