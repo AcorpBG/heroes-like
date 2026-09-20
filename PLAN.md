@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Ground pickup scenery occlusion
+
+`fix-pickup-scenery-occlusion-20260920` - completed. Portable loot and its shine now draw below overlapping scenery using the existing portable-object classification. Structures and armies retain their presentation. Focused 37-check render/collection/fog/reduced-motion regression passed, including forest-canopy occlusion at two gold animation times; no full suite or native generation changes.
+
 ### Animated raw resource pickups
 
 `art-raw-pickups-shine-20260920` - completed. Selected A raw gold/ore/wood sprites are live; gold has travelling reflections and sparkles, ore a subtler sheen, and wood stays matte. Cached rendering respects fog and reduced motion; 1000/10/10 rewards and one-time collection are preserved. Focused 31-check GPU/runtime regression passed; no full suite.

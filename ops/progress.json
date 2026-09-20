@@ -22302,6 +22302,15 @@
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
+      "id": "fix-pickup-scenery-occlusion-20260920",
+      "title": "Ground pickups under overlapping scenery",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "runtime_implementation_slice",
+      "source": "PLAN.md",
+      "notes": "Portable resource piles, artifacts and standalone loot render before scenery; both static art and cached shader shine sit under canopy/rock overhangs. Existing semantic classification keeps structures and armies in their established layer. Focused raw_pickup_shine_regression.py passes 37 checks including actual GPU canopy coverage with no sparkle leakage, exposed gold animation, collection, fog and reduced motion. Visually inspected the overlap render. No full suite, source placement or native generation changes. Task-owned temporary captures/logs removed."
+    },
+    {
       "id": "animation-expanded-idle-loops-20260919",
       "title": "Eight-pose creature idle loops for the complete 160-unit roster",
       "status": "completed",

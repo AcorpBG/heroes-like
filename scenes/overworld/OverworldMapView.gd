@@ -2129,10 +2129,15 @@ func _draw_state_layer() -> void:
 				object_presentations += _visible_object_presentation_count(tile)
 			_draw_tile_state_overlay(tile, rect)
 			_draw_town_footprint_underlay(tile, rect)
-			_draw_tile_scenery_icon(tile, rect)
-	# Scenery is landscape, not a foreground curtain over pickups or armies.
-	# Keep its exact collision/painted coverage, then draw visitable identities
-	# above it in their usual row order. Both passes share the cached batches.
+			_draw_tile_ground_pickups(tile, rect)
+	# Ground loot (including its animated highlights) sits beneath overhanging
+	# canopies and rock silhouettes. Finish all loot before drawing scenery:
+	# a tree's canopy can reach tiles several rows above its ground anchor.
+	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
+		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
+			var tile := Vector2i(x, y)
+			_draw_tile_scenery_icon(tile, _tile_rect(board_rect, tile))
+	# Structures and armies retain their readable foreground presentation.
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile := Vector2i(x, y)
@@ -3757,14 +3762,35 @@ func _draw_tile_scenery_icon(tile: Vector2i, rect: Rect2) -> void:
 
 	_draw_native_scenery_layers_at(tile, rect, remembered)
 
+func _draw_tile_ground_pickups(tile: Vector2i, rect: Rect2) -> void:
+	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+		return
+	var remembered := not OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
+	var standalone := _standalone_map_object_at(tile)
+	if not standalone.is_empty() and _object_is_portable(_standalone_map_object_profile(standalone)):
+		var object_rect := _decorative_object_footprint_rect(standalone, rect)
+		if not _draw_standalone_map_object_sprite(standalone, object_rect, remembered, tile):
+			_draw_standalone_map_object_marker(standalone, object_rect, remembered, tile)
+	var resource := _resource_node_at(tile)
+	if not resource.is_empty() and _object_is_portable(_resource_object_profile(resource)):
+		var resource_rect := _resource_draw_rect(resource, rect, tile)
+		if not _draw_resource_sprite(resource, resource_rect, remembered, tile):
+			_draw_resource_marker(resource, resource_rect, remembered, tile)
+	var artifact := _artifact_node_at(tile)
+	if not artifact.is_empty():
+		if not _draw_artifact_sprite(artifact, rect, remembered, tile):
+			_draw_artifact_marker(rect, remembered, tile)
+
 func _draw_tile_state_icon(tile: Vector2i, rect: Rect2, include_scenery: bool = true) -> void:
 	if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
 		return
 	var visible := OverworldRulesScript.is_tile_visible(_session, tile.x, tile.y, _level)
 	var remembered := not visible
-	if include_scenery: _draw_tile_scenery_icon(tile, rect)
+	if include_scenery:
+		_draw_tile_ground_pickups(tile, rect)
+		_draw_tile_scenery_icon(tile, rect)
 	var standalone_map_object := _standalone_map_object_at(tile)
-	if not standalone_map_object.is_empty():
+	if not standalone_map_object.is_empty() and not _object_is_portable(_standalone_map_object_profile(standalone_map_object)):
 		var object_rect := _decorative_object_footprint_rect(standalone_map_object, rect)
 		if not _draw_standalone_map_object_sprite(standalone_map_object, object_rect, remembered, tile):
 			_draw_standalone_map_object_marker(standalone_map_object, object_rect, remembered, tile)
@@ -3773,15 +3799,11 @@ func _draw_tile_state_icon(tile: Vector2i, rect: Rect2, include_scenery: bool = 
 		if not _draw_town_sprite(visual_rect, rect, remembered, tile):
 			_draw_town_marker(visual_rect, rect, _town_color(tile), remembered, tile)
 	var resource_node := _resource_node_at(tile)
-	if not resource_node.is_empty():
+	if not resource_node.is_empty() and not _object_is_portable(_resource_object_profile(resource_node)):
 		var resource_rect := _resource_draw_rect(resource_node, rect, tile)
 		if not _draw_resource_sprite(resource_node, resource_rect, remembered, tile):
 			_draw_resource_marker(resource_node, resource_rect, remembered, tile)
 		_draw_mine_control_flag(resource_node, rect, resource_rect, remembered)
-	var artifact_node := _artifact_node_at(tile)
-	if not artifact_node.is_empty():
-		if not _draw_artifact_sprite(artifact_node, rect, remembered, tile):
-			_draw_artifact_marker(rect, remembered, tile)
 	var encounter_node := _encounter_node_at(tile)
 	var playback_actor := _turn_playback_event.has("actor") and String(encounter_node.get("placement_id","")) == String(_turn_playback_event.get("placement_id",""))
 	if not encounter_node.is_empty() and not playback_actor and (visible or _has_rememberable_encounter_at(tile)):
