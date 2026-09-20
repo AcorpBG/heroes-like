@@ -139,6 +139,56 @@
     "lava_fissures": {
       "mode": 5,
       "strength": 0.035
+    },
+    "gold_pickup_shine": {
+      "mode": 6,
+      "strength": 0.8,
+      "speed": 0.23,
+      "shine_color": [
+        1.0,
+        0.98,
+        0.82
+      ],
+      "sparkle_strength": 1.3,
+      "glints": [
+        [
+          0.37,
+          0.34
+        ],
+        [
+          0.64,
+          0.43
+        ],
+        [
+          0.47,
+          0.66
+        ]
+      ]
+    },
+    "ore_pickup_sheen": {
+      "mode": 6,
+      "strength": 0.26,
+      "speed": 0.17,
+      "shine_color": [
+        0.8,
+        0.86,
+        0.9
+      ],
+      "sparkle_strength": 0.18,
+      "glints": [
+        [
+          0.4,
+          0.4
+        ],
+        [
+          0.61,
+          0.52
+        ],
+        [
+          0.44,
+          0.66
+        ]
+      ]
     }
   },
   "assets": {
@@ -155,7 +205,9 @@
     "mapobj_cinder_kiln": "kiln",
     "mapobj_charcoal_burners": "charcoal",
     "resource_site_neutral_cinder_kiln_claimed": "claimed_kiln",
-    "resource_site_neutral_charcoal_burners_claimed": "claimed_charcoal"
+    "resource_site_neutral_charcoal_burners_claimed": "claimed_charcoal",
+    "mapobj_road_writ_purse": "gold_pickup_shine",
+    "mapobj_quarry_chip_hod": "ore_pickup_sheen"
   },
   "asset_rules": [
     {

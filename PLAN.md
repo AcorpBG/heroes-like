@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Animated raw resource pickups
+
+`art-raw-pickups-shine-20260920` - completed. Selected A raw gold/ore/wood sprites are live; gold has travelling reflections and sparkles, ore a subtler sheen, and wood stays matte. Cached rendering respects fog and reduced motion; 1000/10/10 rewards and one-time collection are preserved. Focused 31-check GPU/runtime regression passed; no full suite.
+
 ### Common pickup artwork proposals
 
 `art-common-pickup-proposals-20260920` - completed. Three original gold/ore/wood proposal sets and full prompts are saved in `art/overworld/source/generated/pickups/proposals_20260920/`: A raw piles, B merchant supplies, C weathered field caches. Visually reviewed concept previews; runtime replacement follows owner selection.

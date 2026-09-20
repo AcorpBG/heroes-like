@@ -6594,40 +6594,37 @@
       "runtime_sha256": "3e2b6ec27b3f9739850f8e1263f1b3b1c44ff61e134ef21c2b0ef78508459a15"
     },
     "mapobj_road_writ_purse": {
-      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_road_writ_purse.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_road_writ_purse-trimmed.png",
-      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
-      "source_model": "built_in_image_gen_chroma_key_split",
+      "path": "res://art/overworld/runtime/objects/pickups/raw_gold_pile.png",
+      "source_generated": "res://art/overworld/source/generated/pickups/raw_piles_20260920/gold-source.png",
+      "source_model": "built_in_image_gen_transparent",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "distinct_sprite_assignment": true,
       "assigned_map_object_id": "object_road_writ_purse",
       "assigned_map_object_family": "pickup",
-      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/map_sheets/manifest.json",
-      "runtime_sha256": "73604ca0db80ab737624ce199eeca8309c37257746fd121e441ea23376aca5a5"
+      "source_processing_manifest": "res://art/overworld/source/generated/pickups/raw_piles_20260920/provenance.json",
+      "runtime_sha256": "a99eed403a48545290111432e287fd478097eb3d3baf4e4482366bb5548e2c95"
     },
     "mapobj_split_wood_pile": {
-      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_split_wood_pile.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_split_wood_pile-trimmed.png",
-      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
-      "source_model": "built_in_image_gen_chroma_key_split",
+      "path": "res://art/overworld/runtime/objects/pickups/raw_wood_pile.png",
+      "source_generated": "res://art/overworld/source/generated/pickups/raw_piles_20260920/wood-source.png",
+      "source_model": "built_in_image_gen_transparent",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "distinct_sprite_assignment": true,
       "assigned_map_object_id": "object_split_wood_pile",
       "assigned_map_object_family": "pickup",
-      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/map_sheets/manifest.json",
-      "runtime_sha256": "18735672ad88ca9eafa71e9b84c6d7c4d83f1a707ebb24779c09a0dea74809e0"
+      "source_processing_manifest": "res://art/overworld/source/generated/pickups/raw_piles_20260920/provenance.json",
+      "runtime_sha256": "82d517382aafbf958bfe9f4030b8840c2d1fd4ca74d66e340b2a1b2a0ed2389f"
     },
     "mapobj_quarry_chip_hod": {
-      "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_quarry_chip_hod.png",
-      "source_trimmed": "res://art/overworld/source/trimmed/map_objects/distinct/mapobj_quarry_chip_hod-trimmed.png",
-      "source_generated_atlas": "res://art/overworld/source/generated/map_objects/distinct/map_object_distinct_atlas_20260504_batch_03.png",
-      "source_model": "built_in_image_gen_chroma_key_split",
+      "path": "res://art/overworld/runtime/objects/pickups/raw_ore_pile.png",
+      "source_generated": "res://art/overworld/source/generated/pickups/raw_piles_20260920/ore-source.png",
+      "source_model": "built_in_image_gen_transparent",
       "asset_policy": "original_generated_runtime_sprite_no_homm3_art_import",
       "distinct_sprite_assignment": true,
       "assigned_map_object_id": "object_quarry_chip_hod",
       "assigned_map_object_family": "pickup",
-      "source_processing_manifest": "res://art/overworld/source/generated/cutout_recovery_20260909/map_sheets/manifest.json",
-      "runtime_sha256": "b99ae2760d168162a4191d9967d0c6a455ddaeee4cd64abd964aa0dbbde671a7"
+      "source_processing_manifest": "res://art/overworld/source/generated/pickups/raw_piles_20260920/provenance.json",
+      "runtime_sha256": "7ac226652012becb4f47f7206d5052b6322c2d7c6697df32fb6f7942e5ab9c08"
     },
     "mapobj_payroll_casket": {
       "path": "res://art/overworld/runtime/objects/map_objects/distinct/mapobj_payroll_casket.png",
@@ -43358,6 +43355,18 @@
     "site_grassland_plank_grove": {
       "asset_id": "mapobj_common_wood_mine",
       "fit": "Unified animated sawmill"
+    },
+    "site_road_writ_purse": {
+      "asset_id": "mapobj_road_writ_purse",
+      "fit": "Approved raw gold pile, one-time resource pickup."
+    },
+    "site_quarry_chip_hod": {
+      "asset_id": "mapobj_quarry_chip_hod",
+      "fit": "Approved raw ore pile, one-time resource pickup."
+    },
+    "site_split_wood_pile": {
+      "asset_id": "mapobj_split_wood_pile",
+      "fit": "Approved raw wood pile, one-time resource pickup."
     }
   },
   "artifact_default_sprite": {

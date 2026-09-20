@@ -9,6 +9,11 @@ uniform float anchor = 0.62;
 uniform float phase = 0.0;
 uniform float speed = 1.0;
 uniform float ripple = 0.0;
+uniform vec3 shine_color = vec3(1.0, 0.94, 0.72);
+uniform float sparkle_strength = 0.0;
+uniform vec2 glint_0 = vec2(-10.0);
+uniform vec2 glint_1 = vec2(-10.0);
+uniform vec2 glint_2 = vec2(-10.0);
 uniform vec4 source_region = vec4(0.0, 0.0, 1.0, 1.0);
 uniform vec4 activity_region = vec4(0.0, 0.0, 1.0, 1.0);
 uniform vec2 padding_uv = vec2(0.0);
@@ -18,6 +23,13 @@ uniform float clock_override = -1.0;
 varying vec4 paint_tint;
 
 void vertex() { paint_tint = COLOR; }
+
+float metal_glint(vec2 uv, vec2 point, float time) {
+	vec2 d = abs(uv - point);
+	float pulse = pow(max(0.0, sin(time)), 12.0);
+	float cross_light = exp(-d.x * 320.0 - d.y * 28.0) + exp(-d.y * 320.0 - d.x * 28.0);
+	return cross_light * pulse;
+}
 
 void fragment() {
 	vec2 local_uv = (UV - texture_region.xy) / texture_region.zw;
@@ -54,6 +66,16 @@ void fragment() {
 		}
 	}
 	vec4 pixel = texture(TEXTURE, texture_region.xy + clamp(uv, half_pixel, vec2(1.0) - half_pixel) * texture_region.zw);
+	if (motion_enabled && mode == 6) {
+		// A reflection travels over the metal; geometry and alpha never change.
+		float sweep = mix(-0.4, 2.0, fract(t * speed));
+		float band = exp(-pow((original.x + original.y * 0.65 - sweep) / 0.065, 2.0));
+		float metal = smoothstep(0.12, 0.65, max(pixel.r, max(pixel.g, pixel.b)));
+		float glints = metal_glint(original, glint_0, t * 1.7)
+			+ metal_glint(original, glint_1, t * 1.7 + 2.1)
+			+ metal_glint(original, glint_2, t * 1.7 + 4.2);
+		pixel.rgb = mix(pixel.rgb, shine_color, clamp(band * strength * metal + glints * sparkle_strength, 0.0, 0.95));
+	}
 	float inside = step(0.0, uv.x) * step(0.0, uv.y) * step(uv.x, 1.0) * step(uv.y, 1.0);
 	COLOR = vec4(pixel.rgb * brightness, pixel.a * inside) * paint_tint;
 }
