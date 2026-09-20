@@ -1570,10 +1570,10 @@ static func _town_artifact_service_actions(
 			continue
 		var town_id := String(town.get("town_id", ""))
 		var allowed_town_ids_value = contract.get("allowed_town_ids", [])
-		if allowed_town_ids_value is Array and not allowed_town_ids_value.is_empty() and town_id not in allowed_town_ids_value:
+		if allowed_town_ids_value is Array and not allowed_town_ids_value.is_empty() and ContentService.canonical_town_id(town_id) not in allowed_town_ids_value:
 			continue
 		var excluded_town_ids_value = contract.get("excluded_town_ids", [])
-		if excluded_town_ids_value is Array and town_id in excluded_town_ids_value:
+		if excluded_town_ids_value is Array and ContentService.canonical_town_id(town_id) in excluded_town_ids_value:
 			continue
 		var source_key := "%s:%s:%s" % [session.scenario_id, String(town.get("placement_id", "")), building_id]
 		var selection := ArtifactRulesScript.select_live_source_reward(

@@ -127,6 +127,12 @@ func get_army_group(id: String) -> Dictionary:
 func get_town(id: String) -> Dictionary:
 	return get_content_by_id(TOWNS_PATH, id)
 
+func canonical_town_id(id: String) -> String:
+	# Retired IDs are references only, never additional selectable templates.
+	# Keeping placed IDs intact preserves old scenario objective/script targets.
+	var aliases: Dictionary = load_json(TOWNS_PATH).get("legacy_aliases", {})
+	return String(aliases.get(id, id))
+
 func get_building(id: String) -> Dictionary:
 	return get_content_by_id(BUILDINGS_PATH, id)
 
@@ -295,6 +301,8 @@ func get_encounter(id: String) -> Dictionary:
 	return get_content_by_id(ENCOUNTERS_PATH, id)
 
 func get_content_by_id(path: String, id: String, list_key: String = "items") -> Dictionary:
+	if path == TOWNS_PATH and list_key == "items":
+		id = canonical_town_id(id)
 	return _indexed_content_row(path, id, list_key, "id")
 
 func _indexed_content_row(path: String, id: String, list_key: String, id_field: String) -> Dictionary:
@@ -1535,7 +1543,7 @@ func _validate_scenario(
 		if not (placement is Dictionary):
 			continue
 		var town_id := String(placement.get("town_id", ""))
-		if town_id == "" or not town_index.has(town_id):
+		if town_id == "" or not town_index.has(canonical_town_id(town_id)):
 			push_warning("Scenario %s references missing town id %s." % [scenario_id, town_id])
 
 	for placement in scenario.get("resource_nodes", []):

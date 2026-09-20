@@ -254,7 +254,7 @@ def main():
         d = e['data']
         e['description'] = description(e)
         if unified_towns and e['category'] == 'towns':
-            e['description'] += ' Uses the shared ' + labels[d['faction_id']] + ' overworld town artwork on every terrain; its named-town rules and interior remain distinct.'
+            e['description'] += ' The single gameplay town template for ' + labels[d['faction_id']] + ', with one construction tree and terrain-neutral overworld artwork. Retired town IDs resolve to this template for older maps and saves.'
         e['faction'] = d.get('faction_id', d.get('player_faction_id', ''))
         e['tags'] = list(dict.fromkeys(str(v) for v in [d.get('role'), d.get('category'), d.get('family'), d.get('school_id'), d.get('rarity'), d.get('context'), d.get('strategic_role')] if v))
         if d.get('contains_dead_tree'):
