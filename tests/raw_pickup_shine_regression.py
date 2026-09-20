@@ -31,6 +31,59 @@ func changed(a: Image, b: Image, region: Rect2i) -> int:
 			var d := a.get_pixel(x,y) - b.get_pixel(x,y)
 			if maxf(absf(d.r), maxf(absf(d.g),absf(d.b))) > .08: count += 1
 	return count
+func overlap_frame(view, session, nodes: Array, scenery: Array) -> Image:
+	session.overworld.resource_nodes=nodes
+	session.overworld.map_objects=scenery
+	view.set_map_state(session,session.overworld.map,Vector2i(session.overworld.map[0].size(),session.overworld.map.size()),Vector2i(-1,-1))
+	await capture()
+	for entry in view._scenery_batches.entries:
+		entry.batch.material.set_shader_parameter("clock_override",0.0)
+		entry.batch.material.set_shader_parameter("phase",0.0)
+	return await capture()
+func overlap_checks(view, session, out: String):
+	# Actual cached map painter: canopy pixels must cover both the pile and
+	# its shader sparkle, including overhangs from a later map row.
+	view._dynamic_layer.hide()
+	view._terrain_ambient_layer.hide()
+	for row in session.overworld.map: row.fill("grass")
+	for row in session.overworld.fog.explored_tiles: row.fill(true)
+	for row in session.overworld.fog.visible_tiles: row.fill(true)
+	var tree := {"placement_id":"occluding_forest","kind":"decorative_obstacle","x":3,"y":4,"level":0,"runtime_object_role":"decorative_blocker_sprite","native_scenery_art_version":2,"h3m_type_id":135,"package_block_tiles":[{"x":3,"y":4},{"x":4,"y":4},{"x":5,"y":4}]}
+	var pile := {"site_id":"site_road_writ_purse","object_id":"object_road_writ_purse","kind":"reward_reference","placement_id":"occluded_gold","x":4,"y":3,"level":0,"collected":false}
+	var empty := await overlap_frame(view,session,[],[])
+	var tree_only := await overlap_frame(view,session,[],[tree])
+	var gold_only := await overlap_frame(view,session,[pile],[])
+	var bounds := Rect2i()
+	for entry in view._scenery_batches.entries:
+		if entry.get("asset_id","")=="mapobj_"+IDS[0]: bounds=Rect2i(entry.rect.grow(3))
+	check(bounds.has_area(),"overlap fixture did not draw the pile")
+	var together := await overlap_frame(view,session,[pile],[tree])
+	together.save_png(out+"/gold-under-canopy.png")
+	var gold_index := -1
+	var tree_index := -1
+	for entry in view._scenery_batches.entries:
+		if entry.get("asset_id","")=="mapobj_"+IDS[0]: gold_index=entry.batch.get_index()
+		if String(entry.get("asset_id","")).begins_with("native_vegetation_"): tree_index=entry.batch.get_index()
+	check(gold_index>=0 and tree_index>gold_index,"gold batch drawn above canopy batch")
+	var occluded := []
+	var exposed := 0
+	for y in range(bounds.position.y,bounds.end.y):
+		for x in range(bounds.position.x,bounds.end.x):
+			if gold_only.get_pixel(x,y).is_equal_approx(empty.get_pixel(x,y)): continue
+			if together.get_pixel(x,y).is_equal_approx(tree_only.get_pixel(x,y)):
+				occluded.append(Vector2i(x,y))
+			elif together.get_pixel(x,y).is_equal_approx(gold_only.get_pixel(x,y)): exposed+=1
+	check(occluded.size()>=10,"overlapping tree never occludes gold: "+str(occluded.size()))
+	check(exposed>=10,"pile completely hidden in overlap fixture")
+	for entry in view._scenery_batches.entries:
+		if entry.get("asset_id","")=="mapobj_"+IDS[0]: entry.batch.material.set_shader_parameter("clock_override",1.5)
+	var shining := await capture()
+	var leaked := 0
+	for point in occluded:
+		if not shining.get_pixelv(point).is_equal_approx(tree_only.get_pixelv(point)): leaked+=1
+	check(leaked==0,"gold shine leaks over opaque canopy")
+	check(changed(together,shining,bounds)>0,"visible part of covered pile lost shine")
+	print("PICKUP_OCCLUSION_PIXELS "+JSON.stringify({"covered":occluded.size(),"exposed":exposed,"shine_leaks":leaked}))
 func _ready(): call_deferred("run")
 func run():
 	var out := OS.get_cmdline_user_args()[0]
@@ -86,6 +139,7 @@ func run():
 	await capture()
 	for entry in view._scenery_batches.entries:
 		check(entry.get("profile",{}).get("mode",0)!=6,"collected pickup still shines")
+	await overlap_checks(view,session,out)
 	view.hide()
 	var gallery := Control.new()
 	add_child(gallery)
