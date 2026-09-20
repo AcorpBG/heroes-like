@@ -113605,6 +113605,18 @@
         "PLAN.md"
       ],
       "notes": "Owner-selected rewards for the standard Road Writ Purse, Quarry Chip Hod and Split Wood Pile: 1000 gold, 10 ore and 10 wood. Implemented in shared content and rebuilt the wiki. Exact reward/content-scope checks and existing portable-resource classification regression pass. One-time consumption, difficulty modifiers, artwork and native source placement preserved. No full suite or game launch; no disposable files created."
+    },
+    {
+      "id": "art-common-pickup-proposals-20260920",
+      "title": "Common resource pickup artwork proposals",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "art_proposal_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "PLAN.md"
+      ],
+      "notes": "Owner requested improved visual variants for gold, ore and wood pickups. Delivered A raw resource piles, B merchant supplies and C weathered field caches, each with gold/ore/wood and a generated small grass-strip concept preview. Original PNG sheets and all built-in image generation prompts saved; dimensions/decoding and visual composition checked. Proposal-only slice complete; runtime art selection and integration await owner choice. No game or repository tests were run; no disposable artifacts created."
     }
   ],
   "project": "heroes-like",
