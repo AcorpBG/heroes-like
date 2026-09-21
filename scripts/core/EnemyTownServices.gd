@@ -85,6 +85,12 @@ static func visit(town: Dictionary, raid: Dictionary, treasury: Dictionary, day:
 		if trained.ok:
 			hero = trained.hero
 			changes.append("trained at " + String(ContentService.get_building(String(id)).get("name", id)))
+		var building := ContentService.get_building(String(id))
+		if building.has("faction_service") and Development.FactionServices.useful_to_ai(hero, town, building, day, treasury):
+			var service := Development.FactionServices.perform(hero, town, building, day, treasury)
+			if service.ok:
+				hero = service.hero
+				changes.append(String(building.faction_service.label).to_lower())
 	var army: Dictionary = raid.get("enemy_army", {}).duplicate(true)
 	var upgraded := upgrade_stacks(town, army.get("stacks", []), treasury)
 	if not upgraded.upgrades.is_empty():

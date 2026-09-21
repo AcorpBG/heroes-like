@@ -5,6 +5,7 @@ const DATA_PATH := "res://content/town_development.json"
 const Heroes = preload("res://scripts/core/HeroCommandRules.gd")
 const Progression = preload("res://scripts/core/HeroProgressionRules.gd")
 const Artifacts = preload("res://scripts/core/ArtifactRules.gd")
+const FactionServices = preload("res://scripts/core/FactionTownServices.gd")
 
 static func data() -> Dictionary:
 	return ContentService.load_json(DATA_PATH)
@@ -236,6 +237,11 @@ static func service_actions(session, town: Dictionary) -> Array:
 		if b.has("hero_visit_reward") and present:
 			var claimed: Array = hero.get("town_training_claims", [])
 			actions.append({"id":"town_train:"+String(id),"label":"Visit "+String(b.name),"summary":String(b.description),"disabled":id in claimed})
+		if b.has("faction_service") and present:
+			var reason := FactionServices.unavailable_reason(hero, town, b, int(session.day), resources)
+			var service: Dictionary = b.faction_service
+			actions.append({"id": "town_faction:" + String(id), "label": String(service.label) + " — " + cost_text(service.get("cost", {})),
+				"summary": "%s Cost: %s. Once per week per %s. %s" % [String(service.description), cost_text(service.get("cost", {})), String(service.get("scope", "town")), reason], "disabled": reason != ""})
 		var target := String(b.get("unlock_unit_id", ""))
 		var base := String(ContentService.get_unit(target).get("upgrade_from", ""))
 		if base != "":
@@ -275,6 +281,11 @@ static func perform_service(session, town: Dictionary, action_id: String) -> Dic
 	var resources: Dictionary = session.overworld.get("resources",{}).duplicate(true)
 	var message := ""
 	match parts[0]:
+		"town_faction":
+			var result := FactionServices.perform(hero, town, ContentService.get_building(parts[1]), int(session.day), resources)
+			if not result.ok: return result
+			hero = result.hero
+			message = result.message
 		"town_train":
 			var b := ContentService.get_building(parts[1])
 			var result := train_hero(hero, town, parts[1])

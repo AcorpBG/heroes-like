@@ -22298,7 +22298,7 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Owner selected the five town-overhaul completion passes on 2026-09-22. AI services completed; next implement distinctive faction town mechanics, followed by original building art, individual creature upgrades and full-match balance. Do not expand into native generation or unrelated systems.",
+  "nextActionGuardrailNote": "Owner selected all five town-overhaul passes. AI services and faction mechanics completed. Next create original building artwork with distinct upgrade stages, then individual creature upgrade names/gameplay/animated art and full-match balance. Do not expand into native generation or unrelated systems.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
     {
@@ -22315,13 +22315,13 @@
     {
       "id": "town-overhaul-faction-mechanics-20260922",
       "title": "Distinctive functional faction town specials",
-      "status": "pending",
+      "status": "completed",
       "classification": "gameplay_content_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "docs/common-town-building-template.md"
       ],
-      "notes": "Owner-authorized completion goal. Completion requires shipped behavior/content and focused validation; planning alone is not completion."
+      "notes": "Implemented six paid weekly faction services with persistent town/hero scopes, actual reserve/resource/mana/XP effects and AI decisions. Six asymmetric defensive effects integrated into town combat: opening volley, movement trap, spell ward, no-resurrection healing, finite pressure shield and ranged fog; saved shields and heal-round markers. Existing passive benefits retained; services promoted above formation with explicit button costs; wiki descriptions updated. 185 focused faction checks + 146 AI + 676 shared-town checks pass on Windows, actual UI rendered/reviewed. No full suite, Linux execution or full-match balance claim. Art and creature upgrade passes remain pending."
     },
     {
       "id": "town-overhaul-building-art-20260922",
