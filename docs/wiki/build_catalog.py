@@ -240,6 +240,16 @@ def main():
     for name, key in [('unit_art_manifest', 'battle_standee'), ('hero_art_manifest', 'portrait'), ('building_art_manifest', 'icon_path'), ('spell_icons', 'icon_path'), ('faction_crests', 'icon_path')]:
         for row in contents[name]['items']:
             if row.get(key): primary[row['id']] = {'path': row[key].removeprefix('res://')}
+    refreshed_buildings = set()
+    for faction, layers in read('content/town_building_scene_art_manifest.json')['factions'].items():
+        for building, layer in layers.items():
+            if not layer.get('icon_path'):
+                continue
+            attach(building, layer['runtime_path'], labels[faction] + ' town painting', 'content/town_building_scene_art_manifest.json')
+            attach(building, layer['icon_path'], labels[faction] + ' construction icon', 'content/town_building_scene_art_manifest.json')
+            if building not in refreshed_buildings:
+                primary[building] = {'path': layer['icon_path'].removeprefix('res://')}
+                refreshed_buildings.add(building)
     if unified_towns:
         for town in contents['towns']['items']:
             sprite_id = overworld['town_identity_sprites'][town['id']]

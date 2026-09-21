@@ -22326,13 +22326,13 @@
     {
       "id": "town-overhaul-building-art-20260922",
       "title": "Original faction building art and readable upgrade stages",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "gameplay_content_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "docs/common-town-building-template.md"
       ],
-      "notes": "Owner-authorized completion goal. Completion requires shipped behavior/content and focused validation; planning alone is not completion."
+      "notes": "First integrated art slice: four original Embercourt civic hall stages, a generated cleared village plot, faction-aware construction/info icons and wiki media, saved sources/prompts and reproducible alpha-preserving packaging. All four actual town stages and developed composition rendered; 43 art/input checks and 676 shared town checks pass on Windows. Other faction stages/branches and existing floating or overlapping developed-town placements remain unfinished; art pass is not complete. No full suite or Linux execution."
     },
     {
       "id": "town-overhaul-creature-upgrades-20260922",

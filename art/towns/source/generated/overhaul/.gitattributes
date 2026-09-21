@@ -1,0 +1,2 @@
+# Prompt hashes must remain identical on Windows and Linux checkouts.
+*.prompt.txt text eol=lf

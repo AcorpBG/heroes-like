@@ -157,7 +157,7 @@ const FACTION_BACKDROP_TEXTURES := {
 }
 const FACTION_DEVELOPMENT_SCENE_PATHS := {
 	"faction_embercourt": {
-		"village": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_village.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_embercourt_cleared_village.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_fully_built.png",
 	},
@@ -762,6 +762,11 @@ func set_external_command_overlay(enabled: bool) -> void:
 	queue_redraw()
 
 func _main_building_normalized_rect() -> Rect2:
+	# A separate hall painting owns its alpha-shaped input. Do not leave the
+	# old baked-in hall's rectangular click target floating over the courtyard.
+	for entry in _town_building_scene_entries(_town_scene_rect()):
+		if String(entry.get("plot_id", "")) == "hall" and not bool(entry.get("embedded_in_base", false)):
+			return Rect2()
 	var faction_hotspots: Dictionary = MAIN_BUILDING_HOTSPOTS.get(_town_faction_id(), {})
 	var stage_id := "village"
 	return faction_hotspots.get(stage_id, Rect2())
@@ -1563,6 +1568,10 @@ func _create_building_hotspot(building_id: String) -> Button:
 	return button
 
 func _on_building_hotspot_pressed(building_id: String) -> void:
+	for entry in _town_building_scene_entries(_town_scene_rect()):
+		if String(entry.get("plot_id", "")) == "hall" and String(entry.get("visible_building_id", "")) == building_id:
+			main_building_activated.emit()
+			return
 	building_activated.emit(building_id)
 
 func _sync_building_hotspots() -> void:
@@ -1586,9 +1595,12 @@ func _sync_building_hotspots() -> void:
 		var building_name := String(building.get("name", building_id))
 		var description := String(building.get("description", ""))
 		button.tooltip_text = "%s\n%s\nOpen building information." % [building_name, description]
+		if String(entry.get("plot_id", "")) == "hall":
+			button.tooltip_text = "%s\n%s\nOpen town construction." % [building_name, description]
 		# Registration may already have assigned an automatic node-name label.
 		# Mark the catalog identity as authored so focus/visibility scans retain it.
-		UiAccessibility.describe_control(button, "%s building" % building_name, "%s Press to open building information." % description)
+		var purpose := "town construction" if String(entry.get("plot_id", "")) == "hall" else "building information"
+		UiAccessibility.describe_control(button, "%s building" % building_name, "%s Press to open %s." % [description, purpose])
 		button.position = destination_rect.position
 		button.size = destination_rect.size
 		# Catalog layers also contain transparent margins. Their empty pixels
