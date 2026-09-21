@@ -8,6 +8,7 @@ const DifficultyRulesScript = preload("res://scripts/core/DifficultyRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+const TownServices = preload("res://scripts/core/EnemyTownServices.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
 const NativeTransit = preload("res://scripts/core/NativeTransitRules.gd")
@@ -2271,6 +2272,9 @@ static func advance_raids(
 		_advance_profile_add_ms(profile, "pre_move_route_pickup_ms", phase_started)
 
 		phase_started = _advance_profile_timer(profile_enabled)
+		var pre_move_services := use_town_services_for_raid(session, config, encounter, faction_id)
+		event_messages.append_array(pre_move_services.get("messages", []))
+		event_records.append_array(pre_move_services.get("events", []))
 		var pre_move_resupply := _maybe_resupply_raid_from_nearby_town(session, config, encounter, faction_id)
 		if bool(pre_move_resupply.get("resupplied", false)):
 			encounter = pre_move_resupply.get("encounter", encounter)
@@ -2395,6 +2399,9 @@ static func advance_raids(
 			_advance_profile_add_ms(profile, "step_route_pickup_ms", phase_started)
 
 			phase_started = _advance_profile_timer(profile_enabled)
+			var route_services := use_town_services_for_raid(session, config, encounter, faction_id)
+			event_messages.append_array(route_services.get("messages", []))
+			event_records.append_array(route_services.get("events", []))
 			var route_resupply := _maybe_resupply_raid_from_nearby_town(session, config, encounter, faction_id)
 			if bool(route_resupply.get("resupplied", false)):
 				encounter = route_resupply.get("encounter", encounter)
@@ -6797,6 +6804,8 @@ static func build_roster_commander_state(
 		"pending_specialty_choices": existing_state.get("pending_specialty_choices", []),
 		"last_outcome": String(existing_state.get("last_outcome", record.get("last_outcome", ""))),
 		"artifacts": ArtifactRulesScript.normalize_hero_artifacts(artifacts_source),
+		"town_training_claims": _normalize_string_array(existing_state.get("town_training_claims", [])),
+		"last_town_trade_day": int(existing_state.get("last_town_trade_day", -1)),
 	}
 	if String(existing_state.get("player_id", "")) != "":
 		commander_state["player_id"] = String(existing_state.player_id)
@@ -19257,6 +19266,37 @@ static func _regroup_raid_at_town(
 		if not regroup_assignment_event.is_empty():
 			events.append(regroup_assignment_event)
 	return {"encounter": raid, "state": state, "event_message": message, "ai_events": events}
+
+static func use_town_services_for_raid(session, config: Dictionary, raid: Dictionary, controller: String) -> Dictionary:
+	var messages: Array = []
+	var events: Array = []
+	if String(raid.get("placement_id", "")) in session.overworld.get("resolved_encounters", []):
+		return {"messages": messages, "events": events}
+	for state in session.overworld.get("enemy_states", []):
+		if PlayerRules.controller_id(state) != controller: continue
+		var treasury: Dictionary = state.get("treasury", {})
+		for town in session.overworld.get("towns", []):
+			if not TownServices.can_visit(town, raid, controller): continue
+			var result := TownServices.visit(town, raid, treasury, int(session.day), controller)
+			var captured: Array = state.get("captured_artifact_ids", []).duplicate()
+			for sold_id in result.get("sold_ids", []): captured.erase(sold_id)
+			state["captured_artifact_ids"] = captured
+			var commander: Dictionary = raid.get("enemy_commander_state", {})
+			if not commander.is_empty():
+				commander = sync_commander_army_continuity(commander, raid.get("enemy_army", {}), String(raid.get("encounter_id", "")))
+				raid["enemy_commander_state"] = commander
+				sync_commander_state_to_roster(session, controller, commander)
+			if not result.changes.is_empty():
+				var message := "%s visits %s: %s." % [_raid_name(raid), _town_name(town), ", ".join(result.changes)]
+				messages.append(message)
+				events.append(build_ai_event_record(session, config, "ai_town_services", raid, {
+					"target_kind": "town", "target_placement_id": String(town.get("placement_id", "")),
+					"target_label": _town_name(town), "target_x": int(town.get("x", 0)), "target_y": int(town.get("y", 0)),
+					"target_reason_codes": ["town_visit_services"], "target_public_reason": "using town services",
+				}, {"summary": message, "state_policy": "durable_state_reference"}))
+		state["treasury"] = treasury
+		break
+	return {"messages": messages, "events": events}
 
 static func _maybe_resupply_raid_from_nearby_town(
 	session: SessionStateStoreScript.SessionData,

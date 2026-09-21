@@ -163,6 +163,68 @@ static func upgrade_cost(base: String, target: String, count: int) -> Dictionary
 		if delta > 0: cost[key] = delta
 	return cost
 
+static func train_hero(hero: Dictionary, town: Dictionary, building_id: String) -> Dictionary:
+	var building := ContentService.get_building(building_id)
+	var reward: Dictionary = building.get("hero_visit_reward", {})
+	var claims: Array = hero.get("town_training_claims", []).duplicate()
+	if building_id not in active_buildings(town) or reward.is_empty() or building_id in claims:
+		return {"ok": false, "hero": hero}
+	var trained := hero.duplicate(true)
+	if reward.has("experience"):
+		trained = Progression.add_experience(trained, int(reward.experience)).hero
+	var command: Dictionary = trained.get("command", {}).duplicate(true)
+	for stat in ["attack", "defense", "power", "knowledge"]:
+		command[stat] = int(command.get(stat, 0)) + int(reward.get(stat, 0))
+	trained["command"] = command
+	claims.append(building_id)
+	trained["town_training_claims"] = claims
+	return {"ok": true, "hero": trained}
+
+static func upgrade_army(town: Dictionary, stacks: Array, base: String, resources: Dictionary) -> Dictionary:
+	var target := String(data().get("unit_upgrades", {}).get(base, ""))
+	var available := false
+	for id in active_buildings(town):
+		if target != "" and ContentService.get_building(String(id)).get("unlock_unit_id", "") == target:
+			available = true
+	var count := 0
+	for stack in stacks:
+		if stack.get("unit_id", "") == base: count += maxi(0, int(stack.get("count", 0)))
+	var cost := upgrade_cost(base, target, count)
+	if not available or count <= 0 or not can_pay(resources, cost):
+		return {"ok": false, "stacks": stacks}
+	var upgraded := stacks.duplicate(true)
+	for stack in upgraded:
+		if stack.get("unit_id", "") == base: stack["unit_id"] = target
+	for key in cost: resources[key] = int(resources.get(key, 0)) - int(cost[key])
+	return {"ok": true, "stacks": upgraded, "count": count, "cost": cost}
+
+static func trade_artifact(hero: Dictionary, town: Dictionary, day: int, artifact_id: String, buying: bool, resources: Dictionary) -> Dictionary:
+	var exchange := false
+	for id in active_buildings(town):
+		if ContentService.get_building(String(id)).get("artifact_exchange", false): exchange = true
+	var artifact := ContentService.get_artifact(artifact_id)
+	if not exchange or artifact.is_empty() or bool(artifact.get("quest_item", false)):
+		return {"ok": false, "hero": hero}
+	var week := str(maxi(0, (day - 1) / 7))
+	var purchases: Dictionary = town.get("artifact_shop_purchases", {}).duplicate(true)
+	var purchased: Array = purchases.get(week, [])
+	var result: Dictionary
+	if buying:
+		if artifact_id not in offers(town, day) or artifact_id in purchased or Artifacts.has_artifact(hero, artifact_id) or not can_pay(resources, {"gold": price(artifact)}):
+			return {"ok": false, "hero": hero}
+		result = Artifacts.claim_artifact(hero, artifact_id, "Purchased", false)
+	else:
+		if artifact_id not in Artifacts.normalize_hero_artifacts(hero.get("artifacts", {})).inventory:
+			return {"ok": false, "hero": hero}
+		result = Artifacts.remove_owned_artifact(hero, artifact_id)
+	if not bool(result.get("ok", false)): return result
+	resources["gold"] = int(resources.get("gold", 0)) + (-price(artifact) if buying else price(artifact) / 2)
+	if buying:
+		purchased.append(artifact_id)
+		purchases[week] = purchased
+		town["artifact_shop_purchases"] = purchases
+	return result
+
 static func service_actions(session, town: Dictionary) -> Array:
 	var actions: Array = []
 	if town.is_empty() or town.get("owner", "") != "player": return actions
@@ -215,40 +277,26 @@ static func perform_service(session, town: Dictionary, action_id: String) -> Dic
 	match parts[0]:
 		"town_train":
 			var b := ContentService.get_building(parts[1])
-			var reward: Dictionary = b.get("hero_visit_reward",{})
-			if reward.has("experience"): hero=Progression.add_experience(hero,int(reward.experience)).hero
-			var command: Dictionary = hero.get("command",{}).duplicate(true)
-			for stat in ["attack","defense","power","knowledge"]:
-				command[stat]=int(command.get(stat,0))+int(reward.get(stat,0))
-			hero["command"]=command
-			var claims: Array = hero.get("town_training_claims",[]).duplicate()
-			claims.append(parts[1]);hero["town_training_claims"]=claims
+			var result := train_hero(hero, town, parts[1])
+			if not result.ok: return result
+			hero = result.hero
 			message=String(b.description)
 		"town_upgrade":
 			var base := String(parts[2])
-			var target := String(data().get("unit_upgrades",{}).get(base,""))
 			var stacks := Heroes._holder_stacks(session,town,parts[1])
-			var count := 0
-			for stack in stacks:
-				if stack.get("unit_id","")==base: count+=int(stack.get("count",0));stack["unit_id"]=target
-			var cost := upgrade_cost(base,target,count)
-			for key in cost: resources[key]=int(resources.get(key,0))-int(cost[key])
-			Heroes._set_holder_stacks(session,town,parts[1],stacks)
-			message="Upgraded %d creatures for %s." % [count,cost_text(cost)]
+			var result := upgrade_army(town, stacks, base, resources)
+			if not result.ok: return result
+			Heroes._set_holder_stacks(session,town,parts[1],result.stacks)
+			message="Upgraded %d creatures for %s." % [result.count,cost_text(result.cost)]
 		"town_buy":
-			var result := Artifacts.claim_artifact(hero,parts[1],"Purchased",false)
+			var result := trade_artifact(hero, town, session.day, parts[1], true, resources)
 			if not bool(result.get("ok",false)): return result
 			hero=result.hero
-			resources["gold"]=int(resources.get("gold",0))-price(ContentService.get_artifact(parts[1]))
-			var week := str(maxi(0,(int(session.day)-1)/7))
-			var purchases: Dictionary = town.get("artifact_shop_purchases",{}).duplicate(true)
-			var purchased: Array=purchases.get(week,[]);purchased.append(parts[1]);purchases[week]=purchased;town["artifact_shop_purchases"]=purchases
 			message="Bought "+String(ContentService.get_artifact(parts[1]).get("name",parts[1]))+"."
 		"town_sell":
-			var result := Artifacts.remove_owned_artifact(hero,parts[1])
+			var result := trade_artifact(hero, town, session.day, parts[1], false, resources)
 			if not bool(result.get("ok",false)): return result
 			hero=result.hero
-			resources["gold"]=int(resources.get("gold",0))+price(ContentService.get_artifact(parts[1]))/2
 			message="Sold "+String(ContentService.get_artifact(parts[1]).get("name",parts[1]))+"."
 	if parts[0] != "town_upgrade": session.overworld["hero"]=hero
 	session.overworld["resources"]=resources
