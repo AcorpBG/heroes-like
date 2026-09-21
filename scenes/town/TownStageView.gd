@@ -157,7 +157,7 @@ const FACTION_BACKDROP_TEXTURES := {
 }
 const FACTION_DEVELOPMENT_SCENE_PATHS := {
 	"faction_embercourt": {
-		"village": "res://art/towns/runtime/backdrops/overhaul/faction_embercourt_cleared_village.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_embercourt_terraced_village.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_fully_built.png",
 	},
