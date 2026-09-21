@@ -332,74 +332,241 @@
       "reference_inputs": [
         "art/towns/source/generated/overhaul/faction_embercourt/terraced_village.png"
       ]
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_wayfarers_hall.png",
+      "source_sha256": "eb60a5451315605c796cabd8cf67c5b6a6ae00860f52766ab178bac4cfe0b8c5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_wayfarers_hall.prompt.txt",
+      "generation_output": "exec-e4775f73-b4be-4a2c-a307-345d205baa14.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_wayfarers_hall",
+      "visible_width": 145,
+      "ground_anchor": [
+        240,
+        530
+      ],
+      "grounding": "Original function-specific Embercourt building on its authored river-quay terrace; front entrance joins the working town paths."
+    },
+    {
+      "id": "building_dev_growth_1",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_1.png",
+      "source_sha256": "bcd7e4f3329b94ea8938131445554931e8f81b2e8fd80f1f04ef6730e903046c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_1.prompt.txt",
+      "generation_output": "exec-8e5eb29c-0e0e-4d5a-870e-adbc617cb84c.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_growth_1",
+      "visible_width": 110,
+      "ground_anchor": [
+        80,
+        590
+      ],
+      "grounding": "Original function-specific Embercourt building on its authored river-quay terrace; front entrance joins the working town paths."
+    },
+    {
+      "id": "building_dev_growth_2",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_2.png",
+      "source_sha256": "9f86a3ef5eba6b483686aa9e7c633de50eac17c6cdfd72c92ca2ab801a847107",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_2.prompt.txt",
+      "generation_output": "exec-0a24c860-dbc6-4299-b3cf-e4eefa39ce2d.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_growth_2",
+      "visible_width": 130,
+      "ground_anchor": [
+        1235,
+        610
+      ],
+      "grounding": "Original function-specific Embercourt building on its authored river-quay terrace; front entrance joins the working town paths."
+    },
+    {
+      "id": "building_dev_growth_3",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_3.png",
+      "source_sha256": "815c44146f0eeac44c77d6df101b27b2a8bd7804b7685a766e6718b62bf1b69a",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_growth_3.prompt.txt",
+      "generation_output": "exec-2005a96a-d54d-4e3a-a5f2-55f551ff244d.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_growth_3",
+      "visible_width": 105,
+      "ground_anchor": [
+        85,
+        475
+      ],
+      "grounding": "Original function-specific Embercourt building on its authored river-quay terrace; front entrance joins the working town paths."
+    },
+    {
+      "id": "building_dev_training_attack",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_attack.png",
+      "source_sha256": "6a3d356f355fd4518f74066c9fd50d324da07e9ef97b7343779841e55023db59",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_attack.prompt.txt",
+      "generation_output": "exec-906cdab0-689b-445c-9e42-7093f6651ab1.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_training_attack",
+      "visible_width": 155,
+      "ground_anchor": [
+        1175,
+        725
+      ],
+      "grounding": "Original function-specific Embercourt building on its authored river-quay terrace; front entrance joins the working town paths."
+    },
+    {
+      "id": "building_dev_training_defense",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_defense.png",
+      "source_sha256": "5472da63dc67d4457b5214bfa9d1b01a500fa1b3adc94bcca90a7d9471156045",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_defense.prompt.txt",
+      "generation_output": "exec-87264406-46f7-4cba-aef8-3f6b47437fea.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_training_defense",
+      "visible_width": 130,
+      "ground_anchor": [
+        390,
+        580
+      ],
+      "grounding": "Original function-specific Embercourt building on its authored river-quay terrace; front entrance joins the working town paths."
+    },
+    {
+      "id": "building_dev_training_experience",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_experience.png",
+      "source_sha256": "1dc97324549260828edc246764b0cb9bcd787e7a639550cddfb414a13fb5d583",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_training_experience.prompt.txt",
+      "generation_output": "exec-f427a95b-74a8-463b-a815-9b6058d0f810.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_training_experience",
+      "visible_width": 135,
+      "ground_anchor": [
+        400,
+        690
+      ],
+      "grounding": "Original function-specific Embercourt building on its authored river-quay terrace; front entrance joins the working town paths."
+    },
+    {
+      "id": "building_dev_artifact_exchange",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_artifact_exchange.png",
+      "source_sha256": "3727523fe37b650f5c950fa90033fbedd8e30a4bf5552a33f4485185263bcbe5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_artifact_exchange.prompt.txt",
+      "generation_output": "exec-60878a16-1d22-4905-a777-5ac448871824.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_artifact_exchange",
+      "visible_width": 175,
+      "ground_anchor": [
+        1340,
+        770
+      ],
+      "grounding": "Original function-specific Embercourt building on its authored river-quay terrace; front entrance joins the working town paths."
+    },
+    {
+      "id": "building_dev_embercourt_unique_1",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_1_riverside.png",
+      "source_sha256": "796766a0ce81730d4928adee11c983e3e3d51b4e60251563569b4a5e3525f937",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_1_riverside.prompt.txt",
+      "generation_output": "exec-d7b93b55-8859-4c6b-98c9-f754ba41c7bb.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_embercourt_unique_1",
+      "visible_width": 180,
+      "ground_anchor": [
+        505,
+        855
+      ],
+      "grounding": "Counting office stands on the left-bank quay with the dock extending right and its cargo barge on the river side."
+    },
+    {
+      "id": "building_dev_embercourt_unique_2",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_2.png",
+      "source_sha256": "13c336d425d2fb509d0558f854fd0cf398030553c6d78452ae3817ab8bada353",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_2.prompt.txt",
+      "generation_output": "exec-e09268e0-6936-410c-82c0-ef321fee01e7.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_embercourt_unique_2",
+      "visible_width": 125,
+      "ground_anchor": [
+        915,
+        465
+      ],
+      "grounding": "Original function-specific Embercourt building on its authored river-quay terrace; front entrance joins the working town paths."
+    },
+    {
+      "id": "building_dev_embercourt_unique_3",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_3.png",
+      "source_sha256": "cdc032677b00bec241617e3f0bb5b4052f96754e613bd430affa49f9c42df8da",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_3.prompt.txt",
+      "generation_output": "exec-ae3d7a0c-115a-40ed-a7a8-261dfece0143.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_embercourt_unique_3",
+      "visible_width": 105,
+      "ground_anchor": [
+        1020,
+        650
+      ],
+      "grounding": "Quartermaster depot stands on the paved right-bank working quay west of the sparring grounds."
     }
   ],
   "existing_plot_placements": {
     "faction_embercourt": {
-      "building_wayfarers_hall": {
-        "ground_anchor": [
-          240,
-          530
-        ],
-        "visible_width": 145,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "building_dev_growth_1": {
-        "ground_anchor": [
-          80,
-          590
-        ],
-        "visible_width": 110,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "building_dev_growth_2": {
-        "ground_anchor": [
-          1235,
-          610
-        ],
-        "visible_width": 130,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "building_dev_growth_3": {
-        "ground_anchor": [
-          85,
-          475
-        ],
-        "visible_width": 105,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "building_dev_training_attack": {
-        "ground_anchor": [
-          1175,
-          725
-        ],
-        "visible_width": 155,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "building_dev_training_defense": {
-        "ground_anchor": [
-          390,
-          580
-        ],
-        "visible_width": 130,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "building_dev_training_experience": {
-        "ground_anchor": [
-          400,
-          690
-        ],
-        "visible_width": 135,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "building_dev_artifact_exchange": {
-        "ground_anchor": [
-          1340,
-          770
-        ],
-        "visible_width": 175,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
       "embercourt_t1": {
         "ground_anchor": [
           1505,
@@ -454,30 +621,6 @@
           850
         ],
         "visible_width": 160,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "building_dev_embercourt_unique_1": {
-        "ground_anchor": [
-          460,
-          845
-        ],
-        "visible_width": 145,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "building_dev_embercourt_unique_2": {
-        "ground_anchor": [
-          915,
-          465
-        ],
-        "visible_width": 125,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "building_dev_embercourt_unique_3": {
-        "ground_anchor": [
-          1240,
-          385
-        ],
-        "visible_width": 90,
         "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
       }
     }
