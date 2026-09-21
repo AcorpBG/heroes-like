@@ -47,7 +47,14 @@ static func building_category_icon_path(building_id: String) -> String:
 		return ""
 	return icon_path
 
-static func building_icon_path(building_id: String) -> String:
+static func building_icon_path(building_id: String, faction_id: String = "") -> String:
+	if faction_id != "":
+		var layers := ContentService.load_json("res://content/town_building_scene_art_manifest.json")
+		var faction_layers: Dictionary = layers.get("factions", {}).get(faction_id, {})
+		var layer: Dictionary = faction_layers.get(building_id, {})
+		var faction_icon := String(layer.get("icon_path", ""))
+		if faction_icon.begins_with("res://art/towns/runtime/buildings/") and ResourceLoader.exists(faction_icon, "Texture2D"):
+			return faction_icon
 	var art := ContentService.get_building_art(building_id)
 	var icon_path := String(art.get("icon_path", "")).strip_edges()
 	if String(art.get("id", "")) == building_id \

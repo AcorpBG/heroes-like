@@ -6851,6 +6851,202 @@
         "generation_date": "2026-09-09",
         "generation_output": "exec-c5e69ade-ae1a-4004-b0bc-d3e033c585d9.png",
         "shared_art_from": "building_charter_bastion"
+      },
+      "building_town_hall": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_town_hall.png",
+        "source_sha256": "2975e7bdd9c2fe2c2c07c91c5f0aef718c93f237ee25d8b1cfc5b1b1bc8e1cab",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_town_hall.prompt.txt",
+        "prompt_sha256": "9d0266fe8cae5a7d8c46352aa63581113023ac30cf1ba377761398d5fad9add6",
+        "generation_output": "exec-a10d0868-3783-4a49-a74a-239e8ee07ce0.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_town_hall",
+        "trim_box": [
+          41,
+          39,
+          1222,
+          1230
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_town_hall.png",
+        "runtime_sha256": "78f64add8f077bd782d38c640236f91f0e3862a60e682e9504a06d863d071ab9",
+        "runtime_size": [
+          508,
+          512
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_town_hall.png",
+        "icon_sha256": "1edc49944cf5a9bf98de5275d82df790bb97bedfa5f45a41fd0dd89d77cc4239",
+        "normalized_rect": [
+          0.6203125,
+          0.3757550098786339,
+          0.134375,
+          0.24091165678803275
+        ],
+        "ground_anchor": [
+          0.6875,
+          0.6166666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Civic building sits on the cleared right-bank courtyard with its entrance facing the quay; successive stages retain the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
+      },
+      "building_dev_hall_2": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_2.png",
+        "source_sha256": "cc6922447c1419b4f96c5faef489d7a07aad139bbb97584b988bca8cd408a04b",
+        "source_size": [
+          1367,
+          1150
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_2.prompt.txt",
+        "prompt_sha256": "fe143391cd7b3757e861e0568836d474e880b7f9e285fed2f98bfa82f5b3d83d",
+        "generation_output": "exec-028a344c-d394-4e01-9dbd-9dabf22781c4.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_hall_2",
+        "trim_box": [
+          0,
+          0,
+          1324,
+          1146
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_hall_2.png",
+        "runtime_sha256": "8681b79606afb221fcfaf424f0e5bb93ee5ef9a3bbede9640ea7d7ca8bdefc5d",
+        "runtime_size": [
+          512,
+          443
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_hall_2.png",
+        "icon_sha256": "7bb6c0f8b20e8f129f57f75b7d4b15ab6eb455d15359660d457ab9950d345c04",
+        "normalized_rect": [
+          0.6109375,
+          0.3810422960725076,
+          0.153125,
+          0.2356243705941591
+        ],
+        "ground_anchor": [
+          0.6875,
+          0.6166666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Civic building sits on the cleared right-bank courtyard with its entrance facing the quay; successive stages retain the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
+      },
+      "building_dev_hall_3": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_3.png",
+        "source_sha256": "51778f1a2855f9efbcc591c085b5c43ec02d6dd637ee3528ae8a67833097c270",
+        "source_size": [
+          1312,
+          1199
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_3.prompt.txt",
+        "prompt_sha256": "3cae935e4d36cdedad45b9666e77a3ea588667467e0ac7154a36775f3c732d70",
+        "generation_output": "exec-996e475d-a6b2-4de2-b88c-50bcdbfc9ed2.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_hall_3",
+        "trim_box": [
+          0,
+          0,
+          1312,
+          1199
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_hall_3.png",
+        "runtime_sha256": "f26565c951642ff928e84d34735f26b6f59d032b0d3fbc0e6ea6434a8ac65023",
+        "runtime_size": [
+          512,
+          468
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_hall_3.png",
+        "icon_sha256": "1c696990da723a82203472e15728440569e2064a17d438cde72266a3e66a5b82",
+        "normalized_rect": [
+          0.6,
+          0.3323509485094851,
+          0.175,
+          0.28431571815718154
+        ],
+        "ground_anchor": [
+          0.6875,
+          0.6166666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Civic building sits on the cleared right-bank courtyard with its entrance facing the quay; successive stages retain the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
+      },
+      "building_dev_hall_4": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_4.png",
+        "source_sha256": "bcf2d84f0f50a2e2fed576b2c505c17330f727bb057f1279e1313ad5cc22ffba",
+        "source_size": [
+          1312,
+          1199
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_4.prompt.txt",
+        "prompt_sha256": "774ddc49e2f17d22ef554a8946f1145eaae9a34c6ba25b2322be8421dfcaa0d8",
+        "generation_output": "exec-318e579a-6998-4f11-86fc-c5de7025dcd2.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_hall_4",
+        "trim_box": [
+          12,
+          5,
+          1300,
+          1183
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_hall_4.png",
+        "runtime_sha256": "ca2e148e8b09f2a43d439fb1837d46fe96a0280e1ab3ddd8bb8415da1101f29a",
+        "runtime_size": [
+          512,
+          468
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_hall_4.png",
+        "icon_sha256": "21971694d29f2f6f084f27843e4c3fc01e521d48a54cdcc26ca54e70adf8f140",
+        "normalized_rect": [
+          0.5875,
+          0.29147688060731536,
+          0.2,
+          0.3251897860593513
+        ],
+        "ground_anchor": [
+          0.6875,
+          0.6166666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Civic building sits on the cleared right-bank courtyard with its entrance facing the quay; successive stages retain the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       }
     },
     "faction_mireclaw": {

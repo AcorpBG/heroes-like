@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "processing": "Original built-in imagegen masters. Crop transparent margins and Lanczos downsample only; no synthetic building geometry or palette swaps. Backdrop edit is separately generated from the original project scene.",
+  "items": [
+    {
+      "id": "building_town_hall",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_town_hall.png",
+      "source_sha256": "2975e7bdd9c2fe2c2c07c91c5f0aef718c93f237ee25d8b1cfc5b1b1bc8e1cab",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_town_hall.prompt.txt",
+      "generation_output": "exec-a10d0868-3783-4a49-a74a-239e8ee07ce0.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 215,
+      "ground_anchor": [
+        1100,
+        555
+      ]
+    },
+    {
+      "id": "building_dev_hall_2",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_2.png",
+      "source_sha256": "cc6922447c1419b4f96c5faef489d7a07aad139bbb97584b988bca8cd408a04b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_2.prompt.txt",
+      "generation_output": "exec-028a344c-d394-4e01-9dbd-9dabf22781c4.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 245,
+      "ground_anchor": [
+        1100,
+        555
+      ]
+    },
+    {
+      "id": "building_dev_hall_3",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_3.png",
+      "source_sha256": "51778f1a2855f9efbcc591c085b5c43ec02d6dd637ee3528ae8a67833097c270",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_3.prompt.txt",
+      "generation_output": "exec-996e475d-a6b2-4de2-b88c-50bcdbfc9ed2.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 280,
+      "ground_anchor": [
+        1100,
+        555
+      ]
+    },
+    {
+      "id": "building_dev_hall_4",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_4.png",
+      "source_sha256": "bcf2d84f0f50a2e2fed576b2c505c17330f727bb057f1279e1313ad5cc22ffba",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_hall_4.prompt.txt",
+      "generation_output": "exec-318e579a-6998-4f11-86fc-c5de7025dcd2.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 320,
+      "ground_anchor": [
+        1100,
+        555
+      ]
+    },
+    {
+      "id": "cleared_village",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/cleared_village.png",
+      "source_sha256": "7da8176b780e53a833d11665bfbf949e48f65c805da486ecbf520ebfc51bc574",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/cleared_village.prompt.txt",
+      "generation_output": "exec-83db05a5-149d-4a0b-8c94-e0b314c3a47b.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/runtime/backdrops/development_scenes/town_embercourt_village.png"
+      ],
+      "kind": "backdrop",
+      "stage": "village"
+    }
+  ]
+}

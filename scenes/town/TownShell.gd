@@ -622,7 +622,7 @@ func _populate_building_information(building_id: String) -> void:
 	_town_catalog_subtitle_label.text = "Completed %s building • inspect its permanent town contribution" % category.to_lower()
 	_building_info_status.text = "%s • Standing in %s" % [category, String(_header_label.text).split(" • ")[0]]
 	_building_info_description.text = String(building.get("description", "No description available."))
-	var texture_path := TownRules.building_icon_path(building_id)
+	var texture_path := TownRules.building_icon_path(building_id, _active_town_faction_id())
 	_building_info_icon.texture = load(texture_path) as Texture2D if texture_path != "" and ResourceLoader.exists(texture_path, "Texture2D") else null
 	_building_info_icon.tooltip_text = "%s — original Town building painting" % building_name
 	_building_info_icon.accessibility_name = "%s building painting" % building_name
@@ -3998,7 +3998,7 @@ func _catalog_build_tooltip(action: Dictionary) -> String:
 
 func _apply_build_action_icon(button: Button, action: Dictionary) -> void:
 	var building_id := TownRules.building_id_for_action(String(action.get("id", "")))
-	var icon_path := TownRules.building_icon_path(building_id)
+	var icon_path := TownRules.building_icon_path(building_id, _active_town_faction_id())
 	if icon_path == "":
 		return
 	var texture := load(icon_path) as Texture2D
