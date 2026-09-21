@@ -5242,9 +5242,22 @@
       ],
       "development_version": 1,
       "faction_id": "faction_embercourt",
-      "description": "Chartered river convoys produce 500 gold daily.",
+      "description": "Chartered river convoys produce 500 gold daily. Exchange 3 wood and 3 ore for 1,200 gold. Service available once per week per town.",
       "income": {
         "gold": 500
+      },
+      "faction_service": {
+        "label": "Commission a supply convoy",
+        "description": "Exchange 3 wood and 3 ore for 1,200 gold.",
+        "scope": "town",
+        "kind": "resource_exchange",
+        "cost": {
+          "wood": 3,
+          "ore": 3
+        },
+        "reward": {
+          "gold": 1200
+        }
       }
     },
     {
@@ -5261,9 +5274,15 @@
       ],
       "development_version": 1,
       "faction_id": "faction_embercourt",
-      "description": "Signal beacons add 15 town battle readiness. Defending creatures also gain +2 defense during town battles.",
+      "description": "Signal beacons add 15 town battle readiness. Defending creatures also gain +2 defense during town battles. Beacon Volley: defending ranged attacks deal 25% more damage in round 1.",
       "readiness_bonus": 15,
-      "defender_defense_bonus": 2
+      "defender_defense_bonus": 2,
+      "town_defense_effect": {
+        "id": "beacon_volley",
+        "rounds": 1,
+        "damage_pct": 25,
+        "description": "Beacon Volley: defending ranged attacks deal 25% more damage in round 1."
+      }
     },
     {
       "id": "building_dev_embercourt_unique_3",
@@ -5899,9 +5918,15 @@
       ],
       "development_version": 1,
       "faction_id": "faction_mireclaw",
-      "description": "Flood chains add 20 town battle readiness. Defending creatures also gain +2 defense during town battles.",
+      "description": "Flood chains add 20 town battle readiness. Defending creatures also gain +2 defense during town battles. Chainboom: attacking creatures lose 1 movement point in rounds 1-2, minimum 1.",
       "readiness_bonus": 20,
-      "defender_defense_bonus": 2
+      "defender_defense_bonus": 2,
+      "town_defense_effect": {
+        "id": "chainboom",
+        "rounds": 2,
+        "movement_penalty": 1,
+        "description": "Chainboom: attacking creatures lose 1 movement point in rounds 1-2, minimum 1."
+      }
     },
     {
       "id": "building_dev_mireclaw_unique_3",
@@ -5917,9 +5942,22 @@
       ],
       "development_version": 1,
       "faction_id": "faction_mireclaw",
-      "description": "Reedkin gatherings add 3 weekly tier-1 recruits.",
+      "description": "Reedkin gatherings add 3 weekly tier-1 recruits. Add one base week of recruits to the chosen tier-1 dwelling. Recruitment still costs its normal price. Service available once per week per town.",
       "growth_tier": 1,
-      "growth_amount": 3
+      "growth_amount": 3,
+      "faction_service": {
+        "label": "Call the reedkin levy",
+        "description": "Add one base week of recruits to the chosen tier-1 dwelling. Recruitment still costs its normal price.",
+        "scope": "town",
+        "kind": "recruits",
+        "cost": {
+          "peatwax": 1
+        },
+        "tiers": [
+          1
+        ],
+        "growth_pct": 100
+      }
     },
     {
       "id": "building_dev_sunvault_t1_1",
@@ -6510,9 +6548,18 @@
       ],
       "development_version": 1,
       "faction_id": "faction_sunvault",
-      "description": "Visiting heroes gain +1 power, once per hero across all Calibration Courts.",
+      "description": "Visiting heroes gain +1 power, once per hero across all Calibration Courts. Restore this visiting hero to full mana. Service available once per week per hero.",
       "hero_visit_reward": {
         "power": 1
+      },
+      "faction_service": {
+        "label": "Restore mana at the Calibration Court",
+        "description": "Restore this visiting hero to full mana.",
+        "scope": "hero",
+        "kind": "restore_mana",
+        "cost": {
+          "aetherglass": 1
+        }
       }
     },
     {
@@ -6529,9 +6576,15 @@
       ],
       "development_version": 1,
       "faction_id": "faction_sunvault",
-      "description": "Calibrated musters add 2 weekly tier-2 recruits.",
+      "description": "Calibrated musters add 2 weekly tier-2 recruits. Prism Ward: defenders gain 30 percentage points of spell-damage resistance in rounds 1-2, subject to the normal resistance cap.",
       "growth_tier": 2,
-      "growth_amount": 2
+      "growth_amount": 2,
+      "town_defense_effect": {
+        "id": "prism_ward",
+        "rounds": 2,
+        "resistance_pct": 30,
+        "description": "Prism Ward: defenders gain 30 percentage points of spell-damage resistance in rounds 1-2, subject to the normal resistance cap."
+      }
     },
     {
       "id": "building_dev_thornwake_t1_1",
@@ -7103,9 +7156,25 @@
       ],
       "development_version": 1,
       "faction_id": "faction_thornwake",
-      "description": "The living nursery produces 1 verdant graft daily.",
+      "description": "The living nursery produces 1 verdant graft daily. Add half a base week of recruits, rounded up, to each built tier-1, tier-2 and tier-3 dwelling. Recruitment still costs its normal price. Service available once per week per town.",
       "income": {
         "verdant_grafts": 1
+      },
+      "faction_service": {
+        "label": "Awaken the graft bloom",
+        "description": "Add half a base week of recruits, rounded up, to each built tier-1, tier-2 and tier-3 dwelling. Recruitment still costs its normal price.",
+        "scope": "town",
+        "kind": "recruits",
+        "cost": {
+          "verdant_grafts": 1,
+          "gold": 500
+        },
+        "tiers": [
+          1,
+          2,
+          3
+        ],
+        "growth_pct": 50
       }
     },
     {
@@ -7122,9 +7191,15 @@
       ],
       "development_version": 1,
       "faction_id": "faction_thornwake",
-      "description": "Living roots add 15 town battle readiness. Defending creatures also gain +2 defense during town battles.",
+      "description": "Living roots add 15 town battle readiness. Defending creatures also gain +2 defense during town battles. Rootbound Ward: at the start of rounds 2 and 3, each surviving defending stack heals up to 25% of one creature's health. Fallen creatures are not restored.",
       "readiness_bonus": 15,
-      "defender_defense_bonus": 2
+      "defender_defense_bonus": 2,
+      "town_defense_effect": {
+        "id": "root_ward",
+        "rounds": 3,
+        "heal_pct": 25,
+        "description": "Rootbound Ward: at the start of rounds 2 and 3, each surviving defending stack heals up to 25% of one creature's health. Fallen creatures are not restored."
+      }
     },
     {
       "id": "building_dev_thornwake_unique_3",
@@ -7733,7 +7808,7 @@
       ],
       "development_version": 1,
       "faction_id": "faction_brasshollow",
-      "description": "Standardized assembly reduces faction recruitment costs by 10%.",
+      "description": "Standardized assembly reduces faction recruitment costs by 10%. Convert 2 wood, 2 ore and 350 gold into 2 embergrain for tier-6 recruitment. Service available once per week per town.",
       "recruitment_discount_percent": {
         "unit_brasshollow_scrip_haulers": 10,
         "unit_brasshollow_rivet_hounds": 10,
@@ -7762,6 +7837,20 @@
         "unit_brasshollow_quenchbell_mortars_veteran": 10,
         "unit_brasshollow_crucible_crawlers_veteran": 10,
         "unit_brasshollow_foundry_saint_veteran": 10
+      },
+      "faction_service": {
+        "label": "Reclaim furnace fuel",
+        "description": "Convert 2 wood, 2 ore and 350 gold into 2 embergrain for tier-6 recruitment.",
+        "scope": "town",
+        "kind": "resource_exchange",
+        "cost": {
+          "wood": 2,
+          "ore": 2,
+          "gold": 350
+        },
+        "reward": {
+          "embergrain": 2
+        }
       }
     },
     {
@@ -7778,9 +7867,14 @@
       ],
       "development_version": 1,
       "faction_id": "faction_brasshollow",
-      "description": "Pressure defenses add 20 town battle readiness. Defending creatures also gain +2 defense during town battles.",
+      "description": "Pressure defenses add 20 town battle readiness. Defending creatures also gain +2 defense during town battles. Pressure Shield: each defending stack begins battle with a non-renewing shield absorbing damage equal to 15% of its starting health.",
       "readiness_bonus": 20,
-      "defender_defense_bonus": 2
+      "defender_defense_bonus": 2,
+      "town_defense_effect": {
+        "id": "pressure_shield",
+        "health_pct": 15,
+        "description": "Pressure Shield: each defending stack begins battle with a non-renewing shield absorbing damage equal to 15% of its starting health."
+      }
     },
     {
       "id": "building_dev_veilmourn_t1_1",
@@ -8371,9 +8465,20 @@
       ],
       "development_version": 1,
       "faction_id": "faction_veilmourn",
-      "description": "Visiting heroes gain 750 experience, once per hero across all Charts.",
+      "description": "Visiting heroes gain 750 experience, once per hero across all Charts. Gain 1,500 experience from preserved voyage memories. Service available once per week per hero.",
       "hero_visit_reward": {
         "experience": 750
+      },
+      "faction_service": {
+        "label": "Study a lost voyage",
+        "description": "Gain 1,500 experience from preserved voyage memories.",
+        "scope": "hero",
+        "kind": "experience",
+        "cost": {
+          "memory_salt": 1,
+          "gold": 500
+        },
+        "experience": 1500
       }
     },
     {
@@ -8390,9 +8495,15 @@
       ],
       "development_version": 1,
       "faction_id": "faction_veilmourn",
-      "description": "Harbor bells add 2 weekly tier-3 recruits.",
+      "description": "Harbor bells add 2 weekly tier-3 recruits. Bellwake Fog: defending creatures take 35% less ranged damage in rounds 1-2.",
       "growth_tier": 3,
-      "growth_amount": 2
+      "growth_amount": 2,
+      "town_defense_effect": {
+        "id": "bellwake_fog",
+        "rounds": 2,
+        "ranged_reduction_pct": 35,
+        "description": "Bellwake Fog: defending creatures take 35% less ranged damage in rounds 1-2."
+      }
     }
   ]
 }

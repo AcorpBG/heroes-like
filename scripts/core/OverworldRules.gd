@@ -6477,6 +6477,7 @@ static func _copy_town_runtime_metadata(target: Dictionary, source: Dictionary) 
 		"development_version",
 		"legacy_built_buildings",
 		"artifact_shop_purchases",
+		"town_service_claims",
 		"controlling_player_id",
 		"owner_slot",
 		"level",

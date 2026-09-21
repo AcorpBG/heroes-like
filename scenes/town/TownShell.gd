@@ -540,7 +540,7 @@ func _direct_dialog_mode_surfaces(mode: String) -> Array:
 		"muster":
 			return [_response_label, _response_actions]
 		"log":
-			return [_army_management, _artifact_label, _artifact_actions, _tavern_label, _tavern_actions, _transfer_label, _transfer_actions, _response_label, _response_actions]
+			return [_response_label, _response_actions, _army_management, _artifact_label, _artifact_actions, _tavern_label, _tavern_actions, _transfer_label, _transfer_actions]
 		"building_info":
 			return [_building_info_surface]
 		_:
@@ -551,6 +551,8 @@ func _set_direct_dialog_surface_visibility(mode: String) -> void:
 	for child in _domain_actions.get_children():
 		if child is CanvasItem:
 			(child as CanvasItem).visible = child in visible_surfaces
+	for index in range(visible_surfaces.size()):
+		_domain_actions.move_child(visible_surfaces[index], index)
 
 func _configure_direct_action_buttons() -> void:
 	var controls := {
@@ -2773,6 +2775,7 @@ func _active_hero_cache_signature(town: Dictionary) -> String:
 	parts.append("level=%d" % int(hero.get("level", 0)))
 	parts.append("xp=%d" % int(hero.get("experience", 0)))
 	parts.append("training=%s" % _string_array_signature(hero.get("town_training_claims", [])))
+	parts.append("faction_services=%s/%s" % [JSON.stringify(hero.get("town_service_claims", {})), JSON.stringify(town.get("town_service_claims", {}))])
 	parts.append("command=%s" % JSON.stringify(hero.get("command", {})))
 	var movement: Dictionary = hero.get("movement", {}) if hero.get("movement", {}) is Dictionary else {}
 	var overworld_movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
@@ -4246,6 +4249,10 @@ func _rebuild_response_actions(actions_override: Variant = null) -> void:
 		actions = actions.filter(func(a): return String(a.get("id", "")).begins_with("town_upgrade:"))
 	elif _town_catalog_mode == "trade":
 		actions = actions.filter(func(a): return String(a.get("id", "")).begins_with("town_buy:") or String(a.get("id", "")).begins_with("town_sell:"))
+	elif _town_catalog_mode == "log":
+		actions = actions.filter(func(a):
+			var id := String(a.get("id", ""))
+			return not id.begins_with("town_") or id.begins_with("town_train:") or id.begins_with("town_faction:"))
 	if actions.is_empty():
 		_response_actions.add_child(_make_placeholder_label("Build an upgraded dwelling to train its stationed troops." if _town_catalog_mode == "muster" else "Build an Artifact Exchange and bring a hero to trade." if _town_catalog_mode == "trade" else "No town services ready"))
 		return

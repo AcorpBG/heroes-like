@@ -10,6 +10,7 @@ const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
+const TownBattle = preload("res://scripts/core/TownBattleRules.gd")
 const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRules.gd")
 const BattleAiRulesScript = preload("res://scripts/core/BattleAiRules.gd")
 const ActionPlayback = preload("res://scripts/core/BattleActionPlayback.gd")
@@ -301,6 +302,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 	if town_context_type in ["town_defense", "town_assault"]:
 		var defending_town: Dictionary = _find_town_by_placement(session, String(battle_context.get("town_placement_id", ""))).get("town", {})
 		OverworldRulesScript.TownDevelopment.apply_defender_bonus(stacks, defending_town, town_context_type)
+		TownBattle.prepare(battle, OverworldRulesScript.TownDevelopment.active_buildings(defending_town), "player" if town_context_type == "town_defense" else "enemy")
 	_ensure_battle_hex_state(battle)
 	_initialize_damage_rng_state(session, battle)
 	_prepare_round(battle, 1)
@@ -1357,7 +1359,7 @@ static func legal_destinations_for_stack(battle: Dictionary, battle_id: String) 
 		return []
 	if _advance_distance_delta(stack, battle) <= 0 and int(battle.get("distance", 1)) > 0:
 		return []
-	return _reachable_empty_hexes(battle, stack, _stack_movement_points(stack))
+	return _reachable_empty_hexes(battle, stack, _stack_movement_points(stack, battle))
 
 static func legal_attack_targets_for_active_stack(battle: Dictionary, ranged: bool = false) -> Array:
 	var active_stack = get_active_stack(battle)
@@ -8257,6 +8259,7 @@ static func _normalize_stack(stack: Variant) -> Dictionary:
 		"tier": clamp(int(stack.get("tier", unit.get("tier", 1))), 1, 7),
 		"unit_hp": unit_hp,
 		"total_health": max(0, int(stack.get("total_health", int(stack.get("base_count", 0)) * unit_hp))),
+		"town_shield_hp": maxi(0, int(stack.get("town_shield_hp", 0))),
 		"base_count": max(0, int(stack.get("base_count", 0))),
 		"attack": int(stack.get("attack", unit.get("attack", 0))),
 		"defense": int(stack.get("defense", unit.get("defense", 0))),
@@ -8462,8 +8465,8 @@ static func _first_open_body_near(stack: Dictionary, preferred: Dictionary, used
 static func _stack_hex(stack: Dictionary) -> Dictionary:
 	return _normalize_hex_cell(stack.get(STACK_HEX_KEY, {}))
 
-static func _stack_movement_points(stack: Dictionary) -> int:
-	return clamp(int(stack.get("speed", 1)), 1, 6)
+static func _stack_movement_points(stack: Dictionary, battle: Dictionary = {}) -> int:
+	return maxi(1, clampi(int(stack.get("speed", 1)), 1, 6) - TownBattle.movement_penalty(battle, stack))
 
 static func _build_occupancy_map(battle: Dictionary) -> Dictionary:
 	var occupied := {}
@@ -9033,6 +9036,10 @@ static func _prepare_round(battle: Dictionary, round_number: int) -> void:
 			_mark_stack_animation_event(battle, String(stack.get("battle_id", "")), "battle_status_expired")
 	battle["stacks"] = stacks
 	_apply_foundry_aura_round_repair(battle)
+	for healing in TownBattle.heal_round(battle):
+		var message := "Rootbound Ward restores %d health to %s." % [int(healing.amount), _stack_label(healing.stack)]
+		_record_event(battle, message)
+		_append_presentation_event(battle, "heal", message, {"action_id": "town_root_ward", "target_battle_id": String(healing.stack.get("battle_id", "")), "healing": int(healing.amount)})
 	_sync_occupied_hexes(battle)
 	_apply_round_pressure_shifts(battle)
 	battle["turn_order"] = _sorted_turn_order(battle)
@@ -9209,6 +9216,7 @@ static func _damage_modifier(
 	modifier *= _field_objective_cover_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
 	modifier *= _faction_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
 	modifier *= _commander_damage_modifier(attacker, defender, battle, is_ranged, resolved_distance)
+	modifier *= TownBattle.damage_multiplier(battle, attacker, defender, is_ranged)
 	modifier *= float(_hero_payload_for_side(battle, String(attacker.get("side", ""))).get("damage_multiplier", 1.0))
 	return modifier
 
@@ -9244,6 +9252,9 @@ static func _unit_loss_range(defender: Dictionary, min_damage: int, max_damage: 
 	var total_health = max(0, int(defender.get("total_health", 0)))
 	var unit_hp = max(1, int(defender.get("unit_hp", 1)))
 	var before = _alive_count(defender)
+	var shield := maxi(0, int(defender.get("town_shield_hp", 0)))
+	min_damage = maxi(0, min_damage - shield)
+	max_damage = maxi(0, max_damage - shield)
 	var after_min = int(ceil(float(max(0, total_health - min_damage)) / float(unit_hp)))
 	var after_max = int(ceil(float(max(0, total_health - max_damage)) / float(unit_hp)))
 	return {
@@ -9368,7 +9379,9 @@ static func _apply_damage_to_stack(battle: Dictionary, battle_id: String, damage
 	for index in range(stacks.size()):
 		var stack = stacks[index]
 		if stack is Dictionary and String(stack.get("battle_id", "")) == battle_id:
-			stack["total_health"] = max(0, int(stack.get("total_health", 0)) - max(0, damage))
+			var absorbed := TownBattle.absorb(stack, damage)
+			stack["total_health"] = max(0, int(stack.get("total_health", 0)) - max(0, damage - absorbed))
+			if absorbed > 0: _record_event(battle, "Pressure shield absorbs %d damage for %s." % [absorbed, _stack_label(stack)])
 			stacks[index] = stack
 			break
 	battle["stacks"] = stacks
@@ -12008,6 +12021,8 @@ static func _stack_focus_summary(stack: Dictionary, battle: Dictionary, is_activ
 		lines.append("Stance: Defending")
 	var effect_summary = SpellRulesScript.effect_summary(stack, battle)
 	lines.append("Effects: %s" % (effect_summary if effect_summary != "" else "none"))
+	var town_defense := TownBattle.summary(battle, stack)
+	if town_defense != "": lines.append("Town defense: " + town_defense)
 	lines.append(_stack_status_pressure_line(stack, battle))
 	var ability_summary = _stack_ability_summary(stack)
 	if ability_summary != "":

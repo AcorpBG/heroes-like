@@ -6806,6 +6806,7 @@ static func build_roster_commander_state(
 		"artifacts": ArtifactRulesScript.normalize_hero_artifacts(artifacts_source),
 		"town_training_claims": _normalize_string_array(existing_state.get("town_training_claims", [])),
 		"last_town_trade_day": int(existing_state.get("last_town_trade_day", -1)),
+		"town_service_claims": existing_state.get("town_service_claims", {}).duplicate(true) if existing_state.get("town_service_claims", {}) is Dictionary else {},
 	}
 	if String(existing_state.get("player_id", "")) != "":
 		commander_state["player_id"] = String(existing_state.player_id)

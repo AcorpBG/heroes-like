@@ -72,6 +72,23 @@ Each faction has three unique buildings in addition to the common lines. Their c
 | Veilmourn Armada | Chart of Lost Voyages | Visiting heroes gain 750 experience, once per hero across all Charts. |
 | Veilmourn Armada | Bellwake Muster | Harbor bells add 2 weekly tier-3 recruits. |
 
+## Signature faction services and defenses
+
+The following mechanics supplement the three faction buildings and their passive benefits above. Each service requires a physically visiting hero and its built faction building. A week begins on days 1, 8, 15 and so on. Town-scoped claims survive capture; hero-scoped claims apply across every town with that building. Neither loading a save nor revisiting resets them. Reserve rewards only affect constructed, chosen dwellings and use their active upgraded creature; they are additional recruitment stock, not free army units.
+
+| Faction / service building | Weekly service | Scope | Town defense building and effect |
+| --- | --- | --- | --- |
+| Embercourt / Convoy Charter | Trade 3 wood + 3 ore for 1,200 gold. | Town | Beacon Watch: defending ranged attacks deal +25% damage in round 1. |
+| Mireclaw / Reedkin Gathering | Spend 1 peatwax to add one base week of tier-1 recruitment stock. | Town | Chainboom Defenses: attackers lose 1 movement point in rounds 1–2, minimum 1. |
+| Sunvault / Calibration Court | Spend 1 aetherglass to restore the visitor's mana fully. Does not consume the separate once-only power lesson. | Hero | Prism Muster: defenders gain 30 percentage points of spell-damage resistance in rounds 1–2, subject to the normal 75% cap. |
+| Thornwake / Renewal Nursery | Spend 1 verdant graft + 500 gold to add half a base week of tier-1–3 stock, rounded up per built dwelling. | Town | Rootbound Ward: at the start of rounds 2 and 3, each surviving defending stack heals up to 25% of one creature's health. No resurrection. |
+| Brasshollow / Assembly Discipline | Convert 2 wood + 2 ore + 350 gold into 2 embergrain for tier-6 recruits. | Town | Pressure Bastion: a shield on each defending stack absorbs damage equal to 15% of starting health, rounded up. It never refills during battle. |
+| Veilmourn / Chart of Lost Voyages | Spend 1 memory salt + 500 gold for 1,500 XP, using normal level progression. The separate once-only 750 XP visit remains. | Hero | Bellwake Muster: defenders take 35% less ranged damage in rounds 1–2; melee damage is unchanged. |
+
+Services appear first in Town Log & Logistics with prices on the buttons and exact benefits/limits in tooltips. Battle creature inspection explains active town effects and remaining shield strength; healing and shield absorption appear in the battle log. Shield consumption and already-resolved round healing survive battle saves. Effects apply to the defender in both player defense and player assault contexts, and not to field battles. These are defensive building effects, not destructible walls, gates or towers.
+
+AI town visitors and stationed defenders use the same paid services and persistent limits. AI saves gold for construction/recruitment, uses supply convoys when gold is low, keeps common-material reserves, requests growth only when matching recruitment stock is running low, restores mana when at least half is missing, and makes fuel only when the faction's tier-6 resource is low. Values remain initial balance choices until the goal's full-match balance pass.
+
 ## Artifact trading
 
 Artifact Exchange requires Marketplace. A visiting active hero can buy up to three distinct stocked artifacts per town per week; claimed offers remain exhausted through saves and ownership changes until the next weekly refresh. Offers use stable town identity/week, not simulation RNG. Common/uncommon/rare items cost 1,500 / 2,500 / 4,000 gold. Epic/legendary sale valuations are 6,500 / 10,000. Selling pays half valuation and requires the artifact in inventory, not equipped; quest items are excluded. Buying places the item in inventory. Duplicate ownership, sold-out stock, insufficient funds, remote visits, unowned towns and stale action callbacks are rejected before mutation.
@@ -175,3 +192,5 @@ Each listed choice has an upgraded Veteran dwelling. Tier 6 uses secondary rare 
 `tests/town_development_regression.py` checks all faction trees and both branch graphs, runtime construction/upgrade/resource/weekly-growth flows, training and trading transactions, persistent claims, migration, defending-side bonuses and actual town UI. Windows Godot 4.6.2 focused run passes 676 checks; town, muster, market and construction dialogs were rendered and reviewed, including an actual artifact purchase UI callback. JSON, artwork bindings, construction branch reachability, wiki counts and scoped diff checks pass. Known pre-existing certificate-store/MSAA startup messages remain. No full repository suite, native generation changes or Linux execution in this slice.
 
 AI services follow-up (2026-09-22): `tests/town_ai_services_regression.py` passes 146 focused Windows runtime checks, including all six factions, public economy/full enemy turns, town defenders, route-arrival services, saved commander reconstruction, paid upgrades, equipment choice, treasury isolation and artifact income/sales. Shared player services retain all 676 existing focused checks. No full suite or Linux execution.
+
+Faction mechanics follow-up (2026-09-22): `tests/town_faction_mechanics_regression.py` passes 185 focused checks for all six paid services, exact resource/recruit/XP/mana effects, weekly scope and resets, save preservation, AI use, six actual town-battle effects in both defense orientations, shield spending and battle reloads, expiry and healing without resurrection. The live Town Log & Logistics service button and transaction were exercised; rendered dialog reviewed. Existing AI and shared-town regressions also pass (146 + 676; 1,007 total). No full repository suite or Linux execution. Full-match balance remains pending.

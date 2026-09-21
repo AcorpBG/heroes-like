@@ -3,6 +3,7 @@ extends RefCounted
 
 const HeroProgressionRulesScript = preload("res://scripts/core/HeroProgressionRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
+const TownBattle = preload("res://scripts/core/TownBattleRules.gd")
 
 const CONTEXT_OVERWORLD := "overworld"
 const CONTEXT_BATTLE := "battle"
@@ -1352,6 +1353,7 @@ static func target_is_immune_to_status(target_stack: Dictionary, battle: Diction
 static func spell_damage_resistance_pct(battle: Dictionary, target_stack: Dictionary, spell: Dictionary) -> int:
 	var school_id := String(spell.get("school_id", ""))
 	var total := int(target_stack.get("spell_resistance_pct", 0))
+	total += TownBattle.spell_resistance(battle, target_stack)
 	total += int(normalize_school_resistance(target_stack.get("spell_school_resistance_pct", {})).get(school_id, 0))
 	var hero := _hero_payload_for_target_side(battle, target_stack)
 	total += int(hero.get("battle_spell_resistance_pct", 0))
