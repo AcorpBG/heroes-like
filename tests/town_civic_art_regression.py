@@ -1,4 +1,4 @@
-"""Focused Embercourt civic-stage rendering and developed-town painted input."""
+"""Focused Embercourt building rendering and developed-town painted input."""
 import argparse
 from pathlib import Path
 from town_development_regression import SCRIPT as FIXTURE
@@ -38,7 +38,18 @@ func run():
 		"fort":["building_dev_fort_1","building_dev_fort_2","building_dev_fort_3"],
 		"market":["building_market_square","building_dev_trade_exchange"],
 		"storehouse":["building_dev_storehouse_1","building_dev_storehouse_2"],
-		"guild":["building_dev_guild_1","building_dev_guild_2","building_dev_guild_3","building_dev_guild_4","building_dev_guild_5"]}
+		"guild":["building_dev_guild_1","building_dev_guild_2","building_dev_guild_3","building_dev_guild_4","building_dev_guild_5"],
+		"building_wayfarers_hall":["building_wayfarers_hall"],
+		"building_dev_growth_1":["building_dev_growth_1"],
+		"building_dev_growth_2":["building_dev_growth_2"],
+		"building_dev_growth_3":["building_dev_growth_3"],
+		"building_dev_training_attack":["building_dev_training_attack"],
+		"building_dev_training_defense":["building_dev_training_defense"],
+		"building_dev_training_experience":["building_dev_training_experience"],
+		"building_dev_artifact_exchange":["building_dev_artifact_exchange"],
+		"building_dev_embercourt_unique_1":["building_dev_embercourt_unique_1"],
+		"building_dev_embercourt_unique_2":["building_dev_embercourt_unique_2"],
+		"building_dev_embercourt_unique_3":["building_dev_embercourt_unique_3"]}
 	var seen=[]
 	for plot in lines:
 		for id in lines[plot]:

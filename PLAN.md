@@ -27,7 +27,7 @@ Rules:
 Owner-selected completion passes (2026-09-22), in order:
 - `town-overhaul-ai-services-20260922` (completed; 146 focused AI checks, 676 shared town checks): persistent once-only hero training, paid existing-army upgrades and useful artifact commerce for AI town visitors.
 - `town-overhaul-faction-mechanics-20260922` (completed; 185 focused checks): six paid weekly faction services and six asymmetric town-battle defenses, with player/AI use, save persistence and visible explanations.
-- `town-overhaul-building-art-20260922` (in progress): Embercourt has 16 original stage paintings and faction icons: four halls, three fortifications, five guilds, two markets and two storehouses. Revised river terraces ground the developed town; all 23 active plots remain clickable. Continue remaining buildings/factions and distinct dwelling branches/upgrades.
+- `town-overhaul-building-art-20260922` (in progress): Embercourt has 27 original paintings/icons covering every civic, support and faction-special building stage. Revised river terraces ground the developed town; all 23 active plots remain clickable. Continue its 24 dwelling branch/upgrade paintings and all other factions.
 - `town-overhaul-creature-upgrades-20260922`: individual upgrade names, abilities and original animated visuals for all 72 selected creatures.
 - `town-overhaul-match-balance-20260922`: complete matches, tune construction/growth/rare-resource/artifact economy from observed play.
 Preserve saves and existing work; focused checks only, no full repository suite. Workshop and destructible siege structures remain excluded.
