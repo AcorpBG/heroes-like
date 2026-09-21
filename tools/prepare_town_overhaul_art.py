@@ -53,6 +53,8 @@ def main():
     scene, layout, backdrop = map(read, (scene_path, layout_path, backdrop_path))
     packet = read(PACKET)
     for item in packet['items']:
+        if not item.get('active', True):
+            continue
         source = ROOT / item['source_path']
         prompt = ROOT / item['prompt_path']
         if digest(source) != item['source_sha256']:
@@ -100,13 +102,33 @@ def main():
             'runtime_size': list(rendered.size), 'icon_path': uri(icon), 'icon_sha256': digest(icon),
             'normalized_rect': [(x-width/2)/1600, (y-height)/900, width/1600, height/900],
             'ground_anchor': [x/1600, y/900], 'modulate': [1, 1, 1, 1], 'hit_alpha_threshold': .25,
-            'grounding': 'Civic building sits on the cleared right-bank courtyard with its entrance facing the quay; successive stages retain the same ground anchor.',
+            'grounding': item.get('grounding', 'Civic building sits on the cleared right-bank courtyard with its entrance facing the quay; successive stages retain the same ground anchor.'),
             'curation': 'Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice.',
         })
         scene['factions'][faction][name] = metadata
         for plot in layout['factions'][faction]['plots']:
             if plot['plot_id'] == item['plot_id']:
                 plot['embedded_in_base'] = False
+    # Explicit art-direction placement for older paintings while their new
+    # faction-specific replacements are produced. Never infer terrain anchors
+    # from a generic grid or move another faction's established composition.
+    generated = {(i['faction_id'], i['id']) for i in packet['items'] if i.get('kind') == 'building'}
+    for faction, plots in packet.get('existing_plot_placements', {}).items():
+        for plot in layout['factions'][faction]['plots']:
+            placement = plots.get(plot['plot_id'])
+            if not placement:
+                continue
+            x, y = placement['ground_anchor']
+            for building in plot['building_ids']:
+                if (faction, building) in generated:
+                    continue
+                layer = scene['factions'][faction][building]
+                with Image.open(ROOT / layer['runtime_path'].removeprefix('res://')) as image:
+                    width = placement['visible_width']
+                    height = width * image.height / image.width
+                layer['normalized_rect'] = [(x-width/2)/1600, (y-height)/900, width/1600, height/900]
+                layer['ground_anchor'] = [x/1600, y/900]
+                layer['grounding'] = placement['grounding']
     for path, payload in ((scene_path, scene), (layout_path, layout)):
         save(path, payload)
     save_backdrops(backdrop_path, backdrop)

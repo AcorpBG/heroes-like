@@ -87,7 +87,399 @@
         "art/towns/runtime/backdrops/development_scenes/town_embercourt_village.png"
       ],
       "kind": "backdrop",
-      "stage": "village"
+      "stage": "village",
+      "active": false
+    },
+    {
+      "id": "building_market_square",
+      "plot_id": "market",
+      "visible_width": 250,
+      "ground_anchor": [
+        235,
+        685
+      ],
+      "kind": "building",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png",
+      "source_sha256": "49ff8be9da544df9187bceef7e1125001b42000a84e73901f033f90ce014cfd5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.prompt.txt",
+      "generation_output": "exec-a696642b-32cc-4b07-99a5-16d50c889f1c.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "grounding": "Market arcade faces the left-bank civic terrace; keep its counters exposed in both stages."
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "plot_id": "market",
+      "visible_width": 280,
+      "ground_anchor": [
+        235,
+        685
+      ],
+      "kind": "building",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_trade_exchange.png",
+      "source_sha256": "d97ec88396d05b728daec20a080e3756376f4e42b4324948701a07b11cee1421",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_trade_exchange.prompt.txt",
+      "generation_output": "exec-4d474986-a919-4101-a49b-d7eca0aee158.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "grounding": "Market arcade faces the left-bank civic terrace; keep its counters exposed in both stages."
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "plot_id": "storehouse",
+      "visible_width": 175,
+      "ground_anchor": [
+        1460,
+        490
+      ],
+      "kind": "building",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_storehouse_1.png",
+      "source_sha256": "820bb27281aa0df229530b2ad364c9fc160318fbd3433ec839ea887085b471f0",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_storehouse_1.prompt.txt",
+      "generation_output": "exec-bd8517cf-bc1e-4dd1-98a3-ec1a75a469a0.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "grounding": "Receiving sheds stand on the upper right-bank service terrace."
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "plot_id": "storehouse",
+      "visible_width": 215,
+      "ground_anchor": [
+        1460,
+        490
+      ],
+      "kind": "building",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_storehouse_2.png",
+      "source_sha256": "4da05719d58b725ecb771f1eac97ed15db2ac09c90d0cb2ffc49726353742ff8",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_storehouse_2.prompt.txt",
+      "generation_output": "exec-990612a3-5706-462d-bd6a-82ea10720de3.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "grounding": "Receiving sheds stand on the upper right-bank service terrace."
+    },
+    {
+      "id": "building_dev_fort_1",
+      "plot_id": "fort",
+      "visible_width": 350,
+      "ground_anchor": [
+        650,
+        675
+      ],
+      "kind": "building",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_1.png",
+      "source_sha256": "028fe2cabc690da719e884600799ab2e117222b70e67ec649fe07865bc6cb615",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_1.prompt.txt",
+      "generation_output": "exec-08d7d156-b22c-44b3-9fd8-35f4f0baa0b5.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "grounding": "Fortified lock spans the central river channel, with both abutments attached to the quays and water visible through the arch."
+    },
+    {
+      "id": "building_dev_fort_2",
+      "plot_id": "fort",
+      "visible_width": 385,
+      "ground_anchor": [
+        650,
+        675
+      ],
+      "kind": "building",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_2.png",
+      "source_sha256": "cb9e75f8700ee258492ae82c86e58e23c08eee412ced1c382ee9863242e5a7b1",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_2.prompt.txt",
+      "generation_output": "exec-90e16469-5114-44f4-9fe4-c3d7931bb1f1.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "grounding": "Fortified lock spans the central river channel, with both abutments attached to the quays and water visible through the arch."
+    },
+    {
+      "id": "building_dev_fort_3",
+      "plot_id": "fort",
+      "visible_width": 420,
+      "ground_anchor": [
+        650,
+        675
+      ],
+      "kind": "building",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_3.png",
+      "source_sha256": "009a607b74ed5ab8981ac280e6b2b45fa592fd81827aa138d88f337585147a8c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_fort_3.prompt.txt",
+      "generation_output": "exec-9da08daa-7608-4891-9fbf-1a89f9bea0a7.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "grounding": "Fortified lock spans the central river channel, with both abutments attached to the quays and water visible through the arch."
+    },
+    {
+      "id": "building_dev_guild_1",
+      "plot_id": "guild",
+      "visible_width": 135,
+      "ground_anchor": [
+        1390,
+        655
+      ],
+      "kind": "building",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_1.png",
+      "source_sha256": "ddf278da1d0152d0ac437b04fbd659a32e4cf30ddd5876caf3e0c408b815f5c6",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_1.prompt.txt",
+      "generation_output": "exec-707b33d5-20fe-4231-93ec-16c1b9d7d834.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "grounding": "Beacon academy stands on the lower right-bank terrace with its entrance facing the riverside approach."
+    },
+    {
+      "id": "building_dev_guild_2",
+      "plot_id": "guild",
+      "visible_width": 150,
+      "ground_anchor": [
+        1390,
+        655
+      ],
+      "kind": "building",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_2.png",
+      "source_sha256": "850eaf9209666dd02282146afd0bb57cfc596a9d4c32ffe79d9b9ca33c53f1da",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_2.prompt.txt",
+      "generation_output": "exec-57beff04-ea32-40cc-a4bc-20b849441754.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "grounding": "Beacon academy stands on the lower right-bank terrace with its entrance facing the riverside approach."
+    },
+    {
+      "id": "building_dev_guild_3",
+      "plot_id": "guild",
+      "visible_width": 170,
+      "ground_anchor": [
+        1390,
+        655
+      ],
+      "kind": "building",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_3.png",
+      "source_sha256": "db5ec2caf98bac5798d4fc192a1f2d6e1be4f19697126245f6080097979b8467",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_3.prompt.txt",
+      "generation_output": "exec-e99d8590-ec5b-49b7-8c19-336bc8081001.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "grounding": "Beacon academy stands on the lower right-bank terrace with its entrance facing the riverside approach."
+    },
+    {
+      "id": "building_dev_guild_4",
+      "plot_id": "guild",
+      "visible_width": 185,
+      "ground_anchor": [
+        1390,
+        655
+      ],
+      "kind": "building",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_4.png",
+      "source_sha256": "92061f618f197575f144801335805a4983287bea798b6a3127b028d03655a90c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_4.prompt.txt",
+      "generation_output": "exec-d003b171-3c31-4218-8adb-623299d93b2b.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "grounding": "Beacon academy stands on the lower right-bank terrace with its entrance facing the riverside approach."
+    },
+    {
+      "id": "building_dev_guild_5",
+      "plot_id": "guild",
+      "visible_width": 205,
+      "ground_anchor": [
+        1390,
+        655
+      ],
+      "kind": "building",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_5.png",
+      "source_sha256": "c0796edfd6c81ef400a43f7198609941a4ba9282809197f33741540ee47cba41",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_guild_5.prompt.txt",
+      "generation_output": "exec-71726315-d8a1-453f-be72-c95b00a16940.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "grounding": "Beacon academy stands on the lower right-bank terrace with its entrance facing the riverside approach."
+    },
+    {
+      "id": "terraced_village",
+      "faction_id": "faction_embercourt",
+      "kind": "backdrop",
+      "stage": "village",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/terraced_village_open_lock.png",
+      "source_sha256": "45571eb94ad0e5b59d44b2168ad3dfb73a7b8d052d2bb09c61df08cf86ee9f58",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/terraced_village_open_lock.prompt.txt",
+      "generation_output": "exec-9281735a-0319-483f-a903-0fba62a5b86f.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/terraced_village.png"
+      ]
     }
-  ]
+  ],
+  "existing_plot_placements": {
+    "faction_embercourt": {
+      "building_wayfarers_hall": {
+        "ground_anchor": [
+          240,
+          530
+        ],
+        "visible_width": 145,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "building_dev_growth_1": {
+        "ground_anchor": [
+          80,
+          590
+        ],
+        "visible_width": 110,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "building_dev_growth_2": {
+        "ground_anchor": [
+          1235,
+          610
+        ],
+        "visible_width": 130,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "building_dev_growth_3": {
+        "ground_anchor": [
+          85,
+          475
+        ],
+        "visible_width": 105,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "building_dev_training_attack": {
+        "ground_anchor": [
+          1175,
+          725
+        ],
+        "visible_width": 155,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "building_dev_training_defense": {
+        "ground_anchor": [
+          390,
+          580
+        ],
+        "visible_width": 130,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "building_dev_training_experience": {
+        "ground_anchor": [
+          400,
+          690
+        ],
+        "visible_width": 135,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "building_dev_artifact_exchange": {
+        "ground_anchor": [
+          1340,
+          770
+        ],
+        "visible_width": 175,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "embercourt_t1": {
+        "ground_anchor": [
+          1505,
+          755
+        ],
+        "visible_width": 155,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "embercourt_t2": {
+        "ground_anchor": [
+          1300,
+          490
+        ],
+        "visible_width": 115,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "embercourt_t3": {
+        "ground_anchor": [
+          1530,
+          635
+        ],
+        "visible_width": 130,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "embercourt_t4": {
+        "ground_anchor": [
+          275,
+          815
+        ],
+        "visible_width": 165,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "embercourt_t5": {
+        "ground_anchor": [
+          80,
+          730
+        ],
+        "visible_width": 120,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "embercourt_t6_1": {
+        "ground_anchor": [
+          435,
+          780
+        ],
+        "visible_width": 145,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "embercourt_t7_1": {
+        "ground_anchor": [
+          115,
+          850
+        ],
+        "visible_width": 160,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "building_dev_embercourt_unique_1": {
+        "ground_anchor": [
+          460,
+          845
+        ],
+        "visible_width": 145,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "building_dev_embercourt_unique_2": {
+        "ground_anchor": [
+          915,
+          465
+        ],
+        "visible_width": 125,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      },
+      "building_dev_embercourt_unique_3": {
+        "ground_anchor": [
+          1240,
+          385
+        ],
+        "visible_width": 90,
+        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
+      }
+    }
+  }
 }
