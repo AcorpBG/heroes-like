@@ -22298,9 +22298,64 @@
     }
   },
   "native_cli_required_next_slice": "",
-  "nextActionGuardrailNote": "Actor-readability work is completed and validated. No next slice selected; await owner direction rather than expanding into native generation, gameplay or unrelated presentation work.",
+  "nextActionGuardrailNote": "Owner selected the five town-overhaul completion passes on 2026-09-22. AI services completed; next implement distinctive faction town mechanics, followed by original building art, individual creature upgrades and full-match balance. Do not expand into native generation or unrelated systems.",
   "notes": "Validated AI army-capacity checkpoint: shared paid/raid/roster/site admission; atomic consolidation and Town handoffs; partial resupply retains rejected source troops; capacity-feasible orders without score changes; restored commander continuity precedes starter-army fallback. 55 focused checks, Medium/Large 95-check deterministic seven-turn replay controls, five strategic AI reports, 11 Python acceptance tests, repository and both-platform packages pass. Scripted reward retention, legal terminal matches and full responsiveness/presentation acceptance remain unfinished; old oversized match segments are diagnostic only.",
   "plannedSlices": [
+    {
+      "id": "town-overhaul-ai-services-20260922",
+      "title": "AI town training, paid army upgrades and artifact trading",
+      "status": "completed",
+      "classification": "gameplay_content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "AI garrisons, town defenders and physically visiting field commanders use shared paid upgrades, once-only training and budgeted useful artifact buy/equip/sell services. Normal economy/full turns and route arrivals wired; commander claims and equipment survive rebuilding/saves. Equipped purchase income, no duplicate legacy income, sold relic removal. 146 focused AI runtime checks plus 676 existing player town checks pass on Windows Godot 4.6.2; no full suite or Linux execution. Remaining four goal passes are pending, not complete."
+    },
+    {
+      "id": "town-overhaul-faction-mechanics-20260922",
+      "title": "Distinctive functional faction town specials",
+      "status": "pending",
+      "classification": "gameplay_content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Owner-authorized completion goal. Completion requires shipped behavior/content and focused validation; planning alone is not completion."
+    },
+    {
+      "id": "town-overhaul-building-art-20260922",
+      "title": "Original faction building art and readable upgrade stages",
+      "status": "pending",
+      "classification": "gameplay_content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Owner-authorized completion goal. Completion requires shipped behavior/content and focused validation; planning alone is not completion."
+    },
+    {
+      "id": "town-overhaul-creature-upgrades-20260922",
+      "title": "Individual creature upgrade identities, gameplay and animated art",
+      "status": "pending",
+      "classification": "gameplay_content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Owner-authorized completion goal. Completion requires shipped behavior/content and focused validation; planning alone is not completion."
+    },
+    {
+      "id": "town-overhaul-match-balance-20260922",
+      "title": "Full-match town development playtesting and balance tuning",
+      "status": "pending",
+      "classification": "gameplay_content_implementation_slice",
+      "source": "PLAN.md",
+      "sourceDocs": [
+        "docs/common-town-building-template.md"
+      ],
+      "notes": "Owner-authorized completion goal. Completion requires shipped behavior/content and focused validation; planning alone is not completion."
+    },
     {
       "id": "feature-common-town-development-20260921",
       "title": "Shared town development, exclusive dwellings and faction services",

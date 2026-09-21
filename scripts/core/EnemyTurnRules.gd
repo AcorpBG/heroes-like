@@ -1,6 +1,7 @@
 class_name EnemyTurnRules
 extends RefCounted
 const TownDevelopment = preload("res://scripts/core/TownDevelopmentRules.gd")
+const TownServices = preload("res://scripts/core/EnemyTownServices.gd")
 
 const TurnPlayback = preload("res://scripts/core/OverworldTurnPlayback.gd")
 
@@ -456,6 +457,10 @@ static func run_enemy_town_economy_turn(
 		if not study_messages.is_empty():
 			messages.append_array(study_messages)
 		_append_event_records(events, study_result.get("events", []))
+		var services := _use_enemy_town_services(session, config, state, treasury, faction_id)
+		state = services.state
+		messages.append_array(services.messages)
+		_append_event_records(events, services.events)
 		state["treasury"] = treasury
 		states[state_index] = state
 	session.overworld["enemy_states"] = states
@@ -1129,6 +1134,10 @@ static func _run_empire_cycle(
 		messages.append_array(study_messages)
 	_append_event_records(events, study_result.get("events", []))
 	_profile_add_ms(profile, "spell_study_ms", phase_started)
+	var services := _use_enemy_town_services(session, config, state, treasury, faction_id)
+	state = services.state
+	messages.append_array(services.messages)
+	_append_event_records(events, services.events)
 
 	phase_started = _profile_timer(profile_enabled)
 	_reinforcement_profile_begin(profile_enabled)
@@ -1524,6 +1533,39 @@ static func _build_in_enemy_towns(
 		if not build_event.is_empty():
 			events.append(build_event)
 	return {"messages": messages, "events": events}
+
+static func _use_enemy_town_services(session, config: Dictionary, state: Dictionary, treasury: Dictionary, controller: String) -> Dictionary:
+	var messages: Array = []
+	var events: Array = []
+	state["treasury"] = treasury
+	_write_enemy_state(session, controller, state)
+	for town in session.overworld.get("towns", []):
+		if town.get("owner", "neutral") != "enemy" or PlayerRules.town_controller_id(town) != controller: continue
+		var upgraded := TownServices.upgrade_stacks(town, town.get("garrison", []), treasury)
+		if not upgraded.upgrades.is_empty():
+			town["garrison"] = upgraded.stacks
+			messages.append("%s upgrades its garrison." % _town_name(town))
+		var defender := EnemyAdventureRulesScript._active_town_defender_entry(session, town, controller)
+		if not defender.is_empty():
+			var visitor := LevelRules.town_entrance(town)
+			visitor.merge({"spawned_by_faction_id": controller, "enemy_commander_state": defender.commander_state,
+				"enemy_army": {"stacks": town.get("garrison", [])}}, true)
+			var visit := TownServices.visit(town, visitor, treasury, int(session.day), controller)
+			var captured: Array = state.get("captured_artifact_ids", []).duplicate()
+			for sold_id in visit.get("sold_ids", []): captured.erase(sold_id)
+			state["captured_artifact_ids"] = captured
+			var commander := EnemyAdventureRulesScript.sync_commander_army_continuity(visitor.enemy_commander_state, visitor.enemy_army)
+			town["garrison"] = visitor.enemy_army.stacks
+			town["ai_defender_commander_state"] = commander
+			EnemyAdventureRulesScript.sync_commander_state_to_roster(session, controller, commander)
+			if not visit.changes.is_empty(): messages.append("%s's defender %s." % [_town_name(town), ", ".join(visit.changes)])
+	for raid in session.overworld.get("encounters", []):
+		if PlayerRules.raid_controller_id(raid) != controller: continue
+		var result := EnemyAdventureRulesScript.use_town_services_for_raid(session, config, raid, controller)
+		messages.append_array(result.messages)
+		events.append_array(result.events)
+	var updated := _find_state(session.overworld.get("enemy_states", []), controller)
+	return {"state": updated if not updated.is_empty() else state, "messages": messages, "events": events}
 
 static func _study_spells_in_enemy_towns(
 	session: SessionStateStoreScript.SessionData,
@@ -7863,7 +7905,16 @@ static func _captured_artifact_ids(state: Dictionary) -> Array:
 
 static func _captured_artifact_income(state: Dictionary) -> Dictionary:
 	var income = _blank_resource_pool()
+	var assigned: Array = []
+	for entry in state.get("commander_roster", []):
+		var hero: Dictionary = entry.get("commander_state", {})
+		assigned.append_array(TownServices.Artifacts.owned_artifact_ids(hero))
+		if String(entry.get("status", "available")) == "recovering": continue
+		income = _merge_resource_pools(income, TownServices.Artifacts.aggregate_bonuses(hero.duplicate(true)).get("daily_income", {}))
+	# Older saves can have empire relics without a commander binding. Keep that
+	# income, but bound artifacts pay only while equipped, never twice or after sale.
 	for artifact_id_value in _captured_artifact_ids(state):
+		if artifact_id_value in assigned: continue
 		var artifact = ContentService.get_artifact(String(artifact_id_value))
 		if artifact.is_empty():
 			continue

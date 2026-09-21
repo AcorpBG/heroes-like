@@ -78,6 +78,14 @@ Artifact Exchange requires Marketplace. A visiting active hero can buy up to thr
 
 Artifact commerce is in **Town Market**; training is in **Town Log & Logistics**. Hover descriptions explain effects before use. Owned towns can upgrade their garrison even without a visiting hero; hero training/artifact commerce require a visitor.
 
+## AI town services
+
+Enemy garrisons pay to upgrade existing troops at completed upgraded dwellings. Field commanders use training and artifact services when at an owned town entrance or its cardinal approach, on the same map level; assigned town defenders can also use them. Services run in the economy/full enemy turn and on route arrivals, independently of whether the host needs reinforcements. Available reserve commanders receive no remote training.
+
+Player and AI transactions share upgrade costs, once-per-building training claims, shop stock, prices and resale restrictions. AI service spending retains 2,000 gold for its economy and limits upgrades and artifact buying to half the current excess. It upgrades higher-tier troops first, equips beneficial owned gear, compares both trinket slots, buys at most one useful improvement per hero/day, and sells dominated unequipped non-quest/non-set surplus. Final balance remains pending the full-match pass.
+
+Claims, the daily trading limit, army composition and equipment survive commander rebuilds and saves. Equipped purchased artifacts contribute daily income. Captured artifacts assigned to a hero are not counted twice, unequipped items do not pay, and sold items leave the empire income list. Unbound legacy empire relics retain their old income. Controller identity prevents same-faction rivals from using each other's services.
+
 ## Compatibility and economy replacement
 
 `content/town_development.json` contains explicit per-faction legacy-building mappings, the selected rosters and upgrade pairs. Existing town placement/template IDs, source maps, source masks, owner, position, heroes and garrisons are not rewritten. Old built IDs are retained in `legacy_built_buildings` as migration history. Old economic/support buildings map to the new storehouse/fortification/guild lines; old unit-unlock buildings map to their matching choice, or the same-tier default if the old creature is not in the new town tree. Old dwelling upgrades map to the relevant Veteran lodge.
@@ -165,3 +173,5 @@ Each listed choice has an upgraded Veteran dwelling. Tier 6 uses secondary rare 
 ## Validation
 
 `tests/town_development_regression.py` checks all faction trees and both branch graphs, runtime construction/upgrade/resource/weekly-growth flows, training and trading transactions, persistent claims, migration, defending-side bonuses and actual town UI. Windows Godot 4.6.2 focused run passes 676 checks; town, muster, market and construction dialogs were rendered and reviewed, including an actual artifact purchase UI callback. JSON, artwork bindings, construction branch reachability, wiki counts and scoped diff checks pass. Known pre-existing certificate-store/MSAA startup messages remain. No full repository suite, native generation changes or Linux execution in this slice.
+
+AI services follow-up (2026-09-22): `tests/town_ai_services_regression.py` passes 146 focused Windows runtime checks, including all six factions, public economy/full enemy turns, town defenders, route-arrival services, saved commander reconstruction, paid upgrades, equipment choice, treasury isolation and artifact income/sales. Shared player services retain all 676 existing focused checks. No full suite or Linux execution.

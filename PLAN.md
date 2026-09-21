@@ -24,6 +24,14 @@ Rules:
 
 ### Shared town development
 
+Owner-selected completion passes (2026-09-22), in order:
+- `town-overhaul-ai-services-20260922` (completed; 146 focused AI checks, 676 shared town checks): persistent once-only hero training, paid existing-army upgrades and useful artifact commerce for AI town visitors.
+- `town-overhaul-faction-mechanics-20260922`: faction-specific live mechanics beyond generic resource/stat bonuses.
+- `town-overhaul-building-art-20260922`: original faction-appropriate building art with distinct upgrade stages.
+- `town-overhaul-creature-upgrades-20260922`: individual upgrade names, abilities and original animated visuals for all 72 selected creatures.
+- `town-overhaul-match-balance-20260922`: complete matches, tune construction/growth/rare-resource/artifact economy from observed play.
+Preserve saves and existing work; focused checks only, no full repository suite. Workshop and destructible siege structures remain excluded.
+
 `feature-common-town-development-20260921` - completed. Shared active-stage buildings, exclusive T1-T5 choices, T6/T7 faction-resource dwellings, 72 Veteran upgrades, three growth and three hero-support buildings, artifact commerce and three specials per faction. Legacy town migration preserves troops and claims; AI construction/recruitment shares the rules. 676 focused runtime/save/economy/UI checks pass; rendered town/muster/market dialogs reviewed, no full suite. See `docs/common-town-building-template.md`.
 
 
