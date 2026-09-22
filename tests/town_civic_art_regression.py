@@ -69,6 +69,32 @@ func run():
 			shell._close_town_catalog(false)
 	for branch in [1,2]:
 		var town:Dictionary=s.overworld.towns[0]
+		town.built_buildings=town.built_buildings.filter(func(id):return ContentService.get_building(id).get("category","")!="dwelling")
+		town.available_recruits={}
+		Dev.migrate_town(town)
+		for tier in range(1,8):
+			var choice:int=branch if tier<=5 else 1
+			var base_id="building_dev_embercourt_t%d_%d"%[tier,choice]
+			var plot="embercourt_t%d"%tier if tier<=5 else "embercourt_t%d_1"%tier
+			for suffix in ["","_upgrade"]:
+				var id=base_id+suffix
+				build(s,id);shell._refresh()
+				await capture("branch-%d-"%branch+id)
+				var view=shell._town_stage_view
+				var active:Array=view._town_building_scene_entries(view._town_scene_rect()).filter(func(e):return e.plot_id==plot)
+				check(active.size()==1 and active[0].visible_building_id==id,"dwelling choice/stage not replaced: "+id)
+				var path:String=view._town_building_texture_path(id)
+				check(path.contains("/overhaul/") and path.ends_with("/"+id+".png") and (path not in seen or (branch==2 and tier>=6)),"old or reused dwelling painting: "+id)
+				seen.append(path)
+				check(view._town_building_texture(id)!=null,"missing dwelling texture: "+id)
+				check(Towns.building_icon_path(id,"faction_embercourt").contains("/overhaul/"),"wrong dwelling icon: "+id)
+				check(view.validation_building_hotspot_summary(id).aligned,"misaligned dwelling input: "+id)
+				view.validation_activate_building_hotspot(id)
+				for frame in range(2):await get_tree().process_frame
+				check(shell._town_catalog_is_open(),"dwelling information route: "+id)
+				shell._close_town_catalog(false)
+	for branch in [1,2]:
+		var town:Dictionary=s.overworld.towns[0]
 		town.built_buildings=[]
 		for id in ContentService.get_town(town.town_id).buildable_building_ids:
 			var b=ContentService.get_building(id)
@@ -81,9 +107,24 @@ func run():
 	get_tree().quit(0 if failures.is_empty() else 1)
 '''
 
+def script_for_part(part):
+    # Keep each off-screen render run below the shared two-minute bound.
+    # Every stage and both final branch compositions still receive the checks.
+    civic = SCRIPT.index('\tvar lines={')
+    dwellings = SCRIPT.index('\tfor branch in [1,2]:')
+    developed = SCRIPT.index('\tfor branch in [1,2]:', dwellings + 1)
+    if part == 'civic':
+        return SCRIPT[:dwellings] + SCRIPT[developed:]
+    setup = SCRIPT[:civic] + '\tbuild(s,"building_dev_fort_1")\n\tvar seen=[]\n'
+    return setup + SCRIPT[dwellings:].replace('for branch in [1,2]:', 'for branch in [' + part + ']:')
+
+
 if __name__ == '__main__':
     p=argparse.ArgumentParser()
     p.add_argument('--godot',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--part',choices=['all','civic','1','2'],default='all')
     args=p.parse_args()
-    raise SystemExit(run_probe(SCRIPT,args.godot,args.output,'TOWN_CIVIC_ART_REPORT'))
+    parts=['civic','1','2'] if args.part=='all' else [args.part]
+    results=[run_probe(script_for_part(part),args.godot,args.output/part,'TOWN_CIVIC_ART_REPORT') for part in parts]
+    raise SystemExit(max(results))

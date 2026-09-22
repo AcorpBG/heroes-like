@@ -563,66 +563,513 @@
         650
       ],
       "grounding": "Quartermaster depot stands on the paved right-bank working quay west of the sparring grounds."
+    },
+    {
+      "id": "building_dev_embercourt_t1_1",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1.png",
+      "source_sha256": "1da25c71f98bf4638d694e40135650941e2e7dee83c33546863c306a610af927",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1.prompt.txt",
+      "generation_output": "exec-5a89bfd6-aa1d-4894-90a7-34c495e2d08a.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t1",
+      "visible_width": 135,
+      "ground_anchor": [
+        1505,
+        755
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t1_2",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2.png",
+      "source_sha256": "bbbc8dfc7f90ba8f7ef5ea79f03cda12e3ab5c463fd688078edaff7081d29184",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2.prompt.txt",
+      "generation_output": "exec-ed13fa62-b3e0-496f-816b-d0e4d7624f42.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t1",
+      "visible_width": 135,
+      "ground_anchor": [
+        1505,
+        755
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t2_1",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1.png",
+      "source_sha256": "afe8af2776bd1ae82898236cfe17e6b2de309bd05c36e76cc28176a058613c63",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1.prompt.txt",
+      "generation_output": "exec-ba7bfd79-2636-4fe4-833e-355c96079500.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t2",
+      "visible_width": 125,
+      "ground_anchor": [
+        1300,
+        490
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t2_2",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2.png",
+      "source_sha256": "82aab847f885513cdc91bf391a1ccfa0847710389f53111c50f58518c7afc271",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2.prompt.txt",
+      "generation_output": "exec-20808cd4-5750-4671-b210-42359e2a706c.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t2",
+      "visible_width": 125,
+      "ground_anchor": [
+        1300,
+        490
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t3_1",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1.png",
+      "source_sha256": "279a61d53e3da11a7a59ede0d6cf71b8eda843da4c7e4e09211b5f71d3b57217",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1.prompt.txt",
+      "generation_output": "exec-9e0a5abe-1d32-441a-a0aa-37ff7a727ee7.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t3",
+      "visible_width": 130,
+      "ground_anchor": [
+        1515,
+        635
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t3_2",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2.png",
+      "source_sha256": "581f82908396ef8423b5af61e5e27380ebbac93b2d9d0e48088f8d89d8b16508",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2.prompt.txt",
+      "generation_output": "exec-c97179d8-afc9-4782-a0e3-6a0334884f92.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t3",
+      "visible_width": 130,
+      "ground_anchor": [
+        1515,
+        635
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t4_1",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1.png",
+      "source_sha256": "7c1735d038fa78b3de8d66ccb7a09ddc8b4a538e2e7a67851283572dac9dbba2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1.prompt.txt",
+      "generation_output": "exec-6de6ca89-50cc-4f32-8745-c9990278afbe.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t4",
+      "visible_width": 155,
+      "ground_anchor": [
+        275,
+        815
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t4_2",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2.png",
+      "source_sha256": "6850f1d42b85a2dc8d8a8be311b49297772bdc4a2391d2c264cfa853d15eea16",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2.prompt.txt",
+      "generation_output": "exec-b14a15b2-0471-491c-a21d-69e8c8efe33a.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t4",
+      "visible_width": 155,
+      "ground_anchor": [
+        275,
+        815
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t5_1",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1.png",
+      "source_sha256": "e49b1fc32bebef8da124be45dffe329d83cd3162092cb5c6bedeeb87500d3b04",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1.prompt.txt",
+      "generation_output": "exec-43adec55-cf44-423e-aa42-94ace7723c0a.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t5",
+      "visible_width": 115,
+      "ground_anchor": [
+        80,
+        710
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t5_2",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2.png",
+      "source_sha256": "dac04ae52a36f4fb4cb70f4e91eaee35aed4a2fefd285a62d8a27f60944aecb2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2.prompt.txt",
+      "generation_output": "exec-c5af4cde-0027-4784-a776-7260a31118b6.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t5",
+      "visible_width": 115,
+      "ground_anchor": [
+        80,
+        710
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t6_1",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1.png",
+      "source_sha256": "8c8ccede36ca0f60b908d6210047c9db34c17a68f26064f717d5596f22f11bd5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1.prompt.txt",
+      "generation_output": "exec-01ed6e8d-559e-4d1d-9c54-466cb74b39c2.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t6_1",
+      "visible_width": 170,
+      "ground_anchor": [
+        435,
+        780
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t7_1",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1.png",
+      "source_sha256": "4b15105e016e7cdf21a6efe2ea5b4ef35430bef0f010ba3e237cd3931e89196e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1.prompt.txt",
+      "generation_output": "exec-6e8f6f43-4910-421c-a186-587a6347d01a.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t7_1",
+      "visible_width": 185,
+      "ground_anchor": [
+        125,
+        845
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t1_1_upgrade",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1_upgrade.png",
+      "source_sha256": "fb837e80f34921b36ea620e276a241cd868423f2668967ab1752a3bb91518059",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1_upgrade.prompt.txt",
+      "generation_output": "exec-34c74020-9152-4bde-8a85-ce36d516cd69.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t1",
+      "visible_width": 155,
+      "ground_anchor": [
+        1505,
+        755
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t1_2_upgrade",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2_upgrade.png",
+      "source_sha256": "4dc9ebe0f8f0c44faa0756564b7a86c3b5e42f79f8f8a9d95938c33c52bbf57f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2_upgrade.prompt.txt",
+      "generation_output": "exec-d68ed596-c6d9-4d97-900a-7e7a18bd463e.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t1",
+      "visible_width": 155,
+      "ground_anchor": [
+        1505,
+        755
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t2_1_upgrade",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1_upgrade.png",
+      "source_sha256": "a1ff17bff80285cbd1a898882af5a821eed50b789e9ad68898f6d2d3b717f9a1",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1_upgrade.prompt.txt",
+      "generation_output": "exec-4b9c4287-bf51-4d95-8d29-6a3939ec9f2e.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t2",
+      "visible_width": 145,
+      "ground_anchor": [
+        1300,
+        490
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t2_2_upgrade",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2_upgrade.png",
+      "source_sha256": "8fd828a798e3aa544d386dff945edb5cc4dc22b4cbf9e98fb5acca4c554e1cf4",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2_upgrade.prompt.txt",
+      "generation_output": "exec-f3a72b8d-50a8-4f68-b444-d0ed4afc3df1.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t2",
+      "visible_width": 145,
+      "ground_anchor": [
+        1300,
+        490
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t3_1_upgrade",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1_upgrade.png",
+      "source_sha256": "e14c436946b220372766c405d6fb45b3aa000b92db8b61d3eaf07bf27bb79a68",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1_upgrade.prompt.txt",
+      "generation_output": "exec-b31dc082-7f51-4875-bc26-27cefaa940ec.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t3",
+      "visible_width": 155,
+      "ground_anchor": [
+        1515,
+        635
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t3_2_upgrade",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2_upgrade.png",
+      "source_sha256": "cccc832defe4d9476881d1a04babf6c080ad1d8efc795dbe5c191923fbfb7279",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2_upgrade.prompt.txt",
+      "generation_output": "exec-e96052f7-dfbb-4fc7-a1df-0a7510b21d4e.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t3",
+      "visible_width": 155,
+      "ground_anchor": [
+        1515,
+        635
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t4_1_upgrade",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1_upgrade.png",
+      "source_sha256": "8c1c2403828581306710856bf5e4e4370b56147b26b1c45e2eea818c40490ae9",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1_upgrade.prompt.txt",
+      "generation_output": "exec-1329c57b-3566-48ff-8d78-d9cda8fddf40.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t4",
+      "visible_width": 180,
+      "ground_anchor": [
+        275,
+        815
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t4_2_upgrade",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2_upgrade.png",
+      "source_sha256": "f3bdc2b41dd1ac997a175cac6e71ae42c5c18703531755d030bedf950ebe7ca0",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2_upgrade.prompt.txt",
+      "generation_output": "exec-84071320-6639-425d-936a-2d8a9396345f.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t4",
+      "visible_width": 180,
+      "ground_anchor": [
+        275,
+        815
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t5_1_upgrade",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1_upgrade.png",
+      "source_sha256": "0dc6779f4493b55b370068d1fdaf8abd9760c557de57c2871f4a887d8f861899",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1_upgrade.prompt.txt",
+      "generation_output": "exec-9462fe36-919d-4b7d-9b18-0c0380917900.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t5",
+      "visible_width": 135,
+      "ground_anchor": [
+        80,
+        710
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t5_2_upgrade",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2_upgrade.png",
+      "source_sha256": "dfef821d37ded52a4389e27b8b61b5c47d0767dd71fbaa3e68b63f97a7e23225",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2_upgrade.prompt.txt",
+      "generation_output": "exec-9056d03f-9c7a-4fb4-876c-4a6e69e1776f.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t5",
+      "visible_width": 135,
+      "ground_anchor": [
+        80,
+        710
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t6_1_upgrade",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1_upgrade.png",
+      "source_sha256": "489b424d64b0dac90bb0016154861220d4595e4909dc87ddcc60a6d738aa753d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1_upgrade.prompt.txt",
+      "generation_output": "exec-f410df01-ccdf-4609-bc87-84ea1c17bdc5.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t6_1",
+      "visible_width": 195,
+      "ground_anchor": [
+        435,
+        780
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "building_dev_embercourt_t7_1_upgrade",
+      "faction_id": "faction_embercourt",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1_upgrade.png",
+      "source_sha256": "047113f15a90c30af4d890f591d95ce5471fd69e8c0f4226da92aa39e8286f61",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1_upgrade.prompt.txt",
+      "generation_output": "exec-8502da27-c0e6-4c63-b52d-f10e31331788.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "embercourt_t7_1",
+      "visible_width": 210,
+      "ground_anchor": [
+        125,
+        845
+      ],
+      "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
     }
   ],
   "existing_plot_placements": {
-    "faction_embercourt": {
-      "embercourt_t1": {
-        "ground_anchor": [
-          1505,
-          755
-        ],
-        "visible_width": 155,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "embercourt_t2": {
-        "ground_anchor": [
-          1300,
-          490
-        ],
-        "visible_width": 115,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "embercourt_t3": {
-        "ground_anchor": [
-          1530,
-          635
-        ],
-        "visible_width": 130,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "embercourt_t4": {
-        "ground_anchor": [
-          275,
-          815
-        ],
-        "visible_width": 165,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "embercourt_t5": {
-        "ground_anchor": [
-          80,
-          730
-        ],
-        "visible_width": 120,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "embercourt_t6_1": {
-        "ground_anchor": [
-          435,
-          780
-        ],
-        "visible_width": 145,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      },
-      "embercourt_t7_1": {
-        "ground_anchor": [
-          115,
-          850
-        ],
-        "visible_width": 160,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot."
-      }
-    }
+    "faction_embercourt": {}
   }
 }
