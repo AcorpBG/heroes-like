@@ -1,4 +1,4 @@
-"""Focused Embercourt building rendering and developed-town painted input."""
+"""Focused faction building rendering and developed-town painted input."""
 import argparse
 from pathlib import Path
 from town_development_regression import SCRIPT as FIXTURE
@@ -10,6 +10,7 @@ func capture(name:String):
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png(OS.get_cmdline_user_args()[0]+"/"+name+".png")
 func check_exposed(view):
+	check(view._resolved_scenic_backdrop_path.contains("/overhaul/"),"old baked-building backdrop selected")
 	var controls:Array=view.building_hotspot_controls()
 	var counts={}
 	for button in controls:
@@ -107,24 +108,31 @@ func run():
 	get_tree().quit(0 if failures.is_empty() else 1)
 '''
 
-def script_for_part(part):
+def script_for_part(part, faction='embercourt'):
     # Keep each off-screen render run below the shared two-minute bound.
     # Every stage and both final branch compositions still receive the checks.
     civic = SCRIPT.index('\tvar lines={')
     dwellings = SCRIPT.index('\tfor branch in [1,2]:')
     developed = SCRIPT.index('\tfor branch in [1,2]:', dwellings + 1)
-    if part == 'civic':
-        return SCRIPT[:dwellings] + SCRIPT[developed:]
-    setup = SCRIPT[:civic] + '\tbuild(s,"building_dev_fort_1")\n\tvar seen=[]\n'
-    return setup + SCRIPT[dwellings:].replace('for branch in [1,2]:', 'for branch in [' + part + ']:')
+    if part in ('civic', 'foundation'):
+        script = SCRIPT[:dwellings] + SCRIPT[developed:]
+        if part == 'foundation':
+            script = script.replace('\tvar seen=[]', '\tfor plot in lines.keys():\n\t\tif plot not in ["fort","market","storehouse","guild"]:lines.erase(plot)\n\tvar seen=[]')
+    else:
+        setup = SCRIPT[:civic] + '\tbuild(s,"building_dev_fort_1")\n\tvar seen=[]\n'
+        script = setup + SCRIPT[dwellings:].replace('for branch in [1,2]:', 'for branch in [' + part + ']:')
+    if faction == 'mireclaw':
+        script = script.replace('embercourt', 'mireclaw').replace('town_riverwatch', 'town_duskfen')
+    return script
 
 
 if __name__ == '__main__':
     p=argparse.ArgumentParser()
     p.add_argument('--godot',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--part',choices=['all','civic','1','2'],default='all')
+    p.add_argument('--part',choices=['all','civic','foundation','1','2'],default='all')
+    p.add_argument('--faction',choices=['embercourt','mireclaw'],default='embercourt')
     args=p.parse_args()
     parts=['civic','1','2'] if args.part=='all' else [args.part]
-    results=[run_probe(script_for_part(part),args.godot,args.output/part,'TOWN_CIVIC_ART_REPORT') for part in parts]
+    results=[run_probe(script_for_part(part,args.faction),args.godot,args.output/part,'TOWN_CIVIC_ART_REPORT') for part in parts]
     raise SystemExit(max(results))

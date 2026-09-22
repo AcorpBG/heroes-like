@@ -7254,14 +7254,14 @@
           342
         ],
         "normalized_rect": [
-          0.7,
-          0.37777777777777777,
-          0.1901285807291667,
-          0.22592592592592595
+          0.7640625,
+          0.3812282986111111,
+          0.109375,
+          0.1298828125
         ],
         "ground_anchor": [
-          0.78125,
-          0.5888888888888889
+          0.81875,
+          0.5111111111111111
         ],
         "modulate": [
           1,
@@ -7270,7 +7270,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Long reed-roofed hiring hall sits behind the right communal fire platform. Its front-left stair approaches the existing causeway, retaining the main hall and fire as distinct landmarks.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_wayfarers_hall.prompt.txt",
         "prompt_sha256": "cae3d288d24051f66546f2ae8b662294a599a421dc817644a449732d1b1b70ea",
         "curation": "Original built-in text-only paintings described from the inspected Duskfen village. Preserve generated alpha, camera, warm upper-left backlight and wet reed/timber materials. Actual composition, paid growth, input/save and platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance.",
@@ -7280,36 +7280,45 @@
         "shared_art_from": "building_wayfarers_hall"
       },
       "building_market_square": {
-        "asset_id": "faction_mireclaw_building_market_square",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_market_square.png",
-        "source_sha256": "c6dac6c22a564073798bc0e1e34e1701ea4d6a4590d894f1e3cc8d68f3713eeb",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_market_square.png",
+        "source_sha256": "a28c2e0b6f8d08aa6356ce781e92f4819ffca7d2dfe5119214bf2cbdeb116ba1",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_market_square.prompt.txt",
+        "prompt_sha256": "b80ede386e4257b2c689494256c86cc0c5595945d330618d6b49093fa6cd1ee8",
+        "generation_output": "exec-8ca2dfde-19c9-4c84-8c42-0e64be938251.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_market_square",
         "trim_box": [
           0,
-          11,
-          1536,
-          1024
+          21,
+          1248,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_market_square.png",
-        "trimmed_sha256": "60f4fd30735cd7e9f841c9c33d6e324bce1c29e0e95ff6246d0c8907df1e75bb",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_market_square.png",
-        "runtime_sha256": "23c96ef129af5ffa5815d7e1b805fbb5a669918df0ef6b522615ec6dc718550e",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_market_square.png",
+        "runtime_sha256": "1bb7a1206a489c5daa9fd827a77cec6b40c8e011140c2a8c3bb3c6e836294a8e",
         "runtime_size": [
           512,
-          338
+          506
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_market_square.png",
+        "icon_sha256": "4dd1083f0851ba097054fdf383e884de1c810d0f9f3d55feacae78498b7a25ff",
         "normalized_rect": [
-          0.25625,
-          0.5912760416666667,
-          0.1875,
-          0.21983506944444445
+          0.1453125,
+          0.385136217948718,
+          0.084375,
+          0.14819711538461539
         ],
         "ground_anchor": [
-          0.403125,
-          0.7888888888888889
+          0.1875,
+          0.5333333333333333
         ],
         "modulate": [
           1,
@@ -7318,14 +7327,8 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low reed-and-hide trade counters continue the left working landing below the Den. The short front-right loading stair faces the ferry approach; open piling gaps retain the original marsh below.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_market_square.prompt.txt",
-        "prompt_sha256": "1bfb4dca804d395e810b9660ff8270101c62832ba3bc10b85a7fcbc6c2c9b832",
-        "curation": "Original built-in text-only paintings described from the inspected Duskfen village. Preserve generated alpha, camera, warm upper-left backlight and wet reed/timber materials. Actual composition, paid growth, input/save and platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-23b1bc97-61b0-4235-b754-1c68a43b739f.png",
-        "shared_art_from": "building_market_square"
+        "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_mire_pens": {
         "asset_id": "faction_mireclaw_building_mire_pens",
@@ -8644,36 +8647,45 @@
         "generation_output": "exec-38f0ddf2-6954-497f-b9bf-8ef06d5e7c7e.png"
       },
       "building_dev_fort_1": {
-        "asset_id": "faction_mireclaw_building_blackbranch_den",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_blackbranch_den.png",
-        "source_sha256": "d0c8a1df8391f08940483ee55b521775c51d64b89e9a4999a33fc493d27ca0b3",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_1.png",
+        "source_sha256": "c3fb70fcdc2b154b35d1973901bd73ff2cb488854f4012ea5264bd58d7c1d31c",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_1.prompt.txt",
+        "prompt_sha256": "0e48c56caaa6eff3b3a6c7893d1ebede4cf4591505b379626b4a2c1a21fa2fdb",
+        "generation_output": "exec-a8b994b1-336e-48ae-994d-fffb795805a4.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_fort_1",
         "trim_box": [
-          0,
-          0,
-          1524,
-          1005
+          20,
+          52,
+          1238,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_blackbranch_den.png",
-        "trimmed_sha256": "fb629dd4e125cc41d2ee5752fe5a3e56023284ec9ed518c9b130f0b3e7461ef3",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_blackbranch_den.png",
-        "runtime_sha256": "f0bc38ca8bc845287bdffc6ae005f300c3352d798b0918660022a2fa35208984",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_fort_1.png",
+        "runtime_sha256": "9632df0a5b167fe830b1ec0c18ec1c3bd1fb9b17d13a71dad9913ec708832824",
         "runtime_size": [
           512,
-          338
+          505
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_fort_1.png",
+        "icon_sha256": "e7a48feeb055aadd9d944330683f7335cf35dab458344a04adf10d526305137d",
         "normalized_rect": [
-          0.259375,
-          0.4166666666666667,
-          0.1736328125,
-          0.2035590277777778
+          0.246875,
+          0.2747035212552454,
+          0.10625,
+          0.1864075898558657
         ],
         "ground_anchor": [
-          0.38125,
-          0.6044444444444445
+          0.3,
+          0.46111111111111114
         ],
         "modulate": [
           1,
@@ -8682,46 +8694,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low connected reed chambers extend the middle-left shore behind the ferry landing. Their front-right stair reaches the existing boardwalk; wet short pilings descend into the marsh without a separate terrain disk.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_blackbranch_den.prompt.txt",
-        "prompt_sha256": "9c3cccc859458e67923f052ef78abb2e23939a41e1836bf80026bf4e2446652f",
-        "curation": "Original built-in text-only paintings described from the inspected Duskfen village. Preserve generated alpha, camera, warm upper-left backlight and wet reed/timber materials. Actual composition, paid growth, input/save and platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-50bdfb12-3f05-49a7-aca8-47673fbb874d.png",
-        "shared_art_from": "building_blackbranch_den"
+        "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_fort_2": {
-        "asset_id": "faction_mireclaw_building_blackbranch_den",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_blackbranch_den.png",
-        "source_sha256": "d0c8a1df8391f08940483ee55b521775c51d64b89e9a4999a33fc493d27ca0b3",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_2.png",
+        "source_sha256": "bcace1cadcc37211d2d16dd64bdab8055492bc1546b9bbac0539e34f038934ef",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_2.prompt.txt",
+        "prompt_sha256": "5465924dff0bfbf646eb3dcd1eb88d485219e991a6289de6d46ca7451cbde1f9",
+        "generation_output": "exec-a3530fbc-f0d5-4960-84ed-a9e4f3055f97.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_fort_2",
         "trim_box": [
           0,
-          0,
-          1524,
-          1005
+          21,
+          1238,
+          1228
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_blackbranch_den.png",
-        "trimmed_sha256": "fb629dd4e125cc41d2ee5752fe5a3e56023284ec9ed518c9b130f0b3e7461ef3",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_blackbranch_den.png",
-        "runtime_sha256": "f0bc38ca8bc845287bdffc6ae005f300c3352d798b0918660022a2fa35208984",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_fort_2.png",
+        "runtime_sha256": "a88bc09f8c34be0b5cb1b8505a0ea464986ba7208dad6e4d0d0feba5a3553efe",
         "runtime_size": [
           512,
-          338
+          499
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_fort_2.png",
+        "icon_sha256": "aa7bbbd845712baa14591336c0123bc9ff153465e56546803599a0c7adb06712",
         "normalized_rect": [
-          0.259375,
-          0.4166666666666667,
-          0.1736328125,
-          0.2035590277777778
+          0.2390625,
+          0.2498698617842398,
+          0.121875,
+          0.2112412493268713
         ],
         "ground_anchor": [
-          0.38125,
-          0.6044444444444445
+          0.3,
+          0.46111111111111114
         ],
         "modulate": [
           1,
@@ -8730,46 +8745,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low connected reed chambers extend the middle-left shore behind the ferry landing. Their front-right stair reaches the existing boardwalk; wet short pilings descend into the marsh without a separate terrain disk.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_blackbranch_den.prompt.txt",
-        "prompt_sha256": "9c3cccc859458e67923f052ef78abb2e23939a41e1836bf80026bf4e2446652f",
-        "curation": "Original built-in text-only paintings described from the inspected Duskfen village. Preserve generated alpha, camera, warm upper-left backlight and wet reed/timber materials. Actual composition, paid growth, input/save and platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-50bdfb12-3f05-49a7-aca8-47673fbb874d.png",
-        "shared_art_from": "building_blackbranch_den"
+        "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_fort_3": {
-        "asset_id": "faction_mireclaw_building_blackbranch_den",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_blackbranch_den.png",
-        "source_sha256": "d0c8a1df8391f08940483ee55b521775c51d64b89e9a4999a33fc493d27ca0b3",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_3.png",
+        "source_sha256": "e2a0891b2b07cdbab40be20ca3db3de8c5db43ba4e3f2183fd2a185edf983720",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_3.prompt.txt",
+        "prompt_sha256": "d7f109f26ae7f3ca8de12e4767e05b0b87a38e971b1b866b6049ec1f165e9df1",
+        "generation_output": "exec-d882d6e8-35cf-458f-ac59-65125d5497ab.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_fort_3",
         "trim_box": [
           0,
-          0,
-          1524,
-          1005
+          21,
+          1254,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_blackbranch_den.png",
-        "trimmed_sha256": "fb629dd4e125cc41d2ee5752fe5a3e56023284ec9ed518c9b130f0b3e7461ef3",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_blackbranch_den.png",
-        "runtime_sha256": "f0bc38ca8bc845287bdffc6ae005f300c3352d798b0918660022a2fa35208984",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_fort_3.png",
+        "runtime_sha256": "a1e28727e64ba55e2a6ac6590935d8d83a278818860e6b38338f2265fd6f5b08",
         "runtime_size": [
           512,
-          338
+          503
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_fort_3.png",
+        "icon_sha256": "98c33881d8e23989857b0a42af066d3df6fb5e9db89fa4aeb546c077fd6d0134",
         "normalized_rect": [
-          0.259375,
-          0.4166666666666667,
-          0.1736328125,
-          0.2035590277777778
+          0.23125,
+          0.22076023391812866,
+          0.1375,
+          0.24035087719298245
         ],
         "ground_anchor": [
-          0.38125,
-          0.6044444444444445
+          0.3,
+          0.46111111111111114
         ],
         "modulate": [
           1,
@@ -8778,46 +8796,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low connected reed chambers extend the middle-left shore behind the ferry landing. Their front-right stair reaches the existing boardwalk; wet short pilings descend into the marsh without a separate terrain disk.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_blackbranch_den.prompt.txt",
-        "prompt_sha256": "9c3cccc859458e67923f052ef78abb2e23939a41e1836bf80026bf4e2446652f",
-        "curation": "Original built-in text-only paintings described from the inspected Duskfen village. Preserve generated alpha, camera, warm upper-left backlight and wet reed/timber materials. Actual composition, paid growth, input/save and platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-50bdfb12-3f05-49a7-aca8-47673fbb874d.png",
-        "shared_art_from": "building_blackbranch_den"
+        "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_guild_1": {
-        "asset_id": "faction_mireclaw_building_lantern_archive",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "source_sha256": "ac6c3026a9921e6aee275bceece530b30ee6bd50c7f152af07fb7b78b92bb2e4",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_1.png",
+        "source_sha256": "fc431add2edaa560692da73faf787df8bef0c6b83c3835c81672c12d32d4213e",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_1.prompt.txt",
+        "prompt_sha256": "5d82f0901706994d1509284f1f9e33006087170e90c23e0d8faece9b9f3aa1bb",
+        "generation_output": "exec-35a5379a-fec2-430e-8b16-b812117e693b.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_guild_1",
         "trim_box": [
           0,
-          0,
-          1524,
-          1024
+          21,
+          1248,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "trimmed_sha256": "1af437c2480dbcb4fe801359710054b0e9ee38419fc80acfa8dcd2a913569445",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "runtime_sha256": "77004a2c13af9a647d3bca639af0f33e7d8482789a5993c1da2f4a57ef8d6e99",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_guild_1.png",
+        "runtime_sha256": "b6c9159eb75d9732497f9bf17d22321212ed3b89a5393addefd48f979c03d229",
         "runtime_size": [
           512,
-          344
+          506
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_guild_1.png",
+        "icon_sha256": "8c767534acb94211dc4f7b85d4c12954aa1215abb6c2b59f6241c5e9f03f64e3",
         "normalized_rect": [
-          0.153125,
-          0.45,
-          0.13642578125,
-          0.16296296296296295
+          0.415625,
+          0.340224358974359,
+          0.0625,
+          0.10977564102564102
         ],
         "ground_anchor": [
-          0.256875,
-          0.6
+          0.446875,
+          0.45
         ],
         "modulate": [
           1,
@@ -8826,46 +8847,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The compact records house occupies the left shore beside the Den and above the Market approach, set behind their nearer roofs.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_lantern_archive.prompt.txt",
-        "prompt_sha256": "dd95119a4977f7cce599f24ea4b8d9e696c96370b0c528dff524b3f22879355d",
-        "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-acc93383-863b-4666-a296-2ffe899ba0c3.png",
-        "shared_art_from": "building_lantern_archive"
+        "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_guild_2": {
-        "asset_id": "faction_mireclaw_building_lantern_archive",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "source_sha256": "ac6c3026a9921e6aee275bceece530b30ee6bd50c7f152af07fb7b78b92bb2e4",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_2.png",
+        "source_sha256": "524ae10a025ffad1c534c89de8a597130ac1bed69f900c7edf4bb3a3be55d422",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_2.prompt.txt",
+        "prompt_sha256": "78d8cab9105d60f7692ecdb30606efb790fed50b4f951d0cbe957168be54e559",
+        "generation_output": "exec-0c0b1b08-f759-464e-8015-c214046edff5.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_guild_2",
         "trim_box": [
+          57,
           0,
-          0,
-          1524,
-          1024
+          1192,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "trimmed_sha256": "1af437c2480dbcb4fe801359710054b0e9ee38419fc80acfa8dcd2a913569445",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "runtime_sha256": "77004a2c13af9a647d3bca639af0f33e7d8482789a5993c1da2f4a57ef8d6e99",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_guild_2.png",
+        "runtime_sha256": "ec37161ac40078ce5f0099522127182de159c0b743f676ac5f0d2e43181ded94",
         "runtime_size": [
-          512,
-          344
+          463,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_guild_2.png",
+        "icon_sha256": "78b5fdaf3083c3ebb85e15103f20b31846aee32497adf77de027839187f6a8cd",
         "normalized_rect": [
-          0.153125,
-          0.45,
-          0.13642578125,
-          0.16296296296296295
+          0.409375,
+          0.3026872246696035,
+          0.075,
+          0.14731277533039647
         ],
         "ground_anchor": [
-          0.256875,
-          0.6
+          0.446875,
+          0.45
         ],
         "modulate": [
           1,
@@ -8874,46 +8898,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The compact records house occupies the left shore beside the Den and above the Market approach, set behind their nearer roofs.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_lantern_archive.prompt.txt",
-        "prompt_sha256": "dd95119a4977f7cce599f24ea4b8d9e696c96370b0c528dff524b3f22879355d",
-        "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-acc93383-863b-4666-a296-2ffe899ba0c3.png",
-        "shared_art_from": "building_lantern_archive"
+        "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_guild_3": {
-        "asset_id": "faction_mireclaw_building_lantern_archive",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "source_sha256": "ac6c3026a9921e6aee275bceece530b30ee6bd50c7f152af07fb7b78b92bb2e4",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_3.png",
+        "source_sha256": "11dd1348a8abe313a13c5382bdd77f683182a1023838832971a67a47ee4da9be",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_3.prompt.txt",
+        "prompt_sha256": "93b4819fa9f47bf38c62f5edd70abd3b20e62f82f679883ddc2ca1977bfd11c9",
+        "generation_output": "exec-b8b59451-cbe4-4afa-9e91-994a9fff0e1b.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_guild_3",
         "trim_box": [
-          0,
-          0,
-          1524,
-          1024
+          56,
+          11,
+          1211,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "trimmed_sha256": "1af437c2480dbcb4fe801359710054b0e9ee38419fc80acfa8dcd2a913569445",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "runtime_sha256": "77004a2c13af9a647d3bca639af0f33e7d8482789a5993c1da2f4a57ef8d6e99",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_guild_3.png",
+        "runtime_sha256": "f9a618699b857c3146a7e55ea5edc66b241a27839e436bec07c355beeacfbdff",
         "runtime_size": [
-          512,
-          344
+          476,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_guild_3.png",
+        "icon_sha256": "8a27c5dc21e00223c1ac85bb0139cfca56f625187fd45bc3d383bc102fbdb32a",
         "normalized_rect": [
-          0.153125,
-          0.45,
-          0.13642578125,
-          0.16296296296296295
+          0.403125,
+          0.2825925925925926,
+          0.0875,
+          0.1674074074074074
         ],
         "ground_anchor": [
-          0.256875,
-          0.6
+          0.446875,
+          0.45
         ],
         "modulate": [
           1,
@@ -8922,46 +8949,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The compact records house occupies the left shore beside the Den and above the Market approach, set behind their nearer roofs.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_lantern_archive.prompt.txt",
-        "prompt_sha256": "dd95119a4977f7cce599f24ea4b8d9e696c96370b0c528dff524b3f22879355d",
-        "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-acc93383-863b-4666-a296-2ffe899ba0c3.png",
-        "shared_art_from": "building_lantern_archive"
+        "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_guild_4": {
-        "asset_id": "faction_mireclaw_building_lantern_archive",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "source_sha256": "ac6c3026a9921e6aee275bceece530b30ee6bd50c7f152af07fb7b78b92bb2e4",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_4.png",
+        "source_sha256": "51163746b31df9cba377a2ac3bbbdb610a3ac255a05c0a390d6f466fe76e074c",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_4.prompt.txt",
+        "prompt_sha256": "e326981d9fcf876f12e5809cd6fe33fccf3895258436e3bd0fd40db7d581244e",
+        "generation_output": "exec-6b642613-bf36-4ebb-aee3-c55f8903f75a.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_guild_4",
         "trim_box": [
           0,
-          0,
-          1524,
-          1024
+          15,
+          1228,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "trimmed_sha256": "1af437c2480dbcb4fe801359710054b0e9ee38419fc80acfa8dcd2a913569445",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "runtime_sha256": "77004a2c13af9a647d3bca639af0f33e7d8482789a5993c1da2f4a57ef8d6e99",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_guild_4.png",
+        "runtime_sha256": "c193fa03416b4566c1064582a941209450e4264c8ada6b4af0b7fce5e965297d",
         "runtime_size": [
-          512,
-          344
+          507,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_guild_4.png",
+        "icon_sha256": "16a1b550ea1e06555f9778aedc7d648d84bef560292c5289b38bebfe8c8a1048",
         "normalized_rect": [
-          0.153125,
-          0.45,
-          0.13642578125,
-          0.16296296296296295
+          0.396875,
+          0.2706297502714441,
+          0.1,
+          0.17937024972855592
         ],
         "ground_anchor": [
-          0.256875,
-          0.6
+          0.446875,
+          0.45
         ],
         "modulate": [
           1,
@@ -8970,46 +9000,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The compact records house occupies the left shore beside the Den and above the Market approach, set behind their nearer roofs.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_lantern_archive.prompt.txt",
-        "prompt_sha256": "dd95119a4977f7cce599f24ea4b8d9e696c96370b0c528dff524b3f22879355d",
-        "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-acc93383-863b-4666-a296-2ffe899ba0c3.png",
-        "shared_art_from": "building_lantern_archive"
+        "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_guild_5": {
-        "asset_id": "faction_mireclaw_building_lantern_archive",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "source_sha256": "ac6c3026a9921e6aee275bceece530b30ee6bd50c7f152af07fb7b78b92bb2e4",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_5.png",
+        "source_sha256": "6111b85a2979440817443b8f54860d2b9fe0d7853f24648475a95bfed1ce85d9",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_5.prompt.txt",
+        "prompt_sha256": "d492aa49265fc3f9cd4c87dc03eec10018d8ef233eaf3f2322d019bf93b047ef",
+        "generation_output": "exec-74899f47-563d-4de7-82fb-ccfee95c6539.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_guild_5",
         "trim_box": [
+          33,
           0,
-          0,
-          1524,
-          1024
+          1208,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "trimmed_sha256": "1af437c2480dbcb4fe801359710054b0e9ee38419fc80acfa8dcd2a913569445",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_lantern_archive.png",
-        "runtime_sha256": "77004a2c13af9a647d3bca639af0f33e7d8482789a5993c1da2f4a57ef8d6e99",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_guild_5.png",
+        "runtime_sha256": "5afa0f8da72a21e4a7b027cf5056731e5fe12f0fd58dbc5c2757b94abb988dd4",
         "runtime_size": [
-          512,
-          344
+          480,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_guild_5.png",
+        "icon_sha256": "908f71d0208cbd33280ef07ef7119fbb00b8d4516d4a095996bd369366238648",
         "normalized_rect": [
-          0.153125,
-          0.45,
-          0.13642578125,
-          0.16296296296296295
+          0.3890625,
+          0.2306241134751773,
+          0.115625,
+          0.2193758865248227
         ],
         "ground_anchor": [
-          0.256875,
-          0.6
+          0.446875,
+          0.45
         ],
         "modulate": [
           1,
@@ -9018,46 +9051,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The compact records house occupies the left shore beside the Den and above the Market approach, set behind their nearer roofs.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_lantern_archive.prompt.txt",
-        "prompt_sha256": "dd95119a4977f7cce599f24ea4b8d9e696c96370b0c528dff524b3f22879355d",
-        "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-acc93383-863b-4666-a296-2ffe899ba0c3.png",
-        "shared_art_from": "building_lantern_archive"
+        "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_trade_exchange": {
-        "asset_id": "faction_mireclaw_building_market_square",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_market_square.png",
-        "source_sha256": "c6dac6c22a564073798bc0e1e34e1701ea4d6a4590d894f1e3cc8d68f3713eeb",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_trade_exchange.png",
+        "source_sha256": "9f8e79d958a7631c404b7292e83da82b3550f01461a79418283f7098d20fb85c",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_trade_exchange.prompt.txt",
+        "prompt_sha256": "6184f5fdfb7af7d13de764c6d923710aeac98565f2499a65ba2e638cac1e25a4",
+        "generation_output": "exec-2a91a1f5-b457-4a10-ae76-61de00a27726.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_trade_exchange",
         "trim_box": [
-          0,
           11,
-          1536,
-          1024
+          21,
+          1254,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_market_square.png",
-        "trimmed_sha256": "60f4fd30735cd7e9f841c9c33d6e324bce1c29e0e95ff6246d0c8907df1e75bb",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_market_square.png",
-        "runtime_sha256": "23c96ef129af5ffa5815d7e1b805fbb5a669918df0ef6b522615ec6dc718550e",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_trade_exchange.png",
+        "runtime_sha256": "70fa1f28ea397b2f8d31f0f8318f1ccb97aa90e204c4d28dcbbd5c12888eb51c",
         "runtime_size": [
           512,
-          338
+          508
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_trade_exchange.png",
+        "icon_sha256": "0c6bea0dd9612e4973dd61e61cab3f07713c3e73be24aaf19b33aaa31b25d647",
         "normalized_rect": [
-          0.25625,
-          0.5912760416666667,
-          0.1875,
-          0.21983506944444445
+          0.134375,
+          0.345964065433092,
+          0.10625,
+          0.18736926790024136
         ],
         "ground_anchor": [
-          0.403125,
-          0.7888888888888889
+          0.1875,
+          0.5333333333333333
         ],
         "modulate": [
           1,
@@ -9066,46 +9102,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low reed-and-hide trade counters continue the left working landing below the Den. The short front-right loading stair faces the ferry approach; open piling gaps retain the original marsh below.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_market_square.prompt.txt",
-        "prompt_sha256": "1bfb4dca804d395e810b9660ff8270101c62832ba3bc10b85a7fcbc6c2c9b832",
-        "curation": "Original built-in text-only paintings described from the inspected Duskfen village. Preserve generated alpha, camera, warm upper-left backlight and wet reed/timber materials. Actual composition, paid growth, input/save and platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-23b1bc97-61b0-4235-b754-1c68a43b739f.png",
-        "shared_art_from": "building_market_square"
+        "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_storehouse_1": {
-        "asset_id": "faction_mireclaw_building_mire_pens",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mire_pens.png",
-        "source_sha256": "f1c3cd062158d9435741a601e4d8ad50bce1da13df05aa32e46158737f6cee69",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_1.png",
+        "source_sha256": "a6dee2183fd3ab81ef136e2a2741d51608c2d0884ba2ef0ae64fd9a1e70ad989",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_1.prompt.txt",
+        "prompt_sha256": "a6bd84bb136ef084e6ced21eb9ee0ade98e0956006be09178b423f89d8e214ce",
+        "generation_output": "exec-27d5fb32-8701-4571-9ce8-4a47d1ea9326.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_storehouse_1",
         "trim_box": [
-          25,
-          9,
-          1535,
-          1024
+          0,
+          33,
+          1238,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mire_pens.png",
-        "trimmed_sha256": "0c874ff6cdc3b2923df965c445813be39e3594fe4d67f52e51d2459a96c7dc67",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mire_pens.png",
-        "runtime_sha256": "4c27a72752873b135439a059ff6f164c106c4344cae545f688ac46899a37fc56",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_storehouse_1.png",
+        "runtime_sha256": "fdac0c93ac01c789a996056312968a49cf75da60e1f22efa46e57c0cad207b60",
         "runtime_size": [
           512,
-          344
+          505
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_storehouse_1.png",
+        "icon_sha256": "eeb9427186ea5c701aec9ae61ce98215983a8f847313e6b7d74691470f262785",
         "normalized_rect": [
-          0.2467000325520833,
-          0.27411024305555554,
-          0.17818196614583331,
-          0.21292679398148148
+          0.6546875,
+          0.3019071979895889,
+          0.078125,
+          0.13698169089929996
         ],
         "ground_anchor": [
-          0.39125,
-          0.4711111111111111
+          0.69375,
+          0.4388888888888889
         ],
         "modulate": [
           1,
@@ -9114,46 +9153,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Rear-left handler platforms join the reed shore behind the original Den; the exposed roof remains separate from the main hall and the foreground Den.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mire_pens.prompt.txt",
-        "prompt_sha256": "69a1932e83375c295d8974d2596aa667a4e34323b8e8aaf9e13c5fb64a9630f0",
-        "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-ab2f3467-9a2b-48d6-af9c-443e97892d42.png",
-        "shared_art_from": "building_mire_pens"
+        "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_storehouse_2": {
-        "asset_id": "faction_mireclaw_building_mire_pens",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mire_pens.png",
-        "source_sha256": "f1c3cd062158d9435741a601e4d8ad50bce1da13df05aa32e46158737f6cee69",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_2.png",
+        "source_sha256": "cb53f10a09d250833e323c31e38926720037fdbe1b65619253ceb955526acb7d",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_2.prompt.txt",
+        "prompt_sha256": "d83aa7137dfeb8aba07ac7a5496c231db8f3e49e8a51fc28a9c086526108c03d",
+        "generation_output": "exec-4fd0f5e3-5edd-4903-ae75-cf94dae8b319.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_storehouse_2",
         "trim_box": [
-          25,
-          9,
-          1535,
-          1024
+          12,
+          47,
+          1241,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mire_pens.png",
-        "trimmed_sha256": "0c874ff6cdc3b2923df965c445813be39e3594fe4d67f52e51d2459a96c7dc67",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mire_pens.png",
-        "runtime_sha256": "4c27a72752873b135439a059ff6f164c106c4344cae545f688ac46899a37fc56",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_storehouse_2.png",
+        "runtime_sha256": "1e046a4c30a59923d351bc89d2264bd73fbd1b68b01708ea037352bbdd86043a",
         "runtime_size": [
           512,
-          344
+          503
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_storehouse_2.png",
+        "icon_sha256": "9704f047a8eb15a8b91b7442a30fd654d82c9e32b0ae9e26d1ee43303e1e65b4",
         "normalized_rect": [
-          0.2467000325520833,
-          0.27411024305555554,
-          0.17818196614583331,
-          0.21292679398148148
+          0.6453125,
+          0.2697495705632402,
+          0.096875,
+          0.16913931832564869
         ],
         "ground_anchor": [
-          0.39125,
-          0.4711111111111111
+          0.69375,
+          0.4388888888888889
         ],
         "modulate": [
           1,
@@ -9162,14 +9204,8 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Rear-left handler platforms join the reed shore behind the original Den; the exposed roof remains separate from the main hall and the foreground Den.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mire_pens.prompt.txt",
-        "prompt_sha256": "69a1932e83375c295d8974d2596aa667a4e34323b8e8aaf9e13c5fb64a9630f0",
-        "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-ab2f3467-9a2b-48d6-af9c-443e97892d42.png",
-        "shared_art_from": "building_mire_pens"
+        "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_growth_1": {
         "asset_id": "faction_mireclaw_building_slingers_post",
@@ -9194,14 +9230,14 @@
           349
         ],
         "normalized_rect": [
-          0.6202688598632813,
-          0.3001274956597222,
-          0.10764617919921875,
-          0.13042805989583334
+          0.0765625,
+          0.5517903645833333,
+          0.071875,
+          0.08709852430555555
         ],
         "ground_anchor": [
-          0.64,
-          0.42
+          0.1125,
+          0.6388888888888888
         ],
         "modulate": [
           1,
@@ -9210,7 +9246,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Compact rear watch platform west of the command rail, preserving visible marsh piles. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_slingers_post.prompt.txt",
         "prompt_sha256": "b5c8486560ddadbed7a523caf848ac1e5a19aaa7d809571855452cde0988f0f8",
         "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
@@ -9242,14 +9278,14 @@
           345
         ],
         "normalized_rect": [
-          0.66875,
-          0.6111111111111112,
-          0.1482421875,
-          0.17777777777777778
+          0.2578125,
+          0.5155924479166667,
+          0.084375,
+          0.10107421875
         ],
         "ground_anchor": [
-          0.71125,
-          0.7677777777777778
+          0.3,
+          0.6166666666666667
         ],
         "modulate": [
           1,
@@ -9258,7 +9294,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The low drum platform joins the right-hand shore below the communal fire and hiring hall; its steps face the existing main causeway.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_war_drum_circle.prompt.txt",
         "prompt_sha256": "0d72e47c4bd278ffb3e634fbbc658434f0738e16da19df0b9319c71ff909580a",
         "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
@@ -9290,14 +9326,14 @@
           347
         ],
         "normalized_rect": [
-          0.19289895019531245,
-          0.7265333333333333,
-          0.1224510498046875,
-          0.14733333333333334
+          0.3984375,
+          0.51142578125,
+          0.078125,
+          0.09412977430555555
         ],
         "ground_anchor": [
-          0.29,
-          0.86
+          0.4375,
+          0.6055555555555555
         ],
         "modulate": [
           1,
@@ -9306,7 +9342,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Foreground ritual ring on the root bank, with its frontage above navigation. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_gorefen_ring.prompt.txt",
         "prompt_sha256": "b10050d2db07b7150845ca7c2c1104ed9dba13a1c10e6b29f3343b4ed13af7fd",
         "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
@@ -9338,14 +9374,14 @@
           341
         ],
         "normalized_rect": [
-          0.15191853841145833,
-          0.3262261284722222,
-          0.12470499674479166,
-          0.14784794560185185
+          0.6703125,
+          0.5260091145833333,
+          0.071875,
+          0.08510199652777778
         ],
         "ground_anchor": [
-          0.25125,
-          0.4588888888888889
+          0.70625,
+          0.6111111111111112
         ],
         "modulate": [
           1,
@@ -9354,7 +9390,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The faction snare dens occupy the rear-left marsh shore behind the Archive and existing Pens, distinct from the generic Den plot.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_blackbranch_den.prompt.txt",
         "prompt_sha256": "65d36fea2ab0ebeac02b4edcccc6263ca722b465e94f7b6c536fcc6bef509689",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9386,14 +9422,14 @@
           344
         ],
         "normalized_rect": [
-          0.69375,
-          0.7611111111111111,
-          0.14243977864583335,
-          0.1703703703703704
+          0.81875,
+          0.5732638888888889,
+          0.0875,
+          0.10451388888888889
         ],
         "ground_anchor": [
-          0.72875,
-          0.91
+          0.8625,
+          0.6777777777777778
         ],
         "modulate": [
           1,
@@ -9402,7 +9438,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The attached ferry boards from the lower-right waterfront and leaves the central bridge lane readable.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_chainboom_ferry.prompt.txt",
         "prompt_sha256": "7cd116c7cd4ef668739a320aa54b0f45514234b0a7cdce05b5fc0b521f19f226",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9434,14 +9470,14 @@
           339
         ],
         "normalized_rect": [
-          0.859375,
-          0.6744212962962969,
-          0.11766764322916666,
-          0.13854166666670312
+          0.109375,
+          0.6543619791666667,
+          0.08125,
+          0.09563802083333334
         ],
         "ground_anchor": [
-          0.895,
-          0.7955555555555556
+          0.15,
+          0.75
         ],
         "modulate": [
           1,
@@ -9450,7 +9486,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The mudglass rehearsal deck follows the far-right near shore, separate from the earlier communal War Drum Circle.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_war_drum_circle.prompt.txt",
         "prompt_sha256": "617a9e3dde56d6f9bf156b985bc70a3f3e782dc96be8809bffcfca8366dba9f9",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9482,14 +9518,14 @@
           341
         ],
         "normalized_rect": [
-          0.7875,
-          0.5783420138888888,
-          0.12139892578125,
-          0.14388020833333334
+          0.2640625,
+          0.6852756076388888,
+          0.078125,
+          0.0925021701388889
         ],
         "ground_anchor": [
-          0.879375,
-          0.7066666666666667
+          0.303125,
+          0.7777777777777778
         ],
         "modulate": [
           1,
@@ -9498,7 +9534,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The shrine occupies the east waterfront below the hiring hall and beside the forge, behind the nearer drum decks.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_sporewake_shrine.prompt.txt",
         "prompt_sha256": "ce7e9ace30d63a0822cbaa85016d94d9dbea9f3fadffacc51c586c33c2acf1c1",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9530,14 +9566,14 @@
           344
         ],
         "normalized_rect": [
-          0.88125,
-          0.4666666666666667,
-          0.11162109375,
-          0.13333333333333333
+          0.3734375,
+          0.6455729166666667,
+          0.078125,
+          0.09331597222222222
         ],
         "ground_anchor": [
-          0.928125,
-          0.5877777777777777
+          0.4125,
+          0.7388888888888889
         ],
         "modulate": [
           1,
@@ -9546,7 +9582,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The flood-quenching forge occupies the easternmost working shore beside the hiring hall, without moving older paintings.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.prompt.txt",
         "prompt_sha256": "a845f27899a9288ccfe117d26095cdd04d9408031d37b12a51ffb7a6fca6ed38",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9578,14 +9614,14 @@
           344
         ],
         "normalized_rect": [
-          0.88125,
-          0.4666666666666667,
-          0.11162109375,
-          0.13333333333333333
+          0.3734375,
+          0.6455729166666667,
+          0.078125,
+          0.09331597222222222
         ],
         "ground_anchor": [
-          0.928125,
-          0.5877777777777777
+          0.4125,
+          0.7388888888888889
         ],
         "modulate": [
           1,
@@ -9594,7 +9630,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The flood-quenching forge occupies the easternmost working shore beside the hiring hall, without moving older paintings.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.prompt.txt",
         "prompt_sha256": "a845f27899a9288ccfe117d26095cdd04d9408031d37b12a51ffb7a6fca6ed38",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9626,14 +9662,14 @@
           344
         ],
         "normalized_rect": [
-          0.88125,
-          0.4666666666666667,
-          0.11162109375,
-          0.13333333333333333
+          0.3734375,
+          0.6455729166666667,
+          0.078125,
+          0.09331597222222222
         ],
         "ground_anchor": [
-          0.928125,
-          0.5877777777777777
+          0.4125,
+          0.7388888888888889
         ],
         "modulate": [
           1,
@@ -9642,7 +9678,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The flood-quenching forge occupies the easternmost working shore beside the hiring hall, without moving older paintings.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.prompt.txt",
         "prompt_sha256": "a845f27899a9288ccfe117d26095cdd04d9408031d37b12a51ffb7a6fca6ed38",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9674,14 +9710,14 @@
           344
         ],
         "normalized_rect": [
-          0.88125,
-          0.4666666666666667,
-          0.11162109375,
-          0.13333333333333333
+          0.3734375,
+          0.6455729166666667,
+          0.078125,
+          0.09331597222222222
         ],
         "ground_anchor": [
-          0.928125,
-          0.5877777777777777
+          0.4125,
+          0.7388888888888889
         ],
         "modulate": [
           1,
@@ -9690,7 +9726,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The flood-quenching forge occupies the easternmost working shore beside the hiring hall, without moving older paintings.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.prompt.txt",
         "prompt_sha256": "a845f27899a9288ccfe117d26095cdd04d9408031d37b12a51ffb7a6fca6ed38",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9722,14 +9758,14 @@
           343
         ],
         "normalized_rect": [
-          0.515625,
-          0.7444444444444445,
-          0.16497802734375,
-          0.19629629629633333
+          0.48125,
+          0.5957899305555555,
+          0.0875,
+          0.10421006944444444
         ],
         "ground_anchor": [
-          0.5725,
-          0.9177777777777778
+          0.525,
+          0.7
         ],
         "modulate": [
           1,
@@ -9738,7 +9774,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The low command house sits on the near-right landing beside the central bridge, keeping the original main hall distinct.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.prompt.txt",
         "prompt_sha256": "79982a2acd58554bd8dcf30b67de5dd55bb1a11a088aef7b56053ab557b82a1a",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9770,14 +9806,14 @@
           343
         ],
         "normalized_rect": [
-          0.515625,
-          0.7444444444444445,
-          0.16497802734375,
-          0.19629629629633333
+          0.48125,
+          0.5957899305555555,
+          0.0875,
+          0.10421006944444444
         ],
         "ground_anchor": [
-          0.5725,
-          0.9177777777777778
+          0.525,
+          0.7
         ],
         "modulate": [
           1,
@@ -9786,7 +9822,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The low command house sits on the near-right landing beside the central bridge, keeping the original main hall distinct.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.prompt.txt",
         "prompt_sha256": "79982a2acd58554bd8dcf30b67de5dd55bb1a11a088aef7b56053ab557b82a1a",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9818,14 +9854,14 @@
           343
         ],
         "normalized_rect": [
-          0.515625,
-          0.7444444444444445,
-          0.16497802734375,
-          0.19629629629633333
+          0.48125,
+          0.5957899305555555,
+          0.0875,
+          0.10421006944444444
         ],
         "ground_anchor": [
-          0.5725,
-          0.9177777777777778
+          0.525,
+          0.7
         ],
         "modulate": [
           1,
@@ -9834,7 +9870,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The low command house sits on the near-right landing beside the central bridge, keeping the original main hall distinct.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.prompt.txt",
         "prompt_sha256": "79982a2acd58554bd8dcf30b67de5dd55bb1a11a088aef7b56053ab557b82a1a",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9866,14 +9902,14 @@
           343
         ],
         "normalized_rect": [
-          0.515625,
-          0.7444444444444445,
-          0.16497802734375,
-          0.19629629629633333
+          0.48125,
+          0.5957899305555555,
+          0.0875,
+          0.10421006944444444
         ],
         "ground_anchor": [
-          0.5725,
-          0.9177777777777778
+          0.525,
+          0.7
         ],
         "modulate": [
           1,
@@ -9882,7 +9918,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The low command house sits on the near-right landing beside the central bridge, keeping the original main hall distinct.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.prompt.txt",
         "prompt_sha256": "79982a2acd58554bd8dcf30b67de5dd55bb1a11a088aef7b56053ab557b82a1a",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9914,14 +9950,14 @@
           344
         ],
         "normalized_rect": [
-          0.33262499999999995,
-          0.7491111111111112,
-          0.12002099609375001,
-          0.14355555555555555
+          0.5875,
+          0.6826388888888889,
+          0.075,
+          0.08958333333333333
         ],
         "ground_anchor": [
-          0.43,
-          0.88
+          0.625,
+          0.7722222222222223
         ],
         "modulate": [
           1,
@@ -9930,7 +9966,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Antler enclosure on the foreground root bank, separated from the ritual ring and footer. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.prompt.txt",
         "prompt_sha256": "b5bdc31aac7e497d398e5d2a891e7ee84800265acac77efe1b594d91a0bec091",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -9962,14 +9998,14 @@
           344
         ],
         "normalized_rect": [
-          0.33262499999999995,
-          0.7491111111111112,
-          0.12002099609375001,
-          0.14355555555555555
+          0.5875,
+          0.6826388888888889,
+          0.075,
+          0.08958333333333333
         ],
         "ground_anchor": [
-          0.43,
-          0.88
+          0.625,
+          0.7722222222222223
         ],
         "modulate": [
           1,
@@ -9978,7 +10014,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Antler enclosure on the foreground root bank, separated from the ritual ring and footer. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.prompt.txt",
         "prompt_sha256": "b5bdc31aac7e497d398e5d2a891e7ee84800265acac77efe1b594d91a0bec091",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10010,14 +10046,14 @@
           344
         ],
         "normalized_rect": [
-          0.33262499999999995,
-          0.7491111111111112,
-          0.12002099609375001,
-          0.14355555555555555
+          0.5875,
+          0.6826388888888889,
+          0.075,
+          0.08958333333333333
         ],
         "ground_anchor": [
-          0.43,
-          0.88
+          0.625,
+          0.7722222222222223
         ],
         "modulate": [
           1,
@@ -10026,7 +10062,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Antler enclosure on the foreground root bank, separated from the ritual ring and footer. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.prompt.txt",
         "prompt_sha256": "b5bdc31aac7e497d398e5d2a891e7ee84800265acac77efe1b594d91a0bec091",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10058,14 +10094,14 @@
           344
         ],
         "normalized_rect": [
-          0.33262499999999995,
-          0.7491111111111112,
-          0.12002099609375001,
-          0.14355555555555555
+          0.5875,
+          0.6826388888888889,
+          0.075,
+          0.08958333333333333
         ],
         "ground_anchor": [
-          0.43,
-          0.88
+          0.625,
+          0.7722222222222223
         ],
         "modulate": [
           1,
@@ -10074,7 +10110,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Antler enclosure on the foreground root bank, separated from the ritual ring and footer. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.prompt.txt",
         "prompt_sha256": "b5bdc31aac7e497d398e5d2a891e7ee84800265acac77efe1b594d91a0bec091",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10106,14 +10142,14 @@
           344
         ],
         "normalized_rect": [
-          0.425,
-          0.49456380208333334,
-          0.10218505859375,
-          0.12210286458333333
+          0.6984375,
+          0.6955729166666667,
+          0.078125,
+          0.09331597222222222
         ],
         "ground_anchor": [
-          0.504375,
-          0.5988888888888889
+          0.7375,
+          0.7888888888888889
         ],
         "modulate": [
           1,
@@ -10122,7 +10158,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Compact toll approach follows the middle-left causeway beside the market/Den routes, keeping the central main-hall entrance exposed.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.prompt.txt",
         "prompt_sha256": "1ad3fee9a8c641282c168e0dc56f2259fce19915e9259f735f142fea43feb457",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10154,14 +10190,14 @@
           344
         ],
         "normalized_rect": [
-          0.425,
-          0.49456380208333334,
-          0.10218505859375,
-          0.12210286458333333
+          0.6984375,
+          0.6955729166666667,
+          0.078125,
+          0.09331597222222222
         ],
         "ground_anchor": [
-          0.504375,
-          0.5988888888888889
+          0.7375,
+          0.7888888888888889
         ],
         "modulate": [
           1,
@@ -10170,7 +10206,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Compact toll approach follows the middle-left causeway beside the market/Den routes, keeping the central main-hall entrance exposed.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.prompt.txt",
         "prompt_sha256": "1ad3fee9a8c641282c168e0dc56f2259fce19915e9259f735f142fea43feb457",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10202,14 +10238,14 @@
           344
         ],
         "normalized_rect": [
-          0.425,
-          0.49456380208333334,
-          0.10218505859375,
-          0.12210286458333333
+          0.6984375,
+          0.6955729166666667,
+          0.078125,
+          0.09331597222222222
         ],
         "ground_anchor": [
-          0.504375,
-          0.5988888888888889
+          0.7375,
+          0.7888888888888889
         ],
         "modulate": [
           1,
@@ -10218,7 +10254,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Compact toll approach follows the middle-left causeway beside the market/Den routes, keeping the central main-hall entrance exposed.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.prompt.txt",
         "prompt_sha256": "1ad3fee9a8c641282c168e0dc56f2259fce19915e9259f735f142fea43feb457",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10250,14 +10286,14 @@
           344
         ],
         "normalized_rect": [
-          0.425,
-          0.49456380208333334,
-          0.10218505859375,
-          0.12210286458333333
+          0.6984375,
+          0.6955729166666667,
+          0.078125,
+          0.09331597222222222
         ],
         "ground_anchor": [
-          0.504375,
-          0.5988888888888889
+          0.7375,
+          0.7888888888888889
         ],
         "modulate": [
           1,
@@ -10266,7 +10302,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Compact toll approach follows the middle-left causeway beside the market/Den routes, keeping the central main-hall entrance exposed.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.prompt.txt",
         "prompt_sha256": "1ad3fee9a8c641282c168e0dc56f2259fce19915e9259f735f142fea43feb457",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10298,14 +10334,14 @@
           344
         ],
         "normalized_rect": [
-          0.51875,
-          0.5555555555555556,
-          0.11162109375,
-          0.13333333333333333
+          0.8,
+          0.7381944444444445,
+          0.075,
+          0.08958333333333333
         ],
         "ground_anchor": [
-          0.553125,
-          0.6766666666666666
+          0.8375,
+          0.8277777777777777
         ],
         "modulate": [
           1,
@@ -10314,7 +10350,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The lookout stands on the central causeway landing below the main hall, with its stair reaching the bridge approach. Its roof and body remain outside the command dock.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.prompt.txt",
         "prompt_sha256": "f0162a27052134de81e4353fa913c96ee62dd1904be18748adad19cb63243553",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10346,14 +10382,14 @@
           344
         ],
         "normalized_rect": [
-          0.51875,
-          0.5555555555555556,
-          0.11162109375,
-          0.13333333333333333
+          0.8,
+          0.7381944444444445,
+          0.075,
+          0.08958333333333333
         ],
         "ground_anchor": [
-          0.553125,
-          0.6766666666666666
+          0.8375,
+          0.8277777777777777
         ],
         "modulate": [
           1,
@@ -10362,7 +10398,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The lookout stands on the central causeway landing below the main hall, with its stair reaching the bridge approach. Its roof and body remain outside the command dock.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.prompt.txt",
         "prompt_sha256": "f0162a27052134de81e4353fa913c96ee62dd1904be18748adad19cb63243553",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10394,14 +10430,14 @@
           344
         ],
         "normalized_rect": [
-          0.51875,
-          0.5555555555555556,
-          0.11162109375,
-          0.13333333333333333
+          0.8,
+          0.7381944444444445,
+          0.075,
+          0.08958333333333333
         ],
         "ground_anchor": [
-          0.553125,
-          0.6766666666666666
+          0.8375,
+          0.8277777777777777
         ],
         "modulate": [
           1,
@@ -10410,7 +10446,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The lookout stands on the central causeway landing below the main hall, with its stair reaching the bridge approach. Its roof and body remain outside the command dock.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.prompt.txt",
         "prompt_sha256": "f0162a27052134de81e4353fa913c96ee62dd1904be18748adad19cb63243553",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10442,14 +10478,14 @@
           344
         ],
         "normalized_rect": [
-          0.51875,
-          0.5555555555555556,
-          0.11162109375,
-          0.13333333333333333
+          0.8,
+          0.7381944444444445,
+          0.075,
+          0.08958333333333333
         ],
         "ground_anchor": [
-          0.553125,
-          0.6766666666666666
+          0.8375,
+          0.8277777777777777
         ],
         "modulate": [
           1,
@@ -10458,7 +10494,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The lookout stands on the central causeway landing below the main hall, with its stair reaching the bridge approach. Its roof and body remain outside the command dock.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.prompt.txt",
         "prompt_sha256": "f0162a27052134de81e4353fa913c96ee62dd1904be18748adad19cb63243553",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10490,14 +10526,14 @@
           353
         ],
         "normalized_rect": [
-          0.6099711100260417,
-          0.6182364004629629,
-          0.09239705403645834,
-          0.1132450810185185
+          0.084375,
+          0.7649739583333334,
+          0.0875,
+          0.10724826388888889
         ],
         "ground_anchor": [
-          0.6775,
-          0.7166666666666667
+          0.128125,
+          0.8722222222222222
         ],
         "modulate": [
           1,
@@ -10506,7 +10542,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The oracle alcove joins the right bridge landing between Silt Watch and the communal drum quay, with visible stairs and a short piling base. The command dock and hiring hall cannot conceal it.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.prompt.txt",
         "prompt_sha256": "17707b04f329b7618957a02372b48845c85331d1c67ba33d6986c14ccd3d72b3",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10538,14 +10574,14 @@
           353
         ],
         "normalized_rect": [
-          0.6099711100260417,
-          0.6182364004629629,
-          0.09239705403645834,
-          0.1132450810185185
+          0.084375,
+          0.7649739583333334,
+          0.0875,
+          0.10724826388888889
         ],
         "ground_anchor": [
-          0.6775,
-          0.7166666666666667
+          0.128125,
+          0.8722222222222222
         ],
         "modulate": [
           1,
@@ -10554,7 +10590,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The oracle alcove joins the right bridge landing between Silt Watch and the communal drum quay, with visible stairs and a short piling base. The command dock and hiring hall cannot conceal it.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.prompt.txt",
         "prompt_sha256": "17707b04f329b7618957a02372b48845c85331d1c67ba33d6986c14ccd3d72b3",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10586,14 +10622,14 @@
           350
         ],
         "normalized_rect": [
-          0.8366678873697917,
-          0.7555555555555555,
-          0.149237060546875,
-          0.18148148148144444
+          0.1859375,
+          0.7559678819444444,
+          0.109375,
+          0.13292100694444445
         ],
         "ground_anchor": [
-          0.8775,
-          0.9166666666666666
+          0.240625,
+          0.8888888888888888
         ],
         "modulate": [
           1,
@@ -10602,7 +10638,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The short irregular boom follows the near-right settlement edge and joins the ferry/drum approaches.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.prompt.txt",
         "prompt_sha256": "8cae1abab8268c2dbdb71401b3a4af789e5cec20a47fe2048a102ff7cc54e1da",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10634,14 +10670,14 @@
           350
         ],
         "normalized_rect": [
-          0.8366678873697917,
-          0.7555555555555555,
-          0.149237060546875,
-          0.18148148148144444
+          0.1859375,
+          0.7559678819444444,
+          0.109375,
+          0.13292100694444445
         ],
         "ground_anchor": [
-          0.8775,
-          0.9166666666666666
+          0.240625,
+          0.8888888888888888
         ],
         "modulate": [
           1,
@@ -10650,7 +10686,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The short irregular boom follows the near-right settlement edge and joins the ferry/drum approaches.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.prompt.txt",
         "prompt_sha256": "8cae1abab8268c2dbdb71401b3a4af789e5cec20a47fe2048a102ff7cc54e1da",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10682,14 +10718,14 @@
           342
         ],
         "normalized_rect": [
-          0.66875,
-          0.6123263888888889,
-          0.148828125,
-          0.1765625
+          0.465625,
+          0.7756944444444445,
+          0.1,
+          0.11875
         ],
         "ground_anchor": [
-          0.71125,
-          0.7677777777777778
+          0.515625,
+          0.8944444444444445
         ],
         "modulate": [
           1,
@@ -10698,7 +10734,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Hidden boat slip joins the right communal landing in Reedbarrow, whose catalog has no generic War Drum Circle at this site. Its boats retain transparent water gaps.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_smugglers_flotilla.prompt.txt",
         "prompt_sha256": "b6fe904265898b2460ecf8bd56c52577ee9719b131f062e869c7d652c1e1c88a",
         "curation": "Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.",
@@ -10730,14 +10766,14 @@
           345
         ],
         "normalized_rect": [
-          0.134375,
-          0.6055555555555555,
-          0.1297119140625,
-          0.15555555555555556
+          0.596875,
+          0.8190972222222223,
+          0.1,
+          0.11979166666666667
         ],
         "ground_anchor": [
-          0.240625,
-          0.7488888888888889
+          0.646875,
+          0.9388888888888889
         ],
         "modulate": [
           1,
@@ -10746,7 +10782,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The hunt lodge joins the left shore below the Archive and beside the Market, behind the nearer pack enclosure.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_fenbell_hunt_lodge.prompt.txt",
         "prompt_sha256": "a9ea0f7ec9f5d35cdebd49b4afdb93b471efd207941829772813c0659332b168",
         "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
@@ -10778,14 +10814,14 @@
           341
         ],
         "normalized_rect": [
-          0.41875,
-          0.2777777777777778,
-          0.11875,
-          0.14074074074077778
+          0.3296875,
+          0.7926974826388888,
+          0.090625,
+          0.10730251736111111
         ],
         "ground_anchor": [
-          0.501875,
-          0.4077777777777778
+          0.375,
+          0.9
         ],
         "modulate": [
           1,
@@ -10794,7 +10830,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Repair forge joins the rear-left settlement shore between Fenscale Pens and the main hall; it is a separate authored workshop from the eastern faction armor forge.",
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_floodtide_forge.prompt.txt",
         "prompt_sha256": "731c15660d94876cbea434b0e0a4f3430cee4defb85c84d6b40a241965c0399c",
         "curation": "Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.",
@@ -10802,6 +10838,208 @@
         "generation_date": "2026-09-09",
         "generation_output": "exec-3209afb2-f11b-42e0-8ba5-a429090c268c.png",
         "shared_art_from": "building_floodtide_forge"
+      },
+      "building_town_hall": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_town_hall.png",
+        "source_sha256": "f48a4006b16df7e8b96dca466d244f39cef7c23537e5d4d478a908f3257878c8",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_town_hall.prompt.txt",
+        "prompt_sha256": "bdb8702ecb4d21b391b0cca053ba5fc43df76614e70b208be91538d9899af00a",
+        "generation_output": "exec-8d79daf4-93b3-484e-854e-cc3afc6209b6.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/cleared_marsh.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_town_hall",
+        "trim_box": [
+          0,
+          21,
+          1242,
+          1238
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_town_hall.png",
+        "runtime_sha256": "82f87edb0c1aa82969f3f09ccd72e0a9d5209f69a2f6fdaef9aee919948b073b",
+        "runtime_size": [
+          512,
+          502
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_town_hall.png",
+        "icon_sha256": "0fe2f6a8cfcc216654c2769d7e6f32e70ca5013c622fc707a42bc4d92c342acd",
+        "normalized_rect": [
+          0.509375,
+          0.3162551440329218,
+          0.14375,
+          0.2504115226337449
+        ],
+        "ground_anchor": [
+          0.58125,
+          0.5666666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Council hall sits on the central raised earthen terrace, front stair meeting the boardwalk. All four stages retain the same entrance ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
+      },
+      "building_dev_hall_2": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_2.png",
+        "source_sha256": "6cd117de7879f86aaf489d55aced3da014f044ed56394f3ee9cadad24f204cb7",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_2.prompt.txt",
+        "prompt_sha256": "58e4e184d231cadf7a3a4ee9882350b7123834fc8334f7b80fe8657117411e8c",
+        "generation_output": "exec-a9e4ac2c-efd9-48ce-b416-83515764d6b7.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_town_hall.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_hall_2",
+        "trim_box": [
+          31,
+          29,
+          1238,
+          1226
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_hall_2.png",
+        "runtime_sha256": "5ae825b59cd30bfd043c7b2448b163b14c9aeafa614b5cff489ff4d7bc73a97f",
+        "runtime_size": [
+          512,
+          508
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_hall_2.png",
+        "icon_sha256": "45fdedcc4cb6637a6bf55c6da292690b26f622cef28b494c97576abe04f306de",
+        "normalized_rect": [
+          0.4984375,
+          0.27466169566418114,
+          0.165625,
+          0.2920049710024855
+        ],
+        "ground_anchor": [
+          0.58125,
+          0.5666666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Council hall sits on the central raised earthen terrace, front stair meeting the boardwalk. All four stages retain the same entrance ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
+      },
+      "building_dev_hall_3": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png",
+        "source_sha256": "dd50aaba2642e213e6e0e46a12894cb1f2347bb112b46cc2bf7674a324b105ed",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.prompt.txt",
+        "prompt_sha256": "ff6f8d40a7c1ce642d01a2b1075e0c2ea9370bb2673cbfce183a40d62dc82744",
+        "generation_output": "exec-3ee4ba0b-f198-409f-9729-9b038faedc2c.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_hall_3",
+        "trim_box": [
+          0,
+          23,
+          1253,
+          1254
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_hall_3.png",
+        "runtime_sha256": "64a5115c528fec4db5c485eb3a14a38f29aa48c2764d5aaefd9304631fa27ffd",
+        "runtime_size": [
+          512,
+          503
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_hall_3.png",
+        "icon_sha256": "2a86e85223282eff9754a380592c68799bdcf373ba3146a6b5e6b704757c9170",
+        "normalized_rect": [
+          0.4921875,
+          0.25555998935887203,
+          0.178125,
+          0.3111066773077946
+        ],
+        "ground_anchor": [
+          0.58125,
+          0.5666666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Council hall sits on the central raised earthen terrace, front stair meeting the boardwalk. All four stages retain the same entrance ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
+      },
+      "building_dev_hall_4": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_4.png",
+        "source_sha256": "66c13ce375ecc9a3ce83a2b0505a0461b29746e8a4f47b45ea4c85f90854cc0e",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_4.prompt.txt",
+        "prompt_sha256": "8e761aa393772e9d465326fc6d2ee5baae6e9ccb23218531411802210fe524be",
+        "generation_output": "exec-0eb06369-0483-45c7-bf7c-d2382cc9bb7c.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/references/hall_3_intermediate.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_hall_4",
+        "trim_box": [
+          0,
+          53,
+          1254,
+          1254
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_hall_4.png",
+        "runtime_sha256": "2182083661706e2db9079391d5d19091967cc73bf3c690888e1250216dda691d",
+        "runtime_size": [
+          512,
+          490
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_hall_4.png",
+        "icon_sha256": "46af1dfdc609bb5e1210011c400a12a2ac11de7180d9797bd91105aecf3b29ab",
+        "normalized_rect": [
+          0.4796875,
+          0.22081782739677477,
+          0.203125,
+          0.3458488392698919
+        ],
+        "ground_anchor": [
+          0.58125,
+          0.5666666666666667
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Council hall sits on the central raised earthen terrace, front stair meeting the boardwalk. All four stages retain the same entrance ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       }
     },
     "faction_sunvault": {

@@ -162,7 +162,7 @@ const FACTION_DEVELOPMENT_SCENE_PATHS := {
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_embercourt_fully_built.png",
 	},
 	"faction_mireclaw": {
-		"village": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_village.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_mireclaw_cleared_marsh.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_fully_built.png",
 	},
