@@ -1416,156 +1416,746 @@
         395
       ],
       "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_wayfarers_hall.png",
+      "source_sha256": "87b4368b01a062d816f06137f7c7d68a1a96564d740440758af650d1f7ff6943",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_wayfarers_hall.prompt.txt",
+      "generation_output": "exec-9393966e-9ede-46d3-bed0-07b63da97de9.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_wayfarers_hall",
+      "visible_width": 175,
+      "ground_anchor": [
+        1310,
+        460
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_growth_1",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_1.png",
+      "source_sha256": "19b3c37f4d3e258ab7e3dbdce343b8cba5bf0d43c4724494898d0f561931d5a2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_1.prompt.txt",
+      "generation_output": "exec-dac6689e-fe29-4fcb-84bf-eaefdaf4f7b6.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_growth_1",
+      "visible_width": 150,
+      "ground_anchor": [
+        180,
+        575
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_growth_2",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_2.png",
+      "source_sha256": "67beb10660d308b0bccae83d1246b4b0d4ef3a40306682fca7136a4e188ff163",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_2.prompt.txt",
+      "generation_output": "exec-04f698cc-35d3-4169-8e95-dbd54cc8ae54.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_growth_2",
+      "visible_width": 160,
+      "ground_anchor": [
+        480,
+        555
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_growth_3",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_3.png",
+      "source_sha256": "727d70323c45c94867f7e63e73642b40641452f2afebeeee05d252bedbea2cd8",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_3.prompt.txt",
+      "generation_output": "exec-5aa81832-8249-4a1a-9b73-537eeb4c7408.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_growth_3",
+      "visible_width": 150,
+      "ground_anchor": [
+        700,
+        545
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_training_attack",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_attack.png",
+      "source_sha256": "c7fafcbd67bdd9cbf00d775beb063ecc6b932b3bfb18624adb4bb734c32aaf84",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_attack.prompt.txt",
+      "generation_output": "exec-7a22b52e-398a-4bb4-aba2-3d5f2caf1004.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_training_attack",
+      "visible_width": 145,
+      "ground_anchor": [
+        1130,
+        550
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_training_defense",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_defense.png",
+      "source_sha256": "9712cf9f86ecad1f80835a505a0494226f86d7456b06640e83f19b423de8f3a6",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_defense.prompt.txt",
+      "generation_output": "exec-a323333c-f5d8-4693-ba6e-bf236e8716cb.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_training_defense",
+      "visible_width": 160,
+      "ground_anchor": [
+        1380,
+        610
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_training_experience",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_experience.png",
+      "source_sha256": "ca6f62459ee15d688e1d0948c7de44007de8d3ae1f260a424b72ee5f1c169bb2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_experience.prompt.txt",
+      "generation_output": "exec-53df828d-93a8-40ab-b83c-72a8c0b266a1.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_training_experience",
+      "visible_width": 155,
+      "ground_anchor": [
+        240,
+        675
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_artifact_exchange",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_artifact_exchange.png",
+      "source_sha256": "ed7b33a015d1e6f88aa573cd2a38d9d6bf71aee4e55226962398e54e5f404cfd",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_artifact_exchange.prompt.txt",
+      "generation_output": "exec-6aa8819c-6a59-4f5a-a351-7e3ae289686c.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_artifact_exchange",
+      "visible_width": 155,
+      "ground_anchor": [
+        485,
+        700
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_unique_1",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_1.png",
+      "source_sha256": "4d14c587235e1b078497d2a28bcf733c4c1cfc262ebfed8f230c1b697afad3d4",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_1.prompt.txt",
+      "generation_output": "exec-dc850cbf-36c1-4f20-8ffb-6b3e7edf70b1.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_mireclaw_unique_1",
+      "visible_width": 180,
+      "ground_anchor": [
+        825,
+        805
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_unique_2",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_2.png",
+      "source_sha256": "74c50b7d4ec4185769b058593edc41cb492f425218248346eaa05e47d55c4efa",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_2.prompt.txt",
+      "generation_output": "exec-5f10ae78-aa4e-4e0b-bcd5-ba814ca7b83d.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_mireclaw_unique_2",
+      "visible_width": 200,
+      "ground_anchor": [
+        1035,
+        845
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_unique_3",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_3.png",
+      "source_sha256": "ddec38883a38e687ac2b578fe0cb33869e640d15da5fb24d038740aa4141e804",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_3.prompt.txt",
+      "generation_output": "exec-ae55787b-d5a4-4a87-9465-c3c42227a552.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_mireclaw_unique_3",
+      "visible_width": 175,
+      "ground_anchor": [
+        600,
+        810
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t1_1",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1.png",
+      "source_sha256": "f657953838592cc0133d1c5976f55b1a28996135003904242504c0b83a15a5ca",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1.prompt.txt",
+      "generation_output": "exec-f0e7ca85-ba08-40d6-8c33-3b76f8249679.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t1",
+      "visible_width": 145,
+      "ground_anchor": [
+        660,
+        665
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t1_1_upgrade",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1_upgrade.png",
+      "source_sha256": "ad836be5eb6c9847432151083480bd11a9fe03f5ed1e1e1329d76411a755057c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1_upgrade.prompt.txt",
+      "generation_output": "exec-445a2789-3af8-4864-9a80-dc5308d2f400.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t1",
+      "visible_width": 175,
+      "ground_anchor": [
+        660,
+        665
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t1_2",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2.png",
+      "source_sha256": "9e68d00dcf00306bc81057d58666e3577330759762fbc3587100f997e4d2d007",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2.prompt.txt",
+      "generation_output": "exec-bb629c99-73b7-40bb-923f-cdd58b06208b.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t1",
+      "visible_width": 145,
+      "ground_anchor": [
+        660,
+        665
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t1_2_upgrade",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2_upgrade.png",
+      "source_sha256": "5dda3105ff3ff68657f983bbb2dcc4004815c6cf4d3ecd086eddf60a1a28e9d2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2_upgrade.prompt.txt",
+      "generation_output": "exec-54684bcd-6edc-4a4d-a491-676bf226442c.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t1",
+      "visible_width": 175,
+      "ground_anchor": [
+        660,
+        665
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t2_1",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1.png",
+      "source_sha256": "04e13be84dfddc51085d581024480c99781c42b8b8611207262b5ce83d380479",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1.prompt.txt",
+      "generation_output": "exec-97beddb3-7776-4b5e-9e69-9e8571543455.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t2",
+      "visible_width": 160,
+      "ground_anchor": [
+        840,
+        630
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t2_1_upgrade",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1_upgrade.png",
+      "source_sha256": "669e9b92b2dcc83d803d08215845c1cc247ee03214e47a05eb8b4d405a67b681",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1_upgrade.prompt.txt",
+      "generation_output": "exec-dc8372df-5eb0-48da-8147-ea6a188dd293.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t2",
+      "visible_width": 185,
+      "ground_anchor": [
+        840,
+        630
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t2_2",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2.png",
+      "source_sha256": "cb6830c6d90b2b44afb0e1b89fd7300a51c0f506e1b4aad920cac0e35fe6e3e2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2.prompt.txt",
+      "generation_output": "exec-70d4c104-2441-4fc7-9552-591133fc30d7.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t2",
+      "visible_width": 160,
+      "ground_anchor": [
+        840,
+        630
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t2_2_upgrade",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2_upgrade.png",
+      "source_sha256": "51a204f097c76fce04455016fb21519cf4da748588f9404c7457842935cc097c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2_upgrade.prompt.txt",
+      "generation_output": "exec-188ffe3c-ec3c-4678-8bc1-38974d886678.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t2",
+      "visible_width": 185,
+      "ground_anchor": [
+        840,
+        630
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t3_1",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1.png",
+      "source_sha256": "37b1ce5dd8af49eb0d0c4a6f886d4a9616d59d845a3672b11037d16181e57ba2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1.prompt.txt",
+      "generation_output": "exec-83f65f92-77b8-4129-a80b-9a1355099d51.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t3",
+      "visible_width": 145,
+      "ground_anchor": [
+        1000,
+        695
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t3_1_upgrade",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1_upgrade.png",
+      "source_sha256": "35ba8f7842cc261e549f189a98d5dfe25781f982348f78b6f6c4f4b660ae1ee2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1_upgrade.prompt.txt",
+      "generation_output": "exec-d7c0e7e4-dc86-45ae-8944-3688c4d1a3a2.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t3",
+      "visible_width": 175,
+      "ground_anchor": [
+        1000,
+        695
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t3_2",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2.png",
+      "source_sha256": "35cd38b646d86c2317cce5a66b55b06cc9cad302ba5b415ea78290e0d8cc4948",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2.prompt.txt",
+      "generation_output": "exec-5fc7555e-ad53-4db1-b15f-4059b181f56d.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t3",
+      "visible_width": 145,
+      "ground_anchor": [
+        1000,
+        695
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t3_2_upgrade",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2_upgrade.png",
+      "source_sha256": "0c4507bd3e8aa3626c8bbcf804043296b3e3fa4e0839c7bbb415905089c4a7fd",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2_upgrade.prompt.txt",
+      "generation_output": "exec-cd68f87f-5b37-4dac-8b8a-ceb991a45168.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t3",
+      "visible_width": 175,
+      "ground_anchor": [
+        1000,
+        695
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t4_1",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1.png",
+      "source_sha256": "a35f06082c2780c55dc861f91669c5ccdf5b2aef50b75ffee59f3cbac25e2385",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1.prompt.txt",
+      "generation_output": "exec-4d4adb76-5bbf-45de-9b28-f8959163f5c7.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t4",
+      "visible_width": 145,
+      "ground_anchor": [
+        1180,
+        710
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t4_1_upgrade",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1_upgrade.png",
+      "source_sha256": "cf4358a835b88408ea0343063dfeea7cc81bc2f22204d0e099ca90ec45e9f581",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1_upgrade.prompt.txt",
+      "generation_output": "exec-87df6127-e8e5-47fc-bea9-d4b8c0f3399a.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t4",
+      "visible_width": 175,
+      "ground_anchor": [
+        1180,
+        710
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t4_2",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2.png",
+      "source_sha256": "043742598b66d21ed9ec6c174dfedb9bbef8c37ebca5740455555287c702903b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2.prompt.txt",
+      "generation_output": "exec-4a148f2d-b580-4de4-9fdd-6afdc08e583f.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t4",
+      "visible_width": 145,
+      "ground_anchor": [
+        1180,
+        710
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t4_2_upgrade",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2_upgrade.png",
+      "source_sha256": "a44cc4a1ad28c526aa7951feb36dac6a64fbb22752c44c279dcdd0b18ae5f9be",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2_upgrade.prompt.txt",
+      "generation_output": "exec-2e5d9cae-80e7-44d1-87fe-6920327b020f.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t4",
+      "visible_width": 175,
+      "ground_anchor": [
+        1180,
+        710
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t5_1",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1.png",
+      "source_sha256": "c89e31a5e808bd90a5896eb6aa22644043364ab3b05d8136377b394805b65b7c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1.prompt.txt",
+      "generation_output": "exec-227c4d4a-6228-459e-9112-9e2df4513447.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t5",
+      "visible_width": 150,
+      "ground_anchor": [
+        1340,
+        745
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t5_1_upgrade",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_upgrade.png",
+      "source_sha256": "197b0e56831adc4480b8e3c46ff7d0aae151903378cfafec5f59e1d67736d700",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_upgrade.prompt.txt",
+      "generation_output": "exec-a648c38b-5d23-4ec2-b9f9-33c81944b533.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t5",
+      "visible_width": 180,
+      "ground_anchor": [
+        1340,
+        745
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t5_2",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2.png",
+      "source_sha256": "0ed88ab41d54f23b58a59300604c0a218c29fba5306feba3a476f470a36d4a6b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2.prompt.txt",
+      "generation_output": "exec-97db875a-47c6-48c2-8030-a5a32333ccd0.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t5",
+      "visible_width": 150,
+      "ground_anchor": [
+        1340,
+        745
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t5_2_upgrade",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2_upgrade.png",
+      "source_sha256": "a552126bbc8ddd5570611fcaacb756b94bbae24d69093d77d2a310d0763aa7e0",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2_upgrade.prompt.txt",
+      "generation_output": "exec-b303da7b-e07f-4170-9e0e-d09e8a800502.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t5",
+      "visible_width": 180,
+      "ground_anchor": [
+        1340,
+        745
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t6_1",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1.png",
+      "source_sha256": "1d116b158b639254920ba1e4741495bf6f14c9d5a278050adddb98cc59e6e84e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1.prompt.txt",
+      "generation_output": "exec-4a488f34-21bc-4691-8397-72f4c1f5b9bf.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t6_1",
+      "visible_width": 190,
+      "ground_anchor": [
+        185,
+        790
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t6_1_upgrade",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1_upgrade.png",
+      "source_sha256": "7439029c2ca86b864d3ce01b6c2c928a52ba420b5cd3516d2fe9a3e9ffd5effd",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1_upgrade.prompt.txt",
+      "generation_output": "exec-db1a7bb1-6338-49ae-97d2-ec76fa1510e8.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t6_1",
+      "visible_width": 220,
+      "ground_anchor": [
+        185,
+        790
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t7_1",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1.png",
+      "source_sha256": "16aaf00642f23ccba9ba62be0be3398f721aab62d57d554e16c6735782362839",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1.prompt.txt",
+      "generation_output": "exec-7271a972-4efa-45d6-84bb-1659673d3430.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t7_1",
+      "visible_width": 205,
+      "ground_anchor": [
+        395,
+        805
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_dev_mireclaw_t7_1_upgrade",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_upgrade.png",
+      "source_sha256": "4939c02b0923c76bad7a1699a9f87b9114dc20db2bd55312c8e474d60468500d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_upgrade.prompt.txt",
+      "generation_output": "exec-54236e90-f704-4b2a-a143-2d58f1f90d9e.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "mireclaw_t7_1",
+      "visible_width": 245,
+      "ground_anchor": [
+        395,
+        805
+      ],
+      "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
     }
   ],
   "existing_plot_placements": {
     "faction_embercourt": {},
-    "faction_mireclaw": {
-      "building_wayfarers_hall": {
-        "ground_anchor": [
-          1310,
-          460
-        ],
-        "visible_width": 175,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "building_dev_growth_1": {
-        "ground_anchor": [
-          180,
-          575
-        ],
-        "visible_width": 115,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "building_dev_growth_2": {
-        "ground_anchor": [
-          480,
-          555
-        ],
-        "visible_width": 135,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "building_dev_growth_3": {
-        "ground_anchor": [
-          700,
-          545
-        ],
-        "visible_width": 125,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "building_dev_training_attack": {
-        "ground_anchor": [
-          1130,
-          550
-        ],
-        "visible_width": 115,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "building_dev_training_defense": {
-        "ground_anchor": [
-          1380,
-          610
-        ],
-        "visible_width": 140,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "building_dev_training_experience": {
-        "ground_anchor": [
-          240,
-          675
-        ],
-        "visible_width": 130,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "building_dev_artifact_exchange": {
-        "ground_anchor": [
-          485,
-          700
-        ],
-        "visible_width": 125,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "mireclaw_t1": {
-        "ground_anchor": [
-          660,
-          665
-        ],
-        "visible_width": 125,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "mireclaw_t2": {
-        "ground_anchor": [
-          840,
-          630
-        ],
-        "visible_width": 140,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "mireclaw_t3": {
-        "ground_anchor": [
-          1000,
-          695
-        ],
-        "visible_width": 120,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "mireclaw_t4": {
-        "ground_anchor": [
-          1180,
-          710
-        ],
-        "visible_width": 125,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "mireclaw_t5": {
-        "ground_anchor": [
-          1340,
-          745
-        ],
-        "visible_width": 120,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "mireclaw_t6_1": {
-        "ground_anchor": [
-          205,
-          785
-        ],
-        "visible_width": 140,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "mireclaw_t7_1": {
-        "ground_anchor": [
-          385,
-          800
-        ],
-        "visible_width": 175,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "building_dev_mireclaw_unique_1": {
-        "ground_anchor": [
-          825,
-          805
-        ],
-        "visible_width": 160,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "building_dev_mireclaw_unique_2": {
-        "ground_anchor": [
-          1035,
-          845
-        ],
-        "visible_width": 160,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      },
-      "building_dev_mireclaw_unique_3": {
-        "ground_anchor": [
-          600,
-          810
-        ],
-        "visible_width": 145,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
-      }
-    }
+    "faction_mireclaw": {}
   },
   "reference_assets": [
     {
