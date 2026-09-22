@@ -132,7 +132,8 @@ def main():
     for path, payload in ((scene_path, scene), (layout_path, layout)):
         save(path, payload)
     save_backdrops(backdrop_path, backdrop)
-    print(f"Packaged {len(packet['items'])} original paintings; existing faction layers preserved.")
+    active_count = sum(item.get("active", True) for item in packet["items"])
+    print(f"Packaged {active_count} active original paintings; existing faction layers preserved.")
 
 
 if __name__ == '__main__':

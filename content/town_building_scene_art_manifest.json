@@ -5610,32 +5610,41 @@
         "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t1_1": {
-        "asset_id": "faction_embercourt_building_embercourt_oath_pikehall",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
-        "source_sha256": "40bc88d3b7dfd945d60cc67532866e353c8fb642293e7947debed79f5328700e",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1.png",
+        "source_sha256": "1da25c71f98bf4638d694e40135650941e2e7dee83c33546863c306a610af927",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1.prompt.txt",
+        "prompt_sha256": "83e301e9c78ae42efa28cbea6c645055383c36d417d1f3cf6c3e70ddd7ce2d58",
+        "generation_output": "exec-5a89bfd6-aa1d-4894-90a7-34c495e2d08a.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t1_1",
         "trim_box": [
-          33,
-          19,
-          1518,
-          1000
+          0,
+          39,
+          1217,
+          1230
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
-        "trimmed_sha256": "3c59c3b14b34ebc36c8fa3ab52beda7d8146a7bcffa0c4100f312a45d2c19a8d",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
-        "runtime_sha256": "6ead9b5bf4fc59cbf278aa8fc517e535ec96f71e96db51dfea73307f71323574",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t1_1.png",
+        "runtime_sha256": "25126841d75559b4ce4ce28964eb9ac795db3d2d8690286cb4dbfc4228eee809",
         "runtime_size": [
           512,
-          338
+          501
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t1_1.png",
+        "icon_sha256": "dc23270c2033db46b5c2adc8c1bde405f12fb07386e5739e418d908929923b07",
         "normalized_rect": [
-          0.8921875,
-          0.7251953125,
-          0.096875,
-          0.11369357638888888
+          0.8984375,
+          0.6920934903679357,
+          0.084375,
+          0.14679539852095316
         ],
         "ground_anchor": [
           0.940625,
@@ -5648,42 +5657,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.prompt.txt",
-        "prompt_sha256": "199f3e9c6416206e4834b540666be91a2726e48d476777619f01ed6b15ed96f2",
-        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-fd3e1d33-ce0c-4ed3-a899-3eae2024f983.png",
-        "shared_art_from": "building_embercourt_oath_pikehall"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t1_1_upgrade": {
-        "asset_id": "faction_embercourt_building_embercourt_oath_pikehall",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
-        "source_sha256": "40bc88d3b7dfd945d60cc67532866e353c8fb642293e7947debed79f5328700e",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1_upgrade.png",
+        "source_sha256": "fb837e80f34921b36ea620e276a241cd868423f2668967ab1752a3bb91518059",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1_upgrade.prompt.txt",
+        "prompt_sha256": "10865b2d745fee1b5fa9d2ad83794677dd783045366e3319cfc39d0d2f66cb87",
+        "generation_output": "exec-34c74020-9152-4bde-8a85-ce36d516cd69.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t1_1_upgrade",
         "trim_box": [
-          33,
-          19,
-          1518,
-          1000
+          53,
+          45,
+          1229,
+          1234
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
-        "trimmed_sha256": "3c59c3b14b34ebc36c8fa3ab52beda7d8146a7bcffa0c4100f312a45d2c19a8d",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
-        "runtime_sha256": "6ead9b5bf4fc59cbf278aa8fc517e535ec96f71e96db51dfea73307f71323574",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t1_1_upgrade.png",
+        "runtime_sha256": "4c1193295edfa924fbff9fdf7ddf236bc7573f7f554005050f401637b1b3c551",
         "runtime_size": [
-          512,
-          338
+          506,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t1_1_upgrade.png",
+        "icon_sha256": "414e271d7f61afe1ccb1e4e34300ecdc27bbd34aefc3c134e98038c2ca3a21d9",
         "normalized_rect": [
           0.8921875,
-          0.7251953125,
+          0.6647628495842782,
           0.096875,
-          0.11369357638888888
+          0.17412603930461074
         ],
         "ground_anchor": [
           0.940625,
@@ -5696,42 +5708,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.prompt.txt",
-        "prompt_sha256": "199f3e9c6416206e4834b540666be91a2726e48d476777619f01ed6b15ed96f2",
-        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-fd3e1d33-ce0c-4ed3-a899-3eae2024f983.png",
-        "shared_art_from": "building_embercourt_oath_pikehall"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t1_2": {
-        "asset_id": "faction_embercourt_building_embercourt_oath_pikehall",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
-        "source_sha256": "40bc88d3b7dfd945d60cc67532866e353c8fb642293e7947debed79f5328700e",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2.png",
+        "source_sha256": "bbbc8dfc7f90ba8f7ef5ea79f03cda12e3ab5c463fd688078edaff7081d29184",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2.prompt.txt",
+        "prompt_sha256": "e6e144685955ba86d24dc26b78de69a86c865e817b4de3d88034ff76124ac8cf",
+        "generation_output": "exec-ed13fa62-b3e0-496f-816b-d0e4d7624f42.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t1_2",
         "trim_box": [
-          33,
-          19,
-          1518,
-          1000
+          0,
+          50,
+          1225,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
-        "trimmed_sha256": "3c59c3b14b34ebc36c8fa3ab52beda7d8146a7bcffa0c4100f312a45d2c19a8d",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
-        "runtime_sha256": "6ead9b5bf4fc59cbf278aa8fc517e535ec96f71e96db51dfea73307f71323574",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t1_2.png",
+        "runtime_sha256": "99f85cb1de3493b24ea9ea604d33ce3d11ca184d78fe0ba25cfccfbe6a2e06ae",
         "runtime_size": [
           512,
-          338
+          503
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t1_2.png",
+        "icon_sha256": "3efabd55539c5937d4c6a9eac1f5e13e699b0b7a44473ea2eb9dc35ca7526c7e",
         "normalized_rect": [
-          0.8921875,
-          0.7251953125,
-          0.096875,
-          0.11369357638888888
+          0.8984375,
+          0.6914603174603174,
+          0.084375,
+          0.14742857142857144
         ],
         "ground_anchor": [
           0.940625,
@@ -5744,42 +5759,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.prompt.txt",
-        "prompt_sha256": "199f3e9c6416206e4834b540666be91a2726e48d476777619f01ed6b15ed96f2",
-        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-fd3e1d33-ce0c-4ed3-a899-3eae2024f983.png",
-        "shared_art_from": "building_embercourt_oath_pikehall"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t1_2_upgrade": {
-        "asset_id": "faction_embercourt_building_embercourt_oath_pikehall",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
-        "source_sha256": "40bc88d3b7dfd945d60cc67532866e353c8fb642293e7947debed79f5328700e",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2_upgrade.png",
+        "source_sha256": "4dc9ebe0f8f0c44faa0756564b7a86c3b5e42f79f8f8a9d95938c33c52bbf57f",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2_upgrade.prompt.txt",
+        "prompt_sha256": "03cd66dbb7b5c58381995f1884dba94c850b0bcd9ccc9757644a383ec7edd1a6",
+        "generation_output": "exec-d68ed596-c6d9-4d97-900a-7e7a18bd463e.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t1_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t1_2_upgrade",
         "trim_box": [
-          33,
-          19,
-          1518,
-          1000
+          0,
+          12,
+          1226,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
-        "trimmed_sha256": "3c59c3b14b34ebc36c8fa3ab52beda7d8146a7bcffa0c4100f312a45d2c19a8d",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.png",
-        "runtime_sha256": "6ead9b5bf4fc59cbf278aa8fc517e535ec96f71e96db51dfea73307f71323574",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t1_2_upgrade.png",
+        "runtime_sha256": "c95cdcec1c3b1d86ca4a3f3560a96f402c146f0c413f27af55373a7f6d3fb194",
         "runtime_size": [
-          512,
-          338
+          505,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t1_2_upgrade.png",
+        "icon_sha256": "9e540044ae8d1e14345f723ae1d4ad6cfcffa6b3049c0a401d20b16b14f085c3",
         "normalized_rect": [
           0.8921875,
-          0.7251953125,
+          0.6644190683342396,
           0.096875,
-          0.11369357638888888
+          0.17446982055464927
         ],
         "ground_anchor": [
           0.940625,
@@ -5792,42 +5810,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_oath_pikehall.prompt.txt",
-        "prompt_sha256": "199f3e9c6416206e4834b540666be91a2726e48d476777619f01ed6b15ed96f2",
-        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-fd3e1d33-ce0c-4ed3-a899-3eae2024f983.png",
-        "shared_art_from": "building_embercourt_oath_pikehall"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t2_1": {
-        "asset_id": "faction_embercourt_building_embercourt_beacon_court",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
-        "source_sha256": "630a3f7b0a7f5274d6089b232a623fdc070b7a205047b09fba7b24c80599a461",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1.png",
+        "source_sha256": "afe8af2776bd1ae82898236cfe17e6b2de309bd05c36e76cc28176a058613c63",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1.prompt.txt",
+        "prompt_sha256": "7850bef735a77cca913f7190626affdcad54108be38ad18bdbea388f82e2e768",
+        "generation_output": "exec-ba7bfd79-2636-4fe4-833e-355c96079500.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t2_1",
         "trim_box": [
-          17,
-          0,
-          1520,
-          1024
+          49,
+          21,
+          1223,
+          1182
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
-        "trimmed_sha256": "993b7b3309aee5d9617a8bbd0b3e14811059b05d076436e3cbc48d727573b9da",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
-        "runtime_sha256": "7713184215909cd3f885d36676ead688a76be3005238ffd3761b041010fcec66",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t2_1.png",
+        "runtime_sha256": "15225c8032a534535a3292bda487ded0879ad7a7a38e43a82998106648d1082d",
         "runtime_size": [
           512,
-          349
+          506
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t2_1.png",
+        "icon_sha256": "853ac99e593a5745154632f479c82a68c0b9be83c9eee00225365222916b8722",
         "normalized_rect": [
-          0.7765625,
-          0.45734592013888886,
-          0.071875,
-          0.08709852430555555
+          0.7734375,
+          0.40709350747681244,
+          0.078125,
+          0.13735093696763204
         ],
         "ground_anchor": [
           0.8125,
@@ -5840,42 +5861,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_court.prompt.txt",
-        "prompt_sha256": "120b92b9ce5379fefe4696c7f472385347a942e081260ae7e3b5bdb1a5021ef0",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-533a06fb-665f-4c09-9de6-512ea380d2f5.png",
-        "shared_art_from": "building_embercourt_beacon_court"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t2_1_upgrade": {
-        "asset_id": "faction_embercourt_building_embercourt_beacon_court",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
-        "source_sha256": "630a3f7b0a7f5274d6089b232a623fdc070b7a205047b09fba7b24c80599a461",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1_upgrade.png",
+        "source_sha256": "a1ff17bff80285cbd1a898882af5a821eed50b789e9ad68898f6d2d3b717f9a1",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1_upgrade.prompt.txt",
+        "prompt_sha256": "e95424a285143aca652b2e2a772d614c89c906f50e5a86afad99a733eaf65141",
+        "generation_output": "exec-4b9c4287-bf51-4d95-8d29-6a3939ec9f2e.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t2_1_upgrade",
         "trim_box": [
-          17,
-          0,
-          1520,
-          1024
+          48,
+          51,
+          1225,
+          1182
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
-        "trimmed_sha256": "993b7b3309aee5d9617a8bbd0b3e14811059b05d076436e3cbc48d727573b9da",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
-        "runtime_sha256": "7713184215909cd3f885d36676ead688a76be3005238ffd3761b041010fcec66",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t2_1_upgrade.png",
+        "runtime_sha256": "91d5e5a464e9602761898d14f896cf6763c051ba123691e6c9b6af32029f2a8f",
         "runtime_size": [
           512,
-          349
+          492
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t2_1_upgrade.png",
+        "icon_sha256": "42de790495ea3124b165dafb5e83a73d4d103f13fbe1e67dd229b35271b9236b",
         "normalized_rect": [
-          0.7765625,
-          0.45734592013888886,
-          0.071875,
-          0.08709852430555555
+          0.7671875,
+          0.3896299443028415,
+          0.090625,
+          0.15481450014160295
         ],
         "ground_anchor": [
           0.8125,
@@ -5888,42 +5912,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_court.prompt.txt",
-        "prompt_sha256": "120b92b9ce5379fefe4696c7f472385347a942e081260ae7e3b5bdb1a5021ef0",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-533a06fb-665f-4c09-9de6-512ea380d2f5.png",
-        "shared_art_from": "building_embercourt_beacon_court"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t2_2": {
-        "asset_id": "faction_embercourt_building_embercourt_beacon_court",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
-        "source_sha256": "630a3f7b0a7f5274d6089b232a623fdc070b7a205047b09fba7b24c80599a461",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2.png",
+        "source_sha256": "82aab847f885513cdc91bf391a1ccfa0847710389f53111c50f58518c7afc271",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2.prompt.txt",
+        "prompt_sha256": "1d2033857c05c38481e6ffbae487c17ad81d10ba3dc96afa2dcecfbae7bb336d",
+        "generation_output": "exec-20808cd4-5750-4671-b210-42359e2a706c.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t2_2",
         "trim_box": [
-          17,
           0,
-          1520,
-          1024
+          21,
+          1234,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
-        "trimmed_sha256": "993b7b3309aee5d9617a8bbd0b3e14811059b05d076436e3cbc48d727573b9da",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
-        "runtime_sha256": "7713184215909cd3f885d36676ead688a76be3005238ffd3761b041010fcec66",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t2_2.png",
+        "runtime_sha256": "a228ac879d870bd278e0295b49e0c7644121c2f3c348aa6fad456726054d0b4d",
         "runtime_size": [
           512,
-          349
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t2_2.png",
+        "icon_sha256": "95c9f7a1a5a86307677e60931c8a2f721dc104e95479eebae3455abcc1c1ee36",
         "normalized_rect": [
-          0.7765625,
-          0.45734592013888886,
-          0.071875,
-          0.08709852430555555
+          0.7734375,
+          0.40566810732937153,
+          0.078125,
+          0.13877633711507292
         ],
         "ground_anchor": [
           0.8125,
@@ -5936,42 +5963,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_court.prompt.txt",
-        "prompt_sha256": "120b92b9ce5379fefe4696c7f472385347a942e081260ae7e3b5bdb1a5021ef0",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-533a06fb-665f-4c09-9de6-512ea380d2f5.png",
-        "shared_art_from": "building_embercourt_beacon_court"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t2_2_upgrade": {
-        "asset_id": "faction_embercourt_building_embercourt_beacon_court",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
-        "source_sha256": "630a3f7b0a7f5274d6089b232a623fdc070b7a205047b09fba7b24c80599a461",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2_upgrade.png",
+        "source_sha256": "8fd828a798e3aa544d386dff945edb5cc4dc22b4cbf9e98fb5acca4c554e1cf4",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2_upgrade.prompt.txt",
+        "prompt_sha256": "6e08abaf1ab2184bbf49dcaef731341c77a9cac08b440abcaf2bb4014a8d6040",
+        "generation_output": "exec-f3a72b8d-50a8-4f68-b444-d0ed4afc3df1.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t2_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t2_2_upgrade",
         "trim_box": [
-          17,
-          0,
-          1520,
-          1024
+          12,
+          56,
+          1254,
+          1190
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
-        "trimmed_sha256": "993b7b3309aee5d9617a8bbd0b3e14811059b05d076436e3cbc48d727573b9da",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_beacon_court.png",
-        "runtime_sha256": "7713184215909cd3f885d36676ead688a76be3005238ffd3761b041010fcec66",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t2_2_upgrade.png",
+        "runtime_sha256": "52045463537b41f9117ac1d8be586815c5468c234aea69e9858f9c699726c3ec",
         "runtime_size": [
           512,
-          349
+          467
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t2_2_upgrade.png",
+        "icon_sha256": "405f3090e6c08b3718e1e707c9603b4113deda430fb5c64ca696141dfdfd1d13",
         "normalized_rect": [
-          0.7765625,
-          0.45734592013888886,
-          0.071875,
-          0.08709852430555555
+          0.7671875,
+          0.3973429951690821,
+          0.090625,
+          0.14710144927536234
         ],
         "ground_anchor": [
           0.8125,
@@ -5984,45 +6014,48 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_court.prompt.txt",
-        "prompt_sha256": "120b92b9ce5379fefe4696c7f472385347a942e081260ae7e3b5bdb1a5021ef0",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-533a06fb-665f-4c09-9de6-512ea380d2f5.png",
-        "shared_art_from": "building_embercourt_beacon_court"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t3_1": {
-        "asset_id": "faction_embercourt_building_embercourt_drake_sluice",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
-        "source_sha256": "d9051dcd3e8c08f37a09f599a21fef871701f694af7b2a1a147670818a5a150d",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1.png",
+        "source_sha256": "279a61d53e3da11a7a59ede0d6cf71b8eda843da4c7e4e09211b5f71d3b57217",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1.prompt.txt",
+        "prompt_sha256": "0d643009e09371b4b3734061bf309daa42082cff0075869ff5d77b31c50a2c99",
+        "generation_output": "exec-9e0a5abe-1d32-441a-a0aa-37ff7a727ee7.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t3_1",
         "trim_box": [
-          17,
-          5,
-          1520,
-          1024
+          42,
+          53,
+          1232,
+          1230
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
-        "trimmed_sha256": "801cdf886c0b979947d50302b50f90353094feff910cae0b17ca64c84d11c77a",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
-        "runtime_sha256": "97b7c0ed68cab1d9a37b9920c4433c410932e5d084aad9da73d653d3f83977e7",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t3_1.png",
+        "runtime_sha256": "570dbd4b38e0f42ad16cdf58af5c3eb10f1e82dac24bceade662b7bc5f0586ff",
         "runtime_size": [
           512,
-          347
+          506
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t3_1.png",
+        "icon_sha256": "1289fc91d51a007be4d37f503d3e1d026b66ec5a6aed8f41be4f0edb8252193b",
         "normalized_rect": [
-          0.915625,
-          0.6076605902777777,
+          0.90625,
+          0.5626890756302521,
           0.08125,
-          0.09789496527777777
+          0.14286647992530346
         ],
         "ground_anchor": [
-          0.95625,
+          0.946875,
           0.7055555555555556
         ],
         "modulate": [
@@ -6032,45 +6065,48 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_drake_sluice.prompt.txt",
-        "prompt_sha256": "e84f454052450d8c064dc069d22544831a498f4fa31ec45b7477bfb1e3638556",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-846ece4d-21d2-4d47-9d83-9710c663fbff.png",
-        "shared_art_from": "building_embercourt_drake_sluice"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t3_1_upgrade": {
-        "asset_id": "faction_embercourt_building_embercourt_drake_sluice",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
-        "source_sha256": "d9051dcd3e8c08f37a09f599a21fef871701f694af7b2a1a147670818a5a150d",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1_upgrade.png",
+        "source_sha256": "e14c436946b220372766c405d6fb45b3aa000b92db8b61d3eaf07bf27bb79a68",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1_upgrade.prompt.txt",
+        "prompt_sha256": "98f231c5b9243bfa3631467a7da3fe521310cfc1ecbf4d2fa8581b659dc3f161",
+        "generation_output": "exec-b31dc082-7f51-4875-bc26-27cefaa940ec.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t3_1_upgrade",
         "trim_box": [
-          17,
-          5,
-          1520,
-          1024
+          14,
+          16,
+          1254,
+          1204
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
-        "trimmed_sha256": "801cdf886c0b979947d50302b50f90353094feff910cae0b17ca64c84d11c77a",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
-        "runtime_sha256": "97b7c0ed68cab1d9a37b9920c4433c410932e5d084aad9da73d653d3f83977e7",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t3_1_upgrade.png",
+        "runtime_sha256": "68a5df5344ed841a74c09911cb5050814240b27433f2b0277ee6438d6bb5a6e4",
         "runtime_size": [
           512,
-          347
+          491
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t3_1_upgrade.png",
+        "icon_sha256": "2499c5284ed29b3255ac0c233f0fb4ef52e24ec63533ef060b6c58f42af5e92a",
         "normalized_rect": [
-          0.915625,
-          0.6076605902777777,
-          0.08125,
-          0.09789496527777777
+          0.8984375,
+          0.5405555555555556,
+          0.096875,
+          0.165
         ],
         "ground_anchor": [
-          0.95625,
+          0.946875,
           0.7055555555555556
         ],
         "modulate": [
@@ -6080,45 +6116,48 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_drake_sluice.prompt.txt",
-        "prompt_sha256": "e84f454052450d8c064dc069d22544831a498f4fa31ec45b7477bfb1e3638556",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-846ece4d-21d2-4d47-9d83-9710c663fbff.png",
-        "shared_art_from": "building_embercourt_drake_sluice"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t3_2": {
-        "asset_id": "faction_embercourt_building_embercourt_drake_sluice",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
-        "source_sha256": "d9051dcd3e8c08f37a09f599a21fef871701f694af7b2a1a147670818a5a150d",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2.png",
+        "source_sha256": "581f82908396ef8423b5af61e5e27380ebbac93b2d9d0e48088f8d89d8b16508",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2.prompt.txt",
+        "prompt_sha256": "6c4569c6f76b85e2171170a8141b01a2670c0fad14ff30c6d81f33b886150dc6",
+        "generation_output": "exec-c97179d8-afc9-4782-a0e3-6a0334884f92.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t3_2",
         "trim_box": [
-          17,
-          5,
-          1520,
-          1024
+          36,
+          21,
+          1236,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
-        "trimmed_sha256": "801cdf886c0b979947d50302b50f90353094feff910cae0b17ca64c84d11c77a",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
-        "runtime_sha256": "97b7c0ed68cab1d9a37b9920c4433c410932e5d084aad9da73d653d3f83977e7",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t3_2.png",
+        "runtime_sha256": "afb726e4a02d248bfd2c9b4d12cd9ab23e0aeac95abd9b4c9e18724cc0ae9356",
         "runtime_size": [
-          512,
-          347
+          498,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t3_2.png",
+        "icon_sha256": "51a83cf142571f2596f8b22994ddd5f37455292fd781560baa03c55fa8e816c2",
         "normalized_rect": [
-          0.915625,
-          0.6076605902777777,
+          0.90625,
+          0.5571388888888889,
           0.08125,
-          0.09789496527777777
+          0.14841666666666664
         ],
         "ground_anchor": [
-          0.95625,
+          0.946875,
           0.7055555555555556
         ],
         "modulate": [
@@ -6128,45 +6167,48 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_drake_sluice.prompt.txt",
-        "prompt_sha256": "e84f454052450d8c064dc069d22544831a498f4fa31ec45b7477bfb1e3638556",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-846ece4d-21d2-4d47-9d83-9710c663fbff.png",
-        "shared_art_from": "building_embercourt_drake_sluice"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t3_2_upgrade": {
-        "asset_id": "faction_embercourt_building_embercourt_drake_sluice",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
-        "source_sha256": "d9051dcd3e8c08f37a09f599a21fef871701f694af7b2a1a147670818a5a150d",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2_upgrade.png",
+        "source_sha256": "cccc832defe4d9476881d1a04babf6c080ad1d8efc795dbe5c191923fbfb7279",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2_upgrade.prompt.txt",
+        "prompt_sha256": "6393aeb43a9f86b97c34ca4a3f83f247a026650a4cde7c9c19b3aa7386545390",
+        "generation_output": "exec-e96052f7-dfbb-4fc7-a1df-0a7510b21d4e.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t3_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t3_2_upgrade",
         "trim_box": [
-          17,
-          5,
-          1520,
-          1024
+          0,
+          0,
+          1230,
+          1198
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
-        "trimmed_sha256": "801cdf886c0b979947d50302b50f90353094feff910cae0b17ca64c84d11c77a",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_drake_sluice.png",
-        "runtime_sha256": "97b7c0ed68cab1d9a37b9920c4433c410932e5d084aad9da73d653d3f83977e7",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t3_2_upgrade.png",
+        "runtime_sha256": "cf524a904aebe496f75d6546c8998d44a077324a72b3d83eafb2ca62d195749e",
         "runtime_size": [
           512,
-          347
+          499
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t3_2_upgrade.png",
+        "icon_sha256": "6494d3c3fd1dd74c582bf1cbdc5e676462bab78425ad1e19be1497385130d528",
         "normalized_rect": [
-          0.915625,
-          0.6076605902777777,
-          0.08125,
-          0.09789496527777777
+          0.8984375,
+          0.5378139114724481,
+          0.096875,
+          0.1677416440831075
         ],
         "ground_anchor": [
-          0.95625,
+          0.946875,
           0.7055555555555556
         ],
         "modulate": [
@@ -6176,42 +6218,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_drake_sluice.prompt.txt",
-        "prompt_sha256": "e84f454052450d8c064dc069d22544831a498f4fa31ec45b7477bfb1e3638556",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-846ece4d-21d2-4d47-9d83-9710c663fbff.png",
-        "shared_art_from": "building_embercourt_drake_sluice"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t4_1": {
-        "asset_id": "faction_embercourt_building_embercourt_charter_bastion",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
-        "source_sha256": "621cc7e7d0c3d3c9e3177ff62356ebc96f84873cca4f014928488c9e1b0144c2",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1.png",
+        "source_sha256": "7c1735d038fa78b3de8d66ccb7a09ddc8b4a538e2e7a67851283572dac9dbba2",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1.prompt.txt",
+        "prompt_sha256": "355542c8d5ae825c1ea51f111a60b611d6b9fe62935778a38512414ebf5eb5d1",
+        "generation_output": "exec-6de6ca89-50cc-4f32-8745-c9990278afbe.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t4_1",
         "trim_box": [
           0,
-          0,
-          1536,
-          1024
+          21,
+          1216,
+          1182
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
-        "trimmed_sha256": "be1aa996c2ee2f29c9522e17b944dbd5d07ecdbae5252122cd3bbaa4be184c0b",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
-        "runtime_sha256": "0ee703ec0ba84ba95b1bd5dfccb2374954219cfe9078b640dc92b0277c8e3339",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t4_1.png",
+        "runtime_sha256": "4615ee52ab5b346bedd9b06f4f5a0411d731795f4bba91d5dbceb24328307e1c",
         "runtime_size": [
           512,
-          341
+          489
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t4_1.png",
+        "icon_sha256": "f7c3c1fad175aec1b9c3a15cfd97552fb8f760837eab60dbd9fb43535d8135d5",
         "normalized_rect": [
-          0.1203125,
-          0.7834526909722223,
-          0.103125,
-          0.12210286458333333
+          0.1234375,
+          0.7411229897660818,
+          0.096875,
+          0.1644325657894737
         ],
         "ground_anchor": [
           0.171875,
@@ -6224,42 +6269,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_bastion.prompt.txt",
-        "prompt_sha256": "8d660a44cf8875d529cbf6c8b32e5694744a5655eb806b61b2cc16a507c8e10b",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-ea80e3af-f83b-43f4-86b7-5e2c900ad6df.png",
-        "shared_art_from": "building_embercourt_charter_bastion"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t4_1_upgrade": {
-        "asset_id": "faction_embercourt_building_embercourt_charter_bastion",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
-        "source_sha256": "621cc7e7d0c3d3c9e3177ff62356ebc96f84873cca4f014928488c9e1b0144c2",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1_upgrade.png",
+        "source_sha256": "8c1c2403828581306710856bf5e4e4370b56147b26b1c45e2eea818c40490ae9",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1_upgrade.prompt.txt",
+        "prompt_sha256": "2fc1d309447ad0a7faf7d2620cdc79189243bc8d5dceae5538195fbaf37ac254",
+        "generation_output": "exec-1329c57b-3566-48ff-8d78-d9cda8fddf40.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t4_1_upgrade",
         "trim_box": [
           0,
-          0,
-          1536,
-          1024
+          19,
+          1220,
+          1186
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
-        "trimmed_sha256": "be1aa996c2ee2f29c9522e17b944dbd5d07ecdbae5252122cd3bbaa4be184c0b",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
-        "runtime_sha256": "0ee703ec0ba84ba95b1bd5dfccb2374954219cfe9078b640dc92b0277c8e3339",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t4_1_upgrade.png",
+        "runtime_sha256": "6e917218b59491cab3dcf1e5ea187566b7b1adae399300f9e4fe5f2552aa1301",
         "runtime_size": [
           512,
-          341
+          490
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t4_1_upgrade.png",
+        "icon_sha256": "686aca9ca5fc59ed4a37fc31269e97559443a403dbbbdb342be69940af14dc41",
         "normalized_rect": [
-          0.1203125,
-          0.7834526909722223,
-          0.103125,
-          0.12210286458333333
+          0.115625,
+          0.7142440801457195,
+          0.1125,
+          0.19131147540983606
         ],
         "ground_anchor": [
           0.171875,
@@ -6272,42 +6320,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_bastion.prompt.txt",
-        "prompt_sha256": "8d660a44cf8875d529cbf6c8b32e5694744a5655eb806b61b2cc16a507c8e10b",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-ea80e3af-f83b-43f4-86b7-5e2c900ad6df.png",
-        "shared_art_from": "building_embercourt_charter_bastion"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t4_2": {
-        "asset_id": "faction_embercourt_building_embercourt_charter_bastion",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
-        "source_sha256": "621cc7e7d0c3d3c9e3177ff62356ebc96f84873cca4f014928488c9e1b0144c2",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2.png",
+        "source_sha256": "6850f1d42b85a2dc8d8a8be311b49297772bdc4a2391d2c264cfa853d15eea16",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2.prompt.txt",
+        "prompt_sha256": "bd59e9712a8ca1dc0225274151f6356f3a223c41ada151b288dc53d6590f8848",
+        "generation_output": "exec-b14a15b2-0471-491c-a21d-69e8c8efe33a.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t4_2",
         "trim_box": [
-          0,
-          0,
-          1536,
-          1024
+          41,
+          21,
+          1229,
+          1228
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
-        "trimmed_sha256": "be1aa996c2ee2f29c9522e17b944dbd5d07ecdbae5252122cd3bbaa4be184c0b",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
-        "runtime_sha256": "0ee703ec0ba84ba95b1bd5dfccb2374954219cfe9078b640dc92b0277c8e3339",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t4_2.png",
+        "runtime_sha256": "a01d9de2c03f0742357d67d6ecfdb907f5230875b53228cabbc18d248461ec04",
         "runtime_size": [
-          512,
-          341
+          504,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t4_2.png",
+        "icon_sha256": "50ba17844d9dc0ad34dada2a5379a20c70525de97e309a664987b550ffff3c44",
         "normalized_rect": [
-          0.1203125,
-          0.7834526909722223,
-          0.103125,
-          0.12210286458333333
+          0.1234375,
+          0.730578937523382,
+          0.096875,
+          0.1749766180321736
         ],
         "ground_anchor": [
           0.171875,
@@ -6320,42 +6371,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_bastion.prompt.txt",
-        "prompt_sha256": "8d660a44cf8875d529cbf6c8b32e5694744a5655eb806b61b2cc16a507c8e10b",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-ea80e3af-f83b-43f4-86b7-5e2c900ad6df.png",
-        "shared_art_from": "building_embercourt_charter_bastion"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t4_2_upgrade": {
-        "asset_id": "faction_embercourt_building_embercourt_charter_bastion",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
-        "source_sha256": "621cc7e7d0c3d3c9e3177ff62356ebc96f84873cca4f014928488c9e1b0144c2",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2_upgrade.png",
+        "source_sha256": "f3bdc2b41dd1ac997a175cac6e71ae42c5c18703531755d030bedf950ebe7ca0",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2_upgrade.prompt.txt",
+        "prompt_sha256": "774ca39764a00d9bec38ff72446efb4c0441fd7dc26fbac4f06eb50780b2599a",
+        "generation_output": "exec-84071320-6639-425d-936a-2d8a9396345f.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t4_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t4_2_upgrade",
         "trim_box": [
-          0,
-          0,
-          1536,
-          1024
+          64,
+          6,
+          1242,
+          1189
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
-        "trimmed_sha256": "be1aa996c2ee2f29c9522e17b944dbd5d07ecdbae5252122cd3bbaa4be184c0b",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_charter_bastion.png",
-        "runtime_sha256": "0ee703ec0ba84ba95b1bd5dfccb2374954219cfe9078b640dc92b0277c8e3339",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t4_2_upgrade.png",
+        "runtime_sha256": "61dade732a7bd139ca0800b36f5515c7477edc1db370b554b3e45e01227b5af9",
         "runtime_size": [
-          512,
-          341
+          510,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t4_2_upgrade.png",
+        "icon_sha256": "5def0ec4cfac73ca349e247e658c6111f9590fedecc6310a3e1b809149c4bc73",
         "normalized_rect": [
-          0.1203125,
-          0.7834526909722223,
-          0.103125,
-          0.12210286458333333
+          0.115625,
+          0.7047066591209206,
+          0.1125,
+          0.200848896434635
         ],
         "ground_anchor": [
           0.171875,
@@ -6368,46 +6422,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_charter_bastion.prompt.txt",
-        "prompt_sha256": "8d660a44cf8875d529cbf6c8b32e5694744a5655eb806b61b2cc16a507c8e10b",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama and faction architecture. Source masters and developed 1280x720 composition/input inspected: Court joins the right terrace, Drake pens meet the waterfront, and Bastion/Flame share the rear civic site. Preserve genuine alpha, the original village/prior layers and deliberate depth. Paid-growth, full-save, three-resolution and official-platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance. Two rejected opaque tool edits of Flame are retained separately as failed generation evidence, not used in runtime art.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-ea80e3af-f83b-43f4-86b7-5e2c900ad6df.png",
-        "shared_art_from": "building_embercourt_charter_bastion"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t5_1": {
-        "asset_id": "faction_embercourt_building_embercourt_lockhouse_tally",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
-        "source_sha256": "8d1672c35b2c3c9fd4cba6a1eb573a6d104b5c9ca7aede83dda17ad1f86d76ea",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1.png",
+        "source_sha256": "e49b1fc32bebef8da124be45dffe329d83cd3162092cb5c6bedeeb87500d3b04",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1.prompt.txt",
+        "prompt_sha256": "59094e93c31b43f283d463eff600d0c2f274ff151a60b4ba4864123ddf87d29e",
+        "generation_output": "exec-43adec55-cf44-423e-aa42-94ace7723c0a.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t5_1",
         "trim_box": [
-          19,
-          12,
-          1503,
-          1024
+          0,
+          21,
+          1214,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
-        "trimmed_sha256": "df6b60f7f3158861681451dbb72f018bc9a04e8e8a2e5f51ecee782d90f51a68",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
-        "runtime_sha256": "33c00a0058fb969bcd1c3b1e2532d143dde8147789039ccaf8dc96d47f8cfa20",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t5_1.png",
+        "runtime_sha256": "79e7604955f16d46a122baaa5f1b97fa226a7e788a0d1cf9f73c5467a5e64eef",
         "runtime_size": [
-          512,
-          349
+          504,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t5_1.png",
+        "icon_sha256": "1b0287143523b7988659a69b87166bedeca416d964141f1a33a8dc32fd82dff7",
         "normalized_rect": [
-          0.0125,
-          0.7202256944444444,
-          0.075,
-          0.09088541666666666
+          0.0140625,
+          0.6591112941607176,
+          0.071875,
+          0.12977759472817132
         ],
         "ground_anchor": [
           0.05,
-          0.8111111111111111
+          0.7888888888888889
         ],
         "modulate": [
           1,
@@ -6416,46 +6473,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.prompt.txt",
-        "prompt_sha256": "84bb990fced1e20b2bc10d0e44fcd31ba9e3ff272f3c0a65789a15a1ac4d2047",
-        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-ffeed79c-1774-4672-a80d-c0232c698644.png",
-        "shared_art_from": "building_embercourt_lockhouse_tally"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t5_1_upgrade": {
-        "asset_id": "faction_embercourt_building_embercourt_lockhouse_tally",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
-        "source_sha256": "8d1672c35b2c3c9fd4cba6a1eb573a6d104b5c9ca7aede83dda17ad1f86d76ea",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1_upgrade.png",
+        "source_sha256": "0dc6779f4493b55b370068d1fdaf8abd9760c557de57c2871f4a887d8f861899",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1_upgrade.prompt.txt",
+        "prompt_sha256": "6dc810e5fefdf147485f8fc74ef80b3c417968575314d4dc69517069f2ac020e",
+        "generation_output": "exec-9462fe36-919d-4b7d-9b18-0c0380917900.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t5_1_upgrade",
         "trim_box": [
-          19,
-          12,
-          1503,
-          1024
+          0,
+          15,
+          1222,
+          1204
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
-        "trimmed_sha256": "df6b60f7f3158861681451dbb72f018bc9a04e8e8a2e5f51ecee782d90f51a68",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
-        "runtime_sha256": "33c00a0058fb969bcd1c3b1e2532d143dde8147789039ccaf8dc96d47f8cfa20",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t5_1_upgrade.png",
+        "runtime_sha256": "89fdbbd007ed30d987b9b734cd9e3c7bb06ad8658b29f3abdbef15601dbc9269",
         "runtime_size": [
           512,
-          349
+          498
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t5_1_upgrade.png",
+        "icon_sha256": "56cfc334409c91f945a8af8826fa05be5d363cc1bb0be173f4ee5c02feeb9b05",
         "normalized_rect": [
-          0.0125,
-          0.7202256944444444,
-          0.075,
-          0.09088541666666666
+          0.0078125,
+          0.6429396253864339,
+          0.084375,
+          0.145949263502455
         ],
         "ground_anchor": [
           0.05,
-          0.8111111111111111
+          0.7888888888888889
         ],
         "modulate": [
           1,
@@ -6464,46 +6524,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.prompt.txt",
-        "prompt_sha256": "84bb990fced1e20b2bc10d0e44fcd31ba9e3ff272f3c0a65789a15a1ac4d2047",
-        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-ffeed79c-1774-4672-a80d-c0232c698644.png",
-        "shared_art_from": "building_embercourt_lockhouse_tally"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t5_2": {
-        "asset_id": "faction_embercourt_building_embercourt_lockhouse_tally",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
-        "source_sha256": "8d1672c35b2c3c9fd4cba6a1eb573a6d104b5c9ca7aede83dda17ad1f86d76ea",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2.png",
+        "source_sha256": "dac04ae52a36f4fb4cb70f4e91eaee35aed4a2fefd285a62d8a27f60944aecb2",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2.prompt.txt",
+        "prompt_sha256": "6ffff2d07345d528561c228f164a9b0d2761c11d175636ea63eedea4a03a625c",
+        "generation_output": "exec-c5af4cde-0027-4784-a776-7260a31118b6.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t5_2",
         "trim_box": [
+          38,
           19,
-          12,
-          1503,
-          1024
+          1226,
+          1230
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
-        "trimmed_sha256": "df6b60f7f3158861681451dbb72f018bc9a04e8e8a2e5f51ecee782d90f51a68",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
-        "runtime_sha256": "33c00a0058fb969bcd1c3b1e2532d143dde8147789039ccaf8dc96d47f8cfa20",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t5_2.png",
+        "runtime_sha256": "f2b7c9cdef17372459372f00a7a201ef58435b22d5d6833b707296289f78999b",
         "runtime_size": [
-          512,
-          349
+          502,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t5_2.png",
+        "icon_sha256": "5936c8b58d43f6a0104e379ff8cea7918c47a391c0536e072dc5ccd65cfcd7c7",
         "normalized_rect": [
-          0.0125,
-          0.7202256944444444,
-          0.075,
-          0.09088541666666666
+          0.0140625,
+          0.6586372989150767,
+          0.071875,
+          0.1302515899738122
         ],
         "ground_anchor": [
           0.05,
-          0.8111111111111111
+          0.7888888888888889
         ],
         "modulate": [
           1,
@@ -6512,46 +6575,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.prompt.txt",
-        "prompt_sha256": "84bb990fced1e20b2bc10d0e44fcd31ba9e3ff272f3c0a65789a15a1ac4d2047",
-        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-ffeed79c-1774-4672-a80d-c0232c698644.png",
-        "shared_art_from": "building_embercourt_lockhouse_tally"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t5_2_upgrade": {
-        "asset_id": "faction_embercourt_building_embercourt_lockhouse_tally",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
-        "source_sha256": "8d1672c35b2c3c9fd4cba6a1eb573a6d104b5c9ca7aede83dda17ad1f86d76ea",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2_upgrade.png",
+        "source_sha256": "dfef821d37ded52a4389e27b8b61b5c47d0767dd71fbaa3e68b63f97a7e23225",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2_upgrade.prompt.txt",
+        "prompt_sha256": "cd60278344500a57e034f1a635e9464c7e26acf6558808d7bef2ac211e6179de",
+        "generation_output": "exec-9056d03f-9c7a-4fb4-876c-4a6e69e1776f.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t5_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t5_2_upgrade",
         "trim_box": [
-          19,
-          12,
-          1503,
-          1024
+          43,
+          22,
+          1209,
+          1228
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
-        "trimmed_sha256": "df6b60f7f3158861681451dbb72f018bc9a04e8e8a2e5f51ecee782d90f51a68",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.png",
-        "runtime_sha256": "33c00a0058fb969bcd1c3b1e2532d143dde8147789039ccaf8dc96d47f8cfa20",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t5_2_upgrade.png",
+        "runtime_sha256": "ab24ed5dd729ff5d532b81c03b7b2edf4f4d40af47c5a62eb918efa9ce711454",
         "runtime_size": [
-          512,
-          349
+          495,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t5_2_upgrade.png",
+        "icon_sha256": "ebc4fbe3131026e9531e121378aed960e634325f2dc4a75617fc444d147ebc2e",
         "normalized_rect": [
-          0.0125,
-          0.7202256944444444,
-          0.075,
-          0.09088541666666666
+          0.0078125,
+          0.6337430912902611,
+          0.084375,
+          0.15514579759862776
         ],
         "ground_anchor": [
           0.05,
-          0.8111111111111111
+          0.7888888888888889
         ],
         "modulate": [
           1,
@@ -6560,42 +6626,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lockhouse_tally.prompt.txt",
-        "prompt_sha256": "84bb990fced1e20b2bc10d0e44fcd31ba9e3ff272f3c0a65789a15a1ac4d2047",
-        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-ffeed79c-1774-4672-a80d-c0232c698644.png",
-        "shared_art_from": "building_embercourt_lockhouse_tally"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t6_1": {
-        "asset_id": "faction_embercourt_building_embercourt_beacon_writs",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_writs.png",
-        "source_sha256": "8d6aab8fc60337147c86f6fa3c89954cb7d17efb5a04b334881d021f178e6c28",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1.png",
+        "source_sha256": "8c8ccede36ca0f60b908d6210047c9db34c17a68f26064f717d5596f22f11bd5",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1.prompt.txt",
+        "prompt_sha256": "611d9a7c4a066b8e40006d3e382f8f0557a4b5c82188be80ec68e8fa22d72116",
+        "generation_output": "exec-01ed6e8d-559e-4d1d-9c54-466cb74b39c2.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t6_1",
         "trim_box": [
-          65,
-          0,
-          1524,
-          988
+          47,
+          20,
+          1209,
+          1228
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_beacon_writs.png",
-        "trimmed_sha256": "4623997a7da8efe6751f5ebae7c58c4ee47e552c48fca8dc104c545977f8e96e",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_beacon_writs.png",
-        "runtime_sha256": "70ce26797f7ac1384f3be344330dc0b14175149901ffa0c2faa5ac4e1c958e8a",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t6_1.png",
+        "runtime_sha256": "b1e7f20e1361b9de7c7f8dbbebb5d4413df16ce2a811aee3ae0bccab796cccc3",
         "runtime_size": [
-          512,
-          347
+          493,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t6_1.png",
+        "icon_sha256": "f9da99caabb7bc0e0311aa77f5aff2c3fc82f0cc288e1a701e45027129734453",
         "normalized_rect": [
-          0.2265625,
-          0.7574761284722222,
-          0.090625,
-          0.10919053819444445
+          0.21875,
+          0.6703002486135016,
+          0.10625,
+          0.19636641805316504
         ],
         "ground_anchor": [
           0.271875,
@@ -6608,42 +6677,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_writs.prompt.txt",
-        "prompt_sha256": "ddad2b0f5d604bcb099c9adf47e6222fc4e54b2d40f3a7d5a10cdbcd327a3882",
-        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-6729bdfa-4f23-4cb2-acc0-225b425e9425.png",
-        "shared_art_from": "building_embercourt_beacon_writs"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t6_1_upgrade": {
-        "asset_id": "faction_embercourt_building_embercourt_beacon_writs",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_writs.png",
-        "source_sha256": "8d6aab8fc60337147c86f6fa3c89954cb7d17efb5a04b334881d021f178e6c28",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1_upgrade.png",
+        "source_sha256": "489b424d64b0dac90bb0016154861220d4595e4909dc87ddcc60a6d738aa753d",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1_upgrade.prompt.txt",
+        "prompt_sha256": "ac3b8d0eb93eeb5203b2d31ee15defadadea7223cc5b3c8930e156b306427ca0",
+        "generation_output": "exec-f410df01-ccdf-4609-bc87-84ea1c17bdc5.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t6_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t6_1_upgrade",
         "trim_box": [
-          65,
+          45,
           0,
-          1524,
-          988
+          1213,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_beacon_writs.png",
-        "trimmed_sha256": "4623997a7da8efe6751f5ebae7c58c4ee47e552c48fca8dc104c545977f8e96e",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_beacon_writs.png",
-        "runtime_sha256": "70ce26797f7ac1384f3be344330dc0b14175149901ffa0c2faa5ac4e1c958e8a",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t6_1_upgrade.png",
+        "runtime_sha256": "6da6e295c74660ddb0c9b2bf43cfd16ce5a3ae921eb136f2c52063aaca70bd77",
         "runtime_size": [
-          512,
-          347
+          477,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t6_1_upgrade.png",
+        "icon_sha256": "a4eb4c00168e267c963715df150e4d23568b565195182bd58e12f5513de01067",
         "normalized_rect": [
-          0.2265625,
-          0.7574761284722222,
-          0.090625,
-          0.10919053819444445
+          0.2109375,
+          0.6340468036529681,
+          0.121875,
+          0.23261986301369864
         ],
         "ground_anchor": [
           0.271875,
@@ -6656,46 +6728,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_beacon_writs.prompt.txt",
-        "prompt_sha256": "ddad2b0f5d604bcb099c9adf47e6222fc4e54b2d40f3a7d5a10cdbcd327a3882",
-        "curation": "Original text-only paintings matched to the inspected Riverwatch panorama. Revised developed composition and exact input inspected at 1280x720: grain exchange behind the Watch court, tally office on the left quay, central working weir, right-shore barge slip, foreground-right oath court and rear-bank beacon. Foreground Slip/Lantern pixels retain ownership; the exposed Oath right gable opens its own information. Full paid-growth, three-resolution and official-platform results are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-6729bdfa-4f23-4cb2-acc0-225b425e9425.png",
-        "shared_art_from": "building_embercourt_beacon_writs"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t7_1": {
-        "asset_id": "faction_embercourt_building_embercourt_lantern_court",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lantern_court.png",
-        "source_sha256": "f34d056a814a65e2cb46967bf040128680118d6a9ae721d7062e0296add76738",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1.png",
+        "source_sha256": "4b15105e016e7cdf21a6efe2ea5b4ef35430bef0f010ba3e237cd3931e89196e",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1.prompt.txt",
+        "prompt_sha256": "ea5c059265186ccb91510994b435031be229f6a37f5996e40b9dfeb91e6eaa64",
+        "generation_output": "exec-6e8f6f43-4910-421c-a186-587a6347d01a.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t7_1",
         "trim_box": [
           0,
-          0,
-          1536,
-          1000
+          8,
+          1222,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_lantern_court.png",
-        "trimmed_sha256": "0a443bb7a25fc5c13253fdc9e2701a050d3ada4e611c5f4a21f0aff5a62b9625",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_lantern_court.png",
-        "runtime_sha256": "763e7dfe04b7fdf46265d4d1277d7ae470359dc4889874a5c5bdd424cb331e25",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t7_1.png",
+        "runtime_sha256": "16cdca9d1a692db310cc70706ea075374353a861905eee81f5a15a7f1fc12527",
         "runtime_size": [
-          512,
-          333
+          502,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t7_1.png",
+        "icon_sha256": "3d37823d87970db7a3f05bdf03beb475c7102bd61333a84dc1314307fa098a6d",
         "normalized_rect": [
-          0.021875,
-          0.8288194444444444,
-          0.1,
-          0.115625
+          0.0203125,
+          0.7292962356792144,
+          0.115625,
+          0.2095926532096745
         ],
         "ground_anchor": [
-          0.071875,
-          0.9444444444444444
+          0.078125,
+          0.9388888888888889
         ],
         "modulate": [
           1,
@@ -6704,46 +6779,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lantern_court.prompt.txt",
-        "prompt_sha256": "fd1db6531743993e4fb8ef2385147de13266cb903ee1b95030f126ad10442703",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama. Source masters and earned/mixed-developed 1280x720 scenes inspected: low hearing arcade on the foreground-right stone bank, relief store/hoist on the left quay with an attached pontoon and plain supply barge. Preserve original alpha, adjacent roofs, channel and command controls. Paid Day-18/19 construction and full non-clock save equality pass; three-resolution and official Linux/Windows acceptance are recorded separately in the art-repair report. Registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-008e04ee-92e3-47b4-bddf-7820ce9d37d4.png",
-        "shared_art_from": "building_embercourt_lantern_court"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_t7_1_upgrade": {
-        "asset_id": "faction_embercourt_building_embercourt_lantern_court",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lantern_court.png",
-        "source_sha256": "f34d056a814a65e2cb46967bf040128680118d6a9ae721d7062e0296add76738",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1_upgrade.png",
+        "source_sha256": "047113f15a90c30af4d890f591d95ce5471fd69e8c0f4226da92aa39e8286f61",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1_upgrade.prompt.txt",
+        "prompt_sha256": "af71503f234ca512f3ae5b737bf4ed1fb1b7532fc578f4684d8a248d7ce2f50e",
+        "generation_output": "exec-8502da27-c0e6-4c63-b52d-f10e31331788.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_t7_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_embercourt_building_dev_embercourt_t7_1_upgrade",
         "trim_box": [
           0,
-          0,
-          1536,
-          1000
+          21,
+          1254,
+          1205
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_embercourt/building_embercourt_lantern_court.png",
-        "trimmed_sha256": "0a443bb7a25fc5c13253fdc9e2701a050d3ada4e611c5f4a21f0aff5a62b9625",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_embercourt/building_embercourt_lantern_court.png",
-        "runtime_sha256": "763e7dfe04b7fdf46265d4d1277d7ae470359dc4889874a5c5bdd424cb331e25",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_embercourt/building_dev_embercourt_t7_1_upgrade.png",
+        "runtime_sha256": "d0da8ad0f6be1c29586018e882510d65dbdda3f71ad53faebbfd307dde08e046",
         "runtime_size": [
           512,
-          333
+          483
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_embercourt/building_dev_embercourt_t7_1_upgrade.png",
+        "icon_sha256": "13c276d414f8b90a174f56a89b990355c7a39f62b023f528dad8e2e4863a58f4",
         "normalized_rect": [
-          0.021875,
-          0.8288194444444444,
-          0.1,
-          0.115625
+          0.0125,
+          0.7185805422647529,
+          0.13125,
+          0.22030834662413612
         ],
         "ground_anchor": [
-          0.071875,
-          0.9444444444444444
+          0.078125,
+          0.9388888888888889
         ],
         "modulate": [
           1,
@@ -6752,14 +6830,8 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored terrace placement on the revised Embercourt riverfront. Rear buildings follow the bank; foreground structures join paved working quays. New stage art is still pending for this plot.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_embercourt/building_embercourt_lantern_court.prompt.txt",
-        "prompt_sha256": "fd1db6531743993e4fb8ef2385147de13266cb903ee1b95030f126ad10442703",
-        "curation": "Original text-only RGBA paintings matched to the inspected Riverwatch panorama. Source masters and earned/mixed-developed 1280x720 scenes inspected: low hearing arcade on the foreground-right stone bank, relief store/hoist on the left quay with an attached pontoon and plain supply barge. Preserve original alpha, adjacent roofs, channel and command controls. Paid Day-18/19 construction and full non-clock save equality pass; three-resolution and official Linux/Windows acceptance are recorded separately in the art-repair report. Registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-08",
-        "generation_output": "exec-008e04ee-92e3-47b4-bddf-7820ce9d37d4.png",
-        "shared_art_from": "building_embercourt_lantern_court"
+        "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_embercourt_unique_1": {
         "source_path": "res://art/towns/source/generated/overhaul/faction_embercourt/building_dev_embercourt_unique_1_riverside.png",

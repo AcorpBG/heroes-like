@@ -22332,7 +22332,7 @@
       "sourceDocs": [
         "docs/common-town-building-template.md"
       ],
-      "notes": "Art pass remains in progress. Embercourt has 27 original paintings and matching icons covering all civic, growth, hero-training, commerce and faction-special stages; its 24 dwelling branches/upgrades and all other factions still need original art. Authored river-quay placements and a river-facing convoy dock ground the town. All 23 active plots remain clickable for either dwelling branch. Masters/prompts and alpha-preserving packaging retained; wiki updated. Expanded civic/support regression passes 210 Windows checks; preceding hall slice passed 43 art/input and 676 shared-town checks. No full suite or Linux execution."
+      "notes": "Art pass remains in progress across factions. All 51 active Embercourt building stages now have distinct original paintings and matching icons, including 24 dwelling branches/upgrades with expanded architecture. Authored river-quay placements ground both developed-town compositions; all 23 active plots retain exposed painted click areas. Masters, exact prompts, hashes and alpha-preserving packaging retained; wiki updated. Expanded art regression passes 460 Windows checks in three bounded runs (210 civic/support and 125 per dwelling branch); an initial combined render timeout was resolved by splitting the same checks. Preceding hall slice passed 43 art/input and 676 shared-town checks. Five other factions still need original art; creature identities/animations and match balance remain separate pending passes. No full suite or Linux execution."
     },
     {
       "id": "town-overhaul-creature-upgrades-20260922",
