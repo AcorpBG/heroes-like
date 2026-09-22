@@ -7232,32 +7232,41 @@
         "generation_output": "exec-50bdfb12-3f05-49a7-aca8-47673fbb874d.png"
       },
       "building_wayfarers_hall": {
-        "asset_id": "faction_mireclaw_building_wayfarers_hall",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_wayfarers_hall.png",
-        "source_sha256": "3d315adc84489fe3a4a5e35310194263c9644d060f9de1d00a51904a9fb36a59",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_wayfarers_hall.png",
+        "source_sha256": "87b4368b01a062d816f06137f7c7d68a1a96564d740440758af650d1f7ff6943",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_wayfarers_hall.prompt.txt",
+        "prompt_sha256": "62f747596b4ee5263176a4e76062c4f9464deb96fcbcc5b9fcab4782b20acfc2",
+        "generation_output": "exec-9393966e-9ede-46d3-bed0-07b63da97de9.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_wayfarers_hall",
         "trim_box": [
-          0,
-          0,
-          1532,
-          1024
+          45,
+          21,
+          1254,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_wayfarers_hall.png",
-        "trimmed_sha256": "b168b4f1527f49c79c87f8418350b244e83237a14f62c63c8661d159d6a1dcde",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_wayfarers_hall.png",
-        "runtime_sha256": "90e58e629943890f919958f5050fa015eb44df5b9ae6893159fc1a4cde5c87e3",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_wayfarers_hall.png",
+        "runtime_sha256": "52d66647ccca4db15e90643a0c84716064d35bd6f4f13f2fe41322cf799ac469",
         "runtime_size": [
-          512,
-          342
+          502,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_wayfarers_hall.png",
+        "icon_sha256": "37b8f7f467fd1a8186d511c15af205bd9f2ccc46caf8f3af3389bfc8890710ed",
         "normalized_rect": [
           0.7640625,
-          0.3812282986111111,
+          0.31280672732285636,
           0.109375,
-          0.1298828125
+          0.19830438378825477
         ],
         "ground_anchor": [
           0.81875,
@@ -7270,14 +7279,8 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_wayfarers_hall.prompt.txt",
-        "prompt_sha256": "cae3d288d24051f66546f2ae8b662294a599a421dc817644a449732d1b1b70ea",
-        "curation": "Original built-in text-only paintings described from the inspected Duskfen village. Preserve generated alpha, camera, warm upper-left backlight and wet reed/timber materials. Actual composition, paid growth, input/save and platform acceptance are recorded separately in the art-repair report; registration alone is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-c06f2362-c3dc-4dba-8ea1-283780a15022.png",
-        "shared_art_from": "building_wayfarers_hall"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_market_square": {
         "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_market_square.png",
@@ -9208,32 +9211,41 @@
         "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_growth_1": {
-        "asset_id": "faction_mireclaw_building_slingers_post",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_slingers_post.png",
-        "source_sha256": "1b48e2827f8809fb0993f37102c8b7e6b0f2cd8033cf0ab5707f66f6a10ee236",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_1.png",
+        "source_sha256": "19b3c37f4d3e258ab7e3dbdce343b8cba5bf0d43c4724494898d0f561931d5a2",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_1.prompt.txt",
+        "prompt_sha256": "f224daea0b13c4256794ff7d7443032d13bac2099b3eabb91c7f35f84f9a5385",
+        "generation_output": "exec-dac6689e-fe29-4fcb-84bf-eaefdaf4f7b6.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_growth_1",
         "trim_box": [
-          19,
-          1,
-          1520,
-          1024
+          0,
+          21,
+          1240,
+          1230
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_slingers_post.png",
-        "trimmed_sha256": "85d9f80e2a79bc3a6b7d416676b577b76bb3b9485068604fce2b319710bea73e",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_slingers_post.png",
-        "runtime_sha256": "13fcd297510d23aae3b4a4f59aa1fea6ff77e1101a92451e9c24202f1af3ade6",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_growth_1.png",
+        "runtime_sha256": "e779d49d26faa635afbfc3740414ca8503200f37060170896deb118ee9be6407",
         "runtime_size": [
           512,
-          349
+          499
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_growth_1.png",
+        "icon_sha256": "93dd80267c3c168eeab03214772c6d5ad609ebbe7c06ab9a097c30dd3e02fe8c",
         "normalized_rect": [
-          0.0765625,
-          0.5517903645833333,
-          0.071875,
-          0.08709852430555555
+          0.065625,
+          0.47638888888888886,
+          0.09375,
+          0.1625
         ],
         "ground_anchor": [
           0.1125,
@@ -9246,42 +9258,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_slingers_post.prompt.txt",
-        "prompt_sha256": "b5c8486560ddadbed7a523caf848ac1e5a19aaa7d809571855452cde0988f0f8",
-        "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-098ab0b7-6b4c-4873-8c13-578bbe1ce2d5.png",
-        "shared_art_from": "building_slingers_post"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_growth_2": {
-        "asset_id": "faction_mireclaw_building_war_drum_circle",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_war_drum_circle.png",
-        "source_sha256": "ab9870e32eef792afafbd66c03b81ceb077bdcaaf63253d3d9271e6a505962d1",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_2.png",
+        "source_sha256": "67beb10660d308b0bccae83d1246b4b0d4ef3a40306682fca7136a4e188ff163",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_2.prompt.txt",
+        "prompt_sha256": "5785634a48feddf7ce8077e4e43625c5ca32abca1d13aff3d7f11c19b927b3f8",
+        "generation_output": "exec-04f698cc-35d3-4169-8e95-dbd54cc8ae54.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_growth_2",
         "trim_box": [
           0,
-          0,
-          1518,
-          1024
+          47,
+          1231,
+          1240
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_war_drum_circle.png",
-        "trimmed_sha256": "871b354a351fd0aa7ed14d840935372e0b20f878401ac6edfeb74d9d269634ee",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_war_drum_circle.png",
-        "runtime_sha256": "0da6f93ec0f38f8b352031a9d99df9fb2560a7eb10bfc34ff307d84a1f1d458d",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_growth_2.png",
+        "runtime_sha256": "c69a88c36c1041db431a829f5cee1fc59491de3561de5e31dc1b84ab6b2df75a",
         "runtime_size": [
           512,
-          345
+          496
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_growth_2.png",
+        "icon_sha256": "4507cde43af7d735dba6e57935e43dd22220004374b1fa6b5e2c6924d607459c",
         "normalized_rect": [
-          0.2578125,
-          0.5155924479166667,
-          0.084375,
-          0.10107421875
+          0.25,
+          0.44437674880404365,
+          0.1,
+          0.172289917862623
         ],
         "ground_anchor": [
           0.3,
@@ -9294,42 +9309,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_war_drum_circle.prompt.txt",
-        "prompt_sha256": "0d72e47c4bd278ffb3e634fbbc658434f0738e16da19df0b9319c71ff909580a",
-        "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-8cee1801-0b61-4c71-86bc-d27bfa01215a.png",
-        "shared_art_from": "building_war_drum_circle"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_growth_3": {
-        "asset_id": "faction_mireclaw_building_gorefen_ring",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_gorefen_ring.png",
-        "source_sha256": "82733f8ba39aee397533186bf0199c7ca510d1c4be38f82df177ed345a57cbdf",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_3.png",
+        "source_sha256": "727d70323c45c94867f7e63e73642b40641452f2afebeeee05d252bedbea2cd8",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_growth_3.prompt.txt",
+        "prompt_sha256": "808b171c26d228331d21ebeadca84eda4c613ccc53dcdac8b1bd8acc088d633a",
+        "generation_output": "exec-5aa81832-8249-4a1a-9b73-537eeb4c7408.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_growth_3",
         "trim_box": [
-          23,
           0,
-          1536,
-          1024
+          17,
+          1254,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_gorefen_ring.png",
-        "trimmed_sha256": "8ea0f26fa355631731ae47d0ec89181a0ee1511eb2acc5c5355a5734ff5e24af",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_gorefen_ring.png",
-        "runtime_sha256": "2e434e455073927e7a4f8ec308625dd811715bb052ad04c353d7563a8ce3d4fb",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_growth_3.png",
+        "runtime_sha256": "48a9b13828b671a7ffcd9ca8babf76acfacd282b7cc9bb8acf6f846585a4409c",
         "runtime_size": [
           512,
-          347
+          505
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_growth_3.png",
+        "icon_sha256": "ac80f4301440ad00b11e365dd8f88887004f5ab2648bd9e2921f40e2477e89a6",
         "normalized_rect": [
-          0.3984375,
-          0.51142578125,
-          0.078125,
-          0.09412977430555555
+          0.390625,
+          0.44114832535885173,
+          0.09375,
+          0.1644072301967039
         ],
         "ground_anchor": [
           0.4375,
@@ -9342,42 +9360,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_gorefen_ring.prompt.txt",
-        "prompt_sha256": "b10050d2db07b7150845ca7c2c1104ed9dba13a1c10e6b29f3343b4ed13af7fd",
-        "curation": "Original built-in text-only RGBA paintings for the owner-directed nine-building Duskfen batch. Preserve generated alpha, wet timber/reed materials, sunset backlight and shared upgrade sites. Masters inspected together; batch composition, ordinary progression, input/save and platform evidence are recorded separately in the art-repair report. Registration is not acceptance.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-8d89afaf-d461-45c3-8b2d-716869426a9c.png",
-        "shared_art_from": "building_gorefen_ring"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_training_attack": {
-        "asset_id": "faction_mireclaw_building_mireclaw_blackbranch_den",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_blackbranch_den.png",
-        "source_sha256": "9ececf80b90e06aef88484f6e194b34752d9ed58a28a6932dac1455acde1c778",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_attack.png",
+        "source_sha256": "c7fafcbd67bdd9cbf00d775beb063ecc6b932b3bfb18624adb4bb734c32aaf84",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_attack.prompt.txt",
+        "prompt_sha256": "885d48ff28031d680ed0583947b2586f78f4ebde40c3bda69d709d8974be475e",
+        "generation_output": "exec-7a22b52e-398a-4bb4-aba2-3d5f2caf1004.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_training_attack",
         "trim_box": [
-          23,
-          27,
-          1518,
-          1024
+          0,
+          21,
+          1204,
+          1230
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_blackbranch_den.png",
-        "trimmed_sha256": "70d39badc60d7f792843dce0885681823b1f96eaf11940b46901892f1ac6d125",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_blackbranch_den.png",
-        "runtime_sha256": "10f940b37a3a8d16eca82aea0088b1ddd738c12dc5e183c7c53969c567297eec",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_training_attack.png",
+        "runtime_sha256": "f3628271a0ed7ba8037a45e3e02933890ba29563d14d282b6e5a939f19859a40",
         "runtime_size": [
-          512,
-          341
+          510,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_training_attack.png",
+        "icon_sha256": "e370d36d66cbb62805303d27657354a12c0644c74e5bd269d14ae087c225b62a",
         "normalized_rect": [
-          0.6703125,
-          0.5260091145833333,
-          0.071875,
-          0.08510199652777778
+          0.6609375,
+          0.4493309339239571,
+          0.090625,
+          0.16178017718715393
         ],
         "ground_anchor": [
           0.70625,
@@ -9390,42 +9411,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_blackbranch_den.prompt.txt",
-        "prompt_sha256": "65d36fea2ab0ebeac02b4edcccc6263ca722b465e94f7b6c536fcc6bef509689",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-5efe0086-f667-407e-9aaa-a3bb030e6b67.png",
-        "shared_art_from": "building_mireclaw_blackbranch_den"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_training_defense": {
-        "asset_id": "faction_mireclaw_building_mireclaw_chainboom_ferry",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_chainboom_ferry.png",
-        "source_sha256": "309d212285cce22ed56ee93b01544086bebadf4dad9790630735f8fe4f475385",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_defense.png",
+        "source_sha256": "9712cf9f86ecad1f80835a505a0494226f86d7456b06640e83f19b423de8f3a6",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_defense.prompt.txt",
+        "prompt_sha256": "b8773558da9e40efe439101dcceb037bea60c42678f0f6c2fb2dbfdf214d21aa",
+        "generation_output": "exec-a323333c-f5d8-4693-ba6e-bf236e8716cb.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_training_defense",
         "trim_box": [
-          0,
-          0,
-          1522,
-          1024
+          33,
+          9,
+          1239,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_chainboom_ferry.png",
-        "trimmed_sha256": "6637c03c670f3b8d9ed2066d5b5e71a51568352d34dfa2b132c0b36a3591ed31",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_chainboom_ferry.png",
-        "runtime_sha256": "2e4d89f7d2b3a289bc91d3ab96c7414a3b787d124164ea6d9af94ae5f5c02ffd",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_training_defense.png",
+        "runtime_sha256": "7dd04fe95667677920d9d676f77e6545196c218f03ef7875b0d5b512916cc09a",
         "runtime_size": [
-          512,
-          344
+          496,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_training_defense.png",
+        "icon_sha256": "824227942181418649eac1cba58a8d4e4c11ca16eaa0a184f4e2ba79484e9a23",
         "normalized_rect": [
-          0.81875,
-          0.5732638888888889,
-          0.0875,
-          0.10451388888888889
+          0.8125,
+          0.4942509673852957,
+          0.1,
+          0.18352681039248203
         ],
         "ground_anchor": [
           0.8625,
@@ -9438,42 +9462,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_chainboom_ferry.prompt.txt",
-        "prompt_sha256": "7cd116c7cd4ef668739a320aa54b0f45514234b0a7cdce05b5fc0b521f19f226",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-b4122dc8-047a-467e-868c-73d03c11e5af.png",
-        "shared_art_from": "building_mireclaw_chainboom_ferry"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_training_experience": {
-        "asset_id": "faction_mireclaw_building_mireclaw_war_drum_circle",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_war_drum_circle.png",
-        "source_sha256": "537ff316f227fb65a8286dab13119027dfd74835f9263d6d9f56538033769f4a",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_experience.png",
+        "source_sha256": "ca6f62459ee15d688e1d0948c7de44007de8d3ae1f260a424b72ee5f1c169bb2",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_training_experience.prompt.txt",
+        "prompt_sha256": "6d25ab6ab6ee320ca977466e539085c91ed8b1137eea4cafe10ca545d8a885cb",
+        "generation_output": "exec-53df828d-93a8-40ab-b83c-72a8c0b266a1.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_training_experience",
         "trim_box": [
-          0,
-          16,
-          1522,
-          1024
+          106,
+          19,
+          1200,
+          1228
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_war_drum_circle.png",
-        "trimmed_sha256": "454d223b5145cd886facc53b4333fa154785a2436fe86083b111ac88a2a0532e",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_war_drum_circle.png",
-        "runtime_sha256": "372e82fbe93fbff6019de11eac05af28e11e0b69389f80b12e93efcd24bbf705",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_training_experience.png",
+        "runtime_sha256": "06fd1f65d659d22c1d5d9178932c1c9119ba6a70b72cee4f7497405295d0515d",
         "runtime_size": [
-          512,
-          339
+          463,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_training_experience.png",
+        "icon_sha256": "ec0d5115f4ce6811acb69a69482051ec5cfe6d08d47234f940fa2d8a53e38469",
         "normalized_rect": [
-          0.109375,
-          0.6543619791666667,
-          0.08125,
-          0.09563802083333334
+          0.1015625,
+          0.5596739792809262,
+          0.096875,
+          0.19032602071907373
         ],
         "ground_anchor": [
           0.15,
@@ -9486,42 +9513,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_war_drum_circle.prompt.txt",
-        "prompt_sha256": "617a9e3dde56d6f9bf156b985bc70a3f3e782dc96be8809bffcfca8366dba9f9",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-e28c3874-7fb5-4c53-ba36-7da4b941f9d9.png",
-        "shared_art_from": "building_mireclaw_war_drum_circle"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_artifact_exchange": {
-        "asset_id": "faction_mireclaw_building_mireclaw_sporewake_shrine",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_sporewake_shrine.png",
-        "source_sha256": "1164ea8198563b20b0aed13496a6b1adff9f84ac04986d8ffed1e05f37740090",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_artifact_exchange.png",
+        "source_sha256": "ed7b33a015d1e6f88aa573cd2a38d9d6bf71aee4e55226962398e54e5f404cfd",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_artifact_exchange.prompt.txt",
+        "prompt_sha256": "5190bb0c4eac2c214e857d0ff13d19ae50ba04d8b27427007b102189c82c54d4",
+        "generation_output": "exec-6aa8819c-6a59-4f5a-a351-7e3ae289686c.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_artifact_exchange",
         "trim_box": [
           0,
-          4,
-          1530,
-          1024
+          21,
+          1237,
+          1228
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_sporewake_shrine.png",
-        "trimmed_sha256": "57fa0ed77e3c7816cfe2ae1a95dace7bb9e018a91e653cdf0178a18520e49926",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_sporewake_shrine.png",
-        "runtime_sha256": "f07bf518cfaefe6ec659cedd498983db06fb330abd3ba59d76ff33a666343e1b",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_artifact_exchange.png",
+        "runtime_sha256": "1a1f38536ae3794dca7bc8015e33d197741a5bebf44b6892f9524496679ff423",
         "runtime_size": [
           512,
-          341
+          500
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_artifact_exchange.png",
+        "icon_sha256": "9cd5eb4646a655fd926d01ee085eac7d57f5b826480249cf22dce260a2961683",
         "normalized_rect": [
-          0.2640625,
-          0.6852756076388888,
-          0.078125,
-          0.0925021701388889
+          0.2546875,
+          0.6097323273151891,
+          0.096875,
+          0.1680454504625887
         ],
         "ground_anchor": [
           0.303125,
@@ -9534,42 +9564,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_sporewake_shrine.prompt.txt",
-        "prompt_sha256": "ce7e9ace30d63a0822cbaa85016d94d9dbea9f3fadffacc51c586c33c2acf1c1",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-56bfea45-c9bf-4d98-bfaa-72d57be02d5c.png",
-        "shared_art_from": "building_mireclaw_sporewake_shrine"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t1_1": {
-        "asset_id": "faction_mireclaw_building_mireclaw_floodtide_forge",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
-        "source_sha256": "953852dc044568ff497a0835df172dfd6d652308da8f4a534657e1299d976593",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1.png",
+        "source_sha256": "f657953838592cc0133d1c5976f55b1a28996135003904242504c0b83a15a5ca",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1.prompt.txt",
+        "prompt_sha256": "9c9a9768d97ed3bd371d3db85dbf16c1137df0a9f1d0816ff99f8bab567bb4d9",
+        "generation_output": "exec-f0e7ca85-ba08-40d6-8c33-3b76f8249679.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t1_1",
         "trim_box": [
           0,
-          0,
-          1524,
-          1024
+          21,
+          1246,
+          1228
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
-        "trimmed_sha256": "7a596363af808150dba935bafa58b772b59a9c2bafa3650335edfe3388354d42",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
-        "runtime_sha256": "5a3ee6fe1e0f825cb9450e4deae6afe2cdde58dc9ee36461cb75c359bdd14cb5",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1.png",
+        "runtime_sha256": "30aadccf7c7c84d278514972d23ff1f23fd5b986d23a2d8132022ac92ed52c01",
         "runtime_size": [
           512,
-          344
+          496
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1.png",
+        "icon_sha256": "86448fd29e6466bc9a401da9afda59d733044651bc5a2be362f3a07d532588ff",
         "normalized_rect": [
-          0.3734375,
-          0.6455729166666667,
-          0.078125,
-          0.09331597222222222
+          0.3671875,
+          0.5828205814160871,
+          0.090625,
+          0.15606830747280184
         ],
         "ground_anchor": [
           0.4125,
@@ -9582,42 +9615,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.prompt.txt",
-        "prompt_sha256": "a845f27899a9288ccfe117d26095cdd04d9408031d37b12a51ffb7a6fca6ed38",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-e5ea0ba1-ac59-462e-9613-33e8eef21733.png",
-        "shared_art_from": "building_mireclaw_floodtide_forge"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t1_1_upgrade": {
-        "asset_id": "faction_mireclaw_building_mireclaw_floodtide_forge",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
-        "source_sha256": "953852dc044568ff497a0835df172dfd6d652308da8f4a534657e1299d976593",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1_upgrade.png",
+        "source_sha256": "ad836be5eb6c9847432151083480bd11a9fe03f5ed1e1e1329d76411a755057c",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1_upgrade.prompt.txt",
+        "prompt_sha256": "27b7c81e54b6121e81089ea78ecf8ab5dfe8d457dbe71d1ee32886f141a37c3e",
+        "generation_output": "exec-445a2789-3af8-4864-9a80-dc5308d2f400.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t1_1_upgrade",
         "trim_box": [
           0,
-          0,
-          1524,
-          1024
+          52,
+          1254,
+          1198
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
-        "trimmed_sha256": "7a596363af808150dba935bafa58b772b59a9c2bafa3650335edfe3388354d42",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
-        "runtime_sha256": "5a3ee6fe1e0f825cb9450e4deae6afe2cdde58dc9ee36461cb75c359bdd14cb5",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1_upgrade.png",
+        "runtime_sha256": "2cd1757565af62afb01d20b6bfe8e03aee5da7ecdbf5a264eedc4dd85e1b543f",
         "runtime_size": [
           512,
-          344
+          468
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t1_1_upgrade.png",
+        "icon_sha256": "b53ddfd99a01c5a49ff13bd7d931890e1f10a07433cea28cdaad5c7681e1a115",
         "normalized_rect": [
-          0.3734375,
-          0.6455729166666667,
-          0.078125,
-          0.09331597222222222
+          0.3578125,
+          0.561190855927698,
+          0.109375,
+          0.17769803296119085
         ],
         "ground_anchor": [
           0.4125,
@@ -9630,42 +9666,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.prompt.txt",
-        "prompt_sha256": "a845f27899a9288ccfe117d26095cdd04d9408031d37b12a51ffb7a6fca6ed38",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-e5ea0ba1-ac59-462e-9613-33e8eef21733.png",
-        "shared_art_from": "building_mireclaw_floodtide_forge"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t1_2": {
-        "asset_id": "faction_mireclaw_building_mireclaw_floodtide_forge",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
-        "source_sha256": "953852dc044568ff497a0835df172dfd6d652308da8f4a534657e1299d976593",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2.png",
+        "source_sha256": "9e68d00dcf00306bc81057d58666e3577330759762fbc3587100f997e4d2d007",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2.prompt.txt",
+        "prompt_sha256": "bca43dd622ab218884ebffa11e474a28747bd1c53989d69d61c3f37f39c1df16",
+        "generation_output": "exec-bb629c99-73b7-40bb-923f-cdd58b06208b.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t1_2",
         "trim_box": [
           0,
-          0,
-          1524,
-          1024
+          17,
+          1224,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
-        "trimmed_sha256": "7a596363af808150dba935bafa58b772b59a9c2bafa3650335edfe3388354d42",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
-        "runtime_sha256": "5a3ee6fe1e0f825cb9450e4deae6afe2cdde58dc9ee36461cb75c359bdd14cb5",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2.png",
+        "runtime_sha256": "4509728f4c644f3644ffe410aa2d17256cac2410c98a0aa4bd905fd3ec93a181",
         "runtime_size": [
-          512,
-          344
+          507,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2.png",
+        "icon_sha256": "bf9226accac94c99947c57c2a1b9a34dcc33abd7558949c2a075b7ab9134c476",
         "normalized_rect": [
-          0.3734375,
-          0.6455729166666667,
-          0.078125,
-          0.09331597222222222
+          0.3671875,
+          0.576066630355846,
+          0.090625,
+          0.16282225853304286
         ],
         "ground_anchor": [
           0.4125,
@@ -9678,42 +9717,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.prompt.txt",
-        "prompt_sha256": "a845f27899a9288ccfe117d26095cdd04d9408031d37b12a51ffb7a6fca6ed38",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-e5ea0ba1-ac59-462e-9613-33e8eef21733.png",
-        "shared_art_from": "building_mireclaw_floodtide_forge"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t1_2_upgrade": {
-        "asset_id": "faction_mireclaw_building_mireclaw_floodtide_forge",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
-        "source_sha256": "953852dc044568ff497a0835df172dfd6d652308da8f4a534657e1299d976593",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2_upgrade.png",
+        "source_sha256": "5dda3105ff3ff68657f983bbb2dcc4004815c6cf4d3ecd086eddf60a1a28e9d2",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2_upgrade.prompt.txt",
+        "prompt_sha256": "ef00e42995202b6fa5b8c8b89f279acf2123622b7bed992647edacd47bd1b2c8",
+        "generation_output": "exec-54684bcd-6edc-4a4d-a491-676bf226442c.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t1_2_upgrade",
         "trim_box": [
           0,
           0,
-          1524,
-          1024
+          1222,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
-        "trimmed_sha256": "7a596363af808150dba935bafa58b772b59a9c2bafa3650335edfe3388354d42",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.png",
-        "runtime_sha256": "5a3ee6fe1e0f825cb9450e4deae6afe2cdde58dc9ee36461cb75c359bdd14cb5",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2_upgrade.png",
+        "runtime_sha256": "f6628e3fc8edfc1c7e59ac1cdcd764eb6fe09cc8f4b1c050859a466aa08d8f85",
         "runtime_size": [
-          512,
-          344
+          499,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t1_2_upgrade.png",
+        "icon_sha256": "bb4cd63e4fb0f11eaee2067de77d7c505143f2def038982cdb9baf9cd8b77ba8",
         "normalized_rect": [
-          0.3734375,
-          0.6455729166666667,
-          0.078125,
-          0.09331597222222222
+          0.3578125,
+          0.5393526095653756,
+          0.109375,
+          0.19953627932351337
         ],
         "ground_anchor": [
           0.4125,
@@ -9726,42 +9768,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_floodtide_forge.prompt.txt",
-        "prompt_sha256": "a845f27899a9288ccfe117d26095cdd04d9408031d37b12a51ffb7a6fca6ed38",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-e5ea0ba1-ac59-462e-9613-33e8eef21733.png",
-        "shared_art_from": "building_mireclaw_floodtide_forge"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t2_1": {
-        "asset_id": "faction_mireclaw_building_mireclaw_nightglass_dominion",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
-        "source_sha256": "dba7fb4f10bb71dd468e02370e27b0bdf4d5fc98c267616f4bec8bcf64493ff7",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1.png",
+        "source_sha256": "04e13be84dfddc51085d581024480c99781c42b8b8611207262b5ce83d380479",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1.prompt.txt",
+        "prompt_sha256": "de4157780f885c4b50e32357135c43b21ef65f704ef1eb85541a37bb1099b693",
+        "generation_output": "exec-97beddb3-7776-4b5e-9e69-9e8571543455.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t2_1",
         "trim_box": [
           0,
-          0,
-          1530,
-          1024
+          23,
+          1254,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
-        "trimmed_sha256": "2a444811d80c844956aa70a309967e12d85026752809534d5212664978669a84",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
-        "runtime_sha256": "8140c9e30546c3370841f858768382a7420e9f77389711dcf85ac8efcae1b48a",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1.png",
+        "runtime_sha256": "1d6abbb94129c623b191d1d9c07dbfb0e3b27ba03eee4be11f44ea1a58a16b2f",
         "runtime_size": [
           512,
-          343
+          503
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1.png",
+        "icon_sha256": "514ea1baac05f88aae4a65af34fef38a51348f5df001b2f015d4a16c3c2d2bce",
         "normalized_rect": [
-          0.48125,
-          0.5957899305555555,
-          0.0875,
-          0.10421006944444444
+          0.475,
+          0.5254828991671097,
+          0.1,
+          0.17451710083289032
         ],
         "ground_anchor": [
           0.525,
@@ -9774,42 +9819,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.prompt.txt",
-        "prompt_sha256": "79982a2acd58554bd8dcf30b67de5dd55bb1a11a088aef7b56053ab557b82a1a",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-f5d0d97b-3957-440e-9abf-f8a304260315.png",
-        "shared_art_from": "building_mireclaw_nightglass_dominion"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t2_1_upgrade": {
-        "asset_id": "faction_mireclaw_building_mireclaw_nightglass_dominion",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
-        "source_sha256": "dba7fb4f10bb71dd468e02370e27b0bdf4d5fc98c267616f4bec8bcf64493ff7",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1_upgrade.png",
+        "source_sha256": "669e9b92b2dcc83d803d08215845c1cc247ee03214e47a05eb8b4d405a67b681",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1_upgrade.prompt.txt",
+        "prompt_sha256": "ef9f4b887a00f5d9584d6b8a239b5347c4c8c3b9baed68f92d28f6d405018318",
+        "generation_output": "exec-dc8372df-5eb0-48da-8147-ea6a188dd293.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t2_1_upgrade",
         "trim_box": [
           0,
-          0,
-          1530,
-          1024
+          41,
+          1254,
+          1220
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
-        "trimmed_sha256": "2a444811d80c844956aa70a309967e12d85026752809534d5212664978669a84",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
-        "runtime_sha256": "8140c9e30546c3370841f858768382a7420e9f77389711dcf85ac8efcae1b48a",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1_upgrade.png",
+        "runtime_sha256": "c9cbb7bdc825f74dbe66f62ee48a63f2e14934c5bd0d2d7267452c5cd969c8bc",
         "runtime_size": [
           512,
-          343
+          481
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t2_1_upgrade.png",
+        "icon_sha256": "101e4435eda6a0b74e26622bcf9a6cc9ec8ef31dea667c22e683ad6969ac0f8a",
         "normalized_rect": [
-          0.48125,
-          0.5957899305555555,
-          0.0875,
-          0.10421006944444444
+          0.4671875,
+          0.5067384370015948,
+          0.115625,
+          0.1932615629984051
         ],
         "ground_anchor": [
           0.525,
@@ -9822,42 +9870,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.prompt.txt",
-        "prompt_sha256": "79982a2acd58554bd8dcf30b67de5dd55bb1a11a088aef7b56053ab557b82a1a",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-f5d0d97b-3957-440e-9abf-f8a304260315.png",
-        "shared_art_from": "building_mireclaw_nightglass_dominion"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t2_2": {
-        "asset_id": "faction_mireclaw_building_mireclaw_nightglass_dominion",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
-        "source_sha256": "dba7fb4f10bb71dd468e02370e27b0bdf4d5fc98c267616f4bec8bcf64493ff7",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2.png",
+        "source_sha256": "cb6830c6d90b2b44afb0e1b89fd7300a51c0f506e1b4aad920cac0e35fe6e3e2",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2.prompt.txt",
+        "prompt_sha256": "564f59d6286ef9715fa611ef0280c627c9e9ad67f108fe03c95d69242ebc26a6",
+        "generation_output": "exec-70d4c104-2441-4fc7-9552-591133fc30d7.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t2_2",
         "trim_box": [
           0,
-          0,
-          1530,
-          1024
+          21,
+          1254,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
-        "trimmed_sha256": "2a444811d80c844956aa70a309967e12d85026752809534d5212664978669a84",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
-        "runtime_sha256": "8140c9e30546c3370841f858768382a7420e9f77389711dcf85ac8efcae1b48a",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2.png",
+        "runtime_sha256": "aa7ae497d296f8b90bb0193353d42dae1b6b86fb0d0a18d7ca73dcd359995de1",
         "runtime_size": [
           512,
-          343
+          503
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2.png",
+        "icon_sha256": "f2c835f5b22012828a8093a95d76e56082f85be9af77f577c2bdeaebd5bfe4be",
         "normalized_rect": [
-          0.48125,
-          0.5957899305555555,
-          0.0875,
-          0.10421006944444444
+          0.475,
+          0.5251993620414672,
+          0.1,
+          0.1748006379585327
         ],
         "ground_anchor": [
           0.525,
@@ -9870,42 +9921,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.prompt.txt",
-        "prompt_sha256": "79982a2acd58554bd8dcf30b67de5dd55bb1a11a088aef7b56053ab557b82a1a",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-f5d0d97b-3957-440e-9abf-f8a304260315.png",
-        "shared_art_from": "building_mireclaw_nightglass_dominion"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t2_2_upgrade": {
-        "asset_id": "faction_mireclaw_building_mireclaw_nightglass_dominion",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
-        "source_sha256": "dba7fb4f10bb71dd468e02370e27b0bdf4d5fc98c267616f4bec8bcf64493ff7",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2_upgrade.png",
+        "source_sha256": "51a204f097c76fce04455016fb21519cf4da748588f9404c7457842935cc097c",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2_upgrade.prompt.txt",
+        "prompt_sha256": "97b014ce52190802a650a16d1cdb400e4367034db71b74791124ee48ab00ad8a",
+        "generation_output": "exec-188ffe3c-ec3c-4678-8bc1-38974d886678.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t2_2_upgrade",
         "trim_box": [
           0,
-          0,
-          1530,
-          1024
+          51,
+          1254,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
-        "trimmed_sha256": "2a444811d80c844956aa70a309967e12d85026752809534d5212664978669a84",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.png",
-        "runtime_sha256": "8140c9e30546c3370841f858768382a7420e9f77389711dcf85ac8efcae1b48a",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2_upgrade.png",
+        "runtime_sha256": "e645c4c9d8a9be90898e06061ca5dad4d28a5a1d26c1be21f90410a834a00abc",
         "runtime_size": [
           512,
-          343
+          491
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t2_2_upgrade.png",
+        "icon_sha256": "f1638dbd492d56802c89ed091624400997b15f86b732e57b6f361132d855fe6b",
         "normalized_rect": [
-          0.48125,
-          0.5957899305555555,
-          0.0875,
-          0.10421006944444444
+          0.4671875,
+          0.5028043593833067,
+          0.115625,
+          0.19719564061669326
         ],
         "ground_anchor": [
           0.525,
@@ -9918,42 +9972,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_nightglass_dominion.prompt.txt",
-        "prompt_sha256": "79982a2acd58554bd8dcf30b67de5dd55bb1a11a088aef7b56053ab557b82a1a",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-f5d0d97b-3957-440e-9abf-f8a304260315.png",
-        "shared_art_from": "building_mireclaw_nightglass_dominion"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t3_1": {
-        "asset_id": "faction_mireclaw_building_mireclaw_antler_pit",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
-        "source_sha256": "b1e90dfcb9c8f217aa3860e158daebac2815c7d1303f475cb85cd5b319ddb5ff",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1.png",
+        "source_sha256": "37b1ce5dd8af49eb0d0c4a6f886d4a9616d59d845a3672b11037d16181e57ba2",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1.prompt.txt",
+        "prompt_sha256": "9e16a01cc8199fbb78254a632f5f400155ea32dd84fd563391ce190e122333ef",
+        "generation_output": "exec-83f65f92-77b8-4129-a80b-9a1355099d51.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t3_1",
         "trim_box": [
           0,
-          0,
-          1522,
-          1024
+          31,
+          1236,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
-        "trimmed_sha256": "1009c66522d8297179ef70c5cea0681b90f1586ee224edd3c86e5bc5639eebbf",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
-        "runtime_sha256": "8a02cfab7d3071d08f6dc454a277d8a6be6b04315e3e156506fb08ceb44352f6",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1.png",
+        "runtime_sha256": "0cc8de77b08d4fe5d935030774bfb33c50036825a05324f710fa1a623df51630",
         "runtime_size": [
           512,
-          344
+          507
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1.png",
+        "icon_sha256": "732b79b9c76ca2552173334d19631dbe7645ca8a942424edf4dae8b4bdf93c9e",
         "normalized_rect": [
-          0.5875,
-          0.6826388888888889,
-          0.075,
-          0.08958333333333333
+          0.5796875,
+          0.6128056454512766,
+          0.090625,
+          0.1594165767709457
         ],
         "ground_anchor": [
           0.625,
@@ -9966,42 +10023,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.prompt.txt",
-        "prompt_sha256": "b5bdc31aac7e497d398e5d2a891e7ee84800265acac77efe1b594d91a0bec091",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-fcb9ee28-4601-4ea4-9b0e-219a2544723d.png",
-        "shared_art_from": "building_mireclaw_antler_pit"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t3_1_upgrade": {
-        "asset_id": "faction_mireclaw_building_mireclaw_antler_pit",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
-        "source_sha256": "b1e90dfcb9c8f217aa3860e158daebac2815c7d1303f475cb85cd5b319ddb5ff",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1_upgrade.png",
+        "source_sha256": "35ba8f7842cc261e549f189a98d5dfe25781f982348f78b6f6c4f4b660ae1ee2",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1_upgrade.prompt.txt",
+        "prompt_sha256": "9d6c635865a735a261367e4358524db601c588b9d2e73d86a28d90311298d3c9",
+        "generation_output": "exec-d7c0e7e4-dc86-45ae-8944-3688c4d1a3a2.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t3_1_upgrade",
         "trim_box": [
           0,
-          0,
-          1522,
-          1024
+          19,
+          1254,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
-        "trimmed_sha256": "1009c66522d8297179ef70c5cea0681b90f1586ee224edd3c86e5bc5639eebbf",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
-        "runtime_sha256": "8a02cfab7d3071d08f6dc454a277d8a6be6b04315e3e156506fb08ceb44352f6",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1_upgrade.png",
+        "runtime_sha256": "88e035c15a40ba1ce6b0afc3f6bd46735d5c838bc675b3024c810dbe7ef03fd4",
         "runtime_size": [
           512,
-          344
+          504
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t3_1_upgrade.png",
+        "icon_sha256": "5a992c7aabffe0e88c1651e871809177648183cec2fd17ea050fa1d7ffb0fe62",
         "normalized_rect": [
-          0.5875,
-          0.6826388888888889,
-          0.075,
-          0.08958333333333333
+          0.5703125,
+          0.5807239057239056,
+          0.109375,
+          0.1914983164983165
         ],
         "ground_anchor": [
           0.625,
@@ -10014,42 +10074,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.prompt.txt",
-        "prompt_sha256": "b5bdc31aac7e497d398e5d2a891e7ee84800265acac77efe1b594d91a0bec091",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-fcb9ee28-4601-4ea4-9b0e-219a2544723d.png",
-        "shared_art_from": "building_mireclaw_antler_pit"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t3_2": {
-        "asset_id": "faction_mireclaw_building_mireclaw_antler_pit",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
-        "source_sha256": "b1e90dfcb9c8f217aa3860e158daebac2815c7d1303f475cb85cd5b319ddb5ff",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2.png",
+        "source_sha256": "35cd38b646d86c2317cce5a66b55b06cc9cad302ba5b415ea78290e0d8cc4948",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2.prompt.txt",
+        "prompt_sha256": "34797857caee65ac92e929e7e7386d253815960e8da737358ca532af57e363fe",
+        "generation_output": "exec-5fc7555e-ad53-4db1-b15f-4059b181f56d.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t3_2",
         "trim_box": [
           0,
-          0,
-          1522,
-          1024
+          53,
+          1254,
+          1214
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
-        "trimmed_sha256": "1009c66522d8297179ef70c5cea0681b90f1586ee224edd3c86e5bc5639eebbf",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
-        "runtime_sha256": "8a02cfab7d3071d08f6dc454a277d8a6be6b04315e3e156506fb08ceb44352f6",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2.png",
+        "runtime_sha256": "2da1be93e150849ac131a286f1b06dd255bd8c8c6b927aa028f4d9a0ca900f4b",
         "runtime_size": [
           512,
-          344
+          474
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2.png",
+        "icon_sha256": "e568eb924c13875e8f20fa9572e19a59ad1bbec3b342a17a7bd643197c34cb19",
         "normalized_rect": [
-          0.5875,
-          0.6826388888888889,
-          0.075,
-          0.08958333333333333
+          0.5796875,
+          0.6230595427963849,
+          0.090625,
+          0.1491626794258373
         ],
         "ground_anchor": [
           0.625,
@@ -10062,42 +10125,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.prompt.txt",
-        "prompt_sha256": "b5bdc31aac7e497d398e5d2a891e7ee84800265acac77efe1b594d91a0bec091",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-fcb9ee28-4601-4ea4-9b0e-219a2544723d.png",
-        "shared_art_from": "building_mireclaw_antler_pit"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t3_2_upgrade": {
-        "asset_id": "faction_mireclaw_building_mireclaw_antler_pit",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
-        "source_sha256": "b1e90dfcb9c8f217aa3860e158daebac2815c7d1303f475cb85cd5b319ddb5ff",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2_upgrade.png",
+        "source_sha256": "0c4507bd3e8aa3626c8bbcf804043296b3e3fa4e0839c7bbb415905089c4a7fd",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2_upgrade.prompt.txt",
+        "prompt_sha256": "60e78861bdd28fcc98a671acc36159f9aed66dfd83b52ee3a13cad685456102c",
+        "generation_output": "exec-cd68f87f-5b37-4dac-8b8a-ceb991a45168.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t3_2_upgrade",
         "trim_box": [
           0,
-          0,
-          1522,
-          1024
+          9,
+          1254,
+          1228
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
-        "trimmed_sha256": "1009c66522d8297179ef70c5cea0681b90f1586ee224edd3c86e5bc5639eebbf",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.png",
-        "runtime_sha256": "8a02cfab7d3071d08f6dc454a277d8a6be6b04315e3e156506fb08ceb44352f6",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2_upgrade.png",
+        "runtime_sha256": "fe38cfa87dfb12bf941bf5c1e6e26a3a09d4fb081c5d8dc8d3c67f92d584c85b",
         "runtime_size": [
           512,
-          344
+          498
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t3_2_upgrade.png",
+        "icon_sha256": "59c900b611eb2226569c8f7d6e2c31d73e685a74679d3c9dc453768056a596d3",
         "normalized_rect": [
-          0.5875,
-          0.6826388888888889,
-          0.075,
-          0.08958333333333333
+          0.5703125,
+          0.5832048555732766,
+          0.109375,
+          0.18901736664894558
         ],
         "ground_anchor": [
           0.625,
@@ -10110,42 +10176,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_antler_pit.prompt.txt",
-        "prompt_sha256": "b5bdc31aac7e497d398e5d2a891e7ee84800265acac77efe1b594d91a0bec091",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-fcb9ee28-4601-4ea4-9b0e-219a2544723d.png",
-        "shared_art_from": "building_mireclaw_antler_pit"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t4_1": {
-        "asset_id": "faction_mireclaw_building_mireclaw_reed_toll",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
-        "source_sha256": "c046c4651c4657163192fdb5418a3beeb94fd51ce9b9f01c25c50f355395057e",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1.png",
+        "source_sha256": "a35f06082c2780c55dc861f91669c5ccdf5b2aef50b75ffee59f3cbac25e2385",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1.prompt.txt",
+        "prompt_sha256": "4c8c23bb9ecc807c0529eea598e2fcc858625b8fe20eb67f9517bdcc91a090ad",
+        "generation_output": "exec-4d4adb76-5bbf-45de-9b28-f8959163f5c7.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t4_1",
         "trim_box": [
           0,
-          1,
-          1522,
-          1024
+          39,
+          1222,
+          1230
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
-        "trimmed_sha256": "a99b8f3c978b635c0a86cdf2b2e2558ddefbe570494a04e8fdcb43b85204c0d5",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
-        "runtime_sha256": "e3f32b6fa173535300844c7454974604faf81acbc838b8fcdff879164c84e475",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1.png",
+        "runtime_sha256": "21d740025cf34eb06856774763976674e91ef4d562e3436b8b4a1dbf8d88fe69",
         "runtime_size": [
           512,
-          344
+          499
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1.png",
+        "icon_sha256": "eda9e6a184f01563c805b81f741bcf5cbbd8b901e1e803592230ff8b77f972db",
         "normalized_rect": [
-          0.6984375,
-          0.6955729166666667,
-          0.078125,
-          0.09331597222222222
+          0.6921875,
+          0.631864884524459,
+          0.090625,
+          0.1570240043644299
         ],
         "ground_anchor": [
           0.7375,
@@ -10158,42 +10227,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.prompt.txt",
-        "prompt_sha256": "1ad3fee9a8c641282c168e0dc56f2259fce19915e9259f735f142fea43feb457",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-3cd953b4-9ec1-40f0-8ef2-f6a163f3fb73.png",
-        "shared_art_from": "building_mireclaw_reed_toll"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t4_1_upgrade": {
-        "asset_id": "faction_mireclaw_building_mireclaw_reed_toll",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
-        "source_sha256": "c046c4651c4657163192fdb5418a3beeb94fd51ce9b9f01c25c50f355395057e",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1_upgrade.png",
+        "source_sha256": "cf4358a835b88408ea0343063dfeea7cc81bc2f22204d0e099ca90ec45e9f581",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1_upgrade.prompt.txt",
+        "prompt_sha256": "0a5643e3af7dccd87eda1975857d7cd46982050092ce8f9666efa7fd76ce2d65",
+        "generation_output": "exec-87df6127-e8e5-47fc-bea9-d4b8c0f3399a.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t4_1_upgrade",
         "trim_box": [
           0,
-          1,
-          1522,
-          1024
+          9,
+          1237,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
-        "trimmed_sha256": "a99b8f3c978b635c0a86cdf2b2e2558ddefbe570494a04e8fdcb43b85204c0d5",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
-        "runtime_sha256": "e3f32b6fa173535300844c7454974604faf81acbc838b8fcdff879164c84e475",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1_upgrade.png",
+        "runtime_sha256": "fe55659e564b9dad172df7659accb9cdcf41b1965bff37116ea1449b5bcef703",
         "runtime_size": [
-          512,
-          344
+          509,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t4_1_upgrade.png",
+        "icon_sha256": "2e82873183587d133ca58fd4eabb846ee34d79e0441cd3d180cdc4f1b3aa4e79",
         "normalized_rect": [
-          0.6984375,
-          0.6955729166666667,
-          0.078125,
-          0.09331597222222222
+          0.6828125,
+          0.5931869217641247,
+          0.109375,
+          0.19570196712476423
         ],
         "ground_anchor": [
           0.7375,
@@ -10206,42 +10278,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.prompt.txt",
-        "prompt_sha256": "1ad3fee9a8c641282c168e0dc56f2259fce19915e9259f735f142fea43feb457",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-3cd953b4-9ec1-40f0-8ef2-f6a163f3fb73.png",
-        "shared_art_from": "building_mireclaw_reed_toll"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t4_2": {
-        "asset_id": "faction_mireclaw_building_mireclaw_reed_toll",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
-        "source_sha256": "c046c4651c4657163192fdb5418a3beeb94fd51ce9b9f01c25c50f355395057e",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2.png",
+        "source_sha256": "043742598b66d21ed9ec6c174dfedb9bbef8c37ebca5740455555287c702903b",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2.prompt.txt",
+        "prompt_sha256": "8048f35e7283cc9c0cf85dd410dd246c198acf6ad6fabb6804849b535296f683",
+        "generation_output": "exec-4a148f2d-b580-4de4-9fdd-6afdc08e583f.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t4_2",
         "trim_box": [
+          42,
           0,
-          1,
-          1522,
-          1024
+          1222,
+          1228
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
-        "trimmed_sha256": "a99b8f3c978b635c0a86cdf2b2e2558ddefbe570494a04e8fdcb43b85204c0d5",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
-        "runtime_sha256": "e3f32b6fa173535300844c7454974604faf81acbc838b8fcdff879164c84e475",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2.png",
+        "runtime_sha256": "ac7d7cb72ffdee11fbf082c2c86a2b80eebd7b03505959d5e2e2fba032956b7c",
         "runtime_size": [
-          512,
-          344
+          492,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2.png",
+        "icon_sha256": "473a0f6f7fa1d05c7a1880642778e09cb36773e73ab92b42a6122e3565af3bd9",
         "normalized_rect": [
-          0.6984375,
-          0.6955729166666667,
-          0.078125,
-          0.09331597222222222
+          0.6921875,
+          0.6212241054613936,
+          0.090625,
+          0.1676647834274953
         ],
         "ground_anchor": [
           0.7375,
@@ -10254,42 +10329,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.prompt.txt",
-        "prompt_sha256": "1ad3fee9a8c641282c168e0dc56f2259fce19915e9259f735f142fea43feb457",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-3cd953b4-9ec1-40f0-8ef2-f6a163f3fb73.png",
-        "shared_art_from": "building_mireclaw_reed_toll"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t4_2_upgrade": {
-        "asset_id": "faction_mireclaw_building_mireclaw_reed_toll",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
-        "source_sha256": "c046c4651c4657163192fdb5418a3beeb94fd51ce9b9f01c25c50f355395057e",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2_upgrade.png",
+        "source_sha256": "a44cc4a1ad28c526aa7951feb36dac6a64fbb22752c44c279dcdd0b18ae5f9be",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2_upgrade.prompt.txt",
+        "prompt_sha256": "3c19a7a8258e1fab4b7b60550b902b7b67fd9d2a53ea8154b403f8794ef63c85",
+        "generation_output": "exec-2e5d9cae-80e7-44d1-87fe-6920327b020f.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t4_2_upgrade",
         "trim_box": [
-          0,
-          1,
-          1522,
-          1024
+          49,
+          30,
+          1228,
+          1220
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
-        "trimmed_sha256": "a99b8f3c978b635c0a86cdf2b2e2558ddefbe570494a04e8fdcb43b85204c0d5",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.png",
-        "runtime_sha256": "e3f32b6fa173535300844c7454974604faf81acbc838b8fcdff879164c84e475",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2_upgrade.png",
+        "runtime_sha256": "d0c956a8649e229f52ab3d494fa3816970414cf4eb592196eef153058bdf6576",
         "runtime_size": [
-          512,
-          344
+          507,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t4_2_upgrade.png",
+        "icon_sha256": "c8671b0699f4b8de2e09e4eac71ca95f07a0451d1a6d6e5914ef57d52a42b6a5",
         "normalized_rect": [
-          0.6984375,
-          0.6955729166666667,
-          0.078125,
-          0.09331597222222222
+          0.6828125,
+          0.5926302893224012,
+          0.109375,
+          0.19625859956648758
         ],
         "ground_anchor": [
           0.7375,
@@ -10302,42 +10380,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_reed_toll.prompt.txt",
-        "prompt_sha256": "1ad3fee9a8c641282c168e0dc56f2259fce19915e9259f735f142fea43feb457",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-3cd953b4-9ec1-40f0-8ef2-f6a163f3fb73.png",
-        "shared_art_from": "building_mireclaw_reed_toll"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t5_1": {
-        "asset_id": "faction_mireclaw_building_mireclaw_silt_watch",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
-        "source_sha256": "cf4d8586fb8df0a3cdfef245e6057969a9a6cd5aa089d8eff6e66840770cc4e8",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1.png",
+        "source_sha256": "c89e31a5e808bd90a5896eb6aa22644043364ab3b05d8136377b394805b65b7c",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1.prompt.txt",
+        "prompt_sha256": "c8baa13a2ecc3697c3739c0947d23c75320712f82ed14a4d1f799c88cc271bf6",
+        "generation_output": "exec-227c4d4a-6228-459e-9112-9e2df4513447.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t5_1",
         "trim_box": [
           0,
-          0,
-          1524,
-          1024
+          21,
+          1230,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
-        "trimmed_sha256": "f97087e083cb8b0e0a25c4eb8fb3056d1a911272306c0b66799e78c783664fee",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
-        "runtime_sha256": "93de9a34da651436e046cb37b47566fee1e0382704a9549be78cc2e3fa43e991",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1.png",
+        "runtime_sha256": "8915328aa37e9f48cd5905dd0ae2626e2aedb13b05d14386236dfe3f1cd48ed9",
         "runtime_size": [
-          512,
-          344
+          511,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1.png",
+        "icon_sha256": "1503ea9db67d68272dcb37d501ed8f45b4a5d8032bb6a2e37a96d97f72fbce5a",
         "normalized_rect": [
-          0.8,
-          0.7381944444444445,
-          0.075,
-          0.08958333333333333
+          0.790625,
+          0.6607046070460705,
+          0.09375,
+          0.16707317073170733
         ],
         "ground_anchor": [
           0.8375,
@@ -10350,42 +10431,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.prompt.txt",
-        "prompt_sha256": "f0162a27052134de81e4353fa913c96ee62dd1904be18748adad19cb63243553",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-c1197b26-7e91-434e-ad90-043ec32b2ef1.png",
-        "shared_art_from": "building_mireclaw_silt_watch"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t5_1_upgrade": {
-        "asset_id": "faction_mireclaw_building_mireclaw_silt_watch",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
-        "source_sha256": "cf4d8586fb8df0a3cdfef245e6057969a9a6cd5aa089d8eff6e66840770cc4e8",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_upgrade.png",
+        "source_sha256": "197b0e56831adc4480b8e3c46ff7d0aae151903378cfafec5f59e1d67736d700",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_upgrade.prompt.txt",
+        "prompt_sha256": "95d45d5a068e03a4145375a803c8d21f1c7d608dde2a93b30367e50cb4998e45",
+        "generation_output": "exec-a648c38b-5d23-4ec2-b9f9-33c81944b533.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t5_1_upgrade",
         "trim_box": [
           0,
-          0,
-          1524,
-          1024
+          31,
+          1236,
+          1206
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
-        "trimmed_sha256": "f97087e083cb8b0e0a25c4eb8fb3056d1a911272306c0b66799e78c783664fee",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
-        "runtime_sha256": "93de9a34da651436e046cb37b47566fee1e0382704a9549be78cc2e3fa43e991",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_upgrade.png",
+        "runtime_sha256": "8f4c974c7b99665a5dd59701a54ffc45ba5acd146d7ece2d246398d04835daf1",
         "runtime_size": [
           512,
-          344
+          487
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t5_1_upgrade.png",
+        "icon_sha256": "6095bf9deb91b7b6799f3e45b78ff7ea43cc238e38f8577a5a733749180fa10a",
         "normalized_rect": [
-          0.8,
-          0.7381944444444445,
-          0.075,
-          0.08958333333333333
+          0.78125,
+          0.63764832793959,
+          0.1125,
+          0.19012944983818772
         ],
         "ground_anchor": [
           0.8375,
@@ -10398,42 +10482,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.prompt.txt",
-        "prompt_sha256": "f0162a27052134de81e4353fa913c96ee62dd1904be18748adad19cb63243553",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-c1197b26-7e91-434e-ad90-043ec32b2ef1.png",
-        "shared_art_from": "building_mireclaw_silt_watch"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t5_2": {
-        "asset_id": "faction_mireclaw_building_mireclaw_silt_watch",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
-        "source_sha256": "cf4d8586fb8df0a3cdfef245e6057969a9a6cd5aa089d8eff6e66840770cc4e8",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2.png",
+        "source_sha256": "0ed88ab41d54f23b58a59300604c0a218c29fba5306feba3a476f470a36d4a6b",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2.prompt.txt",
+        "prompt_sha256": "ae2bc4db795e56eae7920d78ad52f60eaa2ce349cf016e090dd410e3fe76b900",
+        "generation_output": "exec-97db875a-47c6-48c2-8030-a5a32333ccd0.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t5_2",
         "trim_box": [
-          0,
-          0,
-          1524,
-          1024
+          41,
+          12,
+          1234,
+          1236
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
-        "trimmed_sha256": "f97087e083cb8b0e0a25c4eb8fb3056d1a911272306c0b66799e78c783664fee",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
-        "runtime_sha256": "93de9a34da651436e046cb37b47566fee1e0382704a9549be78cc2e3fa43e991",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2.png",
+        "runtime_sha256": "e3aa13ef7499fb9a8ee046af925e2811ffc319d31a292fa54b9e465a74ff5704",
         "runtime_size": [
-          512,
-          344
+          499,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2.png",
+        "icon_sha256": "8e38446e061a30834a46576eb6921c81438d30a180d8fa44acf85c0e915b4a47",
         "normalized_rect": [
-          0.8,
-          0.7381944444444445,
-          0.075,
-          0.08958333333333333
+          0.790625,
+          0.6567802924466797,
+          0.09375,
+          0.17099748533109807
         ],
         "ground_anchor": [
           0.8375,
@@ -10446,42 +10533,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.prompt.txt",
-        "prompt_sha256": "f0162a27052134de81e4353fa913c96ee62dd1904be18748adad19cb63243553",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-c1197b26-7e91-434e-ad90-043ec32b2ef1.png",
-        "shared_art_from": "building_mireclaw_silt_watch"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t5_2_upgrade": {
-        "asset_id": "faction_mireclaw_building_mireclaw_silt_watch",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
-        "source_sha256": "cf4d8586fb8df0a3cdfef245e6057969a9a6cd5aa089d8eff6e66840770cc4e8",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2_upgrade.png",
+        "source_sha256": "a552126bbc8ddd5570611fcaacb756b94bbae24d69093d77d2a310d0763aa7e0",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2_upgrade.prompt.txt",
+        "prompt_sha256": "37d8ebc3ed629571847d585fc933ba68925eda8bc53e73fe8ce46b5b6c627d71",
+        "generation_output": "exec-b303da7b-e07f-4170-9e0e-d09e8a800502.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t5_2_upgrade",
         "trim_box": [
           0,
-          0,
-          1524,
-          1024
+          9,
+          1192,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
-        "trimmed_sha256": "f97087e083cb8b0e0a25c4eb8fb3056d1a911272306c0b66799e78c783664fee",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.png",
-        "runtime_sha256": "93de9a34da651436e046cb37b47566fee1e0382704a9549be78cc2e3fa43e991",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2_upgrade.png",
+        "runtime_sha256": "53d65be741b62b32722370cd6500c7b9cc33144b5fa06295c4611d2aca5ff35e",
         "runtime_size": [
-          512,
-          344
+          490,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t5_2_upgrade.png",
+        "icon_sha256": "fdde3d2d04e1143b956af06f2b3d38e9680d20a795945735e0655d82397c7706",
         "normalized_rect": [
-          0.8,
-          0.7381944444444445,
-          0.075,
-          0.08958333333333333
+          0.78125,
+          0.6188851603281135,
+          0.1125,
+          0.20889261744966442
         ],
         "ground_anchor": [
           0.8375,
@@ -10494,46 +10584,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_silt_watch.prompt.txt",
-        "prompt_sha256": "f0162a27052134de81e4353fa913c96ee62dd1904be18748adad19cb63243553",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-c1197b26-7e91-434e-ad90-043ec32b2ef1.png",
-        "shared_art_from": "building_mireclaw_silt_watch"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t6_1": {
-        "asset_id": "faction_mireclaw_building_mireclaw_bog_oracle_nest",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.png",
-        "source_sha256": "3ad91b62a53bca660c00d09e65e6610f011e8f1145727b11c628d51fc47a33e3",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1.png",
+        "source_sha256": "1d116b158b639254920ba1e4741495bf6f14c9d5a278050adddb98cc59e6e84e",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1.prompt.txt",
+        "prompt_sha256": "6a0aee78f3a8b67bd17c1af1915e8c1db5db66b442c3d76cc55984b35a2e3e83",
+        "generation_output": "exec-4a488f34-21bc-4691-8397-72f4c1f5b9bf.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t6_1",
         "trim_box": [
-          59,
-          14,
-          1524,
-          1024
+          0,
+          69,
+          1254,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.png",
-        "trimmed_sha256": "58ad46b9087b9e58e04dcbb3f3b25daa7443230c1ec8b72ab80223f1545d7027",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.png",
-        "runtime_sha256": "61f6bb0cdff8d693121586b6461625d6dbc6d215aa174dde09d265fbb8a10c56",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1.png",
+        "runtime_sha256": "aac56cfefcb559b6f60c3c3b96238b4bc4746c28340cad3b77c3520d29cd494a",
         "runtime_size": [
           512,
-          353
+          484
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1.png",
+        "icon_sha256": "744e46e7528f08855c96049d5d964f70143a73e0d0c9ff5ed2c30afc9d222aac",
         "normalized_rect": [
-          0.084375,
-          0.7649739583333334,
-          0.0875,
-          0.10724826388888889
+          0.05625,
+          0.6782828282828284,
+          0.11875,
+          0.19949494949494948
         ],
         "ground_anchor": [
-          0.128125,
-          0.8722222222222222
+          0.115625,
+          0.8777777777777778
         ],
         "modulate": [
           1,
@@ -10542,46 +10635,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.prompt.txt",
-        "prompt_sha256": "17707b04f329b7618957a02372b48845c85331d1c67ba33d6986c14ccd3d72b3",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-0bb09f3b-6caf-4d91-b86e-19a3af10d5ef.png",
-        "shared_art_from": "building_mireclaw_bog_oracle_nest"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t6_1_upgrade": {
-        "asset_id": "faction_mireclaw_building_mireclaw_bog_oracle_nest",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.png",
-        "source_sha256": "3ad91b62a53bca660c00d09e65e6610f011e8f1145727b11c628d51fc47a33e3",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1_upgrade.png",
+        "source_sha256": "7439029c2ca86b864d3ce01b6c2c928a52ba420b5cd3516d2fe9a3e9ffd5effd",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1_upgrade.prompt.txt",
+        "prompt_sha256": "7aa9a38818d8c06b20831c71ab36870864b63c6e7cd1bf681f340269f1729363",
+        "generation_output": "exec-db1a7bb1-6338-49ae-97d2-ec76fa1510e8.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t6_1_upgrade",
         "trim_box": [
-          59,
-          14,
-          1524,
-          1024
+          0,
+          18,
+          1254,
+          1228
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.png",
-        "trimmed_sha256": "58ad46b9087b9e58e04dcbb3f3b25daa7443230c1ec8b72ab80223f1545d7027",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.png",
-        "runtime_sha256": "61f6bb0cdff8d693121586b6461625d6dbc6d215aa174dde09d265fbb8a10c56",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1_upgrade.png",
+        "runtime_sha256": "83f5238bee3cd024c9be6df94c7ee1297f1b14cb95f4f59c923598c76ec9f99c",
         "runtime_size": [
           512,
-          353
+          494
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t6_1_upgrade.png",
+        "icon_sha256": "cbca38a634858ad06438949164ec397c677db3e8bc5c1dec283d2800034f3e2c",
         "normalized_rect": [
-          0.084375,
-          0.7649739583333334,
-          0.0875,
-          0.10724826388888889
+          0.046875,
+          0.6419103313840155,
+          0.1375,
+          0.2358674463937622
         ],
         "ground_anchor": [
-          0.128125,
-          0.8722222222222222
+          0.115625,
+          0.8777777777777778
         ],
         "modulate": [
           1,
@@ -10590,46 +10686,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_bog_oracle_nest.prompt.txt",
-        "prompt_sha256": "17707b04f329b7618957a02372b48845c85331d1c67ba33d6986c14ccd3d72b3",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-0bb09f3b-6caf-4d91-b86e-19a3af10d5ef.png",
-        "shared_art_from": "building_mireclaw_bog_oracle_nest"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t7_1": {
-        "asset_id": "faction_mireclaw_building_mireclaw_boneboom_palisade",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.png",
-        "source_sha256": "d95a14c73f90dbfd1375dc8ebebd4cb9165adbc12899fc05f7acd2aaef422c3b",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1.png",
+        "source_sha256": "16aaf00642f23ccba9ba62be0be3398f721aab62d57d554e16c6735782362839",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1.prompt.txt",
+        "prompt_sha256": "ad0ede70b434a26d5f97d4e49d2ddd586b4932228ce3ade26fa35bb3e4510d23",
+        "generation_output": "exec-7271a972-4efa-45d6-84bb-1659673d3430.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t7_1",
         "trim_box": [
-          23,
           0,
-          1520,
-          1024
+          0,
+          1246,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.png",
-        "trimmed_sha256": "cbf9254e9d03fcf916d87ce6fa903fb75933d4c84d7b8bcd1961de2327ecbd4c",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.png",
-        "runtime_sha256": "d8bef53c21a52d3fc4efc9ff212772238add7c772e121c8f40209a9121ab0f7b",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1.png",
+        "runtime_sha256": "db4ea963b2fa1c88d646fc6a2dfd7e37a21185224cc257a1eae72208bf5acaca",
         "runtime_size": [
-          512,
-          350
+          509,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1.png",
+        "icon_sha256": "09142b160c92a342c8062d5a78089cee4fc6f12ca5c8e822246323524d1f4cf3",
         "normalized_rect": [
-          0.1859375,
-          0.7559678819444444,
-          0.109375,
-          0.13292100694444445
+          0.1828125,
+          0.6652042090244337,
+          0.128125,
+          0.2292402354200107
         ],
         "ground_anchor": [
-          0.240625,
-          0.8888888888888888
+          0.246875,
+          0.8944444444444445
         ],
         "modulate": [
           1,
@@ -10638,90 +10737,96 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.prompt.txt",
-        "prompt_sha256": "8cae1abab8268c2dbdb71401b3a4af789e5cec20a47fe2048a102ff7cc54e1da",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-9f5dd28d-f111-459c-bec5-817be1c5face.png",
-        "shared_art_from": "building_mireclaw_boneboom_palisade"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_t7_1_upgrade": {
-        "asset_id": "faction_mireclaw_building_mireclaw_boneboom_palisade",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.png",
-        "source_sha256": "d95a14c73f90dbfd1375dc8ebebd4cb9165adbc12899fc05f7acd2aaef422c3b",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_upgrade.png",
+        "source_sha256": "4939c02b0923c76bad7a1699a9f87b9114dc20db2bd55312c8e474d60468500d",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
-        "trim_box": [
-          23,
-          0,
-          1520,
-          1024
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_upgrade.prompt.txt",
+        "prompt_sha256": "0d48101b9b4239bbf968553cd9eebbc175c8246189d3e963279da356993b0981",
+        "generation_output": "exec-54236e90-f704-4b2a-a143-2d58f1f90d9e.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1.png"
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.png",
-        "trimmed_sha256": "cbf9254e9d03fcf916d87ce6fa903fb75933d4c84d7b8bcd1961de2327ecbd4c",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.png",
-        "runtime_sha256": "d8bef53c21a52d3fc4efc9ff212772238add7c772e121c8f40209a9121ab0f7b",
-        "runtime_size": [
-          512,
-          350
-        ],
-        "normalized_rect": [
-          0.1859375,
-          0.7559678819444444,
-          0.109375,
-          0.13292100694444445
-        ],
-        "ground_anchor": [
-          0.240625,
-          0.8888888888888888
-        ],
-        "modulate": [
-          1,
-          1,
-          1,
-          1
-        ],
-        "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_boneboom_palisade.prompt.txt",
-        "prompt_sha256": "8cae1abab8268c2dbdb71401b3a4af789e5cec20a47fe2048a102ff7cc54e1da",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-9f5dd28d-f111-459c-bec5-817be1c5face.png",
-        "shared_art_from": "building_mireclaw_boneboom_palisade"
-      },
-      "building_dev_mireclaw_unique_1": {
-        "asset_id": "faction_mireclaw_building_smugglers_flotilla",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_smugglers_flotilla.png",
-        "source_sha256": "b270b7e5fa0df5b64217b374f406f69d819e1d16b38097a75dbbfd51990411b5",
-        "source_size": [
-          1536,
-          1024
-        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_t7_1_upgrade",
         "trim_box": [
           0,
           7,
-          1524,
-          1024
+          1230,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_smugglers_flotilla.png",
-        "trimmed_sha256": "25662c7ec5ecd2c3c257e5e3286f6a96731ded5dca85dddc59381b0c009bd634",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_smugglers_flotilla.png",
-        "runtime_sha256": "b9564ccc0c1765706106c3f173de1656b3441610aa504eca9846eed52974e647",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_upgrade.png",
+        "runtime_sha256": "bd503a90149d657433eef2c7b7e67a61a4219528b3a435bbc2bffd8a2c572af6",
         "runtime_size": [
-          512,
-          342
+          505,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_t7_1_upgrade.png",
+        "icon_sha256": "7c6769ee548c3bfcb7c7e52ad58c6554b6775ab548bf5ad1a67e7e1f8014c856",
         "normalized_rect": [
-          0.465625,
-          0.7756944444444445,
-          0.1,
-          0.11875
+          0.1703125,
+          0.6184598012646794,
+          0.153125,
+          0.2759846431797651
+        ],
+        "ground_anchor": [
+          0.246875,
+          0.8944444444444445
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
+      },
+      "building_dev_mireclaw_unique_1": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_1.png",
+        "source_sha256": "4d14c587235e1b078497d2a28bcf733c4c1cfc262ebfed8f230c1b697afad3d4",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_1.prompt.txt",
+        "prompt_sha256": "97d61fc14f0efcc088ed8f0368a06be3f9b2e55e070c320ffd170b7deefaad45",
+        "generation_output": "exec-dc850cbf-36c1-4f20-8ffb-6b3e7edf70b1.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_unique_1",
+        "trim_box": [
+          0,
+          9,
+          1237,
+          1254
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_unique_1.png",
+        "runtime_sha256": "610105270160377cb7b6625c4facfbf8ed389d5a69b8aeda9b4eeb0f8d77d2ef",
+        "runtime_size": [
+          509,
+          512
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_unique_1.png",
+        "icon_sha256": "31aa66524b19b03d74ae03811161309f2c39ee211d60115a27cce5035686d1f0",
+        "normalized_rect": [
+          0.459375,
+          0.693150992544687,
+          0.1125,
+          0.20129345189975748
         ],
         "ground_anchor": [
           0.515625,
@@ -10734,42 +10839,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_smugglers_flotilla.prompt.txt",
-        "prompt_sha256": "b6fe904265898b2460ecf8bd56c52577ee9719b131f062e869c7d652c1e1c88a",
-        "curation": "Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-643f188a-3f54-4db0-a58b-51d045c75fbf.png",
-        "shared_art_from": "building_smugglers_flotilla"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_unique_2": {
-        "asset_id": "faction_mireclaw_building_mireclaw_fenbell_hunt_lodge",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_fenbell_hunt_lodge.png",
-        "source_sha256": "77fe84973b97216cedd1f5794b080fbc3e3aa9488703c868f55520415dc67510",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_2.png",
+        "source_sha256": "74c50b7d4ec4185769b058593edc41cb492f425218248346eaa05e47d55c4efa",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_2.prompt.txt",
+        "prompt_sha256": "c6b6857bb108fb68525ea06db8ea922a479e05df703ee9274000da443dd48e9c",
+        "generation_output": "exec-5f10ae78-aa4e-4e0b-bcd5-ba814ca7b83d.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_unique_2",
         "trim_box": [
           0,
-          0,
-          1518,
-          1024
+          47,
+          1227,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_mireclaw_fenbell_hunt_lodge.png",
-        "trimmed_sha256": "bcc194370122de36b9bc8ce0d13cf285b3b8610d81d4e944bfa0f294dcc14fe1",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_mireclaw_fenbell_hunt_lodge.png",
-        "runtime_sha256": "2dc686ced43cad17dcba902cdf1c8dde4b4da1d938bff8ecc1ff662954672030",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_unique_2.png",
+        "runtime_sha256": "6838a0ac65c4fcd4487d7116506b168a47449025b578c9b823d5d681be008aab",
         "runtime_size": [
           512,
-          345
+          504
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_unique_2.png",
+        "icon_sha256": "e62db80bec021874c32e785f15494b9a843e74cf596697f41aabe2d3c1826af7",
         "normalized_rect": [
-          0.596875,
-          0.8190972222222223,
-          0.1,
-          0.11979166666666667
+          0.584375,
+          0.7202888707778684,
+          0.125,
+          0.21860001811102056
         ],
         "ground_anchor": [
           0.646875,
@@ -10782,42 +10890,45 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_mireclaw_fenbell_hunt_lodge.prompt.txt",
-        "prompt_sha256": "a9ea0f7ec9f5d35cdebd49b4afdb93b471efd207941829772813c0659332b168",
-        "curation": "Original built-in text-only RGBA paintings for the complete Duskfen faction-chain batch. Preserve generated alpha, wet timber/reed palette, camera and exact Dominion/Court site. The first referenced Court edit had an opaque checkerboard and was rejected; the accepted Court uses the documented original-house text description. Actual paid progression, visual/input/save and platform acceptance are separate in the art-repair report.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-922e0fdf-7812-42a0-9429-fff09b4b84f6.png",
-        "shared_art_from": "building_mireclaw_fenbell_hunt_lodge"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_mireclaw_unique_3": {
-        "asset_id": "faction_mireclaw_building_floodtide_forge",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_floodtide_forge.png",
-        "source_sha256": "af73753d4ef8ca189bc6b28d46111b4a7fd8561dbb4edecf91cab0c21becff59",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_3.png",
+        "source_sha256": "ddec38883a38e687ac2b578fe0cb33869e640d15da5fb24d038740aa4141e804",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_mireclaw_unique_3.prompt.txt",
+        "prompt_sha256": "cf75ccdba740e1ec5fe7f967ebddc911b725d3fa4c23820a5e0fcfc1ddd767a0",
+        "generation_output": "exec-ae55787b-d5a4-4a87-9465-c3c42227a552.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_mireclaw_building_dev_mireclaw_unique_3",
         "trim_box": [
           0,
-          0,
-          1536,
-          1024
+          19,
+          1240,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_mireclaw/building_floodtide_forge.png",
-        "trimmed_sha256": "27d705de89576561b1f965dad5ed366621f3774d5ea7d3a14a93f4fce3575b58",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_mireclaw/building_floodtide_forge.png",
-        "runtime_sha256": "49e64ea029803557515208248a7ab07d6d99f90f80c34ec72b4ae1cfad0b46cc",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_mireclaw/building_dev_mireclaw_unique_3.png",
+        "runtime_sha256": "c4f5f6545cbe65ea40d6f8999a6aea5b2b04100375de49b762a6883c1208afed",
         "runtime_size": [
           512,
-          341
+          510
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_mireclaw/building_dev_mireclaw_unique_3.png",
+        "icon_sha256": "2b9bbb9e96dfc6205cb6332e47166c36e70578f44ccbbc1cd6dbef7fa26d0e4f",
         "normalized_rect": [
-          0.3296875,
-          0.7926974826388888,
-          0.090625,
-          0.10730251736111111
+          0.3203125,
+          0.7063396057347671,
+          0.109375,
+          0.19366039426523296
         ],
         "ground_anchor": [
           0.375,
@@ -10830,14 +10941,8 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_mireclaw/building_floodtide_forge.prompt.txt",
-        "prompt_sha256": "731c15660d94876cbea434b0e0a4f3430cee4defb85c84d6b40a241965c0399c",
-        "curation": "Original built-in text-only RGBA paintings for the six remaining Mireclaw variant identities. Masters inspected; preserve alpha, wet timber/reed architecture, sunset light and all earlier layers. Distinct generic/faction names remain separate art and gameplay identities. Actual seven-town composition, paid-authority fixtures, input/save and platform evidence are recorded separately in the art-repair report; fixtures are not earned full-match progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-3209afb2-f11b-42e0-8ba5-a429090c268c.png",
-        "shared_art_from": "building_floodtide_forge"
+        "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_town_hall": {
         "source_path": "res://art/towns/source/generated/overhaul/faction_mireclaw/building_town_hall.png",
