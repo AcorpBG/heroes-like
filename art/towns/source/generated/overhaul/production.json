@@ -1067,9 +1067,518 @@
         845
       ],
       "grounding": "Original Embercourt recruitment architecture occupies its authored terrace; the mutually exclusive branches and expanded upgrade share one ground anchor."
+    },
+    {
+      "id": "cleared_marsh",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/cleared_marsh.png",
+      "source_sha256": "420a86f84ab5d2dc91ad86e8b0c9842475049566008b2aaf1dc7c05f8f6cc41f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/cleared_marsh.prompt.txt",
+      "generation_output": "exec-bb4ca6de-5686-4a16-b70c-aae112b9ceb3.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_village.png"
+      ],
+      "kind": "backdrop",
+      "stage": "village"
+    },
+    {
+      "id": "building_town_hall",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_town_hall.png",
+      "source_sha256": "f48a4006b16df7e8b96dca466d244f39cef7c23537e5d4d478a908f3257878c8",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_town_hall.prompt.txt",
+      "generation_output": "exec-8d79daf4-93b3-484e-854e-cc3afc6209b6.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/cleared_marsh.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 230,
+      "ground_anchor": [
+        930,
+        510
+      ],
+      "grounding": "Council hall sits on the central raised earthen terrace, front stair meeting the boardwalk. All four stages retain the same entrance ground anchor."
+    },
+    {
+      "id": "building_dev_hall_2",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_2.png",
+      "source_sha256": "6cd117de7879f86aaf489d55aced3da014f044ed56394f3ee9cadad24f204cb7",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_2.prompt.txt",
+      "generation_output": "exec-a9e4ac2c-efd9-48ce-b416-83515764d6b7.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_town_hall.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 265,
+      "ground_anchor": [
+        930,
+        510
+      ],
+      "grounding": "Council hall sits on the central raised earthen terrace, front stair meeting the boardwalk. All four stages retain the same entrance ground anchor."
+    },
+    {
+      "id": "building_dev_hall_3",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png",
+      "source_sha256": "dd50aaba2642e213e6e0e46a12894cb1f2347bb112b46cc2bf7674a324b105ed",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.prompt.txt",
+      "generation_output": "exec-3ee4ba0b-f198-409f-9729-9b038faedc2c.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 285,
+      "ground_anchor": [
+        930,
+        510
+      ],
+      "grounding": "Council hall sits on the central raised earthen terrace, front stair meeting the boardwalk. All four stages retain the same entrance ground anchor."
+    },
+    {
+      "id": "building_dev_hall_4",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_4.png",
+      "source_sha256": "66c13ce375ecc9a3ce83a2b0505a0461b29746e8a4f47b45ea4c85f90854cc0e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_4.prompt.txt",
+      "generation_output": "exec-0eb06369-0483-45c7-bf7c-d2382cc9bb7c.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/references/hall_3_intermediate.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 325,
+      "ground_anchor": [
+        930,
+        510
+      ],
+      "grounding": "Council hall sits on the central raised earthen terrace, front stair meeting the boardwalk. All four stages retain the same entrance ground anchor."
+    },
+    {
+      "id": "building_dev_fort_1",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_1.png",
+      "source_sha256": "c3fb70fcdc2b154b35d1973901bd73ff2cb488854f4012ea5264bd58d7c1d31c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_1.prompt.txt",
+      "generation_output": "exec-a8b994b1-336e-48ae-994d-fffb795805a4.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "fort",
+      "visible_width": 170,
+      "ground_anchor": [
+        480,
+        415
+      ],
+      "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
+    },
+    {
+      "id": "building_dev_fort_2",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_2.png",
+      "source_sha256": "bcace1cadcc37211d2d16dd64bdab8055492bc1546b9bbac0539e34f038934ef",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_2.prompt.txt",
+      "generation_output": "exec-a3530fbc-f0d5-4960-84ed-a9e4f3055f97.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "fort",
+      "visible_width": 195,
+      "ground_anchor": [
+        480,
+        415
+      ],
+      "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
+    },
+    {
+      "id": "building_dev_fort_3",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_3.png",
+      "source_sha256": "e2a0891b2b07cdbab40be20ca3db3de8c5db43ba4e3f2183fd2a185edf983720",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_fort_3.prompt.txt",
+      "generation_output": "exec-d882d6e8-35cf-458f-ac59-65125d5497ab.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "fort",
+      "visible_width": 220,
+      "ground_anchor": [
+        480,
+        415
+      ],
+      "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
+    },
+    {
+      "id": "building_dev_guild_1",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_1.png",
+      "source_sha256": "fc431add2edaa560692da73faf787df8bef0c6b83c3835c81672c12d32d4213e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_1.prompt.txt",
+      "generation_output": "exec-35a5379a-fec2-430e-8b16-b812117e693b.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 100,
+      "ground_anchor": [
+        715,
+        405
+      ],
+      "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
+    },
+    {
+      "id": "building_dev_guild_2",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_2.png",
+      "source_sha256": "524ae10a025ffad1c534c89de8a597130ac1bed69f900c7edf4bb3a3be55d422",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_2.prompt.txt",
+      "generation_output": "exec-0c0b1b08-f759-464e-8015-c214046edff5.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 120,
+      "ground_anchor": [
+        715,
+        405
+      ],
+      "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
+    },
+    {
+      "id": "building_dev_guild_3",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_3.png",
+      "source_sha256": "11dd1348a8abe313a13c5382bdd77f683182a1023838832971a67a47ee4da9be",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_3.prompt.txt",
+      "generation_output": "exec-b8b59451-cbe4-4afa-9e91-994a9fff0e1b.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 140,
+      "ground_anchor": [
+        715,
+        405
+      ],
+      "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
+    },
+    {
+      "id": "building_dev_guild_4",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_4.png",
+      "source_sha256": "51163746b31df9cba377a2ac3bbbdb610a3ac255a05c0a390d6f466fe76e074c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_4.prompt.txt",
+      "generation_output": "exec-6b642613-bf36-4ebb-aee3-c55f8903f75a.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 160,
+      "ground_anchor": [
+        715,
+        405
+      ],
+      "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
+    },
+    {
+      "id": "building_dev_guild_5",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_5.png",
+      "source_sha256": "6111b85a2979440817443b8f54860d2b9fe0d7853f24648475a95bfed1ce85d9",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_guild_5.prompt.txt",
+      "generation_output": "exec-74899f47-563d-4de7-82fb-ccfee95c6539.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 185,
+      "ground_anchor": [
+        715,
+        405
+      ],
+      "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
+    },
+    {
+      "id": "building_market_square",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_market_square.png",
+      "source_sha256": "a28c2e0b6f8d08aa6356ce781e92f4819ffca7d2dfe5119214bf2cbdeb116ba1",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_market_square.prompt.txt",
+      "generation_output": "exec-8ca2dfde-19c9-4c84-8c42-0e64be938251.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "market",
+      "visible_width": 135,
+      "ground_anchor": [
+        300,
+        480
+      ],
+      "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_trade_exchange.png",
+      "source_sha256": "9f8e79d958a7631c404b7292e83da82b3550f01461a79418283f7098d20fb85c",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_trade_exchange.prompt.txt",
+      "generation_output": "exec-2a91a1f5-b457-4a10-ae76-61de00a27726.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "market",
+      "visible_width": 170,
+      "ground_anchor": [
+        300,
+        480
+      ],
+      "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_1.png",
+      "source_sha256": "a6dee2183fd3ab81ef136e2a2741d51608c2d0884ba2ef0ae64fd9a1e70ad989",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_1.prompt.txt",
+      "generation_output": "exec-27d5fb32-8701-4571-9ce8-4a47d1ea9326.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "storehouse",
+      "visible_width": 125,
+      "ground_anchor": [
+        1110,
+        395
+      ],
+      "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "faction_id": "faction_mireclaw",
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_2.png",
+      "source_sha256": "cb53f10a09d250833e323c31e38926720037fdbe1b65619253ceb955526acb7d",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/building_dev_storehouse_2.prompt.txt",
+      "generation_output": "exec-4fd0f5e3-5edd-4903-ae75-cf94dae8b319.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "storehouse",
+      "visible_width": 155,
+      "ground_anchor": [
+        1110,
+        395
+      ],
+      "grounding": "Building sits on an authored dry silt terrace of the Mireclaw settlement; short timber feet and door planks meet the earthen ground. Upgrades preserve the same ground anchor."
     }
   ],
   "existing_plot_placements": {
-    "faction_embercourt": {}
-  }
+    "faction_embercourt": {},
+    "faction_mireclaw": {
+      "building_wayfarers_hall": {
+        "ground_anchor": [
+          1310,
+          460
+        ],
+        "visible_width": 175,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "building_dev_growth_1": {
+        "ground_anchor": [
+          180,
+          575
+        ],
+        "visible_width": 115,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "building_dev_growth_2": {
+        "ground_anchor": [
+          480,
+          555
+        ],
+        "visible_width": 135,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "building_dev_growth_3": {
+        "ground_anchor": [
+          700,
+          545
+        ],
+        "visible_width": 125,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "building_dev_training_attack": {
+        "ground_anchor": [
+          1130,
+          550
+        ],
+        "visible_width": 115,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "building_dev_training_defense": {
+        "ground_anchor": [
+          1380,
+          610
+        ],
+        "visible_width": 140,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "building_dev_training_experience": {
+        "ground_anchor": [
+          240,
+          675
+        ],
+        "visible_width": 130,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "building_dev_artifact_exchange": {
+        "ground_anchor": [
+          485,
+          700
+        ],
+        "visible_width": 125,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "mireclaw_t1": {
+        "ground_anchor": [
+          660,
+          665
+        ],
+        "visible_width": 125,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "mireclaw_t2": {
+        "ground_anchor": [
+          840,
+          630
+        ],
+        "visible_width": 140,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "mireclaw_t3": {
+        "ground_anchor": [
+          1000,
+          695
+        ],
+        "visible_width": 120,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "mireclaw_t4": {
+        "ground_anchor": [
+          1180,
+          710
+        ],
+        "visible_width": 125,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "mireclaw_t5": {
+        "ground_anchor": [
+          1340,
+          745
+        ],
+        "visible_width": 120,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "mireclaw_t6_1": {
+        "ground_anchor": [
+          205,
+          785
+        ],
+        "visible_width": 140,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "mireclaw_t7_1": {
+        "ground_anchor": [
+          385,
+          800
+        ],
+        "visible_width": 175,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "building_dev_mireclaw_unique_1": {
+        "ground_anchor": [
+          825,
+          805
+        ],
+        "visible_width": 160,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "building_dev_mireclaw_unique_2": {
+        "ground_anchor": [
+          1035,
+          845
+        ],
+        "visible_width": 160,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      },
+      "building_dev_mireclaw_unique_3": {
+        "ground_anchor": [
+          600,
+          810
+        ],
+        "visible_width": 145,
+        "grounding": "Authored placement on a dry marsh terrace or its boardwalk edge; retained painting pending its distinct overhaul replacement."
+      }
+    }
+  },
+  "reference_assets": [
+    {
+      "source_path": "art/towns/source/generated/overhaul/faction_mireclaw/references/hall_3_intermediate.png",
+      "source_sha256": "7ae94ff796ae76c963fef12c7d30a6ae6438912f1564fec2dd5b3f9296120cb2",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_mireclaw/references/hall_3_intermediate.prompt.txt",
+      "generation_output": "exec-d590c64f-d2e6-430d-ad7b-5ebf46c2c931.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_mireclaw/building_dev_hall_2.png"
+      ],
+      "purpose": "Intermediate hall study used as the original visual reference for hall stage 4; retained for provenance, not bound as a game building."
+    }
+  ]
 }
