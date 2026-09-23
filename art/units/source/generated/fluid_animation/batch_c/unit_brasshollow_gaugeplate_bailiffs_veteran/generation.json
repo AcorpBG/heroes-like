@@ -1,0 +1,96 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/idle_v1.png",
+      "sha256": "67474c9e4312375840ba96dbd2808b8dd313fea8a9e78046b32f33ffd31d9b8c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "73f1d1bbe231e7cd9f611c8edea17f00b323ac5fb6b96dc16117321b97070fbd",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-246de44a-50af-4094-9930-dd547172e4db.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/identity_reference.png",
+          "sha256": "622eaf3dfef9579b29e73252b31fdf5b9fa6a0c89dc7acbbad2bbf0067a48ffb"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/attack_v1.png",
+      "sha256": "301154dbdbfb6f8459d86ef6980067af3af8fd07d1b890a0c97d35c4e018eeb9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "9defbb217a10851af98ee4a647eb3b4ccd30c228c528c32f414356a1d5745d3f",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-eaf7009a-38fd-4d78-8310-af02e387a2e9.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/identity_reference.png",
+          "sha256": "622eaf3dfef9579b29e73252b31fdf5b9fa6a0c89dc7acbbad2bbf0067a48ffb"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/reactions_v1.png",
+      "sha256": "27ad132ca8f25a56f2b0cc53b7fe7f21d05941d2a70b2ef4d4b0a3ae1c11fdc0",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "bf3dd4ccd77db5571c2c8dd7d1f1e9499aae279dfa108936445d43d40784074b",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-590d2b5c-0dd6-4211-9ce8-ab4fda2bcb14.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/identity_reference.png",
+          "sha256": "622eaf3dfef9579b29e73252b31fdf5b9fa6a0c89dc7acbbad2bbf0067a48ffb"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/cast_v1.png",
+      "sha256": "cb50049a4554ac4697322fad0b8f9bdcb44f74f3615e937b45cbe85615092826",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "8aa0ed0805e1444b4ee44715aa96e310a6ba652b5b75dc33321e8e5b7523c44e",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-4f82b108-e779-4a9b-9303-536c215968ce.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/identity_reference.png",
+          "sha256": "622eaf3dfef9579b29e73252b31fdf5b9fa6a0c89dc7acbbad2bbf0067a48ffb"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/death_v1.png",
+      "sha256": "4e07a773f8633b47f6a5f74fac45e3c381fe532422bacaed5260dfad7d4f93e0",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "f2269553a32b22e0debe69527a4db69da95d7393e8253e2592feb5bfaff24808",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-7045b675-5117-4ed5-b633-ffa48d235b92.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/identity_reference.png",
+          "sha256": "622eaf3dfef9579b29e73252b31fdf5b9fa6a0c89dc7acbbad2bbf0067a48ffb"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/move_v1.png",
+      "sha256": "8a4b11ee19fa7de42637eefc69004a22682ec3fb318d18ba8096ac298d95c9db",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "ecfbf059018d843852689a8568d2d717189618ff364f7af87eee3398909d4511",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-09fd5887-edce-4ba8-9ab6-763c15471c84.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/identity_reference.png",
+          "sha256": "622eaf3dfef9579b29e73252b31fdf5b9fa6a0c89dc7acbbad2bbf0067a48ffb"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/move_far_v1.png",
+      "sha256": "311aa1ddcb9c0a2119b2e066948a97a56fb65a953012fe55cc859ce382dbd198",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "1d811c9a371f66940110ef103e0aa7397674a390784f33794d45e4b79405146a",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-a9b95f61-2f19-4646-a047-59521926e024.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugeplate_bailiffs_veteran/identity_reference.png",
+          "sha256": "622eaf3dfef9579b29e73252b31fdf5b9fa6a0c89dc7acbbad2bbf0067a48ffb"
+        }
+      ]
+    }
+  ]
+}
