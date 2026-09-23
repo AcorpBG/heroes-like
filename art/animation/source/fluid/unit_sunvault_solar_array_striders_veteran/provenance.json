@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/idle_v1.png": "fc04843420ae852bff6433aba448373be3d6f8908f02d9798516137b999fff16",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/attack_v1.png": "6c31539a05afb97504ba357df8b8610dd21ce67b8a0e8c9fd2d5638c0edfb248",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/death_v1.png": "db8f63bbd82097fedee0b9ce39b318a308e3633cdf99bebb43637f3345972142",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/reactions_v1.png": "1173a4314ec2d816d1f37abcb7f18fbbeadc351479efe52c80763c52d627ed28",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/cast_v1.png": "b17d5a5c0aaabb29b646d61e75eca14b53ef6f1bb867df5e0867497de9d6efda",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/death_corrected_v1.png": "4b0dd4a9a39249c391bf7d410fd8ac988814a8ddb5195d5ce28bcf1c6797e686",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/move_tripod_v1.png": "041a2757308946050b8ef81b30c18d0d03f82093e9eee6986b1c769db342e0db"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Heliostat Pathfinders: 49 frames across seven clips reviewed at native Godot size. Lens-blade thrust/recovery, folding-array idle/support/brace, sequential nine-pose gait preserving the shipped three-foot silhouette, grounded mechanical collapse with corrected complete blade. Eight masters and rejected proposals preserved; no gameplay changes."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "e09cd6422894aa19834aa909135cf5c8c12df9895fa6c59f45ecd76d0664c22a",
+  "atlas_sha256": "c37e43bdb7203a8fa798527ef6a5526e91fbb42fa06d7d786b3503c15dacf5d7",
+  "texture_bytes_rgba": 19296000
+}
