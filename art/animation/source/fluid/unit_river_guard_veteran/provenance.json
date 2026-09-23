@@ -9,7 +9,9 @@
     "res://art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/attack_v2.png": "7e6a3c190e92b5f64a1e14baabce7372cca131f564cd31a25fba781635dc07f5",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/reactions_v1.png": "fb01f9f56d87ae32287090ba0a2c6b09405c14813697fa2efb4ee8571587b469",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/death_v1.png": "4f4fcaaae2dddccca7e57dc0f0025d0c3329f21f054c8a06d49ba71d6f6fd5a6",
-    "res://art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/support_v1.png": "a2aef00623d5c151be65371e3c5cd4ed2c707513355208bdabef60f1d5ec3d50"
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/support_v1.png": "a2aef00623d5c151be65371e3c5cd4ed2c707513355208bdabef60f1d5ec3d50",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v2.png": "25f6e4d0a73796482718f6523723da7a2290cb74c86ada59ac0f06e684524db4",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png": "8236ab24c06b12851f5c14f03e4aebf24584f8247376a80f48139f32a44d9f77"
   },
   "accepted_clips": [
     "idle",
@@ -17,13 +19,15 @@
     "hit",
     "defend",
     "death",
-    "cast"
+    "cast",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Reviewed source and Godot128/64 action phases: clear right-directed spear thrust with anticipation/recovery, shield recoil, dedicated guard, knees-to-ground collapse and final prone corpse, physical spear salute. Idle previously reviewed. Move remains explicitly unfinished."
+    "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
   },
-  "atlas_sha256": "ede295f91c17ab4448fe9ad9c1bd97a732821167d52bc13395ad9dd511ba8196",
-  "texture_bytes_rgba": 20407296,
-  "baseline_atlas_sha256": "410f73b1ee584cd20dc6bad9e5bc327aab82a68e2aef10d7df5ff1c81c0c810e"
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "410f73b1ee584cd20dc6bad9e5bc327aab82a68e2aef10d7df5ff1c81c0c810e",
+  "atlas_sha256": "29e4b235a1dedba74b9c1cdcdfbd2856a51b95e3150d9492d8326c91443c5278",
+  "texture_bytes_rgba": 23808512
 }

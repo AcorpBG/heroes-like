@@ -1,0 +1,83 @@
+[
+  {
+    "clip": "move",
+    "tool": "built-in image_gen",
+    "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v2.prompt.txt",
+    "prompt_sha256": "01b13324503d1a9d3b4ff92c95eb64bdc4f5baceb0233c0b5cc7b64281440e1a",
+    "reference": "art/units/source/curated/unit_ember_archer.png",
+    "reference_sha256": "d019d88e87184ac8b68c852444d4be3b1a7fbd54282c13aa61f78170b885ce83",
+    "master": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v2.png",
+    "master_sha256": "02e5863c9d03d273b2a060b0533bce20593c508a204f9506f4c04e211ce5c1f4",
+    "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccce-2711-7133-9769-7d380293a5ac/exec-047e5798-cdd0-4bbb-a9ed-00d091917df6.png",
+    "pose_reference": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_pose_reference.png",
+    "pose_reference_sha256": "10fd0a533a999cda9367d15df84f3552c4eba1588f37a6fd8df96d9a404886e7",
+    "pose_reference_lineage": "Reviewed original Weirshield eight-pose contact/inbetween sequence composed by fluid_art_a; copied as durable image-generation pose input."
+  },
+  {
+    "clip": "ranged",
+    "tool": "built-in image_gen",
+    "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_v1.prompt.txt",
+    "prompt_sha256": "7422a16d6fe75031baaa3d6747a97a971db322f7b8f99cbda3da98f0b7d9e097",
+    "reference": "art/units/source/curated/unit_ember_archer.png",
+    "reference_sha256": "d019d88e87184ac8b68c852444d4be3b1a7fbd54282c13aa61f78170b885ce83",
+    "master": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_v1.png",
+    "master_sha256": "6596c2e79e16ee0add460ce4be3bf45f51b93741bec29cfc1c18112795cd27d6",
+    "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccce-2711-7133-9769-7d380293a5ac/exec-b97b4fc3-d634-4d1f-ad01-6d3a88aad9e9.png"
+  },
+  {
+    "clip": "death",
+    "tool": "built-in image_gen",
+    "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_v1.prompt.txt",
+    "prompt_sha256": "c7279b573a77b2967dec9678468c498b9b07958a62bbab2cd99580f5e61a7c10",
+    "reference": "art/units/source/curated/unit_ember_archer.png",
+    "reference_sha256": "d019d88e87184ac8b68c852444d4be3b1a7fbd54282c13aa61f78170b885ce83",
+    "master": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_v1.png",
+    "master_sha256": "1c29c68a2af82dffb890c86548710b28cecc3170303561bcc91b512f3e87cf3d",
+    "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccce-2711-7133-9769-7d380293a5ac/exec-79805af6-d7e9-4396-b74a-0e1a1bfc8aed.png"
+  },
+  {
+    "clip": "attack",
+    "tool": "built-in image_gen",
+    "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_v1.prompt.txt",
+    "prompt_sha256": "024e5a5d9c0897db5b93d4e558ba2ca486b52c4ae60cec6faa2156a2f0012ca4",
+    "reference": "art/units/source/curated/unit_ember_archer.png",
+    "reference_sha256": "d019d88e87184ac8b68c852444d4be3b1a7fbd54282c13aa61f78170b885ce83",
+    "master": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_v1.png",
+    "master_sha256": "0ce17e1ddc917df64fa79c2258af608d50f3454b2b9ac62f884f3e7fde594438",
+    "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccce-2711-7133-9769-7d380293a5ac/exec-c7a9a2fa-bceb-46ad-b699-9348a906e306.png"
+  },
+  {
+    "clip": "cast",
+    "tool": "built-in image_gen",
+    "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.prompt.txt",
+    "prompt_sha256": "4000f7247e7e5378bd347e001c2524c8560745b233ecafd7448df48d513bd54c",
+    "reference": "art/units/source/curated/unit_ember_archer.png",
+    "reference_sha256": "d019d88e87184ac8b68c852444d4be3b1a7fbd54282c13aa61f78170b885ce83",
+    "master": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png",
+    "master_sha256": "fead6f294e78fdfaf188bf10d606109bbd96a71336f3751ee465a6ca5ac262aa",
+    "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccce-2711-7133-9769-7d380293a5ac/exec-240a1f4e-c3d8-410a-b48b-0afcc502e449.png"
+  },
+  {
+    "clip": "reactions",
+    "tool": "built-in image_gen",
+    "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.prompt.txt",
+    "prompt_sha256": "51ed830c14ea0be74b042bb6a3612d45841fcaff2a86edb9fede849e73357cbd",
+    "reference": "art/units/source/curated/unit_ember_archer.png",
+    "reference_sha256": "d019d88e87184ac8b68c852444d4be3b1a7fbd54282c13aa61f78170b885ce83",
+    "master": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png",
+    "master_sha256": "92bd62b952998e6243baaca69fb62224e0bff34e1c8745db653f308e02524f37",
+    "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccce-2711-7133-9769-7d380293a5ac/exec-a8452040-b525-4920-920f-d8640fc6e544.png"
+  },
+  {
+    "clip": "move_v1",
+    "tool": "built-in image_gen",
+    "status": "rejected_gait",
+    "reason": "same-leading-leg ambiguity through halves; replaced by newly painted skeleton-guided move_v2",
+    "master": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v1.png",
+    "master_sha256": "16add587bbefeb81f223c76390b379f5077cd162ebb8376f534f6e6cc0773e3d",
+    "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v1.prompt.txt",
+    "prompt_sha256": "3722d0ba638cdadea93d60285163b2d714587599480ef2b3cc175d4b62602182",
+    "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccce-2711-7133-9769-7d380293a5ac/exec-68ea6dd6-1fff-415c-8f64-037c19a00ba0.png",
+    "reference": "art/units/source/curated/unit_ember_archer.png"
+  }
+]

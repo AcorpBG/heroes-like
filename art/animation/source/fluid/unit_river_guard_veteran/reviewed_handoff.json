@@ -777,6 +777,164 @@
           ],
           "scale": 0.5,
           "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_00",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v2.png",
+          "rects": [
+            [
+              0,
+              0,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            545,
+            851
+          ],
+          "scale": 0.2925,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              502
+            ]
+          ],
+          "anchor": [
+            310,
+            492
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              502
+            ]
+          ],
+          "anchor": [
+            761,
+            492
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png",
+          "rects": [
+            [
+              1024,
+              0,
+              1536,
+              502
+            ]
+          ],
+          "anchor": [
+            1260,
+            492
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v2.png",
+          "rects": [
+            [
+              887,
+              0,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1237,
+            858
+          ],
+          "scale": 0.2925,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png",
+          "rects": [
+            [
+              0,
+              502,
+              512,
+              1024
+            ]
+          ],
+          "anchor": [
+            310,
+            991
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png",
+          "rects": [
+            [
+              512,
+              502,
+              1024,
+              1024
+            ]
+          ],
+          "anchor": [
+            761,
+            991
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png",
+          "rects": [
+            [
+              1024,
+              512,
+              1536,
+              1024
+            ],
+            [
+              1150,
+              502,
+              1210,
+              512
+            ]
+          ],
+          "anchor": [
+            1260,
+            991
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 8
         }
       ],
       "alpha_noise_cutoff": 8,
@@ -864,6 +1022,21 @@
           "loop": true,
           "static_frame": 0,
           "gesture_kind": "nonmagical_spear_salute"
+        },
+        "move": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 100,
+          "loop": true,
+          "static_frame": 0
         }
       },
       "accepted_clips": [
@@ -872,12 +1045,13 @@
         "hit",
         "defend",
         "death",
-        "cast"
+        "cast",
+        "move"
       ],
       "preserve_clips": [],
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Reviewed source and Godot128/64 action phases: clear right-directed spear thrust with anticipation/recovery, shield recoil, dedicated guard, knees-to-ground collapse and final prone corpse, physical spear salute. Idle previously reviewed. Move remains explicitly unfinished."
+        "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/idle_v1.png": 0.5,
@@ -885,9 +1059,12 @@
         "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/attack_v2.png": 0.58,
         "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/reactions_v1.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/death_v1.png": 0.55,
-        "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/support_v1.png": 0.5
+        "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/support_v1.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v2.png": 0.2925,
+        "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png": 0.5
       },
-      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image."
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "preserved_accepted_clips": []
     }
   ]
 }

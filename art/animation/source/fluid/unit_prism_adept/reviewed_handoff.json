@@ -1,0 +1,720 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_prism_adept",
+      "reference_height": 256,
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "name": "attack_00",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png",
+          "rects": [
+            [
+              136,
+              7,
+              459,
+              384
+            ]
+          ],
+          "anchor": [
+            285,
+            380
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png",
+          "rects": [
+            [
+              620,
+              9,
+              924,
+              384
+            ]
+          ],
+          "anchor": [
+            785,
+            378
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png",
+          "rects": [
+            [
+              135,
+              398,
+              460,
+              769
+            ]
+          ],
+          "anchor": [
+            285,
+            766
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png",
+          "rects": [
+            [
+              592,
+              411,
+              1003,
+              766
+            ]
+          ],
+          "anchor": [
+            785,
+            766
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png",
+          "rects": [
+            [
+              72,
+              796,
+              559,
+              1133
+            ]
+          ],
+          "anchor": [
+            260,
+            1130
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png",
+          "rects": [
+            [
+              588,
+              778,
+              976,
+              1133
+            ]
+          ],
+          "anchor": [
+            780,
+            1133
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png",
+          "rects": [
+            [
+              113,
+              1133,
+              456,
+              1513
+            ]
+          ],
+          "anchor": [
+            289,
+            1516
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png",
+          "rects": [
+            [
+              617,
+              1133,
+              940,
+              1517
+            ]
+          ],
+          "anchor": [
+            789,
+            1516
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_00",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png",
+          "rects": [
+            [
+              126,
+              13,
+              439,
+              390
+            ]
+          ],
+          "anchor": [
+            285,
+            386
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_01",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png",
+          "rects": [
+            [
+              590,
+              12,
+              959,
+              391
+            ]
+          ],
+          "anchor": [
+            765,
+            386
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_02",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png",
+          "rects": [
+            [
+              107,
+              399,
+              468,
+              772
+            ]
+          ],
+          "anchor": [
+            283,
+            769
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_03",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png",
+          "rects": [
+            [
+              566,
+              399,
+              989,
+              772
+            ]
+          ],
+          "anchor": [
+            765,
+            769
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_04",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png",
+          "rects": [
+            [
+              77,
+              775,
+              487,
+              1143
+            ]
+          ],
+          "anchor": [
+            269,
+            1140
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_05",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png",
+          "rects": [
+            [
+              584,
+              778,
+              980,
+              1143
+            ]
+          ],
+          "anchor": [
+            765,
+            1140
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_06",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png",
+          "rects": [
+            [
+              121,
+              1143,
+              471,
+              1516
+            ]
+          ],
+          "anchor": [
+            283,
+            1524
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_07",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png",
+          "rects": [
+            [
+              599,
+              1143,
+              926,
+              1516
+            ]
+          ],
+          "anchor": [
+            765,
+            1524
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_00",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/reactions_v1.png",
+          "rects": [
+            [
+              130,
+              10,
+              525,
+              402
+            ]
+          ],
+          "anchor": [
+            319,
+            399
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/reactions_v1.png",
+          "rects": [
+            [
+              595,
+              17,
+              966,
+              402
+            ]
+          ],
+          "anchor": [
+            774,
+            399
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/reactions_v1.png",
+          "rects": [
+            [
+              121,
+              402,
+              521,
+              799
+            ]
+          ],
+          "anchor": [
+            319,
+            797
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/reactions_v1.png",
+          "rects": [
+            [
+              571,
+              402,
+              958,
+              799
+            ]
+          ],
+          "anchor": [
+            774,
+            797
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_00",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/reactions_v1.png",
+          "rects": [
+            [
+              93,
+              799,
+              512,
+              1167
+            ]
+          ],
+          "anchor": [
+            304,
+            1166
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_01",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/reactions_v1.png",
+          "rects": [
+            [
+              578,
+              799,
+              977,
+              1168
+            ]
+          ],
+          "anchor": [
+            781,
+            1166
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_02",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/reactions_v1.png",
+          "rects": [
+            [
+              80,
+              1171,
+              480,
+              1515
+            ]
+          ],
+          "anchor": [
+            296,
+            1517
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_03",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/reactions_v1.png",
+          "rects": [
+            [
+              580,
+              1168,
+              942,
+              1514
+            ]
+          ],
+          "anchor": [
+            778,
+            1517
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_00",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.png",
+          "rects": [
+            [
+              155,
+              8,
+              465,
+              386
+            ]
+          ],
+          "anchor": [
+            295,
+            382
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.png",
+          "rects": [
+            [
+              631,
+              18,
+              931,
+              386
+            ]
+          ],
+          "anchor": [
+            770,
+            382
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.png",
+          "rects": [
+            [
+              163,
+              391,
+              442,
+              761
+            ]
+          ],
+          "anchor": [
+            295,
+            759
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.png",
+          "rects": [
+            [
+              636,
+              422,
+              909,
+              761
+            ]
+          ],
+          "anchor": [
+            770,
+            759
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.png",
+          "rects": [
+            [
+              164,
+              811,
+              425,
+              1135
+            ]
+          ],
+          "anchor": [
+            303,
+            1133
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.png",
+          "rects": [
+            [
+              639,
+              777,
+              925,
+              1135
+            ]
+          ],
+          "anchor": [
+            770,
+            1133
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.png",
+          "rects": [
+            [
+              155,
+              1135,
+              466,
+              1521
+            ]
+          ],
+          "anchor": [
+            295,
+            1518
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.png",
+          "rects": [
+            [
+              633,
+              1135,
+              948,
+              1522
+            ]
+          ],
+          "anchor": [
+            770,
+            1518
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "ranged": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 3
+        },
+        "cast": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "preserve_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "attack",
+        "ranged",
+        "hit",
+        "defend",
+        "cast",
+        "idle"
+      ],
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/move_v1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/reactions_v1.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/death_v2.png": 0.54,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/death_v1.png": 0.5
+      },
+      "source_scale_reason": "Common regular-sheet anatomy is 370px high versus existing 223px idle. Reaction sheet uses slightly larger armor volume. Death masters depict crouched/collapsed anatomy at higher drawing resolution; repaired source 2 is independently calibrated once for the whole image.",
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Reviewed native Godot phase sequences at battle scale; accepted articulated anatomy and action continuity. Corrected source crop contamination where needed. Only listed clips accepted; deferred movement or anatomy gaps remain unchanged."
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "stem": "move_contacts_v2",
+  "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb1-654e-7aa2-af06-8bdc2dae09d2\\exec-5d546b9f-f8b4-4e83-9694-49ee2dd72427.png",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v2.png",
+  "source_sha256": "f2e1d3e563c85c4ef2bd06e491a1b4e4ac35066d3fc451a4f429a3db43692013",
+  "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v2.prompt.txt",
+  "prompt_sha256": "791fb95df4be353ec5c46a061fdcbe9dc1cccb9e6566792968ac1faa1c13a153",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v2.png",
+      "sha256": "25f6e4d0a73796482718f6523723da7a2290cb74c86ada59ac0f06e684524db4"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reference.png",
+      "sha256": "396c2cfbf51ef76ff311d1b17f7ee267ee6259076bf43d62adb83f2eca8a3690"
+    }
+  ],
+  "review_status": "rejected_guard_kneecap_leak"
+}

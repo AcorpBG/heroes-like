@@ -56,6 +56,91 @@
       "reference_sha256": "65b539dd7ce63fdf410f3d9ce5466c20753664b3d760d8e91b6da0568eacf98b",
       "tool": "built-in image_gen",
       "processing": "Extract original connected alpha component; discard alpha <= 8 background only. No synthesized/interpolated/warped poses."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_contacts_v1.png",
+      "master_sha256": "936b43528800e98e2cc189b47aecdf08138eaa02ff8e64263b3313c914f9b625",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_contacts_v1.prompt.txt",
+      "prompt_sha256": "3f30f1a7cda1fcd911512b4a544669550ba0b79a215514987a27edf7c255072f",
+      "tool": "built-in image_gen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-0f2bbb70-ecb4-40a4-9e1a-18d4ef3bba86.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_contacts_v1.png",
+          "sha256": "fc7df9889bab10aa87e0753eaa49bf5d4aeff63e716a475fc9fd131ab5f5a556"
+        },
+        {
+          "path": "art/units/source/curated/unit_thornwake_thornwhip_carriers.png",
+          "sha256": "65b539dd7ce63fdf410f3d9ce5466c20753664b3d760d8e91b6da0568eacf98b"
+        }
+      ],
+      "processing": "Original alpha component crop only, alpha<=8 removed; anatomy unchanged."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1.png",
+      "master_sha256": "d07f2a060cb9e6d06abf3bc536758520a7e9a07bfba3dcffe46a418803937ff4",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1.prompt.txt",
+      "prompt_sha256": "5e905c5603cfaa1d50e3b09845a49398e482da954d56f7f4c583fb0f1b6e5cd7",
+      "tool": "built-in image_gen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-7a58f514-d0e4-418c-b0cf-7cc2471ff4e9.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_reference_a.png",
+          "sha256": "044f8fb8b51aafb2a134a211ca8d6e0b54f60daa0da8a6b8d66a991e48985ea0"
+        }
+      ],
+      "processing": "Original alpha component crop only, alpha<=8 removed; anatomy unchanged."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1.png",
+      "master_sha256": "38c3dbf5bfd10c2b50927815903f5c9fe1d30209c2b36cb179e330efe9d61e9d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1.prompt.txt",
+      "prompt_sha256": "f01070c2b81271d946e456d133bb8ae71b5c8aef23c75e0f0ea74d19a839ebcf",
+      "tool": "built-in image_gen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-51d1332f-7ec3-4539-acf5-ec994203ff42.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_reference_b.png",
+          "sha256": "8c542f333ffab626674e1abaff8b7b56de13fea9458f24e71a9d926f43ef2e64"
+        }
+      ],
+      "processing": "Original alpha component crop only, alpha<=8 removed; anatomy unchanged."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v1.png",
+      "master_sha256": "2bdf199167bb625318bf6d37974797bda38001ca06ac53c0ad19a1017d1921a4",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v1.prompt.txt",
+      "prompt_sha256": "a1d0b832cbaeb5c4567f2000c55c88001b57c735c914b0e753f76fdd0d0833b3",
+      "reference": "art/units/source/curated/unit_thornwake_thornwhip_carriers.png",
+      "reference_sha256": "65b539dd7ce63fdf410f3d9ce5466c20753664b3d760d8e91b6da0568eacf98b",
+      "tool": "built-in image_gen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-79989b90-82a5-4223-9a19-8c10da0e44b5.png",
+      "processing": "Original connected alpha crop only, alpha<=8 removal."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2.png",
+      "master_sha256": "11fb08d10e917faf4c7b1c5013a9666e0f92c7a676110b61ccdb4865cc6eb382",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2.prompt.txt",
+      "prompt_sha256": "ce542e8b6b1d39b92f956c78e6c057284da8e5625c812b25b53342ca7473a554",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v1.png",
+      "reference_sha256": "2bdf199167bb625318bf6d37974797bda38001ca06ac53c0ad19a1017d1921a4",
+      "tool": "built-in image_gen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-853695a3-7db7-4f11-a018-9a47736317cf.png",
+      "processing": "Original connected alpha crop only, alpha<=8 removal."
     }
-  ]
+  ],
+  "rejected_sources": [
+    {
+      "master": "move_v1.png",
+      "reason": "Repeated leading leg in both halfcycles; retained original source, not current movement handoff."
+    },
+    {
+      "master": "idle_v1.png",
+      "reason": "Bottom boot soles clipped at canvas boundary; repaired by generated idle_v2."
+    }
+  ],
+  "move_reference_crops": {
+    "source": "move_contacts_v1.png",
+    "processing": "Exact left/right alpha bounding crops only"
+  }
 }

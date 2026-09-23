@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/idle_v2.png": "532b5c8662be1eef72c8fad9c60e92cf5a1e216eb0d6ed7bacb2c8a61f4c89a7",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/attack_v1.png": "3a1c093dba06e6862b27993b85d0cbfa638d074ec2b6137e189b974ad9de771b",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/ranged_v2.png": "d6a19d24778811f20fc91c5917f58c85e8934c777e13861d92a33267454feadf",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/reactions_v1.png": "a90f7f3d6ab821b9dd458d67c0962e0fd29cb0a4f019656c96aade00d710b9ca",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/death_v1.png": "f29159e0aca807b0720e8a81cd0f5d111de34a4da54f039e03647ef9ecf1cbfe",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_v2.png": "eb1107ef0d501f6e378e9d9d5d4703ad52ee2052fa60a5ca2b75313e5a67c131",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_hand_v3.png": "75cc4e061be5239e7a66648216291131107df3fd5f683e969231bb9808cf9fac"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "4c3c6db6816ab07af10a4bcbe7232510dde7706b55cf6f571db100382bca6f79",
+  "atlas_sha256": "03a115518443696737d620ecfa5c7d223f671678e24fd5a03d4dd17118423722",
+  "texture_bytes_rgba": 16859136
+}

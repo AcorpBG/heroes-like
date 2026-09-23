@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_v1.png",
+      "sha256": "827dead2dcf78952355ea473e19a010da7597a8652e2fc7be770c5a610f594d1",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_v1.prompt.txt",
+      "prompt_sha256": "0926f00fd40ce9234e23b761740feae8b4482e20dfefb4291e7d16925ca4a3f9",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/curated/unit_veilmourn_dreamwake_foganchor_colossi.png",
+      "reference_sha256": "1f76cc5f8c540485ae285b9d6534b7f16bafd0bd2e5f97a2b3211abe86dde905",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-66997f89-2068-46cf-9e73-1fb69effe2c9.png",
+      "tool": "image_gen.imagegen",
+      "status": "rejected_same_leading_leg"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_v2.png",
+      "sha256": "c6a1b95d6046eafc3524de0951290bff4be1e0a97496cf79becc2f4a07ad2747",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_v2.prompt.txt",
+      "prompt_sha256": "2cfaaecf8b0e72cc6e22df03ffd38ddc53907474b26d7509364dabeb557cd26b",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_v1.png",
+      "reference_sha256": "827dead2dcf78952355ea473e19a010da7597a8652e2fc7be770c5a610f594d1",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-54a4c984-74f2-4dcc-886a-2aa40ecdc2fb.png",
+      "tool": "image_gen.imagegen",
+      "status": "rejected_same_leading_leg"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/attack_v1.png",
+      "sha256": "f1983bf51eb1618684908eeb94de3b9f1e4bc2153a3bccdb93afa00ca39cac06",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/attack_v1.prompt.txt",
+      "prompt_sha256": "0f4761a1189a1a3f554428d58728acdcc0d4d2356aa2df3bd0bc3063fba1f744",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/curated/unit_veilmourn_dreamwake_foganchor_colossi.png",
+      "reference_sha256": "1f76cc5f8c540485ae285b9d6534b7f16bafd0bd2e5f97a2b3211abe86dde905",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-1a291fbe-793b-469d-85b1-7671147efc57.png",
+      "tool": "image_gen.imagegen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/reactions_v1.png",
+      "sha256": "0a4779b4b06626381c465b6cfc18b0d83d679b30bc9f10ee847422e8025990d2",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/reactions_v1.prompt.txt",
+      "prompt_sha256": "327e8a0d0402ded83e3a3dc3437b856e46dedfbb6887b6a0f7dfd0b4373290d5",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/curated/unit_veilmourn_dreamwake_foganchor_colossi.png",
+      "reference_sha256": "1f76cc5f8c540485ae285b9d6534b7f16bafd0bd2e5f97a2b3211abe86dde905",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-41b8fb82-54a7-46e8-812d-bf8563048b99.png",
+      "tool": "image_gen.imagegen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/death_v1.png",
+      "sha256": "5758c013466451fa1000059360804f60cd6cdabfecd1541c045a2004d9313312",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/death_v1.prompt.txt",
+      "prompt_sha256": "7a2e01f5340e6cbcc556d79b8506a4941b296c2e3958a6678b897c762e22c528",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/curated/unit_veilmourn_dreamwake_foganchor_colossi.png",
+      "reference_sha256": "1f76cc5f8c540485ae285b9d6534b7f16bafd0bd2e5f97a2b3211abe86dde905",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-f5d1dbcd-b850-4ebd-bbbd-7305a7b1ef71.png",
+      "tool": "image_gen.imagegen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/cast_v1.png",
+      "sha256": "dcc71ebcc7d7e9d4807ec3b79bc7e1cfed16dc2127dcf5c53f7548dfc928fdc0",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/cast_v1.prompt.txt",
+      "prompt_sha256": "bcd58037eda70e94dc420be3e48d98f64ec04af23e2b8bbd59c588f3f584bcf9",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/curated/unit_veilmourn_dreamwake_foganchor_colossi.png",
+      "reference_sha256": "1f76cc5f8c540485ae285b9d6534b7f16bafd0bd2e5f97a2b3211abe86dde905",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-d844685d-5f88-4d60-b6c3-1fda5386b809.png",
+      "tool": "image_gen.imagegen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_contacts_v1.png",
+      "sha256": "fc7df9889bab10aa87e0753eaa49bf5d4aeff63e716a475fc9fd131ab5f5a556",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_contacts_v1.prompt.txt",
+      "prompt_sha256": "0d776b74e66320924207894ad65c33b42fa088bd371137e934875ee90e88def1",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/curated/unit_veilmourn_dreamwake_foganchor_colossi.png",
+      "reference_sha256": "1f76cc5f8c540485ae285b9d6534b7f16bafd0bd2e5f97a2b3211abe86dde905",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-275cf636-8536-4dd7-8d06-35b873f74f6d.png",
+      "tool": "image_gen.imagegen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_inbetweens_v1.png",
+      "sha256": "81d84b05a4ff15d890949ec7e2d582a62689feac753fa4151cd35fd62ebd170e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_inbetweens_v1.prompt.txt",
+      "prompt_sha256": "03ff4b90540cb64d1d7fb2604fd9f2e32be5f548a8df1fda223f286c18ca6450",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_contacts_v1.png",
+      "reference_sha256": "fc7df9889bab10aa87e0753eaa49bf5d4aeff63e716a475fc9fd131ab5f5a556",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-4b6d168d-47b2-456e-8837-0225ba85fdcc.png",
+      "tool": "image_gen.imagegen",
+      "status": "pending_visual_review"
+    }
+  ]
+}

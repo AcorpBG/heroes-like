@@ -1,0 +1,31 @@
+{
+  "unit_id": "unit_embercourt_amberweir_lockpike_wardens",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_lockpike_wardens/idle_v1.png": "2abf236012168bead3aa9675cbeea5af173150fe452367eb17ee61527f8dcee3",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_lockpike_wardens/move_v4.png": "315795af57292786a54ae3f920e7eb7a4163bd1d2b16389c00d99f03c73fa645",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_lockpike_wardens/attack_v1.png": "21648ce29c1260953c487be37d1b9385c5586598e9cc4f9410c93c7068e8082f",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_lockpike_wardens/reactions_v1.png": "adac3b77e733edd82879e2df9e26f3918e4c3f4ac8e7e4b128bed02a773e167b",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_lockpike_wardens/death_v1.png": "f709589d971d64e39d7d4f6816d8db56c53e9a9f80fb170d4a99fe8a623e928b",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_amberweir_lockpike_wardens/cast_v1.png": "d497e9164c4c00577f742dcdf985b3f3e0405bd8aadab312410925ac5ebd56a1"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "6edd086ef54ad86a154442555d5ab9e4c139a139c98eaac153cb63699f36e1b4",
+  "atlas_sha256": "f90cfa37c022e5f02f8f189cb56714e9c78bb29e6f5802764326242ca3d9aa23",
+  "texture_bytes_rgba": 19041792
+}

@@ -1,0 +1,58 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_00.png": "73df279a72f33da6cc5c2e1e8a62ff37e2fdea633bc598d83eef75bbb6393f88",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_01.png": "2781f37d1ddb1bbdd96961672224af76df3f4b53ba5182aa9166b52c0c17c6c1",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_02.png": "7cf9b5f97b46a5fc03ad530f1df059428c9cf991c6a0a6e4e89f862c83280670",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_03.png": "369da072a18209dae7a42337c76588e6ffa9aa53d4f29055784b1c19967b998a",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_04.png": "c320e7b165ddd9d0637811d5352af82da1844fd02fda87f890b0e6c172d3093d",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_05.png": "8303821e2135be778572d82d7ca472d07beae0bafad650ded77a9d80fa4d2243",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_06.png": "4a082f37e0416ef6202677811ea64b6035887dbb21e86ed810bf8e3665ab832d",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_07.png": "52df5ae64f28a231a6fb0480c0266dfd6ca6aa8b2cfbecd7c3a65023a1fb889b",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_00.png": "235b45c487f1c159216b68f77132ac15173a0d3f444a81539cccaf16ebdbfcde",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_01.png": "679d5ada86ac22efeaaea721902326d21065648556d6dd2103e6b86528d7b52c",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_02.png": "d6f5b3c37aaf3b297349afcebc0acc7e68cf93d87f54dab2d4333a66c4573193",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_03.png": "d77f226901d241515a46da0268e3eb6b512c8eac21980718c687ea03ce156290",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_04.png": "fbf40a87c7224735f7223f68e7690ebad3152ad3c163de48096aa1ff0cd5b0c7",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_05.png": "c3fb19aa3e5f1729858485a5ac39d2512c791c83ba09c4c4123d2d3a9558e6f0",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_06.png": "a519a1312fa5196e442c2309774849af59de974f958e313a523ec8e9f868d7b1",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_07.png": "8a1c4bcf9b458511a156ffeb56392083a588cca400c3f6770fd36911c7ab1a0b",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_00.png": "48b120684ac6737c5b06cb40b1fae4357bbc0117b8cc25c892995df2ab6f446d",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_01.png": "b448efc5d6759835806ab74acbbd76a2f9f5436d4bfb224468014ff55048ae4a",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_02.png": "5085926ff8434d40ec9f646df9fb2a23b06b2b8e7826c7c1ee46207f56633841",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_03.png": "3ac37fdb5845ee516cf6c65ddcb4a52e5e20d12b014b26b467941a06fee98128",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_04.png": "5a47fd74129becb0fd4c86c15221ff954c314b89c995f4ebdb82ab18889e196f",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_05.png": "03cb884c83e01e20ab7f07724d46390ca536c65ea65be5fec6f46725f5c2ed45",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_06.png": "2ca1d0d252bf7ae9d4f0ec3254fa8ba5bdb42a4726b26cfe770128e2002c6ece",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_07.png": "f5d39b67ae7bfdf4111b1f73ed711920adfbf5d19d7873512d005de9360a91dd",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_00.png": "5237a226218d05335589fc325d389270e1900101305f21c777b0cd46b6cf5392",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_01.png": "bde510d1d599c94ab0a601a325ed76cd532f4bc0c0a8dc9914a64da48dabc7ec",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_02.png": "2ce989c8f1370845cc0cf0520014b13e8d5ac83c7493f00288203723d36be0f0",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_03.png": "5a8446311687b082ad9ddfc7f7143c0f9bc5e50b91a8c0cf2b09c26ee3b8fd63",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_04.png": "c87e475f7215dbab1d093c62d30cd46cae765c8739df13f079cd53e32e092fc3",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_05.png": "06063bb0d0723caa1f6dec5f8255bbb6f777bf5bada59c959a7c11144149b977",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_06.png": "cc7bebf4705ec59a94906ee5f66a67562c3ca16cbb771d6c37edd7f4cc21954c",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_07.png": "41065ba7115ff39c32d93e45888f304569a72655074747fff5cee0c70c468e2f"
+  },
+  "accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "a6e156254df12902a6a95446779c89cb5539646f4e689cc7e99142e90e34d41d",
+  "atlas_sha256": "c287fb6e99932c95476846f9a822629fdef259492348eae3df3e5f53756b6ef5",
+  "texture_bytes_rgba": 16068864
+}

@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_foganchor_colossi",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_contacts_v1.png": "fc7df9889bab10aa87e0753eaa49bf5d4aeff63e716a475fc9fd131ab5f5a556",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_inbetweens_v1.png": "81d84b05a4ff15d890949ec7e2d582a62689feac753fa4151cd35fd62ebd170e",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/attack_v1.png": "f1983bf51eb1618684908eeb94de3b9f1e4bc2153a3bccdb93afa00ca39cac06",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/reactions_v1.png": "0a4779b4b06626381c465b6cfc18b0d83d679b30bc9f10ee847422e8025990d2",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/death_v1.png": "5758c013466451fa1000059360804f60cd6cdabfecd1541c045a2004d9313312",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/cast_v1.png": "dcc71ebcc7d7e9d4807ec3b79bc7e1cfed16dc2127dcf5c53f7548dfc928fdc0"
+  },
+  "accepted_clips": [
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed native Godot phase sequences at battle scale; accepted articulated anatomy and action continuity. Corrected source crop contamination where needed. Only listed clips accepted; deferred movement or anatomy gaps remain unchanged."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "7a939571743c75e0bb652a71c40819d62b2fa682c9f58b0f7e179176cce4d638",
+  "atlas_sha256": "4ac2a2fd4842f49bddfe6af6a2a49081331df3627595f748e4e95d64b17b990a",
+  "texture_bytes_rgba": 23181312
+}

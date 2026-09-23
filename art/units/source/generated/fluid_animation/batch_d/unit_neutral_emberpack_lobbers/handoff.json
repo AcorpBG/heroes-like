@@ -1,0 +1,1348 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_emberpack_lobbers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "death_v1_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png",
+          "rects": [
+            [
+              55,
+              0,
+              441,
+              540
+            ]
+          ],
+          "anchor": [
+            221.0,
+            444
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "death_v1_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png",
+          "rects": [
+            [
+              492,
+              0,
+              836,
+              540
+            ]
+          ],
+          "anchor": [
+            664.5,
+            444
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "death_v1_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png",
+          "rects": [
+            [
+              917,
+              0,
+              1254,
+              540
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            444
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "death_v1_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png",
+          "rects": [
+            [
+              1389,
+              0,
+              1739,
+              540
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            444
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "death_v1_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png",
+          "rects": [
+            [
+              29,
+              540,
+              437,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            819
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "death_v1_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png",
+          "rects": [
+            [
+              458,
+              540,
+              869,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            819
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "death_v1_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png",
+          "rects": [
+            [
+              894,
+              540,
+              1313,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            819
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "death_v1_08",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png",
+          "rects": [
+            [
+              1334,
+              540,
+              1749,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            819
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "move_v1_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/move_v1.png",
+          "rects": [
+            [
+              70,
+              0,
+              350,
+              450
+            ]
+          ],
+          "anchor": [
+            221.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "move_v1_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/move_v1.png",
+          "rects": [
+            [
+              503,
+              0,
+              797,
+              450
+            ]
+          ],
+          "anchor": [
+            664.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "move_v1_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/move_v1.png",
+          "rects": [
+            [
+              952,
+              0,
+              1241,
+              450
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "move_v1_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/move_v1.png",
+          "rects": [
+            [
+              1392,
+              0,
+              1685,
+              450
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "move_v1_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/move_v1.png",
+          "rects": [
+            [
+              74,
+              450,
+              351,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "move_v1_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/move_v1.png",
+          "rects": [
+            [
+              517,
+              450,
+              801,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "move_v1_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/move_v1.png",
+          "rects": [
+            [
+              958,
+              450,
+              1241,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "move_v1_08",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/move_v1.png",
+          "rects": [
+            [
+              1407,
+              450,
+              1690,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "attack_v1_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png",
+          "rects": [
+            [
+              45,
+              0,
+              363,
+              450
+            ]
+          ],
+          "anchor": [
+            221.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "attack_v1_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png",
+          "rects": [
+            [
+              427,
+              0,
+              873,
+              450
+            ]
+          ],
+          "anchor": [
+            664.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "attack_v1_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png",
+          "rects": [
+            [
+              903,
+              0,
+              1250,
+              450
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "attack_v1_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png",
+          "rects": [
+            [
+              1326,
+              0,
+              1758,
+              450
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "attack_v1_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png",
+          "rects": [
+            [
+              20,
+              450,
+              450,
+              887
+            ],
+            [
+              450,
+              490,
+              505,
+              590
+            ]
+          ],
+          "anchor": [
+            221.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "attack_v1_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png",
+          "rects": [
+            [
+              505,
+              450,
+              865,
+              887
+            ],
+            [
+              475,
+              650,
+              505,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "attack_v1_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png",
+          "rects": [
+            [
+              936,
+              450,
+              1268,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "attack_v1_08",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png",
+          "rects": [
+            [
+              1362,
+              450,
+              1682,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "idle_v1_01",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
+          "rects": [
+            [
+              62,
+              0,
+              375,
+              450
+            ]
+          ],
+          "anchor": [
+            221.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "idle_v1_02",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
+          "rects": [
+            [
+              522,
+              0,
+              819,
+              450
+            ]
+          ],
+          "anchor": [
+            664.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "idle_v1_03",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
+          "rects": [
+            [
+              966,
+              0,
+              1262,
+              450
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "idle_v1_04",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
+          "rects": [
+            [
+              1409,
+              0,
+              1706,
+              450
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "idle_v1_05",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
+          "rects": [
+            [
+              67,
+              450,
+              380,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "idle_v1_06",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
+          "rects": [
+            [
+              517,
+              450,
+              819,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "idle_v1_07",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
+          "rects": [
+            [
+              918,
+              450,
+              1262,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "idle_v1_08",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
+          "rects": [
+            [
+              1409,
+              450,
+              1706,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "hit_defend_v1_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png",
+          "rects": [
+            [
+              58,
+              0,
+              410,
+              450
+            ]
+          ],
+          "anchor": [
+            221.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "hit_defend_v1_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png",
+          "rects": [
+            [
+              506,
+              0,
+              866,
+              450
+            ]
+          ],
+          "anchor": [
+            664.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "hit_defend_v1_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png",
+          "rects": [
+            [
+              945,
+              0,
+              1289,
+              450
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "hit_defend_v1_04",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png",
+          "rects": [
+            [
+              1315,
+              0,
+              1757,
+              450
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "hit_defend_v1_05",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png",
+          "rects": [
+            [
+              21,
+              450,
+              449,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "hit_defend_v1_06",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png",
+          "rects": [
+            [
+              514,
+              450,
+              863,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "hit_defend_v1_07",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png",
+          "rects": [
+            [
+              941,
+              450,
+              1305,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "hit_defend_v1_08",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png",
+          "rects": [
+            [
+              1384,
+              450,
+              1757,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "support_v1_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png",
+          "rects": [
+            [
+              35,
+              0,
+              392,
+              450
+            ]
+          ],
+          "anchor": [
+            221.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "support_v1_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png",
+          "rects": [
+            [
+              479,
+              0,
+              835,
+              450
+            ]
+          ],
+          "anchor": [
+            664.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "support_v1_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png",
+          "rects": [
+            [
+              922,
+              0,
+              1278,
+              450
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "support_v1_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png",
+          "rects": [
+            [
+              1366,
+              0,
+              1752,
+              450
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "support_v1_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png",
+          "rects": [
+            [
+              35,
+              450,
+              421,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "support_v1_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png",
+          "rects": [
+            [
+              479,
+              450,
+              835,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "support_v1_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png",
+          "rects": [
+            [
+              922,
+              450,
+              1278,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "support_v1_08",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png",
+          "rects": [
+            [
+              1366,
+              450,
+              1722,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "ranged_v1_01",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              36,
+              0,
+              393,
+              450
+            ]
+          ],
+          "anchor": [
+            221.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "ranged_v1_02",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              444,
+              0,
+              889,
+              450
+            ]
+          ],
+          "anchor": [
+            664.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "ranged_v1_03",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              893,
+              0,
+              1322,
+              450
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "ranged_v1_04",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              1368,
+              0,
+              1761,
+              450
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "ranged_v1_05",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              38,
+              450,
+              478,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "ranged_v1_06",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              506,
+              450,
+              870,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "ranged_v1_07",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              956,
+              450,
+              1293,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        },
+        {
+          "name": "ranged_v1_08",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              1403,
+              450,
+              1727,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination."
+        }
+      ],
+      "clips": {
+        "death": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 120,
+          "loop": false
+        },
+        "dead": {
+          "indices": [
+            7
+          ],
+          "frame_msec": 120,
+          "loop": false
+        },
+        "move": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 110,
+          "loop": true
+        },
+        "attack": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "contact_frame": 4
+        },
+        "idle": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 120,
+          "loop": true,
+          "static_frame": 0
+        },
+        "hit": {
+          "indices": [
+            32,
+            33,
+            34,
+            35
+          ],
+          "frame_msec": 110,
+          "loop": false
+        },
+        "defend": {
+          "indices": [
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 120,
+          "loop": false,
+          "hold_last": true
+        },
+        "cast": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "contact_frame": 4
+        },
+        "ranged": {
+          "indices": [
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "contact_frame": 4
+        }
+      },
+      "accepted_clips": [
+        "idle",
+        "attack",
+        "hit",
+        "defend",
+        "death",
+        "dead",
+        "cast"
+      ],
+      "preserve_clips": [],
+      "visual_review": {
+        "status": "partial",
+        "accepted": [
+          "idle",
+          "attack",
+          "hit",
+          "defend",
+          "death",
+          "dead",
+          "cast"
+        ],
+        "pending": [
+          "move",
+          "ranged"
+        ],
+        "notes": "Root approved6clips; rangedv2 removes detachedprojectile. Movement held sameleadingbootconcern."
+      },
+      "provenance": [
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png",
+          "source_sha256": "d40115a7984dcc44ce857f6c1db0913e3574dc895cdb9d4d3a5397f785ad165e",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.prompt.txt",
+          "prompt_sha256": "fa398bab559d9c29e4919d759209df913c6936c979b8a8af051378b1c4e13d19",
+          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
+          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-8ebf1b8c-c723-4957-8283-95297ee06194.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/move_v1.png",
+          "source_sha256": "60ae4d60ea4fce3c7c4fd8b071913f409b86c50dd7392b15b12dc60328716082",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/move_v1.prompt.txt",
+          "prompt_sha256": "2999d49cf0707895114911c243b994924ffdb64ff19abf0b18e2f537f2933ab5",
+          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
+          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-5f4a1e8c-6b12-4cf8-896e-0cf053a922bd.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png",
+          "source_sha256": "737fef43385dc510e37ec29682d6d42cb9a17ddc0a5ce136e76885d9397846a0",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.prompt.txt",
+          "prompt_sha256": "5ec21ac4ca01c8c9a14d4da1b7ce0c44359cff68aa1477ba97346e5c5ea94f46",
+          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
+          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-ab0a5ad1-2bfd-4650-8425-97ba9b7b6b02.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
+          "source_sha256": "aa4b208ca2a33227106bf9d1cfc0cc90fcafe2369e6c05a4527dfdf8d44dea25",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.prompt.txt",
+          "prompt_sha256": "fae1e8909b8ddbc39ae79a86e3fcbfb6554d55dbd70bf2391216e4b5ba5e3561",
+          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
+          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-77ec8c06-c0d2-494e-8a92-5b7cbb9d07a3.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png",
+          "source_sha256": "f97cd61d44fae7edce189fffaf4a783dbcbb3cd83705e0c7dc8d60b52a5e4cb6",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.prompt.txt",
+          "prompt_sha256": "9f9dedec5b4ad4465bd779dad4b8df4a33fe6feffa76ee55600b4369acd37a66",
+          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
+          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-48765ba0-b51e-4e3c-ac8c-400ee6b1c834.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png",
+          "source_sha256": "dd411048e84366dc90d3cd6c4cf45aea65e460784a61680c0771357dc66a4c44",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.prompt.txt",
+          "prompt_sha256": "db61a8119acce29574d4d17a9fe98dae894171abdd85c31177597813617829bc",
+          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
+          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-31154420-74dc-48ff-a3b5-e39259870563.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v1.png",
+          "source_sha256": "cd20f2b681d6915246537ac506762002aa50f12271a7c1d904a452481e74dd8d",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v1.prompt.txt",
+          "prompt_sha256": "10eba7e38f7bb0125d5ccfb1df9f6ac7943be7aa8298ecfa55659428e193bc74",
+          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
+          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-65b96bde-d208-4239-8c48-4791776c1489.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "source_sha256": "e3a1db8bbc542bb09c21f6dda9979e9bb2c638ff26763333ddcd399da502be9d",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.prompt.txt",
+          "prompt_sha256": "0cf4f8f7087ab361ea1cd847fff26c910877d2029fc35839a18701d445c83f86",
+          "reference": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v1.png",
+          "reference_sha256": "cd20f2b681d6915246537ac506762002aa50f12271a7c1d904a452481e74dd8d",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-81f2425d-6d6a-4297-be9a-2ec7267e999c.png",
+          "purpose": "Remove baked detached projectile; runtime supplies projectile",
+          "output_size": [
+            1774,
+            887
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -8,7 +8,9 @@
     "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/attack_v1.png": "b5f339b69aac9401983826e91dcb333dd24974dd74db7c987f71ee16389b501c",
     "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/hit_defend_v1.png": "b11018c5bd0317616d138b99f1e994aec536f68a65fe79f283d298d8f3cfa03a",
     "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png": "f7deb20a80f8a62e08fec5f719f779c25295a0a52b211873e9a44d96916f7a64",
-    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.png": "a136d11ec63fc38080c906f567065f66381115fd47d672db698f4a205a6ad3b3"
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.png": "a136d11ec63fc38080c906f567065f66381115fd47d672db698f4a205a6ad3b3",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_contacts_v1.png": "d04159c00dad9c23657700d67ad3e049a9d38311840e61a03911e3c1ee4ec351",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_inbetweens_v1.png": "de43713d236b102b01019253b2c9b645262adc68ffda069518a212579d01dc93"
   },
   "accepted_clips": [
     "idle",
@@ -16,13 +18,15 @@
     "hit",
     "defend",
     "death",
-    "cast"
+    "cast",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Godot128 overview reviewed: articulated sword/shield idle and sweep, dedicated shield guard, recoil, sword salute and continuous collapse to prone corpse. Move remains explicitly unfinished and old fallback is not claimed accepted."
+    "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
   },
-  "atlas_sha256": "14a50444902e6388f100545d44bd66f3149582e8bc7bf37deef00b2c5c2216dc",
-  "texture_bytes_rgba": 17122560,
-  "baseline_atlas_sha256": "8d6b7d051ad658f6ab8fc0987e7f0ca7fd47ef43228ff77db2f5683a4d786937"
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "8d6b7d051ad658f6ab8fc0987e7f0ca7fd47ef43228ff77db2f5683a4d786937",
+  "atlas_sha256": "ae7dfb46e3511c601e50d95b0f6395945f9565dccfe8abf1f1c0d813bd95ecc2",
+  "texture_bytes_rgba": 19976320
 }

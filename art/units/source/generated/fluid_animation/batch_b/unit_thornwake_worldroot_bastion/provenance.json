@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "unit_id": "unit_thornwake_worldroot_bastion",
+  "sources": [
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1.png",
+      "master_sha256": "ac94b08aab024c846bc9b9fb7b7761ea4fd54dc525e463b8f0e5732bd5b191a3",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1.prompt.txt",
+      "prompt_sha256": "eeff8bccf7e1a16cc2c88903f54b080c85c078204de692ed5e1a3451e56c88d9",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-2a7bea5c-b2ba-4d52-a643-1234483c9649.png",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/identity_reference.png",
+      "reference_sha256": "722afcde4fcdcb9c6e45c6e66fddfa820c5f9fa3eb26193b00f32fc0e6c71a64",
+      "tool": "built-in image_gen",
+      "processing": "Extract original connected alpha component; discard alpha <= 8 background only. No synthesized/interpolated/warped poses."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2.png",
+      "master_sha256": "6ae26437a8aee09c19ce88c999fce88932f99cec31d6fb550fda3eef2ae87d2f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2.prompt.txt",
+      "prompt_sha256": "231996537210ae25da0e4c8cfee67d7c5d8db1f9b29c1d91a34a1a02d579f401",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-b5f2ab68-ae0e-46f8-943d-3f00dcc8c7d5.png",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/identity_reference.png",
+      "reference_sha256": "722afcde4fcdcb9c6e45c6e66fddfa820c5f9fa3eb26193b00f32fc0e6c71a64",
+      "tool": "built-in image_gen",
+      "processing": "Extract original connected alpha component; discard alpha <= 8 background only. No synthesized/interpolated/warped poses."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1.png",
+      "master_sha256": "7ff27e90148195a5e788200d8e0966a2141c2a4c1238f0be0deb2d8eb5a17e2c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1.prompt.txt",
+      "prompt_sha256": "6b8476496779bc2604558c9542232623cd22f8cabb3ea5ce14d5b8976c9007dc",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-ede5855d-db50-4b0b-85f0-bd3fdc815cd1.png",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/identity_reference.png",
+      "reference_sha256": "722afcde4fcdcb9c6e45c6e66fddfa820c5f9fa3eb26193b00f32fc0e6c71a64",
+      "tool": "built-in image_gen",
+      "processing": "Extract original connected alpha component; discard alpha <= 8 background only. No synthesized/interpolated/warped poses."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1.png",
+      "master_sha256": "307cbea757a4b908ca6d08014d0a5632d4d2d31765878f9ed0a08d066f902dc8",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1.prompt.txt",
+      "prompt_sha256": "ff08267cdce03a35cd48f0dcb7a5db8f41c690f4272d8e33b7666adad9ff08a3",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-c25ddeb2-de7f-41bf-a0b7-e29df80b4e94.png",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/identity_reference.png",
+      "reference_sha256": "722afcde4fcdcb9c6e45c6e66fddfa820c5f9fa3eb26193b00f32fc0e6c71a64",
+      "tool": "built-in image_gen",
+      "processing": "Extract original connected alpha component; discard alpha <= 8 background only. No synthesized/interpolated/warped poses."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1.png",
+      "master_sha256": "9f7845e86cafd0f5f923d7d00b9016929b1d0dd9052b15090f252f5937f7a07b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1.prompt.txt",
+      "prompt_sha256": "b75b40fdcb97be969708d4ec01efc47783682690f0fa920bf7bb915444038e1b",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-d77415e8-1928-4452-b086-0f545dd2c3de.png",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/identity_reference.png",
+      "reference_sha256": "722afcde4fcdcb9c6e45c6e66fddfa820c5f9fa3eb26193b00f32fc0e6c71a64",
+      "tool": "built-in image_gen",
+      "processing": "Extract original connected alpha component; discard alpha <= 8 background only. No synthesized/interpolated/warped poses."
+    }
+  ],
+  "identity_reference_origin": {
+    "source": "art/animation/runtime/poses/unit_thornwake_worldroot_bastion.png",
+    "frame_index": 14,
+    "processing": "Exact crop of first live idle pose; no painting or resizing."
+  },
+  "rejected_sources": [
+    {
+      "master": "attack_v1.png",
+      "reason": "Shield-arm identity switches during contact; replaced with root-foot stomp."
+    }
+  ]
+}

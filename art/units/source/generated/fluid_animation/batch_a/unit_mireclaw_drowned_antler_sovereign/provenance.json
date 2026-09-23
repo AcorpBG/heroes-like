@@ -1,0 +1,47 @@
+{
+  "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+  "generator": "built_in_imagegen",
+  "reference": "art/units/source/curated/unit_mireclaw_drowned_antler_sovereign.png",
+  "reference_sha256": "0e0fbb099326b16e32b3b79945e5af5f34a69819e7a1fe1c4156649e1ded97a2",
+  "outputs": {
+    "move": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-773a61b0-24e1-4ddf-972d-53f616bd8df0.png",
+    "attack": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-bd5b57da-e4f1-47f7-96e6-f887b2ba6a91.png",
+    "reactions": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-4eee0bf8-e02e-4a4a-970b-4d1152101914.png",
+    "death": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-720e751c-c3a2-444d-ad00-f46abd362c03.png",
+    "cast": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-57d41cfe-c9a8-4807-ab12-dc1eca50d8e0.png"
+  },
+  "sources": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/move_v1.png",
+      "sha256": "339649ffd1041ee077ea42a3d4b82c26bffc926c86d2fb67c540dfc654cbc129",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/move_v1.prompt.txt",
+      "prompt_sha256": "db32fc0916dccf7851c36a4584d426eef79281cf39a39f167a1754dd58968df6"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/attack_v1.png",
+      "sha256": "9bdcc1935ca1f0308b2674d7d1ed2cb899b3b0cd54cebfd4a7ae270a440f197d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/attack_v1.prompt.txt",
+      "prompt_sha256": "f2c2d5fe5df49fe59c113e7ba4d8dd942c519572794a45b12e9d9b86895b6a6a"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/reactions_v1.png",
+      "sha256": "b756e8021bf4f74a0d9bc40530c7e7720a0731665af52a7fcbd9e02e5aa0ae29",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/reactions_v1.prompt.txt",
+      "prompt_sha256": "94274ab23dd44ae09119dcebd8d0ab92d16666a5d2e7f9a5d69300d9d82b4b54"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/death_v1.png",
+      "sha256": "67685978cd88e94177df77f00b69b064055a713fe6e094932b4a949ebd04ce8d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/death_v1.prompt.txt",
+      "prompt_sha256": "89c329aed00a3bef814cb7287f32303f4837ca0c6e2e55162cac23dbde252ef9"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/cast_v1.png",
+      "sha256": "9b0bbe5c454913daccddcf5fc30aedcfb23be4393e37260a81167f0dc19c153d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/cast_v1.prompt.txt",
+      "prompt_sha256": "0c11200fd88bbf6fe6e32f7683425c95566b640f8bfa271eff382ea3eb90093e"
+    }
+  ],
+  "rejected_sources": [],
+  "extraction": "Original alpha greater than 8 connected silhouette spans; no pixel repainting, deformations or pose duplication. Corpse uses final death pose."
+}

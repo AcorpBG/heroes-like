@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_brasshollow_quenchbell_mortars",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars/idle_v1.png": "18a0f252c8b132a523e211908e94f7842ffea3238ddc127d99d6d2d7f3ccbed5",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars/move_v1.png": "ed8dddd8f3f00127bc411dc19e006fb6a6b60f9b1e3492a6dc5121b617c5d94a",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars/attack_v1.png": "b26177e66d006b8d5313427fa74049ef02b235915d61cf92d6cd2a5d16ee333a",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars/ranged_v1.png": "92496fa6f87ae5a42c36feb5de184f2d7f69fa602e039860fc75aef9e8065984",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars/reactions_v1.png": "c76188ce370a8f3e4d4035cd974a317088b8cfa49c8f831bf7f1668780700ada",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars/death_v1.png": "74d2004c8426316d0c9cd0f737a5fe60818503854fdbd5342e27dabacad9731c",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars/cast_v1.png": "a4c872744acc71b0fab6cc9a26ac1a285b88935d6ae40fbab916b23bddb84e9e"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed native Godot phase sequences at battle scale; accepted articulated anatomy and action continuity. Corrected source crop contamination where needed. Only listed clips accepted; deferred movement or anatomy gaps remain unchanged."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "edd1f895da658fa334fa6d17c2507ebaec55230577ac140d7482fdb54c5ebae3",
+  "atlas_sha256": "ba9b6c67641c02c06f4971f2f27c3ca07cb956a5a066cee6bb0262159030f577",
+  "texture_bytes_rgba": 21196800
+}

@@ -1,0 +1,20 @@
+{
+  "stem": "move_inbetweens_v1",
+  "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb1-654e-7aa2-af06-8bdc2dae09d2\\exec-8149701b-6a7a-41c0-813e-85d47e9c3813.png",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.png",
+  "source_sha256": "44b0bb4c8c6cf35fbc029fcf7a9833817122405abbef5cc1ee19d51e7ecadc91",
+  "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.prompt.txt",
+  "prompt_sha256": "4f4606b6fac3ba9dfdb935ad0d5a6be3aa5b09c297e6fa23b9472bfd78f44a31",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png",
+      "sha256": "8236ab24c06b12851f5c14f03e4aebf24584f8247376a80f48139f32a44d9f77"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v3.png",
+      "sha256": "6e1b15b36ecfec4b7d8534596a16d782c898198daa24c16a0d8473a5f5c632a4"
+    }
+  ],
+  "review_status": "pending_motion_review"
+}

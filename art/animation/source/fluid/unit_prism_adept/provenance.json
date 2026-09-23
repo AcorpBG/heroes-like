@@ -1,0 +1,30 @@
+{
+  "unit_id": "unit_prism_adept",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png": "a7d13aad02b5a4068d25dca4100d44a25f169d4919641f3c283f9723381aabfd",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png": "2b29a271fd128d3eacc9e025c22266fde3fba2f1407c373291c69035c332b022",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/reactions_v1.png": "1cda969403dbf687218beeb957a71327cece5ec0e38825ebfcc47ad08014eebd",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.png": "07cca1443b712f3c533cf4d96b4091164b8bd6bd811ea8ea03790f276658d5cb"
+  },
+  "accepted_clips": [
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed native Godot phase sequences at battle scale; accepted articulated anatomy and action continuity. Corrected source crop contamination where needed. Only listed clips accepted; deferred movement or anatomy gaps remain unchanged."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "7a0fa8aff9c000bae11d8046fb5d94c01717da1a4222b638776c1e45712e471f",
+  "atlas_sha256": "937803773b4f13a02b2b666e0388be2bae5120193898258d0c7df2677e68d939",
+  "texture_bytes_rgba": 17240064
+}

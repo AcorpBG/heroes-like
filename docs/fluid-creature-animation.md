@@ -15,7 +15,7 @@ Owner request, 2026-09-23: expand the animation improvement to every live unit t
 
 ## Production and ownership
 
-`art/units/source/generated/fluid_animation/production.json` contains the current `assignments` partition for all 232 IDs. The owner's expanded limit is 20 subagents: nineteen artists with 12-13 disjoint units each, plus one playback/pipeline agent. These assignments supersede the original four 58-unit batches; source paths retain their original batch names for provenance. Artists own only their assigned unit directories and handoffs. The coordinator owns shared data merges, final acceptance, planning, wiki updates and Git. Use existing units/manifest references rather than inventing new creature designs.
+`art/units/source/generated/fluid_animation/production.json` contains the current `assignments` partition for all 232 IDs. The initial pass used nineteen artists with 12-13 disjoint units each and one playback/pipeline agent. The owner subsequently stopped all subagents because of usage consumption; continue solo unless explicitly reauthorized. These assignments supersede the original four 58-unit batches; source paths retain their original batch names for provenance. Artists own only their assigned unit directories and handoffs. The coordinator owns shared data merges, final acceptance, planning, wiki updates and Git. Use existing units/manifest references rather than inventing new creature designs.
 
 The shared hero-spell route presents the active stack in `cast_support_anchor` even for noncasters. Every creature therefore needs an appropriate physical support gesture; only actual casters should depict casting, and only ranged units require a ranged weapon/release sequence.
 
