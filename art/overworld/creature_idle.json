@@ -5913,33 +5913,37 @@
     "unit_embercourt_beaconline_writguard_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_beaconline_writguard_veteran.png",
       "frame_size": [
-        257,
-        255
+        197,
+        250
       ],
-      "frames": 4,
-      "frame_msec": 280,
+      "frames": 8,
+      "frame_msec": 145,
       "static_frame": 0,
       "ground_anchor": [
-        137.0,
-        238
+        104.0,
+        242
       ],
-      "painted_extent": 241,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_beaconline_writguard_veteran.png",
+      "painted_extent": 234,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_beaconline_writguard_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        119,
+        152,
         2,
-        376,
-        257
+        349,
+        252
       ],
-      "source_sha256": "a1e7955a00111610d79580905a668f10de736482195d62787c85109259be3191",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_beaconline_writguard_veteran/provenance.json",
-      "sha256": "e3916706ae32c264c59aecf01d009b1ab386891330481aa08cc4c88760708ba7"
+      "source_sha256": "3e87d8e783229ead743b96d48b4bd0d46a8f2527f16935c8ab323de7f9c1f0c6",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_beaconline_writguard_veteran/provenance.json",
+      "sha256": "c17d67531d4e66a91b7c17096b9c81e3f003ba407ae70f588d47ae265fb6fbcb"
     },
     "unit_embercourt_sluicefire_lindworms_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_sluicefire_lindworms_veteran.png",
