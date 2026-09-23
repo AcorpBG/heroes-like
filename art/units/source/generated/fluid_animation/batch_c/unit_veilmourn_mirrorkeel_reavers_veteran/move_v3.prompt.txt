@@ -1,0 +1,12 @@
+Use case: identity-preserve. Create a production sprite sheet of EIGHT distinct original WALK poses for the exact ghostly armored reaver shown in the reference. Reference establishes identity and painting, not repeated poses. Keep dark iron armor and muted gold filigree, tall pointed helmet with black face and long pale hair, compass shoulder medallion, mast-and-tattered-sail rig on back, blue-grey trailing spirit cloak with subtle skull faces, ONE long black/gold hooked spear gripped with TWO hands throughout, small hanging lanterns. Fixed elevated three-quarter camera faces screen-right; never mirror body, swap hands, change armor or add weapons.
+
+TWO columns FOUR rows, eight complete separate figures, no text. Real transparent background with 40px gutters and margins on ALL sides. Entire mast tip, cloak ends, spear tip and both boots fully visible. Fixed body size in every cell. Eight painted poses in row-major order:
+1 RIGHTMOST boot forward and flat at lower right; LEFTMOST boot behind at lower left.
+2 Right foot supports beneath body, right knee compresses, left heel lifts.
+3 Left thigh swings ahead, LEFTMOST knee rises, LEFT boot visibly airborne at lower LEFT; right boot remains planted lower RIGHT.
+4 LEFTMOST shin extends toward lower LEFT, toe up just before landing, right heel lifting.
+5 LEFTMOST boot now forward flat lower LEFT, RIGHTMOST boot behind lower RIGHT; opposite contact to pose1. No torso mirror.
+6 Left foot supports under body, left knee compresses, right heel lifts.
+7 Right thigh swings ahead, RIGHTMOST knee rises, RIGHT boot visibly airborne at lower RIGHT; left boot planted lower LEFT.
+8 RIGHTMOST shin extends toward lower RIGHT, toe up before landing, left heel lifting.
+Leg identity remains connected to its original hip. Both knees flex; feet do not teleport. Distinct reciprocal phases, not repeated leading leg. Hands keep correct two-handed shaft grip with visible elbow absorption and restrained spear pitch. Back rig stable, cloth and lanterns lag gently opposite gait without changing lengths. Detailed original painterly fantasy strategy-game sprite, not photoreal or glossy plastic, no trails or ground scenery.

@@ -8,7 +8,11 @@
     "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/hit_defend_v2.png": "a8b5613e613bb97bfcb929b90fd2b7cc4ba49c00250971b850c65c4e37566647",
     "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/cast_v1.png": "39feb3d57691a7da8878347b81a611fa42a6db72af921162f19883bae48d95e1",
     "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/idle_v1.png": "37fcc3c2f25df3d8f28649c8217d8e805e5c503937157248ea8a49afbe419247",
-    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/death_v1.png": "02cd2000e9b83dcaedfa0b66d561720f976d9f6e39200f93c81aabf35839ff86"
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/death_v1.png": "02cd2000e9b83dcaedfa0b66d561720f976d9f6e39200f93c81aabf35839ff86",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_near_v4.png": "b94c639246e57e33e80fcbd9e279e1af29becf4f9c8b434853e51eb63feee95b",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_contacts_v1.png": "14e0039c332dbd62d06be6062ef5fbb4990efbc577a6264b751fe2d8ae3e7905",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_left_support_v7.png": "760ced2b97bd9cedc2887de6c81ebd3467cc39f02e2f0ffb2437a32891359842",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_inbetweens_v2.png": "b07a3734b096539aa9f92aeae327dd77e8d4c705cdb8258d6322b4d0ec27f504"
   },
   "accepted_clips": [
     "attack",
@@ -16,14 +20,15 @@
     "defend",
     "cast",
     "death",
-    "idle"
+    "idle",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Native 128px review: articulated harpoon-arm idle after removal of neighboring ribbon strip, full thrust/recovery, bracing/recoil, two-handed weapon salute and grounded collapse accepted. Movement remains unfinished."
+    "notes": "Native 128px review accepted reciprocal gait with opposing foot support, knee lifts, two-hand spear grip and complete mast/cloth/weapon silhouettes. 120 imported live focused checks passed; prior accepted action sources unchanged."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "1e27fde9e9124b40b57b57d010619df5a058703f5cea9e6eac45e499ff372ca9",
-  "atlas_sha256": "2afebd0ae9403b5a9c7d21e75f268b915ff0f1cd30366a4e48b108f371620ba3",
-  "texture_bytes_rgba": 24944640
+  "atlas_sha256": "6ddbe07f1b9fb15022bada9e2cc4df3beb57654b0d55348dec06ae25c84d38fe",
+  "texture_bytes_rgba": 29102080
 }

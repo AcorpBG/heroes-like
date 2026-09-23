@@ -1,0 +1,62 @@
+{
+  "tool": "builtin_image_gen",
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+  "earlier_lineage": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/provenance.json",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_v3.png",
+      "sha256": "ed4fccc290bf2081dbb9a7029f314dac6861d26cb96984e8167cd600ba511316",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_v3.prompt.txt",
+      "prompt_sha256": "8e535daa144bc83ca9c526acb7300ffeeaeeede51586ebecb5e0a931854f773e",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_contacts_v1.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-99baa6a3-1b7d-4888-9176-d0644b042b38.png",
+      "review": "withheld: repeated leading leg; RGBA background is transparent despite displayed matte"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_near_v4.png",
+      "sha256": "b94c639246e57e33e80fcbd9e279e1af29becf4f9c8b434853e51eb63feee95b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_near_v4.prompt.txt",
+      "prompt_sha256": "9250a41bd6fb617fba65ba1aab496b5727cb0f6a6d8eee3b2eae127e0859aecb",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_contacts_v1.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-1be1d829-cb07-4add-8ae4-861426d5eb95.png",
+      "review": "selected four individually registered poses: far contact/support and opposing passing knees"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_near_v5.png",
+      "sha256": "426ed335e695749e3bd0953ef14b576a8469e8e2e8178f0910edbcb5dd4ee6ea",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_near_v5.prompt.txt",
+      "prompt_sha256": "466e0148bf09740bf1b6fd5e30ff0965a57ff2b80003db8b025102574be5fca7",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_near_v4.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-811b9272-a8f1-40bc-83fe-525f2fcb72ae.png",
+      "review": "unused extraction attempt; original v4 already has transparent background"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_left_support_v6.png",
+      "sha256": "f14a0942ec161dabddaba662a35eec40f58a652adf4cfc01bcc0ceb61e362647",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_left_support_v6.prompt.txt",
+      "prompt_sha256": "0b233bb26463229f9ac49e84304e6c3f7e7718996116b0fa78c3aa2a3683fd56",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_contacts_v1.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-5473ef28-1e0c-41f0-a544-7d8ff14d5761.png",
+      "review": "withheld: clipped mast/spear tips"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_left_support_v7.png",
+      "sha256": "760ced2b97bd9cedc2887de6c81ebd3467cc39f02e2f0ffb2437a32891359842",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_left_support_v7.prompt.txt",
+      "prompt_sha256": "4fbf0c61fd4491118c2d6134f13cd2788cb2ab53c80dabd4b5e94700f86644c0",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_left_support_v6.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-43081254-bd7f-41c0-bc25-eacd9b4576ab.png",
+      "review": "selected restored full silhouettes, near contact and support"
+    }
+  ]
+}
