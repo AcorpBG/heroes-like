@@ -5711,33 +5711,37 @@
     "unit_embercourt_lantern_sappers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_lantern_sappers_veteran.png",
       "frame_size": [
-        202,
-        249
+        203,
+        247
       ],
-      "frames": 4,
-      "frame_msec": 280,
+      "frames": 8,
+      "frame_msec": 150,
       "static_frame": 0,
       "ground_anchor": [
-        88.0,
-        238
+        92.0,
+        239
       ],
-      "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_lantern_sappers_veteran.png",
+      "painted_extent": 231,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_lantern_sappers_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        168,
-        34,
-        370,
-        283
+        144,
+        45,
+        347,
+        292
       ],
-      "source_sha256": "e01d6bb83cb542dbcee127548f073df89abd75d0dc22be73baa7b3953f1a4883",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_lantern_sappers_veteran/provenance.json",
-      "sha256": "ee2692d6f423e4dedf0dc5251b9bff56e8e368d47ffecb0fddfdda2684aa6481"
+      "source_sha256": "e54ef9119e4bcf5d81609a558ca500ad8864013460f80ec4ce56a6e93823ca5f",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_lantern_sappers_veteran/provenance.json",
+      "sha256": "d7934841726d13649d6a90f367af81c1194c733fdf8f0a7c129059afa039bbed"
     },
     "unit_citadel_pikeward_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_citadel_pikeward_veteran.png",

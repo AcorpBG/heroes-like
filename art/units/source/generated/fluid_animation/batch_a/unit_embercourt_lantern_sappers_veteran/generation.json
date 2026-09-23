@@ -1,0 +1,121 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/idle_v1.png",
+      "sha256": "be7c7a6e34ae136a1cd921360ccfd73be5765b33e0519376d0f0e306647fcb40",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "66ab687e3aea62dbd10e91617287a11edfdbaf76c204ceb6ec183b391321ff52",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-7cd04565-5f3c-4c1f-b55f-4f8436971bfb.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/reference.png",
+          "sha256": "26c369df4d0c27ac40f8947fd64d2360be2cc64701ae40e6ee6848fa15c5ccf3"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/attack_v1.png",
+      "sha256": "f17f43032b8e8bc0dd4ee77d58623fe4061917e781d032596067c56b18be0eae",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "ee08d3dad4a953df74c328c0bd51931077e6a3e1141918d89b9feb948cd4d3db",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-4e92a084-267e-49b8-bc85-08b99b73cbd6.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/reference.png",
+          "sha256": "26c369df4d0c27ac40f8947fd64d2360be2cc64701ae40e6ee6848fa15c5ccf3"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/reactions_v1.png",
+      "sha256": "609c4ed1caab466a63e2b23e6885a419cafc9518aa75672d6c7d05d4d0e9b239",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "0fd435f9da620c936d5c6c61e737c4fd5469a1fad80484c22ec3a0e28fc44c5f",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c35391cc-d49b-4cde-abb2-5da22f00aaba.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/reference.png",
+          "sha256": "26c369df4d0c27ac40f8947fd64d2360be2cc64701ae40e6ee6848fa15c5ccf3"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/cast_v1.png",
+      "sha256": "5ea9b880325c70b73adfd7c349af03146a2ea0034519688e16deda2d63a5fb48",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "143cee21ba9904202f69d19f5e413890b21479b03ffbee4f7db5b4000799c24f",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-1496e145-1c80-44b9-9a2c-c5290d86a4e5.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/reference.png",
+          "sha256": "26c369df4d0c27ac40f8947fd64d2360be2cc64701ae40e6ee6848fa15c5ccf3"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/death_v1.png",
+      "sha256": "ffbf72cd2680f14513c051f77f6f1b59144270f1509891892761a093931e4261",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "ea61d4b6dc4faf5e1c4495d4ad4b179ca0dd0856793937f17edb23e8c59f0286",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-9d6aef55-b4c9-486e-98f8-609725b143fe.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/reference.png",
+          "sha256": "26c369df4d0c27ac40f8947fd64d2360be2cc64701ae40e6ee6848fa15c5ccf3"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/move_far_v1.png",
+      "sha256": "b6719af9d3284258ee6ddf2f0d505aefd97e0c7f14377660b35964c70b94a57e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "c76f16a41ce3a40c3cb9ae9dafec71e080aa3561403cd66ccf9bd23110eff33e",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-a0d053c9-583e-4057-a566-dd369925d5a2.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/reference.png",
+          "sha256": "26c369df4d0c27ac40f8947fd64d2360be2cc64701ae40e6ee6848fa15c5ccf3"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/far_leg_pose_guide.png",
+          "sha256": "23ab095f3345e6ff7f5ddc8bc5a2bc5769368c879c531b65cb502fac6fd00570"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/move_near_v1.png",
+      "sha256": "79d021f7cb371f39170f1c7824d2b51bd634ca2f7e0e5ceb4d7fcaa65990181c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "1b82b37cdd45246803ba16f731f8d074017b47398d80d0cbfbd803e53b0e9b64",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-403fafd6-c9ca-403c-b0dc-ee6ccd6f5c8f.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/reference.png",
+          "sha256": "26c369df4d0c27ac40f8947fd64d2360be2cc64701ae40e6ee6848fa15c5ccf3"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/near_passing_v1.png",
+          "sha256": "94a5b3a70983d4f12a0726b5ab440dea0f92b55e95b71028d8d13104baac74db"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/move_near_corrections_v1.png",
+      "sha256": "31393ce98333c2369721d51ff75f5c24d8a3587e7fd76a3b2504d121413b032f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/move_near_corrections_v1.prompt.txt",
+      "prompt_sha256": "2623d474796566f9c16852e888c78552b2f955005167a2d61167f72ad4790b17",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-cd09147e-affc-403d-a0de-d917bb8b2461.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/reference.png",
+          "sha256": "26c369df4d0c27ac40f8947fd64d2360be2cc64701ae40e6ee6848fa15c5ccf3"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/near_passing_guide.png",
+          "sha256": "c8c295acd52ccf4cbf5d1a25ed3b84f538d0d2672442df732cc170c78ab3aa7c"
+        }
+      ]
+    }
+  ]
+}
