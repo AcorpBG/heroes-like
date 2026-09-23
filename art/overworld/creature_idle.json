@@ -7509,33 +7509,37 @@
     "unit_brasshollow_quenchbell_mortars_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_quenchbell_mortars_veteran.png",
       "frame_size": [
-        314,
-        249
+        335,
+        253
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 160,
       "static_frame": 0,
       "ground_anchor": [
-        156.0,
-        239
+        164.0,
+        245
       ],
-      "painted_extent": 298,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_quenchbell_mortars_veteran.png",
+      "painted_extent": 319,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_quenchbell_mortars_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        100,
-        17,
-        414,
-        266
+        44,
+        39,
+        379,
+        292
       ],
-      "source_sha256": "9b5a3c4874eb2bbc3ba3543fea5607c7bc6bab599b804e2927abeca273b316c1",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_quenchbell_mortars_veteran/provenance.json",
-      "sha256": "696e358f871fe6c55afce1217002baf94a0d82b4619fa474fae70a0ca9ce3bd7"
+      "source_sha256": "f6b9d54b82b9f5db5ae425cacd30213b9163bb3c357faf12319bfa149a94b4b8",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_quenchbell_mortars_veteran/provenance.json",
+      "sha256": "c9a784907ab89ee8540e0fb8bad477a9d5d5a8b7dd313a1f9a9c94da4e93e9de"
     },
     "unit_brasshollow_crucible_crawlers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_crucible_crawlers_veteran.png",

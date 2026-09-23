@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/idle_v1.png": "5fbae2edd93085b82fce47cce27799b79f114d944c637ac50608b215eb4ba546",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/attack_v1.png": "b7387f09dd4514bc8445c32b07eb5d5ebd12c48123a39bbffe98a6e79738c830",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/ranged_v1.png": "6b1272d849e82abc64cb8ec3ab876b88bbfc5244721b96a6194acc0deeea22c0",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/reactions_v1.png": "30a0aa743bb2481b3edaed670055394c93e9523197c2c402fca577bd33a20278",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/cast_v1.png": "aad06e9be87134ad19532e4a6208a139cc3ee86fba998042531818ba2273c09b",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/death_v1.png": "de931ee7ff8ea8b5a6ae432901dfcf4a6b61d245cb0b257319b428a0f4e2109c",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/move_cross_v1.png": "43578540e381bb3be19a03e3716ac2d0a00c895d6e1b1566510ee5de04a6a8a7",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/move_near_v1.png": "08ff288d6807a155d07698c5435db6517d118e80db650edb045fb62e3f83ba92",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/move_v1.png": "69150010efac93b7903e91a85c74d7f4b43f0d9b0bafbd40c798b2fd43a6f750"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "56 original Staybell Bombardier paintings reviewed at Godot native battle scale; dedicated articulated operator actions, bell support and corrected reciprocal gait."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "9b5a3c4874eb2bbc3ba3543fea5607c7bc6bab599b804e2927abeca273b316c1",
+  "atlas_sha256": "f6b9d54b82b9f5db5ae425cacd30213b9163bb3c357faf12319bfa149a94b4b8",
+  "texture_bytes_rgba": 29153280
+}
