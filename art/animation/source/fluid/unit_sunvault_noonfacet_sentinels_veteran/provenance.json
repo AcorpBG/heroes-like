@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/idle_v1.png": "7a72c6b8e3e2930ead0abb94a732e252fc1e3d5524f9af2e80adeb7947814499",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/attack_v1.png": "109141b9d7fe754b130b6ff738bbd25fcd104aeb42cd5a84e3f49eb87d1e9919",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/death_v1.png": "68c9a43a4d01c8da68e637088175cb4c492b27a8e490fc20e074970413f74f86",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/reactions_v1.png": "8b2b700c4060c6925ea9eb630bc066d6b52094d96a5648b53b3393afb26eee5b",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/cast_v1.png": "11d9f9c2a82983616034a007bad608c9a9520a33b30ec297af4ea22d14ddc427",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/move_far_v1.png": "ae6fb59d996e703d4d0614a5e927c7a8bf537fdeef921db6d73b4e51b44f7971",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/move_support_v1.png": "0fada5804d5f6f5b198705489cb27d52ee99d26dc5875a71731c700df9751bcf",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels_veteran/move_near_v1.png": "1dd7c8b66a705541a5777e5a778ffe9f0c426bf908c4cddcfbea53cfa285e0df"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Meridian Lockguards: 48 original action placements across seven clips reviewed in Godot at 128px. Shield/weapon arm articulation, polearm attack recovery, dedicated brace and physical salute, reciprocal eight-pose gait, and full grounded collapse. Excludes two clipped source poses and the repeated support-leg proposal; preserves all originals and provenance."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "319bfcde9faf51a8a24b9b070091e3c27e055236933e3db17bb06ba7d86186a9",
+  "atlas_sha256": "7c268a96f76e71e927b9595e4066dd9cc6860fa13cc66dffdab50d5e8abf94e1",
+  "texture_bytes_rgba": 23030784
+}

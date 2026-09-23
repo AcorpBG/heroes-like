@@ -6643,33 +6643,37 @@
     "unit_sunvault_noonfacet_sentinels_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_noonfacet_sentinels_veteran.png",
       "frame_size": [
-        235,
-        248
+        272,
+        247
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 150,
       "static_frame": 0,
       "ground_anchor": [
-        84.0,
-        237
+        113.0,
+        239
       ],
-      "painted_extent": 232,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels_veteran.png",
+      "painted_extent": 256,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_noonfacet_sentinels_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        172,
-        35,
-        407,
-        283
+        91,
+        21,
+        363,
+        268
       ],
-      "source_sha256": "319bfcde9faf51a8a24b9b070091e3c27e055236933e3db17bb06ba7d86186a9",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_noonfacet_sentinels_veteran/provenance.json",
-      "sha256": "d274b88701907a211eb3724bf7ebdecdaae86c637a517302bb23898187df200a"
+      "source_sha256": "7c268a96f76e71e927b9595e4066dd9cc6860fa13cc66dffdab50d5e8abf94e1",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_noonfacet_sentinels_veteran/provenance.json",
+      "sha256": "2ec31072213586499e89cf04e4169091fdd5e1cbb95e830ff0a93ee1487baa02"
     },
     "unit_sunvault_solar_array_striders_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_solar_array_striders_veteran.png",
