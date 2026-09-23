@@ -1,0 +1,92 @@
+[
+  {
+    "stem": "move_v3",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-dadb65cd-8d3b-4ffe-a4d8-79ff3e6eeecb.png",
+    "reference": "move_half_a_v2.png",
+    "status": "rejected ambiguous repeated contacts",
+    "image_sha256": "aa4e4ade3b6b3b7129b35d3f4d23af75c7dc8c287edb94cbff5f9849bbfed469",
+    "prompt_sha256": "663986ba0e86c8f7060febcfa181a0bb63ea84fb351a8d4f90f6b6c1c6c0eef5"
+  },
+  {
+    "stem": "move_contacts_v4",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-7f833907-5fc4-453a-881c-dc90355830e0.png",
+    "reference": "move_half_a_v2.png",
+    "status": "right opposite contact selected; selected poses accepted after native review, candidate 11 and live 134 checks passed",
+    "image_sha256": "c761401c2e7649ec8ba857b9779c2a3ffd5495a5a36ff55186a1f170cc007e34",
+    "prompt_sha256": "7c216b0748c1dd23a29fa6e6e07b194aeb4dea2a822306bf373e98b6c8ef949a"
+  },
+  {
+    "stem": "move_inbetweens_v5",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-5a8e4dce-ea9b-4bc8-b580-8c822c083a47.png",
+    "reference": "move_contacts_v4.png",
+    "status": "rejected ambiguous phases and touching figures",
+    "image_sha256": "eb02ff023eac3993166ec26a7f54111bac6bbbc55a3e865f8d3ae2fc67189941",
+    "prompt_sha256": "e9b71a72b0a82136e77cccecdedc5fab0196d148c6fc55a42333b86ca4778a8d"
+  },
+  {
+    "stem": "move_left_support_v6",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-2ddd8ea7-252d-44fb-88c0-462fe476bdaa.png",
+    "reference": "move_contacts_v4.png",
+    "status": "rejected touching figures and clipped last weapon",
+    "image_sha256": "00d01712cd690cfeb2a72ebe2d4c68ec17c3325a8b7152ca2fbb850bc4d9833d",
+    "prompt_sha256": "3a20b165750c78d2c97e404fb052c1805d903b091936bc6e8cad8eb780a64b55"
+  },
+  {
+    "stem": "move_near_v7",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-5f22431b-3a82-4246-bd7e-a4112cca3b89.png",
+    "reference": "move_contacts_v4.png",
+    "status": "left far reach selected; right support unused; selected poses accepted after native review, candidate 11 and live 134 checks passed",
+    "image_sha256": "876b14efa8826e17c5ac3f551dc95a4bd082ca0f1262e3668b12c5fdb7bcd7cd",
+    "prompt_sha256": "f045489fa44db07a0f9c9065a99c8fc2a055aedc3838050443f87ec9a62312ee"
+  },
+  {
+    "stem": "move_near_reach_v8",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-3095c294-2572-4e9a-94f7-987df59ec399.png",
+    "reference": "move_contacts_v4.png",
+    "status": "right corrected near reach selected; selected poses accepted after native review, candidate 11 and live 134 checks passed",
+    "image_sha256": "6d0967f341ac4474848b3e918b2215891901a9054d7c48484305d800de136b8f",
+    "prompt_sha256": "14e31b618cbf37e262075c9747ee7baaa3a8dcfc746bf21320137f70e5f2e0fa"
+  },
+  {
+    "stem": "move_near_support_v9",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-45cc3538-27bc-4283-bbb2-00cf728d027f.png",
+    "reference": "move_contacts_v4.png",
+    "status": "pose reference only; rejected background alpha halo",
+    "image_sha256": "bfeea5eebd0a72b0203ebec08553a02f2877c5893e29d7628cd73beb61291a2f",
+    "prompt_sha256": "bc707f6b25d6d00ac2f2428cd2fa7a40561fdc54582387cdf8b13cba4e2cdd67"
+  },
+  {
+    "stem": "move_near_support_v10",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-fc36ca24-46ef-4ca1-bd9a-2bb8b409df38.png",
+    "reference": "move_near_support_v9.png",
+    "status": "isolated near support selected; selected poses accepted after native review, candidate 11 and live 134 checks passed",
+    "image_sha256": "99a5d243a9a8d5be3fdb7f5c3f9a435ceda63444a7d599db8c5b64ad004bbc36",
+    "prompt_sha256": "30f773705d3e1e47585f17117ed24474535067c3babc9010a700c69056033fd1"
+  },
+  {
+    "stem": "move_passing_v11",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-b5bcc44a-7a9a-4a14-8ab7-cff2115cbe96.png",
+    "reference": "move_contacts_v4.png",
+    "status": "Right passing pose selected; left corrected in v12 after native review; selected poses accepted after native review, candidate 11 and live 134 checks passed",
+    "image_sha256": "5c9593d9ac8fb073bfdccef52ac158091939d974aed7fa094494775816799d27",
+    "prompt_sha256": "c333ff80e7ea49fcbaa573c9a489a7a8f1d2b2e3e5caeeb142fa393d87966355"
+  },
+  {
+    "stem": "move_passing_v12",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-b8c6a0b1-acf6-43ed-8ab6-7b6dc76cdc51.png",
+    "reference": "move_passing_v11.png",
+    "status": "Left corrected near-knee passing selected, right unused; selected poses accepted after native review, candidate 11 and live 134 checks passed",
+    "image_sha256": "31dc306184b5a13e986cd125585f2e814f5b5c8614aedf227ddaf071eb154ac0",
+    "prompt_sha256": "16bdba61ba7bf7e84fdcda297a6406215e9af7a8ee77ccf944425c3ad16a8ec4"
+  }
+]

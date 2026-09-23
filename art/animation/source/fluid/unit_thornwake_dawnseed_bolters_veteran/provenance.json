@@ -51,7 +51,14 @@
     "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/cast_v2_frame_04.png": "f36134d3be87da38aa089563caca818bf45ce5b9e36d4d511d8274b2ec03f737",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/cast_v2_frame_05.png": "75da7675133ff058fe5b093d5ff80102fca3119fce18ec7660589ea9f15e8522",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/cast_v2_frame_06.png": "f31108f427d10a0e3eebcbcc6248acaf3193b9089be72c11a087288926da2106",
-    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/cast_v2_frame_07.png": "d2a08b2e9198c799cde658adc79b88d58b8198ecb6965373ed934ebd7c9eec76"
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/cast_v2_frame_07.png": "d2a08b2e9198c799cde658adc79b88d58b8198ecb6965373ed934ebd7c9eec76",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/move_half_a_v2.png": "d1fc1bc3d2a90a9bffd9abc4790b6f9160fc22bfb683bf4f614495ad470735ea",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/move_passing_v12.png": "31dc306184b5a13e986cd125585f2e814f5b5c8614aedf227ddaf071eb154ac0",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/move_near_reach_v8.png": "6d0967f341ac4474848b3e918b2215891901a9054d7c48484305d800de136b8f",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/move_contacts_v4.png": "c761401c2e7649ec8ba857b9779c2a3ffd5495a5a36ff55186a1f170cc007e34",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/move_near_support_v10.png": "99a5d243a9a8d5be3fdb7f5c3f9a435ceda63444a7d599db8c5b64ad004bbc36",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/move_passing_v11.png": "5c9593d9ac8fb073bfdccef52ac158091939d974aed7fa094494775816799d27",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/move_near_v7.png": "876b14efa8826e17c5ac3f551dc95a4bd082ca0f1262e3668b12c5fdb7bcd7cd"
   },
   "accepted_clips": [
     "idle",
@@ -60,14 +67,15 @@
     "hit",
     "defend",
     "death",
-    "cast"
+    "cast",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Native 128px review: branch-launcher arm idle, forward melee jab, ranged release, recoil/guard, gradual grounded collapse and two-handed weapon salute. Repeated-leading-foot walk remains withheld."
+    "notes": "Solo original-source and native 128px review accepted eight reciprocal gait paintings with explicit opposite contacts, separately corrected near-knee lift and reach, planted support and far-knee lift/reach. Every pose keeps both hands, three amber pods and complete weapon/cape. Fixed source scales preserve 233px body; selected alpha-separated originals omit halos and neighboring sprites. Earlier accepted actions preserved."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "eb18c3900ab9f6da0cedf629535e6a408a2a2348b18b4ec601594ce26d8ef43c",
-  "atlas_sha256": "8e8066d732490aee70ef41e972c0eb9008fa22d82696141aab4aeaae1a02cdd5",
-  "texture_bytes_rgba": 28945280
+  "atlas_sha256": "8b35972abce3b256bcd3f3d9fc47dd03407cde06215c726915a3e1efc11eafd8",
+  "texture_bytes_rgba": 35443200
 }
