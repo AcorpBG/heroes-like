@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_embercourt_lockglass_writcasters_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_embercourt_lockglass_writcasters_veteran/unit_embercourt_lockglass_writcasters_veteran_idle-alpha.png": "82c83bc9d50ff127cdbddc9e1c9abe0cb8cf6cabb7e9cc8393b8570cd1707626",
+    "res://art/animation/source/poses/unit_embercourt_lockglass_writcasters_veteran/unit_embercourt_lockglass_writcasters_veteran_actions-alpha.png": "373d57c4463bba801bcea7ef56100a9ccf69af244940777784af14dbb27b56c3"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "7c0583390b0ab5c6160380c40d5bf3c104368c4f36e54c77bd0a72785049b21a",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

@@ -1,0 +1,823 @@
+{
+  "faction_id": "faction_embercourt",
+  "items": [
+    {
+      "base_id": "unit_river_guard",
+      "upgrade_id": "unit_river_guard_veteran",
+      "name": "Weirshield Sentinels",
+      "art_brief": "Broad scalloped iron river shield, hooked spear, blue-green sash and riveted shoulder guards; preserve human river infantry proportions.",
+      "gameplay_rationale": "Adds personal missile screening to the existing reach-and-brace infantry, making the shield line a useful approach against shooters rather than only a retaliation trap.",
+      "unit": {
+        "id": "unit_river_guard_veteran",
+        "name": "Weirshield Sentinels",
+        "faction_id": "faction_embercourt",
+        "role": "melee",
+        "tier": 1,
+        "hp": 11,
+        "attack": 5,
+        "defense": 6,
+        "min_damage": 2,
+        "max_damage": 4,
+        "speed": 4,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "reach",
+            "name": "Hook Reach",
+            "description": "Can strike and retaliate across a partially closed line.",
+            "distance_one_multiplier": 0.9
+          },
+          {
+            "id": "brace",
+            "name": "River Brace",
+            "description": "Defensive retaliations hit harder, steady the line, and stagger the attacker into the next round.",
+            "retaliation_multiplier": 1.3,
+            "defending_cohesion_bonus": 2,
+            "status_id": "status_staggered",
+            "status_label": "Staggered",
+            "duration_rounds": 2,
+            "modifiers": {
+              "initiative": -2,
+              "cohesion": -1
+            }
+          },
+          {
+            "id": "shielding",
+            "name": "Weirshield Cover",
+            "description": "The broad weirshield reduces incoming ranged damage by 15%.",
+            "ranged_damage_multiplier": 0.85
+          }
+        ],
+        "growth": 7,
+        "cost": {
+          "gold": 81
+        },
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "beacon": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_river_guard",
+        "art_source_unit_id": "unit_river_guard",
+        "content_status": "town_dwelling_upgrade_live"
+      }
+    },
+    {
+      "base_id": "unit_embercourt_fordhook_cadets",
+      "upgrade_id": "unit_embercourt_fordhook_cadets_veteran",
+      "name": "Chainford Marshals",
+      "art_brief": "Paired long river hooks joined by a visibly heavy short chain, copper marshal shoulder badge, reinforced river boots and dark red coat.",
+      "gameplay_rationale": "A single half-open hook attack can pull a survivor into contact and pin it, letting the crossing specialist create an engagement even before an objective is held.",
+      "unit": {
+        "id": "unit_embercourt_fordhook_cadets_veteran",
+        "name": "Chainford Marshals",
+        "faction_id": "faction_embercourt",
+        "role": "melee",
+        "tier": 1,
+        "hp": 10,
+        "attack": 5,
+        "defense": 5,
+        "min_damage": 2,
+        "max_damage": 3,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "reach",
+            "name": "Fordhook Reach",
+            "description": "The long chain-hook can strike and retaliate across any half-open line at half damage.",
+            "distance_one_multiplier": 0.5
+          },
+          {
+            "id": "brace",
+            "name": "Crossing Brace",
+            "description": "Cadets set their hooks around a held crossing; while defending there, their answer checks the attacker and steadies the line.",
+            "retaliation_multiplier": 1.0,
+            "held_objective_retaliation_multiplier": 1.03,
+            "held_objective_types": [
+              "cover_line",
+              "obstruction_line",
+              "breach_point"
+            ],
+            "grants_base_cohesion": false,
+            "defending_cohesion_bonus": 1,
+            "status_id": "status_staggered",
+            "status_label": "Fordhooked",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -1
+            }
+          },
+          {
+            "id": "hookline",
+            "name": "Chainford Cast",
+            "description": "Once per battle, a hook strike across a half-open line pulls a surviving target into contact when space permits and roots it for the round.",
+            "distance_one_multiplier": 1.0,
+            "uses_per_battle": 1,
+            "available_from_round": 1,
+            "status_id": "status_rooted",
+            "status_label": "Chainford-Pinned",
+            "duration_rounds": 1,
+            "modifiers": {}
+          }
+        ],
+        "growth": 8,
+        "cost": {
+          "gold": 75
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "beacon": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_embercourt_fordhook_cadets",
+        "art_source_unit_id": "unit_embercourt_fordhook_cadets"
+      }
+    },
+    {
+      "base_id": "unit_ember_archer",
+      "upgrade_id": "unit_ember_archer_veteran",
+      "name": "Cinderwake Longbows",
+      "art_brief": "Tall recurved blackwood bow, smouldering orange arrow cage, red half-cloak and ash-grey leather; retain the lean human archer silhouette.",
+      "gameplay_rationale": "Existing harrying shots also reduce retaliation, so ranged preparation creates a safer melee entry instead of solely increasing ranged damage.",
+      "unit": {
+        "id": "unit_ember_archer_veteran",
+        "name": "Cinderwake Longbows",
+        "faction_id": "faction_embercourt",
+        "role": "ranged",
+        "tier": 2,
+        "hp": 9,
+        "attack": 6,
+        "defense": 4,
+        "min_damage": 2,
+        "max_damage": 3,
+        "speed": 5,
+        "initiative": 8,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 8,
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Lantern Volley",
+            "description": "Hits harder while the lines are still opening and the lane is clear.",
+            "damage_multiplier": 1.15,
+            "min_distance": 1,
+            "status_ids": [
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.12,
+            "ally_defending_multiplier": 1.1
+          },
+          {
+            "id": "harry",
+            "name": "Cinderwake Suppression",
+            "description": "Surviving targets lose defense, initiative and cohesion, and their retaliation deals 10% less damage for two rounds.",
+            "status_id": "status_harried",
+            "status_label": "Harried",
+            "duration_rounds": 2,
+            "modifiers": {
+              "defense": -1,
+              "initiative": -1,
+              "cohesion": -1,
+              "retaliation": -10
+            },
+            "momentum_gain": 1
+          }
+        ],
+        "growth": 5,
+        "cost": {
+          "gold": 115
+        },
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "beacon": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_ember_archer",
+        "art_source_unit_id": "unit_ember_archer",
+        "content_status": "town_dwelling_upgrade_live"
+      }
+    },
+    {
+      "base_id": "unit_embercourt_lantern_sappers",
+      "upgrade_id": "unit_embercourt_lantern_sappers_veteran",
+      "name": "Flarepot Engineers",
+      "art_brief": "Brass flare backpack, shuttered bullseye lantern, squat clay flare pots at the belt, leather apron and thick smoke goggles.",
+      "gameplay_rationale": "Keeps the army-wide ambush counter while adding one offensive flare strike against a ranged target; engineers can disrupt a shooter rather than merely survive behind the line.",
+      "unit": {
+        "id": "unit_embercourt_lantern_sappers_veteran",
+        "name": "Flarepot Engineers",
+        "faction_id": "faction_embercourt",
+        "role": "melee",
+        "tier": 2,
+        "hp": 12,
+        "attack": 6,
+        "defense": 5,
+        "min_damage": 3,
+        "max_damage": 4,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "counter_ambush_flare",
+            "name": "Counter-Ambush Flare",
+            "description": "While a Lantern Sapper stack survives, signal flares expose enemy ambush lanes, removing backstab and fogwake bonus damage and preventing Fogbound.",
+            "countered_ability_ids": [
+              "backstab",
+              "fogwake"
+            ],
+            "ambush_bonus_retention": 0.0,
+            "blocks_ambush_status": true,
+            "revealed_status_id": "status_flare_revealed",
+            "revealed_status_label": "Flare-Revealed",
+            "revealed_duration_rounds": 1,
+            "revealed_ability_ids": [
+              "fogwake"
+            ],
+            "revealed_modifiers": {
+              "defense": -1,
+              "initiative": -1
+            }
+          },
+          {
+            "id": "harry",
+            "name": "Shutterflare Breach",
+            "description": "Once per battle, a surviving ranged target struck by the engineers loses one initiative for the round.",
+            "status_id": "status_staggered",
+            "status_label": "Shutterflare Breach",
+            "duration_rounds": 1,
+            "momentum_gain": 0,
+            "uses_per_battle": 1,
+            "target_role": "ranged",
+            "modifiers": {
+              "initiative": -1
+            }
+          }
+        ],
+        "growth": 5,
+        "cost": {
+          "gold": 129,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "beacon": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_embercourt_lantern_sappers",
+        "art_source_unit_id": "unit_embercourt_lantern_sappers"
+      }
+    },
+    {
+      "base_id": "unit_citadel_pikeward",
+      "upgrade_id": "unit_citadel_pikeward_veteran",
+      "name": "Gateward Phalanx",
+      "art_brief": "Very long forked pike, narrow iron tower shield, stepped red helmet crest and layered riverplate; retain upright human pikeman anatomy.",
+      "gameplay_rationale": "Two retaliations each round and a light defensive stagger turn a firing-line support unit into a multi-attacker chokepoint holder.",
+      "unit": {
+        "id": "unit_citadel_pikeward_veteran",
+        "name": "Gateward Phalanx",
+        "faction_id": "faction_embercourt",
+        "role": "melee",
+        "tier": 3,
+        "hp": 19,
+        "attack": 8,
+        "defense": 9,
+        "min_damage": 4,
+        "max_damage": 7,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 2,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "reach",
+            "name": "Basin Pike",
+            "description": "Holds partial engagement lanes without giving up the front.",
+            "distance_one_multiplier": 1.0
+          },
+          {
+            "id": "formation_guard",
+            "name": "Citadel Screen",
+            "description": "Anchors the line, hardens allied cohesion, quickens supporting volleys, and punishes staggered breaches.",
+            "ally_ranged_damage_multiplier": 1.15,
+            "ally_ranged_initiative_bonus": 1,
+            "ally_cohesion_bonus": 1,
+            "defending_cohesion_bonus": 2,
+            "defending_initiative_bonus": 2,
+            "staggered_damage_multiplier": 1.1
+          },
+          {
+            "id": "brace",
+            "name": "Gateward Counterpoint",
+            "description": "While defending, the phalanx can stagger each surviving attacker it retaliates against for the round; it has two retaliations each round.",
+            "retaliation_multiplier": 1.0,
+            "grants_base_cohesion": false,
+            "defending_cohesion_bonus": 0,
+            "status_id": "status_staggered",
+            "status_label": "Pike-Checked",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -1
+            }
+          }
+        ],
+        "growth": 3,
+        "cost": {
+          "gold": 223
+        },
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "beacon": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_citadel_pikeward",
+        "art_source_unit_id": "unit_citadel_pikeward",
+        "content_status": "town_dwelling_upgrade_live"
+      }
+    },
+    {
+      "base_id": "unit_embercourt_bargebow_crews",
+      "upgrade_id": "unit_embercourt_bargebow_crews_veteran",
+      "name": "Winchbow Arbalests",
+      "art_brief": "Large heavy winch crossbow with visible crank, broad bow limbs and bracing strut; human operator in a leather quay apron with a copper sighting lens.",
+      "gameplay_rationale": "Retains protected-lane volley rules and adds one suppressing bolt only when another ally is adjacent to the target, rewarding coordinated ranged support of an engaged melee line.",
+      "unit": {
+        "id": "unit_embercourt_bargebow_crews_veteran",
+        "name": "Winchbow Arbalests",
+        "faction_id": "faction_embercourt",
+        "role": "ranged",
+        "tier": 3,
+        "hp": 15,
+        "attack": 8,
+        "defense": 6,
+        "min_damage": 4,
+        "max_damage": 7,
+        "speed": 3,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Held-Line Barge Shot",
+            "description": "Crews loose their heaviest barge bows only behind a defending screen or from a controlled firing lane.",
+            "damage_multiplier": 1.01,
+            "min_distance": 1,
+            "requires_protected_lane": true,
+            "protected_lane_objective_types": [
+              "cover_line",
+              "lane_battery"
+            ]
+          },
+          {
+            "id": "harry",
+            "name": "Crankshot Suppression",
+            "description": "Once per battle, a surviving target with another allied stack adjacent to it loses one defense and one initiative for the round.",
+            "status_id": "status_staggered",
+            "status_label": "Crankshot Suppression",
+            "duration_rounds": 1,
+            "momentum_gain": 0,
+            "uses_per_battle": 1,
+            "min_adjacent_allies_to_target": 1,
+            "modifiers": {
+              "defense": -1,
+              "initiative": -1
+            }
+          }
+        ],
+        "growth": 4,
+        "cost": {
+          "gold": 230,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 6,
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "beacon": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_embercourt_bargebow_crews",
+        "art_source_unit_id": "unit_embercourt_bargebow_crews"
+      }
+    },
+    {
+      "base_id": "unit_embercourt_ash_oath_bailiffs",
+      "upgrade_id": "unit_embercourt_ash_oath_bailiffs_veteran",
+      "name": "Ashseal Justiciars",
+      "art_brief": "Iron ash-stamp mace, hanging charter-seal tablets, closed judicial visor, ember waist sash and heavy grey coat over plate.",
+      "gameplay_rationale": "Adds one proactive citation on attack to the defensive brace identity, reducing a surviving target's retaliation before it answers the blow.",
+      "unit": {
+        "id": "unit_embercourt_ash_oath_bailiffs_veteran",
+        "name": "Ashseal Justiciars",
+        "faction_id": "faction_embercourt",
+        "role": "melee",
+        "tier": 4,
+        "hp": 25,
+        "attack": 9,
+        "defense": 10,
+        "min_damage": 5,
+        "max_damage": 9,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 3,
+        "cost": {
+          "gold": 351,
+          "ore": 1
+        },
+        "abilities": [
+          {
+            "id": "brace",
+            "name": "Ash-Writ Formation",
+            "description": "Bailiffs seal the compact line under civic writ, steadying their brace and citing the first attacker out of formation on the counterstroke.",
+            "retaliation_multiplier": 1.06,
+            "defending_cohesion_bonus": 1,
+            "status_id": "status_staggered",
+            "status_label": "Cited",
+            "duration_rounds": 1,
+            "modifiers": {
+              "cohesion": -1
+            }
+          },
+          {
+            "id": "harry",
+            "name": "Ashseal Warrant",
+            "description": "Once per battle, a surviving target of a direct attack loses one cohesion and 10% retaliation damage for the round.",
+            "status_id": "status_staggered",
+            "status_label": "Ashseal Warrant",
+            "duration_rounds": 1,
+            "momentum_gain": 0,
+            "uses_per_battle": 1,
+            "modifiers": {
+              "cohesion": -1,
+              "retaliation": -10
+            }
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "beacon": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_embercourt_ash_oath_bailiffs",
+        "art_source_unit_id": "unit_embercourt_ash_oath_bailiffs"
+      }
+    },
+    {
+      "base_id": "unit_embercourt_lockglass_writcasters",
+      "upgrade_id": "unit_embercourt_lockglass_writcasters_veteran",
+      "name": "Prismwrit Adjudicators",
+      "art_brief": "Faceted amber-glass casting prism, fan of suspended writ seals, burgundy layered sleeves and brass segmented collar; preserve human caster silhouette.",
+      "gameplay_rationale": "One ranged binding seal weakens retaliation more against a brace-equipped veteran target, creating an anti-brace support role alongside the existing stagger payoff.",
+      "unit": {
+        "id": "unit_embercourt_lockglass_writcasters_veteran",
+        "name": "Prismwrit Adjudicators",
+        "faction_id": "faction_embercourt",
+        "role": "ranged",
+        "tier": 4,
+        "hp": 21,
+        "attack": 10,
+        "defense": 9,
+        "min_damage": 5,
+        "max_damage": 9,
+        "speed": 4,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 7,
+        "growth": 3,
+        "cost": {
+          "gold": 378,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Lockglass Citation",
+            "description": "A heated writ-seal lands hardest against a staggered line while an allied shield line holds the firing lane open.",
+            "damage_multiplier": 1.08,
+            "min_distance": 1,
+            "status_ids": [
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.08,
+            "ally_defending_multiplier": 1.04
+          },
+          {
+            "id": "obituary",
+            "name": "Binding Injunction",
+            "description": "Once per battle, a ranged seal lowers a surviving target's cohesion by one and retaliation damage by 10%; against a brace-equipped target of tier 2 or higher the retaliation reduction is 20%.",
+            "status_id": "status_obituary_marked",
+            "status_label": "Injunction-Bound",
+            "duration_rounds": 1,
+            "uses_per_battle": 1,
+            "braced_target_min_tier": 2,
+            "braced_ai_target_priority_bonus": 1.5,
+            "modifiers": {
+              "cohesion": -1,
+              "retaliation": -10
+            },
+            "braced_modifiers": {
+              "cohesion": -1,
+              "retaliation": -20
+            }
+          }
+        ],
+        "spell_resistance_pct": 7,
+        "control_resistance_pct": 7,
+        "spell_school_resistance_pct": {
+          "furnace": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_embercourt_lockglass_writcasters",
+        "art_source_unit_id": "unit_embercourt_lockglass_writcasters"
+      }
+    },
+    {
+      "base_id": "unit_embercourt_beacon_lectors",
+      "upgrade_id": "unit_embercourt_beacon_lectors_veteran",
+      "name": "Dawnwrit Precentors",
+      "art_brief": "Split beacon staff, open bronze-bound civic codex, white-and-red mantle and small crown of copper lantern shutters.",
+      "gameplay_rationale": "The single readiness response now also protects low-tier and ranged allies, and can clear or intercept rooting; the decision changes from guarding elite melee to keeping the whole formation mobile.",
+      "unit": {
+        "id": "unit_embercourt_beacon_lectors_veteran",
+        "name": "Dawnwrit Precentors",
+        "faction_id": "faction_embercourt",
+        "role": "ranged",
+        "tier": 5,
+        "hp": 33,
+        "attack": 11,
+        "defense": 9,
+        "min_damage": 7,
+        "max_damage": 12,
+        "speed": 3,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "growth": 2,
+        "cost": {
+          "gold": 487,
+          "wood": 1,
+          "ore": 1
+        },
+        "abilities": [
+          {
+            "id": "harry",
+            "name": "Beacon Lane Citation",
+            "description": "The lector names one veteran breach in beacon law, slowing that line's response long enough for the compact formation to answer.",
+            "status_id": "status_harried",
+            "status_label": "Lane-Cited",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -1
+            },
+            "momentum_gain": 0,
+            "uses_per_battle": 1,
+            "target_min_tier": 4
+          },
+          {
+            "id": "readiness_writ",
+            "name": "Universal Muster",
+            "description": "Once per battle, clear harry, stagger or rooting from an ally, or reserve a response after firing to intercept the next such disruption on an allied line of any tier or role.",
+            "cleansed_status_ids": [
+              "status_harried",
+              "status_mire_harried",
+              "status_staggered",
+              "status_rooted"
+            ],
+            "preparation_status_id": "status_readiness_prepared",
+            "preparation_status_label": "Mustered",
+            "preparation_target_role": "",
+            "preparation_target_min_tier": 1,
+            "preparation_duration_rounds": 99,
+            "uses_per_battle": 1,
+            "ai_attack_score_bonus": 1.5
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 7,
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "beacon": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_embercourt_beacon_lectors",
+        "art_source_unit_id": "unit_embercourt_beacon_lectors"
+      }
+    },
+    {
+      "base_id": "unit_embercourt_beaconline_writguard",
+      "upgrade_id": "unit_embercourt_beaconline_writguard_veteran",
+      "name": "Lanternwall Wardens",
+      "art_brief": "Massive lantern-faced shield, spear pennon shaped as a long illuminated writ, bronze pauldrons and a red-black tabard.",
+      "gameplay_rationale": "Adds a modest army screen for ranged allies caught in melee, with extra protection against brace/reach attackers; the high-tier guard protects a collapsing firing line.",
+      "unit": {
+        "id": "unit_embercourt_beaconline_writguard_veteran",
+        "name": "Lanternwall Wardens",
+        "faction_id": "faction_embercourt",
+        "role": "melee",
+        "tier": 5,
+        "hp": 37,
+        "attack": 11,
+        "defense": 13,
+        "min_damage": 7,
+        "max_damage": 11,
+        "speed": 4,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 2,
+        "cost": {
+          "gold": 621,
+          "embergrain": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "brace",
+            "name": "Beaconline Counterseal",
+            "description": "The lantern pennon locks a defended line in place and cites the first attacker out of step.",
+            "retaliation_multiplier": 1.08,
+            "defending_cohesion_bonus": 1,
+            "status_id": "status_staggered",
+            "status_label": "Countersealed",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -1
+            }
+          },
+          {
+            "id": "formation_guard",
+            "name": "Writ-Lantern Standard",
+            "description": "A raised writ-lantern steadies the formation and gives supporting volleys one clean measured beat.",
+            "ally_ranged_damage_multiplier": 1.07,
+            "ally_ranged_initiative_bonus": 1,
+            "ally_cohesion_bonus": 1,
+            "defending_cohesion_bonus": 1,
+            "defending_initiative_bonus": 1,
+            "staggered_damage_multiplier": 1.08
+          },
+          {
+            "id": "shielding",
+            "name": "Lanternwall Refuge",
+            "description": "The shield reduces its own incoming ranged damage by 10%; allied ranged or shield-bearing stacks take 10% less contact melee damage, with another 5% reduction against brace or reach attackers.",
+            "ranged_damage_multiplier": 0.9,
+            "ally_ranged_melee_damage_reduction_pct": 10,
+            "linebreaker_screen_bonus_pct": 5
+          }
+        ],
+        "spell_resistance_pct": 8,
+        "control_resistance_pct": 8,
+        "spell_school_resistance_pct": {
+          "beacon": 12
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_embercourt_beaconline_writguard",
+        "art_source_unit_id": "unit_embercourt_beaconline_writguard"
+      }
+    },
+    {
+      "base_id": "unit_embercourt_sluicefire_lindworms",
+      "upgrade_id": "unit_embercourt_sluicefire_lindworms_veteran",
+      "name": "Floodpyre Lindworms",
+      "art_brief": "Wingless river lindworm with dark waterworn scales, bright ember throat vents, broad horned jaw and bronze sluice harness; preserve the long low serpentine body.",
+      "gameplay_rationale": "A reduced-force reach attack lets the prepared-target finisher exploit a wounded or disrupted enemy across a half-open line, trading full-contact damage for access.",
+      "unit": {
+        "id": "unit_embercourt_sluicefire_lindworms_veteran",
+        "name": "Floodpyre Lindworms",
+        "faction_id": "faction_embercourt",
+        "role": "melee",
+        "tier": 6,
+        "hp": 58,
+        "attack": 14,
+        "defense": 12,
+        "min_damage": 9,
+        "max_damage": 15,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 1,
+        "cost": {
+          "gold": 946,
+          "aetherglass": 1
+        },
+        "abilities": [
+          {
+            "id": "bloodrush",
+            "name": "Sluicefire Commitment",
+            "description": "The lindworm commits through a prepared breach, accelerating into wounded or disrupted prey but losing force against a clean line.",
+            "clean_target_damage_multiplier": 0.85,
+            "wounded_threshold_ratio": 0.5,
+            "wounded_damage_multiplier": 1.04,
+            "status_ids": [
+              "status_harried",
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.04,
+            "wounded_initiative_bonus": 1,
+            "max_initiative_bonus": 1,
+            "momentum_gain": 1,
+            "kill_momentum_gain": 1,
+            "late_round_initiative_bonus": 1
+          },
+          {
+            "id": "reach",
+            "name": "Floodpyre Lunge",
+            "description": "A long river-neck lunge can strike and retaliate across a half-open line at 60% damage.",
+            "distance_one_multiplier": 0.6
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 10,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "beacon": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_embercourt_sluicefire_lindworms",
+        "art_source_unit_id": "unit_embercourt_sluicefire_lindworms"
+      }
+    },
+    {
+      "base_id": "unit_embercourt_charter_colossus",
+      "upgrade_id": "unit_embercourt_charter_colossus_veteran",
+      "name": "Covenant Bastion",
+      "art_brief": "Walking masonry-and-bronze colossus with monumental engraved charter shield, beacon chimney shoulders, molten seal core and articulated stone feet.",
+      "gameplay_rationale": "Extends the charter retaliation aura to lower-tier melee and to allies that advanced rather than defended, supporting a deliberate formation push while preserving the colossus' own brace role.",
+      "unit": {
+        "id": "unit_embercourt_charter_colossus_veteran",
+        "name": "Covenant Bastion",
+        "faction_id": "faction_embercourt",
+        "role": "melee",
+        "tier": 7,
+        "hp": 118,
+        "attack": 18,
+        "defense": 19,
+        "min_damage": 16,
+        "max_damage": 27,
+        "speed": 4,
+        "initiative": 5,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 1,
+        "cost": {
+          "gold": 1891,
+          "embergrain": 2
+        },
+        "abilities": [
+          {
+            "id": "brace",
+            "name": "Marching Covenant",
+            "description": "The bastion braces its own line and grants other allied melee stacks of every tier 8% stronger retaliation, including allies that advanced instead of defending.",
+            "retaliation_multiplier": 1.08,
+            "ally_retaliation_multiplier": 1.08,
+            "ally_retaliation_min_tier": 1,
+            "ally_retaliation_role": "melee",
+            "ally_retaliation_requires_defending": false,
+            "ally_retaliation_ai_defend_bonus": 1.0,
+            "defending_cohesion_bonus": 2,
+            "status_id": "status_staggered",
+            "status_label": "Charter-Bound",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -1,
+              "cohesion": -1
+            }
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 15,
+        "control_resistance_pct": 10,
+        "spell_school_resistance_pct": {
+          "beacon": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_embercourt_charter_colossus",
+        "art_source_unit_id": "unit_embercourt_charter_colossus"
+      }
+    }
+  ]
+}

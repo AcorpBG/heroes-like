@@ -1,0 +1,139 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_wakeglass_navigators_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              601,
+              627
+            ]
+          ],
+          "anchor": [
+            276,
+            585
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              601,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            923,
+            585
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              601,
+              1254
+            ]
+          ],
+          "anchor": [
+            338,
+            1211
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              601,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            904,
+            1212
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              651
+            ]
+          ],
+          "anchor": [
+            328,
+            650
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              651
+            ]
+          ],
+          "anchor": [
+            884,
+            650
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              651,
+              576,
+              1254
+            ]
+          ],
+          "anchor": [
+            337,
+            1163
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              576,
+              651,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            894,
+            1181
+          ]
+        }
+      ],
+      "alpha_noise_cutoff": 8
+    }
+  ]
+}

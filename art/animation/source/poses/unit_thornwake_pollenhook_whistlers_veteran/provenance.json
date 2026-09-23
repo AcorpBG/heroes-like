@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_thornwake_pollenhook_whistlers_veteran/unit_thornwake_pollenhook_whistlers_veteran-alpha.png": "d5705fcb3bc1ba1ccca393d456b8b5d57d9d428f529ebc2ffbae4656125a1559",
+    "res://art/animation/source/poses/unit_thornwake_pollenhook_whistlers_veteran/unit_thornwake_pollenhook_whistlers_veteran_actions-alpha.png": "ab938b13dbca45c5375f1e04c1626498733c1115da97eeda5329a26243cf0ecb"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "0bdc1c789728957f9e956bd5030631d435a3a3f172e5042665fd158914b637b3",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

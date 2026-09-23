@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers_veteran/unit_mireclaw_fenbell_chainstalkers_veteran_idle-alpha.png": "45a5007c9943fcea5a591922712f19a4fd93d4eb4d54bc93869fec5fd0ae352f",
+    "res://art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers_veteran/unit_mireclaw_fenbell_chainstalkers_veteran_actions-alpha.png": "0d3b10e0d59aff55773e1114db8f4cb889d9f60d71ca505a5ab5ac0dfa43f0ea"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "e6c426fb7338ec1bc0b818c91f21e4cad1f2b1314bd5f47919ee3b4fd568e4c2",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_brasshollow_foundry_saint_veteran/unit_brasshollow_foundry_saint_veteran_source-alpha.png": "4d118eb9a448684a9184c2d086320a5bc4fba675427844bd3d58429d12ef8081",
+    "res://art/animation/source/poses/unit_brasshollow_foundry_saint_veteran/unit_brasshollow_foundry_saint_veteran_actions-alpha.png": "74ccc37e1c5d6c7ca1848c585ae1bbb3627941d504b48039d99c32c932ece7e4"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "16227a0219b52078bf7555f9bc395d306d41f4216ca8bf78334c02f08b620766",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

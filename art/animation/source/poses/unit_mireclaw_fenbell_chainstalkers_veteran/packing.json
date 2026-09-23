@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        399,
+        489
+      ],
+      "source": "unit_mireclaw_fenbell_chainstalkers_veteran_idle-alpha.png",
+      "scale": 0.4691358024691358,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1135,
+        489
+      ],
+      "source": "unit_mireclaw_fenbell_chainstalkers_veteran_idle-alpha.png",
+      "scale": 0.4691358024691358,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          512,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        429,
+        984
+      ],
+      "source": "unit_mireclaw_fenbell_chainstalkers_veteran_idle-alpha.png",
+      "scale": 0.4691358024691358,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          768,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1135,
+        984
+      ],
+      "source": "unit_mireclaw_fenbell_chainstalkers_veteran_idle-alpha.png",
+      "scale": 0.4691358024691358,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_mireclaw_fenbell_chainstalkers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          650,
+          506
+        ]
+      ],
+      "anchor": [
+        318,
+        497
+      ],
+      "scale": 0.4691358024691358
+    },
+    {
+      "source": "unit_mireclaw_fenbell_chainstalkers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          650,
+          0,
+          1536,
+          506
+        ]
+      ],
+      "anchor": [
+        990,
+        497
+      ],
+      "scale": 0.4691358024691358
+    },
+    {
+      "source": "unit_mireclaw_fenbell_chainstalkers_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          506,
+          635,
+          1024
+        ]
+      ],
+      "anchor": [
+        345,
+        985
+      ],
+      "scale": 0.4691358024691358
+    },
+    {
+      "source": "unit_mireclaw_fenbell_chainstalkers_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          635,
+          506,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1090,
+        963
+      ],
+      "scale": 0.4691358024691358
+    }
+  ]
+}

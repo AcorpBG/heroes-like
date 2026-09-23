@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_mireclaw_reedsnare_kin_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_mireclaw_reedsnare_kin_veteran/unit_mireclaw_reedsnare_kin_veteran_idle-alpha.png": "27e89b4d92bfdae7b6090fb51d542057516238a08e53ca750c862e75aaa327d4",
+    "res://art/animation/source/poses/unit_mireclaw_reedsnare_kin_veteran/unit_mireclaw_reedsnare_kin_veteran_actions-alpha.png": "8196fb2b292dea950183618b94585289606e49e64f4e8270dcbf74756aba3d88"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "231f54484e2b4f81cb00a4175350ed20b5655291d3ccb136e669d607f1f28dfe",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

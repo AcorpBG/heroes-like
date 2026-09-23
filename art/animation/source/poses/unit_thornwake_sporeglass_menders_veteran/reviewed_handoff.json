@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_thornwake_sporeglass_menders_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_sporeglass_menders_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              701,
+              561
+            ]
+          ],
+          "anchor": [
+            376.0,
+            536
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_sporeglass_menders_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              701,
+              0,
+              1402,
+              561
+            ]
+          ],
+          "anchor": [
+            1043.5,
+            536
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_sporeglass_menders_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              561,
+              746,
+              1122
+            ]
+          ],
+          "anchor": [
+            376.0,
+            1086
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_sporeglass_menders_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              746,
+              561,
+              1402,
+              1122
+            ]
+          ],
+          "anchor": [
+            1044.0,
+            1087
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_sporeglass_menders_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_sporeglass_menders_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              697,
+              586
+            ]
+          ],
+          "anchor": [
+            338.0,
+            559
+          ],
+          "clip": "attack",
+          "name": "attack_windup"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_sporeglass_menders_veteran_actions.png",
+          "rects": [
+            [
+              697,
+              0,
+              1402,
+              586
+            ]
+          ],
+          "anchor": [
+            1023.0,
+            562
+          ],
+          "clip": "attack",
+          "name": "attack_release"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_sporeglass_menders_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              586,
+              672,
+              1122
+            ]
+          ],
+          "anchor": [
+            390.0,
+            1058
+          ],
+          "clip": "hit",
+          "name": "hit_recoil"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_sporeglass_menders_veteran_actions.png",
+          "rects": [
+            [
+              672,
+              586,
+              1402,
+              1122
+            ]
+          ],
+          "anchor": [
+            1055,
+            1020
+          ],
+          "clip": "dead",
+          "name": "fallen"
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "sha256": "a099fd14e4572a0904c6fea512b7b082841da23cff371c86fb8af3cb9474ea75"
+    }
+  ]
+}

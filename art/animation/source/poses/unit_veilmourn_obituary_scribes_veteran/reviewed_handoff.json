@@ -1,0 +1,139 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_obituary_scribes_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              601,
+              627
+            ]
+          ],
+          "anchor": [
+            314,
+            585
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              601,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            927,
+            584
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              638,
+              1254
+            ]
+          ],
+          "anchor": [
+            296,
+            1206
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              638,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            914,
+            1206
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "anchor": [
+            311,
+            615
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            833,
+            615
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              627,
+              627,
+              1254
+            ]
+          ],
+          "anchor": [
+            360,
+            1173
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              627,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            899,
+            1157
+          ]
+        }
+      ],
+      "alpha_noise_cutoff": 8
+    }
+  ]
+}

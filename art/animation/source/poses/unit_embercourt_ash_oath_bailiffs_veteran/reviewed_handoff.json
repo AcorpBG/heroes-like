@@ -1,0 +1,141 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              768,
+              512
+            ]
+          ],
+          "anchor": [
+            485,
+            496
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              768,
+              0,
+              1536,
+              512
+            ]
+          ],
+          "anchor": [
+            1067,
+            496
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              512,
+              768,
+              1024
+            ]
+          ],
+          "anchor": [
+            513,
+            999
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              768,
+              512,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1074,
+            999
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_idle.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              768,
+              512
+            ]
+          ],
+          "anchor": [
+            447,
+            501
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              768,
+              0,
+              1536,
+              512
+            ]
+          ],
+          "anchor": [
+            1036,
+            485
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              512,
+              768,
+              1024
+            ]
+          ],
+          "anchor": [
+            484,
+            946
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              768,
+              512,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1140,
+            928
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_undertow_harpooners_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "anchor": [
+            286,
+            577
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            927,
+            577
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              681,
+              1254
+            ]
+          ],
+          "anchor": [
+            286,
+            1204
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              681,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            913,
+            1204
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "anchor": [
+            286,
+            604
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            876,
+            604
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              627,
+              620,
+              1254
+            ]
+          ],
+          "anchor": [
+            341,
+            1190
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              620,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            930,
+            1186
+          ]
+        }
+      ],
+      "alpha_noise_cutoff": 8
+    }
+  ]
+}

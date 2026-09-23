@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_mireclaw_sporewake_chanters_veteran/unit_mireclaw_sporewake_chanters_veteran_idle-alpha.png": "931309f8e105d645f17c36deec130436606997893377b684074e40c95785f3ae",
+    "res://art/animation/source/poses/unit_mireclaw_sporewake_chanters_veteran/unit_mireclaw_sporewake_chanters_veteran_actions-alpha.png": "561af4f087660930db1bc28ed2d82e9ae1f4e580ffcf8e1420e56a8cf62af414"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "afcff37a52d7df8341c9c81a18ede06747818b22cf3bfa3df2f97339c6e4e51d",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

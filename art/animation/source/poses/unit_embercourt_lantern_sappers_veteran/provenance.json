@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_embercourt_lantern_sappers_veteran/unit_embercourt_lantern_sappers_veteran_idle-alpha.png": "737249aa1c14e3f085c69385d995b553c3d42937cddea1833bf9e3eafd0a4b5a",
+    "res://art/animation/source/poses/unit_embercourt_lantern_sappers_veteran/unit_embercourt_lantern_sappers_veteran_actions-alpha.png": "747db76982607828c78da80020a65173c3614a1d85bfca124e547e6002be06c0"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "e01d6bb83cb542dbcee127548f073df89abd75d0dc22be73baa7b3953f1a4883",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

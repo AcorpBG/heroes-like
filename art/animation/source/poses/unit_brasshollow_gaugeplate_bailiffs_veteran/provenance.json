@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs_veteran/unit_brasshollow_gaugeplate_bailiffs_veteran_source-alpha.png": "074d6b203331e2f37101cb5351aa01332fd4490dce9610efaa84b0f1885f923c",
+    "res://art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs_veteran/unit_brasshollow_gaugeplate_bailiffs_veteran_actions-alpha.png": "b81826be8356efe30f9322acdda0e336016168b661928b58a612dca41445b6fb"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "80e603f6376228ebe93a03e9651e1f1024931b40d8f2a3b6ce65836adf12f277",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

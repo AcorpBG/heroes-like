@@ -1,0 +1,785 @@
+{
+  "faction_id": "faction_thornwake",
+  "items": [
+    {
+      "base_id": "unit_thornwake_seedcutters",
+      "upgrade_id": "unit_thornwake_seedcutters_veteran",
+      "name": "Amberhook Reapers",
+      "art_brief": "Low orchard laborer with twin amber sickles, sprouting shoulder baskets and broad hooked harvest blades; new pale graft shoots frame a compact forward silhouette.",
+      "gameplay_rationale": "Adds a wounded-target harvest decision to the existing objective-rooting infantry: primary melee attacks gain a modest finishing bonus below half health, without improving retaliation.",
+      "unit": {
+        "id": "unit_thornwake_seedcutters_veteran",
+        "name": "Amberhook Reapers",
+        "faction_id": "faction_thornwake",
+        "role": "melee",
+        "tier": 1,
+        "hp": 10,
+        "attack": 6,
+        "defense": 6,
+        "min_damage": 3,
+        "max_damage": 4,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "bramble_ground",
+            "name": "Bramble Stake",
+            "description": "On a held bramble line, Seedcutters steady their defense and root attackers they counter; their primary melee cuts bite harder into rooted targets.",
+            "held_objective_types": [
+              "cover_line",
+              "obstruction_line",
+              "breach_point"
+            ],
+            "defending_cohesion_bonus": 1,
+            "retaliation_multiplier": 1.01,
+            "rooted_damage_multiplier": 1.01,
+            "status_id": "status_rooted",
+            "status_label": "Bramble-Rooted",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -1
+            },
+            "ai_rooted_target_priority_bonus": 1.0
+          },
+          {
+            "id": "backstab",
+            "name": "Amber Harvest",
+            "description": "Primary melee cuts deal 10% more damage to enemies at half health or less; retaliation does not gain this bonus.",
+            "damage_multiplier": 1.0,
+            "momentum_gain": 0,
+            "status_ids": [],
+            "health_threshold_ratio": 0.5,
+            "threshold_damage_multiplier": 1.1,
+            "primary_melee_only": true
+          }
+        ],
+        "growth": 8,
+        "cost": {
+          "gold": 75,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "root": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_thornwake_seedcutters",
+        "art_source_unit_id": "unit_thornwake_seedcutters"
+      }
+    },
+    {
+      "base_id": "unit_thornwake_pollenhook_whistlers",
+      "upgrade_id": "unit_thornwake_pollenhook_whistlers_veteran",
+      "name": "Bloomchime Whistlers",
+      "art_brief": "Bellflower throat mask, curled pollen blowpipe and hanging seed chimes; a high blooming collar and yellow pollen sacs distinguish the light mobile shooter.",
+      "gameplay_rationale": "Adds a rooted-target ranged payoff to the once-per-battle root shot. The opening prepares a later shot, while allied roots can support follow-up fire after its own snare is spent.",
+      "unit": {
+        "id": "unit_thornwake_pollenhook_whistlers_veteran",
+        "name": "Bloomchime Whistlers",
+        "faction_id": "faction_thornwake",
+        "role": "ranged",
+        "tier": 1,
+        "hp": 9,
+        "attack": 6,
+        "defense": 5,
+        "min_damage": 3,
+        "max_damage": 4,
+        "speed": 5,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 6,
+        "growth": 8,
+        "cost": {
+          "gold": 81,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "harry",
+            "name": "Pollenhook Hitch",
+            "description": "Once per battle, a barbed seed dart bursts into clinging pollen and roots a chosen line for the next exchange.",
+            "status_id": "status_rooted",
+            "status_label": "Pollen-Hitched",
+            "duration_rounds": 1,
+            "uses_per_battle": 1,
+            "target_min_tier": 1,
+            "momentum_gain": 0,
+            "modifiers": {
+              "initiative": -1
+            },
+            "ai_target_priority_bonus": 0.4
+          },
+          {
+            "id": "volley",
+            "name": "Bloomchime Echo",
+            "description": "Ranged attacks deal 10% more damage to rooted enemies, rewarding a follow-up after the opening pollen snare.",
+            "damage_multiplier": 1.0,
+            "min_distance": 1,
+            "status_ids": [
+              "status_rooted"
+            ],
+            "status_damage_multiplier": 1.1,
+            "ally_defending_multiplier": 1.0
+          }
+        ],
+        "spell_resistance_pct": 4,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "root": 8
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_thornwake_pollenhook_whistlers",
+        "art_source_unit_id": "unit_thornwake_pollenhook_whistlers"
+      }
+    },
+    {
+      "base_id": "unit_thornwake_thornwhip_carriers",
+      "upgrade_id": "unit_thornwake_thornwhip_carriers_veteran",
+      "name": "Vinebraid Lashkeepers",
+      "art_brief": "Three braided living whips coiled around interwoven root bracers; long lash silhouette and a layered vine mantle show the greater reach without becoming a heavy shield soldier.",
+      "gameplay_rationale": "Adds reduced-force reach to a defensive retaliator. The player may lash across one intervening step to engage a shooter, or defend for the stronger binding counterattack.",
+      "unit": {
+        "id": "unit_thornwake_thornwhip_carriers_veteran",
+        "name": "Vinebraid Lashkeepers",
+        "faction_id": "faction_thornwake",
+        "role": "melee",
+        "tier": 2,
+        "hp": 12,
+        "attack": 7,
+        "defense": 6,
+        "min_damage": 4,
+        "max_damage": 5,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 5,
+        "cost": {
+          "gold": 129,
+          "wood": 1
+        },
+        "abilities": [
+          {
+            "id": "brace",
+            "name": "Root Brace",
+            "description": "Defensive retaliations lash attackers into root-bound rhythm.",
+            "retaliation_multiplier": 1.15,
+            "defending_cohesion_bonus": 2,
+            "status_id": "status_rooted",
+            "status_label": "Root-Bound",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -2,
+              "cohesion": -1
+            }
+          },
+          {
+            "id": "reach",
+            "name": "Vinebraid Reach",
+            "description": "Braided lashes engage a target from one step away at 70% damage; planted defensive counters retain their binding force.",
+            "distance_one_multiplier": 0.7
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "root": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_thornwake_thornwhip_carriers",
+        "art_source_unit_id": "unit_thornwake_thornwhip_carriers"
+      }
+    },
+    {
+      "base_id": "unit_thornwake_bramblekite_needlers",
+      "upgrade_id": "unit_thornwake_bramblekite_needlers_veteran",
+      "name": "Sunspine Kites",
+      "art_brief": "Wide translucent leaf-kite mantle with radial ivory thorn launchers and sunlit seed veins; a spreading triangular canopy distinguishes this nimble ranged organism.",
+      "gameplay_rationale": "Adds a small ranged payoff against harried targets. Repeated pins establish the condition for the next shot and reward cooperating with other harriers.",
+      "unit": {
+        "id": "unit_thornwake_bramblekite_needlers_veteran",
+        "name": "Sunspine Kites",
+        "faction_id": "faction_thornwake",
+        "role": "ranged",
+        "tier": 2,
+        "hp": 14,
+        "attack": 8,
+        "defense": 6,
+        "min_damage": 4,
+        "max_damage": 5,
+        "speed": 5,
+        "initiative": 8,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 7,
+        "growth": 5,
+        "cost": {
+          "gold": 142,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "harry",
+            "name": "Bramblekite Pin",
+            "description": "A seed-thorn cast from the folded kite mantle tangles the struck line for one exchange.",
+            "status_id": "status_harried",
+            "status_label": "Bramble-Pinned",
+            "duration_rounds": 1,
+            "momentum_gain": 1,
+            "modifiers": {
+              "defense": -1
+            },
+            "ai_target_priority_bonus": 0.2
+          },
+          {
+            "id": "volley",
+            "name": "Sunspine Pursuit",
+            "description": "Ranged thorns deal 8% more damage to harried enemies, turning a previous pin into a prepared follow-up.",
+            "damage_multiplier": 1.0,
+            "min_distance": 1,
+            "status_ids": [
+              "status_harried"
+            ],
+            "status_damage_multiplier": 1.08,
+            "ally_defending_multiplier": 1.0
+          }
+        ],
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "root": 8
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_thornwake_bramblekite_needlers",
+        "art_source_unit_id": "unit_thornwake_bramblekite_needlers"
+      }
+    },
+    {
+      "base_id": "unit_thornwake_sporeglass_menders",
+      "upgrade_id": "unit_thornwake_sporeglass_menders_veteran",
+      "name": "Dewglass Restorers",
+      "art_brief": "Blue-green dew reservoirs under a glass mushroom canopy, articulated salve nozzle and unfurling medicinal fronds; visible clear water and fresh shoots communicate restorative support.",
+      "gameplay_rationale": "Adds one prevention or cleansing response against rooting while keeping capped attack-triggered healing. The mender now restores movement as well as surviving health; no resurrection.",
+      "unit": {
+        "id": "unit_thornwake_sporeglass_menders_veteran",
+        "name": "Dewglass Restorers",
+        "faction_id": "faction_thornwake",
+        "role": "ranged",
+        "tier": 3,
+        "hp": 16,
+        "attack": 9,
+        "defense": 7,
+        "min_damage": 5,
+        "max_damage": 5,
+        "speed": 3,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "growth": 4,
+        "cost": {
+          "gold": 203,
+          "wood": 2
+        },
+        "abilities": [
+          {
+            "id": "sporeglass_mend",
+            "name": "Mending Fire",
+            "description": "Sporeglass salves ride each successful volley, restoring three health per living Mender up to eight health to one injured allied stack. Fallen creatures cannot return.",
+            "health_per_mender": 3,
+            "max_health_per_attack": 8
+          },
+          {
+            "id": "readiness_writ",
+            "name": "Dewglass Unfurling",
+            "description": "Once per battle, medicinal dew prevents an incoming root on an allied melee line, clears an ally's roots after firing, or prepares the same protection for later.",
+            "cleansed_status_ids": [
+              "status_rooted"
+            ],
+            "preparation_status_id": "status_readiness_prepared",
+            "preparation_status_label": "Dew-Prepared",
+            "preparation_target_role": "melee",
+            "preparation_target_min_tier": 1,
+            "preparation_duration_rounds": 99,
+            "uses_per_battle": 1,
+            "ai_attack_score_bonus": 0.75
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 6,
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "root": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_thornwake_sporeglass_menders",
+        "art_source_unit_id": "unit_thornwake_sporeglass_menders"
+      }
+    },
+    {
+      "base_id": "unit_thornwake_seedshield_wardens",
+      "upgrade_id": "unit_thornwake_seedshield_wardens_veteran",
+      "name": "Heartseed Wardens",
+      "art_brief": "Enlarged heart-shaped amber seed shield, seedling spear and overlapping green graft plates; standing guardian with a bright shield core and sheltering foliage.",
+      "gameplay_rationale": "Adds a small retaliation aura for other defending melee stacks. The warden becomes a formation anchor that rewards allied defend orders while retaining its own shield and counterroot.",
+      "unit": {
+        "id": "unit_thornwake_seedshield_wardens_veteran",
+        "name": "Heartseed Wardens",
+        "faction_id": "faction_thornwake",
+        "role": "melee",
+        "tier": 3,
+        "hp": 23,
+        "attack": 8,
+        "defense": 10,
+        "min_damage": 4,
+        "max_damage": 6,
+        "speed": 4,
+        "initiative": 5,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 4,
+        "cost": {
+          "gold": 257,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "brace",
+            "name": "Heartseed Covenant",
+            "description": "Rooted shield counters retain their binding force. Other allied melee stacks deal 8% more retaliation damage while defending.",
+            "retaliation_multiplier": 1.08,
+            "defending_cohesion_bonus": 1,
+            "status_id": "status_rooted",
+            "status_label": "Seedshield-Set",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -1
+            },
+            "ally_retaliation_multiplier": 1.08,
+            "ally_retaliation_min_tier": 1,
+            "ally_retaliation_role": "melee",
+            "ally_retaliation_requires_defending": true,
+            "ally_retaliation_ai_defend_bonus": 0.5
+          },
+          {
+            "id": "shielding",
+            "name": "Amber Seedglass",
+            "description": "Overlapping seedglass faces turn the hardest missile edge while the living shield line remains formed.",
+            "cohesion_hold_bonus": 1,
+            "ranged_damage_multiplier": 0.9,
+            "engaged_damage_multiplier": 1.03
+          }
+        ],
+        "spell_resistance_pct": 8,
+        "control_resistance_pct": 8,
+        "spell_school_resistance_pct": {
+          "root": 12
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_thornwake_seedshield_wardens",
+        "art_source_unit_id": "unit_thornwake_seedshield_wardens"
+      }
+    },
+    {
+      "base_id": "unit_thornwake_barkmantle_rams",
+      "upgrade_id": "unit_thornwake_barkmantle_rams_veteran",
+      "name": "Corkheart Ramparts",
+      "art_brief": "Massive ram-like bark body with thick cork layers, fresh white shoots and deeply grounded root feet; short angular horn bark catches missiles and throws back splinters.",
+      "gameplay_rationale": "Adds a small ranged-damage return to the existing thick missile screen. Opponents must decide whether shooting the durable ram is worth the splinter damage; melee bypasses the return.",
+      "unit": {
+        "id": "unit_thornwake_barkmantle_rams_veteran",
+        "name": "Corkheart Ramparts",
+        "faction_id": "faction_thornwake",
+        "role": "melee",
+        "tier": 4,
+        "hp": 27,
+        "attack": 10,
+        "defense": 12,
+        "min_damage": 6,
+        "max_damage": 10,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 3,
+        "cost": {
+          "gold": 392,
+          "wood": 2,
+          "ore": 1
+        },
+        "abilities": [
+          {
+            "id": "brace",
+            "name": "Barkmantle Brace",
+            "description": "A rooted wall stance that punishes attacks with binding counterforce.",
+            "retaliation_multiplier": 1.2,
+            "defending_cohesion_bonus": 2,
+            "status_id": "status_rooted",
+            "status_label": "Root-Bound",
+            "duration_rounds": 2,
+            "modifiers": {
+              "initiative": -2,
+              "cohesion": -2
+            }
+          },
+          {
+            "id": "shielding",
+            "name": "Corkheart Splinters",
+            "description": "Layered cork reduces incoming ranged damage by 18% and returns 8% of damage received to the shooter when the rampart survives. Existing contact and harried-target bonuses remain.",
+            "cohesion_hold_bonus": 0,
+            "ranged_damage_multiplier": 0.82,
+            "engaged_damage_multiplier": 1.06,
+            "harried_damage_multiplier": 1.06,
+            "ranged_damage_return_ratio": 0.08
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "root": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_thornwake_barkmantle_rams",
+        "art_source_unit_id": "unit_thornwake_barkmantle_rams"
+      }
+    },
+    {
+      "base_id": "unit_thornwake_dawnseed_bolters",
+      "upgrade_id": "unit_thornwake_dawnseed_bolters_veteran",
+      "name": "Dawnburst Arbalists",
+      "art_brief": "Split branch arbalest with three luminous germinating bolt pods and an extended root-stock brace; trained upright orchard artillery with a clear long firing axis.",
+      "gameplay_rationale": "Reworks its volley around a protected firing lane: an adjacent defending ally or controlled cover, obstruction or breach enables the stronger salvo. The mobile unprotected firing position loses the volley bonus.",
+      "unit": {
+        "id": "unit_thornwake_dawnseed_bolters_veteran",
+        "name": "Dawnburst Arbalists",
+        "faction_id": "faction_thornwake",
+        "role": "ranged",
+        "tier": 4,
+        "hp": 22,
+        "attack": 10,
+        "defense": 9,
+        "min_damage": 6,
+        "max_damage": 10,
+        "speed": 4,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 6,
+        "growth": 3,
+        "cost": {
+          "gold": 365,
+          "wood": 2
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "harry",
+            "name": "Dawnseed Pin",
+            "description": "Once per battle, a germinating bolt roots one veteran line just long enough for the grove to reform around it.",
+            "status_id": "status_rooted",
+            "status_label": "Dawnseed-Rooted",
+            "duration_rounds": 1,
+            "uses_per_battle": 1,
+            "target_min_tier": 3,
+            "momentum_gain": 0,
+            "modifiers": {
+              "defense": -1
+            },
+            "ai_target_priority_bonus": 0.25
+          },
+          {
+            "id": "volley",
+            "name": "Dawnburst Emplacement",
+            "description": "An adjacent defending ally or a controlled cover, obstruction or breach enables a 14% stronger ranged salvo, with a further 4% against rooted or staggered targets and 2% while any ally defends.",
+            "damage_multiplier": 1.14,
+            "min_distance": 1,
+            "status_ids": [
+              "status_rooted",
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.04,
+            "ally_defending_multiplier": 1.02,
+            "requires_protected_lane": true,
+            "protected_lane_objective_types": [
+              "cover_line",
+              "obstruction_line",
+              "breach_point"
+            ]
+          }
+        ],
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "root": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_thornwake_dawnseed_bolters",
+        "art_source_unit_id": "unit_thornwake_dawnseed_bolters"
+      }
+    },
+    {
+      "base_id": "unit_thornwake_stagknot_runners",
+      "upgrade_id": "unit_thornwake_stagknot_runners_veteran",
+      "name": "Antlerloom Striders",
+      "art_brief": "Long-legged grafted stag with luminous woven root antlers and flowering tendon ribbons; wider interlaced antlers and lean running limbs preserve the fast flanking silhouette.",
+      "gameplay_rationale": "Adds a modest primary-melee payoff against rooted targets. Fast reach can now exploit roots laid by slower grove units, without also increasing its defensive retaliation.",
+      "unit": {
+        "id": "unit_thornwake_stagknot_runners_veteran",
+        "name": "Antlerloom Striders",
+        "faction_id": "faction_thornwake",
+        "role": "melee",
+        "tier": 5,
+        "hp": 39,
+        "attack": 13,
+        "defense": 13,
+        "min_damage": 10,
+        "max_damage": 15,
+        "speed": 6,
+        "initiative": 8,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 2,
+        "cost": {
+          "gold": 554,
+          "wood": 2
+        },
+        "abilities": [
+          {
+            "id": "reach",
+            "name": "Pinning Reach",
+            "description": "Can engage from a step away to pin ranged lines before they reset.",
+            "distance_one_multiplier": 0.95
+          },
+          {
+            "id": "backstab",
+            "name": "Antlerloom Entwinement",
+            "description": "Primary melee attacks deal 12% more damage to rooted enemies; woven antlers exploit a prepared target without strengthening retaliation.",
+            "damage_multiplier": 1.12,
+            "momentum_gain": 0,
+            "status_ids": [
+              "status_rooted"
+            ],
+            "health_threshold_ratio": 0.0,
+            "threshold_damage_multiplier": 1.0,
+            "primary_melee_only": true
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "root": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_thornwake_stagknot_runners",
+        "art_source_unit_id": "unit_thornwake_stagknot_runners"
+      }
+    },
+    {
+      "base_id": "unit_thornwake_seedglass_cantors",
+      "upgrade_id": "unit_thornwake_seedglass_cantors_veteran",
+      "name": "Blossomchoir Cantors",
+      "art_brief": "Hooded living organism with hanging glass seed bells and flowering organ pipes; a broad sheltering blossom mantle spreads above the ranged choir body.",
+      "gameplay_rationale": "Adds a small melee screen for allied ranged and shield-bearing stacks. The cantor protects its firing choir from contact while retaining one root refrain and conditional volleys.",
+      "unit": {
+        "id": "unit_thornwake_seedglass_cantors_veteran",
+        "name": "Blossomchoir Cantors",
+        "faction_id": "faction_thornwake",
+        "role": "ranged",
+        "tier": 5,
+        "hp": 36,
+        "attack": 12,
+        "defense": 11,
+        "min_damage": 8,
+        "max_damage": 11,
+        "speed": 4,
+        "initiative": 8,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 7,
+        "growth": 2,
+        "cost": {
+          "gold": 554,
+          "wood": 1,
+          "verdant_grafts": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "harry",
+            "name": "Seedglass Refrain",
+            "description": "Once per battle, a measured seedglass refrain roots a veteran enemy line long enough for Crownroot's formation to answer.",
+            "status_id": "status_rooted",
+            "status_label": "Seedglass-Rooted",
+            "duration_rounds": 1,
+            "uses_per_battle": 1,
+            "target_min_tier": 3,
+            "momentum_gain": 0,
+            "modifiers": {
+              "defense": -1
+            },
+            "ai_target_priority_bonus": 0.3
+          },
+          {
+            "id": "volley",
+            "name": "Pollen-Cant Volley",
+            "description": "A held root lane lets the cantor braid pollen notes into a harder shot against enemies already caught or staggered.",
+            "damage_multiplier": 1.04,
+            "min_distance": 1,
+            "status_ids": [
+              "status_rooted",
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.05,
+            "ally_defending_multiplier": 1.03
+          },
+          {
+            "id": "shielding",
+            "name": "Blossomchoir Shelter",
+            "description": "Sheltering blossoms reduce contact melee damage received by allied ranged or shield-bearing stacks by 5%.",
+            "cohesion_hold_bonus": 0,
+            "ranged_damage_multiplier": 1.0,
+            "ally_ranged_melee_damage_reduction_pct": 5
+          }
+        ],
+        "spell_resistance_pct": 12,
+        "control_resistance_pct": 8,
+        "spell_school_resistance_pct": {
+          "root": 18
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_thornwake_seedglass_cantors",
+        "art_source_unit_id": "unit_thornwake_seedglass_cantors"
+      }
+    },
+    {
+      "base_id": "unit_thornwake_graft_matriarchs",
+      "upgrade_id": "unit_thornwake_graft_matriarchs_veteran",
+      "name": "Orchardheart Matriarchs",
+      "art_brief": "Large many-armed graft mother with fruiting halo boughs, suspended restorative sap sacs and bow-like seed-launching arms; heavy amber heart and translucent green fruit show renewal.",
+      "gameplay_rationale": "Adds capped healing after successful ranged damage to a high-tier salvo unit. Its four shots become a limited renewal resource; healing restores only surviving creatures and cannot revive casualties.",
+      "unit": {
+        "id": "unit_thornwake_graft_matriarchs_veteran",
+        "name": "Orchardheart Matriarchs",
+        "faction_id": "faction_thornwake",
+        "role": "ranged",
+        "tier": 6,
+        "hp": 53,
+        "attack": 14,
+        "defense": 11,
+        "min_damage": 10,
+        "max_damage": 17,
+        "speed": 3,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": true,
+        "growth": 1,
+        "cost": {
+          "gold": 973,
+          "peatwax": 1
+        },
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Highroot Graft Salvo",
+            "description": "The matriarch seeds living shafts through a prepared firing lane, pressing hardest into enemies already caught by bramble or broken formation.",
+            "damage_multiplier": 1.01,
+            "min_distance": 1,
+            "status_ids": [
+              "status_harried",
+              "status_rooted",
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.03
+          },
+          {
+            "id": "sporeglass_mend",
+            "name": "Orchardheart Sap",
+            "description": "Each successful ranged attack restores four health per living matriarch, up to twelve health, to one injured allied stack. Fallen creatures cannot return.",
+            "health_per_mender": 4,
+            "max_health_per_attack": 12
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 4,
+        "spell_resistance_pct": 10,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "root": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_thornwake_graft_matriarchs",
+        "art_source_unit_id": "unit_thornwake_graft_matriarchs"
+      }
+    },
+    {
+      "base_id": "unit_thornwake_worldroot_bastion",
+      "upgrade_id": "unit_thornwake_worldroot_bastion_veteran",
+      "name": "Evergraft Colossus",
+      "art_brief": "Towering walking orchard with a deep hollow amber heart, crown of successive fresh grafted canopies and huge root fists; interlocking root feet and layered boughs form a living fortress.",
+      "gameplay_rationale": "Adds a defensive rooting counterstroke to the capstone missile shield. The colossus can actively anchor a lane through defend-and-retaliate instead of functioning only as a large passive damage sponge.",
+      "unit": {
+        "id": "unit_thornwake_worldroot_bastion_veteran",
+        "name": "Evergraft Colossus",
+        "faction_id": "faction_thornwake",
+        "role": "melee",
+        "tier": 7,
+        "hp": 123,
+        "attack": 18,
+        "defense": 18,
+        "min_damage": 17,
+        "max_damage": 30,
+        "speed": 4,
+        "initiative": 5,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 1,
+        "cost": {
+          "gold": 1864,
+          "verdant_grafts": 2
+        },
+        "abilities": [
+          {
+            "id": "shielding",
+            "name": "Worldroot Rampart",
+            "description": "Interlocked root plates absorb incoming volleys and keep the living fortress coherent while the surrounding bramble line grinds down the field.",
+            "cohesion_hold_bonus": 0,
+            "ranged_damage_multiplier": 0.97
+          },
+          {
+            "id": "brace",
+            "name": "Evergraft Rootlock",
+            "description": "Defending gains one extra cohesion. Defensive retaliation deals 10% more damage and roots its surviving target for one round, reducing initiative by one.",
+            "retaliation_multiplier": 1.1,
+            "defending_cohesion_bonus": 1,
+            "status_id": "status_rooted",
+            "status_label": "Evergraft-Rooted",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -1
+            }
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 15,
+        "control_resistance_pct": 10,
+        "spell_school_resistance_pct": {
+          "root": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_thornwake_worldroot_bastion",
+        "art_source_unit_id": "unit_thornwake_worldroot_bastion"
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_sunvault_shard_wardens_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_sunvault_shard_wardens_veteran/unit_sunvault_shard_wardens_veteran_source-alpha.png": "f163092a13e719cde9749c92c5b65bdc2bee1a85091264d3ad1f9a4fcb59212c",
+    "res://art/animation/source/poses/unit_sunvault_shard_wardens_veteran/unit_sunvault_shard_wardens_veteran_actions-alpha.png": "6785a32cb7ba3153d47678399689bbb5e289917583c0f2200e68d09fd9f75649"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "4dee28a0a85658140e990a16eedffac75b8dc0c34268ffe24e6282288a3ff299",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

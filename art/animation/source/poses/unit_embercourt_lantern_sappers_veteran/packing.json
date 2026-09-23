@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    288
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          724,
+          543
+        ]
+      ],
+      "anchor": [
+        418,
+        530
+      ],
+      "source": "unit_embercourt_lantern_sappers_veteran_idle-alpha.png",
+      "scale": 0.45691382765531063,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          724,
+          0,
+          1448,
+          543
+        ]
+      ],
+      "anchor": [
+        1075,
+        530
+      ],
+      "source": "unit_embercourt_lantern_sappers_veteran_idle-alpha.png",
+      "scale": 0.45691382765531063,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          543,
+          724,
+          1086
+        ]
+      ],
+      "anchor": [
+        397,
+        1041
+      ],
+      "source": "unit_embercourt_lantern_sappers_veteran_idle-alpha.png",
+      "scale": 0.45691382765531063,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          724,
+          543,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        1083,
+        1041
+      ],
+      "source": "unit_embercourt_lantern_sappers_veteran_idle-alpha.png",
+      "scale": 0.45691382765531063,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_embercourt_lantern_sappers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          724,
+          551
+        ]
+      ],
+      "anchor": [
+        361,
+        546
+      ],
+      "scale_multiplier": 1.12,
+      "scale": 0.511743486973948
+    },
+    {
+      "source": "unit_embercourt_lantern_sappers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          724,
+          0,
+          1448,
+          551
+        ]
+      ],
+      "anchor": [
+        970,
+        551
+      ],
+      "scale_multiplier": 1.12,
+      "scale": 0.511743486973948
+    },
+    {
+      "source": "unit_embercourt_lantern_sappers_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          551,
+          724,
+          1086
+        ]
+      ],
+      "anchor": [
+        428,
+        1022
+      ],
+      "scale_multiplier": 1.12,
+      "scale": 0.511743486973948
+    },
+    {
+      "source": "unit_embercourt_lantern_sappers_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          724,
+          551,
+          1448,
+          1086
+        ]
+      ],
+      "anchor": [
+        1049,
+        1010
+      ],
+      "scale_multiplier": 1.12,
+      "scale": 0.511743486973948
+    }
+  ]
+}

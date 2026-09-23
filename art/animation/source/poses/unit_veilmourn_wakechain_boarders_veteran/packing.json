@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_veilmourn_wakechain_boarders_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          601,
+          627
+        ]
+      ],
+      "anchor": [
+        296,
+        591
+      ],
+      "source": "unit_veilmourn_wakechain_boarders_veteran-alpha.png",
+      "scale": 0.4293785310734463,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          601,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        923,
+        591
+      ],
+      "source": "unit_veilmourn_wakechain_boarders_veteran-alpha.png",
+      "scale": 0.4293785310734463,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          622,
+          1254
+        ]
+      ],
+      "anchor": [
+        296,
+        1210
+      ],
+      "source": "unit_veilmourn_wakechain_boarders_veteran-alpha.png",
+      "scale": 0.4293785310734463,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          622,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        923,
+        1210
+      ],
+      "source": "unit_veilmourn_wakechain_boarders_veteran-alpha.png",
+      "scale": 0.4293785310734463,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_veilmourn_wakechain_boarders_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          548,
+          627
+        ]
+      ],
+      "anchor": [
+        296,
+        626
+      ],
+      "scale": 0.4293785310734463
+    },
+    {
+      "source": "unit_veilmourn_wakechain_boarders_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          548,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        789,
+        625
+      ],
+      "scale": 0.4293785310734463
+    },
+    {
+      "source": "unit_veilmourn_wakechain_boarders_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          569,
+          1254
+        ]
+      ],
+      "anchor": [
+        280,
+        1175
+      ],
+      "scale": 0.4293785310734463
+    },
+    {
+      "source": "unit_veilmourn_wakechain_boarders_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          569,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        1044,
+        1202
+      ],
+      "scale": 0.4293785310734463
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_brasshollow_rivet_hounds_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          686,
+          595
+        ]
+      ],
+      "anchor": [
+        348,
+        538
+      ],
+      "source": "unit_brasshollow_rivet_hounds_veteran_source-alpha.png",
+      "scale": 0.4342857142857143,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          686,
+          0,
+          1322,
+          595
+        ]
+      ],
+      "anchor": [
+        1000,
+        539
+      ],
+      "source": "unit_brasshollow_rivet_hounds_veteran_source-alpha.png",
+      "scale": 0.4342857142857143,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          595,
+          686,
+          1190
+        ]
+      ],
+      "anchor": [
+        348,
+        1123
+      ],
+      "source": "unit_brasshollow_rivet_hounds_veteran_source-alpha.png",
+      "scale": 0.4342857142857143,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          686,
+          595,
+          1322,
+          1190
+        ]
+      ],
+      "anchor": [
+        1000,
+        1123
+      ],
+      "source": "unit_brasshollow_rivet_hounds_veteran_source-alpha.png",
+      "scale": 0.4342857142857143,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_brasshollow_rivet_hounds_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          580,
+          620
+        ]
+      ],
+      "anchor": [
+        300,
+        575
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.4342857142857143
+    },
+    {
+      "source": "unit_brasshollow_rivet_hounds_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          580,
+          0,
+          1254,
+          620
+        ]
+      ],
+      "anchor": [
+        910,
+        562
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.4342857142857143
+    },
+    {
+      "source": "unit_brasshollow_rivet_hounds_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          620,
+          575,
+          1254
+        ]
+      ],
+      "anchor": [
+        350,
+        1150
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.4342857142857143
+    },
+    {
+      "source": "unit_brasshollow_rivet_hounds_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          575,
+          620,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        904,
+        1149
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.4342857142857143
+    }
+  ]
+}

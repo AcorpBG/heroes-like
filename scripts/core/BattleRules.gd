@@ -9859,14 +9859,20 @@ static func _apply_stack_effect(battle: Dictionary, battle_id: String, effect_pa
 	if not (effect_payload is Dictionary):
 		return {}
 	var effect_id = String(effect_payload.get("effect_id", ""))
-	var readiness_block := _consume_readiness_writ_preparation(battle, battle_id, effect_id)
-	if not readiness_block.is_empty():
-		return readiness_block
 	var stacks = battle.get("stacks", [])
 	for index in range(stacks.size()):
 		var stack = stacks[index]
 		if not (stack is Dictionary) or String(stack.get("battle_id", "")) != battle_id:
 			continue
+		# Ability statuses obey the same innate and active-effect immunities as
+		# spells. An immune target must not spend a one-use readiness ward.
+		if SpellRulesScript.target_is_immune_to_status(stack, battle, effect_id):
+			return {"applied": false, "immune": true, "blocked": true,
+				"blocked_status_id": effect_id,
+				"message": "%s is immune to %s." % [_stack_label(stack), String(effect_payload.get("label", effect_id))]}
+		var readiness_block := _consume_readiness_writ_preparation(battle, battle_id, effect_id)
+		if not readiness_block.is_empty():
+			return readiness_block
 		stack = SpellRulesScript.normalize_stack_effects(stack)
 		var effects = stack.get("effects", [])
 		var kind = String(effect_payload.get("kind", ""))

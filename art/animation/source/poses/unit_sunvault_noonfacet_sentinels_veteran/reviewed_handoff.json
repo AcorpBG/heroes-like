@@ -1,0 +1,144 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_source.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              660,
+              630
+            ]
+          ],
+          "anchor": [
+            289,
+            594
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              680,
+              0,
+              1254,
+              630
+            ]
+          ],
+          "anchor": [
+            892,
+            593
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              630,
+              660,
+              1254
+            ]
+          ],
+          "anchor": [
+            294,
+            1179
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              680,
+              630,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            894,
+            1180
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_source.png"
+        },
+        {
+          "clip": "attack",
+          "name": "attack_windup",
+          "anchor": [
+            350,
+            610
+          ],
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "scale_multiplier": 1.18,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_actions.png"
+        },
+        {
+          "clip": "attack",
+          "name": "attack_release",
+          "anchor": [
+            870,
+            610
+          ],
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "scale_multiplier": 1.18,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_actions.png"
+        },
+        {
+          "clip": "hit",
+          "name": "hit_recoil",
+          "anchor": [
+            415,
+            1155
+          ],
+          "rects": [
+            [
+              0,
+              627,
+              627,
+              1254
+            ]
+          ],
+          "scale_multiplier": 1.18,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_actions.png"
+        },
+        {
+          "clip": "dead",
+          "name": "fallen",
+          "anchor": [
+            932,
+            1127
+          ],
+          "rects": [
+            [
+              627,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "scale_multiplier": 1.18,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_actions.png"
+        }
+      ]
+    }
+  ]
+}

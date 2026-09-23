@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_thornwake_thornwhip_carriers_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          669,
+          599
+        ]
+      ],
+      "anchor": [
+        364.5,
+        588
+      ],
+      "source": "unit_thornwake_thornwhip_carriers_veteran-alpha.png",
+      "scale": 0.39378238341968913,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          669,
+          0,
+          1310,
+          599
+        ]
+      ],
+      "anchor": [
+        878.5,
+        588
+      ],
+      "source": "unit_thornwake_thornwhip_carriers_veteran-alpha.png",
+      "scale": 0.39378238341968913,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          599,
+          707,
+          1200
+        ]
+      ],
+      "anchor": [
+        253.5,
+        1187
+      ],
+      "source": "unit_thornwake_thornwhip_carriers_veteran-alpha.png",
+      "scale": 0.39378238341968913,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          707,
+          599,
+          1310,
+          1200
+        ]
+      ],
+      "anchor": [
+        985.5,
+        1187
+      ],
+      "source": "unit_thornwake_thornwhip_carriers_veteran-alpha.png",
+      "scale": 0.39378238341968913,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_thornwake_thornwhip_carriers_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          610,
+          629
+        ]
+      ],
+      "anchor": [
+        348.0,
+        577
+      ],
+      "clip": "attack",
+      "name": "attack_windup",
+      "scale": 0.39378238341968913
+    },
+    {
+      "source": "unit_thornwake_thornwhip_carriers_veteran_actions-alpha.png",
+      "rects": [
+        [
+          610,
+          0,
+          1310,
+          629
+        ]
+      ],
+      "anchor": [
+        904.0,
+        571
+      ],
+      "clip": "attack",
+      "name": "attack_release",
+      "scale": 0.39378238341968913
+    },
+    {
+      "source": "unit_thornwake_thornwhip_carriers_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          629,
+          625,
+          1200
+        ]
+      ],
+      "anchor": [
+        323,
+        1135
+      ],
+      "clip": "hit",
+      "name": "hit_recoil",
+      "scale": 0.39378238341968913
+    },
+    {
+      "source": "unit_thornwake_thornwhip_carriers_veteran_actions-alpha.png",
+      "rects": [
+        [
+          625,
+          629,
+          1310,
+          1200
+        ]
+      ],
+      "anchor": [
+        995,
+        1110
+      ],
+      "clip": "dead",
+      "name": "fallen",
+      "scale": 0.39378238341968913
+    }
+  ]
+}

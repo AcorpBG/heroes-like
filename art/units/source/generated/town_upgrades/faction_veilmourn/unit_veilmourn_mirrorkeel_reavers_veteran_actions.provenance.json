@@ -1,0 +1,331 @@
+{
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+  "created_utc_date": "2026-09-23",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mirrorkeel_reavers_veteran_actions.png",
+  "sha256": "9f0b4521092d4ad6a5113c8105098f50d68e2de83ea19b1fc6dba80ff18b8299",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "prompt_file": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mirrorkeel_reavers_veteran_actions.prompt.txt",
+  "reference_files": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mirrorkeel_reavers_veteran.png",
+      "role": "Accepted original upgraded idle design; preserve character identity, equipment, camera and rendering.",
+      "sha256": "b777f74e772ab0e997809fcee4eecb260ff43a1568c0984140c908aafdc71212"
+    }
+  ],
+  "selected_actions": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mirrorkeel_reavers_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          604,
+          627
+        ]
+      ],
+      "anchor": [
+        320,
+        626
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mirrorkeel_reavers_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          604,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        948,
+        626
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mirrorkeel_reavers_veteran_actions.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          755,
+          627,
+          771
+        ],
+        [
+          0,
+          771,
+          627,
+          787
+        ],
+        [
+          0,
+          787,
+          627,
+          803
+        ],
+        [
+          0,
+          803,
+          627,
+          819
+        ],
+        [
+          0,
+          819,
+          627,
+          835
+        ],
+        [
+          0,
+          835,
+          637,
+          851
+        ],
+        [
+          0,
+          851,
+          629,
+          867
+        ],
+        [
+          0,
+          867,
+          627,
+          883
+        ],
+        [
+          0,
+          883,
+          627,
+          899
+        ],
+        [
+          0,
+          899,
+          627,
+          915
+        ],
+        [
+          0,
+          915,
+          627,
+          931
+        ],
+        [
+          0,
+          931,
+          627,
+          947
+        ],
+        [
+          0,
+          947,
+          627,
+          963
+        ],
+        [
+          0,
+          963,
+          627,
+          979
+        ],
+        [
+          0,
+          979,
+          627,
+          995
+        ],
+        [
+          0,
+          995,
+          627,
+          1011
+        ],
+        [
+          0,
+          1011,
+          627,
+          1027
+        ],
+        [
+          0,
+          1027,
+          627,
+          1043
+        ],
+        [
+          0,
+          1043,
+          627,
+          1059
+        ],
+        [
+          0,
+          1059,
+          627,
+          1075
+        ],
+        [
+          0,
+          1075,
+          627,
+          1091
+        ],
+        [
+          0,
+          1091,
+          627,
+          1107
+        ],
+        [
+          0,
+          1107,
+          627,
+          1123
+        ],
+        [
+          0,
+          1123,
+          619,
+          1139
+        ],
+        [
+          0,
+          1139,
+          618,
+          1155
+        ],
+        [
+          0,
+          1155,
+          627,
+          1171
+        ],
+        [
+          0,
+          1171,
+          627,
+          1187
+        ]
+      ],
+      "anchor": [
+        289,
+        1181
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mirrorkeel_reavers_veteran_actions.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          627,
+          963,
+          1254,
+          979
+        ],
+        [
+          627,
+          979,
+          1254,
+          995
+        ],
+        [
+          627,
+          995,
+          1254,
+          1011
+        ],
+        [
+          627,
+          1011,
+          1254,
+          1027
+        ],
+        [
+          627,
+          1027,
+          1254,
+          1043
+        ],
+        [
+          627,
+          1043,
+          1254,
+          1059
+        ],
+        [
+          627,
+          1059,
+          1254,
+          1075
+        ],
+        [
+          627,
+          1075,
+          1254,
+          1091
+        ],
+        [
+          627,
+          1091,
+          1254,
+          1107
+        ],
+        [
+          627,
+          1107,
+          1254,
+          1123
+        ],
+        [
+          619,
+          1123,
+          1254,
+          1139
+        ],
+        [
+          618,
+          1139,
+          1254,
+          1155
+        ],
+        [
+          627,
+          1155,
+          1254,
+          1171
+        ],
+        [
+          627,
+          1171,
+          1254,
+          1187
+        ],
+        [
+          627,
+          1187,
+          1254,
+          1203
+        ]
+      ],
+      "anchor": [
+        920,
+        1189
+      ]
+    }
+  ],
+  "visual_review": "Four original articulated battle poses: attack windup, attack release, hit recoil and truly fallen corpse; transparent source exterior, no ground or gore."
+}

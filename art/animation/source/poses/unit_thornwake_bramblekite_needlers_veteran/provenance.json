@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_thornwake_bramblekite_needlers_veteran/unit_thornwake_bramblekite_needlers_veteran-alpha.png": "71dac14ab69a309b0696609c996737001d0ca7d8434ffa15358c1b090d08583e",
+    "res://art/animation/source/poses/unit_thornwake_bramblekite_needlers_veteran/unit_thornwake_bramblekite_needlers_veteran_actions-alpha.png": "186597d753196bf01030f6cc27f1f0dede291d39a6b24974d7669e03e37755d1"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "b54678cd35fe9c3ffe32bde23c8ad56f234786f5632ae7acb7e9dcbf758f0610",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

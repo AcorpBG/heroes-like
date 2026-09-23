@@ -1,0 +1,126 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_embercourt_lockglass_writcasters_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              599
+            ]
+          ],
+          "anchor": [
+            331,
+            587
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            964,
+            586
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              656,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            965,
+            1165
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_idle.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              633,
+              599
+            ]
+          ],
+          "anchor": [
+            295,
+            582
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              633,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            862,
+            576
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              599,
+              604,
+              1199
+            ]
+          ],
+          "anchor": [
+            221,
+            1117
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              604,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            938,
+            1104
+          ]
+        }
+      ]
+    }
+  ]
+}

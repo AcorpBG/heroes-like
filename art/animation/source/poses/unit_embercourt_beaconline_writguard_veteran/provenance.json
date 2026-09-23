@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_embercourt_beaconline_writguard_veteran/unit_embercourt_beaconline_writguard_veteran_idle-alpha.png": "e19dceda58becf423329a1cf0e07ba6ce602d51676166a7e6183d0c79737156b",
+    "res://art/animation/source/poses/unit_embercourt_beaconline_writguard_veteran/unit_embercourt_beaconline_writguard_veteran_actions-alpha.png": "5b7607a830b300e5c47cbdd021c52e6c76ff71f4a6192378cdd29af1539a3d45"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "a1e7955a00111610d79580905a668f10de736482195d62787c85109259be3191",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

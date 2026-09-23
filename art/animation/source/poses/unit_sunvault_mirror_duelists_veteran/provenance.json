@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_sunvault_mirror_duelists_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_sunvault_mirror_duelists_veteran/unit_sunvault_mirror_duelists_veteran_source-alpha.png": "18d7b9564e3d5dfc96af21f6a16f6e94dfdf90e8213fe8b880084c0da502667d",
+    "res://art/animation/source/poses/unit_sunvault_mirror_duelists_veteran/unit_sunvault_mirror_duelists_veteran_actions-alpha.png": "e91355d4219f7a55727f5bb314bed8c2b547b266a0edc36e6ce7c26bd6e2040a"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "2471fc298d0ce74e75c18e46d2fa98c5ac7948d54aced0ef3d39e20e4c57f422",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

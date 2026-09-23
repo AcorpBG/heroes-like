@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_brasshollow_rivet_hounds_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_brasshollow_rivet_hounds_veteran/unit_brasshollow_rivet_hounds_veteran_source-alpha.png": "c054e36c6a8cc285e008ccda04dc419a4d6c12cad2a3b49468651be7615e0566",
+    "res://art/animation/source/poses/unit_brasshollow_rivet_hounds_veteran/unit_brasshollow_rivet_hounds_veteran_actions-alpha.png": "386a1ee8dfabcabca10b78c3f29a715ac86ba8cc1e7158da432cf80c7b81fc35"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "c6ba922416abee7e79ae2723acab7ea012b7f024d42bf98769594e6c4deddac8",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

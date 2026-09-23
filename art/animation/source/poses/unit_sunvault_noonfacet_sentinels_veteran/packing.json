@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    304
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          660,
+          630
+        ]
+      ],
+      "anchor": [
+        289,
+        594
+      ],
+      "source": "unit_sunvault_noonfacet_sentinels_veteran_source-alpha.png",
+      "scale": 0.42066420664206644,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          680,
+          0,
+          1254,
+          630
+        ]
+      ],
+      "anchor": [
+        892,
+        593
+      ],
+      "source": "unit_sunvault_noonfacet_sentinels_veteran_source-alpha.png",
+      "scale": 0.42066420664206644,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          630,
+          660,
+          1254
+        ]
+      ],
+      "anchor": [
+        294,
+        1179
+      ],
+      "source": "unit_sunvault_noonfacet_sentinels_veteran_source-alpha.png",
+      "scale": 0.42066420664206644,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          680,
+          630,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        894,
+        1180
+      ],
+      "source": "unit_sunvault_noonfacet_sentinels_veteran_source-alpha.png",
+      "scale": 0.42066420664206644,
+      "name": "idle_3"
+    },
+    {
+      "clip": "attack",
+      "name": "attack_windup",
+      "anchor": [
+        350,
+        610
+      ],
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "scale_multiplier": 1.18,
+      "source": "unit_sunvault_noonfacet_sentinels_veteran_actions-alpha.png",
+      "scale": 0.4963837638376384
+    },
+    {
+      "clip": "attack",
+      "name": "attack_release",
+      "anchor": [
+        870,
+        610
+      ],
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "scale_multiplier": 1.18,
+      "source": "unit_sunvault_noonfacet_sentinels_veteran_actions-alpha.png",
+      "scale": 0.4963837638376384
+    },
+    {
+      "clip": "hit",
+      "name": "hit_recoil",
+      "anchor": [
+        415,
+        1155
+      ],
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "scale_multiplier": 1.18,
+      "source": "unit_sunvault_noonfacet_sentinels_veteran_actions-alpha.png",
+      "scale": 0.4963837638376384
+    },
+    {
+      "clip": "dead",
+      "name": "fallen",
+      "anchor": [
+        932,
+        1127
+      ],
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "scale_multiplier": 1.18,
+      "source": "unit_sunvault_noonfacet_sentinels_veteran_actions-alpha.png",
+      "scale": 0.4963837638376384
+    }
+  ]
+}

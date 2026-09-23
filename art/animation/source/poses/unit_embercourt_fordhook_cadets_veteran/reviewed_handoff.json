@@ -1,0 +1,145 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_embercourt_fordhook_cadets_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_idle.png",
+      "source_facing": "right",
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              650,
+              610
+            ]
+          ],
+          "anchor": [
+            334,
+            583
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              650,
+              0,
+              1312,
+              610
+            ]
+          ],
+          "anchor": [
+            963,
+            583
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              610,
+              735,
+              1199
+            ]
+          ],
+          "anchor": [
+            269,
+            1139
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              735,
+              610,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            951,
+            1152
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_idle.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              611,
+              599
+            ]
+          ],
+          "anchor": [
+            306,
+            579
+          ],
+          "scale_multiplier": 1.25
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              611,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            845,
+            577
+          ],
+          "scale_multiplier": 1.25
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              599,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            367,
+            1123
+          ],
+          "scale_multiplier": 1.25
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              656,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            972,
+            1078
+          ],
+          "scale_multiplier": 1.25
+        }
+      ],
+      "alpha_noise_cutoff": 8
+    }
+  ]
+}

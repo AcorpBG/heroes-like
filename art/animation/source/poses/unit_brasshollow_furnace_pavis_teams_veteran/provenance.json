@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_brasshollow_furnace_pavis_teams_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_brasshollow_furnace_pavis_teams_veteran/unit_brasshollow_furnace_pavis_teams_veteran_source-alpha.png": "999cbfe1dea70a6261c229d12179b8ffd040572dda011672a5eb3be148ac13d7",
+    "res://art/animation/source/poses/unit_brasshollow_furnace_pavis_teams_veteran/unit_brasshollow_furnace_pavis_teams_veteran_actions-alpha.png": "b30d381d8f8e81f635c54b0a0bceb8e90541b35b0761b9027590e4ac28978488"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "a02a84374e9419192eedc09f8846ef877ca2608ef50f21539369d0b1fcc6cde2",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

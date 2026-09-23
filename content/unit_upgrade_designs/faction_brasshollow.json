@@ -1,0 +1,753 @@
+{
+  "faction_id": "faction_brasshollow",
+  "items": [
+    {
+      "base_id": "unit_brasshollow_scrip_haulers",
+      "upgrade_id": "unit_brasshollow_scrip_haulers_veteran",
+      "name": "Ledgerwall Porters",
+      "art_brief": "Stocky debt laborer behind a tall riveted ledger shield with a brass tally rack; short hook hammer and thick leather apron.",
+      "gameplay_rationale": "Cheap defensive anchor now rewards Defend with brace retaliation and staggers attacking survivors, preparing the faction volley chain. Low damage preserves the laborer role.",
+      "unit": {
+        "id": "unit_brasshollow_scrip_haulers_veteran",
+        "name": "Ledgerwall Porters",
+        "faction_id": "faction_brasshollow",
+        "role": "melee",
+        "tier": 1,
+        "hp": 11,
+        "attack": 4,
+        "defense": 6,
+        "min_damage": 2,
+        "max_damage": 3,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "shielding",
+            "name": "Riveted Ledgerwall",
+            "description": "Cheap riveted plates blunt incoming ranged fire without adding battle-line punch.",
+            "snare_vulnerable": true,
+            "cohesion_hold_bonus": 0,
+            "ranged_damage_multiplier": 0.9
+          },
+          {
+            "id": "brace",
+            "name": "Unpaid Balance",
+            "description": "While defending, answer melee attackers with 10% stronger retaliation and leave survivors staggered for one round; defending also adds one cohesion.",
+            "retaliation_multiplier": 1.1,
+            "defending_cohesion_bonus": 1,
+            "status_id": "status_staggered",
+            "status_label": "Ledger-Staggered",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -1
+            }
+          }
+        ],
+        "growth": 8,
+        "cost": {
+          "gold": 95,
+          "ore": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "furnace": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_brasshollow_scrip_haulers",
+        "art_source_unit_id": "unit_brasshollow_scrip_haulers"
+      }
+    },
+    {
+      "base_id": "unit_brasshollow_tallyspring_throwers",
+      "upgrade_id": "unit_brasshollow_tallyspring_throwers_veteran",
+      "name": "Writwheel Reclaimers",
+      "art_brief": "Lean masked loader carrying an oversized toothed brass disc launcher, stacked debt writs and a spring drum across the back.",
+      "gameplay_rationale": "Opening ranging disc staggers one surviving target per battle, creating rather than merely consuming the faction stagger payoff.",
+      "unit": {
+        "id": "unit_brasshollow_tallyspring_throwers_veteran",
+        "name": "Writwheel Reclaimers",
+        "faction_id": "faction_brasshollow",
+        "role": "ranged",
+        "tier": 1,
+        "hp": 8,
+        "attack": 5,
+        "defense": 3,
+        "min_damage": 2,
+        "max_damage": 4,
+        "speed": 4,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 7,
+        "growth": 8,
+        "cost": {
+          "gold": 88,
+          "ore": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Stamped Ricochet",
+            "description": "A hard-cranked tally disc skips through a staggered line with a little more force than its cheap spring should carry.",
+            "damage_multiplier": 1.05,
+            "min_distance": 1,
+            "status_ids": [
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.04
+          },
+          {
+            "id": "harry",
+            "name": "Served by Ricochet",
+            "description": "Once per battle, the first surviving target is staggered for one round, losing one initiative and opening it to calibrated volleys.",
+            "status_id": "status_staggered",
+            "status_label": "Writ-Struck",
+            "duration_rounds": 1,
+            "uses_per_battle": 1,
+            "target_min_tier": 1,
+            "momentum_gain": 0,
+            "modifiers": {
+              "initiative": -1
+            },
+            "ai_target_priority_bonus": 0.3
+          }
+        ],
+        "spell_resistance_pct": 3,
+        "control_resistance_pct": 4,
+        "spell_school_resistance_pct": {
+          "furnace": 6
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_brasshollow_tallyspring_throwers",
+        "art_source_unit_id": "unit_brasshollow_tallyspring_throwers"
+      }
+    },
+    {
+      "base_id": "unit_brasshollow_rivet_hounds",
+      "upgrade_id": "unit_brasshollow_rivet_hounds_veteran",
+      "name": "Seambreaker Hounds",
+      "art_brief": "Low armored mechanical hound with forked seam-prying jaws, riveted shoulder plates and twin dorsal pressure vents.",
+      "gameplay_rationale": "Faster cooperative armor opener; two supported exposures per battle give a second attack window without becoming a solo assassin.",
+      "unit": {
+        "id": "unit_brasshollow_rivet_hounds_veteran",
+        "name": "Seambreaker Hounds",
+        "faction_id": "faction_brasshollow",
+        "role": "melee",
+        "tier": 2,
+        "hp": 12,
+        "attack": 6,
+        "defense": 5,
+        "min_damage": 3,
+        "max_damage": 5,
+        "speed": 5,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "shielding",
+            "name": "Rivet Hide",
+            "description": "Low-slung plating screens the pack from arrows but does not improve its bite.",
+            "snare_vulnerable": true,
+            "cohesion_hold_bonus": 0,
+            "ranged_damage_multiplier": 0.92
+          },
+          {
+            "id": "harry",
+            "name": "Seambreaker Mandibles",
+            "description": "Twice per battle, striking a surviving tier-two-or-higher target beside an allied stack exposes two defense for one round.",
+            "status_id": "status_rivet_exposed",
+            "status_label": "Seam-Marked",
+            "duration_rounds": 1,
+            "modifiers": {
+              "defense": -2
+            },
+            "momentum_gain": 0,
+            "uses_per_battle": 2,
+            "target_min_tier": 2,
+            "ai_target_priority_bonus": 0.1,
+            "min_adjacent_allies_to_target": 1,
+            "support_ai_target_priority_bonus": 0.15,
+            "support_blocked_summary": "Seambreaker Mandibles need an allied stack beside the target.",
+            "support_ready_summary": "Seambreaker Mandibles will expose two defense for the supported follow-up."
+          }
+        ],
+        "growth": 5,
+        "cost": {
+          "gold": 156,
+          "ore": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "furnace": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_brasshollow_rivet_hounds",
+        "art_source_unit_id": "unit_brasshollow_rivet_hounds"
+      }
+    },
+    {
+      "base_id": "unit_brasshollow_quenchspool_slingers",
+      "upgrade_id": "unit_brasshollow_quenchspool_slingers_veteran",
+      "name": "Arrestor Spoolers",
+      "art_brief": "Industrial cable worker with a huge shoulder reel and weighted copper arrestor loops; cold quench canister and broad braced stance.",
+      "gameplay_rationale": "Adds a once-per-battle anti-melee initiative disruption and a rooted mark that opens Foreclosure Engine Seizure Clause. The cable does not prevent movement; it prepares the collection attack without overlapping arbalist counterbattery suppression.",
+      "unit": {
+        "id": "unit_brasshollow_quenchspool_slingers_veteran",
+        "name": "Arrestor Spoolers",
+        "faction_id": "faction_brasshollow",
+        "role": "ranged",
+        "tier": 2,
+        "hp": 14,
+        "attack": 7,
+        "defense": 5,
+        "min_damage": 3,
+        "max_damage": 5,
+        "speed": 4,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 6,
+        "growth": 5,
+        "cost": {
+          "gold": 156,
+          "ore": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Quenchspool Redline",
+            "description": "A redline cable cast lands with furnace force against a line already staggered by the opening exchange.",
+            "damage_multiplier": 1.08,
+            "min_distance": 1,
+            "status_ids": [
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.04
+          },
+          {
+            "id": "harry",
+            "name": "Arrestor Cable",
+            "description": "Once per battle, a surviving melee target of tier two or higher is marked Cable-Arrested for one round, losing one initiative and becoming vulnerable to Seizure Clause. This mark does not prevent movement.",
+            "status_id": "status_rooted",
+            "status_label": "Cable-Arrested",
+            "duration_rounds": 1,
+            "uses_per_battle": 1,
+            "target_min_tier": 2,
+            "target_role": "melee",
+            "momentum_gain": 0,
+            "modifiers": {
+              "initiative": -1
+            },
+            "ai_target_priority_bonus": 0.5
+          }
+        ],
+        "spell_resistance_pct": 4,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "furnace": 8
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_brasshollow_quenchspool_slingers",
+        "art_source_unit_id": "unit_brasshollow_quenchspool_slingers"
+      }
+    },
+    {
+      "base_id": "unit_brasshollow_furnace_pavis_teams",
+      "upgrade_id": "unit_brasshollow_furnace_pavis_teams_veteran",
+      "name": "Kilnwall Wardens",
+      "art_brief": "Two furnace attendants behind a monumental iron kiln-door pavis with orange glowing slots, thick side braces and soot-dark masks.",
+      "gameplay_rationale": "Turns a specialist linebreaker screen into a general engine bodyguard: allied shooters and shielded stacks take less contact damage, while the expensive slow wall retains weak offense.",
+      "unit": {
+        "id": "unit_brasshollow_furnace_pavis_teams_veteran",
+        "name": "Kilnwall Wardens",
+        "faction_id": "faction_brasshollow",
+        "role": "melee",
+        "tier": 3,
+        "hp": 20,
+        "attack": 7,
+        "defense": 9,
+        "min_damage": 4,
+        "max_damage": 6,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 4,
+        "cost": {
+          "gold": 244,
+          "wood": 1,
+          "ore": 2
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "furnace": 5
+        },
+        "status_immunity_ids": [],
+        "abilities": [
+          {
+            "id": "shielding",
+            "name": "Kilnwall Engine Screen",
+            "description": "The kiln-door wall blunts incoming missiles and reduces contact melee damage against allied shooters and shielded stacks by 8%, plus 6% against attackers with brace or reach.",
+            "snare_vulnerable": true,
+            "cohesion_hold_bonus": 0,
+            "ranged_damage_multiplier": 0.9,
+            "ally_ranged_melee_damage_reduction_pct": 8,
+            "linebreaker_screen_bonus_pct": 6
+          }
+        ],
+        "upgrade_from": "unit_brasshollow_furnace_pavis_teams",
+        "art_source_unit_id": "unit_brasshollow_furnace_pavis_teams"
+      }
+    },
+    {
+      "base_id": "unit_brasshollow_gaugefire_arbalists",
+      "upgrade_id": "unit_brasshollow_gaugefire_arbalists_veteran",
+      "name": "Datumline Piercers",
+      "art_brief": "Long precision arbalest on a shoulder support with a tall calibrated sight fork, brass measuring rails and a narrow armored gunner.",
+      "gameplay_rationale": "Counterbattery alternative to the pavis: one ranged enemy loses defense and initiative, while bolts gain a new payoff against hound seam marks and overheated targets.",
+      "unit": {
+        "id": "unit_brasshollow_gaugefire_arbalists_veteran",
+        "name": "Datumline Piercers",
+        "faction_id": "faction_brasshollow",
+        "role": "ranged",
+        "tier": 3,
+        "hp": 18,
+        "attack": 9,
+        "defense": 6,
+        "min_damage": 4,
+        "max_damage": 7,
+        "speed": 4,
+        "initiative": 8,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 7,
+        "growth": 4,
+        "cost": {
+          "gold": 270,
+          "ore": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Datumline Solution",
+            "description": "Measured bolts strike harder at range two or more, benefit from an allied defending stack, and deal 16% extra damage to seam-exposed or overheated targets.",
+            "damage_multiplier": 1.06,
+            "min_distance": 2,
+            "ally_defending_multiplier": 1.02,
+            "status_ids": [
+              "status_rivet_exposed",
+              "status_overheated"
+            ],
+            "status_damage_multiplier": 1.16
+          },
+          {
+            "id": "harry",
+            "name": "Counterbattery Writ",
+            "description": "Once per battle, a surviving ranged target of tier two or higher loses one defense and two initiative for one round.",
+            "status_id": "status_harried",
+            "status_label": "Datum-Marked",
+            "duration_rounds": 1,
+            "uses_per_battle": 1,
+            "target_min_tier": 2,
+            "momentum_gain": 0,
+            "modifiers": {
+              "defense": -1,
+              "initiative": -2
+            },
+            "ai_target_priority_bonus": 0.25,
+            "target_role": "ranged"
+          }
+        ],
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 6,
+        "spell_school_resistance_pct": {
+          "furnace": 12
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_brasshollow_gaugefire_arbalists",
+        "art_source_unit_id": "unit_brasshollow_gaugefire_arbalists"
+      }
+    },
+    {
+      "base_id": "unit_brasshollow_boiler_rivetcasters",
+      "upgrade_id": "unit_brasshollow_boiler_rivetcasters_veteran",
+      "name": "Twinboiler Fusiliers",
+      "art_brief": "Paired rounded pressure boilers rise behind a masked fusilier holding a wide multi-nozzle rivet gun; asymmetric valves and braided feed pipes.",
+      "gameplay_rationale": "Artillery now reaches a secondary enemy up to two hexes from the victim, punishing loose formations as well as adjacent clusters. Single-secondary and heat limits remain.",
+      "unit": {
+        "id": "unit_brasshollow_boiler_rivetcasters_veteran",
+        "name": "Twinboiler Fusiliers",
+        "faction_id": "faction_brasshollow",
+        "role": "ranged",
+        "tier": 4,
+        "hp": 21,
+        "attack": 9,
+        "defense": 7,
+        "min_damage": 5,
+        "max_damage": 9,
+        "speed": 3,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "growth": 3,
+        "cost": {
+          "gold": 365,
+          "ore": 2
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 7,
+        "abilities": [
+          {
+            "id": "pressure_artillery",
+            "name": "Twinboiler Fragment Fan",
+            "description": "Each shot throws bounded fragment damage into one enemy within two hexes of the primary target; the crew overheats for two rounds and loses one initiative.",
+            "cluster_range": 2,
+            "secondary_damage_per_unit": 1,
+            "max_secondary_damage": 12,
+            "max_secondary_targets": 1,
+            "status_id": "status_overheated",
+            "status_label": "Overheated",
+            "duration_rounds": 2,
+            "modifiers": {
+              "initiative": -1
+            },
+            "ai_heat_score_penalty": 0.5
+          }
+        ],
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "furnace": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_brasshollow_boiler_rivetcasters",
+        "art_source_unit_id": "unit_brasshollow_boiler_rivetcasters"
+      }
+    },
+    {
+      "base_id": "unit_brasshollow_gaugeplate_bailiffs",
+      "upgrade_id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
+      "name": "Warrant Anvils",
+      "art_brief": "Heavy armored bailiff with a rectangular pressure-gauge shield and massive stamped clause hammer; iron docket chains hang at the waist.",
+      "gameplay_rationale": "Two retaliations and a stagger-producing brace make an anti-swarm anvil; it feeds gunline stagger bonuses rather than retaining the base rooting behavior.",
+      "unit": {
+        "id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
+        "name": "Warrant Anvils",
+        "faction_id": "faction_brasshollow",
+        "role": "melee",
+        "tier": 4,
+        "hp": 27,
+        "attack": 9,
+        "defense": 12,
+        "min_damage": 5,
+        "max_damage": 9,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 2,
+        "ranged": false,
+        "growth": 3,
+        "cost": {
+          "gold": 399,
+          "ore": 2
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "brace",
+            "name": "Warrant Served",
+            "description": "While defending, retaliations hit 18% harder and stagger survivors for one round, reducing initiative by two and cohesion by one; defending adds two cohesion.",
+            "retaliation_multiplier": 1.18,
+            "defending_cohesion_bonus": 2,
+            "status_id": "status_staggered",
+            "status_label": "Warrant-Staggered",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -2,
+              "cohesion": -1
+            }
+          },
+          {
+            "id": "shielding",
+            "name": "Gaugeplate Screen",
+            "description": "The numbered plate turns incoming shot aside while the bailiff closes under measured pressure.",
+            "cohesion_hold_bonus": 0,
+            "ranged_damage_multiplier": 0.84,
+            "engaged_damage_multiplier": 1.04,
+            "harried_damage_multiplier": 1.04
+          }
+        ],
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "furnace": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_brasshollow_gaugeplate_bailiffs",
+        "art_source_unit_id": "unit_brasshollow_gaugeplate_bailiffs"
+      }
+    },
+    {
+      "base_id": "unit_brasshollow_debt_engine_exactors",
+      "upgrade_id": "unit_brasshollow_debt_engine_exactors_veteran",
+      "name": "Foreclosure Engines",
+      "art_brief": "Hulking furnace automaton with a giant claw press, docket chains and an exposed red-orange chest boiler; heavy forward-leaning shoulders.",
+      "gameplay_rationale": "Turns a generic burst attacker into the finisher of supported seam attacks. One-round heat cycle changes its attack cadence; no clean-target blanket multiplier increase.",
+      "unit": {
+        "id": "unit_brasshollow_debt_engine_exactors_veteran",
+        "name": "Foreclosure Engines",
+        "faction_id": "faction_brasshollow",
+        "role": "melee",
+        "tier": 5,
+        "hp": 35,
+        "attack": 12,
+        "defense": 10,
+        "min_damage": 8,
+        "max_damage": 12,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "overheat",
+            "name": "Accelerated Foreclosure",
+            "description": "A fresh furnace impact deals 16% extra damage, then the engine overheats for one round: damage falls to 83%, defense by two and initiative by two.",
+            "burst_damage_multiplier": 1.16,
+            "overheated_damage_multiplier": 0.83,
+            "status_id": "status_overheated",
+            "status_label": "Overheated",
+            "duration_rounds": 1,
+            "modifiers": {
+              "defense": -2,
+              "initiative": -2
+            }
+          },
+          {
+            "id": "backstab",
+            "name": "Seizure Clause",
+            "description": "Primary melee strikes deal 15% extra damage to seam-exposed or rooted targets; the engine gains no extra momentum from this clause.",
+            "damage_multiplier": 1.15,
+            "momentum_gain": 0,
+            "status_ids": [
+              "status_rivet_exposed",
+              "status_rooted"
+            ],
+            "health_threshold_ratio": 0.0,
+            "threshold_damage_multiplier": 1.0,
+            "primary_melee_only": true
+          }
+        ],
+        "growth": 2,
+        "cost": {
+          "gold": 702,
+          "ore": 3
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "furnace": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_brasshollow_debt_engine_exactors",
+        "art_source_unit_id": "unit_brasshollow_debt_engine_exactors"
+      }
+    },
+    {
+      "base_id": "unit_brasshollow_quenchbell_mortars",
+      "upgrade_id": "unit_brasshollow_quenchbell_mortars_veteran",
+      "name": "Staybell Bombardiers",
+      "art_brief": "Bell-mouth mortar on a short wheeled carriage with a cooling cistern, broad iron braces and a hooded bell-ringer attendant.",
+      "gameplay_rationale": "Replaces a small initiative debuff with a once-per-battle anti-retaliation writ, strongest against braced lines; its opening enables melee engines instead of merely duplicating artillery fragments.",
+      "unit": {
+        "id": "unit_brasshollow_quenchbell_mortars_veteran",
+        "name": "Staybell Bombardiers",
+        "faction_id": "faction_brasshollow",
+        "role": "ranged",
+        "tier": 5,
+        "hp": 38,
+        "attack": 13,
+        "defense": 10,
+        "min_damage": 8,
+        "max_damage": 12,
+        "speed": 3,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 6,
+        "growth": 2,
+        "cost": {
+          "gold": 729,
+          "ore": 3,
+          "brass_scrip": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Quenchbell Salvo",
+            "description": "A held firing interval lets the mortar crew sound a calibrated long-range opening salvo.",
+            "damage_multiplier": 1.1,
+            "min_distance": 2,
+            "ally_defending_multiplier": 1.04
+          },
+          {
+            "id": "obituary",
+            "name": "Stay of Reprisal",
+            "description": "Once per battle, a surviving shot target loses one cohesion and 10% retaliation damage for one round; a braced target of tier three or higher instead loses two cohesion and 20% retaliation damage.",
+            "status_id": "status_obituary_marked",
+            "status_label": "Reprisal-Stayed",
+            "duration_rounds": 1,
+            "uses_per_battle": 1,
+            "braced_target_min_tier": 3,
+            "braced_ai_target_priority_bonus": 0.6,
+            "modifiers": {
+              "cohesion": -1,
+              "retaliation": -10
+            },
+            "braced_modifiers": {
+              "cohesion": -2,
+              "retaliation": -20
+            }
+          }
+        ],
+        "spell_resistance_pct": 8,
+        "control_resistance_pct": 10,
+        "spell_school_resistance_pct": {
+          "furnace": 18
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_brasshollow_quenchbell_mortars",
+        "art_source_unit_id": "unit_brasshollow_quenchbell_mortars"
+      }
+    },
+    {
+      "base_id": "unit_brasshollow_crucible_crawlers",
+      "upgrade_id": "unit_brasshollow_crucible_crawlers_veteran",
+      "name": "Redline Crucible Crawlers",
+      "art_brief": "Low six-legged furnace gun platform with a long red pressure rail, twin molten vents and a broad armored crucible belly.",
+      "gameplay_rationale": "High-tier barrage gains one adjacent fragment target and a heat cycle, creating direct Saint repair synergy while retaining stagger exploitation. It trades mobility for siege support.",
+      "unit": {
+        "id": "unit_brasshollow_crucible_crawlers_veteran",
+        "name": "Redline Crucible Crawlers",
+        "faction_id": "faction_brasshollow",
+        "role": "ranged",
+        "tier": 6,
+        "hp": 53,
+        "attack": 15,
+        "defense": 12,
+        "min_damage": 10,
+        "max_damage": 15,
+        "speed": 3,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Crucible Barrage",
+            "description": "The crawler braces for a furnace-driven barrage that tears hardest through already-staggered battle lines.",
+            "damage_multiplier": 1.06,
+            "min_distance": 1,
+            "status_ids": [
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.08
+          },
+          {
+            "id": "pressure_artillery",
+            "name": "Redline Slag Burst",
+            "description": "Each shot throws up to four fragment damage per crawler, capped at sixteen, into one adjacent enemy of the primary target; the crawler overheats for two rounds and loses one initiative.",
+            "cluster_range": 1,
+            "secondary_damage_per_unit": 4,
+            "max_secondary_damage": 16,
+            "max_secondary_targets": 1,
+            "status_id": "status_overheated",
+            "status_label": "Overheated",
+            "duration_rounds": 2,
+            "modifiers": {
+              "initiative": -1
+            },
+            "ai_heat_score_penalty": 0.5
+          }
+        ],
+        "growth": 1,
+        "cost": {
+          "gold": 1107,
+          "embergrain": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 5,
+        "spell_resistance_pct": 10,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "furnace": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_brasshollow_crucible_crawlers",
+        "art_source_unit_id": "unit_brasshollow_crucible_crawlers"
+      }
+    },
+    {
+      "base_id": "unit_brasshollow_foundry_saint",
+      "upgrade_id": "unit_brasshollow_foundry_saint_veteran",
+      "name": "Saint of the Last Furnace",
+      "art_brief": "Towering living brass forge idol crowned with crucible ladles; open chest furnace, hanging repair-chain halo and massive soot-black hands.",
+      "gameplay_rationale": "Changes the defense aura from heat-gated to always-on for allied Brasshollow stacks, supporting the entire mixed army; extra repair still rewards heat management and never revives casualties.",
+      "unit": {
+        "id": "unit_brasshollow_foundry_saint_veteran",
+        "name": "Saint of the Last Furnace",
+        "faction_id": "faction_brasshollow",
+        "role": "melee",
+        "tier": 7,
+        "hp": 116,
+        "attack": 18,
+        "defense": 20,
+        "min_damage": 18,
+        "max_damage": 28,
+        "speed": 4,
+        "initiative": 5,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "foundry_aura",
+            "name": "Last Furnace Covenant",
+            "description": "All allied Brasshollow stacks gain one defense even when cool. Each round repairs surviving allies for 1.5% of starting health, plus 2% while overheated, without reviving casualties.",
+            "ally_defense_bonus": 1,
+            "hardening_requires_overheated": false,
+            "round_repair_pct": 0.015,
+            "overheated_repair_bonus_pct": 0.02,
+            "ai_target_priority_bonus": 1.5
+          }
+        ],
+        "growth": 1,
+        "cost": {
+          "gold": 2026,
+          "brass_scrip": 2
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 15,
+        "control_resistance_pct": 10,
+        "spell_school_resistance_pct": {
+          "furnace": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_brasshollow_foundry_saint",
+        "art_source_unit_id": "unit_brasshollow_foundry_saint"
+      }
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "unit_id": "unit_shard_guard_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          675,
+          620
+        ]
+      ],
+      "anchor": [
+        326,
+        604
+      ],
+      "source": "unit_shard_guard_veteran_source-alpha.png",
+      "scale": 0.3793677204658902,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          680,
+          0,
+          1254,
+          620
+        ]
+      ],
+      "anchor": [
+        902,
+        610
+      ],
+      "source": "unit_shard_guard_veteran_source-alpha.png",
+      "scale": 0.3793677204658902,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          620,
+          680,
+          1254
+        ],
+        [
+          680,
+          925,
+          710,
+          980
+        ]
+      ],
+      "anchor": [
+        315,
+        1224
+      ],
+      "source": "unit_shard_guard_veteran_source-alpha.png",
+      "scale": 0.3793677204658902,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          680,
+          620,
+          1254,
+          925
+        ],
+        [
+          710,
+          925,
+          1254,
+          980
+        ],
+        [
+          680,
+          980,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        905,
+        1226
+      ],
+      "source": "unit_shard_guard_veteran_source-alpha.png",
+      "scale": 0.3793677204658902,
+      "name": "idle_3"
+    },
+    {
+      "clip": "attack",
+      "name": "attack_windup",
+      "anchor": [
+        315,
+        563
+      ],
+      "source": "unit_shard_guard_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "scale_multiplier": 1.3,
+      "scale": 0.49317803660565723
+    },
+    {
+      "clip": "attack",
+      "name": "attack_release",
+      "anchor": [
+        857,
+        560
+      ],
+      "source": "unit_shard_guard_veteran_actions-alpha.png",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "scale_multiplier": 1.3,
+      "scale": 0.49317803660565723
+    },
+    {
+      "clip": "hit",
+      "name": "hit_recoil",
+      "anchor": [
+        332,
+        1132
+      ],
+      "source": "unit_shard_guard_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "scale_multiplier": 1.3,
+      "scale": 0.49317803660565723
+    },
+    {
+      "clip": "dead",
+      "name": "fallen",
+      "anchor": [
+        921,
+        1105
+      ],
+      "source": "unit_shard_guard_veteran_actions-alpha.png",
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "scale_multiplier": 1.3,
+      "scale": 0.49317803660565723
+    }
+  ]
+}

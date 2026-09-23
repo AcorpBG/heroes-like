@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_fogbound_leviathan_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_veilmourn_fogbound_leviathan_veteran/unit_veilmourn_fogbound_leviathan_veteran-alpha.png": "f5fa69b34a8020a4906d4b60195c35a92284f243bc9642da22f7294276d12097",
+    "res://art/animation/source/poses/unit_veilmourn_fogbound_leviathan_veteran/unit_veilmourn_fogbound_leviathan_veteran_actions-alpha.png": "27c2dabf3c025d94233c2b91c8f80c7b4b6d5ac9a6bb80b8a71385c854fb93e1"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "cbb3b1b7db9a0a46dcf2f042b2bcfe3509d050a1299deab7a2102a88527e746c",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

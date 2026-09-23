@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_maskglass_corsairs_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_veilmourn_maskglass_corsairs_veteran/unit_veilmourn_maskglass_corsairs_veteran-alpha.png": "ec56e795d4edadbc7d7b0848e8698f088eac2a31790823f2e96a4184292e2525",
+    "res://art/animation/source/poses/unit_veilmourn_maskglass_corsairs_veteran/unit_veilmourn_maskglass_corsairs_veteran_actions-alpha.png": "f98bab0bf490612ccbdc38510c6c3bf277925e68a9a7a3e1b9083bb72a19822b"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "d9c2a478b4c52a14246c59436266e59bc4ce5203a1f3a096fac26ba0b757801c",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

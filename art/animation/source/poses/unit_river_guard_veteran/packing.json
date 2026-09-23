@@ -1,0 +1,168 @@
+{
+  "unit_id": "unit_river_guard_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          625,
+          648
+        ]
+      ],
+      "anchor": [
+        323,
+        637
+      ],
+      "source": "unit_river_guard_veteran_idle-alpha.png",
+      "scale": 0.36075949367088606,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          625,
+          0,
+          1254,
+          600
+        ],
+        [
+          625,
+          600,
+          1110,
+          648
+        ]
+      ],
+      "anchor": [
+        894,
+        636
+      ],
+      "source": "unit_river_guard_veteran_idle-alpha.png",
+      "scale": 0.36075949367088606,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          650,
+          716,
+          1254
+        ]
+      ],
+      "anchor": [
+        299,
+        1222
+      ],
+      "source": "unit_river_guard_veteran_idle-alpha.png",
+      "scale": 0.36075949367088606,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          716,
+          650,
+          1254,
+          1254
+        ],
+        [
+          1110,
+          600,
+          1254,
+          650
+        ]
+      ],
+      "anchor": [
+        893,
+        1222
+      ],
+      "source": "unit_river_guard_veteran_idle-alpha.png",
+      "scale": 0.36075949367088606,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_river_guard_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          553,
+          627
+        ]
+      ],
+      "anchor": [
+        285,
+        595
+      ],
+      "scale_multiplier": 1.25,
+      "scale": 0.45094936708860756
+    },
+    {
+      "source": "unit_river_guard_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          553,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        731,
+        588
+      ],
+      "scale_multiplier": 1.25,
+      "scale": 0.45094936708860756
+    },
+    {
+      "source": "unit_river_guard_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          569,
+          1254
+        ]
+      ],
+      "anchor": [
+        343,
+        1156
+      ],
+      "scale_multiplier": 1.25,
+      "scale": 0.45094936708860756
+    },
+    {
+      "source": "unit_river_guard_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          569,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        868,
+        1130
+      ],
+      "scale_multiplier": 1.25,
+      "scale": 0.45094936708860756
+    }
+  ]
+}

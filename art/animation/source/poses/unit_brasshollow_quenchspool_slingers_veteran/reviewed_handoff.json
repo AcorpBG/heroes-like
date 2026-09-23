@@ -1,0 +1,144 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_brasshollow_quenchspool_slingers_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_quenchspool_slingers_veteran_source.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "anchor": [
+            349,
+            584
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_quenchspool_slingers_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            936,
+            590
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_quenchspool_slingers_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              627,
+              1254
+            ]
+          ],
+          "anchor": [
+            349,
+            1198
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_quenchspool_slingers_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              627,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            936,
+            1198
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_quenchspool_slingers_veteran_source.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_quenchspool_slingers_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "anchor": [
+            341,
+            584
+          ],
+          "scale_multiplier": 1.08
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_quenchspool_slingers_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            850,
+            584
+          ],
+          "scale_multiplier": 1.08
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_quenchspool_slingers_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              627,
+              627,
+              1254
+            ]
+          ],
+          "anchor": [
+            272,
+            1156
+          ],
+          "scale_multiplier": 1.08
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_quenchspool_slingers_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              627,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            941,
+            1134
+          ],
+          "scale_multiplier": 1.08
+        }
+      ]
+    }
+  ]
+}

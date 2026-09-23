@@ -1,0 +1,156 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_sunvault_mirror_duelists_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_source.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              650,
+              627
+            ]
+          ],
+          "anchor": [
+            326,
+            607
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              700,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            982,
+            608
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              715,
+              1000
+            ],
+            [
+              0,
+              1000,
+              640,
+              1254
+            ]
+          ],
+          "anchor": [
+            330,
+            1220
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              720,
+              627,
+              1254,
+              1000
+            ],
+            [
+              640,
+              1000,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            948,
+            1229
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_source.png"
+        },
+        {
+          "clip": "attack",
+          "name": "attack_windup",
+          "anchor": [
+            260,
+            598
+          ],
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "scale_multiplier": 1.4,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_actions.png"
+        },
+        {
+          "clip": "attack",
+          "name": "attack_release",
+          "anchor": [
+            843,
+            604
+          ],
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "scale_multiplier": 1.4,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_actions.png"
+        },
+        {
+          "clip": "hit",
+          "name": "hit_recoil",
+          "anchor": [
+            368,
+            1151
+          ],
+          "rects": [
+            [
+              0,
+              627,
+              627,
+              1254
+            ]
+          ],
+          "scale_multiplier": 1.4,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_actions.png"
+        },
+        {
+          "clip": "dead",
+          "name": "fallen",
+          "anchor": [
+            925,
+            1124
+          ],
+          "rects": [
+            [
+              627,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "scale_multiplier": 1.4,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_actions.png"
+        }
+      ]
+    }
+  ]
+}

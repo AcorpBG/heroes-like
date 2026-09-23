@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_thornwake_sporeglass_menders_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_thornwake_sporeglass_menders_veteran/unit_thornwake_sporeglass_menders_veteran-alpha.png": "693bfd1a6c19702c9b469e7bfb00e51654cfd12505a6cf3c6d2d0fa3f9a0c270",
+    "res://art/animation/source/poses/unit_thornwake_sporeglass_menders_veteran/unit_thornwake_sporeglass_menders_veteran_actions-alpha.png": "a91a7ba3aeb636075446a48eb61ecf64ea9bfd071455bf842c2855c83eed98ec"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "41e56e3eeda3b1678b29405105abe1ff70fc4e40dcd892225d32c8dc8baeda8c",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

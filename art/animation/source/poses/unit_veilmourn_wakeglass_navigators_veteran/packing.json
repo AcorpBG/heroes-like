@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_veilmourn_wakeglass_navigators_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          601,
+          627
+        ]
+      ],
+      "anchor": [
+        276,
+        585
+      ],
+      "source": "unit_veilmourn_wakeglass_navigators_veteran-alpha.png",
+      "scale": 0.41834862385321103,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          601,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        923,
+        585
+      ],
+      "source": "unit_veilmourn_wakeglass_navigators_veteran-alpha.png",
+      "scale": 0.41834862385321103,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          601,
+          1254
+        ]
+      ],
+      "anchor": [
+        338,
+        1211
+      ],
+      "source": "unit_veilmourn_wakeglass_navigators_veteran-alpha.png",
+      "scale": 0.41834862385321103,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          601,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        904,
+        1212
+      ],
+      "source": "unit_veilmourn_wakeglass_navigators_veteran-alpha.png",
+      "scale": 0.41834862385321103,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_veilmourn_wakeglass_navigators_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          651
+        ]
+      ],
+      "anchor": [
+        328,
+        650
+      ],
+      "scale": 0.41834862385321103
+    },
+    {
+      "source": "unit_veilmourn_wakeglass_navigators_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          651
+        ]
+      ],
+      "anchor": [
+        884,
+        650
+      ],
+      "scale": 0.41834862385321103
+    },
+    {
+      "source": "unit_veilmourn_wakeglass_navigators_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          651,
+          576,
+          1254
+        ]
+      ],
+      "anchor": [
+        337,
+        1163
+      ],
+      "scale": 0.41834862385321103
+    },
+    {
+      "source": "unit_veilmourn_wakeglass_navigators_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          576,
+          651,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        894,
+        1181
+      ],
+      "scale": 0.41834862385321103
+    }
+  ]
+}

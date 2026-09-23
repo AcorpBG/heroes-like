@@ -1,0 +1,139 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_bellwake_oars_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              613,
+              627
+            ]
+          ],
+          "anchor": [
+            298,
+            592
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              613,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            925,
+            592
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              645,
+              1254
+            ]
+          ],
+          "anchor": [
+            298,
+            1219
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              645,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            925,
+            1219
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              632
+            ]
+          ],
+          "anchor": [
+            361,
+            629
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              632
+            ]
+          ],
+          "anchor": [
+            857,
+            631
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              632,
+              627,
+              1254
+            ]
+          ],
+          "anchor": [
+            362,
+            1195
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              627,
+              632,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            879,
+            1205
+          ]
+        }
+      ],
+      "alpha_noise_cutoff": 8
+    }
+  ]
+}

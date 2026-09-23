@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_embercourt_fordhook_cadets_veteran/unit_embercourt_fordhook_cadets_veteran_idle-alpha.png": "5e467df6070eef26d4e1db9ac9de77d41181dcbcb147980e3603756268b1ed61",
+    "res://art/animation/source/poses/unit_embercourt_fordhook_cadets_veteran/unit_embercourt_fordhook_cadets_veteran_actions-alpha.png": "55331f6957d980b274ec057ffa9d9e51c83dda58581df7254620049f9674404d"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "28d3c18a08008b86db02303484a4b613c3bc211de43a18e4d19cb38faf0c3e70",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks_veteran/unit_veilmourn_gloamkeel_bulwarks_veteran-alpha.png": "194bd673de5793cec8cfd50445f379766c52b4639bde3de85eac2f0861fca9b4",
+    "res://art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks_veteran/unit_veilmourn_gloamkeel_bulwarks_veteran_actions-alpha.png": "3cccf50a3bfb34f96966a1efa99161d51ddafda7dd659a8cdba785d82a49c90c"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "8d6b7d051ad658f6ab8fc0987e7f0ca7fd47ef43228ff77db2f5683a4d786937",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

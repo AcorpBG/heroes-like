@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_wakechain_boarders_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_veilmourn_wakechain_boarders_veteran/unit_veilmourn_wakechain_boarders_veteran-alpha.png": "ab12aa603f0bf56b2ce27afd93ce6542c78195183a4b3f26995b531aa1012422",
+    "res://art/animation/source/poses/unit_veilmourn_wakechain_boarders_veteran/unit_veilmourn_wakechain_boarders_veteran_actions-alpha.png": "ba5100c55317707549d1e47852f14d3be40aa3157b1a8f3a3361da86722392b3"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "7e9e7242fddfc55298fae4cb16f4e9261f3126912a84b0cb686f35e30ab2f4a0",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

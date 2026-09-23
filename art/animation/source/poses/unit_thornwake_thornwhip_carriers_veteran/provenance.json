@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_thornwake_thornwhip_carriers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_thornwake_thornwhip_carriers_veteran/unit_thornwake_thornwhip_carriers_veteran-alpha.png": "a62257e48737901a184046863e52316f1835325a9803af3a5a82917bffa7bb05",
+    "res://art/animation/source/poses/unit_thornwake_thornwhip_carriers_veteran/unit_thornwake_thornwhip_carriers_veteran_actions-alpha.png": "7cc6da47654a335791731d97cfd211e3a3533e75e20a426509250229645175dd"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "3803e14a42efdf243f86dd3b5d72262fb1b76a4aa6cac7b709557ad04bec5bca",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

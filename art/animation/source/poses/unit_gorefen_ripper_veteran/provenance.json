@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_gorefen_ripper_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_gorefen_ripper_veteran/unit_gorefen_ripper_veteran_idle-alpha.png": "3f81a03b96a9d28deb67b1fe0d1c003497d410a3bdf30167187190f5daddcbed",
+    "res://art/animation/source/poses/unit_gorefen_ripper_veteran/unit_gorefen_ripper_veteran_actions-alpha.png": "6b99c6ac99935fd78eb66af15b0cfe807d2c0c17f4851cc20629937dc34f247d"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "fb3419b1cdaea3e55e758c491aa690bb313c0f2278d84ea92be0e7e262c3383f",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

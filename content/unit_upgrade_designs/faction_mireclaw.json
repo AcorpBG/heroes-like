@@ -1,0 +1,742 @@
+{
+  "faction_id": "faction_mireclaw",
+  "items": [
+    {
+      "base_id": "unit_blackbranch_cutthroat",
+      "upgrade_id": "unit_blackbranch_cutthroat_veteran",
+      "name": "Blackbranch Knifeshade",
+      "art_brief": "Preserve the lean Blackbranch Cutthroat: low reed hood, crescent paired knives, layered reed cloak and pale peatwax knife marks. The upgrade reads as a concealed marsh ambusher, never a new species.",
+      "gameplay_rationale": "A low-tier setup consumer: backstab now recognizes Mireclaw snares and roots as well as ordinary harry/stagger. It can exploit the allied branch and ferry-chain control without acquiring an independent disable; clean-target damage is unchanged.",
+      "unit": {
+        "id": "unit_blackbranch_cutthroat_veteran",
+        "name": "Blackbranch Knifeshade",
+        "faction_id": "faction_mireclaw",
+        "role": "melee",
+        "tier": 1,
+        "hp": 10,
+        "attack": 6,
+        "defense": 5,
+        "min_damage": 3,
+        "max_damage": 4,
+        "speed": 5,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "backstab",
+            "name": "Knife Beneath the Reeds",
+            "description": "Cuts deeper into harried, staggered, mire-snared or root-marked prey, and into stacks at or below 55% health.",
+            "damage_multiplier": 1.2,
+            "momentum_gain": 1,
+            "status_ids": [
+              "status_harried",
+              "status_staggered",
+              "status_mire_harried",
+              "status_rooted"
+            ],
+            "health_threshold_ratio": 0.55,
+            "threshold_damage_multiplier": 1.12
+          }
+        ],
+        "growth": 6,
+        "cost": {
+          "gold": 75
+        },
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "mire": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_blackbranch_cutthroat",
+        "art_source_unit_id": "unit_blackbranch_cutthroat",
+        "content_status": "town_dwelling_upgrade_live"
+      }
+    },
+    {
+      "base_id": "unit_mireclaw_reedsnare_kin",
+      "upgrade_id": "unit_mireclaw_reedsnare_kin_veteran",
+      "name": "Knotroot Trappers",
+      "art_brief": "Preserve the Reedsnare Kin: compact marsh folk carrying braided root loops, hooked snare staffs and woven reed shoulder mats; a clearly visible root coil replaces simple cord.",
+      "gameplay_rationale": "A cooperative low-tier controller: two supported snares per battle can affect tier-2 or higher melee stacks, but still require another ally adjacent to the target. Each snare also reduces initiative, rewarding an encircling pair rather than a lone cheap lock.",
+      "unit": {
+        "id": "unit_mireclaw_reedsnare_kin_veteran",
+        "name": "Knotroot Trappers",
+        "faction_id": "faction_mireclaw",
+        "role": "melee",
+        "tier": 1,
+        "hp": 10,
+        "attack": 6,
+        "defense": 6,
+        "min_damage": 3,
+        "max_damage": 4,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "harry",
+            "name": "Knotroot Closing Circle",
+            "description": "Twice per battle, snares a tier-2 or higher melee survivor if another ally stands beside that target; its cohesion and initiative fall for one round.",
+            "status_id": "status_mire_harried",
+            "status_label": "Reedsnared",
+            "duration_rounds": 1,
+            "target_min_tier": 2,
+            "target_role": "melee",
+            "modifiers": {
+              "cohesion": -1,
+              "initiative": -1
+            },
+            "momentum_gain": 0,
+            "uses_per_battle": 2,
+            "ai_target_priority_bonus": 0.1,
+            "min_adjacent_allies_to_target": 1,
+            "support_ai_target_priority_bonus": 0.15
+          }
+        ],
+        "growth": 8,
+        "cost": {
+          "gold": 61
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "mire": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_mireclaw_reedsnare_kin",
+        "art_source_unit_id": "unit_mireclaw_reedsnare_kin"
+      }
+    },
+    {
+      "base_id": "unit_bog_brute",
+      "upgrade_id": "unit_bog_brute_veteran",
+      "name": "Ironfen Bulwark",
+      "art_brief": "Preserve the hulking Bog Brute: overlapping bog-iron shell plates, thick marsh hide, broad driftwood shield bound with oxidized iron, low steady stance.",
+      "gameplay_rationale": "An army screen: existing ranged durability now also reduces contact melee damage suffered by allied ranged and shielding stacks by 8%. It provides a reason to keep this slow brute alive while the mire ranged branch prepares targets; the screen does not stack additively.",
+      "unit": {
+        "id": "unit_bog_brute_veteran",
+        "name": "Ironfen Bulwark",
+        "faction_id": "faction_mireclaw",
+        "role": "melee",
+        "tier": 2,
+        "hp": 16,
+        "attack": 8,
+        "defense": 7,
+        "min_damage": 4,
+        "max_damage": 6,
+        "speed": 3,
+        "initiative": 5,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "shielding",
+            "name": "Ironfen Living Screen",
+            "description": "Bog-iron hide blunts ranged fire. While the bulwark survives, allied ranged and shield-bearing stacks take 8% less contact melee damage.",
+            "cohesion_hold_bonus": 1,
+            "ranged_damage_multiplier": 0.79,
+            "engaged_damage_multiplier": 1.12,
+            "harried_damage_multiplier": 1.1,
+            "ally_ranged_melee_damage_reduction_pct": 8
+          }
+        ],
+        "growth": 4,
+        "cost": {
+          "gold": 149
+        },
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "mire": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_bog_brute",
+        "art_source_unit_id": "unit_bog_brute",
+        "content_status": "town_dwelling_upgrade_live"
+      }
+    },
+    {
+      "base_id": "unit_mireclaw_mudglass_slingers",
+      "upgrade_id": "unit_mireclaw_mudglass_slingers_veteran",
+      "name": "Shattermire Slingers",
+      "art_brief": "Preserve the Mudglass Slingers: long sling, amber-green mudglass shot, twin sealed jars at the belt, shard-studded reed mask and practical marsh wraps.",
+      "gameplay_rationale": "A flexible ranged disrupter: two blinding shots now cover tier-3 and higher stacks of either attack type, dropping attack and initiative for one round. Broader targeting supports counter-fire or a melee interception; no permanent blind or extra damage is invented.",
+      "unit": {
+        "id": "unit_mireclaw_mudglass_slingers_veteran",
+        "name": "Shattermire Slingers",
+        "faction_id": "faction_mireclaw",
+        "role": "ranged",
+        "tier": 2,
+        "hp": 11,
+        "attack": 7,
+        "defense": 5,
+        "min_damage": 4,
+        "max_damage": 5,
+        "speed": 3,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "abilities": [
+          {
+            "id": "harry",
+            "name": "Shattermire Eyeline",
+            "description": "Twice per battle, a hit on a tier-3 or higher survivor scatters mudglass across its eye-line, reducing attack and initiative and marking it for the pack for one round.",
+            "status_id": "status_mire_harried",
+            "status_label": "Mudglass-Blinded",
+            "duration_rounds": 1,
+            "target_min_tier": 3,
+            "modifiers": {
+              "attack": -1,
+              "initiative": -1
+            },
+            "momentum_gain": 0,
+            "uses_per_battle": 2,
+            "ai_target_priority_bonus": 0.05
+          }
+        ],
+        "growth": 5,
+        "cost": {
+          "gold": 95,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 8,
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "mire": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_mireclaw_mudglass_slingers",
+        "art_source_unit_id": "unit_mireclaw_mudglass_slingers"
+      }
+    },
+    {
+      "base_id": "unit_gorefen_ripper",
+      "upgrade_id": "unit_gorefen_ripper_veteran",
+      "name": "Gorefen Redhook",
+      "art_brief": "Preserve the fast lean Gorefen Ripper: long crimson hooked talons, swept reed mane, shallow bronze hook fittings and forward hunting stance; distinguish it from the much heavier tier-6 packlord.",
+      "gameplay_rationale": "A mobile executioner: retains the wounded-prey/backstab package, adding one round-2 hook attack across a partially closed lane at 35% damage. The survivor is pulled into contact and root-marked, so access rather than raw damage is the upgrade payoff.",
+      "unit": {
+        "id": "unit_gorefen_ripper_veteran",
+        "name": "Gorefen Redhook",
+        "faction_id": "faction_mireclaw",
+        "role": "melee",
+        "tier": 3,
+        "hp": 15,
+        "attack": 10,
+        "defense": 6,
+        "min_damage": 5,
+        "max_damage": 9,
+        "speed": 6,
+        "initiative": 8,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "backstab",
+            "name": "Canal Hook Finish",
+            "description": "Cuts deeper into prey already slowed or weakened by the pack and snowballs the kill beat.",
+            "damage_multiplier": 1.25,
+            "momentum_gain": 1,
+            "status_ids": [
+              "status_harried",
+              "status_staggered"
+            ],
+            "health_threshold_ratio": 0.6,
+            "threshold_damage_multiplier": 1.15
+          },
+          {
+            "id": "bloodrush",
+            "name": "Bloodrush",
+            "description": "Surges faster, strikes harder, and spikes battlefield momentum once prey is wounded or already under pack pressure.",
+            "wounded_threshold_ratio": 0.75,
+            "wounded_damage_multiplier": 1.16,
+            "status_ids": [
+              "status_harried",
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.12,
+            "wounded_initiative_bonus": 1,
+            "max_initiative_bonus": 2,
+            "momentum_gain": 1,
+            "kill_momentum_gain": 1,
+            "late_round_initiative_bonus": 1
+          },
+          {
+            "id": "hookline",
+            "name": "Redhook Pursuit",
+            "description": "Once from round two, the extended redhook crosses a partially closed lane at 35% damage, pulling the survivor into contact and leaving a root mark for one round.",
+            "distance_one_multiplier": 0.35,
+            "uses_per_battle": 1,
+            "available_from_round": 2,
+            "status_id": "status_rooted",
+            "status_label": "Redhook-Marked",
+            "duration_rounds": 1
+          }
+        ],
+        "growth": 3,
+        "cost": {
+          "gold": 216
+        },
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "mire": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_gorefen_ripper",
+        "art_source_unit_id": "unit_gorefen_ripper",
+        "content_status": "town_dwelling_upgrade_live"
+      }
+    },
+    {
+      "base_id": "unit_mireclaw_bogplate_maulers",
+      "upgrade_id": "unit_mireclaw_bogplate_maulers_veteran",
+      "name": "Bogplate Gatebreakers",
+      "art_brief": "Preserve the broad Bogplate Mauler: scarred overlapping shell, unusually long split-log maul with bog-iron teeth, massive forearms and grounded stance; a lever weapon rather than a sleek assassin.",
+      "gameplay_rationale": "A lane breaker: a 60%-damage reach strike can attack and retaliate across a partially closed lane without pulling the victim. Shielding payoff now recognizes roots as well as Mireclaw marks, giving ferry-chain control a slower armored finisher.",
+      "unit": {
+        "id": "unit_mireclaw_bogplate_maulers_veteran",
+        "name": "Bogplate Gatebreakers",
+        "faction_id": "faction_mireclaw",
+        "role": "melee",
+        "tier": 3,
+        "hp": 18,
+        "attack": 9,
+        "defense": 8,
+        "min_damage": 5,
+        "max_damage": 8,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "shielding",
+            "name": "Gatebreaker Bogplate",
+            "description": "Layered bogplate blunts ranged fire and the maul bites harder against mire-snared or root-marked enemies.",
+            "cohesion_hold_bonus": 0,
+            "ranged_damage_multiplier": 0.99,
+            "harried_damage_multiplier": 1.04,
+            "payoff_status_ids": [
+              "status_mire_harried",
+              "status_rooted"
+            ]
+          },
+          {
+            "id": "reach",
+            "name": "Split-Log Leverage",
+            "description": "The long maul strikes and retaliates across a partially closed lane at 60% damage.",
+            "distance_one_multiplier": 0.6
+          }
+        ],
+        "growth": 4,
+        "cost": {
+          "gold": 196,
+          "ore": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "mire": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_mireclaw_bogplate_maulers",
+        "art_source_unit_id": "unit_mireclaw_bogplate_maulers"
+      }
+    },
+    {
+      "base_id": "unit_mireclaw_ferrychain_lashers",
+      "upgrade_id": "unit_mireclaw_ferrychain_lashers_veteran",
+      "name": "Blackwater Chainmasters",
+      "art_brief": "Preserve the Ferrychain Lasher: enormous hooked ferry chain coiled over one shoulder, blackened chain gauntlets, reed-and-hide ferryman mantle and two heavy anchor hooks.",
+      "gameplay_rationale": "An opening displacement specialist: two hookline uses are available from round one at 35% lane damage. It can pull and root-mark two survivors over separate attacks, opening space and targets for its pack; unlike reach the special lane access is spent.",
+      "unit": {
+        "id": "unit_mireclaw_ferrychain_lashers_veteran",
+        "name": "Blackwater Chainmasters",
+        "faction_id": "faction_mireclaw",
+        "role": "melee",
+        "tier": 4,
+        "hp": 24,
+        "attack": 10,
+        "defense": 10,
+        "min_damage": 6,
+        "max_damage": 10,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 3,
+        "cost": {
+          "gold": 311,
+          "wood": 1,
+          "ore": 1
+        },
+        "abilities": [
+          {
+            "id": "hookline",
+            "name": "Blackwater Double Mooring",
+            "description": "Twice per battle from round one, casts a ferry hook across a partially closed lane at 35% damage, pulling the survivor into contact and leaving a root mark for one round.",
+            "distance_one_multiplier": 0.35,
+            "uses_per_battle": 2,
+            "available_from_round": 1,
+            "status_id": "status_rooted",
+            "status_label": "Chain-Marked",
+            "duration_rounds": 1
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "mire": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_mireclaw_ferrychain_lashers",
+        "art_source_unit_id": "unit_mireclaw_ferrychain_lashers"
+      }
+    },
+    {
+      "base_id": "unit_mireclaw_mireglass_reedcasters",
+      "upgrade_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+      "name": "Mireglass Dissonants",
+      "art_brief": "Preserve the Mireglass Reedcaster: forked reed staff cradling cyan-green resonating globes, thin glass bells, reed robes and a sharply readable asymmetrical instrument silhouette.",
+      "gameplay_rationale": "A single-target melee opening: one ranged cast now affects tier-3 and higher survivors with a 20% retaliation penalty and a Mireclaw pack mark. It prepares one dangerous defender for an immediate melee follow-up; the effect lasts one round.",
+      "unit": {
+        "id": "unit_mireclaw_mireglass_reedcasters_veteran",
+        "name": "Mireglass Dissonants",
+        "faction_id": "faction_mireclaw",
+        "role": "ranged",
+        "tier": 4,
+        "hp": 22,
+        "attack": 10,
+        "defense": 9,
+        "min_damage": 6,
+        "max_damage": 10,
+        "speed": 3,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 6,
+        "growth": 3,
+        "cost": {
+          "gold": 331,
+          "wood": 1,
+          "ore": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "rot_cant",
+            "name": "Mireglass Answerbreak",
+            "description": "Once per battle, a ranged hit on a tier-3 or higher survivor leaves it mire-marked with -1 cohesion and 20% weaker retaliation for one round.",
+            "status_id": "status_mire_harried",
+            "status_label": "Dissonance-Marked",
+            "duration_rounds": 1,
+            "modifiers": {
+              "cohesion": -1,
+              "retaliation": -20
+            },
+            "uses_per_battle": 1,
+            "available_from_round": 1,
+            "target_min_tier": 3,
+            "ai_target_priority_bonus": 0.7,
+            "wounded_threshold_ratio": 0.5,
+            "wounded_damage_multiplier": 1.02
+          }
+        ],
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "mire": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_mireclaw_mireglass_reedcasters",
+        "art_source_unit_id": "unit_mireclaw_mireglass_reedcasters"
+      }
+    },
+    {
+      "base_id": "unit_mireclaw_sporewake_chanters",
+      "upgrade_id": "unit_mireclaw_sporewake_chanters_veteran",
+      "name": "Rotchoir Cantors",
+      "art_brief": "Preserve the Sporewake Chanter: broad fungal spore mantle, open reed chanting mask, hanging luminous seed censer and layered swamp-cloth vestments; muted ochre spores over dark green.",
+      "gameplay_rationale": "A sustained attrition caster: two rot calls last two rounds, retaining the tier-4 gate, with -2 cohesion and 5% weaker retaliation. Wounded damage becomes 8% at half health; unlike Dissonants this pays for repeated formation pressure rather than one sharp retaliation break.",
+      "unit": {
+        "id": "unit_mireclaw_sporewake_chanters_veteran",
+        "name": "Rotchoir Cantors",
+        "faction_id": "faction_mireclaw",
+        "role": "ranged",
+        "tier": 5,
+        "hp": 36,
+        "attack": 12,
+        "defense": 10,
+        "min_damage": 9,
+        "max_damage": 12,
+        "speed": 3,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "growth": 2,
+        "cost": {
+          "gold": 446,
+          "wood": 1
+        },
+        "abilities": [
+          {
+            "id": "rot_cant",
+            "name": "Rotchoir Lingering Cant",
+            "description": "Twice per battle, ranged hits rot-call tier-4 or higher survivors for two rounds, reducing cohesion by 2 and retaliation by 5%. Shots deal 8% more damage to stacks at or below half health.",
+            "status_id": "status_harried",
+            "status_label": "Rot-Called",
+            "duration_rounds": 2,
+            "modifiers": {
+              "cohesion": -2,
+              "retaliation": -5
+            },
+            "uses_per_battle": 2,
+            "available_from_round": 1,
+            "target_min_tier": 4,
+            "ai_target_priority_bonus": 0.9,
+            "wounded_threshold_ratio": 0.5,
+            "wounded_damage_multiplier": 1.08
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 6,
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "mire": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_mireclaw_sporewake_chanters",
+        "art_source_unit_id": "unit_mireclaw_sporewake_chanters"
+      }
+    },
+    {
+      "base_id": "unit_mireclaw_fenbell_chainstalkers",
+      "upgrade_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
+      "name": "Fenbell Tollreapers",
+      "art_brief": "Preserve the Fenbell Chainstalker: low hood, hooked bell-chain sickles, small bronze toll bells and taut chain crossing the body; predatory long stride and dark reed wrappings.",
+      "gameplay_rationale": "A contact setup specialist: its once-per-battle tier-4 strike now leaves a root mark while reducing defense and cohesion, and its backstab recognizes root-marked targets. This primes a priority threat already reached in melee for allied root payoffs; it does not grant the Chainmaster lane pull.",
+      "unit": {
+        "id": "unit_mireclaw_fenbell_chainstalkers_veteran",
+        "name": "Fenbell Tollreapers",
+        "faction_id": "faction_mireclaw",
+        "role": "melee",
+        "tier": 5,
+        "hp": 30,
+        "attack": 14,
+        "defense": 10,
+        "min_damage": 9,
+        "max_damage": 14,
+        "speed": 6,
+        "initiative": 9,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 2,
+        "cost": {
+          "gold": 554,
+          "peatwax": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "harry",
+            "name": "Last Fenbell Toll",
+            "description": "Once per battle, a strike on a tier-4 or higher survivor leaves a root mark for one round and reduces defense and cohesion by 1.",
+            "status_id": "status_rooted",
+            "status_label": "Toll-Marked",
+            "duration_rounds": 1,
+            "modifiers": {
+              "defense": -1,
+              "cohesion": -1
+            },
+            "momentum_gain": 0,
+            "uses_per_battle": 1,
+            "target_min_tier": 4,
+            "ai_target_priority_bonus": 0.2
+          },
+          {
+            "id": "backstab",
+            "name": "Tollreaper Cut",
+            "description": "Primary melee attacks cut deeper into harried, mire-snared, staggered or root-marked targets, and into stacks at or below half health.",
+            "damage_multiplier": 1.12,
+            "momentum_gain": 1,
+            "primary_melee_only": true,
+            "status_ids": [
+              "status_mire_harried",
+              "status_harried",
+              "status_staggered",
+              "status_rooted"
+            ],
+            "health_threshold_ratio": 0.5,
+            "threshold_damage_multiplier": 1.08
+          }
+        ],
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 10,
+        "spell_school_resistance_pct": {
+          "mire": 12
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_mireclaw_fenbell_chainstalkers",
+        "art_source_unit_id": "unit_mireclaw_fenbell_chainstalkers"
+      }
+    },
+    {
+      "base_id": "unit_mireclaw_gorefen_rippers",
+      "upgrade_id": "unit_mireclaw_gorefen_rippers_veteran",
+      "name": "Gorefen Packlords",
+      "art_brief": "Preserve the heavy tier-6 Gorefen Rippers: antlerbone shoulder mantle, huge hooked claws, marsh-hide trophies and dense muscular silhouette; visibly heavier and more commanding than the tier-3 Redhook.",
+      "gameplay_rationale": "An isolated-prey commander: isolated attacks gain 12% rather than 2%, and one hit on a tier-5 or higher survivor leaves a defense-reducing Mireclaw mark for the pack. The clean-line damage penalty and quarter-health trigger remain, so the first elite hit can be weaker while setting up subsequent allies.",
+      "unit": {
+        "id": "unit_mireclaw_gorefen_rippers_veteran",
+        "name": "Gorefen Packlords",
+        "faction_id": "faction_mireclaw",
+        "role": "melee",
+        "tier": 6,
+        "hp": 59,
+        "attack": 15,
+        "defense": 13,
+        "min_damage": 11,
+        "max_damage": 17,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 1,
+        "cost": {
+          "gold": 892,
+          "memory_salt": 1
+        },
+        "abilities": [
+          {
+            "id": "bloodrush",
+            "name": "Packlord Cull",
+            "description": "Primary melee attacks punish isolated prey by 12% and exploit wounded or disrupted targets; intact supported lines still reduce the initial attack to 75% damage.",
+            "primary_melee_only": true,
+            "clean_target_damage_multiplier": 0.75,
+            "wounded_threshold_ratio": 0.25,
+            "wounded_damage_multiplier": 1.02,
+            "status_ids": [
+              "status_mire_harried",
+              "status_harried",
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.02,
+            "isolated_damage_multiplier": 1.12,
+            "isolated_ai_target_priority_bonus": 0.3,
+            "wounded_initiative_bonus": 1,
+            "max_initiative_bonus": 1,
+            "momentum_gain": 0,
+            "kill_momentum_gain": 1,
+            "late_round_initiative_bonus": 0
+          },
+          {
+            "id": "harry",
+            "name": "Packlord Quarry Mark",
+            "description": "Once per battle, a hit on a tier-5 or higher survivor marks it for the pack and reduces its defense by 1 for one round.",
+            "status_id": "status_mire_harried",
+            "status_label": "Quarry-Marked",
+            "duration_rounds": 1,
+            "target_min_tier": 5,
+            "uses_per_battle": 1,
+            "modifiers": {
+              "defense": -1
+            },
+            "momentum_gain": 0,
+            "ai_target_priority_bonus": 0.3
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 10,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "mire": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_mireclaw_gorefen_rippers",
+        "art_source_unit_id": "unit_mireclaw_gorefen_rippers"
+      }
+    },
+    {
+      "base_id": "unit_mireclaw_drowned_antler_sovereign",
+      "upgrade_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
+      "name": "Crown of the Drowned Fen",
+      "art_brief": "Preserve the Drowned Antler Sovereign creature: monumental drowned antlers threaded with living reeds and peatwax lamps, water-dark hide, hanging roots and ancient bronze crown fittings. Keep its quadruped or original body plan and massive sovereign silhouette.",
+      "gameplay_rationale": "A defending apex controller: while defending, retaliation root-marks a surviving attacker for one round, setting up the existing root-marked-prey rout on the following attack. Choosing defend now establishes control, while unchanged clean-line penalties discourage indiscriminate charging.",
+      "unit": {
+        "id": "unit_mireclaw_drowned_antler_sovereign_veteran",
+        "name": "Crown of the Drowned Fen",
+        "faction_id": "faction_mireclaw",
+        "role": "melee",
+        "tier": 7,
+        "hp": 120,
+        "attack": 19,
+        "defense": 20,
+        "min_damage": 20,
+        "max_damage": 32,
+        "speed": 4,
+        "initiative": 5,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 1,
+        "cost": {
+          "gold": 1783,
+          "peatwax": 2
+        },
+        "abilities": [
+          {
+            "id": "bloodrush",
+            "name": "Drowned Antler Rout",
+            "description": "The sovereign yields ground before an intact line, then tramples wounded, harried, staggered, or root-marked prey and carries a kill into the next collapse.",
+            "primary_melee_only": true,
+            "clean_target_damage_multiplier": 0.82,
+            "wounded_threshold_ratio": 0.5,
+            "wounded_damage_multiplier": 1.1,
+            "status_ids": [
+              "status_mire_harried",
+              "status_harried",
+              "status_staggered",
+              "status_rooted"
+            ],
+            "status_damage_multiplier": 1.05,
+            "wounded_initiative_bonus": 1,
+            "max_initiative_bonus": 1,
+            "momentum_gain": 0,
+            "kill_momentum_gain": 1,
+            "late_round_initiative_bonus": 0
+          },
+          {
+            "id": "brace",
+            "name": "Roots of the Drowned Crown",
+            "description": "While defending, retaliations strike 5% harder and leave a root mark on surviving attackers for one round; holding ground grants 1 cohesion.",
+            "retaliation_multiplier": 1.05,
+            "defending_cohesion_bonus": 1,
+            "grants_base_cohesion": false,
+            "status_id": "status_rooted",
+            "status_label": "Crown-Marked",
+            "duration_rounds": 1,
+            "modifiers": {}
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 15,
+        "control_resistance_pct": 10,
+        "spell_school_resistance_pct": {
+          "mire": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_mireclaw_drowned_antler_sovereign",
+        "art_source_unit_id": "unit_mireclaw_drowned_antler_sovereign"
+      }
+    }
+  ]
+}

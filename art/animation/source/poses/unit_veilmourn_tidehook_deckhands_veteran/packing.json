@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          601,
+          627
+        ]
+      ],
+      "anchor": [
+        300,
+        615
+      ],
+      "source": "unit_veilmourn_tidehook_deckhands_veteran-alpha.png",
+      "scale": 0.38190954773869346,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          601,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        963,
+        615
+      ],
+      "source": "unit_veilmourn_tidehook_deckhands_veteran-alpha.png",
+      "scale": 0.38190954773869346,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          641,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        958,
+        1217
+      ],
+      "source": "unit_veilmourn_tidehook_deckhands_veteran-alpha.png",
+      "scale": 0.38190954773869346,
+      "name": "idle_2"
+    },
+    {
+      "source": "unit_veilmourn_tidehook_deckhands_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        296,
+        610
+      ],
+      "scale": 0.38190954773869346
+    },
+    {
+      "source": "unit_veilmourn_tidehook_deckhands_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        909,
+        602
+      ],
+      "scale": 0.38190954773869346
+    },
+    {
+      "source": "unit_veilmourn_tidehook_deckhands_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          605,
+          1254
+        ]
+      ],
+      "anchor": [
+        355,
+        1179
+      ],
+      "scale": 0.38190954773869346
+    },
+    {
+      "source": "unit_veilmourn_tidehook_deckhands_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          605,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        954,
+        1161
+      ],
+      "scale": 0.38190954773869346
+    }
+  ]
+}

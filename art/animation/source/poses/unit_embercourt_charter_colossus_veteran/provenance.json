@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_embercourt_charter_colossus_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_embercourt_charter_colossus_veteran/unit_embercourt_charter_colossus_veteran_idle-alpha.png": "e6a95e655fbc60634ada2871634420d81f1318564f3dfd9ec3ba9b76ca60f34c",
+    "res://art/animation/source/poses/unit_embercourt_charter_colossus_veteran/unit_embercourt_charter_colossus_veteran_actions-alpha.png": "c2732e6818366153b837099abb5adc47bd80d835c88ac4ca1d89cc69c6c2a25a"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "d4e446230f5add1fb92e606b847028c26a00b0c917db9a51d0e048e3f5ef6f36",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

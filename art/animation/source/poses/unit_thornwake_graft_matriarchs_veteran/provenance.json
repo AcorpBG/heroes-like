@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_thornwake_graft_matriarchs_veteran/unit_thornwake_graft_matriarchs_veteran-alpha.png": "1f084da01f57eb62f0ffdb0485b6bdcf65a6036120eafe77de9ce2f23db92839",
+    "res://art/animation/source/poses/unit_thornwake_graft_matriarchs_veteran/unit_thornwake_graft_matriarchs_veteran_actions-alpha.png": "9517cffcb751eae98551171ef05c4d9d38b7400cb662891a555e99554ddcf558"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "672b4254f7dd2d2d492705e8371afde2003b16fe3ec3f57a328a660c7f8a912d",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

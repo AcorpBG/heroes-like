@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_thornwake_worldroot_bastion_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_worldroot_bastion_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              670,
+              559
+            ]
+          ],
+          "anchor": [
+            362.5,
+            549
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_worldroot_bastion_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              670,
+              0,
+              1374,
+              559
+            ]
+          ],
+          "anchor": [
+            1011.5,
+            549
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_worldroot_bastion_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              559,
+              713,
+              1145
+            ]
+          ],
+          "anchor": [
+            362.0,
+            1112
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_worldroot_bastion_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              713,
+              559,
+              1374,
+              1145
+            ]
+          ],
+          "anchor": [
+            1011.5,
+            1112
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_worldroot_bastion_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_worldroot_bastion_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              686,
+              593
+            ]
+          ],
+          "anchor": [
+            367.5,
+            572
+          ],
+          "clip": "attack",
+          "name": "attack_windup"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_worldroot_bastion_veteran_actions.png",
+          "rects": [
+            [
+              686,
+              0,
+              1374,
+              593
+            ]
+          ],
+          "anchor": [
+            987.5,
+            571
+          ],
+          "clip": "attack",
+          "name": "attack_release"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_worldroot_bastion_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              593,
+              694,
+              1145
+            ]
+          ],
+          "anchor": [
+            421.5,
+            1073
+          ],
+          "clip": "hit",
+          "name": "hit_recoil"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_worldroot_bastion_veteran_actions.png",
+          "rects": [
+            [
+              694,
+              593,
+              1374,
+              1145
+            ]
+          ],
+          "anchor": [
+            1042,
+            1068
+          ],
+          "clip": "dead",
+          "name": "fallen"
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "sha256": "b3698aedcb53d773a1d619d446ba029bb1c4eaa808f0e4bf84722bf19941ae42"
+    }
+  ]
+}

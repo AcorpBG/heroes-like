@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        326,
+        556
+      ],
+      "source": "unit_brasshollow_gaugeplate_bailiffs_veteran_source-alpha.png",
+      "scale": 0.4444444444444444,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        948,
+        554
+      ],
+      "source": "unit_brasshollow_gaugeplate_bailiffs_veteran_source-alpha.png",
+      "scale": 0.4444444444444444,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        326,
+        1176
+      ],
+      "source": "unit_brasshollow_gaugeplate_bailiffs_veteran_source-alpha.png",
+      "scale": 0.4444444444444444,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        948,
+        1178
+      ],
+      "source": "unit_brasshollow_gaugeplate_bailiffs_veteran_source-alpha.png",
+      "scale": 0.4444444444444444,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_brasshollow_gaugeplate_bailiffs_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        340,
+        571
+      ],
+      "scale_multiplier": 1.04,
+      "scale": 0.4622222222222222
+    },
+    {
+      "source": "unit_brasshollow_gaugeplate_bailiffs_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        874,
+        569
+      ],
+      "scale_multiplier": 1.04,
+      "scale": 0.4622222222222222
+    },
+    {
+      "source": "unit_brasshollow_gaugeplate_bailiffs_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          610,
+          1254
+        ]
+      ],
+      "anchor": [
+        363,
+        1153
+      ],
+      "scale_multiplier": 1.04,
+      "scale": 0.4622222222222222
+    },
+    {
+      "source": "unit_brasshollow_gaugeplate_bailiffs_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          610,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        935,
+        1166
+      ],
+      "scale_multiplier": 1.04,
+      "scale": 0.4622222222222222
+    }
+  ]
+}

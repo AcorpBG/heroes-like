@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_aurora_ballista_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_aurora_ballista_veteran/unit_aurora_ballista_veteran_source-alpha.png": "dddffe37a474be6993a408c7a7c4eb437765a0c49003060a316d9544870a0890",
+    "res://art/animation/source/poses/unit_aurora_ballista_veteran/unit_aurora_ballista_veteran_actions-alpha.png": "2ca46e86a27d500e9570c80ec6222efb7cc573fe0b850cb34555098d5ccf12b2"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "4d01288734d64606723d133ed5a62c7fe7cd5c6db44fb5717fed6ea6ae942df3",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

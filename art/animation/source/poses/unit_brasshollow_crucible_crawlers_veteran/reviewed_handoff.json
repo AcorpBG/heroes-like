@@ -1,0 +1,144 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_brasshollow_crucible_crawlers_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_crucible_crawlers_veteran_source.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "anchor": [
+            289,
+            502
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_crucible_crawlers_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            916,
+            502
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_crucible_crawlers_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              627,
+              1254
+            ]
+          ],
+          "anchor": [
+            289,
+            1103
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_crucible_crawlers_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              627,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            916,
+            1103
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_crucible_crawlers_veteran_source.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_crucible_crawlers_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "anchor": [
+            298,
+            559
+          ],
+          "scale_multiplier": 1.0
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_crucible_crawlers_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            917,
+            555
+          ],
+          "scale_multiplier": 1.0
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_crucible_crawlers_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              627,
+              627,
+              1254
+            ]
+          ],
+          "anchor": [
+            316,
+            1119
+          ],
+          "scale_multiplier": 1.0
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_crucible_crawlers_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              627,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            927,
+            1146
+          ],
+          "scale_multiplier": 1.0
+        }
+      ]
+    }
+  ]
+}

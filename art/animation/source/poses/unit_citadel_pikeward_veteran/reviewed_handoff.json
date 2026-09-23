@@ -1,0 +1,141 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_citadel_pikeward_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              599
+            ]
+          ],
+          "anchor": [
+            356,
+            579
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            952,
+            578
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              599,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            342,
+            1167
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              656,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            977,
+            1166
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_idle.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              587
+            ]
+          ],
+          "anchor": [
+            317,
+            562
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              587
+            ]
+          ],
+          "anchor": [
+            843,
+            562
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              587,
+              634,
+              1199
+            ]
+          ],
+          "anchor": [
+            389,
+            1122
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              634,
+              587,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            897,
+            1087
+          ]
+        }
+      ]
+    }
+  ]
+}

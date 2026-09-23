@@ -1,0 +1,302 @@
+[
+  {
+    "base_id": "unit_shard_guard",
+    "upgrade_id": "unit_shard_guard_veteran",
+    "name": "Dawnwall Custodians",
+    "art_brief": "Melee crystal pavise infantry; broad interlocking shield with a sunrise notch, long hooked crystal spear, ivory layered shoulder guards. Distinguish the spear silhouette and weight-bearing shield stance.",
+    "prompt": "Use case: stylized-concept. Asset type: transparent RGBA four-frame idle animation sprite sheet for an original fantasy strategy game. Create exactly four full-body depictions of the SAME character in a strict evenly spaced 2 by 2 grid, each in its own quadrant, no overlap or borders. Square 1536x1536 sheet; character occupies central 78% of each cell, generous transparent margins on every side. Genuine transparent background, no ground, no text. Polished hand-painted fantasy game art, ivory enamel, aged gold framework, blue-cyan and lavender optical crystal, crisp silhouettes. Consistent three-quarter view facing screen right, fixed camera, identical design, scale and planted feet in all four frames. These must be distinct ARTICULATED idle animation keyframes, not translated/rotated copies: top-left relaxed ready stance; top-right elbows lift and weapon pivots upward with chest inhaling; bottom-left arms extend slightly with weapon settling across body; bottom-right elbows relax, wrist/weapon returns halfway with shoulder shift. Visible limb joint articulation and changing negative spaces; keep feet in exact same stance. Every head, foot and complete weapon stays inside its quadrant. No attack effects, no glow clouds or background particles. Original character design, no copyrighted characters. Subject: Dawnwall Custodians. Melee crystal pavise infantry; broad interlocking shield with a sunrise notch, long hooked crystal spear, ivory layered shoulder guards. Distinguish the spear silhouette and weight-bearing shield stance.",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "reference_lineage": [
+      {
+        "path": "art/units/source/curated/unit_shard_guard.png",
+        "role": "visually inspected faction style and base comparison; not supplied to generator or reused",
+        "sha256": "03f31b58e721b917e36394effbaf8b6fc23d0b1b40a6ebe38dc2e78f4de59c67"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_shard_guard_veteran_source.png",
+    "source_sha256": "f786fde84a2d61588b15b8c652b32a9bce33c7d7a76e0f08658dee56592fb3cb",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "All four poses visually reviewed for complete silhouette, articulated arms or mechanism, stable design and original upgraded equipment; alpha RGBA confirmed."
+  },
+  {
+    "base_id": "unit_sunvault_shard_wardens",
+    "upgrade_id": "unit_sunvault_shard_wardens_veteran",
+    "name": "Mirrorback Wardens",
+    "art_brief": "Melee infantry with a radial mirror shield projecting rigid facet fins, short crystal sword and mirrored backplate. No bow or staff; shield and sword must read clearly.",
+    "prompt": "Use case: stylized-concept. Asset type: transparent RGBA four-frame idle animation sprite sheet for an original fantasy strategy game. Create exactly four full-body depictions of the SAME character in a strict evenly spaced 2 by 2 grid, each in its own quadrant, no overlap or borders. Square 1536x1536 sheet; character occupies central 78% of each cell, generous transparent margins on every side. Genuine transparent background, no ground, no text. Polished hand-painted fantasy game art, ivory enamel, aged gold framework, blue-cyan and lavender optical crystal, crisp silhouettes. Consistent three-quarter view facing screen right, fixed camera, identical design, scale and planted feet in all four frames. These must be distinct ARTICULATED idle animation keyframes, not translated/rotated copies: top-left relaxed ready stance; top-right elbows lift and weapon pivots upward with chest inhaling; bottom-left arms extend slightly with weapon settling across body; bottom-right elbows relax, wrist/weapon returns halfway with shoulder shift. Visible limb joint articulation and changing negative spaces; keep feet in exact same stance. Every head, foot and complete weapon stays inside its quadrant. No attack effects, no glow clouds or background particles. Original character design, no copyrighted characters. Subject: Mirrorback Wardens. Melee infantry with a radial mirror shield projecting rigid facet fins, short crystal sword and mirrored backplate. No bow or staff; shield and sword must read clearly.",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "reference_lineage": [
+      {
+        "path": "art/units/source/curated/unit_sunvault_shard_wardens.png",
+        "role": "visually inspected faction style and base comparison; not supplied to generator or reused",
+        "sha256": "8b5721abc52e6ba60237f84bc766434cb9b6c4b4ec1ecb66e36ecf584075821a"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_shard_wardens_veteran_source.png",
+    "source_sha256": "4a054f6ab02701ba24b95bf40f5d6b28e1fb6c4e63a3a69d1cdc07afd1be360a",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "All four poses visually reviewed for complete silhouette, articulated arms or mechanism, stable design and original upgraded equipment; alpha RGBA confirmed."
+  },
+  {
+    "base_id": "unit_prism_adept",
+    "upgrade_id": "unit_prism_adept_veteran",
+    "name": "Glarewing Harriers",
+    "art_brief": "Light ranged skirmisher with twin-lens bow, swept wing-shaped shoulder prisms and short wind-split scarf. A mobile archer silhouette, not a melee warden.",
+    "prompt": "Use case: stylized-concept. Asset type: transparent RGBA four-frame idle animation sprite sheet for an original fantasy strategy game. Create exactly four full-body depictions of the SAME character in a strict evenly spaced 2 by 2 grid, each in its own quadrant, no overlap or borders. Square 1536x1536 sheet; character occupies central 78% of each cell, generous transparent margins on every side. Genuine transparent background, no ground, no text. Polished hand-painted fantasy game art, ivory enamel, aged gold framework, blue-cyan and lavender optical crystal, crisp silhouettes. Consistent three-quarter view facing screen right, fixed camera, identical design, scale and planted feet in all four frames. These must be distinct ARTICULATED idle animation keyframes, not translated/rotated copies: top-left relaxed ready stance; top-right elbows lift and weapon pivots upward with chest inhaling; bottom-left arms extend slightly with weapon settling across body; bottom-right elbows relax, wrist/weapon returns halfway with shoulder shift. Visible limb joint articulation and changing negative spaces; keep feet in exact same stance. Every head, foot and complete weapon stays inside its quadrant. No attack effects, no glow clouds or background particles. Original character design, no copyrighted characters. Subject: Glarewing Harriers. Light ranged skirmisher with twin-lens bow, swept wing-shaped shoulder prisms and short wind-split scarf. A mobile archer silhouette, not a melee warden.",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "reference_lineage": [
+      {
+        "path": "art/units/source/curated/unit_prism_adept.png",
+        "role": "visually inspected faction style and base comparison; not supplied to generator or reused",
+        "sha256": "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_prism_adept_veteran_source.png",
+    "source_sha256": "252529bb4cee84cee7a7634aa28af70366dc236d7eb1ce4bfe8bc5b00b9a755f",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "All four poses visually reviewed for complete silhouette, articulated arms or mechanism, stable design and original upgraded equipment; alpha RGBA confirmed."
+  },
+  {
+    "base_id": "unit_sunvault_prism_adepts",
+    "upgrade_id": "unit_sunvault_prism_adepts_veteran",
+    "name": "Lattice Conjurers",
+    "art_brief": "Ranged robed optical mage carrying a focus wand inside a suspended hexagonal lens cage, angular crystal headpiece and layered ivory mantle. Clearly different from bow-armed harriers.",
+    "prompt": "Use case: stylized-concept. Asset type: transparent RGBA four-frame idle animation sprite sheet for an original fantasy strategy game. Create exactly four full-body depictions of the SAME character in a strict evenly spaced 2 by 2 grid, each in its own quadrant, no overlap or borders. Square 1536x1536 sheet; character occupies central 78% of each cell, generous transparent margins on every side. Genuine transparent background, no ground, no text. Polished hand-painted fantasy game art, ivory enamel, aged gold framework, blue-cyan and lavender optical crystal, crisp silhouettes. Consistent three-quarter view facing screen right, fixed camera, identical design, scale and planted feet in all four frames. These must be distinct ARTICULATED idle animation keyframes, not translated/rotated copies: top-left relaxed ready stance; top-right elbows lift and weapon pivots upward with chest inhaling; bottom-left arms extend slightly with weapon settling across body; bottom-right elbows relax, wrist/weapon returns halfway with shoulder shift. Visible limb joint articulation and changing negative spaces; keep feet in exact same stance. Every head, foot and complete weapon stays inside its quadrant. No attack effects, no glow clouds or background particles. Original character design, no copyrighted characters. Subject: Lattice Conjurers. Ranged robed optical mage carrying a focus wand inside a suspended hexagonal lens cage, angular crystal headpiece and layered ivory mantle. Clearly different from bow-armed harriers.",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "reference_lineage": [
+      {
+        "path": "art/units/source/curated/unit_sunvault_prism_adepts.png",
+        "role": "visually inspected faction style and base comparison; not supplied to generator or reused",
+        "sha256": "71b5d4e1ee79e191e9032ffb3451e5ec398bbd37242bb325f96f96dfcb2c98b2"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_prism_adepts_veteran_source.png",
+    "source_sha256": "2fb7fcd32396b366f70e91435082a7078602287de05c0db551621b0c01f7e8a6",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "All four poses visually reviewed for complete silhouette, articulated arms or mechanism, stable design and original upgraded equipment; alpha RGBA confirmed."
+  },
+  {
+    "base_id": "unit_aurora_ballista",
+    "upgrade_id": "unit_aurora_ballista_veteran",
+    "name": "Sunline Repeater",
+    "art_brief": "Compact ranged crystal siege engine with three parallel bolt rails, rotating prism drum, brass calibration wheel and planted tripod supports. An engine, not a humanoid or giant.",
+    "prompt": "Use case: stylized-concept. Asset type: transparent RGBA four-frame idle animation sprite sheet for an original fantasy strategy game. Create exactly four full-body depictions of the SAME character in a strict evenly spaced 2 by 2 grid, each in its own quadrant, no overlap or borders. Square 1536x1536 sheet; character occupies central 78% of each cell, generous transparent margins on every side. Genuine transparent background, no ground, no text. Polished hand-painted fantasy game art, ivory enamel, aged gold framework, blue-cyan and lavender optical crystal, crisp silhouettes. Consistent three-quarter view facing screen right, fixed camera, identical design, scale and planted feet in all four frames. These must be distinct ARTICULATED idle animation keyframes, not translated/rotated copies: top-left relaxed ready stance; top-right elbows lift and weapon pivots upward with chest inhaling; bottom-left arms extend slightly with weapon settling across body; bottom-right elbows relax, wrist/weapon returns halfway with shoulder shift. Visible limb joint articulation and changing negative spaces; keep feet in exact same stance. Every head, foot and complete weapon stays inside its quadrant. No attack effects, no glow clouds or background particles. Original character design, no copyrighted characters. Subject: Sunline Repeater. Compact ranged crystal siege engine with three parallel bolt rails, rotating prism drum, brass calibration wheel and planted tripod supports. An engine, not a humanoid or giant. For this mechanical engine replace human arm motion with visibly articulated elevation cradle, bow limbs and rotating prism drum: four separate elevation settings in a gentle ready cycle, planted three support feet unchanged. No humans.",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "reference_lineage": [
+      {
+        "path": "art/units/source/curated/unit_aurora_ballista.png",
+        "role": "visually inspected faction style and base comparison; not supplied to generator or reused",
+        "sha256": "f41f6b46ab457267a870128b0bf2d5c4a15f1803e055625fe8db9cd7a85e7625"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_source.png",
+    "source_sha256": "654533af1c16cbe9bf8f4604a9dab5b479c2ee7f8af41ac12f347c4f2a750db4",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "All four poses visually reviewed for complete silhouette, articulated arms or mechanism, stable design and original upgraded equipment; alpha RGBA confirmed."
+  },
+  {
+    "base_id": "unit_sunvault_mirror_duelists",
+    "upgrade_id": "unit_sunvault_mirror_duelists_veteran",
+    "name": "Parallax Blades",
+    "art_brief": "Melee duelist with two curved mirror sabres of unequal length, split asymmetric cloak and forked mirrored mask. Low forward stance and opposing blade arcs.",
+    "prompt": "Use case: stylized-concept. Asset type: transparent RGBA four-frame idle animation sprite sheet for an original fantasy strategy game. Create exactly four full-body depictions of the SAME character in a strict evenly spaced 2 by 2 grid, each in its own quadrant, no overlap or borders. Square 1536x1536 sheet; character occupies central 78% of each cell, generous transparent margins on every side. Genuine transparent background, no ground, no text. Polished hand-painted fantasy game art, ivory enamel, aged gold framework, blue-cyan and lavender optical crystal, crisp silhouettes. Consistent three-quarter view facing screen right, fixed camera, identical design, scale and planted feet in all four frames. These must be distinct ARTICULATED idle animation keyframes, not translated/rotated copies: top-left relaxed ready stance; top-right elbows lift and weapon pivots upward with chest inhaling; bottom-left arms extend slightly with weapon settling across body; bottom-right elbows relax, wrist/weapon returns halfway with shoulder shift. Visible limb joint articulation and changing negative spaces; keep feet in exact same stance. Every head, foot and complete weapon stays inside its quadrant. No attack effects, no glow clouds or background particles. Original character design, no copyrighted characters. Subject: Parallax Blades. Melee duelist with two curved mirror sabres of unequal length, split asymmetric cloak and forked mirrored mask. Low forward stance and opposing blade arcs.",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "reference_lineage": [
+      {
+        "path": "art/units/source/curated/unit_sunvault_mirror_duelists.png",
+        "role": "visually inspected faction style and base comparison; not supplied to generator or reused",
+        "sha256": "3419a5ba83826bb78f37b2950d95302f9f575a1e276b24aacdbe48a727078a06"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_source.png",
+    "source_sha256": "a9387c423045b28902093ef30ea83e2d916607a97e69b0e6d4611e3e8021d0fe",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "All four poses visually reviewed for complete silhouette, articulated arms or mechanism, stable design and original upgraded equipment; alpha RGBA confirmed."
+  },
+  {
+    "base_id": "unit_sunvault_resonant_choristers",
+    "upgrade_id": "unit_sunvault_resonant_choristers_veteran",
+    "name": "Harmonic Precentors",
+    "art_brief": "Ranged choir mage with tall tuning-fork staff, floating concentric chime rings around shoulders and throat, long pleated ivory robes and segmented crystal halo.",
+    "prompt": "Use case: stylized-concept. Asset type: transparent RGBA four-frame idle animation sprite sheet for an original fantasy strategy game. Create exactly four full-body depictions of the SAME character in a strict evenly spaced 2 by 2 grid, each in its own quadrant, no overlap or borders. Square 1536x1536 sheet; character occupies central 78% of each cell, generous transparent margins on every side. Genuine transparent background, no ground, no text. Polished hand-painted fantasy game art, ivory enamel, aged gold framework, blue-cyan and lavender optical crystal, crisp silhouettes. Consistent three-quarter view facing screen right, fixed camera, identical design, scale and planted feet in all four frames. These must be distinct ARTICULATED idle animation keyframes, not translated/rotated copies: top-left relaxed ready stance; top-right elbows lift and weapon pivots upward with chest inhaling; bottom-left arms extend slightly with weapon settling across body; bottom-right elbows relax, wrist/weapon returns halfway with shoulder shift. Visible limb joint articulation and changing negative spaces; keep feet in exact same stance. Every head, foot and complete weapon stays inside its quadrant. No attack effects, no glow clouds or background particles. Original character design, no copyrighted characters. Subject: Harmonic Precentors. Ranged choir mage with tall tuning-fork staff, floating concentric chime rings around shoulders and throat, long pleated ivory robes and segmented crystal halo.",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "reference_lineage": [
+      {
+        "path": "art/units/source/curated/unit_sunvault_resonant_choristers.png",
+        "role": "visually inspected faction style and base comparison; not supplied to generator or reused",
+        "sha256": "ee39e131b5b80d7986b16314dd4e817ee97178d114f9baf3a8ddda0bb1e20fdf"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_resonant_choristers_veteran_source.png",
+    "source_sha256": "92c94d241a74d217a74bcba80eae59e292eff201cb2b1698e41c97699060b16c",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "All four poses visually reviewed for complete silhouette, articulated arms or mechanism, stable design and original upgraded equipment; alpha RGBA confirmed."
+  },
+  {
+    "base_id": "unit_sunvault_noonfacet_sentinels",
+    "upgrade_id": "unit_sunvault_noonfacet_sentinels_veteran",
+    "name": "Meridian Lockguards",
+    "art_brief": "Heavy melee sentinel with tall sundial shield, mechanical locking polearm ending in two crystal hooks, noon-disc helmet and broad articulated greaves.",
+    "prompt": "Use case: stylized-concept. Asset type: transparent RGBA four-frame idle animation sprite sheet for an original fantasy strategy game. Create exactly four full-body depictions of the SAME character in a strict evenly spaced 2 by 2 grid, each in its own quadrant, no overlap or borders. Square 1536x1536 sheet; character occupies central 78% of each cell, generous transparent margins on every side. Genuine transparent background, no ground, no text. Polished hand-painted fantasy game art, ivory enamel, aged gold framework, blue-cyan and lavender optical crystal, crisp silhouettes. Consistent three-quarter view facing screen right, fixed camera, identical design, scale and planted feet in all four frames. These must be distinct ARTICULATED idle animation keyframes, not translated/rotated copies: top-left relaxed ready stance; top-right elbows lift and weapon pivots upward with chest inhaling; bottom-left arms extend slightly with weapon settling across body; bottom-right elbows relax, wrist/weapon returns halfway with shoulder shift. Visible limb joint articulation and changing negative spaces; keep feet in exact same stance. Every head, foot and complete weapon stays inside its quadrant. No attack effects, no glow clouds or background particles. Original character design, no copyrighted characters. Subject: Meridian Lockguards. Heavy melee sentinel with tall sundial shield, mechanical locking polearm ending in two crystal hooks, noon-disc helmet and broad articulated greaves.",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "reference_lineage": [
+      {
+        "path": "art/units/source/curated/unit_sunvault_noonfacet_sentinels.png",
+        "role": "visually inspected faction style and base comparison; not supplied to generator or reused",
+        "sha256": "ffe6710668b1ecaea7aa352a68f334c7fc8246ff615cd9c00bc0565e419729af"
+      }
+    ],
+    "edits": [
+      {
+        "prompt": "Edit this four-pose sprite sheet. Preserve exactly this character design, four articulated arm and weapon poses, rendering style, camera, colors, and actual transparent background. Repair the clipped weapon in the top-right pose: its entire twin-hook head must appear with generous transparent space above and to the right. Recompose all four characters SMALLER, each fully contained within its quadrant with at least70pixels transparent margin on every side. Four same-scale complete characters in a2x2 grid, no overlap, identical planted-foot positions relative to their quadrant. No text, no backdrop. The full blades, shield, boots and heads must be intact. This is a framing repair, not a new design.",
+        "reference": "unit_sunvault_noonfacet_sentinels_veteran_master_v1.png",
+        "reason": "Repair clipped top-right weapon and add transparent margins",
+        "reference_sha256": "8935bd5f04b751f935168f09d23d2e897b03f35eafda9396f61cf12881eb81f0"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_source.png",
+    "source_sha256": "e0b6c12b8befb9f07ba7021de87691f9cbd64741419e463a22baff62e870cb1a",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "All four poses visually reviewed for complete silhouette, articulated arms or mechanism, stable design and original upgraded equipment; alpha RGBA confirmed."
+  },
+  {
+    "base_id": "unit_sunvault_solar_array_striders",
+    "upgrade_id": "unit_sunvault_solar_array_striders_veteran",
+    "name": "Heliostat Pathfinders",
+    "art_brief": "Melee long-legged articulated construct with broad folding solar arrays over its back and a forward-reaching survey blade, exposed brass joints and crystal feet.",
+    "prompt": "Use case: stylized-concept. Asset type: transparent RGBA four-frame idle animation sprite sheet for an original fantasy strategy game. Create exactly four full-body depictions of the SAME character in a strict evenly spaced 2 by 2 grid, each in its own quadrant, no overlap or borders. Square 1536x1536 sheet; character occupies central 78% of each cell, generous transparent margins on every side. Genuine transparent background, no ground, no text. Polished hand-painted fantasy game art, ivory enamel, aged gold framework, blue-cyan and lavender optical crystal, crisp silhouettes. Consistent three-quarter view facing screen right, fixed camera, identical design, scale and planted feet in all four frames. These must be distinct ARTICULATED idle animation keyframes, not translated/rotated copies: top-left relaxed ready stance; top-right elbows lift and weapon pivots upward with chest inhaling; bottom-left arms extend slightly with weapon settling across body; bottom-right elbows relax, wrist/weapon returns halfway with shoulder shift. Visible limb joint articulation and changing negative spaces; keep feet in exact same stance. Every head, foot and complete weapon stays inside its quadrant. No attack effects, no glow clouds or background particles. Original character design, no copyrighted characters. Subject: Heliostat Pathfinders. Melee long-legged articulated construct with broad folding solar arrays over its back and a forward-reaching survey blade, exposed brass joints and crystal feet. Mechanical articulation: planted four feet remain fixed while knee joints bend slightly, forward survey-blade arm lifts then settles, and back solar arrays fold inward then open across the four frames. Each quadrants character must have60pixels of completely clear transparent margins.",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "reference_lineage": [
+      {
+        "path": "art/units/source/curated/unit_sunvault_solar_array_striders.png",
+        "role": "visually inspected faction style and base comparison; not supplied to generator or reused",
+        "sha256": "38b54e8fc5921b71641d61385457e3281746b2f3bb585c7c39e82d0f8b52b5ec"
+      }
+    ],
+    "edits": [
+      {
+        "prompt": "Repair this 2x2 transparent four-pose character sheet. Bottom-left character's long sword overlaps the bottom-right character. Shorten ALL four survey blades to HALF their present length, and shrink all four whole figures to75percent current size so they each have generous clear transparent margins in their own quadrant. Preserve the ivory-gold long-legged construct with folding crystal back arrays, all four different limb/arm/wing poses, complete feet and body, identical design and scale, facing screen right. Make figures truly separated with no touching and no overlap. Fixed planted feet for the idle sequence. True transparent RGBA, no text, no ground, no effects.",
+        "reference": "unit_sunvault_solar_array_striders_veteran_master_v1.png",
+        "reason": "Separate overlapping blade and add transparent margins",
+        "reference_sha256": "6bf607da44646ea27b1bafc93b3542647ef9bfc4ed9fd7114afdd7f40ef7ec08"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_solar_array_striders_veteran_source.png",
+    "source_sha256": "d943da6cc0747b7debdea64f2db6b75f14f94823742ddf959659636698a6996d",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "All four poses visually reviewed for complete silhouette, articulated arms or mechanism, stable design and original upgraded equipment; alpha RGBA confirmed."
+  },
+  {
+    "base_id": "unit_sunvault_zenith_lensbearers",
+    "upgrade_id": "unit_sunvault_zenith_lensbearers_veteran",
+    "name": "Horizon Arbiters",
+    "art_brief": "Ranged survey mage bearing a huge offset circular sighting lens and ornate survey staff, long geometric tabard and narrow horizon-shaped visor. Keep the large aperture as the dominant silhouette.",
+    "prompt": "Use case: stylized-concept. Asset type: transparent RGBA four-frame idle animation sprite sheet for an original fantasy strategy game. Create exactly four full-body depictions of the SAME character in a strict evenly spaced 2 by 2 grid, each in its own quadrant, no overlap or borders. Square 1536x1536 sheet; character occupies central 78% of each cell, generous transparent margins on every side. Genuine transparent background, no ground, no text. Polished hand-painted fantasy game art, ivory enamel, aged gold framework, blue-cyan and lavender optical crystal, crisp silhouettes. Consistent three-quarter view facing screen right, fixed camera, identical design, scale and planted feet in all four frames. These must be distinct ARTICULATED idle animation keyframes, not translated/rotated copies: top-left relaxed ready stance; top-right elbows lift and weapon pivots upward with chest inhaling; bottom-left arms extend slightly with weapon settling across body; bottom-right elbows relax, wrist/weapon returns halfway with shoulder shift. Visible limb joint articulation and changing negative spaces; keep feet in exact same stance. Every head, foot and complete weapon stays inside its quadrant. No attack effects, no glow clouds or background particles. Original character design, no copyrighted characters. Subject: Horizon Arbiters. Ranged survey mage bearing a huge offset circular sighting lens and ornate survey staff, long geometric tabard and narrow horizon-shaped visor. Keep the large aperture as the dominant silhouette. Keep all four figures small enough to have50pixel clear transparent margins inside their quadrants. Very important: do not clip any equipment.",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "reference_lineage": [
+      {
+        "path": "art/units/source/curated/unit_sunvault_zenith_lensbearers.png",
+        "role": "visually inspected faction style and base comparison; not supplied to generator or reused",
+        "sha256": "42c57b8a2ec5449e24d370934bd4f79c01e122bd12de9c678d0e4c93100e81ac"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_source.png",
+    "source_sha256": "7ff77c73068c90f8e608f3f2fa26317d0968279541709c96a4e7322474571179",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "All four poses visually reviewed for complete silhouette, articulated arms or mechanism, stable design and original upgraded equipment; alpha RGBA confirmed."
+  },
+  {
+    "base_id": "unit_sunvault_aurora_ballistae",
+    "upgrade_id": "unit_sunvault_aurora_ballistae_veteran",
+    "name": "Corona Bulwarks",
+    "art_brief": "Massive MELEE walking crystal shield-body with layered radial armor fins and heavy short ram arms, a warm solar core hidden behind interlocking facets. Absolutely no ballista rails or ranged weapon.",
+    "prompt": "Use case: stylized-concept. Asset type: transparent RGBA four-frame idle animation sprite sheet for an original fantasy strategy game. Create exactly four full-body depictions of the SAME character in a strict evenly spaced 2 by 2 grid, each in its own quadrant, no overlap or borders. Square 1536x1536 sheet; character occupies central 78% of each cell, generous transparent margins on every side. Genuine transparent background, no ground, no text. Polished hand-painted fantasy game art, ivory enamel, aged gold framework, blue-cyan and lavender optical crystal, crisp silhouettes. Consistent three-quarter view facing screen right, fixed camera, identical design, scale and planted feet in all four frames. These must be distinct ARTICULATED idle animation keyframes, not translated/rotated copies: top-left relaxed ready stance; top-right elbows lift and weapon pivots upward with chest inhaling; bottom-left arms extend slightly with weapon settling across body; bottom-right elbows relax, wrist/weapon returns halfway with shoulder shift. Visible limb joint articulation and changing negative spaces; keep feet in exact same stance. Every head, foot and complete weapon stays inside its quadrant. No attack effects, no glow clouds or background particles. Original character design, no copyrighted characters. Subject: Corona Bulwarks. Massive MELEE walking crystal shield-body with layered radial armor fins and heavy short ram arms, a warm solar core hidden behind interlocking facets. Absolutely no ballista rails or ranged weapon. Mechanical idle: visibly flex both short ram-arm elbows, raise forearms protectively, settle them halfway, while armor fins hinge gently open and closed; heavy feet stay planted. Keep all four shield-body constructs separated with wide transparent margins. NO gun, NO cannon, NO bow.",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "reference_lineage": [
+      {
+        "path": "art/units/source/curated/unit_sunvault_aurora_ballistae.png",
+        "role": "visually inspected faction style and base comparison; not supplied to generator or reused",
+        "sha256": "5da13b638c1e3c42999f1f22d095a1f99e43bd5088b2a171cbf1125f649f6222"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_aurora_ballistae_veteran_source.png",
+    "source_sha256": "2e66c4f60e6ec0d5f30fe174081edae5d04ad1a556babc7589738ea82e6a7dc1",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "All four poses visually reviewed for complete silhouette, articulated arms or mechanism, stable design and original upgraded equipment; alpha RGBA confirmed."
+  },
+  {
+    "base_id": "unit_sunvault_daybreak_colossus",
+    "upgrade_id": "unit_sunvault_daybreak_colossus_veteran",
+    "name": "Firstlight Colossus",
+    "art_brief": "Towering RANGED construct with an immense chest solar aperture, orbiting crown of independent focusing lenses, heavy planted legs and broad heat-shedding shoulder plates. No hand sword; radiant aperture is its weapon.",
+    "prompt": "Use case: stylized-concept. Asset type: transparent RGBA four-frame idle animation sprite sheet for an original fantasy strategy game. Create exactly four full-body depictions of the SAME character in a strict evenly spaced 2 by 2 grid, each in its own quadrant, no overlap or borders. Square 1536x1536 sheet; character occupies central 78% of each cell, generous transparent margins on every side. Genuine transparent background, no ground, no text. Polished hand-painted fantasy game art, ivory enamel, aged gold framework, blue-cyan and lavender optical crystal, crisp silhouettes. Consistent three-quarter view facing screen right, fixed camera, identical design, scale and planted feet in all four frames. These must be distinct ARTICULATED idle animation keyframes, not translated/rotated copies: top-left relaxed ready stance; top-right elbows lift and weapon pivots upward with chest inhaling; bottom-left arms extend slightly with weapon settling across body; bottom-right elbows relax, wrist/weapon returns halfway with shoulder shift. Visible limb joint articulation and changing negative spaces; keep feet in exact same stance. Every head, foot and complete weapon stays inside its quadrant. No attack effects, no glow clouds or background particles. Original character design, no copyrighted characters. Subject: Firstlight Colossus. Towering RANGED construct with an immense chest solar aperture, orbiting crown of independent focusing lenses, heavy planted legs and broad heat-shedding shoulder plates. No hand sword; radiant aperture is its weapon. Mechanical idle: four clearly distinct elbow/forearm positions, hands open and curling, chest aperture shutters open slightly then close, orbiting lens crown tilts in four physical arrangements. Huge chest aperture is visible weapon, NO handheld weapons or cannon. Fixed heavy feet. Every separate body stays clear of the other three with wide transparent margins.",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "reference_lineage": [
+      {
+        "path": "art/units/source/curated/unit_sunvault_daybreak_colossus.png",
+        "role": "visually inspected faction style and base comparison; not supplied to generator or reused",
+        "sha256": "41a17f5ace0bb3ec28c3936b68fe5353b85cf901e52e2dc61ea3075e5fb62810"
+      }
+    ],
+    "edits": [
+      {
+        "prompt": "Repair framing of this four-pose transparent original construct sprite sheet. Shrink each whole colossus to80percent its present size, center it inside its own quadrant with wide transparent gutters. Entire orbiting lens crown, every independent lens and point, and all feet must be completely visible with50pixels clear transparent space around them. Preserve exactly the four physically articulated arm/hand poses, chest aperture shutter states and tilting lens crowns. Same ivory-gold-navy construct design, true transparent RGBA, same fixed camera and planted feet. Strict2x2 grid, no text, no ground, no overlap, no cropped crown.",
+        "reference": "unit_sunvault_daybreak_colossus_veteran_master_v1.png",
+        "reason": "Add complete crown and foot margins",
+        "reference_sha256": "20d3d34a04335dfb2ae5e94b50897c2a3cadd2cff978914b47325e1d0d16caa6"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_source.png",
+    "source_sha256": "95d5ef3a1e9b3895bfbba012a0e0b6a322110ca3fb8fc4c0a21a0034d85f1ce4",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "All four poses visually reviewed for complete silhouette, articulated arms or mechanism, stable design and original upgraded equipment; alpha RGBA confirmed."
+  }
+]

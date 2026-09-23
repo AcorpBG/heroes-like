@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_river_guard_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_river_guard_veteran/unit_river_guard_veteran_idle-alpha.png": "233a2a9aade86511687edf676061515dfbf8f43615aa7a6a20368fa507eace56",
+    "res://art/animation/source/poses/unit_river_guard_veteran/unit_river_guard_veteran_actions-alpha.png": "c1f00dd6acbbeef8e2f1836db28304775d3b65dca07621f3860d13da035893de"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "410f73b1ee584cd20dc6bad9e5bc327aab82a68e2aef10d7df5ff1c81c0c810e",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

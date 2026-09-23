@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_thornwake_graft_matriarchs_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_graft_matriarchs_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              669,
+              597
+            ]
+          ],
+          "anchor": [
+            321.5,
+            589
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_graft_matriarchs_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              669,
+              0,
+              1312,
+              597
+            ]
+          ],
+          "anchor": [
+            1005.0,
+            589
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_graft_matriarchs_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              597,
+              687,
+              1199
+            ]
+          ],
+          "anchor": [
+            321.0,
+            1187
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_graft_matriarchs_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              687,
+              597,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            1004.0,
+            1188
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_graft_matriarchs_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_graft_matriarchs_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              616,
+              617
+            ]
+          ],
+          "anchor": [
+            314.5,
+            613
+          ],
+          "clip": "attack",
+          "name": "attack_windup"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_graft_matriarchs_veteran_actions.png",
+          "rects": [
+            [
+              616,
+              0,
+              1312,
+              712
+            ]
+          ],
+          "anchor": [
+            1014.5,
+            621
+          ],
+          "clip": "attack",
+          "name": "attack_release"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_graft_matriarchs_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              617,
+              616,
+              1199
+            ]
+          ],
+          "anchor": [
+            364.0,
+            1166
+          ],
+          "clip": "hit",
+          "name": "hit_recoil"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_graft_matriarchs_veteran_actions.png",
+          "rects": [
+            [
+              616,
+              712,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            968,
+            1140
+          ],
+          "clip": "dead",
+          "name": "fallen"
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "sha256": "9f3c3ae3bdee5738b0ae3d241bfeb1e5856b136edeab1f1dbc5c0cb97019b82a"
+    }
+  ]
+}

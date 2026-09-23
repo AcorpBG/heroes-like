@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_mireclaw_gorefen_rippers_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        478,
+        474
+      ],
+      "source": "unit_mireclaw_gorefen_rippers_veteran_idle-alpha.png",
+      "scale": 0.4978165938864629,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1230,
+        474
+      ],
+      "source": "unit_mireclaw_gorefen_rippers_veteran_idle-alpha.png",
+      "scale": 0.4978165938864629,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          512,
+          783,
+          1024
+        ]
+      ],
+      "anchor": [
+        504,
+        976
+      ],
+      "source": "unit_mireclaw_gorefen_rippers_veteran_idle-alpha.png",
+      "scale": 0.4978165938864629,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          783,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1240,
+        976
+      ],
+      "source": "unit_mireclaw_gorefen_rippers_veteran_idle-alpha.png",
+      "scale": 0.4978165938864629,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_mireclaw_gorefen_rippers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          714,
+          477
+        ]
+      ],
+      "anchor": [
+        410,
+        459
+      ],
+      "scale": 0.4978165938864629
+    },
+    {
+      "source": "unit_mireclaw_gorefen_rippers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          714,
+          0,
+          1536,
+          477
+        ]
+      ],
+      "anchor": [
+        1170,
+        474
+      ],
+      "scale": 0.4978165938864629
+    },
+    {
+      "source": "unit_mireclaw_gorefen_rippers_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          477,
+          719,
+          1024
+        ]
+      ],
+      "anchor": [
+        451,
+        972
+      ],
+      "scale": 0.4978165938864629
+    },
+    {
+      "source": "unit_mireclaw_gorefen_rippers_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          719,
+          477,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1140,
+        973
+      ],
+      "scale": 0.4978165938864629
+    }
+  ]
+}

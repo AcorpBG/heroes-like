@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_mireclaw_ferrychain_lashers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_mireclaw_ferrychain_lashers_veteran/unit_mireclaw_ferrychain_lashers_veteran_idle-alpha.png": "9967b016574b11295d7dec0c90bca0b5cbd77e876d536cc5121871ff6e43321a",
+    "res://art/animation/source/poses/unit_mireclaw_ferrychain_lashers_veteran/unit_mireclaw_ferrychain_lashers_veteran_actions-alpha.png": "b8d989349531bcac928b844d463e8449d0ae5d3250db143dfcea79f0434f4ede"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "2586e6f4a5f998cead169315a5938b5ac1103b12e4d9b06c5b877a3363aa0bed",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

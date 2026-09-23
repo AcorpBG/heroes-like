@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_thornwake_seedcutters_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedcutters_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              664,
+              628
+            ]
+          ],
+          "anchor": [
+            339.0,
+            618
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedcutters_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              664,
+              0,
+              1254,
+              628
+            ]
+          ],
+          "anchor": [
+            964.5,
+            619
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedcutters_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              628,
+              721,
+              1254
+            ]
+          ],
+          "anchor": [
+            341.0,
+            1244
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedcutters_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              721,
+              628,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            965.5,
+            1245
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedcutters_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedcutters_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              578,
+              666
+            ]
+          ],
+          "anchor": [
+            313.5,
+            625
+          ],
+          "clip": "attack",
+          "name": "attack_windup"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedcutters_veteran_actions.png",
+          "rects": [
+            [
+              578,
+              0,
+              1254,
+              666
+            ]
+          ],
+          "anchor": [
+            899.0,
+            620
+          ],
+          "clip": "attack",
+          "name": "attack_release"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedcutters_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              666,
+              611,
+              1254
+            ]
+          ],
+          "anchor": [
+            355.0,
+            1182
+          ],
+          "clip": "hit",
+          "name": "hit_recoil"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedcutters_veteran_actions.png",
+          "rects": [
+            [
+              611,
+              666,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            945,
+            1140
+          ],
+          "clip": "dead",
+          "name": "fallen"
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "sha256": "d6194e93bd8dbfe8ba4a076238bb582625aa7c7c1cbc65c7c17f6372e2323d08"
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_prism_adept_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    288
+  ],
+  "columns": 4,
+  "ground_margin": 48,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          640,
+          627
+        ]
+      ],
+      "anchor": [
+        316,
+        616
+      ],
+      "source": "unit_prism_adept_veteran_source-alpha.png",
+      "scale": 0.37438423645320196,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          650,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        933,
+        616
+      ],
+      "source": "unit_prism_adept_veteran_source-alpha.png",
+      "scale": 0.37438423645320196,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          645,
+          1254
+        ]
+      ],
+      "anchor": [
+        316,
+        1243
+      ],
+      "source": "unit_prism_adept_veteran_source-alpha.png",
+      "scale": 0.37438423645320196,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          650,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        940,
+        1243
+      ],
+      "source": "unit_prism_adept_veteran_source-alpha.png",
+      "scale": 0.37438423645320196,
+      "name": "idle_3"
+    },
+    {
+      "clip": "attack",
+      "name": "attack_windup",
+      "anchor": [
+        336,
+        592
+      ],
+      "scale_multiplier": 1.35,
+      "source": "unit_prism_adept_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "scale": 0.5054187192118227
+    },
+    {
+      "clip": "attack",
+      "name": "attack_release",
+      "anchor": [
+        922,
+        595
+      ],
+      "scale_multiplier": 1.35,
+      "source": "unit_prism_adept_veteran_actions-alpha.png",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "scale": 0.5054187192118227
+    },
+    {
+      "clip": "hit",
+      "name": "hit_recoil",
+      "anchor": [
+        407,
+        1165
+      ],
+      "scale_multiplier": 1.35,
+      "source": "unit_prism_adept_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "scale": 0.5054187192118227
+    },
+    {
+      "clip": "dead",
+      "name": "fallen",
+      "anchor": [
+        921,
+        1060
+      ],
+      "scale_multiplier": 1.35,
+      "source": "unit_prism_adept_veteran_actions-alpha.png",
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "scale": 0.5054187192118227
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+  "created_utc_date": "2026-09-23",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran_actions.png",
+  "sha256": "94617f830495066e824dbd7ed2747cbe691ac2a9e6c2fc4b8f2e694ec41c03ab",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "prompt_file": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran_actions.prompt.txt",
+  "reference_files": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran.png",
+      "role": "Accepted original upgraded idle design; preserve character identity, equipment, camera and rendering.",
+      "sha256": "23f770bfe8222c34d415df55273660691f09dfc2d8956c4e66a39a4976fbf1c5"
+    }
+  ],
+  "selected_actions": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          623,
+          627
+        ]
+      ],
+      "anchor": [
+        327,
+        605
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          623,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        890,
+        604
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran_actions.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          598,
+          1254
+        ]
+      ],
+      "anchor": [
+        317,
+        1179
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran_actions.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          598,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        929,
+        1185
+      ]
+    }
+  ],
+  "visual_review": "Four original articulated battle poses: attack windup, attack release, hit recoil and truly fallen corpse; transparent source exterior, no ground or gore."
+}

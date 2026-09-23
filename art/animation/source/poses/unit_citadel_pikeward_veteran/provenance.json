@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_citadel_pikeward_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_citadel_pikeward_veteran/unit_citadel_pikeward_veteran_idle-alpha.png": "b5bd7efa8ef8a840924fe597fbdf05fd6c41a1288d2cfb826674c14333e0faa8",
+    "res://art/animation/source/poses/unit_citadel_pikeward_veteran/unit_citadel_pikeward_veteran_actions-alpha.png": "6d774dfe58e262cff77a6f3f857041686181d0e86ff1d9ebbce572ef5ffc8ed5"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "84a626f709b8072c8129b9e6ac2ff929fa1f7acf505a72a25e591a85ff161d41",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

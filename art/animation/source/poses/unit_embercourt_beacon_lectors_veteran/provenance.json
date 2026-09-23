@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_embercourt_beacon_lectors_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_embercourt_beacon_lectors_veteran/unit_embercourt_beacon_lectors_veteran_idle-alpha.png": "f1a8df06369b1d0f33387a108c09b6f260bd1bcaa74fbf0413a071c70dde8a8e",
+    "res://art/animation/source/poses/unit_embercourt_beacon_lectors_veteran/unit_embercourt_beacon_lectors_veteran_actions-alpha.png": "44ba65357935b4b737055c67ee691782ced0edcf8ebb92d3db85ec5bd5ed974d"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "2e18a709742370f04d7a25c29e0b2e52866f6028b693fa6fcb81f99ab471588b",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_sunvault_solar_array_striders_veteran/unit_sunvault_solar_array_striders_veteran_source-alpha.png": "bf6f7d84a77d6958303e3f24e1eb09714e04a21764cdf6ccf700eb96e79f6649",
+    "res://art/animation/source/poses/unit_sunvault_solar_array_striders_veteran/unit_sunvault_solar_array_striders_veteran_actions-alpha.png": "0e0ee1f413bda3673e96aa751a036396fd6684de67626769bd9cd2d938aebb46"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "e09cd6422894aa19834aa909135cf5c8c12df9895fa6c59f45ecd76d0664c22a",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

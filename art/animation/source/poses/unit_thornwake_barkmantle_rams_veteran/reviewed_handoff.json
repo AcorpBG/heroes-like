@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_thornwake_barkmantle_rams_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_barkmantle_rams_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              715,
+              535
+            ]
+          ],
+          "anchor": [
+            294.0,
+            511
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_barkmantle_rams_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              715,
+              0,
+              1402,
+              535
+            ]
+          ],
+          "anchor": [
+            1015.0,
+            510
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_barkmantle_rams_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              535,
+              710,
+              1122
+            ]
+          ],
+          "anchor": [
+            294.0,
+            1072
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_barkmantle_rams_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              710,
+              535,
+              1402,
+              1122
+            ]
+          ],
+          "anchor": [
+            993.0,
+            1073
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_barkmantle_rams_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_barkmantle_rams_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              676,
+              552
+            ]
+          ],
+          "anchor": [
+            325.5,
+            527
+          ],
+          "clip": "attack",
+          "name": "attack_windup"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_barkmantle_rams_veteran_actions.png",
+          "rects": [
+            [
+              676,
+              0,
+              1402,
+              552
+            ]
+          ],
+          "anchor": [
+            1026.5,
+            531
+          ],
+          "clip": "attack",
+          "name": "attack_release"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_barkmantle_rams_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              552,
+              690,
+              1122
+            ]
+          ],
+          "anchor": [
+            293.0,
+            1059
+          ],
+          "clip": "hit",
+          "name": "hit_recoil"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_barkmantle_rams_veteran_actions.png",
+          "rects": [
+            [
+              690,
+              552,
+              1402,
+              1122
+            ]
+          ],
+          "anchor": [
+            1040,
+            1064
+          ],
+          "clip": "dead",
+          "name": "fallen"
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "sha256": "43e4a3022b2550f4d597cef46268f75eed306037c19c8b57e6577272be2d51d6"
+    }
+  ]
+}

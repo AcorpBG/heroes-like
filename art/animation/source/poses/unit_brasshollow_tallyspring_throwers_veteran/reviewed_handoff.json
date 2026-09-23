@@ -1,0 +1,144 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_tallyspring_throwers_veteran_source.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              687,
+              572
+            ]
+          ],
+          "anchor": [
+            342,
+            560
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_tallyspring_throwers_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              687,
+              0,
+              1374,
+              572
+            ]
+          ],
+          "anchor": [
+            1029,
+            560
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_tallyspring_throwers_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              572,
+              687,
+              1144
+            ]
+          ],
+          "anchor": [
+            342,
+            1130
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_tallyspring_throwers_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              687,
+              572,
+              1374,
+              1144
+            ]
+          ],
+          "anchor": [
+            1028,
+            1130
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_tallyspring_throwers_veteran_source.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_tallyspring_throwers_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              655
+            ]
+          ],
+          "anchor": [
+            296,
+            619
+          ],
+          "scale_multiplier": 1.03
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_tallyspring_throwers_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              655
+            ]
+          ],
+          "anchor": [
+            917,
+            613
+          ],
+          "scale_multiplier": 1.03
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_tallyspring_throwers_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              655,
+              580,
+              1254
+            ]
+          ],
+          "anchor": [
+            300,
+            1185
+          ],
+          "scale_multiplier": 1.03
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_tallyspring_throwers_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              580,
+              655,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            908,
+            1202
+          ],
+          "scale_multiplier": 1.03
+        }
+      ]
+    }
+  ]
+}

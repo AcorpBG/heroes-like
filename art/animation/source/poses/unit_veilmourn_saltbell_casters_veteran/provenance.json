@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_veilmourn_saltbell_casters_veteran/unit_veilmourn_saltbell_casters_veteran-alpha.png": "ccec6387b5cfb25bd07c84f9c6ccbe5cfebb3b1dcb0066d82b5f08cd140837dd",
+    "res://art/animation/source/poses/unit_veilmourn_saltbell_casters_veteran/unit_veilmourn_saltbell_casters_veteran_actions-alpha.png": "541d5d29964a3905d7c541a95c859f96a226e8d7e96e79a0a64be812c7af2c0a"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "f345ecc34384f787813fbca20f7239a6986fa07cc3cfb7b29ddbd4daa714c3d7",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          670,
+          559
+        ]
+      ],
+      "anchor": [
+        362.5,
+        549
+      ],
+      "source": "unit_thornwake_worldroot_bastion_veteran-alpha.png",
+      "scale": 0.41530054644808745,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          670,
+          0,
+          1374,
+          559
+        ]
+      ],
+      "anchor": [
+        1011.5,
+        549
+      ],
+      "source": "unit_thornwake_worldroot_bastion_veteran-alpha.png",
+      "scale": 0.41530054644808745,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          559,
+          713,
+          1145
+        ]
+      ],
+      "anchor": [
+        362.0,
+        1112
+      ],
+      "source": "unit_thornwake_worldroot_bastion_veteran-alpha.png",
+      "scale": 0.41530054644808745,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          713,
+          559,
+          1374,
+          1145
+        ]
+      ],
+      "anchor": [
+        1011.5,
+        1112
+      ],
+      "source": "unit_thornwake_worldroot_bastion_veteran-alpha.png",
+      "scale": 0.41530054644808745,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_thornwake_worldroot_bastion_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          686,
+          593
+        ]
+      ],
+      "anchor": [
+        367.5,
+        572
+      ],
+      "clip": "attack",
+      "name": "attack_windup",
+      "scale": 0.41530054644808745
+    },
+    {
+      "source": "unit_thornwake_worldroot_bastion_veteran_actions-alpha.png",
+      "rects": [
+        [
+          686,
+          0,
+          1374,
+          593
+        ]
+      ],
+      "anchor": [
+        987.5,
+        571
+      ],
+      "clip": "attack",
+      "name": "attack_release",
+      "scale": 0.41530054644808745
+    },
+    {
+      "source": "unit_thornwake_worldroot_bastion_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          593,
+          694,
+          1145
+        ]
+      ],
+      "anchor": [
+        421.5,
+        1073
+      ],
+      "clip": "hit",
+      "name": "hit_recoil",
+      "scale": 0.41530054644808745
+    },
+    {
+      "source": "unit_thornwake_worldroot_bastion_veteran_actions-alpha.png",
+      "rects": [
+        [
+          694,
+          593,
+          1374,
+          1145
+        ]
+      ],
+      "anchor": [
+        1042,
+        1068
+      ],
+      "clip": "dead",
+      "name": "fallen",
+      "scale": 0.41530054644808745
+    }
+  ]
+}

@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_thornwake_thornwhip_carriers_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_thornwhip_carriers_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              669,
+              599
+            ]
+          ],
+          "anchor": [
+            364.5,
+            588
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_thornwhip_carriers_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              669,
+              0,
+              1310,
+              599
+            ]
+          ],
+          "anchor": [
+            878.5,
+            588
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_thornwhip_carriers_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              599,
+              707,
+              1200
+            ]
+          ],
+          "anchor": [
+            253.5,
+            1187
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_thornwhip_carriers_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              707,
+              599,
+              1310,
+              1200
+            ]
+          ],
+          "anchor": [
+            985.5,
+            1187
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_thornwhip_carriers_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_thornwhip_carriers_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              610,
+              629
+            ]
+          ],
+          "anchor": [
+            348.0,
+            577
+          ],
+          "clip": "attack",
+          "name": "attack_windup"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_thornwhip_carriers_veteran_actions.png",
+          "rects": [
+            [
+              610,
+              0,
+              1310,
+              629
+            ]
+          ],
+          "anchor": [
+            904.0,
+            571
+          ],
+          "clip": "attack",
+          "name": "attack_release"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_thornwhip_carriers_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              629,
+              625,
+              1200
+            ]
+          ],
+          "anchor": [
+            323,
+            1135
+          ],
+          "clip": "hit",
+          "name": "hit_recoil"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_thornwhip_carriers_veteran_actions.png",
+          "rects": [
+            [
+              625,
+              629,
+              1310,
+              1200
+            ]
+          ],
+          "anchor": [
+            995,
+            1110
+          ],
+          "clip": "dead",
+          "name": "fallen"
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "sha256": "07c3ced42a9c99a90d7b7c05b970832d274ea3a56479c0b1391684f09ff77d86"
+    }
+  ]
+}

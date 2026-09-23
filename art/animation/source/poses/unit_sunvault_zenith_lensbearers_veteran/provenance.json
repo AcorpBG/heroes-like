@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_sunvault_zenith_lensbearers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_sunvault_zenith_lensbearers_veteran/unit_sunvault_zenith_lensbearers_veteran_source-alpha.png": "a48eee974f72f67db9ee53e494afc7ec7ee429d7626c5c6f2930d38d9cd3ce0c",
+    "res://art/animation/source/poses/unit_sunvault_zenith_lensbearers_veteran/unit_sunvault_zenith_lensbearers_veteran_actions-alpha.png": "d2c409845792d4550f054db64052312e7fcec4d3d651a8acaf3e72a30fb0687c"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "3ac35570a682d384512fe2e639ec139b8fec5859bec841ea792fece8a096f1e4",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

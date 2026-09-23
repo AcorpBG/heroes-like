@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_veilmourn_undertow_harpooners_veteran",
+  "name": "Keelbreaker Lancers",
+  "created_utc_date": "2026-09-23",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran.png",
+  "sha256": "f483204dc14b14069e1c119316cf5d31a88f00e32dd6c9bcb97d7eb0b16ea208",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "prompt_files": [
+    "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran.final.prompt.txt",
+    "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran.prompt.txt",
+    "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran_actions.prompt.txt"
+  ],
+  "portable_reference_files": [
+    "art/units/battle_standees/unit_veilmourn_gloamkeel_bulwarks.png"
+  ],
+  "reference_role": "Existing standee inspected for painterly rendering style only; no base sprite recoloring or pixel reuse.",
+  "frame_selection": [
+    {
+      "slot": 0,
+      "alpha_bbox": [
+        117,
+        63,
+        627,
+        578
+      ],
+      "separator_alpha_pixels": 0
+    },
+    {
+      "slot": 1,
+      "alpha_bbox": [
+        736,
+        71,
+        1228,
+        578
+      ],
+      "separator_alpha_pixels": 0
+    },
+    {
+      "slot": 2,
+      "alpha_bbox": [
+        114,
+        691,
+        681,
+        1205
+      ],
+      "separator_alpha_pixels": 0
+    },
+    {
+      "slot": 3,
+      "alpha_bbox": [
+        738,
+        690,
+        1226,
+        1205
+      ],
+      "separator_alpha_pixels": 0
+    }
+  ],
+  "quality_notes": "Visually reviewed genuinely distinct arm/weapon poses, preserved generated alpha.",
+  "selected_prompt_file": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_undertow_harpooners_veteran.final.prompt.txt",
+  "preserved_candidates": []
+}

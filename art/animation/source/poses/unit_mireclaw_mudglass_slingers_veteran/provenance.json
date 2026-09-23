@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_mireclaw_mudglass_slingers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_mireclaw_mudglass_slingers_veteran/unit_mireclaw_mudglass_slingers_veteran_idle-alpha.png": "609c95d168ec69e593660967d81cf921b170645f25c674562a1a289074916066",
+    "res://art/animation/source/poses/unit_mireclaw_mudglass_slingers_veteran/unit_mireclaw_mudglass_slingers_veteran_actions-alpha.png": "01ec28834ed19810f2efd13ff80792ba225300923c910b14a33bc959fb5724ee"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "8d67d64da75e6be38976d7da7df3bf0334fafd0b0690f3df7a1bd48ad2f328f7",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

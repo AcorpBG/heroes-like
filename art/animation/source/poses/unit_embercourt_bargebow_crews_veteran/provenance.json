@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_embercourt_bargebow_crews_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_embercourt_bargebow_crews_veteran/unit_embercourt_bargebow_crews_veteran_idle-alpha.png": "640a4713d368389ac0ea3e7d35cae078e91781d0a942d91107f2faf79660028d",
+    "res://art/animation/source/poses/unit_embercourt_bargebow_crews_veteran/unit_embercourt_bargebow_crews_veteran_actions-alpha.png": "ed72228632d304f2509168157e01d4d53331638fad02b7d16d15391d247f8d47"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "e520ec458b3471155fcd5f8ee65797e28118652ae3a46411a1485442cfb6cfbb",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

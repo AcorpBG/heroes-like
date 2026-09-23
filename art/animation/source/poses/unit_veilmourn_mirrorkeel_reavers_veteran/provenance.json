@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers_veteran/unit_veilmourn_mirrorkeel_reavers_veteran-alpha.png": "1288aac4b0004eade20850856c400565aee5b2b07f71a4407ecf7596410a3b70",
+    "res://art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers_veteran/unit_veilmourn_mirrorkeel_reavers_veteran_actions-alpha.png": "216bd4d6e7a0c12bc24a4732cf2a7fc7203711a462e3af28622c7594dd21311a"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "1e27fde9e9124b40b57b57d010619df5a058703f5cea9e6eac45e499ff372ca9",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

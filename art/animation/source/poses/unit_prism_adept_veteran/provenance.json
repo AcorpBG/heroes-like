@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_prism_adept_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_prism_adept_veteran/unit_prism_adept_veteran_source-alpha.png": "7d5ce02995096f5eba56bac025f753ba4f3c94661f8651995f1c6ff605afdff0",
+    "res://art/animation/source/poses/unit_prism_adept_veteran/unit_prism_adept_veteran_actions-alpha.png": "74cbba160b480f3ff2f163b2a5cad44d54e0bc5b9c5aefba64e471b60c164325"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "50f7ed1baa05675b4c68b0675b85bf2383a41ef9c48603cde48a59d06bb46652",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

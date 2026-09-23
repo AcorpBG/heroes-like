@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_brasshollow_crucible_crawlers_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    288
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        289,
+        502
+      ],
+      "source": "unit_brasshollow_crucible_crawlers_veteran_source-alpha.png",
+      "scale": 0.6333333333333333,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        916,
+        502
+      ],
+      "source": "unit_brasshollow_crucible_crawlers_veteran_source-alpha.png",
+      "scale": 0.6333333333333333,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        289,
+        1103
+      ],
+      "source": "unit_brasshollow_crucible_crawlers_veteran_source-alpha.png",
+      "scale": 0.6333333333333333,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        916,
+        1103
+      ],
+      "source": "unit_brasshollow_crucible_crawlers_veteran_source-alpha.png",
+      "scale": 0.6333333333333333,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_brasshollow_crucible_crawlers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        298,
+        559
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.6333333333333333
+    },
+    {
+      "source": "unit_brasshollow_crucible_crawlers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        917,
+        555
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.6333333333333333
+    },
+    {
+      "source": "unit_brasshollow_crucible_crawlers_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        316,
+        1119
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.6333333333333333
+    },
+    {
+      "source": "unit_brasshollow_crucible_crawlers_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        927,
+        1146
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.6333333333333333
+    }
+  ]
+}

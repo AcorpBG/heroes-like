@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_brasshollow_debt_engine_exactors_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_brasshollow_debt_engine_exactors_veteran/unit_brasshollow_debt_engine_exactors_veteran_source-alpha.png": "c76581adefd8121a4298fe8f9c10fcffbf0dc68faf699c0c07d87edaa95ea87f",
+    "res://art/animation/source/poses/unit_brasshollow_debt_engine_exactors_veteran/unit_brasshollow_debt_engine_exactors_veteran_actions-alpha.png": "0f09f1e803558d1d60ee29ca1391775abd19e2c131c4bf1b30fd63bdb52f3d37"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "857d0724853f32c231385404324d5917b3e3667196f954213bb27c96977a126e",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

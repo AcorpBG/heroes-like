@@ -1,0 +1,91 @@
+{
+  "unit_id": "unit_veilmourn_obituary_scribes_veteran",
+  "created_utc_date": "2026-09-23",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran_actions.png",
+  "sha256": "2712d6359e728cf8df3d555aa2e5060c7a968947f813f16979effa4581b9684f",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "prompt_file": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran_actions.prompt.txt",
+  "reference_files": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran.png",
+      "role": "Accepted original upgraded idle design; preserve character identity, equipment, camera and rendering.",
+      "sha256": "d628ebbb6cedddf4831ab259d91560095c379ccaf4bffbc6e709ba8a26a2eb8f"
+    }
+  ],
+  "selected_actions": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        311,
+        615
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        833,
+        615
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran_actions.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        360,
+        1173
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_obituary_scribes_veteran_actions.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        899,
+        1157
+      ]
+    }
+  ],
+  "visual_review": "Four original articulated battle poses: attack windup, attack release, hit recoil and truly fallen corpse; transparent source exterior, no ground or gore."
+}

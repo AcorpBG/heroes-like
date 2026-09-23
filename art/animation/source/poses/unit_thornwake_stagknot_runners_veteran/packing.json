@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_thornwake_stagknot_runners_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    288
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          648,
+          599
+        ]
+      ],
+      "anchor": [
+        349.0,
+        542
+      ],
+      "source": "unit_thornwake_stagknot_runners_veteran-alpha.png",
+      "scale": 0.4453125,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          648,
+          0,
+          1305,
+          599
+        ]
+      ],
+      "anchor": [
+        938.0,
+        543
+      ],
+      "source": "unit_thornwake_stagknot_runners_veteran-alpha.png",
+      "scale": 0.4453125,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          599,
+          662,
+          1205
+        ]
+      ],
+      "anchor": [
+        354.5,
+        1166
+      ],
+      "source": "unit_thornwake_stagknot_runners_veteran-alpha.png",
+      "scale": 0.4453125,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          662,
+          599,
+          1305,
+          1205
+        ]
+      ],
+      "anchor": [
+        971.0,
+        1167
+      ],
+      "source": "unit_thornwake_stagknot_runners_veteran-alpha.png",
+      "scale": 0.4453125,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_thornwake_stagknot_runners_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          625,
+          612
+        ]
+      ],
+      "anchor": [
+        252.0,
+        599
+      ],
+      "clip": "attack",
+      "name": "attack_windup",
+      "scale": 0.4453125
+    },
+    {
+      "source": "unit_thornwake_stagknot_runners_veteran_actions-alpha.png",
+      "rects": [
+        [
+          625,
+          0,
+          1306,
+          612
+        ]
+      ],
+      "anchor": [
+        943.5,
+        595
+      ],
+      "clip": "attack",
+      "name": "attack_release",
+      "scale": 0.4453125
+    },
+    {
+      "source": "unit_thornwake_stagknot_runners_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          612,
+          603,
+          1205
+        ]
+      ],
+      "anchor": [
+        276.5,
+        1158
+      ],
+      "clip": "hit",
+      "name": "hit_recoil",
+      "scale": 0.4453125
+    },
+    {
+      "source": "unit_thornwake_stagknot_runners_veteran_actions-alpha.png",
+      "rects": [
+        [
+          603,
+          612,
+          1306,
+          1205
+        ]
+      ],
+      "anchor": [
+        950,
+        1146
+      ],
+      "clip": "dead",
+      "name": "fallen",
+      "scale": 0.4453125
+    }
+  ]
+}
