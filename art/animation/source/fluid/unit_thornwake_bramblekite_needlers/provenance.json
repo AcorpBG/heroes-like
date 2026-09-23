@@ -43,7 +43,8 @@
     "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_04.png": "b2ae6c82fab87ce7a4410e880708e7df585e043d7248a3bf72aa539a03cb31c0",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_05.png": "1c454a32872de3f367e3bd98c602d9e123f03fa62aa0a9982c97394252886ab6",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_06.png": "80e762ddf65452d3f8a9acfdc95d34460a5336db2aed9436c76e5dee313c202c",
-    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_07.png": "aa55bf10315200014881f99e117f74e2c3ff3a576a3e7a15bd72d7b1219ab82b"
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_07.png": "aa55bf10315200014881f99e117f74e2c3ff3a576a3e7a15bd72d7b1219ab82b",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v3.png": "8323bf76b98be694f86f6b970701768c8138b0a1b1480d571f757c2d66a08d26"
   },
   "accepted_clips": [
     "move",
@@ -52,16 +53,17 @@
     "defend",
     "death",
     "ranged",
+    "cast",
     "idle"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Native 128px review: articulated blowpipe idle, eight-pose wingbeat, thrust/recovery, wing brace/recoil, grounded collapse and cleaned ranged release accepted. Detached dart now belongs only to runtime projectile. Support gesture remains too subtle."
+    "notes": "Solo native battle128/map64 review: near arm releases the blowpipe, extends out, rises over shoulder, invokes a small leaf-light, then lowers and regrips. Same arm owns the entire arc; far hand keeps the right-facing pipe supported. Fixed anatomical scale, complete crown/wing/feet silhouettes, clear physical support gesture replacing subtle chest taps. All previously reviewed idle, flight, melee, ranged, hit, defend and grounded death remain retained."
   },
   "preserved_accepted_clips": [
     "idle"
   ],
   "baseline_atlas_sha256": "6a85798aa6c82a8b8df51d1c25b65f5168aab08f5764a1f9fe9dc4b4e8d00854",
-  "atlas_sha256": "4c33a8756e555a909736a1fc55a622afeec68a80822dbd4ef3745434164af069",
-  "texture_bytes_rgba": 16200576
+  "atlas_sha256": "28515839d7cab664df12abc76db9297700b970cb74751670f1c2c5aef6de0809",
+  "texture_bytes_rgba": 19837440
 }

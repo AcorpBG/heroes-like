@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_thornwake_bramblekite_needlers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "cast_0",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v3.png",
+          "rects": [
+            [
+              0,
+              0,
+              390,
+              493
+            ]
+          ],
+          "anchor": [
+            225,
+            492
+          ],
+          "scale": 0.44,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_1",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v3.png",
+          "rects": [
+            [
+              390,
+              0,
+              782,
+              493
+            ]
+          ],
+          "anchor": [
+            610,
+            492
+          ],
+          "scale": 0.44,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_2",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v3.png",
+          "rects": [
+            [
+              782,
+              0,
+              1167,
+              493
+            ]
+          ],
+          "anchor": [
+            995,
+            492
+          ],
+          "scale": 0.44,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_3",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v3.png",
+          "rects": [
+            [
+              1167,
+              0,
+              1536,
+              493
+            ]
+          ],
+          "anchor": [
+            1380,
+            492
+          ],
+          "scale": 0.44,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_4",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v3.png",
+          "rects": [
+            [
+              0,
+              493,
+              410,
+              1024
+            ]
+          ],
+          "anchor": [
+            232,
+            1003
+          ],
+          "scale": 0.44,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_5",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v3.png",
+          "rects": [
+            [
+              410,
+              493,
+              786,
+              1024
+            ]
+          ],
+          "anchor": [
+            615,
+            1003
+          ],
+          "scale": 0.44,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_6",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v3.png",
+          "rects": [
+            [
+              786,
+              493,
+              1167,
+              1024
+            ]
+          ],
+          "anchor": [
+            997,
+            1003
+          ],
+          "scale": 0.44,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_7",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v3.png",
+          "rects": [
+            [
+              1167,
+              493,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1380,
+            1003
+          ],
+          "scale": 0.44,
+          "alpha_noise_cutoff": 8
+        }
+      ],
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v3.png": 0.44
+      },
+      "source_scale_reason": "One fixed .44 source scale keeps the crown-to-toe anatomy near the retained 194px body; raised arm height is not normalized.",
+      "clips": {
+        "cast": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 115,
+          "contact_frame": 4,
+          "loop": false
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Broad near-arm release, raise, leaf invocation and regrip; native review required."
+      },
+      "provenance": {
+        "tool": "builtin_image_gen",
+        "sources": [
+          {
+            "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v3.png",
+            "sha256": "8323bf76b98be694f86f6b970701768c8138b0a1b1480d571f757c2d66a08d26",
+            "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v3.prompt.txt",
+            "prompt_sha256": "a3f8720684f8bde7ff3c3b95d0bdeba86818d4d2453dfb1cac2cc3f2292ba962",
+            "reference": "art/units/source/curated/unit_thornwake_bramblekite_needlers.png",
+            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-edd81bce-6db4-4074-9828-37832767dcb1.png"
+          }
+        ]
+      }
+    }
+  ]
+}

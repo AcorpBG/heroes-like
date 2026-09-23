@@ -10,7 +10,10 @@
     "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/reactions_v1.png": "a90f7f3d6ab821b9dd458d67c0962e0fd29cb0a4f019656c96aade00d710b9ca",
     "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/death_v1.png": "f29159e0aca807b0720e8a81cd0f5d111de34a4da54f039e03647ef9ecf1cbfe",
     "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_v2.png": "eb1107ef0d501f6e378e9d9d5d4703ad52ee2052fa60a5ca2b75313e5a67c131",
-    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_hand_v3.png": "75cc4e061be5239e7a66648216291131107df3fd5f683e969231bb9808cf9fac"
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_hand_v3.png": "75cc4e061be5239e7a66648216291131107df3fd5f683e969231bb9808cf9fac",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.png": "c3e4d30bd1824de1e278ddcb05bb95253248e9033ccebb900b65905ecff9bd54",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v4.png": "ef7f9e7a4188bdf4c1960688f043509f1f7a989e50ba3574929c2ff8a6eb6f3e",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v7.png": "1da2c69a832f0db2bca8fcb2c03c3cd33b31121c0d2dc2ebed35ae2189b1dedb"
   },
   "accepted_clips": [
     "idle",
@@ -19,14 +22,15 @@
     "hit",
     "defend",
     "death",
-    "cast"
+    "cast",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
+    "notes": "Solo native battle128/map64 review: reciprocal far/near contacts, bent-knee passing, heel-toe reaches and gun counterbalance replace repeated-leading-foot shuffling. Passing support leg repaired in original move_v7 painting. Eight distinct painted phases registered at fixed anatomical scale; all previously reviewed idle, attack, ranged, hit, defend, cast and grounded death clips retained. No whole-body deformation or duplicate padding."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "4c3c6db6816ab07af10a4bcbe7232510dde7706b55cf6f571db100382bca6f79",
-  "atlas_sha256": "03a115518443696737d620ecfa5c7d223f671678e24fd5a03d4dd17118423722",
-  "texture_bytes_rgba": 16859136
+  "atlas_sha256": "49e2ce7b435cf9b8c5516ab5c79ec7035aaa30eea8eeecb1883dc322b2b0950b",
+  "texture_bytes_rgba": 21288960
 }

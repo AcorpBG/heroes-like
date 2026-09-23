@@ -917,6 +917,158 @@
           ],
           "scale": 0.65,
           "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_0",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.png",
+          "rects": [
+            [
+              0,
+              0,
+              444,
+              444
+            ]
+          ],
+          "anchor": [
+            238,
+            408
+          ],
+          "scale": 0.66,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_1",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v4.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              444
+            ]
+          ],
+          "anchor": [
+            1125,
+            408
+          ],
+          "scale": 0.66,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_2",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v7.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              444
+            ]
+          ],
+          "anchor": [
+            1125,
+            408
+          ],
+          "scale": 0.66,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_3",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.png",
+          "rects": [
+            [
+              1330,
+              444,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1568,
+            831
+          ],
+          "scale": 0.66,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_4",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.png",
+          "rects": [
+            [
+              0,
+              444,
+              444,
+              887
+            ]
+          ],
+          "anchor": [
+            238,
+            831
+          ],
+          "scale": 0.66,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_5",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.png",
+          "rects": [
+            [
+              444,
+              444,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            682,
+            831
+          ],
+          "scale": 0.66,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_6",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.png",
+          "rects": [
+            [
+              887,
+              444,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1125,
+            831
+          ],
+          "scale": 0.66,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_7",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.png",
+          "rects": [
+            [
+              1330,
+              0,
+              1774,
+              444
+            ]
+          ],
+          "anchor": [
+            1568,
+            408
+          ],
+          "scale": 0.66,
+          "alpha_noise_cutoff": 8
         }
       ],
       "clips": {
@@ -1013,8 +1165,93 @@
           "frame_msec": 110,
           "loop": false,
           "contact_frame": 3
+        },
+        "move": {
+          "indices": [
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55
+          ],
+          "frame_msec": 100,
+          "loop": true,
+          "painted_phase_order": [
+            "far contact",
+            "far support / near heel lifted",
+            "near knee forward",
+            "near reach",
+            "near contact",
+            "near support / far heel lifted",
+            "far knee forward",
+            "far reach"
+          ]
         }
       },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/idle_v2.png": 0.66,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/attack_v1.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/ranged_v2.png": 0.645,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/reactions_v1.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/death_v1.png": 0.575,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_v2.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_hand_v3.png": 0.235,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.png": 0.66,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v4.png": 0.66,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v7.png": 0.66
+      },
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "tool": "builtin_image_gen",
+        "sources": [
+          {
+            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v4.png",
+            "sha256": "ef7f9e7a4188bdf4c1960688f043509f1f7a989e50ba3574929c2ff8a6eb6f3e",
+            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v4.prompt.txt",
+            "prompt_sha256": "7a96bd897f1912f3b14ac7b0a797b56142e3df63f4bfe2eb1021b0edb38aa076",
+            "reference": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/idle_v2.png",
+            "supporting_references": [],
+            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-7fcad160-b847-448c-8dd9-0a4606c299ba.png"
+          },
+          {
+            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v5.png",
+            "sha256": "c95d904d8aa02e6456317517810221b97644d6bd487a296d320e215b1b2a4f86",
+            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v5.prompt.txt",
+            "prompt_sha256": "04eb47d7c0fb267330985a8857b6454278b0cdd18dc60bafb183b82a0a916d3e",
+            "reference": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v4.png",
+            "supporting_references": [],
+            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-29cae9a1-96a8-4fd4-a535-620c0025a0c2.png"
+          },
+          {
+            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.png",
+            "sha256": "c3e4d30bd1824de1e278ddcb05bb95253248e9033ccebb900b65905ecff9bd54",
+            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.prompt.txt",
+            "prompt_sha256": "4943fdbf0eaa86ba2a89a9e981f03832d10fcf17ef0f899cac0806a73efb80cf",
+            "reference": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v5.png",
+            "supporting_references": [],
+            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-b6475038-8ca7-4ff8-a0ba-8d418dd6db7e.png"
+          },
+          {
+            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v7.png",
+            "sha256": "1da2c69a832f0db2bca8fcb2c03c3cd33b31121c0d2dc2ebed35ae2189b1dedb",
+            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v7.prompt.txt",
+            "prompt_sha256": "187b4b7c0b1a11fc53330268f4b65198d205762e5a5b227ea6e967a87ac882a7",
+            "reference": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v6.png",
+            "supporting_references": [
+              "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v4.png"
+            ],
+            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-8f61b549-4451-4e78-90bb-7e7a4d90d9d0.png"
+          }
+        ]
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Solo native battle128/map64 review: reciprocal far/near contacts, bent-knee passing, heel-toe reaches and gun counterbalance replace repeated-leading-foot shuffling. Passing support leg repaired in original move_v7 painting. Eight distinct painted phases registered at fixed anatomical scale; all previously reviewed idle, attack, ranged, hit, defend, cast and grounded death clips retained. No whole-body deformation or duplicate padding."
+      },
+      "preserved_accepted_clips": [],
       "accepted_clips": [
         "idle",
         "attack",
@@ -1022,140 +1259,9 @@
         "hit",
         "defend",
         "death",
-        "cast"
-      ],
-      "preserve_clips": [],
-      "visual_review": {
-        "status": "accepted_selected_clips",
-        "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
-      },
-      "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/idle_v2.png": 0.66,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/attack_v1.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v1.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/ranged_v2.png": 0.645,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/reactions_v1.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/death_v1.png": 0.575,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_v2.png": 0.65,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_hand_v3.png": 0.235
-      },
-      "source_scale_reason": "One fixed scale per original source normalizes independently generated body heights to225pixels; never per-frame bbox resizing.",
-      "provenance": {
-        "tool": "builtin_image_gen",
-        "references": [
-          "art/animation/source/poses/unit_brasshollow_boiler_rivetcasters_veteran/unit_brasshollow_boiler_rivetcasters_veteran_source-alpha.png"
-        ],
-        "sources": [
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/idle_v1.png",
-            "sha256": "a0c2e2ef8f9086acae12359ad0ea601a22d912fac4abb04214be8f169cc30062",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/idle_v1.prompt.txt",
-            "prompt_sha256": "25d9da1f3fbb0a722dba8b543a91a6adf68ef4114a915c169e2fded3ec2ff4ff",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-bae582ab-cb6c-4c96-93c3-602b2e6ef05e.png",
-            "status": "superseded"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/idle_v2.png",
-            "sha256": "532b5c8662be1eef72c8fad9c60e92cf5a1e216eb0d6ed7bacb2c8a61f4c89a7",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/idle_v2.prompt.txt",
-            "prompt_sha256": "cfd9e9b296e0e1b8eeadeb57ef360a07bcabe43c4bfe387a99057a18ae681d1c",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-46816e9f-154b-4e07-86f4-eb516c2ccea1.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/ranged_v1.png",
-            "sha256": "4ae215e09d9f5c7d900ff33019b0a7217d0c41722494efde8acc7bf692b42570",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/ranged_v1.prompt.txt",
-            "prompt_sha256": "888f03d576ab264abcbe862f512628cb969c316d6f0a1ee946fa312a1e4fa09a",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-c4e5a8cc-d311-4c8a-a9d1-4055dab50f71.png",
-            "status": "superseded"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/ranged_v2.png",
-            "sha256": "d6a19d24778811f20fc91c5917f58c85e8934c777e13861d92a33267454feadf",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/ranged_v2.prompt.txt",
-            "prompt_sha256": "260475eb6b3de1e658a8cfed7c9f2e79a7be168d07cb15178f3df32bf77f69d2",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-2730a681-55b6-45c7-b169-f9394db13cc7.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v1.png",
-            "sha256": "f30e6cefb1885fed39fa8112f8bdcb6765bd968d064183d700c287635c603297",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_v1.prompt.txt",
-            "prompt_sha256": "d96f2bfa31e1c68a55b65bae545dad458b2c6cb5b07d96a2cccde52ec8ad4943",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-e614c8a7-557a-4a87-832a-6bb372d2b10e.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_alpha_v2.png",
-            "sha256": "98a0cd6158c2cfaa4e8f65b7b13af80a263eb9c19f5a8946d1dc81dafadaa262",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/move_alpha_v2.prompt.txt",
-            "prompt_sha256": "bc90454d0c1c1ddf634006a3defb2efcaa9f0555d218ab6470343c90aba20a4e",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-f40f9128-d683-445f-ac74-de90eaecf7b7.png",
-            "status": "superseded"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/attack_v1.png",
-            "sha256": "3a1c093dba06e6862b27993b85d0cbfa638d074ec2b6137e189b974ad9de771b",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/attack_v1.prompt.txt",
-            "prompt_sha256": "206db2aa4a0259d8a4232fa974d6981a346f1a54bc2edfe0db7ac4d728dad8f6",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-13b91480-bcf5-4847-9b26-ad04699e0671.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/death_v1.png",
-            "sha256": "f29159e0aca807b0720e8a81cd0f5d111de34a4da54f039e03647ef9ecf1cbfe",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/death_v1.prompt.txt",
-            "prompt_sha256": "5101f685148b654abac34f1ff0ae537fe84f6932018f8f01a71d9dd9c1bc3446",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-f815bb7d-1a8e-4e90-aea9-e577b4107cd1.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/reactions_v1.png",
-            "sha256": "a90f7f3d6ab821b9dd458d67c0962e0fd29cb0a4f019656c96aade00d710b9ca",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/reactions_v1.prompt.txt",
-            "prompt_sha256": "1400d24933c11ae699e6e85b3f792143ac5ccd8d91620aa48a847dee7c1ba761",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-77dab001-9655-4eb2-a535-1490c76bc626.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_v1.png",
-            "sha256": "8037be2e130561a08bd37a587a52a7cbcc167aec4ab2c65c9ba829f24e5f07fc",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_v1.prompt.txt",
-            "prompt_sha256": "6a2ff75a95459aa9bdedbdab793c7b7dd93a7c1f55e2b28d897aaeb641922dbe",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-e24db1ba-02a8-41b3-b1ff-f8e62f004cb5.png",
-            "status": "superseded"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_v2.png",
-            "sha256": "eb1107ef0d501f6e378e9d9d5d4703ad52ee2052fa60a5ca2b75313e5a67c131",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_v2.prompt.txt",
-            "prompt_sha256": "0a9c4f6b06ae424f084a76a49486efb8ba4af17313aeab8e60c8161486a08485",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-bf62e677-60ee-4df9-abdb-13ebce058d97.png",
-            "status": "pending_review"
-          },
-          {
-            "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_hand_v3.png",
-            "sha256": "75cc4e061be5239e7a66648216291131107df3fd5f683e969231bb9808cf9fac",
-            "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_hand_v3.prompt.txt",
-            "prompt_sha256": "ed28fdde96ea3eec35771f9158cc07d9b235a6674856ec345bd6b48cbb8660b7",
-            "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-fd32-7871-9a3b-64fb488c298f/exec-e0ca5cdd-4840-4167-9f93-d862b2dd9103.png",
-            "status": "pending_review"
-          }
-        ],
-        "derived_reference": {
-          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters_veteran/support_hand_reference.png",
-          "source": "support_v2.png",
-          "rect": [
-            887,
-            0,
-            1331,
-            444
-          ],
-          "used_by": "support_hand_v3"
-        }
-      },
-      "preserved_accepted_clips": []
+        "cast",
+        "move"
+      ]
     }
   ]
 }
