@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/idle_v1.png": "1589f2b6f1ef3c423e6f90ab7883c2bf0e90cd4f8422f7c3d985481fcf72ea43",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/attack_v1.png": "d61485b730f686730ab2ba42d869bd2431b36e03dbbaef3e9889d9750cf1610a",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/reactions_v1.png": "5f8c6f248a5319593997b03ffec7c9ce8c418a841c9b704befe89c5e68239c68",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/cast_v1.png": "ee096565d52d1db0de5c269570fb15bb6189dac05b218efa882731e9639594ec",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/death_v1.png": "65ff942015b94fff3295cd4230d65f3dd6a5ac687414651a82070c5fff03d434",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/move_far_v1.png": "49fbc8125dfb2ac74128647118bf884536245821ac1b0fba1ea7d6e2fad4022d",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/near_passing_v1.png": "94a5b3a70983d4f12a0726b5ab440dea0f92b55e95b71028d8d13104baac74db",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/move_near_v1.png": "2d296a9f9561a59a1bed6ad40c71d5d81cb958bcde2e88b758e6624a51803284"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Original paintings and native 128px Godot phases reviewed: gavel-arm idle, overhead strike and recovery, four hit and four defense poses, physical oath support, reciprocal eight-phase walk and grounded collapse. One wrong-knee source excluded; one fixed anatomical scale per source; actual sole anchors and released gavel retained. Final imported battle and map render checked separately."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "b6b71a7aa522a177b52e38d60fb2961b28df30e5d2bcf7069eef69fb0fee1ccc",
+  "atlas_sha256": "755dd75c6118b9b7cc86b6e2ce888b03a3353b515084849becdd5129beb555bf",
+  "texture_bytes_rgba": 18565120
+}
