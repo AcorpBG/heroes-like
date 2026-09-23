@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/idle_v1.png": "be7c7a6e34ae136a1cd921360ccfd73be5765b33e0519376d0f0e306647fcb40",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/attack_v1.png": "f17f43032b8e8bc0dd4ee77d58623fe4061917e781d032596067c56b18be0eae",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/reactions_v1.png": "609c4ed1caab466a63e2b23e6885a419cafc9518aa75672d6c7d05d4d0e9b239",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/cast_v1.png": "5ea9b880325c70b73adfd7c349af03146a2ea0034519688e16deda2d63a5fb48",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/death_v1.png": "ffbf72cd2680f14513c051f77f6f1b59144270f1509891892761a093931e4261",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/move_far_v1.png": "b6719af9d3284258ee6ddf2f0d505aefd97e0c7f14377660b35964c70b94a57e",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/move_near_v1.png": "79d021f7cb371f39170f1c7824d2b51bd634ca2f7e0e5ceb4d7fcaa65990181c",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lantern_sappers_veteran/move_near_corrections_v1.png": "31393ce98333c2369721d51ff75f5c24d8a3587e7fd76a3b2504d121413b032f"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Flarepot Engineer: 48 reviewed poses, real pot and lantern hand articulation, reciprocal leg cycle, complete tank/hose silhouettes, fixed anatomical scale; 116 focused candidate checks passed."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "e01d6bb83cb542dbcee127548f073df89abd75d0dc22be73baa7b3953f1a4883",
+  "atlas_sha256": "e54ef9119e4bcf5d81609a558ca500ad8864013460f80ec4ce56a6e93823ca5f",
+  "texture_bytes_rgba": 27753600
+}
