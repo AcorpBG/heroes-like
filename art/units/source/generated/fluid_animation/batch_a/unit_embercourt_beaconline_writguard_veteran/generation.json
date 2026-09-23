@@ -1,0 +1,138 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/idle_v1.png",
+      "sha256": "6dc493af2ea6c282ca9c9d87127e0166f61d1da49e601542b39cb04b977766d7",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "a8bf27c7bf3a1dca3530486bcccfa2f68aed4dfbb05e000249f5067da85bcb5b",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-a3767636-eb4b-43ee-85b8-5c3447894b9a.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reference.png",
+          "sha256": "71339e70a4a2b58f11431a03ce6135678576f40e0ac7258b1f3c2e60e63e4b3f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/attack_v1.png",
+      "sha256": "a7d8889c406e844968c96cb0c146b23a2057ef46455e69d5e694ca0f4dd57eef",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "6ecc48b25866ebe26270162328ad6c7237cee246992166d5852434b11a2c3eb3",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-ea7e4eb9-9f15-458a-a6f7-7fef89fff41c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reference.png",
+          "sha256": "71339e70a4a2b58f11431a03ce6135678576f40e0ac7258b1f3c2e60e63e4b3f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reactions_v1.png",
+      "sha256": "21ada7042b8fbc758a22035aaceb9ba68f3e49438bd81711bc9e56b94b243fb5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "f6ad32ff79452a19c7277f315a86d0468487342c21bb9f51c3fe4f5e0a687629",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-2eab244a-a605-49e5-bf5d-9b9d3649b206.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reference.png",
+          "sha256": "71339e70a4a2b58f11431a03ce6135678576f40e0ac7258b1f3c2e60e63e4b3f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/cast_v1.png",
+      "sha256": "9baec34db14f3671be45d007d163cfc6517e6146c167b4346648cc98be559509",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "cc8dd2783a4e9cae2bfd496acedcf7bd99c7872fdf838b62839807898740a767",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-eb6e0389-4c80-4ee5-a74d-b2aea37a4b11.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reference.png",
+          "sha256": "71339e70a4a2b58f11431a03ce6135678576f40e0ac7258b1f3c2e60e63e4b3f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/death_v1.png",
+      "sha256": "c9cc8e2e984d676789637eedbddbee94d4c4849e5a876ea94d1702660de43d06",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "0ceca6f81179af67e34a88dd6a367cce3b87b6c1e74e4f2b90df80add8ce063d",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-846c3688-106a-4d65-8752-c52d58882f6c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reference.png",
+          "sha256": "71339e70a4a2b58f11431a03ce6135678576f40e0ac7258b1f3c2e60e63e4b3f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/move_far_v1.png",
+      "sha256": "d4826e79dd32205f8cf0f338bfab20ae12e9c8f9b96cc4156565935faf2e848e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "7262db688fc227aee3389da1bff6c4b3286d021d322e179d53ac1126ec1e7056",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c4b481ac-f54b-493b-babc-929b967a2a66.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reference.png",
+          "sha256": "71339e70a4a2b58f11431a03ce6135678576f40e0ac7258b1f3c2e60e63e4b3f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/move_near_v1.png",
+      "sha256": "9d6490d4fa798228e3f2ad1f003883e976cd66c7bb2fb355fff917ca0750445a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "c932b5516d4067f8e0efabed93809ecc2cd2cfa17152a73275ba9b359d320eaa",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-dcb18d24-8762-4863-b558-4bf9b03b3c04.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reference.png",
+          "sha256": "71339e70a4a2b58f11431a03ce6135678576f40e0ac7258b1f3c2e60e63e4b3f"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/near_passing_v1.png",
+          "sha256": "94a5b3a70983d4f12a0726b5ab440dea0f92b55e95b71028d8d13104baac74db"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/move_far_v2.png",
+      "sha256": "81d58db8e87426acffe158db93a3ff18986dc4a7f521cdbb80b96d47d2d3d581",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/move_far_v2.prompt.txt",
+      "prompt_sha256": "ea0f14672642b4db00272b6d9962dac8a29c6f314b08fa965a2672b9a5ba99ab",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-d02eff58-ac7e-4fa2-b8a7-6c4b9c0bcf24.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reference.png",
+          "sha256": "71339e70a4a2b58f11431a03ce6135678576f40e0ac7258b1f3c2e60e63e4b3f"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/move_near_v1.png",
+          "sha256": "9d6490d4fa798228e3f2ad1f003883e976cd66c7bb2fb355fff917ca0750445a"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/corrections_v1.png",
+      "sha256": "9a207141029f69b17517c509560591abde7c63bfe9342a016def138b6a9cca08",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/corrections_v1.prompt.txt",
+      "prompt_sha256": "9cbce1b2765e8753c52ae9d9978d8bcfa02da0713b304f71cd8666eb8426bb32",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-fa2e4e66-aab7-48bb-a5ab-aa8cf4ace9b3.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reference.png",
+          "sha256": "71339e70a4a2b58f11431a03ce6135678576f40e0ac7258b1f3c2e60e63e4b3f"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/idle_v1.png",
+          "sha256": "6dc493af2ea6c282ca9c9d87127e0166f61d1da49e601542b39cb04b977766d7"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/attack_v1.png",
+          "sha256": "a7d8889c406e844968c96cb0c146b23a2057ef46455e69d5e694ca0f4dd57eef"
+        }
+      ]
+    }
+  ]
+}

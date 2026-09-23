@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_embercourt_beaconline_writguard_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/idle_v1.png": "6dc493af2ea6c282ca9c9d87127e0166f61d1da49e601542b39cb04b977766d7",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/corrections_v1.png": "9a207141029f69b17517c509560591abde7c63bfe9342a016def138b6a9cca08",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/attack_v1.png": "a7d8889c406e844968c96cb0c146b23a2057ef46455e69d5e694ca0f4dd57eef",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/reactions_v1.png": "21ada7042b8fbc758a22035aaceb9ba68f3e49438bd81711bc9e56b94b243fb5",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/cast_v1.png": "9baec34db14f3671be45d007d163cfc6517e6146c167b4346648cc98be559509",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/death_v1.png": "c9cc8e2e984d676789637eedbddbee94d4c4849e5a876ea94d1702660de43d06",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/move_far_v2.png": "81d58db8e87426acffe158db93a3ff18986dc4a7f521cdbb80b96d47d2d3d581",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beaconline_writguard_veteran/move_near_v1.png": "9d6490d4fa798228e3f2ad1f003883e976cd66c7bb2fb355fff917ca0750445a"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Lanternwall Wardens: seven complete articulated actions reviewed in original paintings and native Godot 128px phases. Corrected idle spear tip, windup spear length and opposite-leg walk; fixed source scales and body ground anchors retain dropped spear and shield."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "a1e7955a00111610d79580905a668f10de736482195d62787c85109259be3191",
+  "atlas_sha256": "3e87d8e783229ead743b96d48b4bd0d46a8f2527f16935c8ab323de7f9c1f0c6",
+  "texture_bytes_rgba": 29302784
+}
