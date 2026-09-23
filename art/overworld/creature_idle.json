@@ -5826,32 +5826,37 @@
     "unit_embercourt_lockglass_writcasters_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_lockglass_writcasters_veteran.png",
       "frame_size": [
-        165,
-        249
+        162,
+        240
       ],
-      "frames": 3,
-      "frame_msec": 280,
+      "frames": 8,
+      "frame_msec": 140,
       "static_frame": 0,
       "ground_anchor": [
-        77.0,
-        238
+        76.0,
+        230
       ],
-      "painted_extent": 233,
+      "painted_extent": 224,
       "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_lockglass_writcasters_veteran.png",
       "source_indices": [
-        0,
-        1,
-        2
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
       ],
       "source_crop": [
-        71,
-        2,
-        236,
-        251
+        72,
+        10,
+        234,
+        250
       ],
-      "source_sha256": "4ff6e3cce06b3417896b4a1dcef6c84d27f527f33dfa43195ec074d6b3d5e401",
+      "source_sha256": "18cdd7d77fb7bdad29c975fd31c98125318d6fa51fccda5be09e4e35b293399f",
       "source_provenance": "res://art/animation/source/fluid/unit_embercourt_lockglass_writcasters_veteran/provenance.json",
-      "sha256": "d79b38ccc5a5bfa5522aa7d37b5231df48cafdb8f6e43c760139a13968b48316"
+      "sha256": "94dcfacc0c9db8ac1a03b16bee5e5784e2077aef22849a7e634e3d275b0ce2bc"
     },
     "unit_embercourt_beacon_lectors_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_beacon_lectors_veteran.png",
