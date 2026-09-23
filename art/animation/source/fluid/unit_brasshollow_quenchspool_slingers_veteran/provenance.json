@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_brasshollow_quenchspool_slingers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers_veteran/idle_v1.png": "0cc8468b770501f90ae9c364167a292b80151e14b26be84c568d3d26b0e3f5c7",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers_veteran/attack_v1.png": "5da59a6fc0c957a572b818315f068a303eaf95e7ed921fc5087cd2fe21de72d2",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers_veteran/ranged_v1.png": "ecdfd0cdea7ca7f7a2dcaa97d085c1a99e6908ed2d3e78184426c6786cb62312",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers_veteran/release_v1.png": "622bd84dd16043f2fb6e17f3a68de42d58dc7fc7541fc0a524e6600df28d751f",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers_veteran/reactions_v1.png": "f3ba2a67296d5e0e06d1825c82d42d7ebc73911e5c1f497e19abfd5122b1a2f0",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers_veteran/cast_v1.png": "de6d6d47367aa0f4794274716d42788ec74724c7045b1f6ad526a113b763c4e8",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers_veteran/death_v1.png": "47f64cfddf0729c7b18066c0bc6f65b68a13be41891ae4b9da7a784ea64229b1",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers_veteran/move_v1.png": "87610e80934d7a4084d08ff06a8f1adfae4e312078aa79cdb3cfda44b5f60454",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers_veteran/move_transitions_v1.png": "95095d937b7c255f1aed0b1177030ec353a411c1b88432e4b795c5ab320bbc23"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "56 original Arrestor Spooler frames reviewed at native Godot battle scale, with corrected rope release hand ownership and reciprocal gait transitions."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "f31f17daf43c19e5ee8a721892985d60eef1d4c5f3edc6a51414ff640869b588",
+  "atlas_sha256": "f9417ca6b9e8f8281f5e0484ec330a49eef0b78d58572f7558526bff9587c0d6",
+  "texture_bytes_rgba": 28815360
+}
