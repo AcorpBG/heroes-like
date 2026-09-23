@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_sunvault_daybreak_colossus_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/idle_v1.png": "0f9c0cb1b8ed7f7f37d1af42940817590ca879bb5a3aea409a9947b9426bae00",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/attack_v1.png": "1995ee75d45e518877b7f6e6882af568285c4a3c55a9873d2748ac39251e3a6e",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/corrections_v1.png": "a1953ad440a402682221098ec93f89c4f0df3644fbc80af2aae4e31da3c51060",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/ranged_v2.png": "218ac1fe3cae5db950daf89a5225d197312c1a8417f3c2e310c77503c05ef947",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/reactions_v1.png": "c5d322a79e900aa60e26ac0af89bdfe3dc6f71629c1305d1de54b17602bd2bbf",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/cast_v1.png": "1e5d4ee6150582c6fda8e1443c8d19c13c326d21e3f1bbfa0e38df64b32bd44d",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/death_v1.png": "6b2440397b44bf42cca66b0fd74b14a4b28dfbcec38e67e7c96a0b14bc8b99ad",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/move_far_corrections_v1.png": "40f8d64466c55484f507c820c4f77316c628ac7689820d1362f9792b2273a250",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/move_far_v1.png": "45ae4d89a9a1d0c66bd27741dc3ada883912fb4cf1189d5b653ac30a221d9484"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Firstlight Colossus: 56 poses across eight actions; corrected melee contact, reciprocal legs and ranged body scale, complete halo and runtime-owned projectile; 132 final candidate checks passed."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "1d23636e49ff744d5349f4e3c6d518ee114d106d35f6634208b011378d4d553c",
+  "atlas_sha256": "3807d0f355673a27b0ba23709e71c9d0624cd2f6c3aff60cd1d512e844f9824c",
+  "texture_bytes_rgba": 16972800
+}

@@ -6767,33 +6767,37 @@
     "unit_sunvault_daybreak_colossus_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_daybreak_colossus_veteran.png",
       "frame_size": [
-        205,
-        250
+        245,
+        245
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        95.0,
-        238
+        126.0,
+        237
       ],
-      "painted_extent": 234,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_daybreak_colossus_veteran.png",
+      "painted_extent": 229,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_daybreak_colossus_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        161,
-        2,
-        366,
-        252
+        10,
+        15,
+        255,
+        260
       ],
-      "source_sha256": "1d23636e49ff744d5349f4e3c6d518ee114d106d35f6634208b011378d4d553c",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_daybreak_colossus_veteran/provenance.json",
-      "sha256": "618b95220e5c264625d119e77a598ea2f81cbba3552503e29c383501272d04b7"
+      "source_sha256": "3807d0f355673a27b0ba23709e71c9d0624cd2f6c3aff60cd1d512e844f9824c",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_daybreak_colossus_veteran/provenance.json",
+      "sha256": "1f50dd3a795bc08a42e387b116237c8e9635cb5fadd0e7e109884eb5e75ed102"
     },
     "unit_thornwake_seedcutters_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_seedcutters_veteran.png",

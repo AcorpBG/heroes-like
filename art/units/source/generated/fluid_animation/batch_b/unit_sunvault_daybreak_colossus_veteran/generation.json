@@ -1,0 +1,143 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/idle_v1.png",
+      "sha256": "0f9c0cb1b8ed7f7f37d1af42940817590ca879bb5a3aea409a9947b9426bae00",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "e3ae7d17efb13fd8a802da4dbb698260418476ac7e308c079e2c2b81492bdc17",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-5e210c64-ecb2-4f76-8f29-7f70b7d34c84.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/identity_reference.png",
+          "sha256": "be79a1e21a38dbdadf05f1a94e38bfcc14c27629a600f2c73225b460a69d34fa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/attack_v1.png",
+      "sha256": "1995ee75d45e518877b7f6e6882af568285c4a3c55a9873d2748ac39251e3a6e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "63bbb75b56dc27660307dbdfb8d6db413a4709efe106d62f9be1b8b31061ea2d",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c82a2ea3-a474-4012-bbe1-534cde15b180.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/identity_reference.png",
+          "sha256": "be79a1e21a38dbdadf05f1a94e38bfcc14c27629a600f2c73225b460a69d34fa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/ranged_v1.png",
+      "sha256": "5fea4d47f1038d8abcee12acb97a851eeaf04c02fa52115beb005cf26d25b4dd",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/ranged_v1.prompt.txt",
+      "prompt_sha256": "8690b2e19665797189d929b6753c43f982707489cecb75b9f70e5f6ade911434",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-7f0b1d53-971c-4460-b90d-d029e7ee4b49.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/identity_reference.png",
+          "sha256": "be79a1e21a38dbdadf05f1a94e38bfcc14c27629a600f2c73225b460a69d34fa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/reactions_v1.png",
+      "sha256": "c5d322a79e900aa60e26ac0af89bdfe3dc6f71629c1305d1de54b17602bd2bbf",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "efdc3dd6177345590ea96d1f02a2aa7bd89919897ef4886ae3ccdda2c15b88cb",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-8c0f987f-26f7-4b23-957c-99733c821ed2.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/identity_reference.png",
+          "sha256": "be79a1e21a38dbdadf05f1a94e38bfcc14c27629a600f2c73225b460a69d34fa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/cast_v1.png",
+      "sha256": "1e5d4ee6150582c6fda8e1443c8d19c13c326d21e3f1bbfa0e38df64b32bd44d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "80a152859f2704d42808cd793042243f4746fc16c0819f0e939b076575ba90b7",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-7c9a9cda-fd3a-48f5-bcfc-6c15242a2b80.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/identity_reference.png",
+          "sha256": "be79a1e21a38dbdadf05f1a94e38bfcc14c27629a600f2c73225b460a69d34fa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/death_v1.png",
+      "sha256": "6b2440397b44bf42cca66b0fd74b14a4b28dfbcec38e67e7c96a0b14bc8b99ad",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "edb083a03ff78da9f31cdc95780cbe6023521abc9f72027737d2c8e4936a6047",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-fe162829-1fef-4873-9851-cdeeb8b06ce6.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/identity_reference.png",
+          "sha256": "be79a1e21a38dbdadf05f1a94e38bfcc14c27629a600f2c73225b460a69d34fa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/move_far_v1.png",
+      "sha256": "45ae4d89a9a1d0c66bd27741dc3ada883912fb4cf1189d5b653ac30a221d9484",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "235789c54edee1858dff1ba2520842ec914f7dfde2c70ab56ee77e0b984ba8f1",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-586b15f2-92de-46fc-8de1-25742ad065f9.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/identity_reference.png",
+          "sha256": "be79a1e21a38dbdadf05f1a94e38bfcc14c27629a600f2c73225b460a69d34fa"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/far_leg_pose_guide.png",
+          "sha256": "23ab095f3345e6ff7f5ddc8bc5a2bc5769368c879c531b65cb502fac6fd00570"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/move_far_corrections_v1.png",
+      "sha256": "40f8d64466c55484f507c820c4f77316c628ac7689820d1362f9792b2273a250",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/move_far_corrections_v1.prompt.txt",
+      "prompt_sha256": "90e75c5242073f08809c0bc33888462305b3b5b063de3aa8efc5e723c8f6cefc",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-acb2b867-f160-4474-9204-c5e191157aa9.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/identity_reference.png",
+          "sha256": "be79a1e21a38dbdadf05f1a94e38bfcc14c27629a600f2c73225b460a69d34fa"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/far_passing_guide.png",
+          "sha256": "888d118bf289b9a7e75c70a42baa0d991f088ce51fc6d2c8f7ad9bf7eba0af00"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/corrections_v1.png",
+      "sha256": "a1953ad440a402682221098ec93f89c4f0df3644fbc80af2aae4e31da3c51060",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/corrections_v1.prompt.txt",
+      "prompt_sha256": "b2bca23b806c6a470d30a0f91a4d5c8dfeee1cab421d653ea7b2c7e3b7969959",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-8557be19-01a2-464b-b62b-e2a73962881c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/identity_reference.png",
+          "sha256": "be79a1e21a38dbdadf05f1a94e38bfcc14c27629a600f2c73225b460a69d34fa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/ranged_v2.png",
+      "sha256": "218ac1fe3cae5db950daf89a5225d197312c1a8417f3c2e310c77503c05ef947",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/ranged_v2.prompt.txt",
+      "prompt_sha256": "7ef0b6255a26f1ff6d085686dfe02890dfbce6fcf035bba7eb538763aa0283c9",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-5704877c-58aa-4874-a7df-4ab7b696e420.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus_veteran/identity_reference.png",
+          "sha256": "be79a1e21a38dbdadf05f1a94e38bfcc14c27629a600f2c73225b460a69d34fa"
+        }
+      ]
+    }
+  ]
+}
