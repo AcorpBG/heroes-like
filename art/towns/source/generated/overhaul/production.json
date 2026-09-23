@@ -3246,6 +3246,1090 @@
       ],
       "visible_width": 235,
       "grounding": "Original Sunvault architecture grounded on authored sandstone plateau terraces; base and upgraded stages share the entrance anchor, with open paths and visible painted input."
+    },
+    {
+      "id": "building_town_hall",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_town_hall.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_town_hall.prompt.txt",
+      "source_sha256": "90b0acd362c1c6b32e0347571929783dfd4b2d9b1d0e1133c95b7b415913db1c",
+      "generation_output": "exec-76223965-3c29-4bc5-8ff5-0a371318e2c8.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/overworld/source/generated/towns/distinct_factions_20260920/thornwake-source.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 210,
+      "ground_anchor": [
+        805,
+        430
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_hall_2",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_2.prompt.txt",
+      "source_sha256": "b4f1d07ac2423c429c8af84b5a38031038083fa0b8c2119678c2badce2b425d3",
+      "generation_output": "exec-8a241573-5b4c-4391-a579-4868a936da09.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_town_hall.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 250,
+      "ground_anchor": [
+        805,
+        430
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_hall_3",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.prompt.txt",
+      "source_sha256": "7404d0a33a208fe310fad88d6957fef52d5a5a71ebf6d654da3e2c0115d49712",
+      "generation_output": "exec-2c9fdbf0-3d74-4e7a-85e7-ce6fc80a83de.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_2.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 290,
+      "ground_anchor": [
+        805,
+        430
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_hall_4",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_4.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_4.prompt.txt",
+      "source_sha256": "715aabab402d25052c342e948ca1b83b0c900da17cb3d96c8ab8fde2456dc5a3",
+      "generation_output": "exec-5f6d44ed-0e8b-4a6a-b4a3-d78e60ff9835.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 325,
+      "ground_anchor": [
+        805,
+        430
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_fort_1",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_1.prompt.txt",
+      "source_sha256": "aceaa5badc3907958f37efc3c0452649412772073b46432a18c70972d3079f40",
+      "generation_output": "exec-252b26e7-500e-49a9-a3ad-66e0a355fc3e.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_town_hall.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "fort",
+      "visible_width": 170,
+      "ground_anchor": [
+        285,
+        455
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_fort_2",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_2.prompt.txt",
+      "source_sha256": "8395a3da96fc9e09f6645184fb02d39cd1ade1d7d2a83bd986311e32244c4bd8",
+      "generation_output": "exec-87d405ca-7d99-49cc-a187-6f137291ed81.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_1.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "fort",
+      "visible_width": 200,
+      "ground_anchor": [
+        285,
+        455
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_fort_3",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_3.prompt.txt",
+      "source_sha256": "ae6bde65aeeeb9de84ca64a378ca1883d2e9391005b8843b5ca555f0684bd496",
+      "generation_output": "exec-d27c1d49-d974-485f-adc0-5482c2728460.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_fort_2.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "fort",
+      "visible_width": 235,
+      "ground_anchor": [
+        285,
+        455
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_guild_1",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_1.prompt.txt",
+      "source_sha256": "ea0fce7dc1150ace620e330a9b84b4265992754a5b33eb0d233d5ea43194da6f",
+      "generation_output": "exec-6431200f-abb4-45d3-9eb2-3ef6d3716691.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_town_hall.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 105,
+      "ground_anchor": [
+        1270,
+        465
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_guild_2",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_2.prompt.txt",
+      "source_sha256": "38bb74030a03c76722fc97e27fcfad3961f0602ec993f0cd61564207fe015430",
+      "generation_output": "exec-b5dcd37d-94be-483d-8405-c711ee19ae35.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_1.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 125,
+      "ground_anchor": [
+        1270,
+        465
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_guild_3",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_3.prompt.txt",
+      "source_sha256": "91a96930e6bff531f3b4b1b7bb1fd1834c6450718e4cfb5c7c8ff5a707f07bb6",
+      "generation_output": "exec-297d6179-b595-4bcc-9d03-6cd7384c1630.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_2.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 145,
+      "ground_anchor": [
+        1270,
+        465
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_guild_4",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_4.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_4.prompt.txt",
+      "source_sha256": "980a4cb907b9aa438b49f1cccd28eb355683b631e17f70bee65a38541551aabd",
+      "generation_output": "exec-984fcf04-95fd-4105-984c-18a2f50fb027.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 170,
+      "ground_anchor": [
+        1270,
+        465
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_guild_5",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_5.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_5.prompt.txt",
+      "source_sha256": "38b0e409c125580e17e847f3f38042fe842099cd9535d1585212e87969217ba4",
+      "generation_output": "exec-427986d6-b9c5-4884-9723-0e6b202c4586.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_guild_4.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 190,
+      "ground_anchor": [
+        1270,
+        465
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_market_square",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_market_square.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_market_square.prompt.txt",
+      "source_sha256": "758f284440c339cfc9584b4185cf034aacc848c51cf49b241c845ba82772a5bc",
+      "generation_output": "exec-9c90ac4d-be37-44b1-a511-4ec9da9c70be.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_town_hall.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "market",
+      "visible_width": 145,
+      "ground_anchor": [
+        420,
+        610
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_trade_exchange.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_trade_exchange.prompt.txt",
+      "source_sha256": "76876c6ea663e55e3e591640911c583a3d5ef24448c805ad2e3a49996a07b01f",
+      "generation_output": "exec-8dd20dc0-83c8-4899-876b-fa41683e296f.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_market_square.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "market",
+      "visible_width": 185,
+      "ground_anchor": [
+        420,
+        610
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_storehouse_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_storehouse_1.prompt.txt",
+      "source_sha256": "73a3a4221b06e2b80d427d5af36783f23a65ac7c815bca118232a9eb52bc0bb2",
+      "generation_output": "exec-3c24031c-d7ac-4701-819e-47f377ac9ee3.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_town_hall.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "storehouse",
+      "visible_width": 130,
+      "ground_anchor": [
+        1010,
+        560
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_storehouse_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_storehouse_2.prompt.txt",
+      "source_sha256": "cee113673b82075aaa8442b845caf5ac4baca1ee4dfefcd039250b1c0368f0ff",
+      "generation_output": "exec-5d5c5ca8-e676-44bf-a95f-e62c76d60c33.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_storehouse_1.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "storehouse",
+      "visible_width": 165,
+      "ground_anchor": [
+        1010,
+        560
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "cleared_orchard",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/cleared_orchard.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/cleared_orchard.prompt.txt",
+      "source_sha256": "812b1cbc6f2a952dfe96ada832793f3442e5b537f258d6b4bea35aefaaf75129",
+      "generation_output": "exec-8bf5e4fe-05dd-4fbe-b0d8-7d1e9972b715.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "backdrop",
+      "stage": "village"
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_wayfarers_hall.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_wayfarers_hall.prompt.txt",
+      "source_sha256": "ea55948cf0824f432f3cf792580c1d0869486d3f9a036b2888e4271859206e72",
+      "generation_output": "exec-caf66299-fc84-404f-a103-ed3a2378cd9b.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "building_wayfarers_hall",
+      "visible_width": 170,
+      "ground_anchor": [
+        1400,
+        645
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_growth_1",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_1.prompt.txt",
+      "source_sha256": "c5728d5462b0f6d805fc4c84391912b0d692f2a0f6881c68d2e6b1a0aaf5d2d6",
+      "generation_output": "exec-d871c55c-c128-4005-b26a-5350c29e5fdc.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "building_dev_growth_1",
+      "visible_width": 145,
+      "ground_anchor": [
+        185,
+        630
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_growth_2",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_2.prompt.txt",
+      "source_sha256": "6b76974537b79f4dcc2300d1a9862a14c2b6d2464f786d3e9a8ed5de5ed09a6f",
+      "generation_output": "exec-95fc4c5d-a87c-4b1a-9d0c-b6eafe1080c8.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "building_dev_growth_2",
+      "visible_width": 150,
+      "ground_anchor": [
+        620,
+        570
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_growth_3",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_growth_3.prompt.txt",
+      "source_sha256": "8c17919fa205cb2d48883ffb8f67b5b00f4b4c2e113c9f102d91f5a7accde071",
+      "generation_output": "exec-c9afb535-f4df-4008-8897-bf870025eca5.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "building_dev_growth_3",
+      "visible_width": 150,
+      "ground_anchor": [
+        970,
+        665
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_training_attack",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_attack.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_attack.prompt.txt",
+      "source_sha256": "8caa1a5ab2eeeab9b1c4586ef18cd261a56e9c022227076da6fcfcf6653b6f05",
+      "generation_output": "exec-d2f89eaf-d828-4419-8bb7-2c3eee544d02.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "building_dev_training_attack",
+      "visible_width": 145,
+      "ground_anchor": [
+        165,
+        750
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_training_defense",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_defense.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_defense.prompt.txt",
+      "source_sha256": "1fd10ed84de61afa4f5ba05115054c28d225f7d0d22bc1eed97d7c539465daaa",
+      "generation_output": "exec-06fbca8c-7155-4edc-84d2-a1b6bc8ce7d3.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "building_dev_training_defense",
+      "visible_width": 150,
+      "ground_anchor": [
+        390,
+        735
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_training_experience",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_experience.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_training_experience.prompt.txt",
+      "source_sha256": "af67f45d62f5edd403104e3e0140ac296ab285df386116ea6ce6a1e9089c5ea5",
+      "generation_output": "exec-68e6407a-0c47-4669-9166-2d9fd0227bfa.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "building_dev_training_experience",
+      "visible_width": 150,
+      "ground_anchor": [
+        635,
+        750
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_artifact_exchange",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_artifact_exchange.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_artifact_exchange.prompt.txt",
+      "source_sha256": "754a60931e2cf95097a39a82b550982f56495aa55a0bda332181f957696240cc",
+      "generation_output": "exec-13cbe881-cec3-4077-9ebf-c815f8e1f69e.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "building_dev_artifact_exchange",
+      "visible_width": 145,
+      "ground_anchor": [
+        825,
+        665
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_unique_1",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_1.prompt.txt",
+      "source_sha256": "1acf56ac4affd1ef06318be826106b3a3a6992127c8c9d78f2f3de621b7c1206",
+      "generation_output": "exec-497ad760-7a4c-4a14-accf-4eecb94f23f5.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "building_dev_thornwake_unique_1",
+      "visible_width": 165,
+      "ground_anchor": [
+        705,
+        835
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_unique_2",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_2.prompt.txt",
+      "source_sha256": "5045e5961faddccbdccfcc82a82116e4ee02322bd46726c28d6ceb9c3ba034f7",
+      "generation_output": "exec-d690f56d-1715-4667-b6a5-adabbbe17f52.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "building_dev_thornwake_unique_2",
+      "visible_width": 170,
+      "ground_anchor": [
+        1005,
+        850
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_unique_3",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_unique_3.prompt.txt",
+      "source_sha256": "ef98b7c3adad98000d096250409497f372636e65b02bb606bd9363367c16f118",
+      "generation_output": "exec-c314c98e-34bf-4049-837d-768bb790c8b1.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "tool": "built_in_image_gen",
+      "kind": "building",
+      "plot_id": "building_dev_thornwake_unique_3",
+      "visible_width": 165,
+      "ground_anchor": [
+        1085,
+        750
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t1_1",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_1.prompt.txt",
+      "source_sha256": "5f8e0d7c6a84db0db867f679e86d38625ae49e6d38725783c2ca95db8ed443e3",
+      "generation_output": "exec-a0ed323e-8eed-4a33-b955-0fe6667aed4f.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t1",
+      "visible_width": 145,
+      "ground_anchor": [
+        1225,
+        700
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t1_1_upgrade",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_1_upgrade.prompt.txt",
+      "source_sha256": "a02b9b1429840f59460097f8df6b0d13a525c56f1f32d8501964629264bf8662",
+      "generation_output": "exec-ac3f31a8-3647-40bf-a979-908671d8cff2.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_1.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t1",
+      "visible_width": 175,
+      "ground_anchor": [
+        1225,
+        700
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t1_2",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_2.prompt.txt",
+      "source_sha256": "2ef282c21c229be2bbed72cedb34767d2fd88da5556f695bac12b4653cc53820",
+      "generation_output": "exec-dfc2dcc8-d8fc-4061-8664-a13b359224ea.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t1",
+      "visible_width": 145,
+      "ground_anchor": [
+        1225,
+        700
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t1_2_upgrade",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_2_upgrade.prompt.txt",
+      "source_sha256": "3e63e65bfcc0d43a8b9ec7a0e887483a5ffe6e4450c95ad90ce3009cab1c711c",
+      "generation_output": "exec-8a8936f1-f53a-4d34-9bba-15e828462cf0.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t1_2.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t1",
+      "visible_width": 175,
+      "ground_anchor": [
+        1225,
+        700
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t2_1",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_1.prompt.txt",
+      "source_sha256": "2e33f429faa71547e54eba5dab364d38fafc32bd15ee88ac31ea2f74e3a6fe22",
+      "generation_output": "exec-de4f216a-49b0-42e8-951b-89fca99f655a.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t2",
+      "visible_width": 145,
+      "ground_anchor": [
+        1390,
+        735
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t2_1_upgrade",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_1_upgrade.prompt.txt",
+      "source_sha256": "eaf07fb0eb0a8eedee5083bf8c9718d89b949c798a3bd6942ccee75ccdf2611e",
+      "generation_output": "exec-7852be91-8dd7-4360-9419-f56c289c23bb.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_1.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t2",
+      "visible_width": 175,
+      "ground_anchor": [
+        1390,
+        735
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t2_2",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_2.prompt.txt",
+      "source_sha256": "e297e26d2da396b8e31d1d0df2a2e116c33ba2302d8a82391b6d53577fe630d3",
+      "generation_output": "exec-57e5f7da-0ff8-4110-9c47-ffcc4ea2ccff.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t2",
+      "visible_width": 145,
+      "ground_anchor": [
+        1390,
+        735
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t2_2_upgrade",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_2_upgrade.prompt.txt",
+      "source_sha256": "3688f39f6831abda2c49c86d7d964d3705504e7f8d3c1895f2e4d92a75800350",
+      "generation_output": "exec-22f7589a-8e13-4b07-bbfb-90cacef6f62f.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t2_2.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t2",
+      "visible_width": 175,
+      "ground_anchor": [
+        1390,
+        735
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t3_1",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_1.prompt.txt",
+      "source_sha256": "6bf3dd541297678f3be560a10e7119762d9a4cc08359f3919b38312a31c9a4bd",
+      "generation_output": "exec-ed604400-9bb7-437f-b343-0a46054727bc.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t3",
+      "visible_width": 150,
+      "ground_anchor": [
+        1410,
+        850
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t3_1_upgrade",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_1_upgrade.prompt.txt",
+      "source_sha256": "c67fb87674f1dd0895c0dfcafa98d6ce9a2babc4b04d7e81482bce3444ef4980",
+      "generation_output": "exec-596292e7-e537-4275-8ddd-60b383f6bd28.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_1.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t3",
+      "visible_width": 180,
+      "ground_anchor": [
+        1410,
+        850
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t3_2",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_2.prompt.txt",
+      "source_sha256": "078ffccca7b246162d86964a3845ceb71961789385f59d572857417ed3e0dc4b",
+      "generation_output": "exec-6bcb2dbb-c8a2-4663-b32a-f5f98982ea3a.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t3",
+      "visible_width": 150,
+      "ground_anchor": [
+        1410,
+        850
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t3_2_upgrade",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_2_upgrade.prompt.txt",
+      "source_sha256": "d55396b6df133482091433c037dc0e0a622467a823396976b84781bdfbfa67f1",
+      "generation_output": "exec-861a1b6e-ae8f-44c7-937f-54e34da2d714.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t3_2.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t3",
+      "visible_width": 180,
+      "ground_anchor": [
+        1410,
+        850
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t4_1",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_1.prompt.txt",
+      "source_sha256": "5fea3f36a136b33f60f6c77db5fd9cc2de2b5bdc30efa7e21bdabd0e4dd5a446",
+      "generation_output": "exec-b904718f-1dc2-43b4-9231-d5ce0cddd51e.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t4",
+      "visible_width": 155,
+      "ground_anchor": [
+        1185,
+        845
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t4_1_upgrade",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_1_upgrade.prompt.txt",
+      "source_sha256": "a274362d9dbb432e8cf7c5a7f5e0c0cb4cb2a1588ea6ad73265700be59c9c3cb",
+      "generation_output": "exec-6dc8771f-7fcb-47d0-984f-c5e0014197ad.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_1.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t4",
+      "visible_width": 185,
+      "ground_anchor": [
+        1185,
+        845
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t4_2",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_2.prompt.txt",
+      "source_sha256": "ee492c6883a3e334d715bef0136932da431fcabbbc0a2c07da12de1579de9305",
+      "generation_output": "exec-8295dca5-507c-481b-b435-e0e9336aed9a.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t4",
+      "visible_width": 155,
+      "ground_anchor": [
+        1185,
+        845
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t4_2_upgrade",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_2_upgrade.prompt.txt",
+      "source_sha256": "516276227799155a946a6689c0f1084d326a2e210cdb8613d82dab580d8ff999",
+      "generation_output": "exec-fd291ac1-bff9-49fc-8bc4-0bdf5f0da8c7.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t4_2.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t4",
+      "visible_width": 185,
+      "ground_anchor": [
+        1185,
+        845
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t5_1",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_1.prompt.txt",
+      "source_sha256": "5b5a060fc39ff31bb694a9ceaac5dca116ec669e453aad3e245cccffe12284b4",
+      "generation_output": "exec-cfa513a0-e689-4582-a48f-5fd0ea58e041.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t5",
+      "visible_width": 160,
+      "ground_anchor": [
+        865,
+        830
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t5_1_upgrade",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_1_upgrade.prompt.txt",
+      "source_sha256": "27e8f07f569d0b998ab57fdf7f5492666171fd97298c2b043b94564b9f9672d2",
+      "generation_output": "exec-33bbada0-7bc9-4ae4-9dc1-3cb82e97c333.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_1.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t5",
+      "visible_width": 190,
+      "ground_anchor": [
+        865,
+        830
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t5_2",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_2.prompt.txt",
+      "source_sha256": "4e3b3ac3df8efe4c8c26fcf6f9b84c6edf853f0d051fcd5eb84294e46124db81",
+      "generation_output": "exec-7b7c8812-e2e5-4f0f-b0eb-3290759160f6.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t5",
+      "visible_width": 160,
+      "ground_anchor": [
+        865,
+        830
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t5_2_upgrade",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_2_upgrade.prompt.txt",
+      "source_sha256": "f45f12d3ee2efeee7fc886b10830ea390dd8e172f8bd43fb147332db6b98ca82",
+      "generation_output": "exec-c8a9679f-7d3f-4765-9fde-6a9622c0cf1f.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t5_2.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t5",
+      "visible_width": 190,
+      "ground_anchor": [
+        865,
+        830
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t6_1",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t6_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t6_1.prompt.txt",
+      "source_sha256": "b5dd07c03de444567b235b795662a26182a74d6b5a08ee9b4eaf74503ac7206c",
+      "generation_output": "exec-b0a20650-1000-43fa-a70e-c06e707a08cf.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t6_1",
+      "visible_width": 190,
+      "ground_anchor": [
+        235,
+        840
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t6_1_upgrade",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t6_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t6_1_upgrade.prompt.txt",
+      "source_sha256": "b4e215900c3a931e27f314f3d126cf6de32095a3bd9fec5c94f9a65a74f63dbb",
+      "generation_output": "exec-296cd309-a425-420d-91e4-c95a1da3334e.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t6_1.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t6_1",
+      "visible_width": 220,
+      "ground_anchor": [
+        235,
+        840
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t7_1",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t7_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t7_1.prompt.txt",
+      "source_sha256": "457ad8d6cd3a434ce9a040478fefdd09605aefc273b83a900249c821cb9c5d49",
+      "generation_output": "exec-a17f92c8-3ac9-4aa7-a92a-be23d67a86a1.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_hall_3.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t7_1",
+      "visible_width": 205,
+      "ground_anchor": [
+        495,
+        840
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_dev_thornwake_t7_1_upgrade",
+      "source_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t7_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t7_1_upgrade.prompt.txt",
+      "source_sha256": "3974c3b3888ddead69601ce41e6a5646d60b3bb19e47a3cf1b4a3e0710232389",
+      "generation_output": "exec-910417a8-f5a0-4dce-945f-843f182e2d69.png",
+      "generation_date": "2026-09-23",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_thornwake/building_dev_thornwake_t7_1.png"
+      ],
+      "faction_id": "faction_thornwake",
+      "kind": "building",
+      "tool": "built_in_image_gen",
+      "plot_id": "thornwake_t7_1",
+      "visible_width": 235,
+      "ground_anchor": [
+        495,
+        840
+      ],
+      "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
     }
   ],
   "existing_plot_placements": {
