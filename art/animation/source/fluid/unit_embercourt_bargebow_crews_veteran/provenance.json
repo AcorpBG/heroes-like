@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_bargebow_crews_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/idle_v1.png": "59180cb847b39dc6fa2813d72167e89b202a1fe7bd29a898583fd48c1e56ca6f",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/attack_v1.png": "958c675394742a52e760df6a250528577299a50d179c6efad847d88039750f06",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/ranged_v1.png": "1054553312ae8772a2464d664080b4815916c35ed72785179b835cb3ef9fac82",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/reactions_v1.png": "fa6b1751ffc973b13fb749d2de193967ea17b38f777492524f300c0a9c68bda3",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/cast_v1.png": "bbaf81860488a66cfcac66170d40be17f50a781fe1a0b4675e20936e642f431a",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/corrections_v1.png": "a5d2d8ca93502b62d5d675fcac3ec9db915a53eeb16e8057f75de4f09721f8b7",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/death_v1.png": "ea5112e767d74a85fc30eda6b8d29e4b27ff50e8323d5169ea4bf319e1b73bc1",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/move_near_v1.png": "73becaf7ecace189866332b176188ac441c892b82eebba2c96f30644b231fa92",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_bargebow_crews_veteran/move_near_v2.png": "0f323271d62c8eb487695625ca091fcee53391d9ea2b6a38d5635da5c028af4a"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Original sources and native 128px Godot phases reviewed: visible winch crank idle, two-handed shove/recovery, reload/aim/release, recoil/brace, raised near-hand rally, reciprocal eight-phase walk and grounded collapse. Wrong-arm, wrong-knee, clipped-tip and undersized gesture poses excluded. One fixed anatomical scale per original source; full weapon silhouettes and sole grounding preserved. Imported battle/map rendering checked separately."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "e520ec458b3471155fcd5f8ee65797e28118652ae3a46411a1485442cfb6cfbb",
+  "atlas_sha256": "30cec2c44877013dbfd07649039731214d22b454650e6242d7f1805cdf7311c9",
+  "texture_bytes_rgba": 33984000
+}
