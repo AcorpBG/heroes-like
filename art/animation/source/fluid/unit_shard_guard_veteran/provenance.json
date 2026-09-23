@@ -35,21 +35,27 @@
     "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/death_v1_frame_04.png": "a7fe485a749d430ebe72bd1ebafd047be98b0b224b0cbae8c3bb297a2b7632f5",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/death_v1_frame_05.png": "6577d03c18b58b211b2b5e631136b79e29c4f3655e0ba8c78af988a4fc7fdf74",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/death_v1_frame_06.png": "cc6c13930b4d392837bef2b1b14c65265ed9c8b4071b1cdb0cf7b6ecdedc2d9c",
-    "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/death_v1_frame_07.png": "779b01df8c2b81e6ba4c85ac3b573d7b838e6ad84921a1cb8f26864dd784c2a5"
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/death_v1_frame_07.png": "779b01df8c2b81e6ba4c85ac3b573d7b838e6ad84921a1cb8f26864dd784c2a5",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/idle_v3.png": "20fcf40f178b76c0c371421e813cba4f3ec84bf805fca3f1d2cc557ffbf57827",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_v2.png": "82971b3bd54b3453adbc4cda4a1fc5e38ca04dbd1574ca242d7c13f9ff41ce42",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_far_v3.png": "e3556a7dce1956ab71986415190c80447eac173c21118f5b4516cad72f893706",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_support_v5.png": "8e48f65bbb87b7486873c3f6e611701f2fd2808b4d78e8cc0e9862bfd919c62a"
   },
   "accepted_clips": [
     "attack",
     "cast",
     "hit",
     "defend",
-    "death"
+    "death",
+    "idle",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Reviewed glaive thrust and recovery, weapon salute, pavise guard and complete collapse. Idle arm motion remains too slight; movement repeats a leading-foot phase."
+    "notes": "Native 128px and map idle review accepted visible glaive/shield articulation and reciprocal march with opposing supports and knee lifts. 118 imported live focused checks passed; prior approved action sources unchanged."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "1c87be9d09c7d24f0c3d48335d81d95325fc346c0310f3267e2250ee8d0b98cd",
-  "atlas_sha256": "ebdb1bf5514df7e22fb4e917b90cd47961842462bcde8d2ae4575d2dfb03bb8c",
-  "texture_bytes_rgba": 15555072
+  "atlas_sha256": "b24d6560aa7b653b6698219827ceced10df0dffd4dfec7c06f0baf5233c4c377",
+  "texture_bytes_rgba": 19543552
 }

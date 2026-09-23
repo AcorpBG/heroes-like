@@ -1,0 +1,53 @@
+{
+  "tool": "builtin_image_gen",
+  "unit_id": "unit_shard_guard_veteran",
+  "earlier_lineage": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_v2.generation.json",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/idle_v3.png",
+      "sha256": "20fcf40f178b76c0c371421e813cba4f3ec84bf805fca3f1d2cc557ffbf57827",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/idle_v3.prompt.txt",
+      "prompt_sha256": "1cacd82fc01323c89d062a5b6f74b0040c68748d311ad730687d10fdc9a48734",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/identity_reference.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-e0b77dc4-1be5-4829-9f40-ad0c7a9b71ab.png",
+      "review": "selected eight articulated glaive/shield idle poses"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_far_v3.png",
+      "sha256": "e3556a7dce1956ab71986415190c80447eac173c21118f5b4516cad72f893706",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_far_v3.prompt.txt",
+      "prompt_sha256": "4513bac23e148d5c1b347165bf9799c9dd4932183efbb237fe6ab3e5778a0a1d",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/identity_reference.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-fb589e82-5f9a-47f9-8372-e9431a8b43b8.png",
+      "review": "selected top-left opposite contact only; other phases revert supporting leg",
+      "exact_prompt_used": "Use case: identity-preserve. Paint FOUR original full-body WALK poses of this exact upgraded ivory-and-gold Shard Guard. Preserve closed helm and gold sun halo, dark-blue sun tabard, cape, ONE blue-shafted crystal glaive in screen-LEFT gauntlet and the tall blue-violet crystal shield carried on screen-RIGHT arm. Fixed elevated three-quarter camera facing right, no mirror, no swapped equipment, no changes in armor, proportions or weapon lengths. Same body scale, real alpha transparency, two columns/two rows with generous transparent gutters and at least 50px outer margins. Include full helmet, both weapon tips, shield base and feet. No scenery, cast effects, text or shadows.\n\nThese are the FAR/SHIELD-SIDE LEG SUPPORT HALF of a reciprocal walk; the opposite half exists. The SHIELD-SIDE leg belongs to the RIGHT hip. Its golden boot must be forward/right in the first TWO poses. The unshielded LEFT leg begins behind/left. Lift shield slightly through its elbow so both feet remain visible below it.\n1 TOP LEFT: RIGHT/SHIELD-SIDE boot extended ahead toward lower RIGHT with heel contacting ground; LEFT/unshielded boot behind toward lower LEFT with heel raised. Glaive carried diagonally below waist, arm relaxed.\n2 TOP RIGHT: RIGHT boot now flat planted under right hip, right knee compressed; LEFT heel raised behind, left knee starts bending. Left elbow flexes absorbing weight and shield arm bends a little.\n3 BOTTOM LEFT: RIGHT boot still planted at lower right, LEFT knee lifted forward and LEFT boot airborne under left thigh at lower LEFT. Make the lifted boot visibly separate from ground. Glaive wrist adjusts, cape trails.\n4 BOTTOM RIGHT: RIGHT boot supports with heel beginning to lift, LEFT leg reaches toward lower LEFT with toe raised just above ground. Left thigh/shin visible, ready for left-foot contact. \nKeep right leg/right hip and left leg/left hip consistent and never mirror torso. Four distinctly painted contact/support/passing/reach phases, physically articulated knees and elbows. Keep the shield proud/rigid and glaive grip intact. Faithful painted strategy-game sprites, matte ivory/gold and subtle crystal color, not plastic.",
+      "prompt_storage_note": "Text file normalizes incidental trailing spaces; exact tool input is preserved in exact_prompt_used."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_support_v4.png",
+      "sha256": "78c697efd6136dd7606ea4f5941f9816e7c23dd35ae2c08c5878643f4f95211f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_support_v4.prompt.txt",
+      "prompt_sha256": "c6b6c487f3fe24d1dddd4759387d7870f086ace651f73218dda30547a68fab80",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/identity_reference.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c3a12772-333c-4d6f-b3cb-19b440267fcb.png",
+      "review": "withheld: top crest clipped and reaching boot points down"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_support_v5.png",
+      "sha256": "8e48f65bbb87b7486873c3f6e611701f2fd2808b4d78e8cc0e9862bfd919c62a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_support_v5.prompt.txt",
+      "prompt_sha256": "90a2b2b8fb6f8de1768ea7f7b28be6bbaa0c7305bbc8b3556a0637c7ff9476b0",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard_veteran/move_support_v4.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-736f525b-b572-452a-8513-26381462d686.png",
+      "review": "selected three corrected support/passing/reach phases"
+    }
+  ]
+}

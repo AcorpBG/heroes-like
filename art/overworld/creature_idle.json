@@ -6369,32 +6369,36 @@
       "path": "res://art/overworld/runtime/creature_idle/unit_shard_guard_veteran.png",
       "frame_size": [
         251,
-        250
+        233
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 135,
       "static_frame": 0,
       "ground_anchor": [
-        97.0,
-        238
+        102.0,
+        223
       ],
       "painted_extent": 235,
       "source_sheet": "res://art/animation/runtime/fluid/unit_shard_guard_veteran.png",
       "source_indices": [
-        0,
-        1,
-        2,
-        3
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
       ],
       "source_crop": [
-        67,
-        34,
-        318,
-        284
+        62,
+        49,
+        313,
+        282
       ],
-      "source_sha256": "ebdb1bf5514df7e22fb4e917b90cd47961842462bcde8d2ae4575d2dfb03bb8c",
+      "source_sha256": "b24d6560aa7b653b6698219827ceced10df0dffd4dfec7c06f0baf5233c4c377",
       "source_provenance": "res://art/animation/source/fluid/unit_shard_guard_veteran/provenance.json",
-      "sha256": "5531d794bc05d23053b5cd85ed58e4d484fa7d967578cc96390878bd78831d87"
+      "sha256": "5f0a168edb693735e9724a5cd1b84c95fe7f8dcfeb26d458563b66aea7112cbf"
     },
     "unit_sunvault_shard_wardens_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_shard_wardens_veteran.png",
