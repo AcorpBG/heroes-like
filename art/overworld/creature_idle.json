@@ -5734,33 +5734,37 @@
     "unit_citadel_pikeward_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_citadel_pikeward_veteran.png",
       "frame_size": [
-        150,
-        248
+        185,
+        246
       ],
-      "frames": 4,
-      "frame_msec": 280,
+      "frames": 8,
+      "frame_msec": 145,
       "static_frame": 0,
       "ground_anchor": [
-        66.0,
+        101.0,
         238
       ],
-      "painted_extent": 232,
-      "source_sheet": "res://art/animation/runtime/poses/unit_citadel_pikeward_veteran.png",
+      "painted_extent": 230,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_citadel_pikeward_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        190,
-        2,
-        340,
-        250
+        131,
+        10,
+        316,
+        256
       ],
-      "source_sha256": "84a626f709b8072c8129b9e6ac2ff929fa1f7acf505a72a25e591a85ff161d41",
-      "source_provenance": "res://art/animation/source/poses/unit_citadel_pikeward_veteran/provenance.json",
-      "sha256": "d12be4f3854f194388aae620a709e0a86ed995bcc84f1cacd193c1aade7f0504"
+      "source_sha256": "b6fc769c28d33b824e6e6246ebd9c25e06ce2eeacb528642bd89d14beda90582",
+      "source_provenance": "res://art/animation/source/fluid/unit_citadel_pikeward_veteran/provenance.json",
+      "sha256": "3e88591a7147ce45171cd0ce9e1eab5993daf2ac38a15da4d4540a34813626ba"
     },
     "unit_embercourt_bargebow_crews_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_bargebow_crews_veteran.png",
