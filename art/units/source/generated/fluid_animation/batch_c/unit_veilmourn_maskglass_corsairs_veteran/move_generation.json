@@ -1,0 +1,29 @@
+{
+  "tool": "builtin_image_gen",
+  "unit_id": "unit_veilmourn_maskglass_corsairs_veteran",
+  "earlier_lineage": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/provenance.json",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_near_half_v3.png",
+      "sha256": "e45f088464d8fd4859059f6aa4b4af23ccc9fb41ca0f6c46df5e47963c334891",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_near_half_v3.prompt.txt",
+      "prompt_sha256": "ce9e5801686e857496ff0ed8655a227b3d2e4528c506374845aca7394685cea3",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_far_half_v1.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-f9e111e8-3961-42b0-873f-8f89cdddf762.png",
+      "review": "selected left-column reach and passing; right-column clipped blade tips excluded"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_support_v4.png",
+      "sha256": "3da70092dd81ec24ee005e1f1c65c069276d0b428eb8779954500833ab88b26c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_support_v4.prompt.txt",
+      "prompt_sha256": "0306fcc19151dbbafa17135371e770bda2b27edc3e86d31748d17368f53c2d9e",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_identity_reference.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-b82172c9-efcb-4d5f-8a97-352044990252.png",
+      "review": "selected two new left-foot contact/support poses with arm articulation"
+    }
+  ]
+}
