@@ -1,0 +1,130 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/idle_v1.png",
+      "sha256": "74a81dd0efe965a41408ea071d3451213b9d5d703688b1220ea4dfaff46681c4",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "c5c4687b60a490b1ddfcf202ab026de7564e9c827e8988f76f175ae7ae790785",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-68477984-e34f-458c-991c-bbd4a074913c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/reference.png",
+          "sha256": "9996537f2bdba74bcfeddd6a516b98c926562b221f7eb7ef58371d9b2fe54b76"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/attack_v1.png",
+      "sha256": "a7e03db4730e4e1f47b9fbaea4ef01d1e60c4a3d9e2e9e5d664e787e9678cd11",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "cb1820252ae517f68704ebd739a627f862587e0588b2c71637604e7164468968",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-71b38229-aa35-4601-88d0-734e42f645ac.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/reference.png",
+          "sha256": "9996537f2bdba74bcfeddd6a516b98c926562b221f7eb7ef58371d9b2fe54b76"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/reactions_v1.png",
+      "sha256": "a1446be74a43e899c0b24b87412aa8debad04dac6e238f9c4c57afb15e042494",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "5f59072d31f5d0cf5b00e7821c5fb9764f986d749a78dc6e7555daab9e5ce955",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-d6169c46-121c-4b86-ab73-4175e85c24e4.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/reference.png",
+          "sha256": "9996537f2bdba74bcfeddd6a516b98c926562b221f7eb7ef58371d9b2fe54b76"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/cast_v1.png",
+      "sha256": "11a2ed51cc298bf9120db5c1d2ca80d8fd822c0c64c3dc2f384dea977f09a436",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "f8a24fc2137bae9fa18191e084140b77d0fbb102aad9c10b7d501fb6cba31b6c",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-a1fe2512-c9e5-45cc-b1f8-fb31b81f61fa.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/reference.png",
+          "sha256": "9996537f2bdba74bcfeddd6a516b98c926562b221f7eb7ef58371d9b2fe54b76"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/death_v1.png",
+      "sha256": "f9d05115783b145b07f2ce2b6ede4bca347cc127ca033f4201790b72f6e9db4c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "64cbc3ce91b28bd251545e0f2762b74a332f95281ff28b26685cb102cda9e011",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-1fb80b8b-a8c6-40b6-a540-20a2407fcdb5.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/reference.png",
+          "sha256": "9996537f2bdba74bcfeddd6a516b98c926562b221f7eb7ef58371d9b2fe54b76"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/move_far_v1.png",
+      "sha256": "c18a8578707c92f26975c9c00249c99f048fb1383ca4543b92b51fb80ad5708d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "97d11a5f2e0e5cb32ff231e4742b099a6ec64a11bca30f7bb8b8e3c0edf7959a",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-13dfacf8-13b7-4de2-beb9-aea051ca5a28.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/reference.png",
+          "sha256": "9996537f2bdba74bcfeddd6a516b98c926562b221f7eb7ef58371d9b2fe54b76"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/far_leg_pose_guide.png",
+          "sha256": "23ab095f3345e6ff7f5ddc8bc5a2bc5769368c879c531b65cb502fac6fd00570"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/move_far_corrections_v1.png",
+      "sha256": "88bde2092de624244008aa5d83ffda8470108742f499a37f26a161fb7bb09b3b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/move_far_corrections_v1.prompt.txt",
+      "prompt_sha256": "e61a342604e768e5658eff252828da0636133e0787e40c0a28515eea891ac77d",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-68f24126-391d-47a4-a4b7-8f8f84ec52fd.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/reference.png",
+          "sha256": "9996537f2bdba74bcfeddd6a516b98c926562b221f7eb7ef58371d9b2fe54b76"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/far_leg_guide.png",
+          "sha256": "043bf4cd646e54fff6651249752c6ff57f7bdb6a769c954b38dc660b567af305"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/move_missing_v1.png",
+      "sha256": "8f2fd6ed6dd2d69604af90706be1199f821f30ad3a9425876a446c4bcb524c09",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/move_missing_v1.prompt.txt",
+      "prompt_sha256": "09a0d0f159600dbd8b6d8db51462ae8254dce25f1562ff55a05f802cf7fa8c0d",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-d54c0b68-106b-4a96-900b-f2ffa66c8cc0.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/reference.png",
+          "sha256": "9996537f2bdba74bcfeddd6a516b98c926562b221f7eb7ef58371d9b2fe54b76"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/idle_v2.png",
+      "sha256": "877b3dc508a85ec73b88534682a8780234f5f6e550c7a8463ecb427252caffd9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/idle_v2.prompt.txt",
+      "prompt_sha256": "2970dd98a947dc4266ad8f6d910423214f704d1b3a6ac5e0cc89fe40e4774ddf",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-2f5b7aeb-393f-47f3-89db-ac9d40e817c3.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/reference.png",
+          "sha256": "9996537f2bdba74bcfeddd6a516b98c926562b221f7eb7ef58371d9b2fe54b76"
+        }
+      ]
+    }
+  ]
+}

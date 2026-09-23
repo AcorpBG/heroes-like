@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_sunvault_mirror_duelists_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/idle_v2.png": "877b3dc508a85ec73b88534682a8780234f5f6e550c7a8463ecb427252caffd9",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/attack_v1.png": "a7e03db4730e4e1f47b9fbaea4ef01d1e60c4a3d9e2e9e5d664e787e9678cd11",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/cast_v1.png": "11a2ed51cc298bf9120db5c1d2ca80d8fd822c0c64c3dc2f384dea977f09a436",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/reactions_v1.png": "a1446be74a43e899c0b24b87412aa8debad04dac6e238f9c4c57afb15e042494",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/death_v1.png": "f9d05115783b145b07f2ce2b6ede4bca347cc127ca033f4201790b72f6e9db4c",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/move_missing_v1.png": "8f2fd6ed6dd2d69604af90706be1199f821f30ad3a9425876a446c4bcb524c09",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/move_far_corrections_v1.png": "88bde2092de624244008aa5d83ffda8470108742f499a37f26a161fb7bb09b3b",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists_veteran/move_far_v1.png": "c18a8578707c92f26975c9c00249c99f048fb1383ca4543b92b51fb80ad5708d"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Parallax Blades: 48 reviewed poses with consistent blue/violet saber ownership, original blade scale, complete tips, reciprocal legs and retained fallen weapons; 116 final candidate checks passed."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "2471fc298d0ce74e75c18e46d2fa98c5ac7948d54aced0ef3d39e20e4c57f422",
+  "atlas_sha256": "45a5b30a3f2b88cba71cc9997e10557d347ef82f91d9fe91045c850f9417d196",
+  "texture_bytes_rgba": 24492160
+}

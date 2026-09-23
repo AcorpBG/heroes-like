@@ -6577,33 +6577,37 @@
     "unit_sunvault_mirror_duelists_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_mirror_duelists_veteran.png",
       "frame_size": [
-        282,
-        250
+        292,
+        245
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 150,
       "static_frame": 0,
       "ground_anchor": [
-        127.0,
-        238
+        168.0,
+        237
       ],
-      "painted_extent": 266,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_mirror_duelists_veteran.png",
+      "painted_extent": 276,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_mirror_duelists_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        129,
-        34,
-        411,
-        284
+        52,
+        23,
+        344,
+        268
       ],
-      "source_sha256": "2471fc298d0ce74e75c18e46d2fa98c5ac7948d54aced0ef3d39e20e4c57f422",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_mirror_duelists_veteran/provenance.json",
-      "sha256": "96fe9fade853b153f25ab167f71d470ae392a5a6f03154d58937191f2762b8d3"
+      "source_sha256": "45a5b30a3f2b88cba71cc9997e10557d347ef82f91d9fe91045c850f9417d196",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_mirror_duelists_veteran/provenance.json",
+      "sha256": "68633b7a8c7b9b9a2ab117ebc1ca597a751ae5a923df744197723bca45dfdcbe"
     },
     "unit_sunvault_resonant_choristers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_resonant_choristers_veteran.png",
