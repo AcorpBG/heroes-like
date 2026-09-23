@@ -1,0 +1,18 @@
+{
+  "tool": "builtin_image_gen",
+  "unit_id": "unit_embercourt_lockglass_writcasters_veteran",
+  "earlier_lineage": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/provenance.json",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_near_v3.png",
+      "sha256": "1f6f02778461bf4d22bc159fffd237a944081dfd59a8061564ecb2ff20ee007d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_near_v3.prompt.txt",
+      "prompt_sha256": "1f9eb35943920ca3cab2bb2a09ca6be4d684064de69ca75a18f0783656510fa8",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-09434773-cf33-43c3-b8cd-5aa2edaa37c7.png",
+      "review": "Accepted four opposite-foot contact/support/passing/reach poses after original and native 128px inspection; combined with four original far-foot phases. Prism hand, hanging tablets and costume retained."
+    }
+  ]
+}
