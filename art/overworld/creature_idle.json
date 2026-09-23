@@ -7439,33 +7439,37 @@
     "unit_brasshollow_gaugeplate_bailiffs_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_gaugeplate_bailiffs_veteran.png",
       "frame_size": [
-        240,
-        249
+        255,
+        245
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 160,
       "static_frame": 0,
       "ground_anchor": [
-        107.0,
-        238
+        129.0,
+        237
       ],
-      "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_gaugeplate_bailiffs_veteran.png",
+      "painted_extent": 239,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_gaugeplate_bailiffs_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        149,
-        2,
-        389,
-        251
+        39,
+        15,
+        294,
+        260
       ],
-      "source_sha256": "80e603f6376228ebe93a03e9651e1f1024931b40d8f2a3b6ce65836adf12f277",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_gaugeplate_bailiffs_veteran/provenance.json",
-      "sha256": "a0f786ee04d4c5e9af9b674ce4a6d5a83cef705eae09ead8fd324f87ed2c8182"
+      "source_sha256": "d9aac4f5dc0a8533fc5864a41d431427629b1eacdb811b7bc8dbe8aa9e5830a4",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_gaugeplate_bailiffs_veteran/provenance.json",
+      "sha256": "8d5b159eba069163eaeae3d2f8d0afc218200f42eefc7a4f0c72168c181beaad"
     },
     "unit_brasshollow_debt_engine_exactors_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_debt_engine_exactors_veteran.png",
