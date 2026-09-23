@@ -7334,33 +7334,37 @@
     "unit_brasshollow_furnace_pavis_teams_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_furnace_pavis_teams_veteran.png",
       "frame_size": [
-        311,
-        249
+        334,
+        257
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 160,
       "static_frame": 0,
       "ground_anchor": [
-        137.0,
-        238
+        159.0,
+        249
       ],
-      "painted_extent": 295,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams_veteran.png",
+      "painted_extent": 318,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_furnace_pavis_teams_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        119,
-        2,
-        430,
-        251
+        49,
+        15,
+        383,
+        272
       ],
-      "source_sha256": "a02a84374e9419192eedc09f8846ef877ca2608ef50f21539369d0b1fcc6cde2",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_furnace_pavis_teams_veteran/provenance.json",
-      "sha256": "37d1d367611dc5dff6f1d80375c0015f4489823a7981a23a77edf123a77d9d63"
+      "source_sha256": "07933f52ae415ef6c0365f6bf9761a7a550f49f63e7e8fca49f560c7f5a35fae",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_furnace_pavis_teams_veteran/provenance.json",
+      "sha256": "a40520a3952cc065731fb9be1e8cbe0db67c64094d785e8127f21768993b7aed"
     },
     "unit_brasshollow_gaugefire_arbalists_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_gaugefire_arbalists_veteran.png",
