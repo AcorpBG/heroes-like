@@ -22326,13 +22326,13 @@
     {
       "id": "town-overhaul-building-art-20260922",
       "title": "Original faction building art and readable upgrade stages",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "gameplay_content_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "docs/common-town-building-template.md"
       ],
-      "notes": "Embercourt, Mireclaw, Sunvault and Thornwake each have all 51 original building stages and icons. Focused Windows art checks: 460, 464, 464 and 464 respectively; Thornwake halls additionally passed47. Thornwake orchard-caravan paintings, cleared orchard backdrop and authored placements preserve23 accessible active plots in both dwelling branches. All Thornwake icons and final developed compositions reviewed; source masters, exact prompts, provenance and hashes preserved; wiki scoped to integrated art. Brasshollow and Veilmourn integration remains in progress. No full suite or Linux execution."
+      "notes": "Completed all six faction building art sets:306 original building stages and matching icons,6 cleared backdrops. All312 active masters unique with verified hashes, exact prompts/references and source preservation. Both exclusive dwelling branches and23 active plots per faction are accessible. Brasshollow and Veilmourn each passed511 focused Windows checks (47hall+212civic/support+126eachdwellingbranch); original stages and both final layouts visually reviewed, with rail/footer/quay grounding adjustments. Embercourt460,Mireclaw464,Sunvault464,Thornwake464 prior art checks retained. Wiki updated for all building stages. Creature action animation and full-match balance are separate active passes. No full suite or Linux execution."
     },
     {
       "id": "town-overhaul-creature-upgrades-20260922",

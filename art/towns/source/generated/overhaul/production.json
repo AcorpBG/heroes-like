@@ -4330,6 +4330,2190 @@
         840
       ],
       "grounding": "Original Thornwake mobile orchard architecture grounded on authored earthen terraces; successive stages retain their entrance anchor and keep winding paths and other buildings exposed."
+    },
+    {
+      "id": "building_town_hall",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_town_hall.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_town_hall.prompt.txt",
+      "source_sha256": "8cd8a8c4e3dc765eda5f94bd8de3522a071c1ec847bf589a139e4f7f420656d8",
+      "generation_output": "exec-be47b780-06ad-4240-96a9-54a7cb6d3752.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/overworld/source/generated/towns/distinct_factions_20260920/brasshollow-source.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "ground_anchor": [
+        345,
+        315
+      ],
+      "visible_width": 180,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_hall_2",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_2.prompt.txt",
+      "source_sha256": "765892493b64e16ed3e6328cb7206c108a0c857861396784c59bd7d98d0fe217",
+      "generation_output": "exec-3c79b607-2316-4e9f-81cf-a71f2e6037e6.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_town_hall.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "ground_anchor": [
+        345,
+        315
+      ],
+      "visible_width": 210,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_hall_3",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.prompt.txt",
+      "source_sha256": "5e9a4f15098c43eb0540fce36d65f5b6aa2a862ce1a9e5568501afafd732b227",
+      "generation_output": "exec-fdcb2642-21f5-4d93-bb03-bdfe817afcb0.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "ground_anchor": [
+        345,
+        315
+      ],
+      "visible_width": 235,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_hall_4",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_4.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_4.prompt.txt",
+      "source_sha256": "9aa189f39fcad29b9588024acd1085dbd935a83a9ec0101e1c107f503511242a",
+      "generation_output": "exec-5a40bf7b-c4c4-4292-a261-c8d930aa1075.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "ground_anchor": [
+        345,
+        315
+      ],
+      "visible_width": 245,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_fort_1",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_fort_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_fort_1.prompt.txt",
+      "source_sha256": "3584bc4ec2ce0cb32c5f9948afc27f3aec90e1a732299dda02d2740baa5e88b1",
+      "generation_output": "exec-a06078cd-8550-4dab-af58-2e7f5ad7a1c1.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "fort",
+      "ground_anchor": [
+        1220,
+        335
+      ],
+      "visible_width": 190,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_fort_2",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_fort_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_fort_2.prompt.txt",
+      "source_sha256": "60d65559a8bf9c746f3c459774e21a59d8dfd1da16eba8d269f31b764d5e04ff",
+      "generation_output": "exec-61fa6c60-0f34-41c1-9f39-8b3034ba91fe.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_fort_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "fort",
+      "ground_anchor": [
+        1220,
+        335
+      ],
+      "visible_width": 220,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_fort_3",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_fort_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_fort_3.prompt.txt",
+      "source_sha256": "06d1cf81e09dde51bf693419761b91b11ad3de85bfd160237a048cdb7195a873",
+      "generation_output": "exec-8fe2131d-7d19-4d39-a9a0-97c6fe40fe09.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_fort_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "fort",
+      "ground_anchor": [
+        1220,
+        335
+      ],
+      "visible_width": 250,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_guild_1",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_1.prompt.txt",
+      "source_sha256": "05a8fc4f3725a6906071f7aa51ffbff8bd0b633698f56f3b2eb81450f6f755ed",
+      "generation_output": "exec-4d0a5299-a3db-4b6b-b9f6-be7787ba0bb6.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "ground_anchor": [
+        880,
+        370
+      ],
+      "visible_width": 100,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_guild_2",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_2.prompt.txt",
+      "source_sha256": "b09c6977967e84b7d24f23d6e1a625c3df43dfb37d88c932673a7f9ab16d9178",
+      "generation_output": "exec-ca2cbef6-9107-4374-bf07-10e440dc161f.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "ground_anchor": [
+        880,
+        370
+      ],
+      "visible_width": 120,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_guild_3",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_3.prompt.txt",
+      "source_sha256": "644207e3ddd45e7e1b2ec6d344e7db746a5bc5b5bb691a3ce618630f659591e5",
+      "generation_output": "exec-586d42f1-1dfb-4d70-9c3d-c1158bc0ae00.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "ground_anchor": [
+        880,
+        370
+      ],
+      "visible_width": 140,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_guild_4",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_4.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_4.prompt.txt",
+      "source_sha256": "f3ced9929cf08f68f791514bfaf1334886543a6c6cdeaa5a03ecc14d30fb1528",
+      "generation_output": "exec-5323be98-29c0-4936-951a-2d7b376093ac.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "ground_anchor": [
+        880,
+        370
+      ],
+      "visible_width": 160,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_guild_5",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_5.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_5.prompt.txt",
+      "source_sha256": "891c7a90f265a5b8b508a842633e96db43d1427d1761b1a89b8296c280106b4a",
+      "generation_output": "exec-c4bb08f9-d3b7-4651-8352-9d5e82da3b56.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_guild_4.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "ground_anchor": [
+        880,
+        370
+      ],
+      "visible_width": 180,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_market_square",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_market_square.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_market_square.prompt.txt",
+      "source_sha256": "ff6a1ac55dd2323967339dd53e014fa300190334da534533af3cdbc6f67baed2",
+      "generation_output": "exec-1d304805-4e77-468c-a2e2-138600527473.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "market",
+      "ground_anchor": [
+        285,
+        470
+      ],
+      "visible_width": 145,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_trade_exchange.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_trade_exchange.prompt.txt",
+      "source_sha256": "04f49afe376ce6db42a292cbb28aabd2e24a8fb5dfd1ea6558d18eca7eabae49",
+      "generation_output": "exec-fa8be660-063d-431f-96ca-108b4e736c08.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "market",
+      "ground_anchor": [
+        285,
+        470
+      ],
+      "visible_width": 180,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_storehouse_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_storehouse_1.prompt.txt",
+      "source_sha256": "2e2a201ad080d2395c99fc23e8514f779168a92c7e6f0c7f780f8726051cecf4",
+      "generation_output": "exec-e4d22516-cf41-43d1-a6b8-261f9147dd2d.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "storehouse",
+      "ground_anchor": [
+        650,
+        430
+      ],
+      "visible_width": 130,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_storehouse_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_storehouse_2.prompt.txt",
+      "source_sha256": "5d108e3b20ed880807db8f1928110ab0dc498c7c3ca7b0b427c5b7cf6f4659aa",
+      "generation_output": "exec-2b80758d-d219-40ff-8ce9-5f30f996b1b7.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_storehouse_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "storehouse",
+      "ground_anchor": [
+        650,
+        430
+      ],
+      "visible_width": 165,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "cleared_foundry",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/cleared_foundry.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/cleared_foundry.prompt.txt",
+      "source_sha256": "7fab36a8013c0e5f292ee769203983147339b79445307912b1f801a501deb709",
+      "generation_output": "exec-5bf81f4b-a9d9-4e54-90a1-78755b1830f9.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/runtime/backdrops/town_brasshollow.png"
+      ],
+      "kind": "backdrop",
+      "stage": "village"
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_wayfarers_hall.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_wayfarers_hall.prompt.txt",
+      "source_sha256": "1c8441a9c2cc4141c819693f03f07b959feccc58633139120dc0edcf55ba9849",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cbfa-556e-7342-9913-8dc4dc9b9f7f/exec-11f3e14a-5462-41d6-a26a-54a88f1a8f84.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_wayfarers_hall",
+      "ground_anchor": [
+        1430,
+        505
+      ],
+      "visible_width": 165,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_growth_1",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_growth_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_growth_1.prompt.txt",
+      "source_sha256": "4de85ba482de1d6817aed7b33bc6d587c44652e4987c12c40cebe446aacd76ac",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cbfa-556e-7342-9913-8dc4dc9b9f7f/exec-9d13bd91-7ea7-43df-a941-d523124e638a.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_growth_1",
+      "ground_anchor": [
+        185,
+        620
+      ],
+      "visible_width": 145,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_growth_2",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_growth_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_growth_2.prompt.txt",
+      "source_sha256": "822b6aad428eece87e6154e20bb1d6108ce33ee5e3535c86bdff67178b599093",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cbfa-556e-7342-9913-8dc4dc9b9f7f/exec-c1bc0add-99f1-43f5-9982-ddd6e9ed42ce.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_growth_2",
+      "ground_anchor": [
+        445,
+        600
+      ],
+      "visible_width": 150,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_growth_3",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_growth_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_growth_3.prompt.txt",
+      "source_sha256": "1e6b977feef0b1fefeb82213d3f7261ef6814b1d65db03e1de39246c8f2f6fce",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cbfa-556e-7342-9913-8dc4dc9b9f7f/exec-d0cf0eb7-6481-4b61-9bc2-3038edb3913b.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_growth_3",
+      "ground_anchor": [
+        835,
+        530
+      ],
+      "visible_width": 150,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_training_attack",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_training_attack.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_training_attack.prompt.txt",
+      "source_sha256": "f42f62d2c34fb06f8873e2534e2a465024863f150657c21be8c37a1f721098d9",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cbfa-556e-7342-9913-8dc4dc9b9f7f/exec-eb2d612b-5764-46c7-a1a9-2bb4b3bf87f1.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_training_attack",
+      "ground_anchor": [
+        130,
+        770
+      ],
+      "visible_width": 145,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_training_defense",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_training_defense.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_training_defense.prompt.txt",
+      "source_sha256": "9669c2e2102b7ce90fe84d56ab6018c9239e9549fb590adc88091c6e3fe01157",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cbfa-556e-7342-9913-8dc4dc9b9f7f/exec-b0489b9f-3b8e-4e30-9c3b-2cbd14a3bffd.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_training_defense",
+      "ground_anchor": [
+        365,
+        745
+      ],
+      "visible_width": 150,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_training_experience",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_training_experience.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_training_experience.prompt.txt",
+      "source_sha256": "71ae6d29592d5e0d5c342ab11c34d5a07cac56a4daea384e649a4fed1c3f8ab3",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cbfa-556e-7342-9913-8dc4dc9b9f7f/exec-f4134582-18e5-400f-a44c-d726cddfc2ed.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_training_experience",
+      "ground_anchor": [
+        1065,
+        615
+      ],
+      "visible_width": 145,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_artifact_exchange",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_artifact_exchange.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_artifact_exchange.prompt.txt",
+      "source_sha256": "b575b412443992b5abe600bed5ac798dc48aa5d9e9dca1331ea34992863362ae",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cc1f-1c31-7003-b44f-abb7ba127a21/exec-f8b00cf9-65fd-4ebb-935d-41aae173dd6c.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_artifact_exchange",
+      "ground_anchor": [
+        1250,
+        625
+      ],
+      "visible_width": 150,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_unique_1",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_unique_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_unique_1.prompt.txt",
+      "source_sha256": "9b9541658f4d3d19934e555ac18557eb17766d0dbdba8303ccb5322689f555de",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cc1f-1c31-7003-b44f-abb7ba127a21/exec-fe6db3a8-5902-407b-a644-8ea680345dcc.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_brasshollow_unique_1",
+      "ground_anchor": [
+        690,
+        810
+      ],
+      "visible_width": 155,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_unique_2",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_unique_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_unique_2.prompt.txt",
+      "source_sha256": "b7d8d3de901ad51010b673e368a1ba71bd95f062d83f9f18bf1386d02c1ddf8d",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cc1f-1c31-7003-b44f-abb7ba127a21/exec-e7fc148b-e9cb-4888-8d14-d1ea790e3951.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_brasshollow_unique_2",
+      "ground_anchor": [
+        1430,
+        650
+      ],
+      "visible_width": 175,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_unique_3",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_unique_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_unique_3.prompt.txt",
+      "source_sha256": "819fb5e89d83a99d0d06c730fba355a8e13ee8af3cae74faea9a19f90b24fc77",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cc1f-1c31-7003-b44f-abb7ba127a21/exec-d67bf84f-5313-45bc-ad1c-ff9733c77a11.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_brasshollow_unique_3",
+      "ground_anchor": [
+        1045,
+        820
+      ],
+      "visible_width": 185,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t1_1",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1.prompt.txt",
+      "source_sha256": "7d63db314ad16ea21fc7111a93e4d81744b02090f91ea11b01d3f3e099efc317",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-4c47df04-1f3f-422b-a49d-3e62d39393af.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t1",
+      "ground_anchor": [
+        640,
+        610
+      ],
+      "visible_width": 140,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t1_1_upgrade",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1_upgrade.prompt.txt",
+      "source_sha256": "42111c0bc37b7de0854a5f0564e81a3af3617a3cce113508b6e78d7b902229fc",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-8cc6c118-0073-49b3-a405-df906c1e685b.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t1",
+      "ground_anchor": [
+        640,
+        610
+      ],
+      "visible_width": 170,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t1_2",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2.prompt.txt",
+      "source_sha256": "d4e047be225e31b7f3862bbe7b82ce8aa2be44ba5d233abf676e649434e9772d",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-15975dee-e588-4711-a20f-f06cfbb137c9.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t1",
+      "ground_anchor": [
+        640,
+        610
+      ],
+      "visible_width": 140,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t1_2_upgrade",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2_upgrade.prompt.txt",
+      "source_sha256": "f8ee52e2153590cc61735fe0980b25e08f520f9f6fc4a2e87358ee08f69e6d2a",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-e2b10d8e-3e4d-4a62-9a4d-a7066c2fcc98.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t1_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t1",
+      "ground_anchor": [
+        640,
+        610
+      ],
+      "visible_width": 170,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t2_1",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1.prompt.txt",
+      "source_sha256": "79e9c9065e3d8e20d3d146cfbb7be7bbaafbf30386e3e352c3a83b6b04b0b35c",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-23794075-8787-4ac1-adb8-4108cfec1c12.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t2",
+      "ground_anchor": [
+        835,
+        675
+      ],
+      "visible_width": 145,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t2_1_upgrade",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1_upgrade.prompt.txt",
+      "source_sha256": "9f2ba82fb003e16d5ec6904de4257143fd5f9f5f06de36e2a01e83ed170d3611",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-45ce4102-3f7e-4ecc-976e-158a83635895.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t2",
+      "ground_anchor": [
+        835,
+        675
+      ],
+      "visible_width": 175,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t2_2",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2.prompt.txt",
+      "source_sha256": "2b6c17776c0cb4f4abc1ad6077c432ac576e649be312f5b43b9e450300bc1342",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-3db63d1c-e7fc-45d8-b610-43736a8bea7b.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t2",
+      "ground_anchor": [
+        835,
+        675
+      ],
+      "visible_width": 145,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t2_2_upgrade",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2_upgrade.prompt.txt",
+      "source_sha256": "d5c6192239cd966778c92c6b2e26234a5411d83c6d31cac15148ace59f5c8103",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-fb0391e5-8797-4e02-a1d2-d67982f24caa.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t2_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t2",
+      "ground_anchor": [
+        835,
+        675
+      ],
+      "visible_width": 175,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t3_1",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1.prompt.txt",
+      "source_sha256": "045c9a749d9e21485b41c4a5d3c723d4b286ba1116d865690adbc3e707484365",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-a59c6d31-9a9e-48a6-b13c-553c9bd81a83.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t3",
+      "ground_anchor": [
+        1420,
+        825
+      ],
+      "visible_width": 145,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t3_1_upgrade",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1_upgrade.prompt.txt",
+      "source_sha256": "3d016296fcadbd2f1823fbb2bbfb8431b3711b9f8ada8c6fa20fe2ddb258c524",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-cc9be8e3-0fa0-448e-a9b2-89a5a109087f.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t3",
+      "ground_anchor": [
+        1420,
+        825
+      ],
+      "visible_width": 175,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t3_2",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2.prompt.txt",
+      "source_sha256": "eb350382b5575411637ea5c118b79af002c9376f79cbc370616d51032dd82648",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-9ce658c4-1525-4d3f-8b59-66e376d96544.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t3",
+      "ground_anchor": [
+        1420,
+        825
+      ],
+      "visible_width": 145,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t3_2_upgrade",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2_upgrade.prompt.txt",
+      "source_sha256": "f834e1937fe412a5fcfc62aaa31b1b79f5553c7256fd6c82dae98e6113e9953e",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-f7f4d230-669b-4b4b-8a06-8911c932d851.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t3_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t3",
+      "ground_anchor": [
+        1420,
+        825
+      ],
+      "visible_width": 175,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t4_1",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1.prompt.txt",
+      "source_sha256": "5ce77df39ab497852f9fa643e449ff787eb6a4c1c97694e8412966bf9c33ffc0",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-a34cf685-2378-4c83-846a-ba6aaa184bb8.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t4",
+      "ground_anchor": [
+        1230,
+        800
+      ],
+      "visible_width": 150,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t4_1_upgrade",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1_upgrade.prompt.txt",
+      "source_sha256": "8c75165261d3e35f4d37f22de9423ccbfdc7ff0cd3e8fac450e5b561f7c72ded",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-b819e0ae-44fd-4429-8937-4dfeb593cf71.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t4",
+      "ground_anchor": [
+        1230,
+        800
+      ],
+      "visible_width": 180,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t4_2",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2.prompt.txt",
+      "source_sha256": "c135fa4ecd4fba613c158ada6cf299f00c9ad6030a5ae0becb730d37b2bd97d2",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-a3ac1033-4262-44dc-a585-7320f726fb26.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t4",
+      "ground_anchor": [
+        1230,
+        800
+      ],
+      "visible_width": 150,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t4_2_upgrade",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2_upgrade.prompt.txt",
+      "source_sha256": "66c96b36eb159e0263bc9ef9107415fd061f736120eb3e4aaa5d080cdc40545d",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-5a6953a8-10cb-495f-86f0-0435e8ab4610.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t4_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t4",
+      "ground_anchor": [
+        1230,
+        800
+      ],
+      "visible_width": 180,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t5_1",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1.prompt.txt",
+      "source_sha256": "538b105beeb3ffa361e0c2ed6cc05d64ac834b9b1326b09bafe1c82e259e65be",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-905aa52b-3231-438d-93b3-e2dbb5f3c2d7.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t5",
+      "ground_anchor": [
+        875,
+        835
+      ],
+      "visible_width": 155,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t5_1_upgrade",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1_upgrade.prompt.txt",
+      "source_sha256": "2dc7af65c2f6bb9dc0736b4e4520523d5b4b31d5ccf50bdf4193259397ac55f2",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-d565468a-26cc-4813-a6a4-9441fa567632.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t5",
+      "ground_anchor": [
+        875,
+        835
+      ],
+      "visible_width": 185,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t5_2",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2.prompt.txt",
+      "source_sha256": "b90b296d94aa3f8d2e60fe917f6105f3def3d2a3f6b8be26e18da10f64579f58",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-746906fd-26a9-4d8c-b792-4f16080a1889.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t5",
+      "ground_anchor": [
+        875,
+        835
+      ],
+      "visible_width": 155,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t5_2_upgrade",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2_upgrade.prompt.txt",
+      "source_sha256": "32aee758522c61ba6b6da1fbbe89d6edc4324d4a961e264301787806cb418fc8",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-7d939740-5568-4a3b-8801-08535830afa9.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t5_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t5",
+      "ground_anchor": [
+        875,
+        835
+      ],
+      "visible_width": 185,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t6_1",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1.prompt.txt",
+      "source_sha256": "b86b8ef931b30f6b6785e478f3c0a64f3f32202318a1ab93a7ead1ddf30a1aae",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-f267ec2c-e72d-4a9b-97f3-04a2811dcea5.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t6_1",
+      "ground_anchor": [
+        480,
+        830
+      ],
+      "visible_width": 180,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t6_1_upgrade",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1_upgrade.prompt.txt",
+      "source_sha256": "f93d94a154b020cd09ed8a38cedd4b3718f3db66485e448a33f530c98561fa19",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-ddbe20b3-b2ad-4cb0-a0f6-1ddb437a346e.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t6_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t6_1",
+      "ground_anchor": [
+        480,
+        830
+      ],
+      "visible_width": 210,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t7_1",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1.prompt.txt",
+      "source_sha256": "72bf8c16aeb2da6e354e54b56cf81c26097b685c01a4a3ebb6280fe99f1dad12",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-08dc0987-955f-4feb-8b55-e38972b091cb.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t7_1",
+      "ground_anchor": [
+        240,
+        845
+      ],
+      "visible_width": 190,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_brasshollow_t7_1_upgrade",
+      "faction_id": "faction_brasshollow",
+      "source_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1_upgrade.prompt.txt",
+      "source_sha256": "75e6bda6e7819609f6c5af8906aacc3a7d9692b65e5a220b191c5b30283199e4",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-6148-78f2-9dcd-658e143d5f7f\\exec-c2e81ba4-5278-43eb-b17e-36b7498e537c.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_brasshollow/building_dev_brasshollow_t7_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "brasshollow_t7_1",
+      "ground_anchor": [
+        240,
+        845
+      ],
+      "visible_width": 225,
+      "grounding": "Original Brasshollow redbrick and riveted-iron architecture rests on the cleared foundry platforms and lower apron; stages retain their ground anchor, with access ramps and distinct building entrances exposed."
+    },
+    {
+      "id": "building_dev_hall_3",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.prompt.txt",
+      "source_sha256": "d59c27d12d721677175be242f5eae241630909b2f876ded5eb916d594dfbef51",
+      "generation_output": "exec-6317b9d6-397b-4a6d-a006-cabe0550c67c.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/overworld/runtime/objects/towns/distinct_factions/veilmourn.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 280,
+      "ground_anchor": [
+        790,
+        440
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_hall_2",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_2.prompt.txt",
+      "source_sha256": "d62d64861ce2c3a3cac47a3f3be3f128df0609c08eaa240bca460adb71f413a5",
+      "generation_output": "exec-93cd7a51-4d6f-40f2-a878-73caa4c157f6.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 240,
+      "ground_anchor": [
+        790,
+        440
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_hall_4",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_4.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_4.prompt.txt",
+      "source_sha256": "eb68aa4fd4e3cbdca56d5d79a7382247df24652edc4e2afeff60345178d6f05c",
+      "generation_output": "exec-753300c1-d1a2-43b5-bae8-0c7febb9ffee.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 310,
+      "ground_anchor": [
+        790,
+        440
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_fort_1",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_1.prompt.txt",
+      "source_sha256": "a36b11f99234c1acddad010135de274df098b61c9a5b7cdb50123ad65812fd95",
+      "generation_output": "exec-a5a79a37-fd58-4b05-a3fa-08981db4e7bf.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "fort",
+      "visible_width": 175,
+      "ground_anchor": [
+        245,
+        425
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_fort_2",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_2.prompt.txt",
+      "source_sha256": "8ce6e81ca9b5058f4ad5aa3f2549aa75fb9e8ca0131021dda5daa96d1328e6a9",
+      "generation_output": "exec-06d9cd99-6067-432c-a072-d4535b78a22c.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "fort",
+      "visible_width": 210,
+      "ground_anchor": [
+        245,
+        425
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_fort_3",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_3.prompt.txt",
+      "source_sha256": "f9f1be196a8891379903655ad58b2dff239eccf262bf7d099a4c2e733f43e5e0",
+      "generation_output": "exec-a916d897-b0ed-409c-ab93-096e279503e0.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "fort",
+      "visible_width": 245,
+      "ground_anchor": [
+        245,
+        425
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_guild_1",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_1.prompt.txt",
+      "source_sha256": "e81d8c3e478c184c8b3a41ae13af0e1f2757b36e52687ebe8440679bdf105704",
+      "generation_output": "exec-33e18721-18ad-4e66-bfef-93dd86e78b85.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 100,
+      "ground_anchor": [
+        1280,
+        450
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_guild_2",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_2.prompt.txt",
+      "source_sha256": "ac673797efce203f4f3a60084388207e17b4a2fc98f7550c6567b2a4c4d01b43",
+      "generation_output": "exec-a4c2c63c-30b7-47cb-81cc-85d586e59986.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 122,
+      "ground_anchor": [
+        1280,
+        450
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_guild_3",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_3.prompt.txt",
+      "source_sha256": "36a121c10958411ad91811470550777ffeb2cf393e5e783bbccf85067c8aed5f",
+      "generation_output": "exec-4d7ab02c-db00-4161-bcbc-d4a2586c6cf6.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 144,
+      "ground_anchor": [
+        1280,
+        450
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_guild_4",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_4.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_4.prompt.txt",
+      "source_sha256": "a0e58ba3e7783c37b924d19b7a495657ca3c82925c334d925a558fb22bebe87b",
+      "generation_output": "exec-dc8604dd-8b95-4b69-a824-d161ee440b45.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 166,
+      "ground_anchor": [
+        1280,
+        450
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_guild_5",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_5.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_5.prompt.txt",
+      "source_sha256": "b7df3aba115fe7d1cdf916f1bdc18cf417f8a73b061dad069ad884f8f91ad34d",
+      "generation_output": "exec-10871dee-1331-446d-907e-012e278b99cc.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 188,
+      "ground_anchor": [
+        1280,
+        450
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_market_square",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_market_square.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_market_square.prompt.txt",
+      "source_sha256": "8cb3eb25375c721ee85d5fed5c0016888aa1d999102bc50989985d6797b5447d",
+      "generation_output": "exec-9b0115fa-3d40-4b48-a166-3ef87d16797f.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "market",
+      "visible_width": 145,
+      "ground_anchor": [
+        430,
+        555
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_trade_exchange.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_trade_exchange.prompt.txt",
+      "source_sha256": "412a663ca2e7ea073a02ca420d1226cdc97a5ba8446f5641df9e11474356edff",
+      "generation_output": "exec-56423a35-88d7-412b-8d1a-17a688db454a.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "market",
+      "visible_width": 180,
+      "ground_anchor": [
+        430,
+        555
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_1.prompt.txt",
+      "source_sha256": "f4d1b8e145c132e0d1f4b7473b76943d0e0fb1987299dff9c5709e0be374466d",
+      "generation_output": "exec-6fa8f857-bcc8-4fd5-9507-9282b0faaa1c.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "storehouse",
+      "visible_width": 130,
+      "ground_anchor": [
+        1020,
+        545
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_2.prompt.txt",
+      "source_sha256": "194165e13352643b1e7beed212a614cd7b9c8202fddd9cc7da1b4888507e7daf",
+      "generation_output": "exec-5704b966-6b20-4a0a-be00-6b3ba575bda3.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "storehouse",
+      "visible_width": 165,
+      "ground_anchor": [
+        1020,
+        545
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "cleared_harbor",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/cleared_harbor.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/cleared_harbor.prompt.txt",
+      "source_sha256": "9c2707d9761023c3a9fc5a11cf677ce96d9d05e38178b7aa1f5f2bd5868d3409",
+      "generation_output": "exec-09358ea8-6b93-4144-9a00-23ce6e9a0c4e.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "backdrop",
+      "stage": "village"
+    },
+    {
+      "id": "building_town_hall",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_town_hall.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_town_hall.prompt.txt",
+      "source_sha256": "6d1539560267c0f302400e9bd85b9a38413741f486de7615c3fb771261e7dda0",
+      "generation_output": "exec-d5fae7f3-2556-4792-a37d-a3e2958f3cba.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 205,
+      "ground_anchor": [
+        790,
+        440
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_wayfarers_hall",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_wayfarers_hall.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_wayfarers_hall.prompt.txt",
+      "source_sha256": "ecb468a0efcbd7ac504629eb9b2e682d02cc876d44ff3ce34a10d064197a76c8",
+      "generation_output": "exec-ec9efd2f-477a-4f5b-9c24-e9b65506e917.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_wayfarers_hall",
+      "visible_width": 160,
+      "ground_anchor": [
+        1440,
+        625
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_growth_1",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_1.prompt.txt",
+      "source_sha256": "18c02b5c191530778424b9a9dcfa40738771030e8d7bb2883c69b890d80f60e9",
+      "generation_output": "exec-c4a85915-fb40-4cdb-bbe6-dbeb292ea5dd.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_growth_1",
+      "visible_width": 145,
+      "ground_anchor": [
+        165,
+        530
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_growth_2",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_2.prompt.txt",
+      "source_sha256": "43b8d1062a94d17ca54ae77c29f407077380829477b2eb9bb2a43bb1ca7d89eb",
+      "generation_output": "exec-a81b1c7f-8b23-4219-bd70-b331067e0826.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_growth_2",
+      "visible_width": 145,
+      "ground_anchor": [
+        630,
+        565
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_growth_3",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_growth_3.prompt.txt",
+      "source_sha256": "5b87715338eca8f98a197718f9ea17a3ea00589b324b11ed20d0dad2a7d176b6",
+      "generation_output": "exec-1918ca39-d6b7-4261-bdc6-64664044551b.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_growth_3",
+      "visible_width": 145,
+      "ground_anchor": [
+        1180,
+        610
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_training_attack",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_attack.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_attack.prompt.txt",
+      "source_sha256": "232b5d37cc661fc4d4281533f8c91696848600ab39bdb582e2eebdccc8d309c7",
+      "generation_output": "exec-f06b3001-b068-4913-b278-baccfa60dff3.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_training_attack",
+      "visible_width": 140,
+      "ground_anchor": [
+        330,
+        705
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_training_defense",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_defense.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_defense.prompt.txt",
+      "source_sha256": "9cdc3085642c3471f5684bf5acf68e684423cabe0bcd26c32e5cda657c770f11",
+      "generation_output": "exec-0588cba4-cbae-4c48-9d98-d0d24c982002.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_training_defense",
+      "visible_width": 145,
+      "ground_anchor": [
+        595,
+        695
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_training_experience",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_experience.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_training_experience.prompt.txt",
+      "source_sha256": "0d73f07f77df341e55c0c56f07735bb2fe8965243dca1fb60590a88244f7ee9a",
+      "generation_output": "exec-c2ad8835-b076-476b-89f8-e2f759cf27a1.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_training_experience",
+      "visible_width": 140,
+      "ground_anchor": [
+        820,
+        620
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_artifact_exchange",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_artifact_exchange.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_artifact_exchange.prompt.txt",
+      "source_sha256": "1bbf7dc0ec9152a25685d80b8e832742d6162b5665a4d7067039a4d1cb655ac4",
+      "generation_output": "exec-c883e897-2271-4cb1-be97-aad790d459cc.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_artifact_exchange",
+      "visible_width": 145,
+      "ground_anchor": [
+        925,
+        710
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_unique_1",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_1.prompt.txt",
+      "source_sha256": "5fc7e0affead64ce54088ceddd74c3f451ced4945e78ddc7308954b419c5e679",
+      "generation_output": "exec-ca9bc4e6-c730-4d8a-9a61-196695684237.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_veilmourn_unique_1",
+      "visible_width": 145,
+      "ground_anchor": [
+        95,
+        750
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_unique_2",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_2.prompt.txt",
+      "source_sha256": "9423a7a495fc696b934cee889c9cffdafc0738ef60bd064be8e553a6f86117e6",
+      "generation_output": "exec-87d99dc7-c5f0-4854-ab03-e0c247f49c07.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_veilmourn_unique_2",
+      "visible_width": 145,
+      "ground_anchor": [
+        690,
+        635
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_unique_3",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_3.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_unique_3.prompt.txt",
+      "source_sha256": "ea37cb29cf1f5b466ce6ac61ab0ab54968a296ec4ed6db8a5d1fb03114662741",
+      "generation_output": "exec-1fefa738-4b70-4c65-bec6-11ad531d6500.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "building_dev_veilmourn_unique_3",
+      "visible_width": 145,
+      "ground_anchor": [
+        1035,
+        650
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t1_1",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_1.prompt.txt",
+      "source_sha256": "a52c83842e75bf904fec17b339f120d1a15c22bbb81cb2ad27f8b0648b75299f",
+      "generation_output": "exec-c48e15ca-712f-4bc3-af2a-42fe1b0da5f1.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t1",
+      "visible_width": 130,
+      "ground_anchor": [
+        1170,
+        745
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t1_1_upgrade",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_1_upgrade.prompt.txt",
+      "source_sha256": "600d0ddf07ff9d13e0eed145ce6f4e4e463cdebb88c8c79820c7e27c771f85eb",
+      "generation_output": "exec-00e9ed89-2624-4a02-b238-48d33adff2bb.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t1",
+      "visible_width": 160,
+      "ground_anchor": [
+        1170,
+        745
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t1_2",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_2.prompt.txt",
+      "source_sha256": "00a47457cf51e7ee92a414f4844983c09223adda78d02b944a294f09a2d2f548",
+      "generation_output": "exec-48e14413-58df-4446-a4a3-0e0dbc4d0b26.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t1",
+      "visible_width": 130,
+      "ground_anchor": [
+        1170,
+        745
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t1_2_upgrade",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_2_upgrade.prompt.txt",
+      "source_sha256": "45142c40bf964dd0dda1d675f0a39d70a14a8100d5e9abac9d890585eb0d7c08",
+      "generation_output": "exec-f124f1e1-7ddd-41ca-a281-2a7a437cab25.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t1_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t1",
+      "visible_width": 160,
+      "ground_anchor": [
+        1170,
+        745
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t2_1",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_1.prompt.txt",
+      "source_sha256": "b5d8604eef05f4478106ac00974d50457e704e4889056e3bfffec9475aa2fc6c",
+      "generation_output": "exec-5f210739-5fa5-49ac-b801-b48a638a1bd4.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t2",
+      "visible_width": 140,
+      "ground_anchor": [
+        1420,
+        775
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t2_1_upgrade",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_1_upgrade.prompt.txt",
+      "source_sha256": "64b377295102f94d8c32a20ad9143844d4bef173e708d5d7dd6ed7cde0afe67e",
+      "generation_output": "exec-8111854e-c235-4c9f-98cf-3f563385ed21.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t2",
+      "visible_width": 170,
+      "ground_anchor": [
+        1420,
+        775
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t2_2",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_2.prompt.txt",
+      "source_sha256": "81163758442827589ca4dc8cb0f3d42bfd45c656b1f02a0ac97041ebae49b6a7",
+      "generation_output": "exec-d6ca930f-e19f-4dad-80ed-6ef64117d014.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t2",
+      "visible_width": 140,
+      "ground_anchor": [
+        1420,
+        775
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t2_2_upgrade",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_2_upgrade.prompt.txt",
+      "source_sha256": "b4f0a46fb25f3396add19e357c26a44f5e3773b653765987bcefec0c92ae8ba3",
+      "generation_output": "exec-e393daaf-97c9-49b7-89fc-873a5ce7c8d5.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t2_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t2",
+      "visible_width": 170,
+      "ground_anchor": [
+        1420,
+        775
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t3_1",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_1.prompt.txt",
+      "source_sha256": "830ad9bbe5f98a042891b4a38cdb7a48dac337780d15a65196b08261916db87c",
+      "generation_output": "exec-8f879482-2d9c-4dfa-b93f-57443009c220.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t3",
+      "visible_width": 145,
+      "ground_anchor": [
+        1450,
+        870
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t3_1_upgrade",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_1_upgrade.prompt.txt",
+      "source_sha256": "9a981c183fb6b465b66c4358af67e7c64a512131ed42d90db6dde58ab5d30aa7",
+      "generation_output": "exec-9972dd34-b255-4545-a700-31a03dcb599f.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t3",
+      "visible_width": 175,
+      "ground_anchor": [
+        1450,
+        870
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t3_2",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_2.prompt.txt",
+      "source_sha256": "2a1a2ba0a39cf7d46cd54221daa64617fb847cb55595f1a8f7cc897e0cd9fc05",
+      "generation_output": "exec-a2aad531-d890-47a5-ab5c-3171741ab2a5.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t3",
+      "visible_width": 145,
+      "ground_anchor": [
+        1450,
+        870
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t3_2_upgrade",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_2_upgrade.prompt.txt",
+      "source_sha256": "c47b90692153cf089587cb04956bc9b94a850e13ed662e05d81c90e68c94e391",
+      "generation_output": "exec-f12eab98-b101-47b2-a2f4-cbb87ddd396f.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t3_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t3",
+      "visible_width": 175,
+      "ground_anchor": [
+        1450,
+        870
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t4_1",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_1.prompt.txt",
+      "source_sha256": "5509617eeb6973011d280c8a61728fecba2f977adac26b8414c8029aae8c1a7b",
+      "generation_output": "exec-f0474080-de39-4773-8a6f-14129a8d5d22.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t4",
+      "visible_width": 150,
+      "ground_anchor": [
+        1265,
+        795
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t4_1_upgrade",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_1_upgrade.prompt.txt",
+      "source_sha256": "c6bcc456321935ea1f347ca089b0e67c02707b8abb77c8896c7461f9689bd48f",
+      "generation_output": "exec-551753f8-3730-4ac9-aea5-a866a9dca0ad.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t4",
+      "visible_width": 180,
+      "ground_anchor": [
+        1265,
+        795
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t4_2",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_2.prompt.txt",
+      "source_sha256": "775404b96b1142e87fdce44a9fa01544c0f4a069acab08be4371bd3e677c1f44",
+      "generation_output": "exec-ccf5a6a5-d41f-454a-b1e1-e3182796283c.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t4",
+      "visible_width": 150,
+      "ground_anchor": [
+        1265,
+        795
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t4_2_upgrade",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_2_upgrade.prompt.txt",
+      "source_sha256": "5a2bbcc4a7b90cc3ca510a2148ef07b7f26973eddfd679a2b28356975fe664ca",
+      "generation_output": "exec-5a052518-decf-46ba-9926-9af8f1b38ca5.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t4_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t4",
+      "visible_width": 180,
+      "ground_anchor": [
+        1265,
+        795
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t5_1",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_1.prompt.txt",
+      "source_sha256": "f34bd2abd413061bc67864008ee083b2fd0a4148ae7c0c02747be84e56882743",
+      "generation_output": "exec-5994653d-769f-4c58-acfa-a0674eb4c5a4.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t5",
+      "visible_width": 145,
+      "ground_anchor": [
+        1070,
+        735
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t5_1_upgrade",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_1_upgrade.prompt.txt",
+      "source_sha256": "de401f2415560fb44092bdc33ee713a2e05ab1d1dd875f652f3863de7dcfa579",
+      "generation_output": "exec-3c749ae3-bd45-417b-8710-1be3ffee71c9.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t5",
+      "visible_width": 175,
+      "ground_anchor": [
+        1070,
+        735
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t5_2",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_2.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_2.prompt.txt",
+      "source_sha256": "3298c9687da92d550e70a30db48f3464bf6ad54e4c44497322bd0b238fd3838d",
+      "generation_output": "exec-00450fa0-aa7a-40e2-adb3-ec8b6d344781.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t5",
+      "visible_width": 145,
+      "ground_anchor": [
+        1070,
+        735
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t5_2_upgrade",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_2_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_2_upgrade.prompt.txt",
+      "source_sha256": "fd0fb2c55c9239bb17900800d483e30b2afb49cb297081df29463c5d73f49f8e",
+      "generation_output": "exec-064d2e5a-7121-4126-a6fd-37f3d3daedfa.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t5_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t5",
+      "visible_width": 175,
+      "ground_anchor": [
+        1070,
+        735
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t6_1",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1.prompt.txt",
+      "source_sha256": "04c507c87948fe02ea9dd6e08e643a4057e2471d5f856bf0a56ed8d629863032",
+      "generation_output": "exec-4dea3e0f-918d-4b2c-94ba-219df6e22fb5.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t6_1",
+      "visible_width": 180,
+      "ground_anchor": [
+        230,
+        850
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t6_1_upgrade",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1_upgrade.prompt.txt",
+      "source_sha256": "f072307b785a620cbe4826685046c3ca7a350bc902ea02116a1817467d9632f1",
+      "generation_output": "exec-c00a0070-2f0e-456b-b139-ce5ddcd97721.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t6_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t6_1",
+      "visible_width": 210,
+      "ground_anchor": [
+        230,
+        850
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t7_1",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t7_1.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t7_1.prompt.txt",
+      "source_sha256": "388e3722b64455fdeae2add352d0da2474756fed33c56b3887015b039bfb3aad",
+      "generation_output": "exec-fdb5e09e-a0dd-45a5-ba30-90b08a75ecf1.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t7_1",
+      "visible_width": 195,
+      "ground_anchor": [
+        485,
+        740
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
+    },
+    {
+      "id": "building_dev_veilmourn_t7_1_upgrade",
+      "faction_id": "faction_veilmourn",
+      "source_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t7_1_upgrade.png",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t7_1_upgrade.prompt.txt",
+      "source_sha256": "137becfef41dfa3a7e0ced37a0630a410ac46f8cd313d66d1e4722497cee43e0",
+      "generation_output": "exec-821f55e8-e951-4f68-b3d1-641a201b0b31.png",
+      "generation_date": "2026-09-23",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+        "res://art/towns/source/generated/overhaul/faction_veilmourn/building_dev_veilmourn_t7_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "veilmourn_t7_1",
+      "visible_width": 225,
+      "ground_anchor": [
+        485,
+        740
+      ],
+      "grounding": "Original Veilmourn hull-timber and ribbed maritime architecture stands on the authored stone quay and timber wharf terraces; entrances share ground anchors across upgrade stages."
     }
   ],
   "existing_plot_placements": {

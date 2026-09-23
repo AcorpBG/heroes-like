@@ -1,0 +1,418 @@
+{
+  "status": "complete",
+  "assets": [
+    {
+      "id": "building_dev_hall_3",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. Expand the Council Hall into a substantial Veilmourn City Hall, an Admiralty of remembered voyages. Retain the southwest front entrance. Add a second large parallel reclaimed hull hall on the right, an elevated enclosed bridge between the upper council decks, a tall sweeping black timber prow at the left rear containing three oval smoky mirror panels, and a great bronze harbor bell suspended in a ribbed stern arch. Distinct broad asymmetric hull-building complex with stacked galleries and nautical rigging, no flags or sails. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "d59c27d12d721677175be242f5eae241630909b2f876ded5eb916d594dfbef51",
+      "generated_at": "2026-09-23T02:39:04.913606+00:00",
+      "generator": "builtin_image_gen",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0cc1f-a81c-7a01-91ce-a65f33b17607/exec-6317b9d6-397b-4a6d-a006-cabe0550c67c.png",
+      "reference": "art/overworld/runtime/objects/towns/distinct_factions/veilmourn.png",
+      "alpha_bbox_128": [
+        42,
+        23,
+        1219,
+        1201
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_hall_2",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-93cd7a51-4d6f-40f2-a878-73caa4c157f6.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_2.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_2.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. Upgrade the same harbor registry to a Council Hall. Preserve the southwest door and recognizable hull lower walls. Add a full upper council deck with curved rib supports and two unequal timber-roofed chambers, a taller forked stern-frame bell mast at the rear and an exterior covered stair gallery. Rope rigging braces architectural frames, bronze lamps, understated grey stone pier footings. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "d62d64861ce2c3a3cac47a3f3be3f128df0609c08eaa240bca460adb71f413a5",
+      "generated_at": "2026-09-23T02:41:19.200093+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        98,
+        18,
+        1206,
+        1223
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_hall_4",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-753300c1-d1a2-43b5-bae8-0c7febb9ffee.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_4.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_4.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. Upgrade this City Hall into the final Capital Admiralty. Keep the southwest doorway and two lower hull halls. Add a third taller curved stern hall behind them, a monumental suspended double-bell gantry between two unequal sculpted ship-rib masts, a new front-side memory treasury wing with pale stone arches, and an additional high enclosed gallery joining decks. Bigger magnificent funeral-harbor civic silhouette, still clearly built of salvaged hull timber and structural ribs rather than a castle. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "eb68aa4fd4e3cbdca56d5d79a7382247df24652edc4e2afeff60345178d6f05c",
+      "generated_at": "2026-09-23T02:42:21.122730+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        41,
+        14,
+        1224,
+        1238
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_fort_1",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-a5a79a37-fd58-4b05-a3fa-08981db4e7bf.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_1.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_1.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. A compact harbor watch barricade: stout dark salvaged timber palisade posts braced by curved ship ribs, one low enclosed keel-roof watch cabin, a heavy slack chain boom across an open southwest-facing entrance and a small manual capstan. Close-fitting stone pier footings only. Asymmetrical low defensive wharf gate, no water or outer town circuit. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "a36b11f99234c1acddad010135de274df098b61c9a5b7cdb50123ad65812fd95",
+      "generated_at": "2026-09-23T02:43:26.987486+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        40,
+        50,
+        1229,
+        1206
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_fort_2",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-06d9cd99-6067-432c-a072-d4535b78a22c.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_2.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_2.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. Upgrade to a fortified harbor gate with two unequal tall timber watch towers made of vertical ship-hull sections, grey stone pier bases, bronze rib braces, an elevated walkway and a conspicuous large chain-winding capstan above the open southwest gateway. Heavy upright keel planks replace the simple palisade, clearly much stronger and taller. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "8ce6e81ca9b5058f4ad5aa3f2549aa75fb9e8ca0131021dda5daa96d1328e6a9",
+      "generated_at": "2026-09-23T02:44:39.982589+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        43,
+        17,
+        1231,
+        1223
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_fort_3",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-a916d897-b0ed-409c-ab93-096e279503e0.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_3.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_fort_3.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. Upgrade into a major harbor bastion gate. Add high overhanging forecastle watch decks, immense outward curved bone-grey ship-rib buttresses, a second raised internal chain gate, heavy bronze anchor clamps and a tall central warning-bell frame. Keep the open southwest approach. Monumental ribbed timber fortification with unequal towers and layered decks, no generic stone castle crenellations. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "f9f1be196a8891379903655ad58b2dff239eccf262bf7d099a4c2e733f43e5e0",
+      "generated_at": "2026-09-23T02:45:48.935472+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        62,
+        24,
+        1233,
+        1223
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_guild_1",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-33e18721-18ad-4e66-bfef-93dd86e78b85.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_1.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_1.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. A small Veil magic chart-house: narrow hull-shaped dark timber cabin on pale grey stone footings, a steep curved overturned-keel roof, one upright oval smoky mirror at the rear in an aged bronze frame, a small sheltered chart desk visible inside the southwest doorway, two restrained amber mourning lanterns. Nautical memory research, quiet scholarly architecture, no temple or castle. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "e81d8c3e478c184c8b3a41ae13af0e1f2757b36e52687ebe8440679bdf105704",
+      "generated_at": "2026-09-23T02:52:51.839196+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        115,
+        40,
+        1182,
+        1202
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_guild_2",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-a4c2c63c-30b7-47cb-81cc-85d586e59986.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_2.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_2.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. Upgrade the chart-house with a raised second-storey navigation loft, a tall forked bell mast carrying a bronze sounding bell, a second smaller oval smoky mirror on a projecting side gallery and covered external stairs. Retain the lower southwest entrance. New substantial vertical silhouette without copying a mage spire. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "ac673797efce203f4f3a60084388207e17b4a2fc98f7550c6567b2a4c4d01b43",
+      "generated_at": "2026-09-23T02:53:53.679239+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        111,
+        18,
+        1176,
+        1201
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_guild_3",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-4d7ab02c-db00-4161-bcbc-d4a2586c6cf6.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_3.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_3.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. Upgrade to a major memory navigation observatory. Add two sweeping pale-grey salvaged ship ribs above the loft holding a large vertical elongated mirror in weathered bronze clamps, an enclosed side archive with a long barrel-shaped hull roof and an extra upper chart balcony. Keep the original small door southwest. The rib-suspended mirror is the new dominant architectural element. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "36a121c10958411ad91811470550777ffeb2cf393e5e783bbccf85067c8aed5f",
+      "generated_at": "2026-09-23T02:54:53.361355+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        64,
+        39,
+        1203,
+        1217
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_guild_4",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-dc8604dd-8b95-4b69-a824-d161ee440b45.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_4.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_4.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. Upgrade the memory observatory with a second larger curved stern-frame tower behind the original, a high narrow bridge carrying a row of bronze sounding bells between towers, two enclosed chart galleries at different levels and a broad side memory-salt preparation chamber. Retain the original front house and rib-suspended oval mirror. Asymmetric two-tower rigged maritime research silhouette, no magical smoke. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "a0e58ba3e7783c37b924d19b7a495657ca3c82925c334d925a558fb22bebe87b",
+      "generated_at": "2026-09-23T02:55:53.222053+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        117,
+        19,
+        1231,
+        1180
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_guild_5",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-10871dee-1331-446d-907e-012e278b99cc.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_5.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_guild_5.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. Final Veil guild upgrade. Add a monumental open overhead cage of five pale-grey bent ship ribs around an immense suspended double-sided smoky silver mirror, above the two lower hull lofts, with taut dark rigging, two large bronze sounding bells at unequal heights and an enlarged stepped archive gallery below. Preserve the original southwest doorway and visible lower chart-house forms. Grand final-tier memory-navigation apparatus, all light restrained and inside lanterns, no luminous aura or ghost. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "b7df3aba115fe7d1cdf916f1bdc18cf417f8a73b061dad069ad884f8f91ad34d",
+      "generated_at": "2026-09-23T02:57:01.531348+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        72,
+        6,
+        1233,
+        1207
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_market_square",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-9b0115fa-3d40-4b48-a166-3ef87d16797f.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_market_square.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_market_square.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. A small Veilmourn salvage market: three unequal open stalls with weathered charcoal canvas canopies stretched on ship-rib frames around a tiny close-fitting wooden trading deck, salvaged crates, rope coils, timber bundles, ore baskets and a plain bronze balance scale. One squat curved hull-roof tally cabin at the back, low silhouette, southwest open access. No sails, banners, words or characters. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "8cb3eb25375c721ee85d5fed5c0016888aa1d999102bc50989985d6797b5447d",
+      "generated_at": "2026-09-23T02:58:30.555700+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        65,
+        193,
+        1217,
+        1119
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-56423a35-88d7-412b-8d1a-17a688db454a.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_trade_exchange.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_trade_exchange.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. Upgrade the salvage market into a substantial freight and ransom exchange. Preserve the southwest open access and recognizable three market canopies. Add a two-storey ship-hull ledger house at the rear, a tall wooden dockside hoist with bronze tackle and an empty suspended cargo sling, a covered second-level barter gallery and a wider sheltered salvage sorting bay. Bigger asymmetrical trading complex built on close-fitting dry stone piers. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "412a663ca2e7ea073a02ca420d1226cdc97a5ba8446f5641df9e11474356edff",
+      "generated_at": "2026-09-23T02:59:45.610860+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        23,
+        131,
+        1242,
+        1179
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-6fa8f857-bcc8-4fd5-9507-9282b0faaa1c.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_1.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_1.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. A low Veilmourn wharf storehouse made from two inverted dark wooden hulls forming long rounded roofs over timber and pale-stone warehouse walls. Wide southwest sliding plank doors reveal neatly stacked timber beams; side roofed bays contain ore baskets, rope and small sealed cargo crates. Two bronze mourning lanterns and a modest hand-operated pulley. Practical low horizontal silhouette. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "f4d1b8e145c132e0d1f4b7473b76943d0e0fb1987299dff9c5709e0be374466d",
+      "generated_at": "2026-09-23T03:01:12.480245+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        59,
+        190,
+        1241,
+        1074
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-5704b966-6b20-4a0a-be00-6b3ba575bda3.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_2.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_storehouse_2.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. Upgrade the twin-hull storehouse with a visibly new tall memory-salt curing annex made of pale stone arches and dark ship ribs, shallow enclosed brine trays showing white-grey salt crystals, a stacked drying rack behind glassless shutters, a bronze condenser coil and a small hoisting gallery. Preserve the original southwest doors and timber/ore bays. The memory-salt facility is a major architectural wing, not merely extra crates. No gold coins or furnace. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n",
+      "sha256": "194165e13352643b1e7beed212a614cd7b9c8202fddd9cc7da1b4888507e7daf",
+      "generated_at": "2026-09-23T03:02:53.355141+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        45,
+        65,
+        1214,
+        1183
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    },
+    {
+      "id": "cleared_harbor",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-09358ea8-6b93-4144-9a00-23ce6e9a0c4e.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/cleared_harbor.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/cleared_harbor.prompt.txt",
+      "prompt": "Generate a landscape16:9 hand-painted fantasy strategy TOWN SCREEN BACKDROP for Veilmourn. Reference supplies funeral-harbor atmosphere only. Redesign as a broad EMPTY buildable harbor district. Upper quarter a distant foggy grey-blue sea with a few very small funeral-hull rooftops and thin bell masts far on the opposite shore, soft overcast light from upper-left, restrained warm dawn break through clouds, quiet spectral maritime mood without ghosts. Lower three quarters mostly continuous broad EMPTY grey stone quays and weathered timber wharf terraces, gentle shallow elevation changes connected by broad ramps. Enough coherent ground for23 independently placed building sprites; largest uninterrupted central stone apron, broad side and foreground wooden wharf areas. Sparse very low perimeter mooring bollards and ropes at outermost edges only, no raised obstacles within building areas. A narrow calm water strip may appear behind the rear quay but no large central canal or foreground water eating the buildable area. No nearby ships, hulls, cranes, towers, buildings, stall roofs, machinery, characters or cargo in the playable lower three quarters. No explicit square grid or marked plots, no labels or UI. Detailed late1990s painterly strategy landscape, damp weathered surfaces readable under buildings, subtle tonal variation and cool-grey brown palette; not near-black night. Fully opaque image. Spacious scenic empty harbor ready for buildings added separately.\n",
+      "sha256": "9c2707d9761023c3a9fc5a11cf677ce96d9d05e38178b7aa1f5f2bd5868d3409",
+      "generated_at": "2026-09-23T03:04:18.961238+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1672,
+      "height": 941,
+      "png_color_type": 2,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "visual_review": "empty connected harbor terraces, distant skyline only"
+    },
+    {
+      "id": "building_town_hall",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc1f-a81c-7a01-91ce-a65f33b17607\\exec-d5fae7f3-2556-4792-a37d-a3e2958f3cba.png",
+      "source": "art/towns/source/generated/overhaul/faction_veilmourn/building_town_hall.png",
+      "prompt_file": "art/towns/source/generated/overhaul/faction_veilmourn/building_town_hall.prompt.txt",
+      "prompt": "Create exactly ONE original production Veilmourn fantasy strategy town building sprite, square canvas with TRUE TRANSPARENT BACKGROUND and entirely opaque hand-painted architecture. Use the supplied reference only for Veilmourn faction construction, materials, lighting and camera; do not copy its entire town layout. Detailed late1990s painted strategy realism, worn tactile materials, readable silhouette, not shiny toy CGI. Elevated southwest three-quarter view about30degrees downward, southwest entry toward lower-left, right walls and roofs visible, soft neutral light from upper-left plus dim amber lantern windows. Veilmourn identity: funeral harbor logistics, salvaged hull-shaped timber buildings, dark weathered ship planks, pale bone-grey structural ribs and stone, aged bronze/iron braces, ropes, smoky silver memory mirrors. A modest Veilmourn harbor registry hall built from a single repurposed dark wooden ship hull resting securely on close-fitting grey stone piers. Curved hull sides form lower walls, the upturned keel makes a long weathered slate-grey roof ridge, small amber lantern windows, aged bronze braces and rope lashings. Compact southwest doorway reached by short broad wooden steps, one low rear bell post and a tiny open manifest porch. A working civic building made from a hull, no actual floating boat, water or sails. Entire building and all rigging must fit inside frame with8percent clear transparent margin. Close-fitting dry structural foundations only, no ground island, water, sea, landscape or background. No people, creatures, skulls, undead, pirates, flags, banners, sails, text, numbers, logos, checkerboard, UI, outer mist or glow. Original quiet maritime architecture, not castle recolor, church, ivory palace or a floating ship. Make all construction physically supported and keep the entry visible.\n IMPORTANT: absolutely no signature, artist mark, watermark or decorative writing. Background must be actual transparent alpha, never a painted checkerboard. Reduce building to80percent canvas height and width with clear empty transparent margins.",
+      "sha256": "6d1539560267c0f302400e9bd85b9a38413741f486de7615c3fb771261e7dda0",
+      "generated_at": "2026-09-23T03:09:07.912944+00:00",
+      "generator": "builtin_image_gen",
+      "width": 1254,
+      "height": 1254,
+      "png_color_type": 6,
+      "reference": "art/towns/source/generated/overhaul/faction_veilmourn/building_dev_hall_3.png",
+      "alpha_bbox_128": [
+        174,
+        126,
+        1177,
+        1129
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "visual_review": "complete distinct architecture, no text/people/flags, full silhouette; backdrop empty central terraces"
+    }
+  ],
+  "validation": "17 sources inspected;16 RGBA alpha0..255; full opaque geometry inside canvas; opaque16:9 backdrop; hashes and prompt paths verified"
+}
